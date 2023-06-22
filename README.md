@@ -5,6 +5,16 @@
 ---
 
 # Nile
+Nile is the first serverless Postgres purpose-built for modern SaaS. 
+- Built in tenant virtualization
+- Drop in tenant and user management
+- Onboard tenants and place them globally - any region, edge or dedicated instance
+- Effortlessly elastic
+- Instant tenant dashboards
+- Fully integrated ready to use UI components
+- Extensive support for popular Postgres extensions
+
+Our mission - To accelerate and advance the next billion SaaS products
 
 <img width="1218" alt="Screen Shot 2023-06-21 at 7 57 57 PM" src="https://github.com/TheNileDev/niledatabase/assets/2977624/f24c5ce5-8144-4cbb-9de6-9454b5afdb31">
 
