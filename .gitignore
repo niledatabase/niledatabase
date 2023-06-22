@@ -1,0 +1,36 @@
+.DS_Store
+tmp
+.vscode
+.idea
+.vercelswp
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+
+# TypeScript 
+*.tsbuildinfo
+
+# node 
+.npm
+node_modules
+
+# Optional eslint cache
+.eslintcache
+
+# dotenv environment variables file
+.env
+.env.test
+.env.local
+.env.production
+
+
+# next.js build output
+.next
+
+# turbo 
+.turbo
