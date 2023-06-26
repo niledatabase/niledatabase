@@ -5,7 +5,9 @@
 ---
 
 # Nile
-Nile is the first serverless Postgres purpose-built for modern SaaS. 
+
+Nile is the first serverless Postgres purpose-built for modern SaaS.
+
 - Built in tenant virtualization
 - Drop in tenant and user management
 - Onboard tenants and place them globally - any region, edge or dedicated instance
@@ -18,12 +20,13 @@ Our mission - To accelerate and advance the next billion SaaS products
 
 <img width="1218" alt="Screen Shot 2023-06-21 at 7 57 57 PM" src="https://github.com/TheNileDev/niledatabase/assets/2977624/f24c5ce5-8144-4cbb-9de6-9454b5afdb31">
 
-
 ## Get Started
+
 Best place to start is to try our [quick start](https://nile.dev.docs/quickstart)
 
 ## Client libraries and framework support
-Nile provides support for numerous languages and frameworks. Check out the list of languages and frameworks supported and try out 
+
+Nile provides support for numerous languages and frameworks. Check out the list of languages and frameworks supported and try out
 specific quick starts
 
 ## Architecture
@@ -36,11 +39,10 @@ We would love contributions, check out our [guidelines](./DEVELOPERS.md)
 
 ## Community & Support
 
-- [Community Forum](https://github.com/TheNileDev/niledatabase/discussions). 
+- [Community Forum](https://github.com/TheNileDev/niledatabase/discussions).
 - [Discord](https://discord.thenile.com).
 
 ## Testing locally
+
 You can test Nile locally using our Docker option. This allows you to test locally before deploying your changes to
 pre-production or production. The Docker option is not for production use.
-
-

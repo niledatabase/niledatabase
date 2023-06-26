@@ -1,34 +1,38 @@
-import rehypeSlug from 'rehype-slug';
+import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
 
 export const meta = {
-  title: 'Learn Nile with SQL',
-}
+  title: "Learn Nile with SQL",
+};
 
 # Quickstart - Explore Nile in 5 minutes with SQL
 
 Learn about Nile's tenant aware tables and how they provide tenant isolation through virtual tenant databases.
 
-## Create a database
+## 1. Create a database
 
-1. Signup to Nile at https://dev-nad.thenile.dev 
+1. Signup to Nile at https://dev-nad.thenile.dev
 2. You should see a welcome message. Click on "Lets get started"
-![Nile welcome.](/images/nad-welcome.png)
-3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to “Use Token in Browser”. 
-4. If you prefer to go through the tutorial with psql, you can skip ahead to <a href="#client-connectivity"> Client Connectivity </a> and then continue from here
+   ![Nile welcome.](/images/nad-welcome.png)
+3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to “Use Token in Browser”.
 
-## Explore Nile with Queries
+## 2. Create a table
+
 Lets imagine that we are building a todo list app and create our first table:
+
 ```sql
 create table todos (
-    tenant_id uuid, 
-    title varchar(256), 
+    tenant_id uuid,
+    title varchar(256),
     complete boolean);
 ```
+
 You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns. If you are in `psql`, you can do `\d todos` in order to view the schema.
 
-See the  `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
+See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
 ![Creating a table in Nile's admin dashboard](/images/nad-create-table.png)
+
+## 3. Insert tenant
 
 Nile ships with built-in tables, like `tenants` table that you used earlier. If you want to learn more about these tables, you can check the [detailed descriptions in Nile’s Concept Document](https://www.notion.so/640f7364152a4941990cf6351b065049?pvs=21).
 
@@ -40,13 +44,13 @@ insert into tenants (name) values ('my first customer');
 select * from tenants;
 ```
 
-Now, with the new tenant created, lets insert a record to the “todos” table - don’t forget to include the `tenant_id`: 
+Now, with the new tenant created, lets insert a record to the “todos” table - don’t forget to include the `tenant_id`:
 
 ```sql
 -- adding a todo item for this tenant
 insert into todos (tenant_id, title, complete) values ('<tenant_id>', 'feed my cat', false);
 
-SELECT tenants.name, title, complete 
+SELECT tenants.name, title, complete
 FROM todos join tenants on tenants.id = todos.tenant_id;
 ```
 
@@ -58,6 +62,8 @@ name                 title          complete
 my first customer    feed my cat    f
 ```
 
+## 4. Add another tenant
+
 It is now time for our second customer and their todo item:
 
 ```sql
@@ -68,10 +74,10 @@ select * from tenants;
 
 ```sql
 -- a new todo item for our second tenant
-insert into todos values ('<tenant_id_of_different_customer>', 
+insert into todos values ('<tenant_id_of_different_customer>',
 'take out the trash', false);
 
-SELECT tenants.name, title, complete 
+SELECT tenants.name, title, complete
 FROM todos join tenants on tenants.id = todos.tenant_id;
 ```
 
@@ -84,7 +90,9 @@ my first customer    feed my cat           f
 different customer   take out the trash    f
 ```
 
-But Nile goes a step further and provides tenant isolation. You can set the session to a specific tenant, and every query that follows will only return data that belongs to this specific tenant. 
+## 5. Tenant isolation
+
+Nile goes a step further and provides tenant isolation. You can set the session to a specific tenant, and every query that follows will only return data that belongs to this specific tenant.
 
 Think of it as querying a virtual database dedicated to this one specific tenant.
 
@@ -94,9 +102,9 @@ You can select a tenant either from the drop-down list next to the ▶️ butto
 select * from tenants;
 -- set context to isolate query to a specific tenant DB
 -- our example uses the second tenant here
-set nile.tenant_id = '<tenant_id>'; 
+set nile.tenant_id = '<tenant_id>';
 
-[SELECT tenants.name, title, complete 
+[SELECT tenants.name, title, complete
 FROM todos join tenants on tenants.id = todos.tenant_id;](https://www.notion.so/29f295f5cf02418dbbdc13f255e62395?pvs=21)
 ```
 
@@ -108,46 +116,13 @@ name                 title                 complete
 different customer   take out the trash    f
 ```
 
+## 6. Looking good! What's next?
+
 🏆 Tada! You have learned the basic Nile concepts:
 
 - [Tenant aware tables](https://www.notion.so/640f7364152a4941990cf6351b065049?pvs=21)
 - Tenant context
 - Tenant isolation
 
+{/* link to "how to connect" TBD */}
 Next, you will want to connect from your favorite query editor or programming language.
-
-## Client Connectivity
-
-In order to connect to your new DB from your favorite programming language or tools like `psql` , you will need credentials and the database connection string. You can find them both under “settings”.
-![Nile settings page.](/images/nad-settings.png)
-From here, you'll choose **connections** and pick your preferred client. I'm going to use `psql` so I select the Postgres logo.
-![Nile connections page.](/images/nad-connection-1.png)
-After selecting your client, you'll see a template with the connection string. 
-Clicking on **generate credentials** will populate the template with new credentials. 
-Now you have a connection string that you can use to connect to your new database and run queries, as one does:
-```sql
-gwen@Gwens-MacBook-Pro ~ % psql postgres://cred_02sqz1dBuQrJzRTaXNZABC:pw_3RLZ9Z7nGWZqXDZ70SRXYZ@dev.khnum.thenile.dev:5432/elegant_star
-psql (14.6 (Homebrew), server 14.0)
-Type "help" for help.
-
-elegant_star=> \dt
-             List of relations
- Schema |     Name      | Type  |   Owner
---------+---------------+-------+------------
- public | tenants       | table | khnum_user
- public | todos         | table | khnum_user
- public | example_table | table | khnum_user
- users  | tenant_users  | table | khnum_user
- users  | users         | table | khnum_user
-(5 rows)
-
-elegant_star=> select * from example_table;
-              tenant_id               | value
---------------------------------------+-------
- 01875983-f8e2-7e34-929d-cb99530ff0ad |     1
- 01875984-c0ca-71f7-869a-001e30f79ce7 |    44
- 0187598b-b3b2-7989-b5b5-b872c528cdd4 |     1
- 018759b9-5baf-75b1-80e8-0f3a531d473d |    44
- 01875983-f8e2-7e34-929d-cb99530ff0ad |     1
-```
-
