@@ -15,6 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
+      <head>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/github-dark.min.css"/>
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );
