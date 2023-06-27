@@ -74,7 +74,7 @@ select * from tenants;
 
 ```sql
 -- a new todo item for our second tenant
-insert into todos values ('<tenant_id_of_different_customer>',
+insert into todos (tenant_id, title, complete) values ('<tenant_id_of_different_customer>',
 'take out the trash', false);
 
 SELECT tenants.name, title, complete
