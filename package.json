@@ -35,7 +35,7 @@
   "homepage": "https://github.com/TheNileDev/niledatabase#readme",
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
-    "prettier": "2.8.8",
+    "prettier": "^2.8.8",
     "turbo": "^1.10.4"
   }
 }

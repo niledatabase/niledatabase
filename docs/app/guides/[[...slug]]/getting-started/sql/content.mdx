@@ -11,9 +11,9 @@ Learn about Nile's tenant aware tables and how they provide tenant isolation thr
 
 ## 1. Create a database
 
-1. Signup to Nile at https://dev-nad.thenile.dev
+1. Signup to [Nile](https://dev-nad.thenile.dev).
 2. You should see a welcome message. Click on "Lets get started"
-   ![Nile welcome.](/images/nad-welcome.png)
+   ![Nile welcome.](/images/nile-welcome.png)
 3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to “Use Token in Browser”.
 
 ## 2. Create a table
@@ -30,7 +30,7 @@ create table todos (
 You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns. If you are in `psql`, you can do `\d todos` in order to view the schema.
 
 See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
-![Creating a table in Nile's admin dashboard](/images/nad-create-table.png)
+![Creating a table in Nile's admin dashboard](/images/gui-create-table.png)
 
 ## 3. Insert tenant
 
@@ -104,8 +104,8 @@ select * from tenants;
 -- our example uses the second tenant here
 set nile.tenant_id = '<tenant_id>';
 
-[SELECT tenants.name, title, complete
-FROM todos join tenants on tenants.id = todos.tenant_id;](https://www.notion.so/29f295f5cf02418dbbdc13f255e62395?pvs=21)
+SELECT tenants.name, title, complete
+FROM todos join tenants on tenants.id = todos.tenant_id;
 ```
 
 If all went well, you’ll see the todo task for “different customer” and not the first customer:

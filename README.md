@@ -39,8 +39,8 @@ We would love contributions, check out our [guidelines](./DEVELOPERS.md)
 
 ## Community & Support
 
-- [Community Forum](https://github.com/TheNileDev/niledatabase/discussions).
-- [Discord](https://discord.thenile.com).
+- [Community Forum](https://github.com/orgs/niledatabase/discussions).
+- [Discord](https://discord.gg/s7hcR9Hxj3).
 
 ## Testing locally
 
