@@ -14,5 +14,5 @@ Turborepo is used to manage and run this monorepo.
    ```
 
 ```sh
- npm run dev:www
+ npm run dev:docs
 ```
