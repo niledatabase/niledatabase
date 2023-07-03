@@ -1,8 +1,10 @@
 export const meta = {
-  title: "Auth with NextJS",
+  title: "User Management with NextJS",
   description: "Get up and running with Nile User Management in NextJS",
   order: 1,
 };
+
+# User Management with Next.js #
 
 Every application has users. This page introduces you to the basics of Nile's drop-in user
 management in the context of a Next.js application.
@@ -45,7 +47,7 @@ Let's run the application to see things working, and then we'll look under the h
 work.
 
 1. Run `npm run dev`, `yarn dev`, or `pnpm dev` to start the server.
-2. Open <http://localhost:3000/sign-up>.
+2. Open [http://localhost:3000/sign-up](http://localhost:3000/sign-up).
 3. Enter an email address and password, and click **Sign up**.
 
 If you're configuration is correct, you'll see the success response from the Nile API.
@@ -138,8 +140,8 @@ the user, returning it in the response.
 
 ## 5. Login ##
 
-With your application running, open <http://localhost:3000/> and login with the user you created in
-Step 3.
+With your application running, open [http://localhost:3000/](http://localhost:3000/) and login with
+the user you created in Step 3.
 
 This is implemented using the same pattern used for sign-up. Open `/app/page.tsx` to find the
 `LoginForm` used, which wraps the `<UserLoginForm>` from the Nile UI Kit. In `/api/login/route.ts`
