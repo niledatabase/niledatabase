@@ -4,7 +4,7 @@ export const meta = {
   order: 1,
 };
 
-# User Management with Next.js #
+# User Management with Next.js
 
 Every application has users. This page introduces you to the basics of Nile's drop-in user
 management in the context of a Next.js application.
@@ -12,7 +12,7 @@ management in the context of a Next.js application.
 If you haven't already, [sign up for Nile][nad] and follow the prompts to create a workspace and
 database.
 
-## 1. Create a Next.js starter app. ##
+## 1. Create a Next.js starter app.
 
 Create a new Next.js project based on our authentication starter:
 
@@ -20,7 +20,7 @@ Create a new Next.js project based on our authentication starter:
 npx create-next-app -e https://github.com/niledatabase/nile-js/tree/master/examples/authentication nile-auth-app && cd nile-auth-app
 ```
 
-## 2. Configure your application. ##
+## 2. Configure your application.
 
 The app uses Nile's SDK and UI Kit which need to be configured with your workspace and database
 name.
@@ -37,11 +37,11 @@ provide the `NEXT_PUBLIC_WORKSPACE` and `NEXT_PUBLIC_DATABASE` values. You can g
 
 You'll see these values used in two places:
 
-* `/nile/Server.ts` - this configures the connection to Nile's API server
-* `/nile/uid/NileContext/index.tsx` - this configures the NileProvider that wraps all Nile UI
-components
+- `/nile/Server.ts` - this configures the connection to Nile's API server
+- `/nile/uid/NileContext/index.tsx` - this configures the NileProvider that wraps all Nile UI
+  components
 
-## 3. Run, Sign Up and Query Users ##
+## 3. Run, Sign Up and Query Users
 
 Let's run the application to see things working, and then we'll look under the hood to see how they
 work.
@@ -61,16 +61,16 @@ SELECT * FROM users.users;
 
 You should see a record with your newly created user.
 
-## 4. Dig Deeper ##
+## 4. Dig Deeper
 
 Let's walk through the sign-up flow, from front-end to back-end:
 
-### The `SignUpForm` ###
+### The `SignUpForm`
 
 Open `/app/sign-up/page.tsx` to find a simple landing page that wraps a `SignUpForm` component:
 
 ```tsx title="/app/sign-up/page.tsx"
-import SignUp from '@/nile/ui/SignUpForm';
+import SignUp from "@/nile/ui/SignUpForm";
 
 export default function SignUpPage() {
   return (
@@ -84,8 +84,8 @@ export default function SignUpPage() {
 The `SignUpForm` (in `/nile/ui/SignUpForm/index.tsx`) provides some basic UI and a couple of key
 components:
 
-* The `<NileContext>` wrapper that provides configuration to nested components
-* The `<UserSignupForm>` from the Nile UI Kit
+- The `<NileContext>` wrapper that provides configuration to nested components
+- The `<UserSignupForm>` from the Nile UI Kit
 
 ```tsx title="/nile/ui/SignUpForm/index.tsx"
 import { UserSignupForm } from '@theniledev/react';
@@ -119,12 +119,12 @@ means your API server needs to handle the request. We'll look at that next.
 > and makes requests to Nile. Plus it keeps Nile out of your user's view, and your
 > application front and center.
 
-### The `sign-up` route ###
+### The `sign-up` route
 
 Open `/app/api/sign-up/route.ts`:
 
 ```tsx title="/app/api/sign-up/route.ts"
-import { api } from '@/nile/Server';
+import { api } from "@/nile/Server";
 
 export async function POST(req: Request) {
   return await api.auth.signUp(req);
@@ -138,7 +138,7 @@ The Nile SDK picks up your workspace and database name from the configuration yo
 issues a request to the Nile API. Our API creates a user in your database and generates a JWT for
 the user, returning it in the response.
 
-## 5. Login ##
+## 5. Login
 
 With your application running, open [http://localhost:3000/](http://localhost:3000/) and login with
 the user you created in Step 3.
@@ -147,7 +147,7 @@ This is implemented using the same pattern used for sign-up. Open `/app/page.tsx
 `LoginForm` used, which wraps the `<UserLoginForm>` from the Nile UI Kit. In `/api/login/route.ts`
 you'll again find the request and response delegated to the Nile SDK.
 
-# Summary #
+# Summary
 
 You've used the basic features of Nile's drop-in user management: user creation and authentication.
 
