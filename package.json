@@ -9,7 +9,9 @@
   "scripts": {
     "dev": "turbo run dev",
     "dev:docs": "turbo run dev --filter=docs",
-    "format:docs": "prettier --write \"docs/**/*.{js,jsx,ts,tsx,css,md,mdx,json}\""
+    "format:docs": "prettier --write \"docs/**/*.{js,jsx,ts,tsx,css,md,mdx,json,mjs}\"",
+    "init:docs": "turbo run build --filter=docs",
+    "preinstall": "npm run init:docs"
   },
   "description": "tenant aware, serverless, globally distributed postgres",
   "directories": {

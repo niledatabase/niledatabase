@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run build:sidenav && next build",
+    "build:sidenav": "node ./scripts/sidenav.mjs",
     "start": "next start",
     "lint": "next lint"
   },

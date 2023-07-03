@@ -28,7 +28,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "../mdx-components.tsx"
+    "../mdx-components.tsx",
+    "build/types/**/*.ts",
+    "utils/buildNavParams.mjs"
   ],
   "exclude": ["node_modules"]
 }
