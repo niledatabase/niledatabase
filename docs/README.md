@@ -8,6 +8,13 @@ Take a look [developers](../../DEVELOPERS.md) to run this app locally
    > if you want `/guides/getting-started` as your path, add a folder `/getting-started`
 2. add an `<slug-name>.mdx` file, put either markdown or react in it
 
+## Adding a section to the documentation
+
+1. Add a folder under `<section_name>/[[...slug]]` with the section.
+   > if you want `/user-management` as your path, add a folder `user-management/[[...slug]]`
+2. Copy an existing `page.tsx` from one of the other sections and change `NavigationRoots` to the a unique name.
+3. Update `Roots` inside of `buildNavParams.mjs` to be sure when build time comes, your new section is included.
+
 ## Adding to the side navigation
 
 The side navigation will automatically render files, based on their location and format.

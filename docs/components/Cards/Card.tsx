@@ -1,12 +1,14 @@
 import Link from "next/link";
+import { NavigationRoots } from "../SideNavigation";
 
 type Props = {
   file: string;
+  root: NavigationRoots;
 };
 export default async function Card(props: Props) {
-  const { file } = props;
+  const { file, root } = props;
   const { meta } = await import(
-    `../../app/guides/\[\[...slug\]\]${file.slice(1, file.length)}`
+    `../../app/${root}/\[\[...slug\]\]${file.slice(1, file.length)}`
   );
   if (!meta) {
     return null;
