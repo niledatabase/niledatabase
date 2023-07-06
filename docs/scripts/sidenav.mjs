@@ -5,7 +5,7 @@ import { buildNavParams } from "../utils/buildNavParams.mjs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const STATIC_DIR = path.join(__dirname, "..", "static");
+const STATIC_DIR = path.join(__dirname, "..", "sidenav");
 
 export default async function run() {
   if (!fs.existsSync(STATIC_DIR)) {
@@ -14,7 +14,7 @@ export default async function run() {
   const routes = await buildNavParams();
   try {
     fs.writeFileSync(
-      path.join(__dirname, "..", "static", "sidenav.json"),
+      path.join(STATIC_DIR, "sidenav.json"),
       JSON.stringify(routes, null, 2)
     );
   } catch (e) {
