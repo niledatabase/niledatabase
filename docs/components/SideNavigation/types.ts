@@ -2,4 +2,5 @@
 // update buildNavParams as well as this
 export enum NavigationRoots {
   Guides = "guides",
+  UserManagement = "user-management",
 }

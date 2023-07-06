@@ -24,7 +24,7 @@ export default async function Card(props: Props) {
     })
     .join("/");
   return (
-    <Link href={`/guides/${href}`} style={{ textDecoration: "none" }}>
+    <Link href={`/${root}/${href}`} style={{ textDecoration: "none" }}>
       <div className="border-2 w-64 px-4 py-1 rounded border-slate-600 hover:border-slate-50 transition-colors">
         <h4 className="text-lg">{meta.title}</h4>
         <p className="text-sm font-light">{meta.description}</p>
