@@ -1,0 +1,186 @@
+# Handling Redirects with Next.js
+
+export const meta = {
+  title: "Next.js",
+  description: "How to handle the authentication result from Nile in Next.js",
+  order: 3,
+};
+
+Nile makes it easy to integrate with identity providers—but what do you do with the result of an
+authentication attempt? This guide will show you an approach using Next.js.
+
+You should have one or more identity providers enabled in your Nile project. If you haven't done
+that yet, check out [Google Authentication with Next.js](../google-auth/nextjs).
+
+# Update the Redirect URL
+
+In this example, we'll use Google as our identity provider. You'll need to configure Nile to
+redirect to the auth handler we'll build in this guide.
+
+1. Open your [Nile dashboard][nad], and select the database for your application.
+2. Click on the **Identity Providers** icon in the side navigation.
+3. Select Google, and make sure the **Redirect URL** is set to
+   `http://localhost:3000/api/auth/handler`.
+
+Nile sends the same parameters to your redirect URL regardless of which identity provider you use.
+You can use the same handler for all of your providers, or use different handlers to customize
+behavior for each.
+
+## Authentication Parameters
+
+After a user authenticates with an identity provider, Nile POSTs the following form-encoded values
+to your redirect URL:
+
+- `state` – the OIDC state parameter associated with the authentication request.
+- `access_token` – the access token for the user. This is a JWT that contains the user's identity
+  information, and should be used when making calls to the Nile API on behalf of the user.
+- `event` – the authentication event that occurred; `SIGNUP` for a new user, `LOGIN` for an existing
+  user, or `AUTH_ERROR` if something went wrong.
+- `error` – if the `event` is `AUTH_ERROR`, this will contain a description of the error.
+- `tenant_id` – if the user logged in to a specific tenant, this will contain the ID of that tenant.
+
+# Setup the Handler Route
+
+Install our Next.js starter from the command line:
+
+```bash
+npx create-next-app -e https://github.com/niledatabase/niledatabase/examples/handling-auth-nextjs handling-auth-nextjs && cd handling-auth-nextjs
+```
+
+and install dependencies with `yarn install` or `npm install`.
+
+The starter includes a handler route at `app/api/auth/handler/route.ts` that matches the redirect
+URL you configured.
+
+## Handle Sign-Up and Login
+
+When a new user authenticates successfully, Nile redirects to your handler with an `event` of
+`SIGN_UP`. For existing users, it's `LOGIN`. In both cases, the `access_token` parameter contains
+the user's access token. Let's ignore error conditions for now, and assume we'll get one of these
+events.
+
+```ts
+import { NextApiRequest } from "next";
+
+export async function POST(req: NextApiRequest) {
+  return showDashboard(req);
+}
+
+function showDashboard(req: NextApiRequest): Response {
+  const accessToken = req.body.access_token;
+
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: `/dashboard?guidedTour=${req.body.event === "SIGN_UP"}`,
+      "Set-Cookie": `token=${accessToken}; Path=/; HttpOnly; Secure; SameSite=Strict;`,
+    },
+  });
+}
+```
+
+Here we're setting a cookie with the user's access token, and redirecting to the application
+dashboard. A query param indicates whether we should show the guided tour, which we only want to do
+for new users.
+
+Let's add the dashboard page at `/app/dashboard/page.tsx`:
+
+```tsx
+"use client";
+
+import styles from "../page.module.css";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import { useSearchParams } from "next/navigation";
+
+export default function Dashboard() {
+  const searchParams = useSearchParams();
+  const guidedTour = searchParams.get("guidedTour");
+
+  return (
+    <main className={styles.main}>
+      <Stack gap={2}>
+        <Typography level="h1">Welcome!</Typography>
+        <Typography>You're logged in.</Typography>
+        {guidedTour === "true" && (
+          <Typography>Let's show you around.</Typography>
+        )}
+      </Stack>
+    </main>
+  );
+}
+```
+
+Run the app with `yarn dev` or `npm run dev`, and open
+[http://localhost:3000/](http://localhost:3000/) in your browser. Click **Continue with Google** and
+login. You should be directed to the dashboard page. If you haven't logged in to your database with
+this account before, you should see a message that says, "Let's show you around." Login again with
+that account, and it should only say, "You're logged in."
+
+## Handle Errors
+
+There will be times when authentication fails. When it does, Nile redirects to your handler with an
+`event` of `AUTH_ERROR` and an `error` parameter describing the error. Let's modify the route to
+handle these errors. The complete route should look like this:
+
+```ts
+import { NextApiRequest } from "next";
+import { log } from "next-axiom";
+
+export async function POST(req: NextApiRequest) {
+  if (req.body.event === "AUTH_ERROR") {
+    return showErrorPage(req.body.error);
+  }
+  return showDashboard(req);
+}
+
+function showErrorPage(error: string): Response {
+  log.warn(`authentication error: ${error}`);
+  return new Response(null, {
+    status: 302,
+    headers: { Location: "/oops" },
+  });
+}
+
+function showDashboard(req: NextApiRequest): Response {
+  const accessToken = req.body.access_token;
+
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: `/dashboard?guidedTour=${req.body.event === "SIGN_UP"}`,
+      "Set-Cookie": `token=${accessToken}; Path=/; HttpOnly; Secure; SameSite=Strict;`,
+    },
+  });
+}
+```
+
+Here we're logging the error (with `next-axiom`) and redirecting to a custom error page. We'll add
+that page at `/app/oops/page.tsx`:
+
+```tsx
+"use client";
+
+import styles from "../page.module.css";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+
+export default function SignUpPage() {
+  return (
+    <main className={styles.main}>
+      <Stack gap={2}>
+        <Typography level="h1">Oops.</Typography>
+        <Typography>Something went wrong.</Typography>
+      </Stack>
+    </main>
+  );
+}
+```
+
+When an error occurs, users will land on [this page.](http://localhost:3000/oops)
+
+# Summary
+
+Your application may have specific requirements around handling auth. This guide shows you the
+general pattern for handling authentication attempts from Nile: determine the auth event, ensure
+the request is valid, and redirect to the appropriate page.
