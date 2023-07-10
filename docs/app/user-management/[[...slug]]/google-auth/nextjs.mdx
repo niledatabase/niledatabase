@@ -24,12 +24,10 @@ each other.
 1. Open your [Nile dashboard][nad], and select the database for your application.
 2. Click on the **Identity Providers** icon in the side navigation.
 3. Click on the Google tile and flip the **Enabled** toggle on.
-4. The **Redirect URI** is the page in your application that Nile redirects to after a user
+4. The client id and secret are values you'll obtain from Google. Leave these blank for now.
+5. The **Redirect URI** is the page in your application that Nile redirects to after a user
    authenticates, or when an error occurs. For this example, enter
    `http://localhost:3000/api/auth/handler`.
-5. The client id and secret are values you'll obtain from Google. Leave these blank for now.
-6. The **Component URL** is what you will provide to Google as the callback URL. Click the **Copy**
-   button to copy it to your clipboard.
 
 ## Configure Google
 
@@ -39,7 +37,9 @@ each other.
 2. Click **Create Credentials > OAuth client ID**.
 3. In the **Application type** dropdown, select **Web Application** and give it a name, like
    "Nile Integration".
-4. Under **Authorized redirect URIs**, paste the URL you copied from Nile, above.
+4. Under **Authorized redirect URIs**, add your database's redirect URI. This should be of the form:
+   `https://dev.khnum.thenile.dev/workspaces/<WORKSPACE_NAME>/databases/<DATABASE_NAME>/users/oidc/callback`
+   _(Your workspace and database name are displayed in the header of the Nile dashboard.)_
 5. Click **Create**. Google displays the **client id** and **client secret**. Copy these values—
    you'll provide them to Nile.
 
@@ -51,7 +51,9 @@ each other.
 With your Google and Nile accounts connected, your application can now authenticate users with
 Google accounts.
 
-# Clone and Install the Authentication Demo
+# Test Authentication
+
+## Clone the Demo Application
 
 You can test your Google configuration with our authentication demo. Install it from the command
 line:
@@ -64,7 +66,21 @@ and install dependencies with `yarn install` or `npm install`.
 
 Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name.
 
-_(Your workspace and database name are displayed in the header of the Nile dashboard.)_
+## Run and Verify
+
+Run the app with `yarn dev` or `npm dev` to start the app, and open
+[http://localhost:3000/](http://localhost:3000/) in your browser. When
+you click "Continue with Google", you'll be redirected to Google's authentication screen. After
+successfully logging in, you'll be redirected back to the demo application's route handler.
+
+You can verify that your user was created in the [Nile dashboard][nad]. Open the SQL editor for your
+database and query the users table:
+
+```sql
+SELECT * FROM users.users;
+```
+
+# Dig Deeper
 
 ## The GoogleSSOButton
 
@@ -128,20 +144,6 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify(e as Error), { status: 500 });
   }
 }
-```
-
-## Run the Demo
-
-Run the app with `yarn dev` or `npm dev` to start the app, and open
-[http://localhost:3000/](http://localhost:3000/) in your browser. When
-you click "Continue with Google", you'll be redirected to Google's authentication screen. After
-successfully logging in, you'll be redirected back to the demo application's route handler.
-
-You can verify that your user was created in the [Nile dashboard][nad]. Open the SQL editor for your
-database and query the users table:
-
-```sql
-SELECT * FROM users.users;
 ```
 
 # Summary
