@@ -49,10 +49,13 @@ npx create-next-app -e https://github.com/niledatabase/niledatabase/examples/han
 
 and install dependencies with `yarn install` or `npm install`.
 
-The starter includes a handler route at `app/api/auth/handler/route.ts` that matches the redirect
-URL you configured.
+Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name.
+_(Your workspace and database name are displayed in the header of the Nile dashboard.)_
 
 ## Handle Sign-Up and Login
+
+The starter includes a handler route at `app/api/auth/handler/route.ts` that matches the redirect
+URL you configured. Open that file for editing.
 
 When a new user authenticates successfully, Nile redirects to your handler with an `event` of
 `SIGN_UP`. For existing users, it's `LOGIN`. In both cases, the `access_token` parameter contains
@@ -177,10 +180,12 @@ export default function SignUpPage() {
 }
 ```
 
-When an error occurs, users will land on [this page.](http://localhost:3000/oops)
+When an error occurs, users will land on [your new error page.](http://localhost:3000/oops)
 
 # Summary
 
-Your application may have specific requirements around handling auth. This guide shows you the
-general pattern for handling authentication attempts from Nile: determine the auth event, ensure
-the request is valid, and redirect to the appropriate page.
+Your application may have special requirements around handling auth, but this guide shows you the
+general pattern when integrating with Nile: determine the auth event, set the user token in the
+cookie, and redirect to the appropriate page.
+
+[nad]: https://dev-nad.thenile.dev/ "Nile Dashboard"
