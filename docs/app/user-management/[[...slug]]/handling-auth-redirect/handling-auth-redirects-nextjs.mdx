@@ -39,12 +39,12 @@ to your redirect URL:
 - `error` – if the `event` is `AUTH_ERROR`, this will contain a description of the error.
 - `tenant_id` – if the user logged in to a specific tenant, this will contain the ID of that tenant.
 
-# Setup the Handler Route
+# Set Up the Handler Route
 
-Install our Next.js starter from the command line:
+Copy our Next.js starter from the command line:
 
 ```bash
-npx create-next-app -e https://github.com/niledatabase/niledatabase/examples/handling-auth-nextjs handling-auth-nextjs && cd handling-auth-nextjs
+git clone https://github.com/niledatabase/niledatabase.git && cp -r niledatabase/examples/handling-auth-nextjs . && cd handling-auth-nextjs
 ```
 
 and install dependencies with `yarn install` or `npm install`.
