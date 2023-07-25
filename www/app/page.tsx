@@ -3,7 +3,7 @@ import Navigation from "./Navigation";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-pattern">
+    <div className="min-h-screen bg-pattern bg-no-repeat bg-top">
       <Navigation />
       <main className="flex flex-col items-center justify-between p-24 relative z-10">
         <h1 className="bg-gradient-text bg-clip-text text-transparent text-7xl leading-normal text-center">
@@ -25,7 +25,7 @@ export default function Home() {
         <div className="flex flex-row items-center justify-between gap-6 mt-28 flex-wrap">
           <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
             <Image
-              src="/multi-tenant.svg"
+              src="/multi-tenant.png"
               alt="built-in multi tenant virtualization icon"
               width={100}
               height={100}
@@ -37,7 +37,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
             <Image
-              src="/user-management.svg"
+              src="/user-management.png"
               alt="drop in user management icon"
               width={100}
               height={100}
@@ -49,7 +49,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
             <Image
-              src="/distribute-globally.svg"
+              src="/distribute-globally.png"
               alt="Onboard once, Distribute Globally icon"
               width={100}
               height={100}
@@ -61,7 +61,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
             <Image
-              src="/elastic.svg"
+              src="/elastic.png"
               alt=" Effortlessly Elastic icon"
               width={100}
               height={100}
@@ -73,7 +73,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
             <Image
-              src="/instant-dashboards.svg"
+              src="/instant-dashboards.png"
               alt="Instant Customer Dashboards icon"
               width={100}
               height={100}
