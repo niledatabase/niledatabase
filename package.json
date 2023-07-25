@@ -11,6 +11,8 @@
     "dev:docs": "turbo run dev --filter=docs",
     "format:docs": "prettier --write \"docs/**/*.{js,jsx,ts,tsx,css,md,mdx,json,mjs}\"",
     "init:docs": "turbo run build --filter=docs",
+    "dev:www": "turbo run dev --filter=www",
+    "format:www": "prettier --write \"www/**/*.{js,jsx,ts,tsx,css,md,mdx,json,mjs}\"",
     "preinstall": "npm run init:docs"
   },
   "description": "tenant aware, serverless, globally distributed postgres",
