@@ -18,6 +18,9 @@ jobs:
           cache: "npm"
       - name: Download dependencies
         run: npm ci
-      - name: Run prettier
+      - name: Run prettier on docs
         run: |-
           npx prettier -c 'docs/**/*.{js,jsx,ts,tsx,css,md,mdx,json}'
+      - name: Run prettier on www
+        run: |-
+          npx prettier -c 'www/**/*.{js,jsx,ts,tsx,css,md,mdx,json}'

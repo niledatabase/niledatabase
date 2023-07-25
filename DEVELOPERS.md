@@ -1,6 +1,6 @@
 # Getting started
 
-This repo is a work in progress, and as such, this file may become out of date quickly. Feel free to update as needed.
+This repo is a work in progress, and as such, this file may become out of date quickly. Feel free to update this file as needed. It may be out of date at the time of reading.
 
 ### Local development
 
@@ -11,8 +11,5 @@ Turborepo is used to manage and run this monorepo.
    available commands
    ```sh
    npm run dev:docs
+   npm run dev:www
    ```
-
-```sh
- npm run dev:docs
-```
