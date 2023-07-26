@@ -5,11 +5,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-pattern bg-no-repeat bg-top">
       <Navigation />
-      <main className="flex flex-col items-center justify-between p-24 relative z-10">
+      <main className="flex flex-col items-center justify-between px-24 py-16">
         <h1 className="bg-gradient-text bg-clip-text text-transparent text-7xl leading-normal text-center">
           Serverless Postgres for modern SaaS
         </h1>
-        <div className="text-xl opacity-60 font-inter mt-2">
+        <div className="text-xl text-slate-400 font-inter mt-2">
           Build In Days. Scale For Years.
         </div>
         <button className="flex flex-row gap-2 text-lg gradientButton mt-10 font-medium">
@@ -92,7 +92,7 @@ export default function Home() {
             src="/benchmark.svg"
             alt="benchmark logo"
             width={114}
-            height={20}
+            height={21}
             priority
           />
         </div>

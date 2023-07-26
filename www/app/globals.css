@@ -3,17 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
 }
 
 body {
@@ -33,6 +25,7 @@ body {
   display: flex;
   align-items: center;
 }
+
 .gradientBorderButton::before {
   content: "";
   position: absolute;
@@ -40,10 +33,11 @@ body {
   border-radius: 0.75rem;
   padding: 1px;
   background: linear-gradient(144deg, #fdc066 0%, #d8d3e9 51%, #7bd1ed 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
+
 .gradientButton {
   align-items: center;
   background: 0 0;
@@ -53,7 +47,9 @@ body {
   display: inline-flex;
   padding: 0.5rem 1.15rem;
   position: relative;
+  z-index: 1;
 }
+
 .gradientButton::before {
   border-radius: 48px;
   background: linear-gradient(144deg, #fdc066 0%, #d8d3e9 51%, #7bd1ed 100%);
@@ -65,4 +61,13 @@ body {
   top: 0;
   width: 100%;
   z-index: -1;
+}
+
+.navBlur {
+  transition: background-color 300ms;
+}
+
+html:not([data-scroll="0"]) .navBlur {
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.5);
 }
