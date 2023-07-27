@@ -5,9 +5,8 @@ import "./storeScroll";
 
 export default function Navigation() {
   return (
-    <div className={`navBlur flex flex-row flex-1 w-full sticky top-0 z-50`}>
-      <div className="flex lg:hidden">Menu</div>
-      <div className="flex flex-row items-center justify-between px-28 flex-1">
+    <div className="navBlur flex flex-row flex-1 w-full sticky top-0 z-50">
+      <div className="flex flex-row items-center justify-between px-28 flex-1 lg:h-auto h-[76px]">
         <div className="w-full items-center flex lg:block lg:items-start lg:w-44 ">
           <Image
             src="/logo.svg"
@@ -15,7 +14,7 @@ export default function Navigation() {
             width={80}
             height={30}
             priority
-            className="m-auto scale-[2.1] translate-y-6 lg:m-0 lg:scale-100 lg:translate-y-0"
+            className="m-auto scale-[2.1] lg:m-0 lg:scale-100 lg:translate-y-0"
           />
         </div>
         <div className="hidden lg:show lg:flex flex-row">
@@ -29,7 +28,7 @@ export default function Navigation() {
         </div>
         <div className="hidden lg:show lg:flex flex-row">
           <div className="flex flex-row gap-4">
-            <div className="flex flex-row py-3 px-4 border-gray-800 border rounded-xl items-center gap-2 bg-black">
+            <div className="flex flex-row py-3 px-4 border-[#242627] border rounded-xl items-center gap-2 bg-black">
               <Image
                 src="/githubStar.svg"
                 alt="github star"

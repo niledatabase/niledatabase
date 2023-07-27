@@ -1,12 +1,15 @@
 import Image from "next/image";
 import Navigation from "./Navigation";
+import SnapshotVideo from "./SnapshotVideo";
+const sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-pattern bg-no-repeat bg-top">
+    <div className="min-h-screen bg-pattern bg-no-repeat bg-top relative">
+      <div className="bg-divider-glow absolute top-0 left-0 right-0 h-[312px] pointer-events-none"></div>
       <Navigation />
       <main className="flex flex-col items-center justify-between px-24 py-16">
-        <h1 className="bg-gradient-text bg-clip-text text-transparent text-7xl leading-normal text-center">
+        <h1 className="bg-gradient-text bg-clip-text text-transparent leading-normal text-center text-[64px]">
           Serverless Postgres for modern SaaS
         </h1>
         <div className="text-xl text-slate-400 font-inter mt-2">
@@ -19,16 +22,18 @@ export default function Home() {
             alt="get started arrow"
             width={15}
             height={20}
+            sizes={sizes}
             priority
           />
         </button>
         <div className="flex flex-row items-center justify-between gap-6 mt-28 flex-wrap">
           <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
             <Image
-              src="/multi-tenant.png"
+              src="/multi-tenant.jpg"
               alt="built-in multi tenant virtualization icon"
               width={100}
               height={100}
+              sizes={sizes}
               priority
             />
             <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base w-40">
@@ -37,10 +42,11 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
             <Image
-              src="/user-management.png"
+              src="/user-management.jpg"
               alt="drop in user management icon"
               width={100}
               height={100}
+              sizes={sizes}
               priority
             />
             <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base w-40">
@@ -49,10 +55,11 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
             <Image
-              src="/distribute-globally.png"
+              src="/distribute-globally.jpg"
               alt="Onboard once, Distribute Globally icon"
               width={100}
               height={100}
+              sizes={sizes}
               priority
             />
             <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base w-40">
@@ -61,22 +68,24 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
             <Image
-              src="/elastic.png"
+              src="/elastic.jpg"
               alt=" Effortlessly Elastic icon"
               width={100}
               height={100}
+              sizes={sizes}
               priority
             />
-            <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base w-40">
+            <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base w-20">
               Effortlessly Elastic
             </div>
           </div>
           <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
             <Image
-              src="/instant-dashboards.png"
+              src="/instant-dashboards.jpg"
               alt="Instant Customer Dashboards icon"
               width={100}
               height={100}
+              sizes={sizes}
               priority
             />
             <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base w-40">
@@ -94,18 +103,16 @@ export default function Home() {
             width={114}
             height={21}
             priority
+            className="opacity-50"
           />
         </div>
         <div className="border rounded-2xl border-[#dfeffe24] p-2">
-          <Image
-            src="/dashboard.svg"
-            alt="nile dashboard"
-            width={1206}
-            height={732}
-            priority
-          />
+          <SnapshotVideo />
         </div>
-        <div className="bg-divider h-px w-full mt-32" />
+        <div className="relative h-16 w-full mt-32">
+          <div className="absolute top-0 left-0 right-0, bottom-0 bgDivider  h-16"></div>
+          <div className="absolute top-0 left-30 right-30 bottom-0 bg-divider-glow w-full"></div>
+        </div>
       </main>
     </div>
   );

@@ -65,9 +65,32 @@ body {
 
 .navBlur {
   transition: background-color 300ms;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 html:not([data-scroll="0"]) .navBlur {
   backdrop-filter: blur(10px);
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bgDivider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: double 1px transparent;
+  border-radius: 3rem;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+
+  background-image: linear-gradient(black, black),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(253, 192, 103, 0.5) 31.77%,
+      rgba(131, 210, 237, 0.5) 71.35%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
