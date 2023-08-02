@@ -14,6 +14,18 @@ We're assuming you have a Nile database up and running. If not, [sign up for Nil
 the prompts to create a workspace and database. You'll also need a Google account and a
 [Google Cloud project](https://console.cloud.google.com/) for your application.
 
+## Create Nile Database Credentials
+
+You'll need to create credentials for your database that allow the dashboard to interact with it.
+You may have already done this when you set up your database, but if not, follow these steps:
+
+1. Open your [Nile dashboard][nad], and select the database for your application.
+2. Click on the **Settings** icon in the side navigation and click **Credentials**.
+3. Click **Generate credentials**.
+4. Click the **Allow browser access** checkbox.
+5. Click **Generate token.** Nile will store this credential to allow the dashboard to interact
+   with your database.
+
 # Connect Your Google and Nile Accounts
 
 To ensure a secure exchange, your Google project and Nile database need to know a little bit about
@@ -28,6 +40,8 @@ each other.
 5. The **Redirect URI** is the page in your application that Nile redirects to after a user
    authenticates, or when an error occurs. For this example, enter
    `http://localhost:3000/api/auth/handler`.
+6. Under **Callback URI**, click the **Copy** button to copy your database's callback URI to your
+   clipboard. You'll need this when you configure Google.
 
 ## Configure Google
 
@@ -37,9 +51,7 @@ each other.
 2. Click **Create Credentials > OAuth client ID**.
 3. In the **Application type** dropdown, select **Web Application** and give it a name, like
    "Nile Integration".
-4. Under **Authorized redirect URIs**, add your database's redirect URI. This should be of the form:
-   `https://dev.khnum.thenile.dev/workspaces/<WORKSPACE_NAME>/databases/<DATABASE_NAME>/users/oidc/callback`
-   _(Your workspace and database name are displayed in the header of the Nile dashboard.)_
+4. Under **Authorized redirect URIs**, past the **Callback URI** that you copied above.
 5. Click **Create**. Google displays the **client id** and **client secret**. Copy these values—
    you'll provide them to Nile.
 
