@@ -14,18 +14,6 @@ We're assuming you have a Nile database up and running. If not, [sign up for Nil
 the prompts to create a workspace and database. You'll also need a Google account and a
 [Google Cloud project](https://console.cloud.google.com/) for your application.
 
-## Create Nile Database Credentials
-
-You'll need to create credentials for your database that allow the dashboard to interact with it.
-You may have already done this when you set up your database, but if not, follow these steps:
-
-1. Open your [Nile dashboard][nad], and select the database for your application.
-2. Click on the **Settings** icon in the side navigation and click **Credentials**.
-3. Click **Generate credentials**.
-4. Click the **Allow browser access** checkbox.
-5. Click **Generate token.** Nile will store this credential to allow the dashboard to interact
-   with your database.
-
 # Connect Your Google and Nile Accounts
 
 To ensure a secure exchange, your Google project and Nile database need to know a little bit about
@@ -41,7 +29,8 @@ each other.
    authenticates, or when an error occurs. For this example, enter
    `http://localhost:3000/api/auth/handler`.
 6. Under **Callback URI**, click the **Copy** button to copy your database's callback URI to your
-   clipboard. You'll need this when you configure Google.
+   clipboard. You'll need this when you configure Google. (The **Component URL** isn't necessary
+   for this example; it's used for configuring the Nile UI component.)
 
 ## Configure Google
 
@@ -52,8 +41,11 @@ each other.
 3. In the **Application type** dropdown, select **Web Application** and give it a name, like
    "Nile Integration".
 4. Under **Authorized redirect URIs**, past the **Callback URI** that you copied above.
-5. Click **Create**. Google displays the **client id** and **client secret**. Copy these values—
-   you'll provide them to Nile.
+5. Click **Create**. Google displays the **client id** and **client secret**. (The client id is the
+   longer of the two, and will look something like
+   `012345678901-e234mkac1qefclfum27kktf4c0jbnfuc.apps.googleusercontent.com`. The client secret is
+   the shorter string and will look something like `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`.)
+   Copy the generated values—you'll provide them to Nile.
 
 ## Provide Client Credentials to Nile
 
@@ -71,7 +63,9 @@ You can test your Google configuration with our authentication demo. Install it 
 line:
 
 ```bash
-git clone https://github.com/niledatabase/niledatabase.git && cp -r niledatabase/examples/google-auth-nextjs . && cd google-auth-nextjs
+git clone https://github.com/niledatabase/niledatabase.git
+cp -r niledatabase/examples/user_management/social_login_google/NextJS ./nile-google-nextjs
+cd nile-google-nextjs
 ```
 
 and install dependencies with `yarn install` or `npm install`.
@@ -84,6 +78,10 @@ Run the app with `yarn dev` or `npm dev` to start the app, and open
 [http://localhost:3000/](http://localhost:3000/) in your browser. When
 you click "Continue with Google", you'll be redirected to Google's authentication screen. After
 successfully logging in, you'll be redirected back to the demo application's route handler.
+
+_Note: some browsers will present a security warning when redirecting from Nile to the local demo
+application because of the switch from HTTPS to HTTP. This is expected behavior for this demo.
+You should, of course, run your production application over HTTPS._
 
 You can verify that your user was created in the [Nile dashboard][nad]. Open the SQL editor for your
 database and query the users table:
