@@ -1,0 +1,26 @@
+{
+  "name": "google-auth-nextjs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@theniledev/react": "^1.0.0-alpha.186",
+    "@theniledev/server": "^1.0.0-alpha.186",
+    "@types/node": "20.3.3",
+    "@types/react": "18.2.14",
+    "@types/react-dom": "18.2.6",
+    "eslint": "8.44.0",
+    "eslint-config-next": "13.4.8",
+    "jwt-decode": "^3.1.2",
+    "next": "13.4.8",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-error-boundary": "^4.0.10",
+    "typescript": "5.1.6"
+  }
+}
