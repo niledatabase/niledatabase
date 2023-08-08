@@ -28,7 +28,8 @@ const useIntersection = (element: RefObject<HTMLElement>) => {
 
   return isVisible;
 };
-export default function SnapshotVideo() {
+export default function SnapshotVideo(props: { src: string; poster: string }) {
+  const { src, poster } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
   const isVisible = useIntersection(videoRef);
 
@@ -39,8 +40,8 @@ export default function SnapshotVideo() {
   }, [videoRef, isVisible]);
 
   return (
-    <video muted ref={videoRef} loop poster="/dashboard.svg">
-      <source src="/snapshot.mp4" />
+    <video muted ref={videoRef} loop poster={`/video/${poster}`}>
+      <source src={`/video/${src}`} />
     </video>
   );
 }
