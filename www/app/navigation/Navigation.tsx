@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import "./storeScroll";
+import "../storeScroll";
+import GithubStar from "./githubStar";
 
 export default function Navigation() {
   return (
@@ -28,29 +29,26 @@ export default function Navigation() {
         </div>
         <div className="hidden lg:show lg:flex flex-row">
           <div className="flex flex-row gap-4">
-            <div className="flex flex-row py-3 px-4 border-[#242627] border rounded-xl items-center gap-2 bg-black">
-              <Image
-                src="/githubStar.svg"
-                alt="github star"
-                width={21}
-                height={20}
-                priority
-              />
-              <span className="w-px h-5 opacity-20 bg-gray-100"></span>
-              <span className="bg-gradient-white bg-clip-text text-transparent">
-                Star us on
-              </span>
-              <Image
-                src="/githubLogo.svg"
-                alt="Github Logo"
-                width={20}
-                height={20}
-                priority
-              />
-            </div>
-            <div className="bg-gradient-text-144 py-3 px-4 bg-clip-text text-transparent gradientBorderButton subpixel-antialiased">
-              Sign Up
-            </div>
+            <button className="github-star">
+              <div className="flex flex-row py-3 px-4 border-[#242627] border rounded-xl items-center gap-2 bg-black">
+                <GithubStar />
+                <span className="w-px h-5 opacity-20 bg-gray-100"></span>
+                <span className="bg-gradient-white bg-clip-text text-transparent">
+                  Star us on
+                </span>
+                <Image
+                  src="/githubLogo.svg"
+                  alt="Github Logo"
+                  width={20}
+                  height={20}
+                />
+              </div>
+            </button>
+            <button className="bg-black">
+              <div className="bg-gradient-text-144 py-3 px-4 bg-clip-text text-transparent gradientBorderButton subpixel-antialiased bg-black">
+                Sign Up
+              </div>
+            </button>
           </div>
         </div>
       </div>
