@@ -5,7 +5,7 @@
 
 This is a starter template that uses Nile in a NextJS app to authenticate users with Google.
 
-* [Live demo](niledatabase-google-sso.vercel.app)
+* [Live demo](https://niledatabase-google-sso.vercel.app)
 * [Video guide](https://drive.google.com/file/d/1BEewQNYaoGOFsDJ8Wc5a2Nb1IMsEdEtd/view?usp=sharing)
 * [Step by steo guide](https://niledatabase-docs.vercel.app/user-management/quick-start/nextjs)
 
