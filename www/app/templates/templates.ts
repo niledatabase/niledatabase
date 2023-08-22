@@ -19,3 +19,18 @@ export const placeholderTemplate: Template = {
     Publisher: "Nile",
   },
 };
+
+export const basicAuthNextJsTemplate: Template = {
+  name: "Basic Auth in NextJS",
+  description:
+    "Built on top of NextJS, this implements a secure login example with a sign up page",
+  author: "jrea",
+  imageSrc: "/templates/BasicAuthNextJs.png",
+  readmeUrl:
+    "https://github.com/niledatabase/nile-js/blob/master/examples/authentication/README.md",
+  metadata: {
+    Framework: "NextJS",
+    "Use Case": "Authentication - Login and Sign Up",
+    Publisher: "Nile",
+  },
+};
