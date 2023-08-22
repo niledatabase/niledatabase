@@ -24,6 +24,7 @@ body {
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .gradientBorderButton::before {
@@ -48,17 +49,17 @@ body {
   padding: 0.5rem 1.15rem;
   position: relative;
   z-index: 1;
+  justify-content: center;
 }
 
-.gradientButton::before {
-  border-radius: 48px;
+.gradientButton::after {
   background: linear-gradient(144deg, #fdc066 0%, #d8d3e9 51%, #7bd1ed 100%);
   content: "";
-  display: block;
   height: 100%;
   left: 0;
   position: absolute;
   top: 0;
+  right: 0;
   width: 100%;
   z-index: -1;
 }

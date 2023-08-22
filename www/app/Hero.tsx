@@ -1,37 +1,7 @@
+import { HeroText } from "@/common/Hero";
+import { sizes } from "@/common/sizes";
 import Image from "next/image";
-const sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw";
-function HeroText() {
-  return (
-    <>
-      <h1 className="bg-gradient-text bg-clip-text text-transparent leading-normal text-center text-[64px]">
-        Serverless Postgres for modern SaaS
-      </h1>
-      <div className="text-xl opacity-60 font-inter mt-2 text-center">
-        Build In Days. Scale For Years.
-      </div>
-      <div className="flex place-content-center">
-        <button className="flex flex-row gap-2 text-lg gradientButton mt-10 font-medium">
-          Get Started
-          <Image
-            src="/arrow.svg"
-            alt="get started arrow"
-            width={15}
-            height={20}
-            sizes={sizes}
-            priority
-          />
-        </button>
-      </div>
-    </>
-  );
-}
-export function HeroBottom() {
-  return (
-    <div className={"w-[784px] flex flex-col place-content-center"}>
-      <HeroText />
-    </div>
-  );
-}
+
 export default function Hero() {
   return (
     <>

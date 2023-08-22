@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import "../storeScroll";
+import "../../app/storeScroll";
 import GithubStar from "./githubStar";
 
 export default function Navigation() {
@@ -9,20 +9,24 @@ export default function Navigation() {
     <div className="navBlur flex flex-row flex-1 w-full sticky top-0 z-50">
       <div className="flex flex-row items-center justify-between px-28 flex-1 lg:h-auto h-[76px]">
         <div className="w-full items-center flex lg:block lg:items-start lg:w-44 ">
-          <Image
-            src="/logo.svg"
-            alt="Nile Logo"
-            width={80}
-            height={30}
-            priority
-            className="m-auto scale-[2.1] lg:m-0 lg:scale-100 lg:translate-y-0"
-          />
+          <Link href="/">
+            <Image
+              src="/logo.svg"
+              alt="Nile Logo"
+              width={80}
+              height={30}
+              priority
+              className="m-auto scale-[2.1] lg:m-0 lg:scale-100 lg:translate-y-0"
+            />
+          </Link>
         </div>
         <div className="hidden lg:show lg:flex flex-row">
           <div className="flex gap-8 py-5 px-2.5">
             <Link href="/docs">Docs</Link>
+            <Link href="/about-us">About Us</Link>
             <Link href="/community">Community</Link>
             <Link href="/blog">Blog</Link>
+            <Link href="/templates">Templates</Link>
             <Link href="/pricing">Pricing</Link>
             <Link href="/status">Status</Link>
           </div>
