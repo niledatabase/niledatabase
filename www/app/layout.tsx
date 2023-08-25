@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-scroll="0">
+    <html lang="en">
       <body className={`${aeonik.variable} ${inter.variable}`}>{children}</body>
     </html>
   );
