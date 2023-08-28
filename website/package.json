@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "name": "website",
+  "version": "1.0.0",
+  "description": "config for vercel",
+  "author": "jrea",
+  "license": "MIT"
+}
