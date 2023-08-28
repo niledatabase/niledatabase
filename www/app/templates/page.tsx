@@ -1,6 +1,4 @@
 import Divider from "@/common/Divider";
-import Footer from "@/common/Footer";
-import Navigation from "@/common/Navigation";
 import PageHeader from "@/common/PageHeader";
 import loadTemplates from "./dataFetcher";
 import { HeroBottom } from "@/common/Hero";

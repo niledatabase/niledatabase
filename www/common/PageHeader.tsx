@@ -6,7 +6,7 @@ type ColorConfig = Record<
 
 const base = {
   titleClasses: "leading-normal text-center text-[64px]",
-  subtitleClasses: "text-xl font-inter mt-2 text-center",
+  subtitleClasses: "text-xl font-inter mt-2 text-center opacity-60 leading-10",
 };
 
 const colorClasses: ColorConfig = {
@@ -16,7 +16,7 @@ const colorClasses: ColorConfig = {
   },
   default: {
     titleClasses: `bg-gradient-text bg-clip-text text-transparent ${base.titleClasses}`,
-    subtitleClasses: `opacity-60 ${base.subtitleClasses}`,
+    subtitleClasses: base.subtitleClasses,
   },
 };
 
@@ -24,16 +24,22 @@ export default function PageHeader({
   title,
   subtitle,
   color = "default",
+  titleClasses: titleOverrides = "",
+  subtitleClasses: subOverrides = "",
 }: {
   title: JSX.Element | string;
-  subtitle: JSX.Element | string;
+  subtitle?: JSX.Element | string;
   color?: ConfigOptions;
+  subtitleClasses?: string;
+  titleClasses?: string;
 }) {
   const { titleClasses, subtitleClasses } = colorClasses[color];
   return (
     <>
-      <h1 className={titleClasses}>{title}</h1>
-      <div className={subtitleClasses}>{subtitle}</div>
+      <h1 className={`${titleClasses} ${titleOverrides}`}>{title}</h1>
+      {subtitle && (
+        <div className={`${subtitleClasses} ${subOverrides}`}>{subtitle}</div>
+      )}
     </>
   );
 }

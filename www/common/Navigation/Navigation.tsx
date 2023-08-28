@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import "../../app/storeScroll";
 import GithubStar from "./githubStar";
+import GradientButton from "../GradientButton";
 
 export default function Navigation() {
   return (
@@ -48,11 +49,7 @@ export default function Navigation() {
                 />
               </div>
             </button>
-            <button className="bg-black">
-              <div className="bg-gradient-text-144 py-3 px-4 bg-clip-text text-transparent gradientBorderButton subpixel-antialiased bg-black">
-                Sign Up
-              </div>
-            </button>
+            <GradientButton>Sign Up</GradientButton>
           </div>
         </div>
       </div>

@@ -9,8 +9,10 @@ const Empty = () => {
 };
 export default function TemplateSearch({
   templates,
+  searchEnabled = true,
 }: {
   templates: Template[];
+  searchEnabled?: boolean;
 }) {
   const [searchText, setSearchText] = useState("");
 
@@ -40,19 +42,21 @@ export default function TemplateSearch({
 
   return (
     <>
-      <div className="flex flex-row gap-2 flex-1 w-full -mt-8 relative z-10 px-4">
-        <Image
-          src="/icons/search.svg"
-          alt="looking glass"
-          width={32}
-          height={32}
-        />
-        <input
-          onChange={(e) => setSearchText(e.target.value)}
-          placeholder="Search all templates"
-          className="bg-transparent text-lg border-none w-full leading-10 focus:outline-none"
-        />
-      </div>
+      {searchEnabled && (
+        <div className="flex flex-row gap-2 flex-1 w-full -mt-8 relative z-10 px-4">
+          <Image
+            src="/icons/search.svg"
+            alt="looking glass"
+            width={32}
+            height={32}
+          />
+          <input
+            onChange={(e) => setSearchText(e.target.value)}
+            placeholder="Search all templates"
+            className="bg-transparent text-lg border-none w-full leading-10 focus:outline-none"
+          />
+        </div>
+      )}
       <div className="flex flex-row gap-6 flex-wrap justify-center">
         {!filtered.length ? (
           <Empty />
