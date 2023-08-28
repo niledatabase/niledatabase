@@ -1,7 +1,10 @@
 {
-  "name": "website",
-  "version": "0.1.0",
   "private": true,
+  "name": "router",
+  "version": "1.0.0",
+  "description": "router for vercel",
+  "author": "jrea",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

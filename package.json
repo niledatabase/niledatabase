@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "workspaces": [
-    "website/www",
-    "website/docs"
+    "website/*"
   ],
   "scripts": {
     "dev": "turbo run dev",
