@@ -1,0 +1,18 @@
+{
+  "rewrites": [
+    {
+      "source": "/docs/",
+      "destination": "https://niledatabase-docs.vercel.app/"
+    },
+    {
+      "source": "/docs/:match*",
+      "destination": "https://niledatabase-docs.vercel.app/:match*"
+    },
+
+    { "source": "/", "destination": "https://niledatabase-www.vercel.app/" },
+    {
+      "source": "/:match*",
+      "destination": "https://niledatabase-www.vercel.app/:match*"
+    }
+  ]
+}
