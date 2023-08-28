@@ -1,0 +1,10 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "multi zone website config for vercel",
+  "author": "jrea",
+  "license": "MIT",
+  "dependencies": {
+    "next": "^13.4.19"
+  }
+}
