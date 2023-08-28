@@ -1,12 +1,11 @@
+import Heading from "@/common/Heading";
 import Image from "next/image";
 
 export default function ArtificialIntelligence() {
   return (
     <div className="flex w-full flex-col">
       <div className="flex flex-col text-center align-middle flex-1 mb-[87px]">
-        <h2 className="leading-normal text-center text-[56px] font-normal text-white">
-           Full stack generative AI experience 
-        </h2>
+        <Heading text=" Full stack generative AI experience" />
       </div>
       <div className="flex place-items-center rounded-[24px] border border-gray">
         <div className="flex w-1/2 flex-col">

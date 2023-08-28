@@ -1,37 +1,14 @@
 "use client";
-import { useRef, useEffect, useState, RefObject } from "react";
+import { useRef, useEffect } from "react";
+import useIntersection from "@/common/useIntersection";
 
-const useIntersection = (element: RefObject<HTMLElement>) => {
-  const [isVisible, setState] = useState(false);
-
-  useEffect(() => {
-    const handleObserver: IntersectionObserverCallback = ([entry]) => {
-      if (entry.isIntersecting) {
-        setState(entry.isIntersecting);
-        if (element.current) {
-          observer.unobserve(element.current);
-        }
-      }
-    };
-    const observer = new IntersectionObserver(handleObserver, {
-      rootMargin: "-200px",
-    });
-
-    element.current && observer.observe(element.current);
-
-    return () => {
-      if (element.current) {
-        observer.unobserve(element.current);
-      }
-    };
-  }, []);
-
-  return isVisible;
-};
+// looking to add width or height? add a poster with the size you want instead.
 export default function SnapshotVideo(props: { src: string; poster: string }) {
   const { src, poster } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
-  const isVisible = useIntersection(videoRef);
+  const isVisible = useIntersection(videoRef, {
+    rootMargin: "-200px",
+  });
 
   useEffect(() => {
     if (videoRef && videoRef.current && isVisible) {

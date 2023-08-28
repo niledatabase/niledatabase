@@ -1,10 +1,9 @@
+import Heading from "@/common/Heading";
 import Image from "next/image";
 export default function CustomerDashboards() {
   return (
     <div className="flex-1">
-      <h2 className="leading-normal text-center text-[56px] font-normal text-white mb-[75px]">
-        Instant Customer Dashboards
-      </h2>
+      <Heading text="Instant Customer Dashboards" />
       <Image
         src="/customer-dashboards.svg"
         alt="UI dashboards"

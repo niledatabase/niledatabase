@@ -1,11 +1,10 @@
+import Heading from "@/common/Heading";
 import Image from "next/image";
 export default function Elastic() {
   return (
     <div className="flex w-full flex-col">
       <div className="flex flex-col text-center align-middle flex-1 mb-[87px]">
-        <h2 className="leading-normal text-center text-[56px] font-normal text-white">
-          Effortlessly Elastic
-        </h2>
+        <Heading text="Effortlessly Elastic" />
       </div>
       <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
         <div className="z-10 relative icon rounded-[20px] flex justify-center">

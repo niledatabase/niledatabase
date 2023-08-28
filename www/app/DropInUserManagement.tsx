@@ -1,15 +1,15 @@
+import Heading from "@/common/Heading";
 import Video from "./Video";
 import Image from "next/image";
 export default function DropInUserManagement() {
   return (
     <div className="flex w-full flex-col">
       <div className="flex flex-col text-center align-middle flex-1">
-        <h2 className="leading-normal text-center text-[56px] font-normal text-white">
-          Drop in tenant and user management
-        </h2>
-        <div className="opacity-60 text-xl">
-          Build In Days. Scale For Years.
-        </div>
+        <Heading text="Drop in tenant and user management">
+          <div className="opacity-60 text-xl">
+            Build In Days. Scale For Years.
+          </div>
+        </Heading>
       </div>
       <Video poster="user-mgmt.jpg" src="user-mgmt.mp4" />
 

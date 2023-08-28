@@ -6,6 +6,7 @@
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 0;
   --background-end-rgb: 0, 0, 0;
+  --scroll: 0;
 }
 
 body {
@@ -69,9 +70,9 @@ body {
   background-color: rgba(0, 0, 0, 0);
 }
 
-html:not([data-scroll="0"]) .navBlur {
-  backdrop-filter: blur(10px);
-  background-color: rgba(0, 0, 0, 0.5);
+html .navBlur {
+  backdrop-filter: blur(min(calc(var(--scroll) * 1px), 10px));
+  background-color: rgba(0, 0, 0, min(calc(var(--scroll) * 0), 0.5));
 }
 
 .bgDivider {
@@ -132,9 +133,6 @@ html:not([data-scroll="0"]) .navBlur {
   fill: #ffb343;
 }
 
-/* background: linear-gradient(225deg, #202020 0%, #000 69.60%); */
-
-/*background-image: linear-gradient(225deg, #FFFFFF38 0%, #FFFFFF00 69.60%);*/
 .icon {
   flex-shrink: 0;
   position: relative;

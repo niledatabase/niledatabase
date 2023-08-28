@@ -1,12 +1,11 @@
+import Heading from "@/common/Heading";
 import Video from "./Video";
 import Image from "next/image";
 export default function DropInUserManagement() {
   return (
     <div className="flex w-full flex-col">
       <div className="flex flex-col text-center align-middle flex-1 mb-[87px]">
-        <h2 className="leading-normal text-center text-[56px] font-normal text-white">
-          Onboard Tenants once, Place globally
-        </h2>
+        <Heading text="Onboard Tenants once, Place globally" />
       </div>
       <div className="flex flex-row gap-4 justify-center">
         <div className="py-4 px-5 w-[395px] itemDivider flex flex-row gap-5">
