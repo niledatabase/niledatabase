@@ -1,10 +1,7 @@
 {
-  "private": true,
   "name": "website",
-  "version": "1.0.0",
-  "description": "config for vercel",
-  "author": "jrea",
-  "license": "MIT",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
