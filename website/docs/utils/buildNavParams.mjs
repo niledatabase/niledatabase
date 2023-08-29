@@ -1,10 +1,10 @@
-import fs from "node:fs";
-import { glob } from "glob";
+import fs from 'node:fs';
+import { glob } from 'glob';
 
 // keep these in sync with NavigationRoots, so the build works as dev does
 const Roots = Object.freeze({
-  Guides: "guides",
-  UserManagement: "user-management",
+  Guides: 'guides',
+  UserManagement: 'user-management',
 });
 
 function sortOrder(a, b) {
@@ -20,11 +20,11 @@ function sortOrder(a, b) {
 
 async function processFile(file) {
   // get the header from the 1st # - can't import because this also runs at build time
-  const content = fs.readFileSync(file, "utf-8");
+  const content = fs.readFileSync(file, 'utf-8');
   const maybeHeader = /#\s(.+)/.exec(content);
   const maybeOrder = /order:\s(-?\d+)/.exec(content);
-  const localFile = file.replace(/\/\[\[...slug\]\]/, "");
-  const parts = localFile.split("/");
+  const localFile = file.replace(/\/\[\[...slug\]\]/, '');
+  const parts = localFile.split('/');
   parts.shift();
   const baseResponse = { file, slug: parts, order: 0 };
   if (maybeHeader) {
@@ -43,7 +43,7 @@ async function generateNestedObjects(input) {
   const output = [];
 
   for (const path of input) {
-    const segments = path.split("/");
+    const segments = path.split('/');
 
     let currentLevel = output;
     let existingItem = null;
@@ -52,7 +52,7 @@ async function generateNestedObjects(input) {
       existingItem = currentLevel.find((item) => item.name === segment);
 
       if (!existingItem) {
-        if (path.endsWith(".mdx")) {
+        if (path.endsWith('.mdx')) {
           const payload = await processFile(path);
           existingItem = {
             name: segment,
@@ -83,7 +83,7 @@ export async function buildNavParams() {
 
   for (const root of roots) {
     const base = `app/${root}`;
-    const results = await glob(`${base}/**`, { ignore: "**/*.tsx" });
+    const results = await glob(`${base}/**`, { ignore: '**/*.tsx' });
     const out = await generateNestedObjects(results.sort());
     if (out.length > 0) {
       files.push(out);
@@ -93,10 +93,10 @@ export async function buildNavParams() {
     files.sort((a, b) => {
       // sort by the 1st index.mdx
       const indexA = a[0].items[0].items[0].items.find(
-        (item) => item.name === "index.mdx"
+        (item) => item.name === 'index.mdx'
       );
       const indexB = b[0].items[0].items[0].items.find(
-        (item) => item.name === "index.mdx"
+        (item) => item.name === 'index.mdx'
       );
       return sortOrder(indexA, indexB);
     });
