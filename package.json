@@ -3,20 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "workspaces": [
-    "website/*"
+    "www"
   ],
   "scripts": {
     "dev": "turbo run dev",
-    "dev:docs": "turbo run dev --filter=docs",
-    "build:docs": "turbo run build --filter=docs",
     "dev:www": "turbo run dev --filter=www",
-    "format": "prettier --write \"website/**/*.{js,jsx,ts,tsx,css,md,mdx,json,mjs}\"",
+    "format": "prettier --write \"www/**/*.{js,jsx,ts,tsx,css,md,mdx,json,mjs}\"",
     "build:www": "turbo run build --filter=www"
   },
   "description": "tenant aware, serverless, globally distributed postgres",
-  "directories": {
-    "doc": "docs"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TheNileDev/niledatabase.git"

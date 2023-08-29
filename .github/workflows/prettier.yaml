@@ -20,4 +20,4 @@ jobs:
         run: npm ci
       - name: Run prettier on website
         run: |-
-          npx prettier -c 'website/**/*.{js,jsx,ts,tsx,css,md,mdx,json}'
+          npx prettier -c 'www/**/*.{js,jsx,ts,tsx,css,md,mdx,json}'
