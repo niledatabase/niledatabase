@@ -1,5 +1,5 @@
-import type { MDXComponents } from 'mdx/types';
-import Cards, { Card } from '@/app/docs/_components/Cards';
+import type { MDXComponents } from "mdx/types";
+import Cards, { Card } from "@/app/docs/_components/Cards";
 
 // This file allows you to provide custom React components
 // to be used in MDX files. You can import and use any

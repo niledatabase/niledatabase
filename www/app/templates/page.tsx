@@ -1,9 +1,9 @@
-import Divider from '@/app/_components/common/Divider';
-import PageHeader from '@/app/_components/common/PageHeader';
-import loadTemplates from './dataFetcher';
-import { HeroBottom } from '@/app/_components/common/Hero';
-import TemplateSearch from './TemplateSearch';
-import Container from '@/app/_components/common/Container';
+import Divider from "@/app/_components/common/Divider";
+import PageHeader from "@/app/_components/common/PageHeader";
+import loadTemplates from "./dataFetcher";
+import { HeroBottom } from "@/app/_components/common/Hero";
+import TemplateSearch from "./TemplateSearch";
+import Container from "@/app/_components/common/Container";
 
 export default async function Home() {
   const templates = await loadTemplates();

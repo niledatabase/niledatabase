@@ -13,8 +13,11 @@ module.exports = {
       colors: {
         gray: "rgba(223, 239, 254, 0.14)",
         white: "#D9D9D9",
+        black: "#0E0E0E",
       },
       backgroundImage: {
+        "footer-fade":
+          "linear-gradient(0deg, rgba(0, 0, 0, 0.00) 0%, #000 100%);",
         "divider-glow":
           "radial-gradient(50.00% 104.84% at 50.00% 0.00%, rgba(255, 255, 255, 0.10) 0%, rgba(0, 0, 0, 0.00) 100%)",
         "gradient-text":
@@ -26,10 +29,6 @@ module.exports = {
         fader: "linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, #000 50%);",
         "gradient-white":
           "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.50) 100%);",
-      },
-      border: {
-        "nile-gradient":
-          "linear-gradient(144deg, #FDC066 0%, #D8D3E9 51.00%, #7BD1ED 100%)",
       },
     },
   },

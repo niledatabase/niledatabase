@@ -1,6 +1,6 @@
-import { HeroText } from '@/app/_components/common/Hero';
-import { sizes } from '@/app/_components/common/sizes';
-import Image from 'next/image';
+import { HeroText } from "@/app/_components/common/Hero";
+import { sizes } from "@/app/_components/common/sizes";
+import Image from "next/image";
 
 export default function Hero() {
   return (

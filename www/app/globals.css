@@ -21,7 +21,8 @@ body {
   font-size: 14px;
 }
 
-.gradientBorderButton {
+.gradientBorderButton,
+.gradientBorderButtonFade {
   position: relative;
   display: flex;
   align-items: center;
@@ -35,6 +36,23 @@ body {
   border-radius: 0.75rem;
   padding: 1px;
   background: linear-gradient(144deg, #fdc066 0%, #d8d3e9 51%, #7bd1ed 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.gradientBorderButtonFade::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+  padding: 1px;
+  background: linear-gradient(
+    144deg,
+    #fdc06635 0%,
+    #d8d3e935 51%,
+    #7bd1ed35 100%
+  );
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;

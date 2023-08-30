@@ -1,11 +1,11 @@
-'use client';
-import Image from 'next/image';
-import Videos from './Videos';
-import { useEffect, useRef, useState } from 'react';
-import useSlowScroll from './useSlowScroll';
-import useIntersection from '@/app/_components/common/useIntersection';
-import Texts from './Texts';
-import Heading from '@/app/_components/common/Heading';
+"use client";
+import Image from "next/image";
+import Videos from "./Videos";
+import { useEffect, useRef, useState } from "react";
+import useSlowScroll from "./useSlowScroll";
+import useIntersection from "@/app/_components/common/useIntersection";
+import Texts from "./Texts";
+import Heading from "@/app/_components/common/Heading";
 
 const timings = [5000, 9000, 10000, 9000];
 export default function Virtualization() {

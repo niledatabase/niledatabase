@@ -1,5 +1,5 @@
-import Heading from '@/app/_components/common/Heading';
-import Image from 'next/image';
+import Heading from "@/app/_components/common/Heading";
+import Image from "next/image";
 export default function CustomerDashboards() {
   return (
     <div className="flex-1">

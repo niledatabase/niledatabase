@@ -23,7 +23,7 @@ A `meta` object should be exported to control how the side navigation renders. I
 
 ```typescript
 export const meta = {
-  title: 'Learn Nile with SQL', // the title that will show on the side navigation
+  title: "Learn Nile with SQL", // the title that will show on the side navigation
   order: 1, // the order in the subnav, based on the subdirectory the file is located
 };
 ```

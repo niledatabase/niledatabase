@@ -1,8 +1,8 @@
-import { notFound } from 'next/navigation';
-import SideNavigation from '../SideNavigation/SideNavigation';
-import { MDXProps } from 'mdx/types';
-import { PageContentProps } from './types';
-import { NavigationRoots } from '../SideNavigation';
+import { notFound } from "next/navigation";
+import SideNavigation from "../SideNavigation/SideNavigation";
+import { MDXProps } from "mdx/types";
+import { PageContentProps } from "./types";
+import { NavigationRoots } from "../SideNavigation";
 
 type Props = {
   page: string | undefined;
@@ -14,7 +14,7 @@ function PageContent(props: Props) {
   const { page, Component, root } = props;
   return (
     <div className="flex">
-      <SideNavigation page={`/docs${root}${page ? `/docs${page}` : ''}`} />
+      <SideNavigation page={`/docs${root}${page ? `/docs${page}` : ""}`} />
       <div className="container mx-auto my-4">
         <div>
           <article className="prose dark:prose-invert">
@@ -30,7 +30,7 @@ export default async function Page(props: PageContentProps) {
   const { params, root } = props;
   const page = params?.slug
     ?.map((str: string) => decodeURIComponent(str))
-    .join('/');
+    .join("/");
   // on the index page
   if (params && Object.keys(params).length === 0) {
     try {

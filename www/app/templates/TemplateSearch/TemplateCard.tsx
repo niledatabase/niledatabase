@@ -1,7 +1,7 @@
-import { Template } from '../types';
-import Link from 'next/link';
-import Image from 'next/image';
-import { sizes } from '@/app/_components/common/sizes';
+import { Template } from "../types";
+import Link from "next/link";
+import Image from "next/image";
+import { sizes } from "@/app/_components/common/sizes";
 export default function TemplateCard(props: Template) {
   const { name, description, author, imageSrc } = props;
   return (

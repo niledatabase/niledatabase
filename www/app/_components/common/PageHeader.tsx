@@ -6,7 +6,8 @@ type ColorConfig = Record<
 
 const base = {
   titleClasses: "leading-normal text-center text-[64px]",
-  subtitleClasses: "text-xl font-inter mt-2 text-center opacity-60 leading-10",
+  subtitleClasses:
+    "text-xl font-inter mt-2 text-center opacity-60 font-normal leading-10 tracking-[0.4px]",
 };
 
 const colorClasses: ColorConfig = {
