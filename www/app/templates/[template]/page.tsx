@@ -1,16 +1,16 @@
-import loadTemplates from '../dataFetcher';
-import { notFound } from 'next/navigation';
-import Markdown from './Markdown';
-import Link from 'next/link';
-import fs from 'fs';
-import path from 'path';
-import Container from '@/app/_components/common/Container';
-import { HeroBottom } from '@/app/_components/common/Hero';
-import Divider from '@/app/_components/common/Divider';
-import Image from 'next/image';
-import { sizes } from '@/app/_components/common/sizes';
+import loadTemplates from "../dataFetcher";
+import { notFound } from "next/navigation";
+import Markdown from "./Markdown";
+import Link from "next/link";
+import fs from "fs";
+import path from "path";
+import Container from "@/app/_components/common/Container";
+import { HeroBottom } from "@/app/_components/common/Hero";
+import Divider from "@/app/_components/common/Divider";
+import Image from "next/image";
+import { sizes } from "@/app/_components/common/sizes";
 
-import cleanTemplateReadme from '../_build/cleanTemplateReadme.mjs';
+import cleanTemplateReadme from "../_build/cleanTemplateReadme.mjs";
 
 type PageProps = {
   params?: {
@@ -35,10 +35,10 @@ export default async function TemplateDetail(pageProps: PageProps) {
 
   const content = fs.readFileSync(
     path.resolve(`app/templates/readmes/${fileName}`),
-    'utf-8'
+    "utf-8"
   );
   const { metadata, name, imageSrc } = template;
-  const linkUrl = template.readmeUrl.replace(/\/blob.+/, '');
+  const linkUrl = template.readmeUrl.replace(/\/blob.+/, "");
 
   return (
     <Container hidePattern={true}>

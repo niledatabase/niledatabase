@@ -1,30 +1,30 @@
-import childProcess from 'child_process';
-import path from 'path';
-import { promisify } from 'util';
-import yargs from 'yargs';
-import fs from 'fs';
-import cleanTemplateReadme from './cleanTemplateReadme.mjs';
+import childProcess from "child_process";
+import path from "path";
+import { promisify } from "util";
+import yargs from "yargs";
+import fs from "fs";
+import cleanTemplateReadme from "./cleanTemplateReadme.mjs";
 
 const exec = promisify(childProcess.exec);
 
 function convertGithubReadme(val) {
   const correctAssetPathname = val.replace(
-    'github.com',
-    'raw.githubusercontent.com'
+    "github.com",
+    "raw.githubusercontent.com"
   );
-  const blobby = correctAssetPathname.replace('/blob', '');
+  const blobby = correctAssetPathname.replace("/blob", "");
   return blobby;
 }
 
 async function run() {
   // transform ts
-  const srcDir = path.resolve('./app/templates/templates.ts');
-  const swcArgs = [srcDir, '-o', path.resolve('./build/templates.mjs')];
-  const command = ['swc', ...swcArgs].join(' ');
+  const srcDir = path.resolve("./app/templates/templates.ts");
+  const swcArgs = [srcDir, "-o", path.resolve("./build/templates.mjs")];
+  const command = ["swc", ...swcArgs].join(" ");
   await exec(command);
 
   // download and write readmes
-  const templates = await import(path.resolve('./build/templates.mjs'));
+  const templates = await import(path.resolve("./build/templates.mjs"));
   const entries = Object.entries(templates);
 
   const requesters = [];
@@ -41,10 +41,10 @@ async function run() {
     if (response.status === 404) {
       const [, { readmeUrl, name }] = entries[index];
       console.log(
-        'unable to find README for',
+        "unable to find README for",
         name,
         `at ${readmeUrl}.`,
-        'Double check the config and be sure the repo is public.'
+        "Double check the config and be sure the repo is public."
       );
     } else {
       files.push(new Response(response.body).text());
@@ -52,7 +52,7 @@ async function run() {
   }
 
   if (!files.length) {
-    console.log('No files written.');
+    console.log("No files written.");
   }
   const pages = await Promise.all(files);
 
@@ -66,9 +66,9 @@ async function run() {
       `./app/templates/_build/readmes/`,
       cleanTemplateReadme(config)
     );
-    fs.writeFile(readmePath, page, 'utf-8', (err) => {
+    fs.writeFile(readmePath, page, "utf-8", (err) => {
       if (!err) {
-        console.log('wrote', `${config.readmeUrl}`);
+        console.log("wrote", `${config.readmeUrl}`);
       } else {
         console.log(err);
       }
@@ -77,8 +77,8 @@ async function run() {
 }
 yargs()
   .command({
-    command: '$0',
-    description: 'build templates',
+    command: "$0",
+    description: "build templates",
     handler: run,
   })
   .help()

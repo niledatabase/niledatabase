@@ -1,9 +1,9 @@
-'use client';
-import Link from 'next/link';
-import Image from 'next/image';
-import './storeScroll';
-import GithubStar from './githubStar';
-import GradientButton from '../GradientButton';
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+import "./storeScroll";
+import GithubStar from "./githubStar";
+import GradientButton from "../GradientButton";
 
 export default function Navigation() {
   return (
