@@ -25,8 +25,8 @@ const videos = [
     videoUrl: "https://www.youtube.com/embed/3SIF03MHaxw",
   },
   {
-    title: "Uber",
-    videoUrl: "https://www.youtube.com/embed/pQ4qeF8WS0A",
+    title: "Promise of Serverless",
+    videoUrl: "https://www.youtube.com/embed/vLlSoHqTTN8",
   },
   {
     title: "Multi-tenant Journey",
