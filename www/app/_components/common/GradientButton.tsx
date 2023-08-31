@@ -28,9 +28,9 @@ export default function GradientButton({
   );
   const subClasses = useMemo(() => {
     if (variant === "soft") {
-      return "py-3 px-4 bg-clip-text text-transparent gradientBorderButtonFade subpixel-antialiased bg-black overflow-hidden";
+      return "py-3 px-4 bg-clip-text text-transparent gradientBorderButtonFade subpixel-antialiased bg-black overflow-hidden whitespace-nowrap";
     }
-    return "bg-gradient-text-144 py-3 px-4 bg-clip-text text-transparent gradientBorderButton subpixel-antialiased bg-black overflow-hidden";
+    return "bg-gradient-text-144 py-3 px-4 bg-clip-text text-transparent gradientBorderButton subpixel-antialiased bg-black overflow-hidden whitespace-nowrap";
   }, []);
   return (
     <button className="bg-black rounded-xl" type={type} onClick={handleClick}>

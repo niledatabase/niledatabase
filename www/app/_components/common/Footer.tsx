@@ -1,7 +1,7 @@
 import Image from "next/image";
-export default function Footer() {
+export default function Footer({ className }: { className?: string }) {
   return (
-    <div className="bg-footer bg-no-repeat w-full relative">
+    <div className={`bg-footer bg-no-repeat w-full relative ${className}`}>
       <div className="absolute top-0 right-0 left-0 bottom-0 bg-footer-fade pointer-events-none"></div>
       <div className="z-10 relative">
         <div className="flex flex-row justify-between w-full">
@@ -67,7 +67,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-40 flex flex-row gap-4 items-center">
+        <div className="mt-40 flex flex-row gap-4 items-center mb-10">
           <div className="bg-[#00B790] w-2 h-2 rounded-md"></div>
           <div className="text-[#A1A1AA]">
             All Systems Operational <span className="text-lg">↗</span>

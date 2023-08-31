@@ -14,24 +14,20 @@ export default function useSlowScroll(
     (event: WheelEvent) => {
       // Prevent default scrolling behavior
       event.preventDefault();
-      if (allowScroll === false) {
-        window.scrollTo({
-          top: prevScrollPosition,
-          // behavior: 'smooth',
-        });
-        return;
-      }
-      // Calculate the new scroll position
       const delta = event.deltaY;
       const scrollPosition = window.scrollY + delta * speedFactor;
-      setPrevScrollPosition(scrollPosition);
 
-      setPrevScrollPosition(scrollPosition);
-      window.scrollTo({
-        top: scrollPosition,
-        // behavior: 'smooth',
-      });
-      handleScroll && handleScroll(scrollPosition);
+      if (allowScroll === false) {
+        setPrevScrollPosition(scrollPosition);
+        window.scrollTo({
+          top: prevScrollPosition,
+        });
+      } else {
+        window.scrollTo({
+          top: scrollPosition,
+        });
+        handleScroll && handleScroll(scrollPosition);
+      }
     },
     [speedFactor, allowScroll, prevScrollPosition]
   );

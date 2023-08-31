@@ -163,3 +163,11 @@ html .navBlur {
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
+
+[id]::before {
+  content: "";
+  display: block;
+  height: 75px;
+  margin-top: -75px;
+  visibility: hidden;
+}
