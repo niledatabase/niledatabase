@@ -5,9 +5,11 @@ import "./storeScroll";
 import GithubStar from "./githubStar";
 import GradientButton from "../GradientButton";
 
-export default function Navigation() {
+export default function Navigation({ className }: { className?: string }) {
   return (
-    <div className="navBlur flex flex-row flex-1 w-full sticky top-0 z-50">
+    <div
+      className={`navBlur flex flex-row flex-1 w-full sticky top-0 z-50 ${className}`}
+    >
       <div className="flex flex-row items-center justify-between px-28 flex-1 lg:h-auto h-[76px]">
         <div className="w-full items-center flex lg:block lg:items-start lg:w-44 ">
           <Link href="/">
@@ -24,7 +26,9 @@ export default function Navigation() {
         <div className="hidden lg:show lg:flex flex-row">
           <div className="flex gap-8 py-5 px-2.5">
             <Link href="/docs">Docs</Link>
-            <Link href="/about-us">About Us</Link>
+            <Link href="/about-us" className="whitespace-nowrap">
+              About Us
+            </Link>
             <Link href="/community">Community</Link>
             <Link href="/blog">Blog</Link>
             <Link href="/templates">Templates</Link>
@@ -38,7 +42,7 @@ export default function Navigation() {
               <div className="flex flex-row py-3 px-4 border-[#242627] border rounded-xl items-center gap-2 bg-black">
                 <GithubStar />
                 <span className="w-px h-5 opacity-20 bg-gray-100"></span>
-                <span className="bg-gradient-white bg-clip-text text-transparent">
+                <span className="bg-gradient-white bg-clip-text text-transparent whitespace-nowrap">
                   Star us on
                 </span>
                 <Image

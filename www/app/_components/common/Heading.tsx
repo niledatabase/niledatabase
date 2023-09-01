@@ -7,11 +7,18 @@ type Props = {
   textAlign?: string;
   className?: string;
   text?: string;
+  rootMargin?: string;
 };
 export default function Heading(props: Props) {
-  const { text, children, className, textAlign = "center" } = props;
+  const {
+    text,
+    children,
+    className,
+    textAlign = "center",
+    rootMargin = "-10%",
+  } = props;
   const headerRef = useRef<HTMLDivElement>(null);
-  const headerVisible = useIntersection(headerRef, { rootMargin: "-10%" });
+  const headerVisible = useIntersection(headerRef, { rootMargin });
   return (
     <div ref={headerRef} className="w-full">
       <div

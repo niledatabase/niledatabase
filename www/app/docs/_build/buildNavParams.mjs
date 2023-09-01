@@ -79,15 +79,26 @@ async function generateNestedObjects(input) {
 
 export async function buildNavParams() {
   const files = [];
-  const roots = Object.values(Roots);
 
-  for (const root of roots) {
-    const base = `app/${root}`;
-    const results = await glob(`${base}/**`, { ignore: "**/*.tsx" });
-    const out = await generateNestedObjects(results.sort());
-    if (out.length > 0) {
-      files.push(out);
-    }
+  // do this instead of *.mdx, or parse the directories and figure out where things go. This seems easier.
+  const results = await glob(`app/docs/**`, {
+    ignore: [
+      "app/docs",
+      "**/*.tsx",
+      "**/*.ts",
+      "**/*.json",
+      "**/*.mjs",
+      "**/_components",
+      "**/_build",
+      "**/README.md",
+      "**/Cards",
+      "**/PageContent",
+      "**/SideNavigation",
+    ],
+  });
+  const out = await generateNestedObjects(results.sort());
+  if (out.length > 0) {
+    files.push(out);
   }
   if (files.length > 1) {
     files.sort((a, b) => {

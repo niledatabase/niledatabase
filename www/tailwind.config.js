@@ -16,6 +16,10 @@ module.exports = {
         black: "#0E0E0E",
       },
       backgroundImage: {
+        border:
+          "linear-gradient(180deg, rgba(223, 239, 254, 0.14) 90%,  rgba(0, 0, 0, 0.00) 100%)",
+        divider:
+          "linear-gradient(0deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.00) 0%, rgba(253, 192, 103, 0.50) 31.77%, rgba(131, 210, 237, 0.50) 71.35%, rgba(0, 0, 0, 0.00) 100%);",
         "footer-fade":
           "linear-gradient(0deg, rgba(0, 0, 0, 0.00) 0%, #000 100%);",
         "divider-glow":
