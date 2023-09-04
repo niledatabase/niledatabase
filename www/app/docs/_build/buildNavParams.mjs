@@ -3,7 +3,7 @@ import { glob } from "glob";
 
 // keep these in sync with NavigationRoots, so the build works as dev does
 const Roots = Object.freeze({
-  Guides: "guides",
+  GetStarted: "get-started",
   UserManagement: "user-management",
 });
 
