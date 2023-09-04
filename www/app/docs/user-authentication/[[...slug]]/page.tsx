@@ -8,7 +8,7 @@ export default async function Page(props: { params: Param }) {
     <Container>
       <PageContent
         params={props.params}
-        root={NavigationRoots.UserManagement}
+        root={NavigationRoots.UserAuthentication}
       />
     </Container>
   );
