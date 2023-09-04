@@ -16,7 +16,7 @@ export default function Home() {
         />
         <div className="prose dark:prose-invert max-w-5xl mt-20 px-4">
           <Link href="/docs/getting-started/languages">
-            <h4>Getting started</h4>
+            <h4>Languages</h4>
           </Link>
         </div>
       </div>

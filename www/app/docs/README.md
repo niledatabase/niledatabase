@@ -4,8 +4,8 @@ Take a look [developers](../../DEVELOPERS.md) to run this app locally
 
 ## Adding a page to the documentation
 
-1. Add a folder under `/docs/guides/[[...slug]]` with the desired url.
-   > if you want `/docs/guides/getting-started` as your path, add a folder `/getting-started`
+1. Add a folder under `/docs/getting-started/[[...slug]]` with the desired url.
+   > if you want `/docs/getting-started/languages` as your path, add a folder `/languages`
 2. add an `<slug-name>.mdx` file, put either markdown or react in it
 
 ## Adding a section to the documentation
@@ -34,7 +34,7 @@ export const meta = {
 
 ## Index components
 
-A common design pattern is to have a grid of options on an index page. To accomplish this, add `<Card />` and `<Cards />` to your markdown files. A `file` is expected (as the relative path based on `/docs/guides/[[...slug]]`). This will grab the `title` and `description` from the `meta`
+A common design pattern is to have a grid of options on an index page. To accomplish this, add `<Card />` and `<Cards />` to your markdown files. A `file` is expected (as the relative path based on `/docs/getting-started/[[...slug]]`). This will grab the `title` and `description` from the `meta`
 
 ```typescript
 <Cards>
