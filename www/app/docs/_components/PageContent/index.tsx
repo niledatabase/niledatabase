@@ -15,6 +15,9 @@ const generateTableOfContents = (
   Component: (props: MDXProps) => JSX.Element
 ): { id: string; children: string }[] => {
   const { children } = Component({}).props;
+  if (typeof children === "string") {
+    return [{ id: String(children), children: "" }];
+  }
   const headings = children
     .filter((child: any) => {
       return child.props?.id;
@@ -33,11 +36,11 @@ function PageContent(props: Props) {
   return (
     <>
       <SideNavigation page={`/docs/${root}${page ? `/${page}` : ""}`} />
-      <div className="pl-4 w-full flex flex-row h-full">
-        <div className="w-[1px] bg-border"></div>
+      <div className="pl-4 w-[56rem] flex flex-row h-full">
+        <div className="w-[1px] bg-border shrink-0"></div>
         <div className="mx-auto w-full flex flex-row justify-start h-full">
           <div className="relative flex flex-row">
-            <article className="prose prose-invert max-w-5xl mt-20 px-4">
+            <article className="prose prose-invert w-4xl mt-20 px-4">
               <Component />
             </article>
             {toc.length > 1 && (

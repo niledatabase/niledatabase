@@ -6,7 +6,7 @@ export function Authors({ authors: _authors }: { authors: string[] }) {
     <div>
       {_authors?.map((author) => {
         const _auth = authors[author];
-        const imageClasses = `border-2 border-[${_auth?.borderColor}] rounded-[33px] h-[32px] w-[32px] flex items-center justify-center overflow-hidden`;
+        const imageClasses = `border-2 border-[#7CD1ED] border-[${_auth?.borderColor}] rounded-[33px] h-[32px] w-[32px] flex items-center justify-center overflow-hidden`;
         return (
           <div key={author} className="flex flex-row gap-2 items-center">
             <div className={imageClasses}>

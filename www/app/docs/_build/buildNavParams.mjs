@@ -1,17 +1,11 @@
 import fs from "node:fs";
 import { glob } from "glob";
 
-// keep these in sync with NavigationRoots, so the build works as dev does
-const Roots = Object.freeze({
-  GetStarted: "get-started",
-  UserAuthentication: "user-authentication",
-});
-
 function sortOrder(a, b) {
-  if (a?.order < b?.order) {
+  if (a?.order > b?.order) {
     return 1;
   }
-  if (a?.order > b?.order) {
+  if (a?.order < b?.order) {
     return -1;
   }
 
@@ -21,7 +15,8 @@ function sortOrder(a, b) {
 async function processFile(file) {
   // get the header from the 1st # - can't import because this also runs at build time
   const content = fs.readFileSync(file, "utf-8");
-  const maybeHeader = /#\s(.+)/.exec(content);
+  const firstHeader = /#\s(.+)/.exec(content);
+  const maybeHeader = /title:\s"(.+)"/.exec(content);
   const maybeOrder = /order:\s(-?\d+)/.exec(content);
   const localFile = file.replace(/\/\[\[...slug\]\]/, "");
   const parts = localFile.split("/");
@@ -29,6 +24,9 @@ async function processFile(file) {
   const baseResponse = { file, slug: parts, order: 0 };
   if (maybeHeader) {
     const [, header] = maybeHeader;
+    baseResponse.header = header;
+  } else if (firstHeader) {
+    const [, header] = firstHeader;
     baseResponse.header = header;
   }
 
@@ -100,18 +98,11 @@ export async function buildNavParams() {
   if (out.length > 0) {
     files.push(out);
   }
-  if (files.length > 1) {
-    files.sort((a, b) => {
-      // sort by the 1st index.mdx
-      const indexA = a[0].items[0].items[0].items.find(
-        (item) => item.name === "index.mdx"
-      );
-      const indexB = b[0].items[0].items[0].items.find(
-        (item) => item.name === "index.mdx"
-      );
-      return sortOrder(indexA, indexB);
-    });
-  }
+  files[0][0].items[0].items.sort((a, b) => {
+    const indexA = a.items[0].items.find((item) => item.name === "index.mdx");
+    const indexB = b.items[0].items.find((item) => item.name === "index.mdx");
+    return sortOrder(indexA, indexB);
+  });
 
   return files;
 }
