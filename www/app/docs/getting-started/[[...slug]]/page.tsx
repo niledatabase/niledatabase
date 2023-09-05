@@ -6,7 +6,10 @@ import Container from "../../_components/Container";
 export default async function Page(props: { params: Param }) {
   return (
     <Container>
-      <PageContent params={props.params} root={NavigationRoots.GettingStarted} />
+      <PageContent
+        params={props.params}
+        root={NavigationRoots.GettingStarted}
+      />
     </Container>
   );
 }
