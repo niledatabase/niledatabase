@@ -37,7 +37,7 @@ function PageContent(props: Props) {
         <div className="w-[1px] bg-border"></div>
         <div className="mx-auto w-full flex flex-row justify-start h-full">
           <div className="relative flex flex-row">
-            <article className="prose dark:prose-invert max-w-5xl mt-20 px-4">
+            <article className="prose prose-invert max-w-5xl mt-20 px-4">
               <Component />
             </article>
             {toc.length > 1 && (

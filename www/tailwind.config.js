@@ -32,7 +32,7 @@ module.exports = {
         footer: "url('/footer-bg.svg')",
         fader: "linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, #000 50%);",
         "gradient-white":
-          "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.50) 100%);",
+          "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.5) 100%)",
       },
     },
   },

@@ -1,0 +1,65 @@
+export const metadata = {
+  title: "Compute-Storage Separation Explained",
+  authors: ["gwenshap"],
+  image: "storage_compute.png",
+  sizzle: "Last week, I saw Gunnar Morling post a good question on Twitter...",
+  tags: ["database"],
+};
+
+Last week, I saw [Gunnar Morling post a good question on Twitter](https://twitter.com/gunnarmorling/status/1610203324963516417):
+!["Separating storage and compute" vs. "Predicate push-down" -- I can't quite square these two with each other. Is there a world where they co-exist, or is it just two opposing patterns/trends in DB tech. ?](/img/storage-compute/tweet-gunnar.png)
+
+It is the kind of question I love because there are probably many developers who are wondering the same thing, while also many developers who feel the answer is obvious. This is because the words "storage", "compute" and "separate" mean different things to different people. So let me clarify things a bit.
+
+Let's start at the beginning - A single machine with local SSDs was pretty common for running DBs in the early days of the cloud. In this scenario, compute and storage are definitely not separate. In the case of a Macbook - I can't even open the box!
+
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/oi4nDjrZTKY"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen
+></iframe>
+
+## Compute-Storage Separation
+
+Today, both in data-centers and the cloud, you typically have the machine the DB is running on, and then the storage on separate devices - Netapp, EMC, EBS, etc.
+
+Note that all these storage devices _have_ compute. They are not just a disk with a network card attached.
+
+So, did we separate compute and storage? We did in three important ways:
+
+1. **Compute and storage nodes have different workloads and can be optimized for them**. Compute nodes use their CPU for DB things - parsing queries, optimizing, hash joins, aggregation, etc. Storage nodes use CPUs for storage things - encryption, snapshots, replicas, etc.
+2. **They fail independently and have different reliability guarantees.** In a single box, if the machine dies, you can lose the DB and the data and everything. Hope you have backups. If compute and storage are separate and a compute machine is dead, you can provision a new machine and connect the old disks. The storage cluster is typically built for extreme reliability so data is never lost. The compute cluster can be designed for your availability SLA - Do you need a hot standby? Or can wait to start a new compute node and connect it to the storage?
+
+But you can take this concept even farther. Compute-storage separation is a key step toward being able to scale them independently. Storage solutions today are very scalable. DB compute on the other hand is more challenging to scale, you often scale up.
+
+Scale up works extremely well and is often an under-rated technique, until it is no longer possible. At this point the usual pattern is to shard. Unfortunately, most DBs aren't aware of shards and therefore everyone needs to write their own sharding logic.
+
+In an ideal world, you'll be able to scale by adding DB machines and dynamically + transparently move workload between them. If storage is tightly coupled with each DB machine, then adding machines means copying data around, which takes time and resources. Decoupling allows for minimal data movement when expanding the compute layer.
+
+Hopefully I convinced you that separating compute and storage is a good thing even in its simple form, and opens the door to elasticity. But what about predicate pushdown? can we still do this? Or is it an opposing pattern?
+
+## Adding Predicate Pushdown
+
+Let's take a simple form of storage/compute separation - single DB machine, and its data files are placed on a storage cluster.
+
+As we already said, storage clusters have compute and they use it for stuff like encryption, compression, snapshots. If you have a general purpose storage cluster, like EBS, this is pretty much all you can do.
+
+But what if your DB has a storage cluster that was built specifically for the database? In a way similar to [AWS Aurora](https://web.stanford.edu/class/cs245/readings/aurora.pdf) architecture. In this case each storage node has some of the data, but not all of it, and a processor. What can you do with those?
+
+Turns out that quite a bit. If you are familiar with the map/reduce model, anything that you can do in a mapper, you can do in these storage nodes - filter, mask sensitive fields, modify formatting, etc. **But - it turns out that filtering is especially powerful.**
+
+The network between storage devices and DBs can become a bottleneck after storage and compute are separated. This can be very difficult bottleneck to solve. If you reach the limits of your network, adding more compute nodes or more storage nodes won't necessarily improve the DB throughput and you have to start sharding the DB cluster in order to limit cross-node traffic. As we mentioned earlier - unless your DB was built for sharding, this requires implementing custom logic.
+
+With predicate pushdown, you send the query "where" clause down to the storage cluster. Each storage node filters the data and only sends a subset over the network to the compute layer. The difference in network traffic is meaningful and allows the system to avoid the network bottleneck. This solution is extra nifty because use the pros of the architecture, the fact that storage has its own compute, to solve the bottleneck that the architecture created. A bit of a Judo move.
+
+## Predicate Pushdown as a Design Pattern
+
+Predicate pushdown pattern is useful in many other systems. Between front end and back end, between a service and its DB and between microservices - by designing APIs that allow you to send filters to the system with the data and only get back the data you really need, you make the system faster and more scalable.
+
+If you build the system with predicate pushdown in mind, a user clicks something in the webapp UI, the request with the filters is sent to the backend, maybe to another service, to the DB, to the storage - the storage apply the filters, and only the minimum required data is sent all the way back to the user. This is a real end-to-end system optimization.
+
+So, hopefully you learned about the different meanings of compute/storage separation, why storage still has compute and why storage/compute separation doesn't conflict with predicate pushdown - in fact they are better together!

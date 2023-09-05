@@ -9,7 +9,7 @@ export default async function SideNavigation({ page }: { page: string }) {
         aria-label="Sidenav"
         className="whitespace-nowrap hidden lg:flex pl-3 sticky top-[71px] h-full"
       >
-        <ul className="p-4 pl-2">
+        <ul className="p-4 pl-2 max-w-xs overflow-scroll">
           <RenderItems items={navBar} page={page} />
         </ul>
       </aside>

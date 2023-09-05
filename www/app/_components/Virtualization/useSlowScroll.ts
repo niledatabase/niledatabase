@@ -13,7 +13,7 @@ export default function useSlowScroll(
   const scroller = useCallback(
     (event: WheelEvent) => {
       // Prevent default scrolling behavior
-      event.preventDefault();
+      // event.preventDefault();
       const delta = event.deltaY;
       const scrollPosition = window.scrollY + delta * speedFactor;
 

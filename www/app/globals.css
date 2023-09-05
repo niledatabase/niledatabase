@@ -171,3 +171,13 @@ html .navBlur {
   margin-top: -75px;
   visibility: hidden;
 }
+
+.prose {
+  --tw-prose-links: #7cd1ed !important;
+  font-size: 20px;
+}
+
+.prose h2,
+.prose h3 {
+  font-size: 48px;
+}

@@ -79,7 +79,6 @@ function RenderItem({ item, page }: { item: any; page: any }) {
   const itemHref = `/${remaining.slug
     ?.join("/")
     .replace(/\/?(index)?\.mdx/, "")}`;
-  console.log(indexHref, itemHref, page);
   useEffect(() => {
     if (page.includes(indexHref) || page.includes(itemHref)) {
       expander[1](true);

@@ -2,11 +2,20 @@
 import nextMdx from "@next/mdx";
 import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
+import scala from "highlight.js/lib/languages/scala";
 
 const withMdx = nextMdx({
   extension: /.mdx?$/,
   options: {
-    rehypePlugins: [rehypeSlug, rehypeHighlight],
+    rehypePlugins: [
+      rehypeSlug,
+      [
+        rehypeHighlight,
+        {
+          languages: { scala },
+        },
+      ],
+    ],
   },
 });
 
