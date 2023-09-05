@@ -15,8 +15,8 @@ export default function Home() {
           className="mt-4"
         />
         <div className="prose dark:prose-invert max-w-5xl mt-20 px-4">
-          <Link href="/docs/guides/getting-started">
-            <h4>Getting started</h4>
+          <Link href="/docs/getting-started/languages">
+            <h4>Languages</h4>
           </Link>
         </div>
       </div>

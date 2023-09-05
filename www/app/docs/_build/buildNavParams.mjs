@@ -3,8 +3,8 @@ import { glob } from "glob";
 
 // keep these in sync with NavigationRoots, so the build works as dev does
 const Roots = Object.freeze({
-  Guides: "guides",
-  UserManagement: "user-management",
+  GetStarted: "get-started",
+  UserAuthentication: "user-authentication",
 });
 
 function sortOrder(a, b) {
