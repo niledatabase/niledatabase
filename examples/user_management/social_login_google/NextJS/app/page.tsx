@@ -1,13 +1,20 @@
+'use client';
+
 import styles from './page.module.css';
 
-import ErrorBox from "@/app/components/ErrorBox";
-import GoogleAuthPanel from "@/app/components/GoogleAuthPanel";
+import { GoogleLoginButton, NileProvider } from "@theniledev/react";
 
 export default function Home() {
   return (
     <main className={styles.main}>
-      <ErrorBox />
-      <GoogleAuthPanel />
+      <NileProvider
+        basePath={String(process.env.NILE_BASE_PATH)}
+      >
+        <GoogleLoginButton 
+                workspace={String(process.env.WORKSPACE)}
+                database={String(process.env.DATABASE)}
+        />
+      </NileProvider>
     </main>
   );
 }
