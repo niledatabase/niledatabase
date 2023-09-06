@@ -1,5 +1,5 @@
-import inspectDirectory from "../PageContent/inspectDirectory";
-import { RenderItems } from "./RenderItems";
+import inspectDirectory from '../PageContent/inspectDirectory';
+import { RenderItems } from './RenderItems';
 
 export default async function SideNavigation({ page }: { page: string }) {
   const navBar = await inspectDirectory();
@@ -7,9 +7,9 @@ export default async function SideNavigation({ page }: { page: string }) {
     <>
       <aside
         aria-label="Sidenav"
-        className="whitespace-nowrap hidden lg:flex pl-3 sticky top-[71px] h-full"
+        className="whitespace-nowrap hidden lg:flex sticky top-[62px] sidenav pb-5 shrink-0"
       >
-        <ul className="p-4 pl-2 max-w-xs overflow-scroll">
+        <ul className="p-4 pl-2 w-[280px] overflow-y-scroll">
           <RenderItems items={navBar} page={page} />
         </ul>
       </aside>

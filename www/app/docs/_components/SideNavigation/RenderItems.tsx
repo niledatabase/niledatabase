@@ -1,9 +1,9 @@
-"use client";
-import { useEffect, useState } from "react";
-import { Fragment } from "react";
-import Image from "next/image";
+'use client';
+import { useEffect, useState } from 'react';
+import { Fragment } from 'react';
+import Image from 'next/image';
 
-import Link from "next/link";
+import Link from 'next/link';
 export function BaseListItem({
   item,
   page,
@@ -16,25 +16,26 @@ export function BaseListItem({
   expander: [boolean, (isExpanded: boolean) => void];
 }) {
   const [expanded, setExpanded] = expander;
-  const href = `/${item.slug?.join("/").replace(/\/?(index)?\.mdx/, "")}`;
+  const href = `/${item.slug?.join('/').replace(/\/?(index)?\.mdx/, '')}`;
   const onPage = page === href || page === `${href}`;
   const itemClasses = [
-    "active:font-bold",
-    "text-[17px]",
-    "py-2",
-    "transition-all",
-    "hover:opacity-100",
-    "flex",
-    "flex-row",
-    "justify-between",
-    expander[0] ? "" : "h-[40px]",
+    'active:font-bold',
+    'text-[17px]',
+    'py-2',
+    'transition-all',
+    'hover:opacity-100',
+    'flex',
+    'flex-row',
+    'justify-between',
+    'whitespace-break-spaces',
+    expander[0] ? '' : 'h-[40px]',
     onPage
-      ? "border-l-[1px] -ml-[10px] p-[10px] opacity-100"
-      : "overflow-hidden opacity-60",
+      ? 'border-l-[1px] -ml-[10px] pl-[10px] opacity-100'
+      : 'overflow-hidden opacity-60',
   ];
 
   return (
-    <li className={itemClasses.join(" ")}>
+    <li className={itemClasses.join(' ')}>
       <Link href={href}>{item.header}</Link>
       {withIcon && (
         <div
@@ -49,7 +50,7 @@ export function BaseListItem({
             width={24}
             height={24}
             className={`${
-              expander[0] ? "rotate-90" : "rotate-0 opacity-40"
+              expander[0] ? 'rotate-90' : 'rotate-0 opacity-40'
             } transition-all`}
           />
         </div>
@@ -71,14 +72,14 @@ function RenderItem({ item, page }: { item: any; page: any }) {
     return <BaseListItem item={item} page={page} expander={expander} />;
   }
 
-  const indexed = item.items.find((item: any) => item.name === "index.mdx");
-  const remaining = item.items.filter((item: any) => item.name !== "index.mdx");
+  const indexed = item.items.find((item: any) => item.name === 'index.mdx');
+  const remaining = item.items.filter((item: any) => item.name !== 'index.mdx');
   const indexHref = `/${indexed?.slug
-    ?.join("/")
-    .replace(/\/?(index)?\.mdx/, "")}`;
+    ?.join('/')
+    .replace(/\/?(index)?\.mdx/, '')}`;
   const itemHref = `/${remaining.slug
-    ?.join("/")
-    .replace(/\/?(index)?\.mdx/, "")}`;
+    ?.join('/')
+    .replace(/\/?(index)?\.mdx/, '')}`;
   useEffect(() => {
     if (page.includes(indexHref) || page.includes(itemHref)) {
       expander[1](true);
@@ -96,7 +97,7 @@ function RenderItem({ item, page }: { item: any; page: any }) {
         />
         <ul
           className={`transition-all ml-1 pl-2 border-l-[1px] border-gray ${
-            expander[0] ? "opacity-100" : "h-[0px] opacity-0 overflow-hidden"
+            expander[0] ? 'opacity-100' : 'h-[0px] opacity-0 overflow-hidden'
           }`}
         >
           {remaining && <RenderItems items={remaining} page={page} />}

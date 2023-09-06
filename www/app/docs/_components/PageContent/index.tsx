@@ -1,8 +1,8 @@
-import { notFound } from "next/navigation";
-import { MDXProps } from "mdx/types";
-import { PageContentProps } from "./types";
-import SideNavigation, { NavigationRoots } from "../SideNavigation";
-import TableOfContents from "./TableOfContents";
+import { notFound } from 'next/navigation';
+import { MDXProps } from 'mdx/types';
+import { PageContentProps } from './types';
+import SideNavigation, { NavigationRoots } from '../SideNavigation';
+import TableOfContents from './TableOfContents';
 
 type Props = {
   page: string | undefined;
@@ -15,8 +15,8 @@ const generateTableOfContents = (
   Component: (props: MDXProps) => JSX.Element
 ): { id: string; children: string }[] => {
   const { children } = Component({}).props;
-  if (typeof children === "string") {
-    return [{ id: String(children), children: "" }];
+  if (typeof children === 'string') {
+    return [{ id: String(children), children: '' }];
   }
   const headings = children
     .filter((child: any) => {
@@ -35,20 +35,18 @@ function PageContent(props: Props) {
   const toc = generateTableOfContents(Component);
   return (
     <>
-      <SideNavigation page={`/docs/${root}${page ? `/${page}` : ""}`} />
-      <div className="pl-4 w-[56rem] flex flex-row h-full">
-        <div className="w-[1px] bg-border shrink-0"></div>
-        <div className="mx-auto w-full flex flex-row justify-start h-full">
-          <div className="relative flex flex-row">
-            <article className="prose prose-invert w-4xl mt-20 px-4">
-              <Component />
-            </article>
-            {toc.length > 1 && (
-              <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-border h-full"></div>
-            )}
-          </div>
-          <TableOfContents toc={toc} />
+      <SideNavigation page={`/docs/${root}${page ? `/${page}` : ''}`} />
+      <div className="flex flex-row h-full items-start">
+        <div className="relative">
+          <div className="absolute top-0 bottom-0 w-[1px] bg-border h-full -left-[1px] hidden lg:block -z-10"></div>
+          <article className="prose prose-invert p-4 mt-20">
+            <Component />
+          </article>
+          {toc.length > 1 && (
+            <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-border h-full hidden xl:block"></div>
+          )}
         </div>
+        <TableOfContents toc={toc} />
       </div>
     </>
   );
@@ -58,7 +56,7 @@ export default async function Page(props: PageContentProps) {
   const { params, root } = props;
   const page = params?.slug
     ?.map((str: string) => decodeURIComponent(str))
-    .join("/");
+    .join('/');
   // on the index page
   if (params && Object.keys(params).length === 0) {
     try {

@@ -1,8 +1,8 @@
-"use client";
-import useSlowScroll from "@/app/_components/Virtualization/useSlowScroll";
-import useIntersection from "@/app/_components/common/useIntersection";
-import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+'use client';
+import useScroll from '@/app/_components/Virtualization/useScroll';
+import useIntersection from '@/app/_components/common/useIntersection';
+import Link from 'next/link';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 type Props = {
   id: string;
   children: string;
@@ -28,7 +28,7 @@ export default function IdLink(props: Props) {
     linkRef.current = document.getElementById(id);
   }, []);
   const isVisible = useIntersection(linkRef, {
-    rootMargin: "-10% 0px -60% 0px",
+    rootMargin: '-10% 0px -60% 0px',
   });
   useEffect(() => {
     if (isVisible) {
@@ -42,7 +42,7 @@ export default function IdLink(props: Props) {
   return (
     <Link
       className={`block ${
-        active || forceActive === order ? "opacity-100" : "opacity-60"
+        active || forceActive === order ? 'opacity-100' : 'opacity-60'
       } p-2 ml-1 hover:opacity-100 transition-opacity`}
       href={`#${id}`}
       onClick={() => {
@@ -61,7 +61,7 @@ export const HoverManager = ({
 }) => {
   const defaultActive = items.findIndex(
     (item) =>
-      typeof window !== "undefined" && window.location.hash.includes(item.id)
+      typeof window !== 'undefined' && window.location.hash.includes(item.id)
   );
   const [active, setActive] = useState<number>(defaultActive ?? -1);
   const [forceActive, setForceActive] = useState<number | null>(null);
@@ -83,7 +83,7 @@ export const HoverManager = ({
     setActive(defaultActive);
   }, [defaultActive]);
 
-  useSlowScroll(1, (pos: number) => {
+  useScroll(1, (pos: number) => {
     if (forceActive !== null) {
       setActive(forceActive);
       setForceActive(null);
@@ -97,7 +97,7 @@ export const HoverManager = ({
       <li key={item.id}>
         <IdLink
           active={
-            typeof document !== "undefined" &&
+            typeof document !== 'undefined' &&
             document.documentElement.scrollTop !== 0 &&
             active === idx
           }
