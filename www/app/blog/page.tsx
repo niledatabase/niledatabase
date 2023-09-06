@@ -1,11 +1,12 @@
-import Container from "../_components/common/Container";
-import Image from "next/image";
-import Link from "next/link";
-import { glob } from "glob";
-import Divider from "../_components/common/Divider";
-import { Authors } from "./_components/Authors";
-import { Metadata } from "./_components/Metadata";
-import { parseMetadata } from "./_components/parseMetadata";
+import Container from '../_components/common/Container';
+import Image from 'next/image';
+import Link from 'next/link';
+import { glob } from 'glob';
+import Divider from '../_components/common/Divider';
+import { Authors } from './_components/Authors';
+import { Metadata } from './_components/Metadata';
+import { parseMetadata } from './_components/parseMetadata';
+import Footer from './_components/Footer';
 
 type Props = {
   fileName: string;
@@ -88,7 +89,7 @@ async function AsyncArticle({ fileName }: { fileName: string }) {
   );
 }
 export default async function Blog() {
-  const [mostRecent, ...remaining]: any = await glob("app/blog/**.mdx");
+  const [mostRecent, ...remaining]: any = await glob('app/blog/**.mdx');
   const { default: FirstArticle, metadata } = await import(`${mostRecent}`);
   return (
     <Container hidePattern={true}>
@@ -99,6 +100,8 @@ export default async function Blog() {
           return <AsyncArticle key={article} fileName={article} />;
         })}
       </div>
+      <Divider />
+      <Footer />
     </Container>
   );
 }
