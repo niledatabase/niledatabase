@@ -1,8 +1,9 @@
-import { notFound } from 'next/navigation';
-import { MDXProps } from 'mdx/types';
-import { PageContentProps } from './types';
-import SideNavigation, { NavigationRoots } from '../SideNavigation';
-import TableOfContents from './TableOfContents';
+import { notFound } from "next/navigation";
+import { MDXProps } from "mdx/types";
+import { PageContentProps } from "./types";
+import SideNavigation, { NavigationRoots } from "../SideNavigation";
+import TableOfContents from "./TableOfContents";
+import "highlight.js/styles/github-dark.css";
 
 type Props = {
   page: string | undefined;
@@ -15,8 +16,8 @@ const generateTableOfContents = (
   Component: (props: MDXProps) => JSX.Element
 ): { id: string; children: string }[] => {
   const { children } = Component({}).props;
-  if (typeof children === 'string') {
-    return [{ id: String(children), children: '' }];
+  if (typeof children === "string") {
+    return [{ id: String(children), children: "" }];
   }
   const headings = children
     .filter((child: any) => {
@@ -35,11 +36,10 @@ function PageContent(props: Props) {
   const toc = generateTableOfContents(Component);
   return (
     <>
-      <SideNavigation page={`/docs/${root}${page ? `/${page}` : ''}`} />
+      <SideNavigation page={`/docs/${root}${page ? `/${page}` : ""}`} />
       <div className="flex flex-row h-full items-start">
         <div className="relative">
-          <div className="absolute top-0 bottom-0 w-[1px] bg-border h-full -left-[1px] hidden lg:block -z-10"></div>
-          <article className="prose prose-invert p-4 mt-20">
+          <article className="prose prose-invert p-4 mt-20 lg:w-[50rem] 2xl:w-[62rem] 2xl:max-w-[62rem]">
             <Component />
           </article>
           {toc.length > 1 && (
@@ -56,7 +56,7 @@ export default async function Page(props: PageContentProps) {
   const { params, root } = props;
   const page = params?.slug
     ?.map((str: string) => decodeURIComponent(str))
-    .join('/');
+    .join("/");
   // on the index page
   if (params && Object.keys(params).length === 0) {
     try {

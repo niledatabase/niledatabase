@@ -1,4 +1,4 @@
-import Subscribe from './Subscribe';
+import Subscribe from "./Subscribe";
 
 export default function Footer() {
   return (

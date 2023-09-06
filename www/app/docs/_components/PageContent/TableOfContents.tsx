@@ -1,5 +1,5 @@
-import { MDXProps } from 'mdx/types';
-import IdLink, { HoverManager } from './IdLink';
+import { MDXProps } from "mdx/types";
+import IdLink, { HoverManager } from "./IdLink";
 
 type Props = {
   toc: any;
@@ -16,7 +16,7 @@ export default function TableOfContents(props: Props) {
         <div className="absolute top-0 bottom-0 w-[1px] bg-divider h-full -left-[1px]"></div>
         <div className="pl-8">
           <div className="text-[16px]">On this page</div>
-          <ol className="flex flex-col whitespace-nowrap mt-2">
+          <ol className="flex flex-col mt-2">
             <HoverManager items={toc} />
           </ol>
         </div>

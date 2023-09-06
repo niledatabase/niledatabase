@@ -1,7 +1,7 @@
-'use client';
-import Image from 'next/image';
-import { sizes } from '@/app/_components/common/sizes';
-import { useRef, useState } from 'react';
+"use client";
+import Image from "next/image";
+import { sizes } from "@/app/_components/common/sizes";
+import { useRef, useState } from "react";
 
 const SERVER_URI = process.env.NEXT_PUBLIC_SERVER_URI;
 
@@ -19,25 +19,25 @@ export default function Subscribe() {
       <div className="absolute right-[8px] top-[8px]">
         <button
           className={`transition-all duration-500 flex flex-row gap-2 text-lg gradientButton font-medium after:rounded-[12px] ${
-            submitted ? 'w-[484px]' : 'w-[140px]'
+            submitted ? "w-[484px]" : "w-[140px]"
           }`}
           onClick={async () => {
             if (ref.current?.value) {
               console.log(ref.current.value);
               const res = await fetch(`${SERVER_URI}/api/subscribe`, {
-                method: 'POST',
+                method: "POST",
                 body: JSON.stringify({ email: ref.current.value }),
               });
               if (res.status === 204) {
                 setDidSubmit(true);
               }
-              ref.current.value = '';
+              ref.current.value = "";
             }
           }}
         >
           <div
             className={`flex flex-row  duration-500 ${
-              submitted ? 'opacity-0' : 'opacity-100'
+              submitted ? "opacity-0" : "opacity-100"
             } trasition-opacity`}
           >
             <div>Subscribe</div>
@@ -52,7 +52,7 @@ export default function Subscribe() {
           </div>
           <div
             className={`absolute whitespace-nowrap ${
-              submitted ? 'opacity-100' : 'opacity-0'
+              submitted ? "opacity-100" : "opacity-0"
             } trasition-opacity delay-500 duration-500`}
           >
             Thanks for subscribing!

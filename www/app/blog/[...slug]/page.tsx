@@ -1,28 +1,28 @@
-import Container from '@/app/_components/common/Container';
-import { glob } from 'glob';
-import { notFound } from 'next/navigation';
-import 'highlight.js/styles/github-dark.css';
-import { parseMetadata } from '../_components/parseMetadata';
-import { Authors } from '../_components/Authors';
-import Heading from '@/app/_components/common/Heading';
-import Image from 'next/image';
-import Subscribe from '../_components/Footer/Subscribe';
-import Footer from '../_components/Footer';
-import Divider from '@/app/_components/common/Divider';
+import Container from "@/app/_components/common/Container";
+import { glob } from "glob";
+import { notFound } from "next/navigation";
+import "highlight.js/styles/github-dark.css";
+import { parseMetadata } from "../_components/parseMetadata";
+import { Authors } from "../_components/Authors";
+import Heading from "@/app/_components/common/Heading";
+import Image from "next/image";
+import Subscribe from "../_components/Footer/Subscribe";
+import Footer from "../_components/Footer";
+import Divider from "@/app/_components/common/Divider";
 export default async function BlogPage(props: { params: { slug: string[] } }) {
   const {
     params: {
       slug: [slug],
     },
   } = props;
-  const files = await glob('app/blog/**.mdx');
+  const files = await glob("app/blog/**.mdx");
   const file = files.find((file) => {
     return file.includes(slug);
   });
   if (!file || !file[0]) {
     return notFound();
   }
-  const article = file.split('/').reverse();
+  const article = file.split("/").reverse();
   const { default: Article, metadata } = await import(`../${article[0]}`);
   const { publishDate, readLength } = parseMetadata(file, Article);
   return (

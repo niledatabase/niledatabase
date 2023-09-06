@@ -1,5 +1,5 @@
-'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+"use client";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function useScroll(
   speedFactor = 0.1,
@@ -12,7 +12,7 @@ export default function useScroll(
   const { allowScroll = true, scrollJacking = false } = config ?? {};
   const scrollerRef = useRef<(event: WheelEvent) => void>(() => null);
   const [prevScrollPosition, setPrevScrollPosition] = useState(
-    typeof window !== 'undefined' ? window.scrollY : 0
+    typeof window !== "undefined" ? window.scrollY : 0
   );
   const scroller = useCallback(
     (event: WheelEvent) => {
@@ -39,11 +39,11 @@ export default function useScroll(
   );
 
   useEffect(() => {
-    document.removeEventListener('wheel', scrollerRef.current);
+    document.removeEventListener("wheel", scrollerRef.current);
     scrollerRef.current = scroller;
-    document.addEventListener('wheel', scrollerRef.current, { passive: false });
+    document.addEventListener("wheel", scrollerRef.current, { passive: false });
     () => {
-      document.removeEventListener('wheel', scrollerRef.current);
+      document.removeEventListener("wheel", scrollerRef.current);
     };
   }, [scroller]);
 }

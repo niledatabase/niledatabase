@@ -64,15 +64,50 @@ async function generateNestedObjects(input) {
           };
         }
         currentLevel.push(existingItem);
-        if (currentLevel.length > 1) {
-          currentLevel.sort(sortOrder);
-        }
       }
+
       currentLevel = existingItem.items;
     }
   }
+  function setOrder(items, parentOrder) {
+    for (const item of items) {
+      if (!item.order && item.items) {
+        const slugChild = item.items.find(
+          (item) => item.name === "[[...slug]]"
+        );
+        if (slugChild) {
+          item.order = item.items[0].items[0].order;
+        }
+        const indexChild = item.items.find((item) => item.name === "index.mdx");
+        if (indexChild) {
+          item.order = indexChild.order;
+        }
+      }
+      if (item.items) {
+        setOrder(item.items, parentOrder);
+      }
+    }
+  }
 
-  return output;
+  setOrder(output, 0);
+
+  function sorter(obj) {
+    if (obj instanceof Array) {
+      obj.sort(sortOrder);
+      for (let i = 0; i < obj.length; i++) {
+        obj[i] = sorter(obj[i]);
+      }
+    } else if (typeof obj === "object" && obj !== null) {
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          obj[key] = sorter(obj[key]);
+        }
+      }
+    }
+
+    return obj;
+  }
+  return sorter(output);
 }
 
 export async function buildNavParams() {
@@ -95,14 +130,16 @@ export async function buildNavParams() {
     ],
   });
   const out = await generateNestedObjects(results.sort());
+  console.log(JSON.stringify(out, null, 2));
   if (out.length > 0) {
     files.push(out);
   }
-  files[0][0].items[0].items.sort((a, b) => {
-    const indexA = a.items[0].items.find((item) => item.name === "index.mdx");
-    const indexB = b.items[0].items.find((item) => item.name === "index.mdx");
-    return sortOrder(indexA, indexB);
-  });
+  // console.log(JSON.stringify(out, null, 2));
+  // files[0][0].items[0].items.sort((a, b) => {
+  // const indexA = a.items[0].items.find((item) => item.name === 'index.mdx');
+  // const indexB = b.items[0].items.find((item) => item.name === 'index.mdx');
+  // return sortOrder(indexA, indexB);
+  // });
 
   return files;
 }
