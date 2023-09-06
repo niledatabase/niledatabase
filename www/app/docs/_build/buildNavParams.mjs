@@ -2,14 +2,7 @@ import fs from "node:fs";
 import { glob } from "glob";
 
 function sortOrder(a, b) {
-  if (a?.order > b?.order) {
-    return 1;
-  }
-  if (a?.order < b?.order) {
-    return -1;
-  }
-
-  return 0;
+  return (a?.order || 0) - (b?.order || 0);
 }
 
 async function processFile(file) {
@@ -130,16 +123,9 @@ export async function buildNavParams() {
     ],
   });
   const out = await generateNestedObjects(results.sort());
-  console.log(JSON.stringify(out, null, 2));
   if (out.length > 0) {
     files.push(out);
   }
-  // console.log(JSON.stringify(out, null, 2));
-  // files[0][0].items[0].items.sort((a, b) => {
-  // const indexA = a.items[0].items.find((item) => item.name === 'index.mdx');
-  // const indexB = b.items[0].items.find((item) => item.name === 'index.mdx');
-  // return sortOrder(indexA, indexB);
-  // });
 
   return files;
 }
