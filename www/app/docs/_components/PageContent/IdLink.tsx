@@ -1,5 +1,5 @@
 "use client";
-import useSlowScroll from "@/app/_components/Virtualization/useSlowScroll";
+import useScroll from "@/app/_components/Virtualization/useScroll";
 import useIntersection from "@/app/_components/common/useIntersection";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -83,7 +83,7 @@ export const HoverManager = ({
     setActive(defaultActive);
   }, [defaultActive]);
 
-  useSlowScroll(1, (pos: number) => {
+  useScroll(1, (pos: number) => {
     if (forceActive !== null) {
       setActive(forceActive);
       setForceActive(null);

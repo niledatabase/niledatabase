@@ -7,7 +7,6 @@ export default function Home() {
   return (
     <Container>
       <SideNavigation page={`/docs`} />
-      <div className="w-[2px] bg-border shrink-0"></div>
       <div className="pl-4 w-full flex flex-col h-full relative">
         <Heading
           text="Welcome to the docs"

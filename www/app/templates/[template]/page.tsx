@@ -34,7 +34,7 @@ export default async function TemplateDetail(pageProps: PageProps) {
   const fileName = cleanTemplateReadme(template);
 
   const content = fs.readFileSync(
-    path.resolve(`app/templates/readmes/${fileName}`),
+    path.resolve(`app/templates/_build/readmes/${fileName}`),
     "utf-8"
   );
   const { metadata, name, imageSrc } = template;

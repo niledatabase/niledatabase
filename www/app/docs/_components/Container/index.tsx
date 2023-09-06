@@ -11,10 +11,10 @@ export default function Container({
   return (
     <>
       <Navigation className="border-gray border-b-[1px]" />
-      <div className="min-h-screen relative flex flex-col">
-        <main className="flex flex-row flex-1 mx-auto">{children}</main>
-        <Footer className="mt-40 container mx-auto" />
-      </div>
+      <main className="min-h-screen mx-auto container flex flex-row justifty-start xl:justify-center">
+        {children}
+      </main>
+      <Footer className="mt-40 container mx-auto" />
     </>
   );
 }

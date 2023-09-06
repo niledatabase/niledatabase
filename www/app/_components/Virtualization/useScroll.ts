@@ -1,31 +1,37 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export default function useSlowScroll(
+export default function useScroll(
   speedFactor = 0.1,
   handleScroll?: (position: number) => void,
-  allowScroll?: boolean
+  config?: {
+    allowScroll?: boolean;
+    scrollJacking: boolean;
+  }
 ) {
+  const { allowScroll = true, scrollJacking = false } = config ?? {};
   const scrollerRef = useRef<(event: WheelEvent) => void>(() => null);
   const [prevScrollPosition, setPrevScrollPosition] = useState(
     typeof window !== "undefined" ? window.scrollY : 0
   );
   const scroller = useCallback(
     (event: WheelEvent) => {
-      // Prevent default scrolling behavior
-      // event.preventDefault();
       const delta = event.deltaY;
       const scrollPosition = window.scrollY + delta * speedFactor;
 
       if (allowScroll === false) {
         setPrevScrollPosition(scrollPosition);
-        window.scrollTo({
-          top: prevScrollPosition,
-        });
+        if (scrollJacking) {
+          window.scrollTo({
+            top: prevScrollPosition,
+          });
+        }
       } else {
-        window.scrollTo({
-          top: scrollPosition,
-        });
+        if (scrollJacking) {
+          window.scrollTo({
+            top: scrollPosition,
+          });
+        }
         handleScroll && handleScroll(scrollPosition);
       }
     },

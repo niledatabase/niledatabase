@@ -6,6 +6,9 @@ import { parseMetadata } from "../_components/parseMetadata";
 import { Authors } from "../_components/Authors";
 import Heading from "@/app/_components/common/Heading";
 import Image from "next/image";
+import Subscribe from "../_components/Footer/Subscribe";
+import Footer from "../_components/Footer";
+import Divider from "@/app/_components/common/Divider";
 export default async function BlogPage(props: { params: { slug: string[] } }) {
   const {
     params: {
@@ -52,6 +55,8 @@ export default async function BlogPage(props: { params: { slug: string[] } }) {
       <div className="prose prose-invert mt-5">
         <Article />
       </div>
+      <Divider />
+      <Footer />
     </Container>
   );
 }

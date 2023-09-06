@@ -27,9 +27,10 @@ export function BaseListItem({
     "flex",
     "flex-row",
     "justify-between",
-    expander[0] ? "" : "h-[40px]",
+    "whitespace-break-spaces",
+    expander[0] ? "" : "h-content",
     onPage
-      ? "border-l-[1px] -ml-[10px] p-[10px] opacity-100"
+      ? "border-l-[1px] -ml-[10px] pl-[10px] opacity-100"
       : "overflow-hidden opacity-60",
   ];
 

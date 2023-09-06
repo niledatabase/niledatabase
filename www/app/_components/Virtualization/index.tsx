@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Videos from "./Videos";
 import { useEffect, useRef, useState } from "react";
-import useSlowScroll from "./useSlowScroll";
+import useScroll from "./useScroll";
 import useIntersection from "@/app/_components/common/useIntersection";
 import Texts from "./Texts";
 import Heading from "@/app/_components/common/Heading";
@@ -16,7 +16,7 @@ export default function Virtualization() {
   const isVisible = useIntersection(wrapperRef, {
     threshold: 0.8,
   });
-  useSlowScroll(speedFactor);
+  useScroll(speedFactor, () => null, { scrollJacking: true });
   useEffect(() => {
     if (isVisible) {
       setSpeedFactor(0.1);

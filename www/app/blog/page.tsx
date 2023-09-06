@@ -6,6 +6,7 @@ import Divider from "../_components/common/Divider";
 import { Authors } from "./_components/Authors";
 import { Metadata } from "./_components/Metadata";
 import { parseMetadata } from "./_components/parseMetadata";
+import Footer from "./_components/Footer";
 
 type Props = {
   fileName: string;
@@ -99,6 +100,8 @@ export default async function Blog() {
           return <AsyncArticle key={article} fileName={article} />;
         })}
       </div>
+      <Divider />
+      <Footer />
     </Container>
   );
 }

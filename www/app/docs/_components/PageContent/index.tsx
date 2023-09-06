@@ -3,6 +3,7 @@ import { MDXProps } from "mdx/types";
 import { PageContentProps } from "./types";
 import SideNavigation, { NavigationRoots } from "../SideNavigation";
 import TableOfContents from "./TableOfContents";
+import "highlight.js/styles/github-dark.css";
 
 type Props = {
   page: string | undefined;
@@ -36,19 +37,16 @@ function PageContent(props: Props) {
   return (
     <>
       <SideNavigation page={`/docs/${root}${page ? `/${page}` : ""}`} />
-      <div className="pl-4 w-[56rem] flex flex-row h-full">
-        <div className="w-[1px] bg-border shrink-0"></div>
-        <div className="mx-auto w-full flex flex-row justify-start h-full">
-          <div className="relative flex flex-row">
-            <article className="prose prose-invert w-4xl mt-20 px-4">
-              <Component />
-            </article>
-            {toc.length > 1 && (
-              <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-border h-full"></div>
-            )}
-          </div>
-          <TableOfContents toc={toc} />
+      <div className="flex flex-row h-full items-start">
+        <div className="relative">
+          <article className="prose prose-invert p-4 mt-20 lg:w-[50rem] 2xl:w-[62rem] 2xl:max-w-[62rem]">
+            <Component />
+          </article>
+          {toc.length > 1 && (
+            <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-border h-full hidden xl:block"></div>
+          )}
         </div>
+        <TableOfContents toc={toc} />
       </div>
     </>
   );
