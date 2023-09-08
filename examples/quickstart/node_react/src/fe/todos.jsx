@@ -12,7 +12,6 @@ import Input from '@mui/joy/Input';
 import Checkbox from '@mui/joy/Checkbox';
 import { useParams } from 'react-router';
 import Chip from '@mui/joy/Chip';
-import AspectRatio from "@mui/joy/AspectRatio/AspectRatio";
 import Sheet from "@mui/joy/Sheet/Sheet";
 
 export default function Todos() {
