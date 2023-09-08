@@ -12,7 +12,7 @@ export default function Container({
       <main className="min-h-screen mx-auto container">
         <div className="flex flex-row">{children}</div>
       </main>
-      <Footer className="mt-40 container mx-auto" />
+      <Footer className="my-40 container mx-auto" />
     </>
   );
 }

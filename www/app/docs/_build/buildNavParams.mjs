@@ -62,28 +62,32 @@ async function generateNestedObjects(input) {
       currentLevel = existingItem.items;
     }
   }
-  function setOrder(items, parentOrder) {
+  function setOrder(items) {
     for (const item of items) {
       if (!item.order && item.items) {
         const slugChild = item.items.find(
           (item) => item.name === "[[...slug]]"
         );
-        if (slugChild) {
-          item.order = item.items[0].items[0].order;
-        }
         const indexChild = item.items.find((item) => item.name === "index.mdx");
+        if (slugChild) {
+          const nestedChild = item.items[0].items?.find(
+            (item) => item.name === "index.mdx"
+          );
+          item.order = nestedChild.order;
+        }
         if (indexChild) {
           item.order = indexChild.order;
         }
       }
       if (item.items) {
-        setOrder(item.items, parentOrder);
+        setOrder(item.items);
       }
     }
   }
 
-  setOrder(output, 0);
+  setOrder(output);
 
+  // console.log(JSON.stringify(output, null, 2));
   function sorter(obj) {
     if (obj instanceof Array) {
       obj.sort(sortOrder);

@@ -188,8 +188,8 @@ html .navBlur {
 [id]::before {
   content: "";
   display: block;
-  height: 75px;
-  margin-top: -75px;
+  height: 62px;
+  margin-top: -62px;
   visibility: hidden;
 }
 
@@ -198,7 +198,20 @@ html .navBlur {
   font-size: 20px;
 }
 
-.prose h2,
-.prose h3 {
+.prose h1 {
+  line-height: 56px;
   font-size: 48px;
+  margin-bottom: 0.5rem;
+}
+.prose h2 {
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: 0.4px;
+  margin-bottom: 0.5rem;
+}
+.prose h3 {
+  line-height: 40px;
+  line-height: 40px;
+  font-size: 32px;
+  margin-bottom: 0.5rem;
 }
