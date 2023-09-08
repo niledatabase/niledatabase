@@ -84,3 +84,14 @@ curl  -X GET \
 curl  -X GET \
   'http://localhost:3001/insecure/all_todos'
 ```
+
+### 6. Running the app with Docker
+
+You can build a docker container that runs this app, and exposes the webapp on port 3006 (the NodeJS and REST API are not exposed). To build and run the container:
+
+```
+docker build . -t todo-node-react
+docker run -it -p3006:3006 todo-node-react
+```
+
+If you point your browser to http://localhost:3006, you'll see the first page of the app. 
