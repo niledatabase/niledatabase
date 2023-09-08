@@ -27,7 +27,7 @@
     "@types/express": "^4.17.17",
     "@types/node": "^20.5.9",
     "typescript": "^5.2.2",
-    "concurrently": "^4.1.0"
+    "concurrently": "^8.2.1"
   },
   "overrides": {
     "@typescript-eslint/typescript-estree": "^5.57.1",
