@@ -4,7 +4,8 @@
   "description": "Multi-tenant todo list app, built with Nile, NodeJS and React",
   "main": "index.js",
   "scripts": {
-    "start": "bash bin/dev.sh"
+    "start": "bash bin/dev.sh",
+    "build": "react-scripts build"
   },
   "private": true,
   "proxy": "http://localhost:3000",
