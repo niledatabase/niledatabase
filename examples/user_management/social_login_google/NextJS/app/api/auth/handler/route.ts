@@ -51,14 +51,14 @@ function redirectOnSuccess(formData: FormData): string {
 }
 
 function toCookieData(formData: FormData): AuthCookieData {
-  const accessToken = formData.get('access_token') as string;
+  const accessToken = String(formData.get('access_token'));
   const decodedJWT = jwtDecode<NileJWTPayload>(accessToken);
   return {
-    accessToken: formData.get('access_token') as string,
-    state: formData.get('state') as string,
-    event: formData.get('event') as string,
-    error: formData.get('error') as string,
-    tenantId: formData.get('tenantId') as string,
+    accessToken: String(formData.get('access_token')),
+    state: String(formData.get('state')),
+    event: String(formData.get('event')),
+    error: String(formData.get('error')),
+    tenantId: String(formData.get('tenantId')),
     tokenData: decodedJWT,
   };
 }
