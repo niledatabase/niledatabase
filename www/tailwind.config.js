@@ -15,6 +15,10 @@ module.exports = {
         lightGray: "rgba(223, 239, 254, 0.20)",
         white: "#D9D9D9",
         black: "#0E0E0E",
+        error: "#ea3a42",
+        warning: "#fa9621",
+        success: "#00B790",
+        info: "#929292",
       },
       backgroundImage: {
         border:

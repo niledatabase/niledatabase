@@ -1,5 +1,7 @@
 import Image from "next/image";
-export default function Footer({ className }: { className?: string }) {
+import Status from "./Status";
+import Link from "next/link";
+export default async function Footer({ className }: { className?: string }) {
   return (
     <div className={`bg-footer bg-no-repeat w-full relative ${className}`}>
       <div className="absolute top-0 right-0 left-0 bottom-0 bg-footer-fade pointer-events-none"></div>
@@ -39,22 +41,30 @@ export default function Footer({ className }: { className?: string }) {
           </div>
           <div className="flex flex-row gap-20">
             <div className="flex flex-col gap-5">
-              <div className="text-lg">Documentation</div>
-              <div className="text-lg opacity-70">Quick Start</div>
+              <Link href="/docs" className="text-lg">
+                Documentation
+              </Link>
+              <Link href="/docs/getting-started" className="text-lg opacity-70">
+                Quick Start
+              </Link>
               <div className="text-lg opacity-70">Use Cases</div>
               <div className="text-lg opacity-70">Architecture</div>
               <div className="text-lg opacity-70">API</div>
             </div>
             <div className="flex flex-col gap-5">
               <div className="text-lg">Resources</div>
-              <div className="text-lg opacity-70">Blog</div>
+              <Link href="/blog" className="text-lg opacity-70">
+                Blog
+              </Link>
               <div className="text-lg opacity-70">Customers</div>
               <div className="text-lg opacity-70">Whitepaper</div>
               <div className="text-lg opacity-70">Changelog</div>
             </div>
             <div className="flex flex-col gap-5">
               <div className="text-lg">Company</div>
-              <div className="text-lg opacity-70">About</div>
+              <Link href="/about-us" className="text-lg opacity-70">
+                About
+              </Link>
               <div className="text-lg opacity-70">Pricing</div>
               <div className="text-lg opacity-70">Terms</div>
               <div className="text-lg opacity-70">Privacy</div>
@@ -67,12 +77,7 @@ export default function Footer({ className }: { className?: string }) {
             </div>
           </div>
         </div>
-        <div className="mt-40 flex flex-row gap-4 items-center mb-10">
-          <div className="bg-[#00B790] w-2 h-2 rounded-md"></div>
-          <div className="text-[#A1A1AA]">
-            All Systems Operational <span className="text-lg">↗</span>
-          </div>
-        </div>
+        <Status />
       </div>
     </div>
   );
