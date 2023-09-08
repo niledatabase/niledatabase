@@ -2,10 +2,178 @@ import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
 
 export const meta = {
-  title: "Node",
+  title: "NodeJS and React",
   order: 1,
 };
 
-# Explore Nile in 5 minutes with Node
+# Build a NodeJS and React app with Nile
 
-TBD.
+In this tutorial, you will learn about Nile's tenant virtualization features, while building a todo list application with NodeJS and React.
+
+## 1. Create a database
+
+1. Signup to [Nile](https://dev-nad.thenile.dev).
+2. You should see a welcome message. Click on "Lets get started"
+   ![Nile welcome.](/docs/nile-welcome.png)
+3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to “Use Token in Browser”.
+
+## 2. Create a table
+
+After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
+
+```sql
+create table todos (
+    tenant_id uuid,
+    title varchar(256),
+    complete boolean);
+```
+
+You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
+
+See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
+![Creating a table in Nile's admin dashboard](/docs/gui-create-table.png)
+
+### 3. Getting credentials
+
+In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentails and keep them somewhere safe. These give you access to the database.
+
+### 4. Setting the environment
+
+Enough GUI for now. Let's get to some code.
+
+If you haven't cloned this repository yet, now will be an excellent time to do so. 
+
+```bash
+git clone https://github.com/niledatabase/niledatabase
+cd niledatabase/examples/quickstart/node_react
+```
+
+Rename `.env.example` to `.env`, and update it with your workspace and database name. 
+_(Your workspace and database name are displayed in the header of the Nile dashboard.)_
+Also fill in the username and password with the credentials you picked up in the previous step.
+
+It should look something like this:
+
+```
+NILE_BASE_PATH = "https://dev.khnum.thenile.dev"
+NILE_DATABASE = "main"
+NILE_WORKSPACE = "todoapp"
+NILE_USER = "018a6b69-b1e9-7574-b8f3-efd5fe63d9bb"
+NILE_PASSWORD = "d757518e-6d52-4bdb-b85f-f008c9f80097"
+```
+
+Install dependencies with `yarn install` or `npm install`.
+
+### 5. Running the app
+
+You can start both NodeJS api server and the React frontend with `npm start` or `yarn start`.
+
+If all went well, your browser should show you the first page in the app, asking you to create a tenant. Feel free to create a tenant or 5.
+
+If you click on "Explore" next to one of the tenants, you can start creating todo items for this tenant.
+
+You can also try using the APIs directly. Here are a few examples:
+
+```
+# create a tenant
+curl --location --request POST 'localhost:3000/tenants' \
+--header 'Content-Type: application/json' \
+--data-raw '{"name":"my first customer"}'
+
+# get tenants
+curl  -X GET 'http://localhost:3000/tenants'
+
+# create a todo (don't forget to use a read tenant-id in the URL)
+curl  -X POST \
+  'http://localhost:3000/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{"title": "feed the cat", "complete": false}'
+
+# list todos for tenant (don't forget to use a read tenant-id in the URL)
+curl  -X GET \
+  'http://localhost:3000/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' 
+
+# list todos for all tenants
+curl  -X GET \
+  'http://localhost:3000/insecure/all_todos'
+```
+
+### 6. Check the data in Nile
+
+You can go back to the Nile dashboard and see the data you created.
+
+If you run:
+  
+  ```sql
+  SELECT tenants.name, title, complete
+  FROM todos join tenants on tenants.id = todos.tenant_id;
+  ```
+
+You should see all the todos you created, and the tenants they belong to.
+
+### 7. How does it work?
+
+The interesting part of this example is the NodeJS server. Lets take a look at [`/examples/quickstart/node_react/app.js`](https://github.com/niledatabase/niledatabase/blob/master/examples/quickstart/node_react/app.js).
+
+The NodeJS server uses the [Nile JS client](https://github.com/niledatabase/nile-js) to connect to Nile. 
+
+The client is initialized with the credentials you provided in the `.env` file:
+
+```js
+  export const { api, db } = Server({
+  workspace: String(process.env.NILE_WORKSPACE),
+  database: String(process.env.NILE_DATABASE),
+  api: {
+    basePath: String(process.env.BASE_PATH),
+  },
+  db: {
+    connection: {
+      user: process.env.NILE_USER,
+      password: process.env.NILE_PASSWORD,
+    },
+  },
+});
+```
+
+It has a friendly ORM-like API for interacting with the database. For example, creating a tenant is as simple as:
+
+```js
+  app.post('/tenants', async (req, res) => {
+      const { name } = req.body
+      const newTenant = await db('tenants').insert({
+          name: name
+      }).returning('id');
+      res.json(newTenant)
+    })
+```
+
+The example uses Nile's tenant isolation to guarantee that each tenant can only see their own data. 
+This is done by adding a `tenant_id` column to each table, and setting `nile.tenant_id` context when querying the `todos` table for each tenant.
+
+```js
+app.get('/tenants/:tenantId/todos', async (req, res) => {
+  try {
+    const { tenantId } = req.params
+
+    // Query the database with tenant context, to guarantee that each tenant can only see their own data
+    const todos = await db('todos').withTenant(tenantId).select('*');
+    res.json(todos);
+  } catch (error: any) {
+    console.log(error.message)
+    res.status(500).json({
+      message: "Internal Server Error",
+    })
+  }
+})
+```
+
+## 8. Looking good!
+
+🏆 Tada! You have learned the basic Nile concepts:
+
+- [Tenant aware tables](https://www.notion.so/640f7364152a4941990cf6351b065049?pvs=21)
+- Tenant context
+- Tenant isolation
+
+
+
