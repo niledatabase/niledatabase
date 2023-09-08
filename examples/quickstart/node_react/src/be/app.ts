@@ -1,7 +1,7 @@
-import 'dotenv/config';
-import express from 'express'
-import Server from '@theniledev/server';
-import Knex from 'knex';
+import "dotenv/config";
+import express from "express";
+import Server from "@theniledev/server";
+import Knex from "knex";
 
 export const { api, db } = Server({
   workspace: String(process.env.NILE_WORKSPACE),
@@ -17,94 +17,97 @@ export const { api, db } = Server({
   },
 });
 
-const app = express()
-app.use(express.json())
+const app = express();
+app.use(express.json());
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`))
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 
 // endpoint to create new tenants
-app.post('/tenants', async (req, res) => {
+app.post("/tenants", async (req, res) => {
   console.log("body: " + JSON.stringify(req.body));
   try {
-    const { name } = req.body
+    const { name } = req.body;
     console.log("tenant name:" + JSON.stringify(name));
 
-    const newTenant = await db('tenants').insert({
-        name: name
-    }).returning('id');
+    const newTenant = await db("tenants")
+      .insert({
+        name: name,
+      })
+      .returning("id");
     console.log("new tenant: " + JSON.stringify(newTenant));
 
-    res.json(newTenant)
+    res.json(newTenant);
   } catch (error: any) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({
       message: "Internal Server Error",
-    })
+    });
   }
-})
+});
 
-app.get('/tenants', async (req, res) => {
+app.get("/tenants", async (req, res) => {
   try {
-    const tenants = await db('tenants').select('*')
-    res.json(tenants)
+    const tenants = await db("tenants").select("*");
+    res.json(tenants);
   } catch (error: any) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({
       message: "Internal Server Error",
-    })
+    });
   }
-})
+});
 
-app.post('/tenants/:tenantId/todos', async (req, res) => { 
+app.post("/tenants/:tenantId/todos", async (req, res) => {
   try {
-    const { tenantId } = req.params
-    const { title, complete } = req.body
+    const { tenantId } = req.params;
+    const { title, complete } = req.body;
 
-    const newTodo = await db('todos').insert({
+    const newTodo = await db("todos")
+      .insert({
         title: title,
         complete: complete || false,
         tenant_id: tenantId,
-    }).returning('*');
+      })
+      .returning("*");
 
     res.json(newTodo);
   } catch (error: any) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({
       message: "Internal Server Error",
-    })
+    });
   }
-})
+});
 
-app.get('/tenants/:tenantId/todos', async (req, res) => {
+app.get("/tenants/:tenantId/todos", async (req, res) => {
   try {
-    const { tenantId } = req.params
-    
+    const { tenantId } = req.params;
+
     /*const tenantDB = prisma.$extends(forTenant(tenantId)) */
 
     // Tenant context not actually working yet...
     // const todos = await db('todos').withTenant(tenantId).select('*');
-    const todos = await db('todos').select('*').where('tenant_id', tenantId);
+    const todos = await db("todos").select("*").where("tenant_id", tenantId);
     res.json(todos);
   } catch (error: any) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({
       message: "Internal Server Error",
-    })
+    });
   }
-})
+});
 
 // insecure endpoint to get all todos - don't try this in production 😅
-app.get('/insecure/all_todos', async (req, res) => {
+app.get("/insecure/all_todos", async (req, res) => {
   try {
-    const todos = await db('todos').select('*');
-    res.json(todos)
+    const todos = await db("todos").select("*");
+    res.json(todos);
   } catch (error: any) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({
       message: "Internal Server Error",
-    })
+    });
   }
-})
-
+});

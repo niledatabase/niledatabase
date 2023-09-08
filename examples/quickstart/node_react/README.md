@@ -2,9 +2,9 @@
 
 This template shows how to use Nile in NodeJS and React for a multi-tenant todo list application.
 
-* [Live demo - TBD](TBD)
-* [Video guide - TBD](TBD)
-* [Step by steo guide - TBD](TBD)
+- [Live demo - TBD](TBD)
+- [Video guide - TBD](TBD)
+- [Step by step guide - TBD](TBD)
 
 ## Getting Started
 
@@ -28,14 +28,14 @@ In the left-hand menu, click on "Settings" and then select "Credentials". Genera
 
 ### 4. Setting the environment
 
-If you haven't cloned this repository yet, now will be an excellent time to do so. 
+If you haven't cloned this repository yet, now will be an excellent time to do so.
 
 ```bash
 git clone https://github.com/niledatabase/niledatabase
 cd niledatabase/examples/quickstart/node_react
 ```
 
-Rename `.env.example` to `.env`, and update it with your workspace and database name. 
+Rename `.env.example` to `.env`, and update it with your workspace and database name.
 _(Your workspace and database name are displayed in the header of the Nile dashboard.)_
 Also fill in the username and password with the credentials you picked up in the previous step.
 
@@ -78,7 +78,7 @@ curl  -X POST \
 
 # list todos for tenant (don't forget to use a read tenant-id in the URL)
 curl  -X GET \
-  'http://localhost:3001/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' 
+  'http://localhost:3001/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
 
 # list todos for all tenants
 curl  -X GET \
