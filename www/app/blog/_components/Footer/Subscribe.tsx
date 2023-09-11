@@ -23,7 +23,6 @@ export default function Subscribe() {
           }`}
           onClick={async () => {
             if (ref.current?.value) {
-              console.log(ref.current.value);
               const res = await fetch(`${SERVER_URI}/api/subscribe`, {
                 method: "POST",
                 body: JSON.stringify({ email: ref.current.value }),

@@ -80,7 +80,6 @@ export default async function Status() {
   if (!Array.isArray(body)) {
     return null;
   }
-  console.log(body);
   const [page] = body;
   const { status } = page;
   const color = getColor(status);

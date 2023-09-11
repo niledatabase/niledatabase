@@ -1,8 +1,8 @@
-import rehypeSlug from 'rehype-slug';
-import rehypeHighlight from 'rehype-highlight';
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
 
 export const meta = {
-  title: 'Node',
+  title: "Node",
   order: 1,
 };
 
@@ -119,13 +119,13 @@ export const { api, db } = Server({
 It has a friendly ORM-like API for interacting with the database. For example, creating a tenant is as simple as:
 
 ```js
-app.post('/tenants', async (req, res) => {
+app.post("/tenants", async (req, res) => {
   const { name } = req.body;
-  const newTenant = await db('tenants')
+  const newTenant = await db("tenants")
     .insert({
       name: name,
     })
-    .returning('id');
+    .returning("id");
   res.json(newTenant);
 });
 ```

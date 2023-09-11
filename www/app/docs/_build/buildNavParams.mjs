@@ -87,7 +87,6 @@ async function generateNestedObjects(input) {
 
   setOrder(output);
 
-  // console.log(JSON.stringify(output, null, 2));
   function sorter(obj) {
     if (obj instanceof Array) {
       obj.sort(sortOrder);
