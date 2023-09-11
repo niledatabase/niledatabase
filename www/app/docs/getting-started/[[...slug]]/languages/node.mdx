@@ -41,17 +41,17 @@ In the left-hand menu, click on "Settings" and then select "Credentials". Genera
 
 Enough GUI for now. Let's get to some code.
 
-If you haven't cloned this repository yet, now will be an excellent time to do so. 
+If you haven't cloned this repository yet, now will be an excellent time to do so.
 
 ```bash
 git clone https://github.com/niledatabase/niledatabase
 cd niledatabase/examples/quickstart/node_react
 ```
 
-Rename `.env.example` to `.env` 
+Rename `.env.example` to `.env`
 Update NILE_USER and NILE_PASSWORD with the credentials you picked up in the previous step.
 
-``` bash
+```bash
 NILE_BASE_PATH = "https://dev.khnum.thenile.dev"
 NILE_USER = "018a6b69-b1e9-7574-b8f3-efd5fe63d9bb"
 NILE_PASSWORD = "d757518e-6d52-4bdb-b85f-f008c9f80097"
@@ -59,7 +59,7 @@ NILE_PASSWORD = "d757518e-6d52-4bdb-b85f-f008c9f80097"
 
 Install dependencies
 
-``` bash
+```bash
 npm install
 ```
 
@@ -67,28 +67,30 @@ npm install
 
 Start both NodeJS api server and the React frontend
 
-``` bash
+```bash
 npm start
 ```
 
-Go to http://localhost:3000 in a browser to see the app. 
+Go to http://localhost:3000 in a browser to see the app.
 
 You can try a few things in the app
 
 <ol>
   <li>Create a new tenant.</li>
-  <li>Click on "Explore" next to one of the tenants and create a few todo items.</li>
+  <li>
+    Click on "Explore" next to one of the tenants and create a few todo items.
+  </li>
   <li>Browse through all the pre populated tenants and todo items</li>
 </ol>
 
 ### 6. Check the data in Nile
 
 Go back to the Nile query editor and see the data you created from the app.
-  
-  ```sql
-  SELECT tenants.name, title, complete
-  FROM todos join tenants on tenants.id = todos.tenant_id;
-  ```
+
+```sql
+SELECT tenants.name, title, complete
+FROM todos join tenants on tenants.id = todos.tenant_id;
+```
 
 You should see all the todos you created, and the tenants they belong to.
 
@@ -96,12 +98,12 @@ You should see all the todos you created, and the tenants they belong to.
 
 The interesting part of this example is the NodeJS server. Lets take a look at [`/examples/quickstart/node_react/app.js`](https://github.com/niledatabase/niledatabase/blob/master/examples/quickstart/node_react/app.js).
 
-The NodeJS server uses the [Nile JS client](https://github.com/niledatabase/nile-js) to connect to Nile. 
+The NodeJS server uses the [Nile JS client](https://github.com/niledatabase/nile-js) to connect to Nile.
 
 The client is initialized with the credentials you provided in the `.env` file:
 
 ```js
-  export const { api, db } = Server({
+export const { api, db } = Server({
   api: {
     basePath: String(process.env.BASE_PATH),
   },
@@ -117,16 +119,18 @@ The client is initialized with the credentials you provided in the `.env` file:
 It has a friendly ORM-like API for interacting with the database. For example, creating a tenant is as simple as:
 
 ```js
-  app.post('/tenants', async (req, res) => {
-      const { name } = req.body
-      const newTenant = await db('tenants').insert({
-          name: name
-      }).returning('id');
-      res.json(newTenant)
+app.post("/tenants", async (req, res) => {
+  const { name } = req.body;
+  const newTenant = await db("tenants")
+    .insert({
+      name: name,
     })
+    .returning("id");
+  res.json(newTenant);
+});
 ```
 
-The example uses Nile's tenant isolation to guarantee that each tenant can only see their own data. 
+The example uses Nile's tenant isolation to guarantee that each tenant can only see their own data.
 
 ```js
 app.get('/tenants/:tenantId/todos', async (req, res) => {
@@ -152,6 +156,3 @@ app.get('/tenants/:tenantId/todos', async (req, res) => {
 - [Tenant aware tables](https://www.notion.so/640f7364152a4941990cf6351b065049?pvs=21)
 - Tenant context
 - Tenant isolation
-
-
-
