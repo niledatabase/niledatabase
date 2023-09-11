@@ -4,7 +4,7 @@ import Typography from '@mui/joy/Typography';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import { Grid } from "@mui/joy";
-import Box from "@mui/material/Box"
+import Box from "@mui/joy/Box"
 
 export type AuthDataPanelProps = {
   authData: AuthCookieData;

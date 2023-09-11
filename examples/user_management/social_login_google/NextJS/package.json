@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@theniledev/react": "^1.0.0-alpha.186",
-    "@theniledev/server": "^1.0.0-alpha.186",
+    "@theniledev/react": "^1.0.0-alpha.194",
+    "@theniledev/server": "^1.0.0-alpha.194",
     "@types/node": "20.3.3",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
