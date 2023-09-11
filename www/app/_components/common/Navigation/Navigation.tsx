@@ -33,7 +33,6 @@ export default function Navigation({ className }: { className?: string }) {
             <Link href="/blog">Blog</Link>
             <Link href="/templates">Templates</Link>
             <Link href="/pricing">Pricing</Link>
-            <Link href="/status">Status</Link>
           </div>
         </div>
         <div className="hidden lg:show lg:flex flex-row">

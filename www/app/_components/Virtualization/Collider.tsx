@@ -1,3 +1,4 @@
+"use client";
 import useIntersection from "@/app/_components/common/useIntersection";
 import { useEffect, useRef } from "react";
 export type ColliderProps = {

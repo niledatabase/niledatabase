@@ -1,0 +1,27 @@
+[
+  {
+    "title": "Things DBs Don't Do - But Should",
+    "authors": ["gwenshap"],
+    "sizzle": "In this blog, I'll point out functionality that is very often needed in data platforms and more likely than not, you will need to build yourself since your DB won’t handle it for you. Even though it really should.",
+    "tags": ["database"]
+  },
+  {
+    "title": "Compute-Storage Separation Explained",
+    "authors": ["gwenshap"],
+    "image": "storage_compute.png",
+    "sizzle": "Last week, I saw Gunnar Morling post a good question on Twitter...",
+    "tags": ["database"]
+  },
+  {
+    "title": "Thank You, 2022 Edition",
+    "authors": ["gwenshap"],
+    "image": "thanksgiving_22.png",
+    "tags": ["company"]
+  },
+  {
+    "title": "Shipping multi-tenant SaaS using Postgres Row-Level Security",
+    "sizzle": "At Nile, we’re making it easier for companies to build world-class control planes for their infra SaaS products",
+    "authors": ["miki"],
+    "tags": ["database"]
+  }
+]

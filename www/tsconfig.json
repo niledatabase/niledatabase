@@ -23,7 +23,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/templates/_build/templates.mjs",
-    "app/templates/_build/cleanTemplateReadme.mjs"
+    "app/templates/_build/cleanTemplateReadme.mjs",
+    "scripts/generateSearch.mjs"
   ],
   "exclude": ["node_modules"]
 }
