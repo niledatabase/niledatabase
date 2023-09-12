@@ -13,6 +13,8 @@ import Checkbox from "@mui/joy/Checkbox";
 import { useParams } from "react-router";
 import Chip from "@mui/joy/Chip";
 import Sheet from "@mui/joy/Sheet/Sheet";
+import Breadcrumbs from '@mui/joy/Breadcrumbs';
+import Link from '@mui/joy/Link';
 
 export default function Todos() {
   const params = useParams();
@@ -29,6 +31,10 @@ export default function Todos() {
 
   return (
     <div id="todo">
+      <Breadcrumbs>
+        <Link href="/"> Tenant List </Link>
+        <Link href={`/tenants/${tenantId}/todos`}> Tenant {tenantId} </Link>
+      </Breadcrumbs>
       <Stack
         direction="column"
         flexWrap="wrap"
