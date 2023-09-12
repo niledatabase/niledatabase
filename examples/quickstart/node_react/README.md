@@ -95,3 +95,13 @@ docker run -it -p3006:3006 todo-node-react
 ```
 
 If you point your browser to http://localhost:3006, you'll see the first page of the app. 
+
+### 7. Deploying on Fly
+
+Assuming you already installed `fly` CLI and got the signup/login all set up.
+Also, as you can see, this is just an example for "try it out" purposes. It isn't especially secure or highly available with these configs...
+
+```
+fly launch --internal-port 3006 --vm-memory 1024 --env DANGEROUSLY_DISABLE_HOST_CHECK=true
+fly deploy --ha=false --vm-memory 1024
+```
