@@ -2,9 +2,9 @@
 
 This template shows how to use Nile in NodeJS and React for a multi-tenant todo list application.
 
-- [Live demo - TBD](TBD)
+- [Live demo - TBD](https://demo-todo-node.fly.dev)
 - [Video guide - TBD](TBD)
-- [Step by step guide - TBD](TBD)
+- [Step by step guide - TBD](https://website-juppj6xr9-niledatabase.vercel.app/docs/getting-started/languages/node)
 
 ## Getting Started
 
@@ -16,7 +16,7 @@ Signup to Nile - https://dev-nad.thenile.dev and choose "Yes, let's get started"
 
 After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
 
-```js
+```sql
     create table todos (tenant_id uuid, title varchar(256), complete boolean);
 ```
 
@@ -41,7 +41,7 @@ Also fill in the username and password with the credentials you picked up in the
 
 It should look something like this:
 
-```
+```bash
 NILE_BASE_PATH = "https://dev.khnum.thenile.dev"
 NILE_DATABASE = "main"
 NILE_WORKSPACE = "todoapp"
@@ -85,23 +85,49 @@ curl  -X GET \
   'http://localhost:3001/insecure/all_todos'
 ```
 
-### 6. Running the app with Docker
+## More things you can do
+### Running the app with Docker
 
 You can build a docker container that runs this app, and exposes the webapp on port 3006 (the NodeJS and REST API are not exposed). To build and run the container:
 
-```
+```bash
 docker build . -t todo-node-react
 docker run -it -p3006:3006 todo-node-react
 ```
 
 If you point your browser to http://localhost:3006, you'll see the first page of the app. 
 
-### 7. Deploying on Fly
+### Deploying on Fly
 
 Assuming you already installed `fly` CLI and got the signup/login all set up.
 Also, as you can see, this is just an example for "try it out" purposes. It isn't especially secure or highly available with these configs...
 
-```
+```bash
 fly launch --internal-port 3006 --vm-memory 1024 --env DANGEROUSLY_DISABLE_HOST_CHECK=true
 fly deploy --ha=false --vm-memory 1024
 ```
+
+### Known Issues
+
+#### NodeJS 20.5.0
+
+We recommend running this example on NodeJS 18 (current long term stable release).
+
+When attempting to run this on NodeJS 20.5.0, you may see:
+
+```js
+[api] TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /Users/gwen/workspaces/niledatabase/examples/quickstart/node_react/src/be/app.ts
+[api]     at new NodeError (node:internal/errors:405:5)
+[api]     at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:99:9)
+[api]     at defaultGetFormat (node:internal/modules/esm/get_format:142:36)
+[api]     at defaultLoad (node:internal/modules/esm/load:91:20)
+[api]     at nextLoad (node:internal/modules/esm/hooks:733:28)
+[api]     at load (/Users/gwen/.nvm/versions/node/v20.5.0/lib/node_modules/ts-node/dist/child/child-loader.js:19:122)
+[api]     at nextLoad (node:internal/modules/esm/hooks:733:28)
+[api]     at Hooks.load (node:internal/modules/esm/hooks:377:26)
+[api]     at MessagePort.handleMessage (node:internal/modules/esm/worker:168:24)
+[api]     at [nodejs.internal.kHybridDispatch] (node:internal/event_target:778:20) {
+[api]   code: 'ERR_UNKNOWN_FILE_EXTENSION'
+```
+
+If you know how to fix this, contributions are more than welcome.
