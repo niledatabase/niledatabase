@@ -2,9 +2,9 @@
 
 This template shows how to use Nile in NodeJS and React for a multi-tenant todo list application.
 
-* [Live demo - TBD](TBD)
-* [Video guide - TBD](TBD)
-* [Step by steo guide - TBD](TBD)
+- [Live demo - TBD](TBD)
+- [Video guide - TBD](TBD)
+- [Step by step guide - TBD](TBD)
 
 ## Getting Started
 
@@ -28,14 +28,14 @@ In the left-hand menu, click on "Settings" and then select "Credentials". Genera
 
 ### 4. Setting the environment
 
-If you haven't cloned this repository yet, now will be an excellent time to do so. 
+If you haven't cloned this repository yet, now will be an excellent time to do so.
 
 ```bash
 git clone https://github.com/niledatabase/niledatabase
 cd niledatabase/examples/quickstart/node_react
 ```
 
-Rename `.env.example` to `.env`, and update it with your workspace and database name. 
+Rename `.env.example` to `.env`, and update it with your workspace and database name.
 _(Your workspace and database name are displayed in the header of the Nile dashboard.)_
 Also fill in the username and password with the credentials you picked up in the previous step.
 
@@ -78,9 +78,30 @@ curl  -X POST \
 
 # list todos for tenant (don't forget to use a read tenant-id in the URL)
 curl  -X GET \
-  'http://localhost:3001/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' 
+  'http://localhost:3001/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
 
 # list todos for all tenants
 curl  -X GET \
   'http://localhost:3001/insecure/all_todos'
+```
+
+### 6. Running the app with Docker
+
+You can build a docker container that runs this app, and exposes the webapp on port 3006 (the NodeJS and REST API are not exposed). To build and run the container:
+
+```
+docker build . -t todo-node-react
+docker run -it -p3006:3006 todo-node-react
+```
+
+If you point your browser to http://localhost:3006, you'll see the first page of the app. 
+
+### 7. Deploying on Fly
+
+Assuming you already installed `fly` CLI and got the signup/login all set up.
+Also, as you can see, this is just an example for "try it out" purposes. It isn't especially secure or highly available with these configs...
+
+```
+fly launch --internal-port 3006 --vm-memory 1024 --env DANGEROUSLY_DISABLE_HOST_CHECK=true
+fly deploy --ha=false --vm-memory 1024
 ```
