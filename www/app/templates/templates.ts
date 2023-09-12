@@ -11,7 +11,8 @@ export const NodeJSQuickstart: Template = {
   imageSrc: "/templates/nad.jpg",
   // the readmeURL should be publically accessible.
   // It should also be the real github url, not the raw readme
-  readmeUrl: "https://github.com/niledatabase/niledatabase/blob/master/examples/quickstart/node_react/README.md",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/master/examples/quickstart/node_react/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
     Framework: "NodeJS",
@@ -19,7 +20,6 @@ export const NodeJSQuickstart: Template = {
     Publisher: "Nile",
   },
 };
-
 
 export const placeholderTemplate: Template = {
   // A great name, preferably unique, name for the template
