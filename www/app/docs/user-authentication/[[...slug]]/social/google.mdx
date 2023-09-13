@@ -6,18 +6,13 @@ export const meta = {
 
 # Support Google Authentication with Next.js
 
-Supporting social login is a great way to reduce the friction of signup, and Nile makes it easy to
-add social providers to your application. This guide walks you through setting up Google as an
-identity provider.
+Supporting social login is a great way to reduce the friction of signup, and Nile makes it easy to add social providers to your application. This guide walks you through setting up Google as an identity provider.
 
-We're assuming you have a Nile database up and running. If not, [sign up for Nile][nad] and follow
-the prompts to create a workspace and database. You'll also need a Google account and a
-[Google Cloud project](https://console.cloud.google.com/) for your application.
+We're assuming you have a Nile database up and running. If not, [sign up for Nile][nad] and follow the prompts to create a workspace and database. You'll also need a Google account and a [Google Cloud project](https://console.cloud.google.com/) for your application.
 
 # Connect Your Google and Nile Accounts
 
-To ensure a secure exchange, your Google project and Nile database need to know a little bit about
-each other.
+To ensure a secure exchange, your Google project and Nile database need to know a little bit about each other.
 
 ## Enable Google in Nile
 
@@ -25,35 +20,23 @@ each other.
 2. Click on the **Identity Providers** icon in the side navigation.
 3. Click on the Google tile and flip the **Enabled** toggle on.
 4. The client id and secret are values you'll obtain from Google. Leave these blank for now.
-5. The **Redirect URI** is the page in your application that Nile redirects to after a user
-   authenticates, or when an error occurs. For this example, enter
-   `http://localhost:3000/api/auth/handler`.
-6. Under **Callback URI**, click the **Copy** button to copy your database's callback URI to your
-   clipboard. You'll need this when you configure Google. (The **Component URL** isn't necessary
-   for this example; it's used for configuring the Nile UI component.)
+5. The **Redirect URI** is the page in your application that Nile redirects to after a user authenticates, or when an error occurs. For this example, enter `http://localhost:3000/api/auth/handler`.
+6. Under **Callback URI**, click the **Copy** button to copy your database's callback URI to your clipboard. You'll need this when you configure Google. (The **Component URL** isn't necessary for this example; it's used for configuring the Nile UI component.)
 
 ## Configure Google
 
-1. Login to your [Google Cloud console](https://console.cloud.google.com/) and open the
-   [credentials panel](https://console.cloud.google.com/apis/credentials) for your Google Cloud
-   project.
+1. Login to your [Google Cloud console](https://console.cloud.google.com/) and open the [credentials panel](https://console.cloud.google.com/apis/credentials) for your Google Cloud project.
 2. Click **Create Credentials > OAuth client ID**.
-3. In the **Application type** dropdown, select **Web Application** and give it a name, like
-   "Nile Integration".
+3. In the **Application type** dropdown, select **Web Application** and give it a name, like "Nile Integration".
 4. Under **Authorized redirect URIs**, past the **Callback URI** that you copied above.
-5. Click **Create**. Google displays the **client id** and **client secret**. (The client id is the
-   longer of the two, and will look something like
-   `012345678901-e234mkac1qefclfum27kktf4c0jbnfuc.apps.googleusercontent.com`. The client secret is
-   the shorter string and will look something like `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`.)
-   Copy the generated values—you'll provide them to Nile.
+5. Click **Create**. Google displays the **client id** and **client secret**. (The client id is the longer of the two, and will look something like `012345678901-e234mkac1qefclfum27kktf4c0jbnfuc.apps.googleusercontent.com`. The client secret is the shorter string and will look something like `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`.) Copy the generated values—you'll provide them to Nile.
 
 ## Provide Client Credentials to Nile
 
 1. Back in the Nile dashboard, enter the client id and secret that you obtained from Google.
 2. Click **Save**.
 
-With your Google and Nile accounts connected, your application can now authenticate users with
-Google accounts.
+With your Google and Nile accounts connected, your application can now authenticate users with Google accounts.
 
 # Test Authentication
 
@@ -74,17 +57,11 @@ Rename `.env.local.example` to `.env.local`, and update it with your workspace a
 
 ## Run and Verify
 
-Run the app with `yarn dev` or `npm dev` to start the app, and open
-[http://localhost:3000/](http://localhost:3000/) in your browser. When
-you click "Continue with Google", you'll be redirected to Google's authentication screen. After
-successfully logging in, you'll be redirected back to the demo application's route handler.
+Run the app with `yarn dev` or `npm dev` to start the app, and open [http://localhost:3000/](http://localhost:3000/) in your browser. When you click "Continue with Google", you'll be redirected to Google's authentication screen. After successfully logging in, you'll be redirected back to the demo application's route handler.
 
-_Note: some browsers will present a security warning when redirecting from Nile to the local demo
-application because of the switch from HTTPS to HTTP. This is expected behavior for this demo.
-You should, of course, run your production application over HTTPS._
+_Note: some browsers will present a security warning when redirecting from Nile to the local demo application because of the switch from HTTPS to HTTP. This is expected behavior for this demo. You should, of course, run your production application over HTTPS._
 
-You can verify that your user was created in the [Nile dashboard][nad]. Open the SQL editor for your
-database and query the users table:
+You can verify that your user was created in the [Nile dashboard][nad]. Open the SQL editor for your database and query the users table:
 
 ```sql
 SELECT * FROM users.users;
@@ -94,9 +71,7 @@ SELECT * FROM users.users;
 
 ## The GoogleSSOButton
 
-In `/app/page.tsx`, you'll find a `<NileProvider>` configured with those environment variables. This
-wraps a `<GoogleSSOButton>` component from the Nile UI Kit. This component initiates an
-authentication request to your Nile database, which redirects to the Google authentication screen.
+In `/app/page.tsx`, you'll find a `<NileProvider>` configured with those environment variables. This wraps a `<GoogleSSOButton>` component from the Nile UI Kit. This component initiates an authentication request to your Nile database, which redirects to the Google authentication screen.
 
 ```tsx
 export default function Home() {
@@ -116,9 +91,7 @@ export default function Home() {
 
 ## The Auth Redirect Handler
 
-When the user successfully authenticates with Google, they are redirected to the URL you provided
-in your Nile configuration. In this example, that's `/api/auth/handler/route.ts`, which simply
-echoes back the values that Nile sends you when an authentication attempt is resolved:
+When the user successfully authenticates with Google, they are redirected to the URL you provided in your Nile configuration. In this example, that's `/api/auth/handler/route.ts`, which simply echoes back the values that Nile sends you when an authentication attempt is resolved:
 
 ```ts
 import jwtDecode, { JwtPayload } from "jwt-decode";
@@ -158,12 +131,8 @@ export async function POST(req: Request) {
 
 # Summary
 
-Nile uses the standard [OpenID Connect protocol](https://openid.net/developers/how-connect-works/)
-to authenticate users with Google, then creates corresponding users in your database. Your
-application will receive information about the user and a Nile access token associated with the
-user—see [Handling Auth Redirects]() for more on that.
+Nile uses the standard [OpenID Connect protocol](https://openid.net/developers/how-connect-works/) to authenticate users with Google, then creates corresponding users in your database. Your application will receive information about the user and a Nile access token associated with the user—see [Handling Auth Redirects]() for more on that.
 
-Nile supports other authentication methods, like [SSO with Okta](). Or if you want to dig deeper
-into querying user data, read [Querying as a User]().
+Nile supports other authentication methods, like [SSO with Okta](). Or if you want to dig deeper into querying user data, read [Querying as a User]().
 
 [nad]: https://dev-nad.thenile.dev/ "Nile Dashboard"
