@@ -37,8 +37,10 @@ module.exports = {
           "linear-gradient(100deg, #F4C587 0%, #D6D3E9 60.42%, #99D2EC 95.31%)",
         "gradient-text-144":
           "linear-gradient(144deg, #FDC066 0%, #D8D3E9 51.00%, #7BD1ED 100%)",
-        pattern: "url('/bg-pattern.jpg')",
         footer: "url('/footer-bg.svg')",
+        base: "url('/bg-pattern.jpg')",
+        community: "url('/hero-community.png')",
+        templates: "url('/hero-templates.png')",
         fader: "linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, #000 50%);",
         "gradient-white":
           "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.5) 100%)",

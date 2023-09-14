@@ -7,7 +7,7 @@ export default function TemplateCard(props: Template) {
   return (
     <Link
       href={`/templates/${encodeURIComponent(name)}`}
-      className="rounded-[20px] border border-gray overflow-hidden w-[382px] h-[386px]"
+      className="rounded-[20px] border border-gray overflow-hidden w-[382px] h-[386px] shrink-0"
     >
       <div className="h-[218px] bg-[#2D2D2D] overflow-hidden">
         <Image

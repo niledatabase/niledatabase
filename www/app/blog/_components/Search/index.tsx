@@ -136,17 +136,17 @@ function SearchBox() {
     >
       <div className="absolute w-[100px] h-[52px] bg-horizontal-fade -left-[76px] -top-[1px]"></div>
       <div
-        className={`w-full flex flex-row gap-2 relative z-10 px-4 border border-[#242627] bg-black rounded-[12px]`}
+        className={`py-1 w-full flex flex-row relative z-10 px-2 border border-[#242627] bg-black rounded-[12px] items-center gap-[10px]`}
       >
         <Image
-          className="absolute top-[5px] left-[4px]"
+          className="ml-3"
           src="/icons/search.svg"
           alt="looking glass"
-          width={32}
-          height={32}
+          width={24}
+          height={24}
         />
         <input
-          className={`bg-black w-full border-none text-lg leading-10 focus:outline-none py-[1px] px-[20px]`}
+          className={`bg-black w-full border-none text-lg leading-10 focus:outline-none py-[1px] placeholder:opacity-40`}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"

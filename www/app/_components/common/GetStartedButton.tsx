@@ -3,7 +3,7 @@ import { sizes } from "./sizes";
 export default function GetStartedButton() {
   return (
     <div className="flex place-content-center">
-      <button className="flex flex-row gap-2 text-lg gradientButton mt-10 font-medium after:rounded-[48px]">
+      <button className="flex flex-row gap-2 text-[16px] gradientButton mt-[40px] leading-[24px] after:rounded-[12px] w-[150px] px-1">
         Get Started
         <Image
           src="/arrow.svg"

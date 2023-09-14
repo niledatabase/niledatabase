@@ -33,8 +33,10 @@ export default function GradientButton({
     return "bg-gradient-text-144 py-3 px-4 bg-clip-text text-transparent gradientBorderButton subpixel-antialiased bg-black overflow-hidden whitespace-nowrap";
   }, []);
   return (
-    <button className="bg-black rounded-xl" type={type} onClick={handleClick}>
-      <div className={subClasses}>{children}</div>
-    </button>
+    <div>
+      <button className="bg-black rounded-xl" type={type} onClick={handleClick}>
+        <div className={subClasses}>{children}</div>
+      </button>
+    </div>
   );
 }

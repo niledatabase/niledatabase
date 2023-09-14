@@ -259,7 +259,12 @@ function Hit({ hit, allowHighlight = true }: any) {
     >
       <div>
         <div className="font-bold py-2">{hit.header}</div>
-        <div className="font-bold">{hit.title}</div>
+        <div
+          className="font-bold"
+          dangerouslySetInnerHTML={{
+            __html: hit.title,
+          }}
+        />
         {hit.header !== hit.content && (
           <div className="text py-2 -mt-2">
             <span
