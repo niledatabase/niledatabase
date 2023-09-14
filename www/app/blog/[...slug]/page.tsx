@@ -25,7 +25,7 @@ export default async function BlogPage(props: { params: { slug: string[] } }) {
   const { default: Article, metadata } = await import(`../${article[0]}`);
   const { publishDate, readLength } = parseMetadata(file, Article);
   return (
-    <Container hidePattern={true}>
+    <Container background={null}>
       <div className="bg-[#2D2D2D] rounded-xl w-[800px] h-[505px] overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex">
         {metadata?.image ? (
           <Image
