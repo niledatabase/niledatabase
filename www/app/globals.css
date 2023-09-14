@@ -215,3 +215,9 @@ html .navBlur {
   font-size: 32px;
   margin-bottom: 0.5rem;
 }
+
+mark {
+  background: none;
+  opacity: 1;
+  color: white;
+}

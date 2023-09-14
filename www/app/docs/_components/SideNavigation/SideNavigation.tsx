@@ -1,5 +1,6 @@
 import inspectDirectory from "../PageContent/inspectDirectory";
 import { RenderItems } from "./RenderItems";
+import SearchBox from "./Search";
 
 export default async function SideNavigation({ page }: { page: string }) {
   const navBar = await inspectDirectory();
@@ -11,6 +12,7 @@ export default async function SideNavigation({ page }: { page: string }) {
       >
         <div className="relative">
           <div className="absolute top-0 bottom-0 w-[1px] bg-border h-full right-[0px] hidden lg:block -z-10"></div>
+          <SearchBox />
           <ul className="p-4 pl-2 w-[280px]">
             <RenderItems items={navBar} page={page} />
           </ul>

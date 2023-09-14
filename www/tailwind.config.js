@@ -13,6 +13,7 @@ module.exports = {
       colors: {
         gray: "rgba(223, 239, 254, 0.14)",
         lightGray: "rgba(223, 239, 254, 0.20)",
+        dimmer: "#97a1aa",
         white: "#D9D9D9",
         black: "#0E0E0E",
         error: "#ea3a42",
