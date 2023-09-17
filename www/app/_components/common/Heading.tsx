@@ -32,7 +32,7 @@ export default function Heading(props: Props) {
           <h2
             className={`${
               className ? `${className} ` : ""
-            }leading-[64px] text-${textAlign} text-[56px] font-normal text-white`}
+            }text-center lg:text-${textAlign} text-white  leading-[40px] text-[32px] lg:leading-[72px] lg:text-[64px]`}
           >
             {text}
           </h2>

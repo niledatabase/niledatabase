@@ -7,6 +7,7 @@
   --background-start-rgb: 0, 0, 0;
   --background-end-rgb: 0, 0, 0;
   --scroll: 0;
+  text-rendering: geometricPrecision;
 }
 
 body {
@@ -85,7 +86,7 @@ body {
   color: #000;
   cursor: pointer;
   display: inline-flex;
-  padding: 0.5rem 1.15rem;
+  padding: 0.65rem 1.15rem;
   position: relative;
   z-index: 1;
   justify-content: center;
@@ -201,17 +202,33 @@ html .navBlur {
 .prose h1 {
   line-height: 56px;
   font-size: 48px;
-  margin-bottom: 0.5rem;
+  font-weight: 400;
 }
 .prose h2 {
   font-size: 40px;
   line-height: 48px;
   letter-spacing: 0.4px;
-  margin-bottom: 0.5rem;
+  font-weight: 400;
 }
 .prose h3 {
   line-height: 40px;
   line-height: 40px;
   font-size: 32px;
-  margin-bottom: 0.5rem;
+  font-weight: 400;
+}
+
+mark {
+  background: none;
+  opacity: 1;
+  color: white;
+}
+@media (max-width: 1024px) {
+  .templateSearch {
+    width: calc(100vw - 3rem);
+  }
+}
+@media (max-width: 768px) {
+  .templateSearch {
+    width: calc(100vw - 20px);
+  }
 }

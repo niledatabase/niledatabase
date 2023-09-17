@@ -10,16 +10,16 @@ export default function Subscribe() {
   const [submitted, setDidSubmit] = useState(false);
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <input
         ref={ref}
-        className={`bg-[#141414] rounded-[20px] border-1 border-[#373737] font-[17px] py-5 px-10 min-w-[500px] mb-3`}
+        className={`bg-[#141414] border border-[#373737] rounded-[20px] text-[17px] py-5 px-10 min-w-[500px] mb-3 placeholder:opacity-40`}
         placeholder="Email Address"
       />
-      <div className="absolute right-[8px] top-[8px]">
+      <div className="absolute right-[8px] top-[9px]">
         <button
           className={`transition-all duration-500 flex flex-row gap-2 text-lg gradientButton font-medium after:rounded-[12px] ${
-            submitted ? "w-[484px]" : "w-[140px]"
+            submitted ? "w-[484px]" : "w-[170px]"
           }`}
           onClick={async () => {
             if (ref.current?.value) {
@@ -37,7 +37,7 @@ export default function Subscribe() {
           <div
             className={`flex flex-row  duration-500 ${
               submitted ? "opacity-0" : "opacity-100"
-            } trasition-opacity`}
+            } trasition-opacity gap-[24px]`}
           >
             <div>Subscribe</div>
             <Image

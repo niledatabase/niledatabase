@@ -8,7 +8,9 @@ import GradientButton from "../GradientButton";
 export default function Navigation({ className }: { className?: string }) {
   return (
     <div
-      className={`navBlur flex flex-row flex-1 w-full sticky top-0 z-50 ${className}`}
+      className={`navBlur flex flex-row flex-1 w-full sticky top-0 z-50 ${
+        className ?? ""
+      }`}
     >
       <div className="flex flex-row items-center justify-between px-28 flex-1 lg:h-auto h-[76px]">
         <div className="w-full items-center flex lg:block lg:items-start lg:w-44 ">
@@ -38,9 +40,9 @@ export default function Navigation({ className }: { className?: string }) {
         <div className="hidden lg:show lg:flex flex-row">
           <div className="flex flex-row gap-4">
             <button className="github-star">
-              <div className="flex flex-row py-3 px-4 border-[#242627] border rounded-xl items-center gap-2 bg-black">
+              <div className="flex flex-row py-3 px-4 border-[#242627] border rounded-xl items-center gap-[10px] bg-black">
                 <GithubStar />
-                <span className="w-px h-5 opacity-20 bg-gray-100"></span>
+                <span className="w-px h-5 opacity-20 bg-[#D9D9D9]"></span>
                 <span className="bg-gradient-white bg-clip-text text-transparent whitespace-nowrap">
                   Star us on
                 </span>

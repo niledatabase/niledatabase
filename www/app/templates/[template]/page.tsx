@@ -41,7 +41,7 @@ export default async function TemplateDetail(pageProps: PageProps) {
   const linkUrl = template.readmeUrl.replace(/\/blob.+/, "");
 
   return (
-    <Container hidePattern={true}>
+    <Container background={null}>
       <div className="flex flex-row w-full justify-around">
         <div className="flex w-1/3 pr-4 flex-col">
           <div className="w-full">

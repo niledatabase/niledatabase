@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build:blogSearch && npm run build:templates && npm run build:sidenav && next build",
+    "build": "npm run build:docSearch && npm run build:blogSearch && npm run build:templates && npm run build:sidenav && next build",
     "start": "next start",
     "lint": "next lint",
     "build:templates": "node ./app/templates/_build/templates.mjs",
     "build:sidenav": "node ./app/docs/_build/sidenav.mjs",
-    "build:blogSearch": "node -r dotenv/config --experimental-loader=./scripts/blog/loader.mjs ./scripts/blog/generateSearch.mjs dotenv_config_path=.env.local"
+    "build:blogSearch": "node -r dotenv/config --experimental-loader=./scripts/blog/loader.mjs ./scripts/blog/generateSearch.mjs",
+    "build:docSearch": "node -r dotenv/config --experimental-loader=./scripts/blog/loader.mjs ./scripts/docs/generateSearch.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^2.3.0",

@@ -22,7 +22,7 @@ function HeroArticle(props: Props) {
   const { fileName, title, authors: _authors, content, sizzle, image } = props;
   const { publishDate, slug, readLength } = parseMetadata(fileName, content);
   return (
-    <Link href={`/blog/${slug}`}>
+    <Link href={`/blog/${slug}`} className="mt-12 -mb-10">
       <div className="flex flex-col lg:flex-row gap-16">
         <div className="bg-[#2D2D2D] rounded-xl w-[550px] h-[347px] overflow-hidden flex-shrink-0 items-center justify-center flex">
           {image ? (
@@ -56,10 +56,10 @@ function HeroArticle(props: Props) {
 }
 
 export default async function Blog() {
-  const [mostRecent, ...remaining]: any = await glob("app/blog/**.mdx");
+  const [mostRecent]: any = await glob("app/blog/**.mdx");
   const { default: FirstArticle, metadata } = await import(`${mostRecent}`);
   return (
-    <Container hidePattern={true}>
+    <Container background={null}>
       <HeroArticle fileName={mostRecent} {...metadata} content={FirstArticle} />
       <Divider />
       <Search />

@@ -1,33 +1,9 @@
-import fs from "node:fs";
 import { glob } from "glob";
+import ignore from "./globIgnore.mjs";
+import { processFile } from "./processFile.mjs";
 
 function sortOrder(a, b) {
   return (a?.order || 0) - (b?.order || 0);
-}
-
-async function processFile(file) {
-  // get the header from the 1st # - can't import because this also runs at build time
-  const content = fs.readFileSync(file, "utf-8");
-  const firstHeader = /#\s(.+)/.exec(content);
-  const maybeHeader = /title:\s"(.+)"/.exec(content);
-  const maybeOrder = /order:\s(-?\d+)/.exec(content);
-  const localFile = file.replace(/\/\[\[...slug\]\]/, "");
-  const parts = localFile.split("/");
-  parts.shift();
-  const baseResponse = { file, slug: parts, order: 0 };
-  if (maybeHeader) {
-    const [, header] = maybeHeader;
-    baseResponse.header = header;
-  } else if (firstHeader) {
-    const [, header] = firstHeader;
-    baseResponse.header = header;
-  }
-
-  if (maybeOrder) {
-    const [, order] = maybeOrder;
-    baseResponse.order = Number(order);
-  }
-  return baseResponse;
 }
 
 async function generateNestedObjects(input) {
@@ -44,10 +20,10 @@ async function generateNestedObjects(input) {
 
       if (!existingItem) {
         if (path.endsWith(".mdx")) {
-          const payload = await processFile(path);
+          const { metadata } = await processFile(path);
           existingItem = {
             name: segment,
-            ...payload,
+            ...metadata,
           };
         } else {
           existingItem = {
@@ -111,19 +87,7 @@ export async function buildNavParams() {
 
   // do this instead of *.mdx, or parse the directories and figure out where things go. This seems easier.
   const results = await glob(`app/docs/**`, {
-    ignore: [
-      "app/docs",
-      "**/*.tsx",
-      "**/*.ts",
-      "**/*.json",
-      "**/*.mjs",
-      "**/_components",
-      "**/_build",
-      "**/README.md",
-      "**/Cards",
-      "**/PageContent",
-      "**/SideNavigation",
-    ],
+    ignore,
   });
   const out = await generateNestedObjects(results.sort());
   if (out.length > 0) {
