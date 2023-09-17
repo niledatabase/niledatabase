@@ -6,6 +6,222 @@ export const meta = {
   order: 1,
 };
 
-# Explore Nile in 5 minutes with Java
+# Build a Java application with Nile
 
-TBD.
+In this tutorial, you will learn about Nile's tenant virtualization features, while building a todo list application with Java, Spring Boot 3 and Hibernate.
+
+## 1. Create a database
+
+1. Signup to [Nile](https://dev-nad.thenile.dev).
+2. You should see a welcome message. Click on "Lets get started"
+   ![Nile welcome.](/docs/nile-welcome.png)
+3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to “Use Token in Browser”.
+
+## 2. Create a table
+
+After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
+
+```sql
+create table todos (
+    tenant_id uuid,
+    title varchar(256),
+    complete boolean);
+```
+
+You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
+
+See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
+![Creating a table in Nile's admin dashboard](/docs/gui-create-table.png)
+
+## 3. Get credentials
+
+In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentails and keep them somewhere safe. These give you access to the database.
+
+## 4. Set the environment
+
+Enough GUI for now. Let's get to some code.
+
+If you haven't cloned this repository yet, now will be an excellent time to do so.
+
+```bash
+git clone https://github.com/niledatabase/niledatabase
+cd niledatabase/examples/quickstart/java
+```
+
+Copy `src/main/resources/application.example` to `src/main/resources/application.properties` and fill in the details of
+your Nile DB.
+
+It should look something like this:
+
+```bash
+spring.datasource.jdbc-url=jdbc:postgresql://dev.khnum.thenile.dev:5432/funky_giraffe
+spring.datasource.username=018a6b69-b1e9-7574-b8f3-efd5fe63d9bb
+spring.datasource.password=d757518e-6d52-4bdb-b85f-f008c9f80097
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=false
+```
+
+## 5. Build and Run the application
+
+This example uses Maven as the build tool. So you'll build it like this:
+
+```bash
+mvn clean package
+```
+
+You should see the Maven build complete with the following output:
+
+```text
+ [INFO] --- spring-boot:3.1.0:repackage (repackage) @ todo-nile ---
+ [INFO] Replacing main artifact /niledatabase/examples/quickstart/java/target/todo-nile-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+ [INFO] The original artifact has been renamed to /niledatabase/examples/quickstart/java/target/todo-nile-0.0.1-SNAPSHOT.jar.original
+ [INFO] ------------------------------------------------------------------------
+ [INFO] BUILD SUCCESS
+ [INFO] ------------------------------------------------------------------------
+```
+
+Now you can run the application:
+
+```bash
+java -jar target/todo-nile-0.0.1-SNAPSHOT.jar
+```
+
+You should see the application starting with the last line of output saying:
+
+```text
+ 2023-09-16T16:56:38.685-07:00  INFO 16200 --- [           main] com.example.todowebapp.TodoWebapp        :
+ Started TodoWebapp in 2.648 seconds (process running for 2.886)
+```
+
+This is a backend service that exposes REST APIs with the todo list functionality.
+You can experiment with these APIs with `curl`:
+
+```bash
+curl --location --request POST 'localhost:8080/tenants' \
+--header 'Content-Type: application/json' \
+--data-raw '{"name":"my first customer"}'
+
+# replace the tenant ID in the URL:
+curl  -X POST \
+  'http://localhost:8080/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{"title": "feed the cat", "complete": false}'
+
+curl  -X GET 'http://localhost:8080/tenants'
+
+# replace the tenant ID in the URL:
+curl  -X GET \
+  'http://localhost:8080/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
+
+# you'll need to create another todo with another tenant to see anything different here
+curl  -X GET \
+  'http://localhost:8080/insecure/all_todos'
+```
+
+## 6. Check the data in Nile
+
+Go back to the Nile query editor and see the data you created from the app.
+
+```sql
+SELECT tenants.name, title, complete
+FROM todos join tenants on tenants.id = todos.tenant_id;
+```
+
+You should see all the todos you created, and the tenants they belong to.
+
+## 7. How does it work?
+
+There are a few moving pieces here, so let's break it down. If you are already familiar with Spring, this should mostly look familiar.
+
+The application starting point is in `src/main/java/com/example/todowebapp/TodoWebapp.java`.
+It's a Spring Boot application, so it has a `main` method that starts the application.
+
+Below it, you will see that we are defining a `DataSource` bean.
+We've extended the standard Hikari data source to add a `TenantAwareDataSource` decorator, which we'll soon explain.
+
+```java
+  HikariDataSource dataSource = new TenantAwareDataSource();
+```
+
+In the same file, you can also see that we are configuring the Web MVC framework to use the `TenantInterceptor`, which we are also about to dive into.
+
+```java
+  registry.addWebRequestInterceptor(new TenantInterceptor()).addPathPatterns("/tenants/{tenant_id}/**");
+```
+
+By using tenant aware data source and interceptor, we are making sure that every request and every database query is associated with a tenant end to end.
+
+### 7.1 The `TenantInterceptor`
+
+This is a Spring MVC interceptor. It is responsible for setting the `nile.tenant_id` context on every request.
+It parses the request path and extracts the tenant ID from it, then it stores it in `ThreadLocalContext`.
+The `ThreadLocalContext` is a simple class that stores the tenant ID in a `ThreadLocal` variable and provides some utility methods for access.
+
+```java
+  public void preHandle(WebRequest request) throws Exception {
+      // We are getting the Tenant ID from the path parameters.
+      // Another way would be to parse a JWT and extract the Tenant ID from the Claims in the Token.
+      // Or to use a header like `X-TenantID`
+      Map pathVariables = (Map) request.getAttribute(
+              HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE,
+              RequestAttributes.SCOPE_REQUEST);
+      String tenantParam = (String) pathVariables.get("tenant_id");
+      UUID tenantId = UUID.fromString(tenantParam);
+      ThreadLocalContext.setTenantID(tenantId);
+  }
+```
+
+Once the interceptor sets the tenant ID, it is set for the entire request handling path.
+The `TenantAwareDataSource` will use it to set the `nile.tenant_id` context on every connection it returns.
+
+### 7.2 The `TenantAwareDataSource`
+
+This is a decorator for the standard Hikari data source. It is reponsible for providing our web application with a connection to the correct tenant database.
+It does this by wrapping `getConnection` and setting `nile.tenant_id` context on the connection before returning it.
+This means that every connection is associated with a specific tenant, and any queries executed on it will be scoped to that tenant.
+
+This is Nile's "virtual tenant databases" feature in action.
+
+```java
+  public Connection getConnection() throws SQLException {
+      Connection connection = super.getConnection();
+
+
+      try (Statement sql = connection.createStatement()) {
+          // This makes sure the connection is to this tenant's "virtual DB"
+          // Any query we run on this connection will only ever return data the belongs to this tenant
+          ThreadLocalContext.getTenantID().ifPresentOrElse(
+                  tenantID -> setContext(sql, "SET nile.tenant_id = '" + tenantID + "'"),
+                  () -> setContext(sql, "RESET nile.tenant_id")
+          );
+      }
+
+      return connection;
+  }
+```
+
+### 7.3 Tieing it all together - handling a request for all todos for a tenant
+
+The `TodoController` is the Spring MVC controller that handles the requests for the todo list.
+Its method `getAllTodos` is the handler for `GET /tenants/{tenant_id}/todos`.
+In order to return all todos for a specific tenant, it uses a very simple query:
+
+```java
+    public @ResponseBody Iterable<Todo> getAllTodos(@PathVariable UUID tenant_id) {
+        return todoRepository.findAll();
+    }
+```
+
+You should note that `todoRepository.findAll()` is a default method of the JPA Repository (Java's standard ORM layer, wrapping Hibernate in this case).
+We did not have to implement any querying logic here.
+
+Even though this query is identical to the one used in `insecureController`, it will only return the todos for the tenant that was requested.
+This is due to the use of tenant interceptor on the request path, and the tenant aware data source that is used by the JPA repository.
+
+## 8. Looking good!
+
+🏆 Tada! You have learned the basic Nile concepts:
+
+- [Tenant aware tables](TBD)
+- Tenant context
+- Tenant isolation
