@@ -8,7 +8,7 @@ export default async function SideNavigation({ page }: { page: string }) {
     <>
       <aside
         aria-label="Sidenav"
-        className="whitespace-nowrap hidden lg:flex sticky top-[62px] sidenav pb-5 shrink-0 overflow-y-scroll"
+        className="whitespace-nowrap z-10 hidden xl:flex xl:sticky top-[62px] sidenav pb-5 shrink-0 overflow-y-scroll"
       >
         <div className="relative">
           <div className="absolute top-0 bottom-0 w-[1px] bg-border h-full right-[0px] hidden lg:block -z-10"></div>

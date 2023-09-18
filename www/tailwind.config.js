@@ -40,6 +40,7 @@ module.exports = {
         footer: "url('/footer-bg.svg')",
         base: "url('/bg-pattern.jpg')",
         community: "url('/hero-community.png')",
+        docs: "url('/hero-docs.png')",
         templates: "url('/hero-templates.png')",
         fader: "linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, #000 50%);",
         "gradient-white":
