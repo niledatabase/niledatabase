@@ -1,0 +1,29 @@
+# flyctl launch added from .gitignore
+# Compiled class file
+**/*.class
+
+# Log file
+**/*.log
+
+# BlueJ files
+**/*.ctxt
+
+# Mobile Tools for Java (J2ME)
+**/.mtj.tmp
+
+# Original packaging not needed
+**/*.original
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+**/hs_err_pid*
+**/replay_pid*
+
+# Database connection config. It is very secre
+**/application.properties
+.run
+
+# flyctl launch added from .idea/.gitignore
+# Default ignored files
+.idea/shelf
+.idea/workspace.xml
+fly.toml

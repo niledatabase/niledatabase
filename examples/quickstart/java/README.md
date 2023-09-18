@@ -110,3 +110,10 @@ docker build -t todo-java .
 docker run -p 8080:8080 todo-java
 ```
 
+If you have Fly.io account, you can deploy on Fly.io by running:
+```test
+fly launch
+fly deploy --ha=false
+```
+
+Make sure you use the `.dockerignore` file from this repo. Fly's generated .dockerignore ignores the main jar for this application.
