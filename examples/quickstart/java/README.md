@@ -101,3 +101,12 @@ curl  -X GET \
 curl  -X GET \
   'http://localhost:8080/insecure/all_todos'
 ```
+
+## Running a Docker Image
+
+You can build and run a Docker image of this example by running:
+```text
+docker build -t todo-java .
+docker run -p 8080:8080 todo-java
+```
+
