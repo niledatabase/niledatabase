@@ -26,7 +26,8 @@
     "app/templates/_build/cleanTemplateReadme.mjs",
     "scripts/generateSearch.mjs",
     "app/docs/_build/globIgnore.mjs",
-    "app/docs/_build/processFile.mjs"
+    "app/docs/_build/processFile.mjs",
+    "scripts/images/images.mjs"
   ],
   "exclude": ["node_modules"]
 }
