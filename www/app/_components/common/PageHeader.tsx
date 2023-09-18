@@ -38,11 +38,11 @@ export default function PageHeader({
 }) {
   const { titleClasses, subtitleClasses } = colorClasses[color];
   return (
-    <>
+    <div>
       <h1 className={`${titleClasses} ${titleOverrides}`}>{title}</h1>
       {subtitle && (
         <div className={`${subtitleClasses} ${subOverrides}`}>{subtitle}</div>
       )}
-    </>
+    </div>
   );
 }
