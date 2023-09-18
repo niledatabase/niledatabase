@@ -39,21 +39,26 @@ export default function Navigation({ className }: { className?: string }) {
         </div>
         <div className="hidden lg:show lg:flex flex-row">
           <div className="flex flex-row gap-4">
-            <button className="github-star">
-              <div className="flex flex-row py-3 px-4 border-[#242627] border rounded-xl items-center gap-[10px] bg-black">
-                <GithubStar />
-                <span className="w-px h-5 opacity-20 bg-[#D9D9D9]"></span>
-                <span className="bg-gradient-white bg-clip-text text-transparent whitespace-nowrap">
-                  Star us on
-                </span>
-                <Image
-                  src="/githubLogo.svg"
-                  alt="Github Logo"
-                  width={20}
-                  height={20}
-                />
-              </div>
-            </button>
+            <Link
+              href={"https://github.com/niledatabase/niledatabase"}
+              target="_blank"
+            >
+              <button className="github-star">
+                <div className="flex flex-row py-3 px-4 border-[#242627] border rounded-xl items-center gap-[10px] bg-black">
+                  <GithubStar />
+                  <span className="w-px h-5 opacity-20 bg-[#D9D9D9]"></span>
+                  <span className="bg-gradient-white bg-clip-text text-transparent whitespace-nowrap">
+                    Star us on
+                  </span>
+                  <Image
+                    src="/githubLogo.svg"
+                    alt="Github Logo"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+              </button>
+            </Link>
             <GradientButton>Sign Up</GradientButton>
           </div>
         </div>
