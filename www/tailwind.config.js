@@ -38,7 +38,7 @@ module.exports = {
         "gradient-text-144":
           "linear-gradient(144deg, #FDC066 0%, #D8D3E9 51.00%, #7BD1ED 100%)",
         footer: "url('/footer-bg.svg')",
-        base: "url('/bg-pattern.jpg')",
+        base: "url('/bg-pattern.webp')",
         community: "url('/hero-community.png')",
         docs: "url('/hero-docs.png')",
         templates: "url('/hero-templates.png')",
