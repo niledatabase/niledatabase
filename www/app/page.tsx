@@ -14,7 +14,7 @@ export default function Home() {
     <Container>
       <Hero />
       <div className="border rounded-2xl border-gray p-2">
-        <Video poster="dashboard.svg" src="snapshot.mp4" />
+        <Video poster="dashboard.webp" src="snapshot.mp4" />
       </div>
       <Divider />
       <Virtualization />
