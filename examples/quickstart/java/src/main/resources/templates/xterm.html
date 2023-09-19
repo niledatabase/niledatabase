@@ -1,0 +1,16 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:href="@{/node_modules/xterm/css/xterm.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/node_modules/xterm/lib/xterm.js}"></script>
+
+</head>
+<body>
+<div id="terminal"></div>
+    <script>
+        var term = new Terminal();
+        term.open(document.getElementById('terminal'));
+        term.write('Hello from \x1B[1;3;33mNile\x1B[0m $ ')
+      </script>
+</body>
+</html>
