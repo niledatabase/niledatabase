@@ -16,7 +16,8 @@ public class XtermController {
     // Due to WebSocket Broker config, this maps to `/app/xterm`
     @MessageMapping("/xterm")
     @SendTo("/resp")
-    public TextMessage xtermCmd(TextMessage msg) {
-        return new TextMessage("test:" + msg);
+    public XTermResponse xtermCmd(XTermCommand cmd) {
+        System.out.println("got websocket message!" + cmd.getCommand());
+        return new XTermResponse("Got your message. You said: " + cmd.getCommand() );
     }
 }

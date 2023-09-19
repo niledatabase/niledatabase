@@ -3,15 +3,118 @@
 <head>
     <link th:href="@{/node_modules/xterm/css/xterm.css}" rel="stylesheet" />
     <script type="text/javascript" th:src="@{/node_modules/xterm/lib/xterm.js}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 </head>
 <body>
 <div id="terminal"></div>
-    <script>
-        var term = new Terminal();
-        term.open(document.getElementById('terminal'));
-        term.write('Hello from \x1B[1;3;33mNile\x1B[0m $ ')
-      </script>
+<script>
+const stompClient = new StompJs.Client({
+    brokerURL: 'ws://localhost:8080/ws'
+});
+
+var term = new window.Terminal({
+    cursorBlink: true,
+    convertEol: true,
+});
+
+stompClient.onConnect = (frame) => {
+    console.log('Connected: ' + frame);
+    stompClient.subscribe('/resp', (msg) => {
+        console.log("got event", msg);
+        resp = JSON.parse(msg.body).get
+        const json = JSON.parse(msg.body)
+        term.write(json.response);
+        term.prompt = () => {
+            term.write('\r\n$ ');
+        };
+        prompt(term);
+    });
+};
+
+stompClient.onWebSocketError = (error) => {
+    console.error('Error with websocket', error);
+};
+
+stompClient.onStompError = (frame) => {
+    console.error('Broker reported error: ' + frame.headers['message']);
+    console.error('Additional details: ' + frame.body);
+};
+
+stompClient.activate();
+term.open(document.getElementById('terminal'));
+term.write('Hello from \x1B[1;3;33mNile\x1B[0m $ ')
+
+
+function init() {
+    if (term._initialized) {
+        return;
+    }
+
+    term._initialized = true;
+
+    term.prompt = () => {
+        term.write('\r\n$ ');
+    };
+    prompt(term);
+
+    term.onData(e => {
+        console.log(e);
+        switch (e) {
+            case '\u0003': // Ctrl+C
+                term.write('^C');
+                prompt(term);
+                break;
+            case '\n': // Enter
+            case '\r': // Enter
+                term.write('\r\n');
+                runCommand(term, command);
+                command = '';
+                break;
+            case '\u007F': // Backspace (DEL)
+                // Do not delete the prompt
+                if (term._core.buffer.x > 2) {
+                    term.write('\b \b');
+                    if (command.length > 0) {
+                        command = command.substr(0, command.length - 1);
+                    }
+                }
+                break;
+            case '\u0009':
+                console.log('tabbed', output, ["dd", "ls"]);
+                break;
+            default:
+                if (e >= String.fromCharCode(0x20) && e <= String.fromCharCode(0x7E) || e >= '\u00a0') {
+                    command += e;
+                    term.write(e);
+                }
+        }
+    });
+}
+
+function clearInput(command) {
+    var inputLengh = command.length;
+    for (var i = 0; i < inputLengh; i++) {
+        term.write('\b \b');
+    }
+}
+function prompt(term) {
+    command = '';
+    term.write('\r\n$ ');
+}
+
+function runCommand(term, command) {
+    if (command.length > 0) {
+        // clearInput(command);
+        stompClient.publish({
+            destination: '/ws/xterm',
+            body: JSON.stringify({'command' : command})
+        })
+        return;
+    }
+}
+
+init();
+</script>
 </body>
 </html>
 <!--
