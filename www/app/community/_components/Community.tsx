@@ -1,40 +1,41 @@
-import Link from "next/link";
-import Image from "next/image";
-import GradientButton from "@/app/_components/common/GradientButton";
-import Heading from "@/app/_components/common/Heading";
+import Link from 'next/link';
+import Image from 'next/image';
+import GradientButton from '@/app/_components/common/GradientButton';
+import Heading from '@/app/_components/common/Heading';
+import { last } from 'lodash';
 
 const playerProps = {
   // width: 372,
   // height: 218,
   allowFullScreen: true,
-  title: "YouTube video player",
+  title: 'YouTube video player',
   allow:
-    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+    'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
 };
 const videos = [
   {
-    title: "Cloudflare",
-    videoUrl: "https://www.youtube.com/embed/DvblO-f2bqQ",
+    title: 'Cloudflare',
+    videoUrl: 'https://www.youtube.com/embed/DvblO-f2bqQ',
   },
   {
-    title: "Airtable",
-    videoUrl: "https://www.youtube.com/embed/KgzwybMkqVc",
+    title: 'Airtable',
+    videoUrl: 'https://www.youtube.com/embed/KgzwybMkqVc',
   },
   {
-    title: "Loom",
-    videoUrl: "https://www.youtube.com/embed/3SIF03MHaxw",
+    title: 'Loom',
+    videoUrl: 'https://www.youtube.com/embed/3SIF03MHaxw',
   },
   {
-    title: "Promise of Serverless",
-    videoUrl: "https://www.youtube.com/embed/vLlSoHqTTN8",
+    title: 'Promise of Serverless',
+    videoUrl: 'https://www.youtube.com/embed/vLlSoHqTTN8',
   },
   {
-    title: "Multi-tenant Journey",
-    videoUrl: "https://www.youtube.com/embed/hR5kEfpZM4Y",
+    title: 'Multi-tenant Journey',
+    videoUrl: 'https://www.youtube.com/embed/hR5kEfpZM4Y',
   },
   {
-    title: "RLS",
-    videoUrl: "https://www.youtube.com/embed/xwHZxZKecXw",
+    title: 'RLS',
+    videoUrl: 'https://www.youtube.com/embed/xwHZxZKecXw',
   },
 ];
 export default function Tutorials() {
@@ -61,19 +62,21 @@ export default function Tutorials() {
           tackled by hundreds of SaaS companies from the cummunity
         </div>
       </div>
-      <div className="flex flex-row gap-8 flex-wrap mt-16 justify-center">
+      <div className="flex flex-col lg:flex-row flex-wrap mt-16 justify-center">
         {videos.map((video) => {
           return (
-            <div key={video.videoUrl}>
-              <div className="border border-gray rounded-[20px] p-4">
-                <iframe
-                  className="rounded-xl overflow-hidden w-[316px] h-[186px] md:w-[680px] md:h-[400px] xl:w-[372px] xl:h-[218px]"
-                  {...playerProps}
-                  src={video.videoUrl}
-                />
-              </div>
-              <div className="text-[#F7F8F8] text-[17px] mt-3">
-                {video.title}
+            <div key={video.videoUrl} className="w-full lg:w-1/2 xl:w-1/3">
+              <div className="p-4">
+                <div className="border border-gray rounded-[20px] p-4 aspect-video">
+                  <iframe
+                    className="rounded-xl overflow-hidden w-full h-full"
+                    {...playerProps}
+                    src={video.videoUrl}
+                  />
+                </div>
+                <div className="text-[#F7F8F8] text-[17px] mt-3">
+                  {video.title}
+                </div>
               </div>
             </div>
           );

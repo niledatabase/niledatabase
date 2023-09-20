@@ -1,14 +1,14 @@
-import Container from "@/app/_components/common/Container";
-import Divider from "@/app/_components/common/Divider";
-import GradientButton from "@/app/_components/common/GradientButton";
-import Heading from "@/app/_components/common/Heading";
-import PageHeader from "@/app/_components/common/PageHeader";
-import Image from "next/image";
-import TemplateSearch from "../templates/TemplateSearch";
-import loadTemplates from "../templates/dataFetcher";
-import Link from "next/link";
-import Tutorials from "./_components/Tutorials";
-import Community from "./_components/Community";
+import Container from '@/app/_components/common/Container';
+import Divider from '@/app/_components/common/Divider';
+import GradientButton from '@/app/_components/common/GradientButton';
+import Heading from '@/app/_components/common/Heading';
+import PageHeader from '@/app/_components/common/PageHeader';
+import Image from 'next/image';
+import TemplateSearch from '../templates/TemplateSearch';
+import loadTemplates from '../templates/dataFetcher';
+import Link from 'next/link';
+import Tutorials from './_components/Tutorials';
+import Community from './_components/Community';
 
 export default async function Home() {
   const templates = await loadTemplates();
@@ -17,7 +17,7 @@ export default async function Home() {
       <div className="flex items-center flex-col mb-[184px]">
         <PageHeader
           title={
-            <div className="flex flex-row mt-5 items-center">
+            <div className="flex flex-row mt-5 items-center w-full justify-center">
               We
               <Image
                 src="/heart.svg"
@@ -56,11 +56,11 @@ export default async function Home() {
           </div>
         </Link>
         <Link href="#">
-          <div className="flex flex-col gap-10 itemDivider p-8">
+          <div className="flex flex-col gap-6 itemDivider p-8">
             <Image
               src="/discord.svg"
               alt="github text in black and white gradient"
-              width={189}
+              width={191}
               height={52}
               className="z-10 relative"
             />
@@ -70,7 +70,7 @@ export default async function Home() {
           </div>
         </Link>
         <Link href="https://x.com/niledatabase">
-          <div className="flex flex-col gap-10 itemDivider p-8">
+          <div className="flex flex-col gap-8 itemDivider p-8">
             <Image
               src="/x.svg"
               alt="github text in black and white gradient"
@@ -88,25 +88,25 @@ export default async function Home() {
       <div className="flex gap-4 flex-col container">
         <Heading text="Templates" textAlign="left" />
         <div className="flex flex-col lg:flex-row justify-between pb-10 w-full gap-4">
-          <div className="text-center text-xl opacity-60 lg:pr-40 lg:text-left ">
+          <div className="text-center text-xl opacity-60 lg:text-left ">
             Get started with one of the hundreds of Nile templates built by the
             community. Contribute your own template to help others.
           </div>
-          <div className="flex justify-center lg:justify-end w-full">
-            <GradientButton href="/templates" variant="soft">
-              <div className="flex flex-row gap-2 items-start w-[170px]">
-                <Image
-                  src="/icons/plus.svg"
-                  alt="orange plus sign"
-                  width={24}
-                  height={24}
-                />
-                <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
-                  Add Your Template
-                </span>
-              </div>
-            </GradientButton>
-          </div>
+        </div>
+        <div className="flex justify-center lg:justify-end w-full -mb-6">
+          <GradientButton href="/templates" variant="soft">
+            <div className="flex flex-row gap-2 items-start w-[170px]">
+              <Image
+                src="/icons/plus.svg"
+                alt="orange plus sign"
+                width={24}
+                height={24}
+              />
+              <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                Add Your Template
+              </span>
+            </div>
+          </GradientButton>
         </div>
         <TemplateSearch
           templates={templates}
