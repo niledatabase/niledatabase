@@ -35,8 +35,12 @@ public class XtermController {
         if (!"curl".equals(parsed.get(0).toLowerCase())) {
             return new XTermResponse("Error: This terminal emulator only supports CURL");
         } else {
-            String resp = $(strCmd);
-            return new XTermResponse(resp);
+            try {
+                String resp = $(strCmd);
+                return new XTermResponse(resp);
+            } catch(Exception e) {
+                return new XTermResponse("Error: Could not run " + strCmd + " because " + e.getMessage());
+            }
         }
     }
 }

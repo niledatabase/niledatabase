@@ -1,0 +1,41 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+      pre {
+        overflow-x: auto;
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+      }
+    </style>
+</head>
+<body>
+<div>
+<h1> Few REST calls to let you explore the Todo backend app:</h1>
+    <ul>
+    <li>Create a tenant:<pre>curl -X POST 'http://localhost:8080/tenants' --header 'Content-Type: application/json' --data '{"name":"my first customer"}'</pre></li>
+    <li>Take a look at the new tenant:<pre>curl  -X GET 'http://localhost:8080/tenants'</pre></li>
+        <li>Create a todo for the tenant. Make sure you use the tenant ID you got previously in your URL:
+            <pre>curl -X POST 'http://localhost:8080/tenants/d4f8ce99-48ad-4275-8f21-885d1d7d9613/todos' --header 'Content-Type: application/json' --data '{"title": "feed the cat", "complete": false}'</pre>
+        </li>
+    <li>Get the TODOs for the tenant:
+        <pre>curl  -X GET 'http://localhost:8080/tenants/018aaf79-51b0-77c5-b1a4-24180a9c3329/todos'</pre>
+    </li>
+    <li> Repeat the previous steps to create another tenant with their own TODO</li>
+        <li> Now check the insecure endpoint that bypasses the tenant-aware interceptor and therefore sees TODO for all tenants:
+            <pre>curl  -X GET 'http://localhost:8080/insecure/all_todos'</pre>
+        </li>
+    </ul>
+
+
+   </pre>
+</div>
+
+<div>
+    <iframe src="/xterm" frameborder="0" width="100%" height="1024" align="right"></iframe>
+</div>
+
+</body>

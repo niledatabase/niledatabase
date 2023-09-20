@@ -8,8 +8,12 @@
 <body>
 <div id="terminal"></div>
 <script>
+
+const host = location.host;
+const websocket_host  = "ws://"+host+"/ws";
+console.log("websocket host:" + websocket_host);
 const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8080/ws'
+    brokerURL: websocket_host
 });
 
 var term = new window.Terminal({
@@ -21,9 +25,15 @@ stompClient.onConnect = (frame) => {
     console.log('Connected: ' + frame);
     stompClient.subscribe('/resp', (msg) => {
         console.log("got event", msg);
-        resp = JSON.parse(msg.body).get
-        const json = JSON.parse(msg.body)
-        term.write(json.response);
+        resp = JSON.parse(msg.body).get;
+        const json = JSON.parse(msg.body);
+        let pretty;
+        try {
+            pretty = JSON.stringify(JSON.parse(json.response), null, 2);
+        } catch {
+            pretty = json.response
+        }
+        term.write(pretty);
         term.prompt = () => {
             term.write('\r\n$ ');
         };
