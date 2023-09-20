@@ -9,8 +9,14 @@
 <div id="terminal"></div>
 <script>
 
+var httpProtocol = 'http://';
+var wsProtocol = 'ws://';
+if (window.location.protocol === 'https:') {
+    httpProtocol = 'http://';
+    wsProtocol = 'wss://';
+}
 const host = location.host;
-const websocket_host  = "ws://"+host+"/ws";
+const websocket_host  = wsProtocol + host+"/ws";
 console.log("websocket host:" + websocket_host);
 const stompClient = new StompJs.Client({
     brokerURL: websocket_host
