@@ -1,66 +1,162 @@
-"use client";
-import Image from "next/image";
-import Videos from "./Videos";
-import { useEffect, useRef, useState } from "react";
-import useScroll from "./useScroll";
-import useIntersection from "@/app/_components/common/useIntersection";
-import Texts from "./Texts";
-import Heading from "@/app/_components/common/Heading";
+'use client';
+import Image from 'next/image';
+import Videos from './Videos';
+import { useEffect, useRef, useState } from 'react';
+import useScroll from './useScroll';
+import useIntersection from '@/app/_components/common/useIntersection';
+import Texts from './Texts';
+import Heading from '@/app/_components/common/Heading';
+import Video from '../Video';
 
-const timings = [5000, 9000, 10000, 9000];
 export default function Virtualization() {
-  const [active, setActive] = useState<number>(0);
-  const [speedFactor, setSpeedFactor] = useState(1);
-  const autoProgress = useRef<NodeJS.Timeout>();
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const isVisible = useIntersection(wrapperRef, {
-    threshold: 0.8,
-  });
-  useScroll(speedFactor, () => null, { scrollJacking: true });
-  useEffect(() => {
-    if (isVisible) {
-      setSpeedFactor(0.1);
-      if (autoProgress) {
-        clearTimeout(autoProgress.current);
-      }
-      const timing = timings[active];
-      if (timing) {
-        autoProgress.current = setTimeout(() => {
-          setActive((active) => active + 1);
-        }, timing);
-      }
-    } else {
-      setSpeedFactor(1);
-    }
-    () => {
-      if (autoProgress.current) {
-        clearTimeout(autoProgress.current);
-      }
-    };
-  }, [active, isVisible]);
-
   return (
-    <div className="flex w-full" ref={wrapperRef}>
-      <div className="w-1/2">
-        <div className="flex flex-col h-full overflow-hidden">
-          <div className="flex-1">
-            <Heading textAlign="left" text="Built-in Tenant virtualization" />
+    <div className="relative">
+      <Image
+        className="absolute top-0 left-0 right-0 -z-10 w-full scale-x-125 blur-lg"
+        src="/virtualization.svg"
+        alt="orange and green blurred gradient"
+        width={1440}
+        height={744}
+      />
+
+      <div className="relative pb-10 mt-20">
+        <Heading text="Built-in Tenant virtualization"></Heading>
+      </div>
+      <div className="flex flex-row justify-around mb-20 bg-[#000] rounded-[20px] p-[56px]">
+        <div className="max-w-[400px] flex gap-8 flex-col">
+          <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3">
+            Native tenant data isolation
           </div>
-          <Texts active={active} setActive={setActive} />
+          <div className="flex flex-row gap-5 items-center">
+            <div className="z-10 relative icon rounded-[20px] flex justify-center">
+              <Image src="/icons/lock.svg" alt="lock" width={24} height={24} />
+            </div>
+            <div className="opacity-60 text-[18px]">
+              100% secure with no cross tenant access
+            </div>
+          </div>
+          <div className="flex flex-row gap-5 items-center">
+            <div className="z-10 relative icon rounded-[20px] flex justify-center">
+              <Image
+                src="/icons/rls.svg"
+                alt="table with lock"
+                width={24}
+                height={24}
+              />
+            </div>
+            <div className="opacity-60 text-[18px]">
+              No more struggle with row level security
+            </div>
+          </div>
+          <div className="flex flex-row gap-5 items-center">
+            <div className="z-10 relative icon rounded-[20px] flex justify-center">
+              <Image
+                src="/icons/share.svg"
+                alt="circles with interconnected dots"
+                width={24}
+                height={24}
+              />
+            </div>
+            <div className="opacity-60 text-[18px]">
+              Securely share data across tenants using shared tables
+            </div>
+          </div>
+        </div>
+        <div className="w-1/2">
+          <Video src="data-isolation.mp4" poster={'data-isolation.png'} />
         </div>
       </div>
-      <div className="w-1/2">
-        <div className="flex flex-row gap-1.5 mb-5">
-          <Image
-            src="/icons/nile.svg"
-            alt="Nile database icon"
-            width={13}
-            height={20}
-          />
-          <span className="text-[#8B8B8B] text-sm">Nile database</span>
+      <div className="flex flex-row w-full pb-6">
+        <div className="w-1/2 px-[20px]">
+          <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3">
+            Tenant Level Backups
+          </div>
         </div>
-        <div className="flex row gap-10 flex-wrap">
-          <Videos lastActive={active} />
+        <div className="w-1/2 px-[20px]">
+          <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3">
+            Performance Isolation Across Tenants
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-row justify-around">
+        <div className="w-1/2 px-[20px] flex flex-col gap-6">
+          <div className="flex flex-row gap-5 items-center">
+            <div className="z-10 relative icon rounded-[20px] flex justify-center">
+              <Image src="/icons/lock.svg" alt="lock" width={24} height={24} />
+            </div>
+            <div className="opacity-60 text-[18px]">
+              Instant restoration from backups for your customers
+            </div>
+          </div>
+          <div className="flex flex-row gap-5 items-center">
+            <div className="z-10 relative icon rounded-[20px] flex justify-center">
+              <Image
+                src="/icons/rls.svg"
+                alt="table with lock"
+                width={24}
+                height={24}
+              />
+            </div>
+            <div className="opacity-60 text-[18px]">
+              No hacky or buggy scripts to restore specific customers
+            </div>
+          </div>
+          <div className="flex flex-row gap-5 items-center mb-5">
+            <div className="z-10 relative icon rounded-[20px] flex justify-center">
+              <Image
+                src="/icons/share.svg"
+                alt="circles with interconnected dots"
+                width={24}
+                height={24}
+              />
+            </div>
+            <div className="opacity-60 text-[18px]">
+              Manage different backup strategies per tenant
+            </div>
+          </div>
+          <Image
+            src="/video/tenant-backup.gif"
+            alt="gif showing data isolation"
+            width={672}
+            height={258}
+          />
+        </div>
+        <div className="w-1/2 px-[20px] flex flex-col gap-6">
+          <div className="flex flex-row gap-5 items-center">
+            <div className="z-10 relative icon rounded-[20px] flex justify-center">
+              <Image src="/icons/lock.svg" alt="lock" width={24} height={24} />
+            </div>
+            <div className="opacity-60 text-[18px]">
+              Hot tenants have no impact on other tenants
+            </div>
+          </div>
+          <div className="flex flex-row gap-5 items-center">
+            <div className="z-10 relative icon rounded-[20px] flex justify-center">
+              <Image
+                src="/icons/rls.svg"
+                alt="table with lock"
+                width={24}
+                height={24}
+              />
+            </div>
+            <div className="opacity-60 text-[18px]">
+              Performance insights per tenant
+            </div>
+          </div>
+          <div className="flex flex-row gap-5 items-center mb-5">
+            <div className="z-10 relative icon rounded-[20px] flex justify-center">
+              <Image
+                src="/icons/share.svg"
+                alt="circles with interconnected dots"
+                width={24}
+                height={24}
+              />
+            </div>
+            <div className="opacity-60 text-[18px]">
+              Predictable performance for each tenant
+            </div>
+          </div>
+          <Video src="perf-iso.mp4" poster={'perf-iso.png'} />
         </div>
       </div>
     </div>

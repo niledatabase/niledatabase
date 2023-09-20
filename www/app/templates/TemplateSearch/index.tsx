@@ -1,12 +1,12 @@
-"use client";
-import Image from "next/image";
-import { useMemo, useState } from "react";
-import { Template } from "../types";
-import TemplateCard from "./TemplateCard";
-import GradientButton from "@/app/_components/common/GradientButton";
+'use client';
+import Image from 'next/image';
+import { useMemo, useState } from 'react';
+import { Template } from '../types';
+import TemplateCard from './TemplateCard';
+import GradientButton from '@/app/_components/common/GradientButton';
 
 const Empty = () => {
-  return <div>No templates match your criteria :feels_bad_man:</div>;
+  return <div>No templates match your criteria.</div>;
 };
 export default function TemplateSearch({
   templates,
@@ -17,17 +17,17 @@ export default function TemplateSearch({
   searchEnabled?: boolean;
   showButton?: boolean;
 }) {
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
 
   const filtered = useMemo(() => {
     if (!searchText) {
-      return templates;
+      return [...templates, ...templates];
     }
     const _templates = templates.filter((template) => {
       const keys = Object.keys(template);
       const anyMatches = keys
         .map((key) => {
-          if (key === "metadata") {
+          if (key === 'metadata') {
             for (const mKey of Object.keys(template.metadata)) {
               if (template[key][mKey].includes(searchText)) {
                 return true;
@@ -46,7 +46,7 @@ export default function TemplateSearch({
   return (
     <div className="templateSearch flex flex-row lg:flex-col gap-[24px] w-full">
       {searchEnabled && (
-        <div className="flex flex-row gap-2 flex-1 w-full -mt-8 relative z-10 px-4 py-3">
+        <div className="flex flex-row gap-2 flex-1 w-full -mt-12 relative z-10 px-6">
           <Image
             src="/icons/search.svg"
             alt="looking glass"
@@ -75,7 +75,7 @@ export default function TemplateSearch({
           </GradientButton>
         </div>
       )}
-      <div className="flex flex-row gap-6 lg:flex-wrap justify-start md:justify-center mt-[20px] overflow-hidden overflow-x-scroll w-screen md:w-auto">
+      <div className="flex flex-row lg:flex-wrap justify-start md:justify-center mt-[20px] overflow-hidden overflow-x-scroll w-screen md:w-auto">
         {!filtered.length ? (
           <Empty />
         ) : (

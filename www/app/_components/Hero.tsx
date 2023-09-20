@@ -1,13 +1,13 @@
-import { HeroText } from "@/app/_components/common/Hero";
-import { sizes } from "@/app/_components/common/sizes";
-import Image from "next/image";
+import { HeroText } from '@/app/_components/common/Hero';
+import { sizes } from '@/app/_components/common/sizes';
+import Image from 'next/image';
 
 export default function Hero() {
   return (
     <>
       <HeroText />
-      <div className="flex flex-row items-center justify-between gap-6 mt-28 flex-wrap">
-        <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
+      <div className="flex flex-row items-center justify-between gap-6 mt-28 w-full flex-wrap lg:flex-nowrap">
+        <div className="flex flex-col gap-3 items-center px-4 py-5">
           <Image
             src="/multi-tenant.jpg"
             alt="built-in multi tenant virtualization icon"
@@ -16,11 +16,12 @@ export default function Hero() {
             sizes={sizes}
             priority
           />
-          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base w-40">
-            Built-in Multi Tenant Virtualization
+          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base whitespace-nowrap">
+            Built-in Multi <br />
+            Tenant Virtualization
           </div>
         </div>
-        <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
+        <div className="flex flex-col gap-3 items-center px-4 py-5">
           <Image
             src="/user-management.jpg"
             alt="drop in user management icon"
@@ -29,11 +30,12 @@ export default function Hero() {
             sizes={sizes}
             priority
           />
-          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base w-40">
-            Drop in User Management
+          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base  whitespace-nowrap">
+            Drop in User <br />
+            Management
           </div>
         </div>
-        <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
+        <div className="flex flex-col gap-3 items-center px-4 py-5">
           <Image
             src="/distribute-globally.jpg"
             alt="Onboard once, Distribute Globally icon"
@@ -42,11 +44,12 @@ export default function Hero() {
             sizes={sizes}
             priority
           />
-          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base w-40">
-            Onboard Once, Distribute Globally
+          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base  whitespace-nowrap">
+            Onboard Once,
+            <br /> Distribute Globally
           </div>
         </div>
-        <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
+        <div className="flex flex-col gap-3 items-center px-4 py-5 ">
           <Image
             src="/elastic.jpg"
             alt=" Effortlessly Elastic icon"
@@ -55,11 +58,12 @@ export default function Hero() {
             sizes={sizes}
             priority
           />
-          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base w-20">
-            Effortlessly Elastic
+          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base  whitespace-nowrap">
+            Effortlessly <br />
+            Elastic
           </div>
         </div>
-        <div className="flex flex-col gap-3 items-center px-4 py-5 w-56">
+        <div className="flex flex-col gap-3 items-center px-4 py-5 ">
           <Image
             src="/instant-dashboards.jpg"
             alt="Instant Customer Dashboards icon"
@@ -68,8 +72,9 @@ export default function Hero() {
             sizes={sizes}
             priority
           />
-          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base w-40">
-            Instant Customer Dashboards
+          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base  whitespace-nowrap">
+            Instant Customer <br />
+            Dashboards
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
-"use client";
-import { useRef } from "react";
-import useIntersection from "./useIntersection";
+'use client';
+import { useRef } from 'react';
+import useIntersection from './useIntersection';
 
 type Props = {
   children?: JSX.Element | JSX.Element[];
@@ -14,8 +14,8 @@ export default function Heading(props: Props) {
     text,
     children,
     className,
-    textAlign = "center",
-    rootMargin = "-10%",
+    textAlign = 'center',
+    rootMargin = '-10%',
   } = props;
   const headerRef = useRef<HTMLDivElement>(null);
   const headerVisible = useIntersection(headerRef, { rootMargin });
@@ -24,15 +24,15 @@ export default function Heading(props: Props) {
       <div
         className={`transition-all ${
           headerVisible
-            ? "translate-y-0 opacity-100"
-            : "translate-y-6 opacity-0"
+            ? 'translate-y-0 opacity-100'
+            : 'translate-y-6 opacity-0'
         }`}
       >
         {text && (
           <h2
             className={`${
-              className ? `${className} ` : ""
-            }text-center lg:text-${textAlign} text-white  leading-[40px] text-[32px] lg:leading-[72px] lg:text-[64px]`}
+              className ? `${className} ` : ''
+            }text-center lg:text-${textAlign} text-white  leading-[40px] text-[32px] lg:leading-[64px] lg:text-[56px]`}
           >
             {text}
           </h2>

@@ -1,13 +1,13 @@
-import Container from "../_components/common/Container";
-import Image from "next/image";
-import Link from "next/link";
-import { glob } from "glob";
-import Divider from "../_components/common/Divider";
-import { Authors } from "./_components/Authors";
-import { Metadata } from "./_components/Metadata";
-import { parseMetadata } from "./_components/parseMetadata";
-import Footer from "./_components/Footer";
-import Search from "./_components/Search";
+import Container from '../_components/common/Container';
+import Image from 'next/image';
+import Link from 'next/link';
+import { glob } from 'glob';
+import Divider from '../_components/common/Divider';
+import { Authors } from './_components/Authors';
+import { Metadata } from './_components/Metadata';
+import { parseMetadata } from './_components/parseMetadata';
+import Footer from './_components/Footer';
+import Search from './_components/Search';
 
 type Props = {
   fileName: string;
@@ -23,10 +23,11 @@ function HeroArticle(props: Props) {
   const { publishDate, slug, readLength } = parseMetadata(fileName, content);
   return (
     <Link href={`/blog/${slug}`} className="mt-12 -mb-10">
-      <div className="flex flex-col lg:flex-row gap-16">
-        <div className="bg-[#2D2D2D] rounded-xl w-[550px] h-[347px] overflow-hidden flex-shrink-0 items-center justify-center flex">
+      <div className="flex flex-col xl:flex-row gap-16">
+        <div className="bg-[#2D2D2D] rounded-xl overflow-hidden flex-shrink-0 items-center justify-center flex">
           {image ? (
             <Image
+              className="aspect-video w-full"
               alt={image}
               width={550}
               height={347}
@@ -34,6 +35,7 @@ function HeroArticle(props: Props) {
             />
           ) : (
             <Image
+              className="aspect-video w-full"
               alt="coffee"
               width={550}
               height={347}
@@ -56,7 +58,7 @@ function HeroArticle(props: Props) {
 }
 
 export default async function Blog() {
-  const [mostRecent]: any = await glob("app/blog/**.mdx");
+  const [mostRecent]: any = await glob('app/blog/**.mdx');
   const { default: FirstArticle, metadata } = await import(`${mostRecent}`);
   return (
     <Container background={null}>
