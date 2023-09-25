@@ -1,5 +1,5 @@
-import GetStartedButton from './GetStartedButton';
-import PageHeader, { OverrideClasses } from './PageHeader';
+import GetStartedButton from "./GetStartedButton";
+import PageHeader, { OverrideClasses } from "./PageHeader";
 
 export function HeroText(props: OverrideClasses) {
   return (
@@ -16,7 +16,7 @@ export function HeroText(props: OverrideClasses) {
 
 export function HeroBottom(props: OverrideClasses) {
   return (
-    <div className={'lg:w-[784px] flex flex-col place-content-center'}>
+    <div className={"lg:w-[784px] flex flex-col place-content-center"}>
       <HeroText {...props} />
     </div>
   );

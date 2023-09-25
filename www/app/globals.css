@@ -161,8 +161,38 @@ html .navBlur {
   content: "";
   display: block;
   height: 100%;
-  left: -2px;
-  right: -2px;
+  left: -1px;
+  right: -1px;
+  top: 0;
+  bottom: 0px;
+  z-index: 1;
+}
+
+.grayBorder {
+  position: relative;
+  align-items: center;
+  border: solid 1px transparent;
+  border-radius: 24px;
+  border-bottom: none;
+
+  background-image: linear-gradient(black, black),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+.grayBorder::before {
+  position: absolute;
+  background-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+  border-radius: 24px;
+  content: "";
+  display: block;
+  height: 100%;
+  left: -1px;
+  right: -1px;
   top: 0;
   bottom: 0px;
   z-index: 1;
@@ -173,8 +203,8 @@ html .navBlur {
   fill: #ffb343;
 }
 
-.github-star:hover .star{
-  opacity:0;
+.github-star:hover .star {
+  opacity: 0;
 }
 .icon {
   flex-shrink: 0;
@@ -224,6 +254,9 @@ mark {
   background: none;
   opacity: 1;
   color: white;
+}
+.templateSearch {
+  background: black;
 }
 @media (max-width: 1024px) {
   .templateSearch {

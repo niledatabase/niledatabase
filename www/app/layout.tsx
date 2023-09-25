@@ -1,9 +1,9 @@
-import './globals.css';
-import type { Metadata } from 'next';
+import "./globals.css";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Nile Database',
-  description: 'Serverless postgres for Modern SaaS',
+  title: "Nile Database",
+  description: "Serverless postgres for Modern SaaS",
 };
 
 export default function RootLayout({

@@ -1,5 +1,5 @@
-'use client';
-import Link from 'next/link';
+"use client";
+import Link from "next/link";
 
 export function Links({ className }: { className?: string }) {
   return (

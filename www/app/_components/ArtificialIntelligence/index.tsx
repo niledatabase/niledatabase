@@ -1,6 +1,6 @@
-import Heading from '@/app/_components/common/Heading';
-import Image from 'next/image';
-import CodeSample from './code.mdx';
+import Heading from "@/app/_components/common/Heading";
+import Image from "next/image";
+import CodeSample from "./code.mdx";
 
 function ChatBlurbContent() {
   return (

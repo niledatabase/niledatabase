@@ -1,6 +1,6 @@
-import Navigation from '@/app/_components/common/Navigation';
-import Footer from '@/app/_components/common/Footer';
-import Body from '@/app/_components/Body';
+import Navigation from "@/app/_components/common/Navigation";
+import Footer from "@/app/_components/common/Footer";
+import Body from "@/app/_components/Body";
 
 export default function Container({
   children,

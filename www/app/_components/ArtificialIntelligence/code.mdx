@@ -1,14 +1,14 @@
 ```typescript
 const nile = new Server.default(serverConfig);
 const { user_id } = await nile.api.users.createUser({
-  email: 'someone@somecompany.com',
-  password: 'notsafetohardcode',
+  email: "someone@somecompany.com",
+  password: "notsafetohardcode",
 });
 // add user to tenant
-await nile.db.insert({ tenant_id, user_id }).into('tenant_users');
+await nile.db.insert({ tenant_id, user_id }).into("tenant_users");
 
 const tenantUsers = await nile
-  .db('tenant_users')
+  .db("tenant_users")
   .withTenant(tenantId)
-  .where('auth_oidc', true);
+  .where("auth_oidc", true);
 ```

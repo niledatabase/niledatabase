@@ -1,14 +1,14 @@
-import Container from '@/app/_components/common/Container';
-import Divider from '@/app/_components/common/Divider';
-import GradientButton from '@/app/_components/common/GradientButton';
-import Heading from '@/app/_components/common/Heading';
-import PageHeader from '@/app/_components/common/PageHeader';
-import Image from 'next/image';
-import TemplateSearch from '../templates/TemplateSearch';
-import loadTemplates from '../templates/dataFetcher';
-import Link from 'next/link';
-import Tutorials from './_components/Tutorials';
-import Community from './_components/Community';
+import Container from "@/app/_components/common/Container";
+import Divider from "@/app/_components/common/Divider";
+import GradientButton from "@/app/_components/common/GradientButton";
+import Heading from "@/app/_components/common/Heading";
+import PageHeader from "@/app/_components/common/PageHeader";
+import Image from "next/image";
+import TemplateSearch from "../templates/TemplateSearch";
+import loadTemplates from "../templates/dataFetcher";
+import Link from "next/link";
+import Tutorials from "./_components/Tutorials";
+import Community from "./_components/Community";
 
 export default async function Home() {
   const templates = await loadTemplates();
@@ -94,19 +94,21 @@ export default async function Home() {
           </div>
         </div>
         <div className="flex justify-center lg:justify-end w-full -mb-6">
-          <GradientButton href="/templates" variant="soft">
-            <div className="flex flex-row gap-2 items-start w-[170px]">
-              <Image
-                src="/icons/plus.svg"
-                alt="orange plus sign"
-                width={24}
-                height={24}
-              />
-              <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
-                Add Your Template
-              </span>
-            </div>
-          </GradientButton>
+          <div>
+            <GradientButton href="/templates" variant="soft">
+              <div className="flex flex-row gap-2 items-start w-[170px]">
+                <Image
+                  src="/icons/plus.svg"
+                  alt="orange plus sign"
+                  width={24}
+                  height={24}
+                />
+                <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                  Add Your Template
+                </span>
+              </div>
+            </GradientButton>
+          </div>
         </div>
         <TemplateSearch
           templates={templates}
@@ -114,17 +116,19 @@ export default async function Home() {
           showButton={false}
         />
         <div className="flex justify-center mt-10">
-          <GradientButton href="/templates" variant="soft">
-            <Image
-              src="/icons/templates.svg"
-              alt="book cover"
-              width={24}
-              height={24}
-            />
-            <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
-              Browse more templates
-            </span>
-          </GradientButton>
+          <div>
+            <GradientButton href="/templates" variant="soft">
+              <Image
+                src="/icons/templates.svg"
+                alt="book cover"
+                width={24}
+                height={24}
+              />
+              <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                Browse more templates
+              </span>
+            </GradientButton>
+          </div>
         </div>
       </div>
       <Divider />

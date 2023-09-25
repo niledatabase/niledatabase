@@ -1,12 +1,12 @@
-'use client';
-import Link from 'next/link';
-import Image from 'next/image';
-import './storeScroll';
-import { Links } from './Links';
-import MobileNav, { NavMenu } from './MobileNav';
-import { GithubCta } from './GithubCta';
-import GradientButton from '../GradientButton';
-import { useCallback, useState } from 'react';
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+import "./storeScroll";
+import { Links } from "./Links";
+import MobileNav, { NavMenu } from "./MobileNav";
+import { GithubCta } from "./GithubCta";
+import GradientButton from "../GradientButton";
+import { useCallback, useState } from "react";
 
 export default function Navigation({
   className,
@@ -24,7 +24,7 @@ export default function Navigation({
       <NavMenu open={open} />
       <div
         className={`flex flex-row flex-1 w-screen sticky top-0 z-50 ${
-          className ?? 'navBlur'
+          className ?? "navBlur"
         }`}
       >
         <div className="flex flex-row items-center justify-between px-10 lg:px-28 flex-1 lg:h-auto h-[76px]">

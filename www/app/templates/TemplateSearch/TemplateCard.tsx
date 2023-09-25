@@ -1,11 +1,11 @@
-import { Template } from '../types';
-import Link from 'next/link';
-import Image from 'next/image';
-import { sizes } from '@/app/_components/common/sizes';
+import { Template } from "../types";
+import Link from "next/link";
+import Image from "next/image";
+import { sizes } from "@/app/_components/common/sizes";
 export default function TemplateCard(props: Template) {
   const { name, description, author, imageSrc } = props;
   return (
-    <div className="w-1/3">
+    <div className="lg:w-1/3 md:w-1/2">
       <div className="p-4">
         <Link
           href={`/templates/${encodeURIComponent(name)}`}

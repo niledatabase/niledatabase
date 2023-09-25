@@ -44,7 +44,7 @@ values
   (724, 'British Airways','London','Paris','2024-07-04 11:10:25-07','2024-07-04 17:10:25-07');
 ```
 
-Most use cases for shared tables will involve loading data from some external source instead of manual inserts into the table. For example, to populate the flights table, you will typically load the data from an airline data company (eg. [Sabre](https://www.sabre.com/products/suites/developer-experience/sabre-apis/)) and also keep it upto date by subscribing to real time changes. 
+Most use cases for shared tables will involve loading data from some external source instead of manual inserts into the table. For example, to populate the flights table, you will typically load the data from an airline data company (eg. [Sabre](https://www.sabre.com/products/suites/developer-experience/sabre-apis/)) and also keep it upto date by subscribing to real time changes.
 
 ## Querying data from shared tables
 
@@ -55,7 +55,7 @@ Selecting the flights that start from SFO
 ```sql
 select * from flights where from_location='SFO';
 
-id  |  name  | from_location.    | to_location.   |   departure_time    |    arrival_time     
+id  |  name  | from_location.    | to_location.   |   departure_time    |    arrival_time
 -----+--------+------------------+----------------+---------------------+---------------------
  643 | United | SFO              | NY             | 2023-12-22 19:10:25 | 2016-12-23 05:10:25
 (1 row)
@@ -74,18 +74,18 @@ create table airports (
 
 -- entry of a few airports in the world with detailed information for each
 insert into airports (id, name, code, address, number_of_terminals)
-values 
+values
   (3459,'San Franciso','SFO','San Francisco, CA 94128','10'),
   (2933,'Singapore','SGR','PO Box 168 Changi Airport Singapore 918146','15'),
   (2234,'London','LDN','Hounslow TW6 1QG, UK','12');
 
--- displaying all the flight informations along with the address of the airport 
+-- displaying all the flight informations along with the address of the airport
 -- from which the flight is starting
-select flights.id, flights.name, flights.from_location, airports.address 
-from flights, airports 
+select flights.id, flights.name, flights.from_location, airports.address
+from flights, airports
 where flights.from_destination=airports.code;
 
-id   |  name  | from_destination |         address         
+id   |  name  | from_destination |         address
 -----+--------+------------------+-------------------------
  643 | United | SFO              | San Francisco, CA 94128
 (1 row)
@@ -96,7 +96,7 @@ id   |  name  | from_destination |         address
 Tenant aware tables can be joined with shared tables to provide relevant information for a specific tenant. For example, let us consider a bookings table that has all the flights booked by employees of a specific company(or tenant) with id **7543a610-f068-45fa-8ba0-7bc884bd29c2**. Each booking will refer to the flights id in the ‘flights’ table. It would be trivial to show detailed flight information along with every booking by joining the two tables.
 
 ```sql
--- the bookings table where each row represents a single booking for a 
+-- the bookings table where each row represents a single booking for a
 -- specific employee within a customer/tenant
 create table bookings (
   tenant_id uuid,
@@ -108,7 +108,7 @@ create table bookings (
 
 -- inserting rows for all the bookings done by employees in a specific tenant
 insert into bookings (tenant_id, booking_id, employee_id, flight_id, total_price)
-values 
+values
   ('7543a610-f068-45fa-8ba0-7bc884bd29c2',1345,2,643, 200.00),
   ('7543a610-f068-45fa-8ba0-7bc884bd29c2',2456,3,123, 150.00),
   ('7543a610-f068-45fa-8ba0-7bc884bd29c2',3240,4,123, 250.00);
@@ -116,15 +116,15 @@ values
 -- set tenant context to ensure selects are isolated only to this tenant
 set nile.tenant_id = '7543a610-f068-45fa-8ba0-7bc884bd29c2';
 
--- join query between bookings and flights to display each booking info in the 
+-- join query between bookings and flights to display each booking info in the
 -- application with detailed information about the flight
-select bookings.booking_id, bookings.employee_id, flights.name, 
-       flights.from_location, flights.to_location, flights.departure_time, 
-       flights.arrival_time, bookings.total_price 
+select bookings.booking_id, bookings.employee_id, flights.name,
+       flights.from_location, flights.to_location, flights.departure_time,
+       flights.arrival_time, bookings.total_price
 from bookings,flights
 where bookings.booking_id=flights.id;
 
-booking_id | employee_id |      name      | from_destination | to_destination |   departure_time    |    arrival_time     | total_price 
+booking_id | employee_id |      name      | from_destination | to_destination |   departure_time    |    arrival_time     | total_price
 ------------+-------------+----------------+------------------+----------------+---------------------+---------------------+-------------
        1345 | 2           | United         | SFO              | NY             | 2023-12-22 19:10:25 | 2016-12-23 05:10:25 | 200.00
        2456 | 3           | Indian Airways | Mumbai           | Delhi          | 2024-11-23 19:10:25 | 2024-11-23 01:10:25 | 150.00
@@ -157,7 +157,7 @@ Finally, it is possible to do writes to multiple shared tables in the same trans
 ```sql
 BEGIN;
 insert into airports (id, name, code, address, number_of_terminals)
-values 
+values
   (4956,'Seattle','SEA','17801 International Blvd','15');
 
 insert into flights

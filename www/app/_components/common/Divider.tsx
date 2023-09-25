@@ -1,4 +1,4 @@
-const base = 'relative h-16 w-full mt-32 container mx-auto';
+const base = "relative h-16 w-full mt-32 container mx-auto";
 const variants = {
   flip: `${base} rotate-180`,
 };

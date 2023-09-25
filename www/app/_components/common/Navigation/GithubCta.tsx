@@ -1,11 +1,11 @@
-import Link from 'next/link';
-import Image from 'next/image';
+import Link from "next/link";
+import Image from "next/image";
 
 export function GithubCta() {
   return (
     <div className="flex">
       <Link
-        href={'https://github.com/niledatabase/niledatabase'}
+        href={"https://github.com/niledatabase/niledatabase"}
         target="_blank"
         className="block github"
       >

@@ -1,6 +1,6 @@
-import Heading from '@/app/_components/common/Heading';
-import Video from './Video';
-import Image from 'next/image';
+import Heading from "@/app/_components/common/Heading";
+import Video from "./Video";
+import Image from "next/image";
 export default function DropInUserManagement() {
   return (
     <div className="flex w-full flex-col">

@@ -1,6 +1,6 @@
-'use client';
-import { useRef, useEffect } from 'react';
-import useIntersection from '@/app/_components/common/useIntersection';
+"use client";
+import { useRef, useEffect } from "react";
+import useIntersection from "@/app/_components/common/useIntersection";
 
 // looking to add width or height? add a poster with the size you want instead.
 export default function SnapshotVideo(props: {
@@ -11,7 +11,7 @@ export default function SnapshotVideo(props: {
   const { src, poster, className } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
   const isVisible = useIntersection(videoRef, {
-    rootMargin: '-200px',
+    rootMargin: "-200px",
   });
 
   useEffect(() => {

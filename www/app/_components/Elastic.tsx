@@ -1,5 +1,5 @@
-import Heading from '@/app/_components/common/Heading';
-import Image from 'next/image';
+import Heading from "@/app/_components/common/Heading";
+import Image from "next/image";
 export default function Elastic() {
   return (
     <div className="flex w-full flex-col">
