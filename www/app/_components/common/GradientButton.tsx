@@ -8,12 +8,14 @@ export default function GradientButton({
   type = "button",
   children,
   variant,
+  className,
 }: {
   href?: string;
   onClick?: () => void;
   type?: "submit" | "button";
   children: (string | JSX.Element)[] | string | JSX.Element;
   variant?: "soft";
+  className?: string;
 }) {
   const { push } = useRouter();
   const handleClick = useMemo<MouseEventHandler<HTMLButtonElement> | undefined>(
@@ -33,10 +35,14 @@ export default function GradientButton({
     return "bg-gradient-text-144 py-3 px-4 bg-clip-text text-transparent gradientBorderButton subpixel-antialiased bg-black overflow-hidden whitespace-nowrap";
   }, []);
   return (
-    <div>
-      <button className="bg-black rounded-xl" type={type} onClick={handleClick}>
-        <div className={subClasses}>{children}</div>
-      </button>
-    </div>
+    <button
+      className={`flex-1 bg-black rounded-xl relative z-10${
+        className ? ` ${className}` : ""
+      }`}
+      type={type}
+      onClick={handleClick}
+    >
+      <div className={subClasses}>{children}</div>
+    </button>
   );
 }

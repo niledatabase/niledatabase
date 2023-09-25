@@ -1,41 +1,41 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import GradientButton from '@/app/_components/common/GradientButton';
-import Heading from '@/app/_components/common/Heading';
-import { last } from 'lodash';
+import Link from "next/link";
+import Image from "next/image";
+import GradientButton from "@/app/_components/common/GradientButton";
+import Heading from "@/app/_components/common/Heading";
+import { last } from "lodash";
 
 const playerProps = {
   // width: 372,
   // height: 218,
   allowFullScreen: true,
-  title: 'YouTube video player',
+  title: "YouTube video player",
   allow:
-    'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
 };
 const videos = [
   {
-    title: 'Cloudflare',
-    videoUrl: 'https://www.youtube.com/embed/DvblO-f2bqQ',
+    title: "Cloudflare",
+    videoUrl: "https://www.youtube.com/embed/DvblO-f2bqQ",
   },
   {
-    title: 'Airtable',
-    videoUrl: 'https://www.youtube.com/embed/KgzwybMkqVc',
+    title: "Airtable",
+    videoUrl: "https://www.youtube.com/embed/KgzwybMkqVc",
   },
   {
-    title: 'Loom',
-    videoUrl: 'https://www.youtube.com/embed/3SIF03MHaxw',
+    title: "Loom",
+    videoUrl: "https://www.youtube.com/embed/3SIF03MHaxw",
   },
   {
-    title: 'Promise of Serverless',
-    videoUrl: 'https://www.youtube.com/embed/vLlSoHqTTN8',
+    title: "Promise of Serverless",
+    videoUrl: "https://www.youtube.com/embed/vLlSoHqTTN8",
   },
   {
-    title: 'Multi-tenant Journey',
-    videoUrl: 'https://www.youtube.com/embed/hR5kEfpZM4Y',
+    title: "Multi-tenant Journey",
+    videoUrl: "https://www.youtube.com/embed/hR5kEfpZM4Y",
   },
   {
-    title: 'RLS',
-    videoUrl: 'https://www.youtube.com/embed/xwHZxZKecXw',
+    title: "RLS",
+    videoUrl: "https://www.youtube.com/embed/xwHZxZKecXw",
   },
 ];
 export default function Tutorials() {

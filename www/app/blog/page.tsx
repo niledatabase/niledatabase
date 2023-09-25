@@ -1,13 +1,13 @@
-import Container from '../_components/common/Container';
-import Image from 'next/image';
-import Link from 'next/link';
-import { glob } from 'glob';
-import Divider from '../_components/common/Divider';
-import { Authors } from './_components/Authors';
-import { Metadata } from './_components/Metadata';
-import { parseMetadata } from './_components/parseMetadata';
-import Footer from './_components/Footer';
-import Search from './_components/Search';
+import Container from "../_components/common/Container";
+import Image from "next/image";
+import Link from "next/link";
+import { glob } from "glob";
+import Divider from "../_components/common/Divider";
+import { Authors } from "./_components/Authors";
+import { Metadata } from "./_components/Metadata";
+import { parseMetadata } from "./_components/parseMetadata";
+import Footer from "./_components/Footer";
+import Search from "./_components/Search";
 
 type Props = {
   fileName: string;
@@ -58,7 +58,7 @@ function HeroArticle(props: Props) {
 }
 
 export default async function Blog() {
-  const [mostRecent]: any = await glob('app/blog/**.mdx');
+  const [mostRecent]: any = await glob("app/blog/**.mdx");
   const { default: FirstArticle, metadata } = await import(`${mostRecent}`);
   return (
     <Container background={null}>

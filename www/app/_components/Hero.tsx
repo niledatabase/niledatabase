@@ -1,12 +1,12 @@
-import { HeroText } from '@/app/_components/common/Hero';
-import { sizes } from '@/app/_components/common/sizes';
-import Image from 'next/image';
+import { HeroText } from "@/app/_components/common/Hero";
+import { sizes } from "@/app/_components/common/sizes";
+import Image from "next/image";
 
 export default function Hero() {
   return (
     <>
       <HeroText />
-      <div className="flex flex-row items-center justify-between gap-6 mt-28 w-full flex-wrap lg:flex-nowrap">
+      <div className="flex flex-row items-center lg:justify-between gap-6 mt-28 w-full flex-wrap lg:flex-nowrap justify-around">
         <div className="flex flex-col gap-3 items-center px-4 py-5">
           <Image
             src="/multi-tenant.jpg"
@@ -51,20 +51,6 @@ export default function Hero() {
         </div>
         <div className="flex flex-col gap-3 items-center px-4 py-5 ">
           <Image
-            src="/elastic.jpg"
-            alt=" Effortlessly Elastic icon"
-            width={100}
-            height={100}
-            sizes={sizes}
-            priority
-          />
-          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base  whitespace-nowrap">
-            Effortlessly <br />
-            Elastic
-          </div>
-        </div>
-        <div className="flex flex-col gap-3 items-center px-4 py-5 ">
-          <Image
             src="/instant-dashboards.jpg"
             alt="Instant Customer Dashboards icon"
             width={100}
@@ -75,6 +61,34 @@ export default function Hero() {
           <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base  whitespace-nowrap">
             Instant Customer <br />
             Dashboards
+          </div>
+        </div>
+        <div className="flex flex-col gap-3 items-center px-4 py-5 ">
+          <Image
+            src="/artificial-intelligence.jpg"
+            alt="Instant Customer Dashboards icon"
+            width={100}
+            height={100}
+            sizes={sizes}
+            priority
+          />
+          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base  whitespace-nowrap">
+            Artificial <br />
+            Intelligence
+          </div>
+        </div>
+        <div className="flex flex-col gap-3 items-center px-4 py-5 ">
+          <Image
+            src="/elastic.jpg"
+            alt=" Effortlessly Elastic icon"
+            width={100}
+            height={100}
+            sizes={sizes}
+            priority
+          />
+          <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base  whitespace-nowrap">
+            Effortlessly <br />
+            Elastic
           </div>
         </div>
       </div>

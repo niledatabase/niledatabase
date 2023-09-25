@@ -1,16 +1,16 @@
-'use client';
-import Image from 'next/image';
-import algoliasearch from 'algoliasearch/lite';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+"use client";
+import Image from "next/image";
+import algoliasearch from "algoliasearch/lite";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   InstantSearch,
   useHits,
   useRefinementList,
   useSearchBox,
-} from 'react-instantsearch';
-import Link from 'next/link';
-import { Authors } from '../Authors';
-import { Metadata } from '../Metadata';
+} from "react-instantsearch";
+import Link from "next/link";
+import { Authors } from "../Authors";
+import { Metadata } from "../Metadata";
 
 const searchClient = algoliasearch(
   String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
@@ -23,17 +23,17 @@ function RefinementItem({
   item: any;
   refine: (value: string) => void;
 }) {
-  const [selected, setSelected] = useState<'selected' | 'normal'>('normal');
+  const [selected, setSelected] = useState<"selected" | "normal">("normal");
 
   const borderColors = {
-    selected: 'border-lightGray',
-    normal: 'border-gray text-transparent',
+    selected: "border-lightGray",
+    normal: "border-gray text-transparent",
   };
   const onClick = useCallback(() => {
-    if (selected !== 'selected') {
-      setSelected('selected');
+    if (selected !== "selected") {
+      setSelected("selected");
     } else {
-      setSelected('normal');
+      setSelected("normal");
     }
     refine(item.value);
   }, [selected]);
@@ -49,7 +49,7 @@ function RefinementItem({
 }
 
 function RefinementList() {
-  const { items, refine } = useRefinementList({ attribute: 'tags' });
+  const { items, refine } = useRefinementList({ attribute: "tags" });
   const sortedItems = useMemo(
     () => items.sort((a, b) => a.value.localeCompare(b.value)),
     [items]
@@ -78,8 +78,8 @@ function Hits() {
 
 function Hit({ hit }: any) {
   const [, publishDate] = /.+(\d{4}-\d{2}-\d{2}).+/.exec(hit.objectID) ?? [];
-  const cleaned = hit.objectID.replace(/\d{4}-\d{2}-\d{2}-/, '');
-  const slug = cleaned.replace('.mdx', '');
+  const cleaned = hit.objectID.replace(/\d{4}-\d{2}-\d{2}-/, "");
+  const slug = cleaned.replace(".mdx", "");
   return (
     <div className="w-full md:w-1/2 lg:w-1/3">
       <div className="p-4">
@@ -120,11 +120,11 @@ function Hit({ hit }: any) {
 
 function SearchBox() {
   const { query, refine } = useSearchBox();
-  const [width, setWidth] = useState<'norm' | 'max'>('norm');
+  const [width, setWidth] = useState<"norm" | "max">("norm");
 
   const widths = {
-    norm: 'left-[75%]',
-    max: 'left-[50%]',
+    norm: "left-[75%]",
+    max: "left-[50%]",
   };
   const [inputValue, setInputValue] = useState(query);
 
@@ -158,10 +158,10 @@ function SearchBox() {
           type="search"
           value={inputValue}
           onFocus={() => {
-            setWidth('max');
+            setWidth("max");
           }}
           onBlur={() => {
-            setWidth('norm');
+            setWidth("norm");
           }}
           onChange={(event) => {
             setInputValue(event.currentTarget.value);

@@ -6,7 +6,7 @@ export default function useScroll(
   handleScroll?: (position: number) => void,
   config?: {
     allowScroll?: boolean;
-    scrollJacking: boolean;
+    scrollJacking?: boolean;
   }
 ) {
   const { allowScroll = true, scrollJacking = false } = config ?? {};

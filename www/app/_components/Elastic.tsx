@@ -1,14 +1,14 @@
-import Heading from '@/app/_components/common/Heading';
-import Image from 'next/image';
+import Heading from "@/app/_components/common/Heading";
+import Image from "next/image";
 export default function Elastic() {
   return (
     <div className="flex w-full flex-col">
       <div className="flex flex-col text-center align-middle flex-1 mb-[87px]">
         <Heading text="Effortlessly Elastic" />
       </div>
-      <div className="flex flex-col lg:flex-row">
-        <div className="w-1/2">
-          <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
+      <div className="flex flex-col lg:flex-row items-center">
+        <div className="lg:w-1/2">
+          <div className="py-4 px-5 flex flex-row gap-5 items-center">
             <div className="z-10 relative icon rounded-[20px] flex justify-center">
               <Image
                 src="/icons/serverless.svg"
@@ -74,7 +74,7 @@ export default function Elastic() {
             </div>
           </div>
         </div>
-        <div className="w-1/2">
+        <div className="lg:w-1/2">
           <Image
             src="/elastic.png"
             alt="spiral intertube with orange, pink, and teal gradient"
