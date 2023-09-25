@@ -173,6 +173,9 @@ html .navBlur {
   fill: #ffb343;
 }
 
+.github-star:hover .star{
+  opacity:0;
+}
 .icon {
   flex-shrink: 0;
   position: relative;

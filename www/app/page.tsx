@@ -25,9 +25,9 @@ export default function Home() {
       <Divider />
       <CustomerDashboards />
       <Divider />
-      <Elastic />
-      <Divider />
       <ArtificialIntelligence />
+      <Divider />
+      <Elastic />
       <Divider />
       <HeroBottom />
     </Container>

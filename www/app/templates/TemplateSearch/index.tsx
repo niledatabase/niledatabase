@@ -21,7 +21,7 @@ export default function TemplateSearch({
 
   const filtered = useMemo(() => {
     if (!searchText) {
-      return [...templates, ...templates];
+      return templates;
     }
     const _templates = templates.filter((template) => {
       const keys = Object.keys(template);

@@ -1,10 +1,4 @@
-'use client';
 import Image from 'next/image';
-import Videos from './Videos';
-import { useEffect, useRef, useState } from 'react';
-import useScroll from './useScroll';
-import useIntersection from '@/app/_components/common/useIntersection';
-import Texts from './Texts';
 import Heading from '@/app/_components/common/Heading';
 import Video from '../Video';
 
@@ -12,7 +6,7 @@ export default function Virtualization() {
   return (
     <div className="relative">
       <Image
-        className="absolute top-0 left-0 right-0 -z-10 w-full scale-x-125 blur-lg"
+        className="absolute top-[17%] lg:top-0 left-0 right-0 -z-10 w-full scale-[300%] lg:scale-x-125 lg:scale-y-100 blur-lg"
         src="/virtualization.svg"
         alt="orange and green blurred gradient"
         width={1440}
@@ -22,20 +16,20 @@ export default function Virtualization() {
       <div className="relative pb-10 mt-20">
         <Heading text="Built-in Tenant virtualization"></Heading>
       </div>
-      <div className="flex flex-row justify-around mb-20 bg-[#000] rounded-[20px] p-[56px]">
-        <div className="max-w-[400px] flex gap-8 flex-col">
-          <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3">
+      <div className="flex flex-col xl:flex-row justify-between mb-20 bg-[#000] rounded-[20px] p-[56px] lg:m-0 mx-6">
+        <div className="flex gap-8 flex-col lg:pr-6 mb-4">
+          <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3 text-center lg:text-left">
             Native tenant data isolation
           </div>
-          <div className="flex flex-row gap-5 items-center">
+          <div className="flex flex-col lg:flex-row gap-5 items-center">
             <div className="z-10 relative icon rounded-[20px] flex justify-center">
               <Image src="/icons/lock.svg" alt="lock" width={24} height={24} />
             </div>
-            <div className="opacity-60 text-[18px]">
+            <div className="opacity-60 text-[18px] text-center lg:text-left">
               100% secure with no cross tenant access
             </div>
           </div>
-          <div className="flex flex-row gap-5 items-center">
+          <div className="flex  flex-col lg:flex-row gap-5 items-center">
             <div className="z-10 relative icon rounded-[20px] flex justify-center">
               <Image
                 src="/icons/rls.svg"
@@ -44,11 +38,11 @@ export default function Virtualization() {
                 height={24}
               />
             </div>
-            <div className="opacity-60 text-[18px]">
+            <div className="opacity-60 text-[18px] text-center lg:text-left">
               No more struggle with row level security
             </div>
           </div>
-          <div className="flex flex-row gap-5 items-center">
+          <div className="flex  flex-col lg:flex-row gap-5 items-center">
             <div className="z-10 relative icon rounded-[20px] flex justify-center">
               <Image
                 src="/icons/share.svg"
@@ -57,16 +51,16 @@ export default function Virtualization() {
                 height={24}
               />
             </div>
-            <div className="opacity-60 text-[18px]">
+            <div className="opacity-60 text-[18px] text-center lg:text-left">
               Securely share data across tenants using shared tables
             </div>
           </div>
         </div>
-        <div className="w-1/2">
+        <div className="xl:w-[603px] xl:shrink-0">
           <Video src="data-isolation.mp4" poster={'data-isolation.png'} />
         </div>
       </div>
-      <div className="flex flex-row w-full pb-6">
+      <div className="flex-row w-full pb-6 hidden lg:flex">
         <div className="w-1/2 px-[20px]">
           <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3">
             Tenant Level Backups
@@ -78,8 +72,11 @@ export default function Virtualization() {
           </div>
         </div>
       </div>
-      <div className="flex flex-row justify-around">
-        <div className="w-1/2 px-[20px] flex flex-col gap-6">
+      <div className="flex flex-col lg:flex-row justify-around">
+        <div className="lg:w-1/2 px-[20px] flex flex-col gap-6">
+          <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3 block lg:hidden text-center">
+            Tenant Level Backups
+          </div>
           <div className="flex flex-row gap-5 items-center">
             <div className="z-10 relative icon rounded-[20px] flex justify-center">
               <Image src="/icons/lock.svg" alt="lock" width={24} height={24} />
@@ -121,7 +118,12 @@ export default function Virtualization() {
             height={258}
           />
         </div>
-        <div className="w-1/2 px-[20px] flex flex-col gap-6">
+        <div className="lg:w-1/2 px-[20px] flex flex-col gap-6">
+          <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3 block lg:hidden text-center mt-10">
+            Performance Isolation
+            <br /> Across Tenants
+          </div>
+
           <div className="flex flex-row gap-5 items-center">
             <div className="z-10 relative icon rounded-[20px] flex justify-center">
               <Image src="/icons/lock.svg" alt="lock" width={24} height={24} />
