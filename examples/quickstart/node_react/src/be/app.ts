@@ -3,14 +3,12 @@ import express from "express";
 import Server from "@theniledev/server";
 import Knex from "knex";
 
-export const { api, db } = Server({
+export const { db } = Server({
   workspace: String(process.env.NILE_WORKSPACE),
   database: String(process.env.NILE_DATABASE),
-  api: {
-    basePath: String(process.env.BASE_PATH),
-  },
   db: {
     connection: {
+      host: process.env.NILE_HOST,
       user: process.env.NILE_USER,
       password: process.env.NILE_PASSWORD,
     },
