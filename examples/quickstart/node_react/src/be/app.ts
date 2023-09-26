@@ -4,7 +4,7 @@ import Server from "@theniledev/server";
 import Knex from "knex";
 
 export const { db } = Server({
-  workspace: String(process.env.NILE_WORKSPACE),
+  workspace: "", // leaving this empty, as we don't need it for this example
   database: String(process.env.NILE_DATABASE),
   db: {
     connection: {
