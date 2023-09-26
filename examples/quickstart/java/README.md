@@ -11,7 +11,7 @@ This template shows how to use Nile with Java and Spring Boot 3 for building a m
 
 ### 1. Create a new database
 
-Signup to Nile - https://dev-nad.thenile.dev and choose "Yes, let's get started". Follow the prompts to create a new workspace and a database.
+Signup to Nile - https://console.thenile.dev and choose "Yes, let's get started". Follow the prompts to create a new workspace and a database.
 
 ### 2. Create todo table
 
@@ -41,7 +41,7 @@ your Nile DB.
 
 It should look something like this:
 ```bash
-spring.datasource.jdbc-url=jdbc:postgresql://dev.khnum.thenile.dev:5432/funky_giraffe
+spring.datasource.jdbc-url=jdbc:postgresql://db.thenile.dev:5432/funky_giraffe
 spring.datasource.username=018a6b69-b1e9-7574-b8f3-efd5fe63d9bb
 spring.datasource.password=d757518e-6d52-4bdb-b85f-f008c9f80097
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect

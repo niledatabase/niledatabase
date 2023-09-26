@@ -8,7 +8,7 @@ export const meta = {
 
 Supporting social login is a great way to reduce the friction of signup, and Nile makes it easy to add social providers to your application. This guide walks you through setting up Google as an identity provider.
 
-We're assuming you have a Nile database up and running. If not, [sign up for Nile][nad] and follow the prompts to create a workspace and database. You'll also need a Google account and a [Google Cloud project](https://console.cloud.google.com/) for your application.
+We're assuming you have a Nile database up and running. If not, [sign up for Nile](https://console.thenile.dev) and follow the prompts to create a workspace and database. You'll also need a Google account and a [Google Cloud project](https://console.cloud.google.com/) for your application.
 
 # Connect Your Google and Nile Accounts
 
@@ -16,7 +16,7 @@ To ensure a secure exchange, your Google project and Nile database need to know 
 
 ## Enable Google in Nile
 
-1. Open your [Nile dashboard][nad], and select the database for your application.
+1. Open the [Nile Console](https://console.thenile.dev), and select the database for your application.
 2. Click on the **Identity Providers** icon in the side navigation.
 3. Click on the Google tile and flip the **Enabled** toggle on.
 4. The client id and secret are values you'll obtain from Google. Leave these blank for now.
@@ -61,7 +61,7 @@ Run the app with `yarn dev` or `npm dev` to start the app, and open [http://loca
 
 _Note: some browsers will present a security warning when redirecting from Nile to the local demo application because of the switch from HTTPS to HTTP. This is expected behavior for this demo. You should, of course, run your production application over HTTPS._
 
-You can verify that your user was created in the [Nile dashboard][nad]. Open the SQL editor for your database and query the users table:
+You can verify that your user was created in the [Nile Console](https://console.thenile.dev). Open the SQL editor for your database and query the users table:
 
 ```sql
 SELECT * FROM users.users;
@@ -134,5 +134,3 @@ export async function POST(req: Request) {
 Nile uses the standard [OpenID Connect protocol](https://openid.net/developers/how-connect-works/) to authenticate users with Google, then creates corresponding users in your database. Your application will receive information about the user and a Nile access token associated with the user—see [Handling Auth Redirects]() for more on that.
 
 Nile supports other authentication methods, like [SSO with Okta](). Or if you want to dig deeper into querying user data, read [Querying as a User]().
-
-[nad]: https://dev-nad.thenile.dev/ "Nile Dashboard"
