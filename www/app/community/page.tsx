@@ -41,7 +41,10 @@ export default async function Home() {
         />
       </div>
       <div className="flex flex-col md:flex-row w-full justify-between gap-10">
-        <Link href="https://github.com/niledatabase/niledatabase">
+        <Link
+          href="https://github.com/niledatabase/niledatabase/discussions"
+          target="_blank"
+        >
           <div className="flex flex-col gap-10 itemDivider p-8">
             <Image
               src="/github-text.svg"
@@ -55,7 +58,7 @@ export default async function Home() {
             </div>
           </div>
         </Link>
-        <Link href="#">
+        <Link href="https://discord.gg/8UuBB84tTy" target="_blank">
           <div className="flex flex-col gap-6 itemDivider p-8">
             <Image
               src="/discord.svg"
@@ -69,7 +72,7 @@ export default async function Home() {
             </div>
           </div>
         </Link>
-        <Link href="https://x.com/niledatabase">
+        <Link href="https://x.com/niledatabase" target="_blank">
           <div className="flex flex-col gap-8 itemDivider p-8">
             <Image
               src="/x.svg"

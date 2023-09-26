@@ -86,17 +86,19 @@ export default async function Home() {
           <div className="flex flex-col">
             <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
               <div className="text-3xl">Start with one of our templates</div>
-              <GradientButton href="/templates" variant="soft">
-                <Image
-                  src="/icons/templates.svg"
-                  alt="book cover"
-                  width={24}
-                  height={24}
-                />
-                <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
-                  More templates
-                </span>
-              </GradientButton>
+              <div>
+                <GradientButton href="/templates" variant="soft">
+                  <Image
+                    src="/icons/templates.svg"
+                    alt="book cover"
+                    width={24}
+                    height={24}
+                  />
+                  <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                    More templates
+                  </span>
+                </GradientButton>
+              </div>
             </div>
             <TemplateSearch
               templates={templates}
@@ -110,17 +112,19 @@ export default async function Home() {
           <div className="flex flex-col">
             <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
               <div className="text-3xl">Learn from our tutorials</div>
-              <GradientButton href="/templates" variant="soft">
-                <Image
-                  src="/icons/templates.svg"
-                  alt="book cover"
-                  width={24}
-                  height={24}
-                />
-                <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
-                  More tutorials
-                </span>
-              </GradientButton>
+              <div>
+                <GradientButton href="/templates" variant="soft">
+                  <Image
+                    src="/icons/templates.svg"
+                    alt="book cover"
+                    width={24}
+                    height={24}
+                  />
+                  <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                    More tutorials
+                  </span>
+                </GradientButton>
+              </div>
             </div>
           </div>
         </div>
