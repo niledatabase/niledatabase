@@ -7,7 +7,27 @@ export const meta = {
 # Errors
 These error codes are applicable for all endpoints.
 
-### Unauthorized
+### Resource not found
 - status: 404
 - message: Resource not found
 - possible fix: Change the request to point to a valid resource
+
+### Unauthorized
+- status: 401
+- message: User not authorized to perform the operation
+- possible fix: Try to provide a valid user credential
+
+### Resource already exist
+- status: 409
+- message: The resource already exist
+- possible fix: Try to create another resource with a different name
+
+### Unauthorized
+- status: 401
+- message: User not authorized to perform the operation
+- possible fix: Try to provide a valid user credential
+
+### Unknown OIDC provider
+- status: 404
+- message: The OIDC provider that is provided is not valid
+- possible fix: Try to provide a valid OIDC provider
