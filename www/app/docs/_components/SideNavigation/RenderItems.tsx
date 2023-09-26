@@ -36,7 +36,14 @@ export function BaseListItem({
 
   return (
     <li className={itemClasses.join(" ")}>
-      <Link href={href}>{item.header}</Link>
+      <Link href={href}>
+        {item.method && (
+          <span className="text-sm bg-gradient-text bg-clip-text text-transparent mr-3 border-lightGray border rounded-[6px] py-1 px-2">
+            {item.method}
+          </span>
+        )}
+        {item.header}
+      </Link>
       {withIcon && (
         <div
           className="cursor-pointer"

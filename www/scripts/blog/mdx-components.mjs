@@ -7,5 +7,14 @@ export var useMDXComponents = function () {
     Cards: function () {
       return null;
     },
+    CodeGroups: function () {
+      return null;
+    },
+    Col: function () {
+      return null;
+    },
+    Row: function () {
+      return null;
+    },
   };
 };

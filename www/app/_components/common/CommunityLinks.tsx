@@ -4,7 +4,10 @@ import Link from "next/link";
 export function CommunityLinks() {
   return (
     <div className="flex flex-col lg:flex-row w-full justify-between gap-10 items-center">
-      <Link href="https://github.com/niledatabase/niledatabase">
+      <Link
+        href="https://github.com/niledatabase/niledatabase/discussions"
+        target="_blank"
+      >
         <div className="flex flex-col gap-10 itemDivider p-8 max-w-[296px]">
           <Image
             src="/github-text.svg"
@@ -18,7 +21,7 @@ export function CommunityLinks() {
           </div>
         </div>
       </Link>
-      <Link href="#">
+      <Link href="https://discord.gg/8UuBB84tTy" target="_blank">
         <div className="flex flex-col gap-10 itemDivider p-8 max-w-[296px]">
           <Image
             src="/discord.svg"
@@ -32,7 +35,7 @@ export function CommunityLinks() {
           </div>
         </div>
       </Link>
-      <Link href="https://x.com/niledatabase">
+      <Link href="https://x.com/niledatabase" target="_blank">
         <div className="flex flex-col gap-10 itemDivider p-8 max-w-[296px]">
           <Image
             src="/x.svg"
