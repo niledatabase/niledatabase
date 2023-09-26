@@ -42,7 +42,7 @@ Also fill in the username and password with the credentials you picked up in the
 It should look something like this:
 
 ```bash
-NILE_BASE_PATH = "https://dev.khnum.thenile.dev"
+NILE_BASE_PATH = "https://api.thenile.dev"
 NILE_DATABASE = "main"
 NILE_WORKSPACE = "todoapp"
 NILE_USER = "018a6b69-b1e9-7574-b8f3-efd5fe63d9bb"

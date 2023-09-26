@@ -1,4 +1,4 @@
-spring.datasource.jdbc-url=jdbc:postgresql://dev.khnum.thenile.dev:5432/<my_db> // <my_db> is the name of the database
+spring.datasource.jdbc-url=jdbc:postgresql://db.thenile.dev:5432/<my_db> // <my_db> is the name of the database
 spring.datasource.username=
 spring.datasource.password=
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
