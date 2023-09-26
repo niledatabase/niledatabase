@@ -2,9 +2,37 @@
 
 export const meta = {
   title: "API Reference",
-  order: 3,
+  order: 2,
   description: "This is a placeholder component.",
-  order: 3,
+  order: 2,
 };
 
-feel free to edit `docs/app/docs/[[...slug]]/api-reference/content.mdx`
+# Introduction
+Describes basic concepts, response codes, authentication and rate limiting aspects of Nile APIs
+With the API, developers can maange tenants (add, update or delete), create and delete databases, manage user lifecylce, implement authentication (basic auth, social logins and enterprise) and other management operations.
+
+## Basic Concepts
+The Nile API is built on REST architecture. We enforce HTTPS in every request to improve data security, integrity, and privacy.
+All requests contain the following base URL:
+
+```bash
+https://api.thenile.dev
+```
+## Authentication
+
+## Response codes
+
+Nile uses standard HTTP codes to indicate the success or failure of your requests.
+
+2xx HTTP codes correspond to success, 4xx codes are for user facing failures, and 5xx codes are for server side issues.
+| Status | Description |
+| ---- | ---- |
+| `20x` | Successful Request |
+| `401` | Unauthorized |
+| `404` | Resource not found |
+| `409` | Resource already exist |
+| `5xx` | Error on Nile servers |
+
+
+## Rate limiting
+The API is currently subject to our terms of service. We could introduce rate limits in the future.
