@@ -5,3 +5,180 @@ export const meta = {
 };
 
 # Support Okta with Next.js
+
+If your target users rely on enterprise SSO, you'll be able to drive adoption with Nile's SSO support. This article will walk you through the basics of integrating with Okta.
+
+We're assuming you have a Nile database up and running. If not, [sign up for Nile][console] and follow the prompts to create a workspace and database.
+
+# Enable Okta for Tenants
+
+Every one of your Nile tenants will have to provide their Okta configuration details, but they can't do that unless you've enabled Okta for your database.
+
+1. Open your [Nile Console][console], and select the database for your application.
+2. Click on the **Identity Providers** icon in the side navigation and select **Single Sign On**.
+3. Open the **okta** dropdown, and flip the **Enabled** toggle on.
+4. In the **Redirect URL** field, enter `http://localhost:3000/api/auth/handler`. This is the URL that users will be redirected to after they authenticate, or when an error occurs.
+
+# Set Up the Demo Application
+
+You can test your Okta configuration with our demo application. This application allows a user to sign up for a new account and then enable Okta for their tenant.
+
+Install it from the command line:
+
+```bash
+git clone https://github.com/niledatabase/niledatabase.git
+cp -r niledatabase/examples/user_management/sso_login_okta/NextJS ./nile-okta-nextjs
+cd nile-okta-nextjs
+```
+
+and install dependencies with `yarn install` or `npm install`.
+
+Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name.
+
+_(In the Nile dashboard, select your database and click the settings icon. Your workspace slug and database name are displayed under **General**, and can be copied to the clipboard.)_
+
+Run the app with `yarn dev` or `npm run dev` to start the app, and open [the sign-up page (http://localhost:3000/sign-up)](http://localhost:3000/sign-up) in your browser.
+
+Enter an email address, password, and tenant name to sign up as a new user. We'll refer to this user as your Tenant Admin. Note that the Tenant Admin is _not_ an Okta user, but someone who manages Okta for the tenant.
+
+_Note: When the tenant name is provided during sign-up, Nile creates a new tenant for you with that name._
+
+[Login as the Tenant Admin](http://localhost:3000/login) to display the settings screen. Under **Step 1**, click the **copy** button next to your redirect URI. You'll need this value when you configure Okta.
+
+# Set Up Okta
+
+## Create a Developer Account
+
+As a Tenant Admin, you need an Okta account to connect to. You can create a new Okta developer account for this purpose. The Okta command-line interface (CLI) is the quickest way to do this. If you don't want to install the CLI, you can [manually sign up](https://developer.okta.com/signup/) for an account instead.
+
+1. Install the [Okta CLI](https://cli.okta.com/).
+2. Run `okta register` and enter your first name, last name, email address, and country.
+3. Click **Activate** in the account activation email that is sent to the email address that you provided.
+4. Find your new domain (like `https://dev-xxxxxxx.okta.com`) and a link to set your password in the email. Follow the link to set the password.
+
+## Create an Okta Tenant
+
+1. Login to your [Okta dashboard](https://developer.okta.com/login/).
+2. From the top left settings menu, select **Applications > Applications**.
+3. Click **Create App Integration**.
+4. For **Sign-in method**, select **OIDC - OpenID Connect**.
+5. For **Application type**, select **Web Application**, and click **Next**.
+6. On the **New Web App Integration** screen, name the integration "Nile Okta Quickstart".
+7. Under the **Sign-in redirect URIs**, paste the redirect URI that you copied from the demo application.
+8. Under **Assignments**, select **Allow everyone in your organization to access**.
+9. Click **Save**.
+
+Okta will generate a client id and secret for your app integration. Copy these values.
+
+# Connect Okta and Nile
+
+1. Back on your [application settings](http://localhost:3000/settings), flip the "Allow Okta logins" toggle on.
+2. Paste the client id and secret into the **Client id** and **Client secret** fields.
+3. In the **Config url** field, enter the [OpenID config URL](https://developer.okta.com/docs/reference/api/oidc/#well-known-openid-configuration) of your Okta tenant. This should be of the form:
+
+```
+https://dev-xxxxxxx.okta.com/.well-known/openid-configuration
+```
+
+4. In the **Email domains** field, enter one or more email domains your tenant is associated with. These are the domains that will be allowed to sign in to your application using Okta.
+5. Click **Update**.
+
+# Test Authentication
+
+1. Open the [login page](http://localhost:3000/).
+2. Enter an email address that belongs to one of the domains you entered in step 3 above, and click **Next**.
+3. You'll be redirected to Okta to sign in. Authenticate here with the user that belongs to your Okta tenant.
+4. After successfully logging in, you'll be redirected back to the demo application's route handler.
+
+_Note: some browsers will present a security warning when redirecting from Nile to the local demo application because of the switch from HTTPS to HTTP. This is expected behavior for this demo. You should, of course, run your production application over HTTPS._
+
+You can verify that your user was created in the [Nile dashboard][console]. Open the SQL editor for your database and query the users table:
+
+```sql
+SELECT * FROM users.users;
+```
+
+# Dig Deeper
+
+## The SingleSignOnForm Component
+
+In `/app/login/Login.tsx`, you'll find a `<NileProvider>` configured with your environment variables. This wraps a `<SingleSignOnForm>` component from the Nile UI Kit. This component checks the user's email domain against the list of registered domains, and if it matches, sends an authentication request to your Nile database. This results in a redirect to Okta.
+
+```tsx
+export default function SSOForm() {
+  ...
+  return (
+    <NileProvider basePath={process.env.NEXT_PUBLIC_BASE_PATH}>
+      <Stack gap={2}>
+        <Typography level="h1">Log in </Typography>
+        <SingleSignOnForm
+          onSuccess={() => {
+            push('/settings');
+          }}
+        />
+        ...
+      </Stack>
+    </NileProvider>
+  );
+}
+```
+
+The `onSuccess()` handler redirects the user to the settings page after a successful login.
+
+## The Okta Settings Component
+
+In `/app/settings/SingleSignOnSettings.tsx`, you'll find a similarly wrapped `<Okta>` component. This is what allows your tenants to provide you with their Okta configuration.
+
+```tsx
+export default function SingleSignOnSettings(props: OktaProps) {
+  return (
+    <NileProvider basePath={process.env.NEXT_PUBLIC_BASE_PATH}>
+      <Stack gap={2}>
+        ...
+        <Typography level="h1">Configure Okta</Typography>
+        <Okta
+          {...props}
+          onSuccess={() => {
+            push("/");
+          }}
+        />
+      </Stack>
+    </NileProvider>
+  );
+}
+```
+
+The UI Kit keeps track of which tenant the settings are for, and will automatically update the tenant's Okta configuration when the form is submitted. The `onSuccess()` handler redirects back to the login page when configuration is complete.
+
+## The Auth Redirect Handler
+
+When the user successfully authenticates with Okta, they are redirected to the URL you provided in your Nile configuration. In this example, that's `/api/auth/handler/route.ts`. It detects the type of authentication event that occurred, then reroutes to the dashboard on success.
+
+```ts
+export async function POST(req: Request) {
+  const formData = await req.formData();
+  const event = formData.get("event");
+
+  let location: string;
+
+  if (event === "AUTH_ERROR") {
+    const message = formData.get("error");
+    location = redirectOnError(message ? message.toString() : "Unknown error");
+  } else {
+    location = redirectOnSuccess(formData);
+  }
+
+  return new Response(null, {
+    headers: { Location: location },
+    status: 302,
+  });
+}
+```
+
+# Summary
+
+Nile uses the standard [OpenID Connect protocol](https://openid.net/developers/how-connect-works/) to authenticate users with Okta, then creates corresponding users in your database. Your application will receive information about the user and a Nile access token associated with the user.
+
+Nile also supports [social login with Google](/docs/user-authentication/social/google).
+
+[console]: https://dev-nad.thenile.dev/ "Nile Console"
