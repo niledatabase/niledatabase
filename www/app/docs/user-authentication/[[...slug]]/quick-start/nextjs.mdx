@@ -8,7 +8,7 @@ export const meta = {
 
 Every application has users. This page introduces you to the basics of Nile's drop-in user management in the context of a Next.js application.
 
-If you haven't already, [sign up for Nile][nad] and follow the prompts to create a workspace and database.
+If you haven't already, [sign up for Nile](https://console.thenile.dev) and follow the prompts to create a workspace and database.
 
 ## 1. Create a Next.js starter app.
 
@@ -22,7 +22,7 @@ npx create-next-app -e https://github.com/niledatabase/nile-js/tree/master/examp
 
 The app uses Nile's SDK and UI Kit which need to be configured with your workspace and database name.
 
-In the project root, rename `.env.local.example` to `.env.local`, and open it for editing. You'll provide the `NEXT_PUBLIC_WORKSPACE` and `NEXT_PUBLIC_DATABASE` values. You can get these from the [Nile Dashboard][nad]
+In the project root, rename `.env.local.example` to `.env.local`, and open it for editing. You'll provide the `NEXT_PUBLIC_WORKSPACE` and `NEXT_PUBLIC_DATABASE` values. You can get these from the [Nile Console](https://console.thenile.dev)
 
 1. Open your database in the dashboard.
 2. The breadcrumbs in the header display your **workspace slug** and **database name**.
@@ -44,7 +44,7 @@ Let's run the application to see things working, and then we'll look under the h
 
 If you're configuration is correct, you'll see the success response from the Nile API.
 
-Login to your [Nile Dashboard][nad], select your database, and open the SQL editor. Query your users table:
+Login to the [Nile Console](https://console.thenile.dev), select your database, and open the SQL editor. Query your users table:
 
 ```sql
 SELECT * FROM users.users;
@@ -135,5 +135,3 @@ Next up:
 
 - [Allow users to sign up and login with Google]() or other social providers
 - [Query as a User with Next.js]()
-
-[nad]: https://dev-nad.thenile.dev/ "Nile Dashboard"
