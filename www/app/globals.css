@@ -48,6 +48,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
 }
 
 .gradientBorderButton::before {
@@ -155,6 +157,7 @@ html .navBlur {
   background-clip: padding-box, border-box;
 }
 .itemDivider::before {
+  pointer-events: none;
   position: absolute;
   background-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
   border-radius: 24px;

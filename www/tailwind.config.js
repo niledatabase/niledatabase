@@ -22,6 +22,8 @@ module.exports = {
         info: "#929292",
       },
       backgroundImage: {
+        overlay:
+          "linear-gradient(90deg, #F4C587 9.19%, #D6D3E9 51.63%, #99D2EC 94.07%)",
         icon: "linear-gradient(134deg, #FDC066 7.53%, #D8D3E9 51.23%, #7BD1ED 93.21%)",
         "divider-bold":
           "linear-gradient(90deg, #00000000, #FDC06780, #83D2ED80, #00000000)",

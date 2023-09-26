@@ -1,8 +1,9 @@
 "use client";
 import Heading from "@/app/_components/common/Heading";
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import faqs from "./faqs";
+import useGoToHash from "@/app/_components/common/useGoToHash";
 const variants = {
   open: "h-auto",
   closed: "h-[62px] opacity-60 hover:opacity-100",
@@ -40,9 +41,11 @@ const ExpandItem = (props: {
 };
 
 export default function FAQ() {
+  const ref = useGoToHash();
   return (
     <div className="mt-24">
       <Heading text="Frequently Asked Questions" />
+      <a href="#faq" ref={ref}></a>
       <div className="flex gap-4 flex-col mt-10">
         {faqs.map(({ header, content }) => {
           return <ExpandItem key={header} header={header} content={content} />;

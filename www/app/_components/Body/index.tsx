@@ -35,7 +35,7 @@ export default function Body({
       }`}
     >
       {background === "circular" && (
-        <div className="w-screen absolute pointer-events-none -z-10 top-[214px] bg-circular opacity-[0.15] h-[60%]" />
+        <div className="w-screen absolute pointer-events-none -z-10 top-0 bg-circular opacity-[0.15] h-[60%]" />
       )}
       {children}
     </body>
