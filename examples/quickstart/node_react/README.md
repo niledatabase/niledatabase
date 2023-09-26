@@ -42,9 +42,8 @@ Also fill in the username and password with the credentials you picked up in the
 It should look something like this:
 
 ```bash
-NILE_BASE_PATH = "https://api.thenile.dev"
+NILE_HOST = db.thenile.dev
 NILE_DATABASE = "main"
-NILE_WORKSPACE = "todoapp"
 NILE_USER = "018a6b69-b1e9-7574-b8f3-efd5fe63d9bb"
 NILE_PASSWORD = "d757518e-6d52-4bdb-b85f-f008c9f80097"
 ```
