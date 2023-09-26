@@ -61,7 +61,7 @@ export default function TemplateSearch({
         </div>
       )}
       {showButton && (
-        <div className="self-end block">
+        <div className="self-end">
           <GradientButton href="/templates" variant="soft">
             <Image
               src="/icons/plus.svg"

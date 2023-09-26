@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Container from "../_components/common/Container";
-import GradientButton from "../_components/common/GradientButton";
 import PageHeader from "../_components/common/PageHeader";
 import FAQ from "./_components/FAQ";
+import ContactUs from "./_components/ContactUs";
 
 function Bullet({ children }: { children: string | JSX.Element }) {
   return (
@@ -79,18 +79,7 @@ export default function Pricing() {
                   Contact Us
                 </div>
                 <div className="my-[24px]">
-                  <GradientButton className="w-full">
-                    <div className="w-full flex flex-row justify-between items-center">
-                      <span className="text-[white]">Contact Us</span>
-                      <Image
-                        src="/icons/arrow.svg"
-                        alt="arrow"
-                        width={25}
-                        height={30}
-                        priority
-                      />
-                    </div>
-                  </GradientButton>
+                  <ContactUs />
                 </div>
                 <div className="opacity-60 text-lg">Limit of 2 databases</div>
                 <div className="bg-divider-bold h-px my-6" />

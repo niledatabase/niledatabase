@@ -54,33 +54,27 @@ export default async function Footer({ className }: { className?: string }) {
               >
                 Quick Start
               </Link>
-              <div className="text-[16px] opacity-70">Use Cases</div>
-              <div className="text-[16px] opacity-70">Architecture</div>
-              <div className="text-[16px] opacity-70">API</div>
             </div>
             <div className="flex flex-col gap-5">
-              <div className="text-[16px]">Resources</div>
               <Link href="/blog" className="text-[16px] opacity-70">
                 Blog
               </Link>
-              <div className="text-[16px] opacity-70">Customers</div>
-              <div className="text-[16px] opacity-70">Whitepaper</div>
-              <div className="text-[16px] opacity-70">Changelog</div>
             </div>
             <div className="flex flex-col gap-5">
-              <div className="text-[16px]">Company</div>
               <Link href="/about-us" className="text-[16px] opacity-70">
                 About
               </Link>
-              <div className="text-[16px] opacity-70">Pricing</div>
-              <div className="text-[16px] opacity-70">Terms</div>
-              <div className="text-[16px] opacity-70">Privacy</div>
+              <Link href="/pricing" className="text-[16px] opacity-70">
+                Pricing
+              </Link>
             </div>
             <div className="flex flex-col gap-5">
-              <div className="text-[16px]">Support</div>
-              <div className="text-[16px] opacity-70">Contact Sales</div>
-              <div className="text-[16px] opacity-70">Get Help</div>
-              <div className="text-[16px] opacity-70">FAQ</div>
+              <Link href="/contact-us" className="text-[16px] opacity-70">
+                Contact Sales
+              </Link>
+              <Link href="/pricing#faq" className="text-[16px] opacity-70">
+                FAQ
+              </Link>
             </div>
           </div>
         </div>

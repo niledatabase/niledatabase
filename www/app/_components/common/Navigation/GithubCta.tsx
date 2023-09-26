@@ -34,8 +34,8 @@ export function GithubCta() {
                     y2="18.2812"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stop-color="#F8F8F8" />
-                    <stop offset="1" stop-color="#8C8C8C" />
+                    <stop stopColor="#F8F8F8" />
+                    <stop offset="1" stopColor="#8C8C8C" />
                   </linearGradient>
                 </defs>
               </svg>
