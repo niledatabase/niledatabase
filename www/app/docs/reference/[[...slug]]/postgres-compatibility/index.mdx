@@ -26,7 +26,7 @@ The table below lists all the features in Postgres that are not yet supported in
 </Row>
 <Row>
   <Col>
-    Function
+    CREATE FUNCTION
   </Col>
   <Col>
     User defined functions are not supported yet
@@ -37,13 +37,102 @@ The table below lists all the features in Postgres that are not yet supported in
 </Row>
 <Row>
   <Col>
-    Triggers
+    CREATE TRIGGER
   </Col>
   <Col>
     Triggers are not supported yet since UDF support is not there
   </Col>
   <Col>
     We hope to support real time events soon
+  </Col>
+</Row>
+<Row>
+  <Col>
+    CREATE SEQUENCE
+  </Col>
+  <Col>
+    Triggers are not supported yet since UDF support is not there
+  </Col>
+  <Col>
+    We hope to support real time events soon
+  </Col>
+</Row>
+<Row>
+  <Col>
+    CREATE POLICY
+  </Col>
+  <Col>
+    Nile will have the ability to define policies through a more powerful permission system that is in progress
+  </Col>
+  <Col>
+    Would love to hear your use case for this in our github discussion forum
+  </Col>
+</Row>
+<Row>
+  <Col>
+    CREATE ROLE
+  </Col>
+  <Col>
+    Ability to define granular roles for developers using the database
+  </Col>
+  <Col>
+    Developer roles can be supported in Nile's console when we support it
+  </Col>
+</Row>
+<Row>
+  <Col>
+    CREATE USER
+  </Col>
+  <Col>
+    Ability to create a new developer to a database
+  </Col>
+  <Col>
+    Creating a new developer to use the database is supported in Nile's console (and API/CLI in the future)
+  </Col>
+</Row>
+<Row>
+  <Col>
+    CREATE DATABASE
+  </Col>
+  <Col>
+    Ability to create a new database
+  </Col>
+  <Col>
+    You can do this from Nile's console
+  </Col>
+</Row>
+<Row>
+  <Col>
+    Transactional writes between tenant and shared tables
+  </Col>
+  <Col>
+    Writes across a tenant and shared in the same transaction
+  </Col>
+  <Col>
+    This is not common from the users we have spoken to. Usually shared tables are loaded separately from an external source. Would love to hear your use case for this in our github discussion forum
+  </Col>
+</Row>
+<Row>
+  <Col>
+    Foreign keys from tenant table referencing shared table
+  </Col>
+  <Col>
+    Referencing a column from a tenant table to a shared table
+  </Col>
+  <Col>
+    Would love to hear your use case for this in our github discussion forum
+  </Col>
+</Row>
+
+<Row>
+  <Col>
+    Transactional writes across different tenants
+  </Col>
+  <Col>
+    Writes across two or more tenants in the same transaction
+  </Col>
+  <Col>
+    This is not common from the users we have spoken to. Most usecases have transactions within the same tenant. Would love to hear your use case for this in our github discussion forum
   </Col>
 </Row>
 
