@@ -2,18 +2,32 @@
 import { useEffect, useState } from "react";
 import { Fragment } from "react";
 import Image from "next/image";
-
 import Link from "next/link";
+const itemOnPage = (item: any) => {
+  return `/${item.slug?.join("/").replace(/\/?(index)?\.mdx/, "")}`;
+};
+const getPage = (indexed: any, remaining: any, page: string) => {
+  const indexHref = `/${indexed?.slug
+    ?.join("/")
+    .replace(/\/?(index)?\.mdx/, "")}`;
+  const itemHref = itemOnPage(remaining);
+  return (
+    (indexed && page.includes(indexHref)) ||
+    (remaining && page.includes(itemHref))
+  );
+};
 export function BaseListItem({
   item,
   page,
   withIcon,
   expander,
+  activeCallback,
 }: {
   item: any;
   page: string;
   withIcon?: boolean;
   expander: [boolean, (isExpanded: boolean) => void];
+  activeCallback?: (page: string, item: any) => void;
 }) {
   const [expanded, setExpanded] = expander;
   const href = `/${item.slug?.join("/").replace(/\/?(index)?\.mdx/, "")}`;
@@ -34,6 +48,13 @@ export function BaseListItem({
       : "overflow-hidden opacity-60",
   ];
 
+  useEffect(() => {
+    const isPage = itemOnPage(item) === page;
+
+    if (isPage) {
+      activeCallback && activeCallback(page, item);
+    }
+  }, [expanded]);
   return (
     <li className={itemClasses.join(" ")}>
       <Link href={href}>
@@ -66,32 +87,50 @@ export function BaseListItem({
   );
 }
 
-function RenderItem({ item, page }: { item: any; page: any }) {
+function RenderItem({
+  item,
+  page,
+  activeCallback,
+}: {
+  item: any;
+  page: any;
+  activeCallback?: (page: string, item: any) => void;
+}) {
   const expander = useState(false);
   if (Array.isArray(item)) {
     const [itm] = item;
     if (itm.items.length) {
-      return <RenderItems items={itm.items} page={page} />;
+      return (
+        <RenderItems
+          items={itm.items}
+          page={page}
+          activeCallback={activeCallback}
+        />
+      );
     }
   }
 
   if (!item.items) {
-    return <BaseListItem item={item} page={page} expander={expander} />;
+    return (
+      <BaseListItem
+        item={item}
+        page={page}
+        expander={expander}
+        activeCallback={activeCallback}
+        withIcon={false}
+      />
+    );
   }
 
   const indexed = item.items.find((item: any) => item.name === "index.mdx");
   const remaining = item.items.filter((item: any) => item.name !== "index.mdx");
-  const indexHref = `/${indexed?.slug
-    ?.join("/")
-    .replace(/\/?(index)?\.mdx/, "")}`;
-  const itemHref = `/${remaining.slug
-    ?.join("/")
-    .replace(/\/?(index)?\.mdx/, "")}`;
+  const onPage = getPage(indexed, remaining, page);
+
   useEffect(() => {
-    if (page.includes(indexHref) || page.includes(itemHref)) {
+    if (onPage) {
       expander[1](true);
     }
-  }, [indexHref, itemHref, page]);
+  }, [onPage, page]);
 
   if (!item.header && indexed) {
     return (
@@ -101,13 +140,20 @@ function RenderItem({ item, page }: { item: any; page: any }) {
           page={page}
           withIcon={true}
           expander={expander}
+          activeCallback={activeCallback}
         />
         <ul
           className={`transition-all ml-1 pl-2 border-l-[1px] border-gray ${
             expander[0] ? "opacity-100" : "h-[0px] opacity-0 overflow-hidden"
           }`}
         >
-          {remaining && <RenderItems items={remaining} page={page} />}
+          {remaining && (
+            <RenderItems
+              items={remaining}
+              page={page}
+              activeCallback={activeCallback}
+            />
+          )}
         </ul>
       </Fragment>
     );
@@ -115,19 +161,55 @@ function RenderItem({ item, page }: { item: any; page: any }) {
 
   if (item.items.length > 0) {
     if (!item.slug) {
-      return item.items && <RenderItems items={item.items} page={page} />;
+      return (
+        item.items && (
+          <RenderItems
+            items={item.items}
+            page={page}
+            activeCallback={activeCallback}
+          />
+        )
+      );
     }
     return (
       <Fragment>
-        <BaseListItem item={item} page={page} expander={expander} />
-        <ul>{item.items && <RenderItems items={item.items} page={page} />}</ul>
+        <BaseListItem
+          item={item}
+          page={page}
+          expander={expander}
+          activeCallback={activeCallback}
+        />
+        <ul>
+          {item.items && (
+            <RenderItems
+              items={item.items}
+              page={page}
+              activeCallback={activeCallback}
+            />
+          )}
+        </ul>
       </Fragment>
     );
   }
 }
 
-export function RenderItems({ items, page }: { items: any; page: string }) {
+export function RenderItems({
+  items,
+  page,
+  activeCallback,
+}: {
+  items: any;
+  page: string;
+  activeCallback?: (page: string, item: any) => void;
+}) {
   return items.map((item: any, idx: number) => {
-    return <RenderItem item={item} page={page} key={idx} />;
+    return (
+      <RenderItem
+        item={item}
+        page={page}
+        key={idx}
+        activeCallback={activeCallback}
+      />
+    );
   });
 }

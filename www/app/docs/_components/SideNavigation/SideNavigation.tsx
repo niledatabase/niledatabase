@@ -1,4 +1,5 @@
 import inspectDirectory from "../PageContent/inspectDirectory";
+import MobileSidenav from "./MobileSidenav";
 import { RenderItems } from "./RenderItems";
 import SearchBox from "./Search";
 
@@ -18,6 +19,7 @@ export default async function SideNavigation({ page }: { page: string }) {
           </ul>
         </div>
       </aside>
+      <MobileSidenav navBar={navBar} page={page} />
     </>
   );
 }
