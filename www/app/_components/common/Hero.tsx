@@ -6,7 +6,7 @@ export function HeroText(props: OverrideClasses) {
     <div className="px-4">
       <PageHeader
         title="Serverless Postgres for modern SaaS"
-        subtitle="Build In Days. Scale For Years."
+        subtitle="Launch In Days. Grow For Years."
         {...props}
       />
       <GetStartedButton />
