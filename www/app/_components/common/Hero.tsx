@@ -8,7 +8,7 @@ export function HeroText(props: OverrideClasses & { title?: string }) {
     <div className="px-4 lg:px-0">
       <PageHeader
         title="Serverless Postgres for modern SaaS"
-        subtitle="Build In Days. Scale For Years."
+        subtitle="Launch In Days. Grow For Years."
         {...props}
       />
       <div className="flex flex-row gap-4 items-center justify-center pt-5">

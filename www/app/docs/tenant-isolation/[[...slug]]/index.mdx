@@ -1,9 +1,22 @@
 # Tenant Isolation
 
 export const meta = {
-  order: 2,
+  order: 3,
 };
 
-<Cards>
-  <Card file="./index.mdx" root="tenant-isolation" />
-</Cards>
+All SaaS applications provide service to multiple customers or tenants. Isolating each tenant's data from another tenant is so basic yet hard to do. Nile enables tenant data isolation without any complex, buggy code or dealing with messy row-level security policies. With Postgres being tenant-aware in Nile, this becomes straightforward. 
+
+## What is tenant data isolation?
+
+A SaaS application serves many tenants. The data for each tenant belongs to the tenant and should not be accessible to other tenants. The users who belong to a specific tenant can access the data they have access to for that tenant. This seems so obvious but yet so hard to achieve in practice. 
+
+In Nile, you can think about it as a single Postgres that has many virtual tenant DBs. You can control where these virtual DBs should be placed. This can be on multitenant or dedicated instances. You get to decide while creating the tenant. This can also be in any region of the world. Nile enables isolation with a single line of code in your application. Nile also ensures user authorization is enforced within a tenant if you use our user management (more about this later)
+![Tenant Isolation](/docs/tenant-isolation.png)
+
+## Enforcing tenant data isolation
+
+## Querying across tenants
+
+## What is tenant performance isolation?
+
+## How does Nile achieve performance isolation between tenants?
