@@ -41,6 +41,9 @@ module.exports = {
 
         "divider-glow":
           "radial-gradient(50.00% 104.84% at 50.00% 0.00%, rgba(255, 255, 255, 0.10) 0%, rgba(0, 0, 0, 0.00) 100%)",
+        "hero-glow":
+          "radial-gradient(rgba(255, 255, 255, 0.10) 0%, rgba(0, 0, 0, 0.00) 80%)",
+
         "gradient-text":
           "linear-gradient(100deg, #F4C587 0%, #D6D3E9 60.42%, #99D2EC 95.31%)",
         "gradient-text-144":
@@ -50,6 +53,7 @@ module.exports = {
         community: "url('/hero-community.png')",
         docs: "url('/hero-docs.png')",
         templates: "url('/hero-templates.png')",
+        "console-video": "url('/hero-bg-video.png')",
         brown:
           "linear-gradient(162deg, #FF9F30 -0.84%, #B1AFE5 48.53%, #2295B7 100%)",
         blue: "linear-gradient(162deg, #FF9F30 -0.84%, #B1AFE5 48.53%, #2295B7 100%);",

@@ -23,9 +23,7 @@ export default function Navigation({
     <>
       <NavMenu open={open} />
       <div
-        className={`flex flex-row flex-1 w-screen sticky top-0 z-50 ${
-          className ?? "navBlur"
-        }`}
+        className={`flex flex-row flex-1 w-screen sticky top-0 z-30 navBlur ${className}`}
       >
         <div className="flex flex-row items-center justify-between px-10 lg:px-28 flex-1 lg:h-auto h-[76px]">
           <div className="items-center flex lg:block lg:items-start lg:w-44">

@@ -4,7 +4,7 @@ import Link from "next/link";
 export default async function Footer({ className }: { className?: string }) {
   return (
     <div
-      className={`bg-footer bg-no-repeat w-full relative ${
+      className={`bg-footer bg-no-repeat w-full relative bg-[bottom] ${
         className ?? ""
       } mt-24`}
     >
@@ -12,7 +12,7 @@ export default async function Footer({ className }: { className?: string }) {
       <div className="z-10 relative">
         <div className="flex flex-col lg:flex-row  justify-between w-full gap-32">
           <div className="flex flex-col gap-3 items-center lg:items-start">
-            <Image src="/logo.svg" alt="nile logo" width={62} height={22} />
+            <Image src="/logo.svg" alt="nile logo" width={80} height={30} />
             <div className="text-[#A1A1AA] text-lg">
               Copyright &copy; {new Date().getFullYear()} Nile
             </div>

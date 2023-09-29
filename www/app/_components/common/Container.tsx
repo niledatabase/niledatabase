@@ -13,9 +13,9 @@ export default function Container({
   return (
     <Body background={background}>
       <Navigation />
-      <main className="flex flex-col items-center justify-between px-4 py-4 lg:px-24 lg:py-16 overflow-hidden container mx-auto">
+      <main className="flex flex-col items-center justify-between px-4 py-4 pb-0 lg:px-24 lg:py-16 container mx-auto">
         {children}
-        <Divider flip={true} />
+        <Divider />
         <Footer />
       </main>
     </Body>

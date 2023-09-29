@@ -30,7 +30,7 @@ export default function Body({
 }) {
   return (
     <body
-      className={`${aeonik.variable} ${inter.variable} ${
+      className={`overflow-x-hidden ${aeonik.variable} ${inter.variable} ${
         background ? variants[background] : null
       }`}
     >

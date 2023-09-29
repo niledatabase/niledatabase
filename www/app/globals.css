@@ -10,6 +10,9 @@
   text-rendering: geometricPrecision;
 }
 
+html {
+  height: 100%;
+}
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -232,25 +235,29 @@ html .navBlur {
 
 .prose {
   --tw-prose-links: #7cd1ed !important;
-  font-size: 20px;
 }
 
-.prose h1 {
-  line-height: 56px;
-  font-size: 48px;
-  font-weight: 400;
-}
-.prose h2 {
-  font-size: 40px;
-  line-height: 48px;
-  letter-spacing: 0.4px;
-  font-weight: 400;
-}
-.prose h3 {
-  line-height: 40px;
-  line-height: 40px;
-  font-size: 32px;
-  font-weight: 400;
+@media (min-width: 1024px) {
+  .prose {
+    font-size: 20px;
+  }
+  .prose h1 {
+    line-height: 56px;
+    font-size: 48px;
+    font-weight: 400;
+  }
+  .prose h2 {
+    font-size: 40px;
+    line-height: 48px;
+    letter-spacing: 0.4px;
+    font-weight: 400;
+  }
+  .prose h3 {
+    line-height: 40px;
+    line-height: 40px;
+    font-size: 32px;
+    font-weight: 400;
+  }
 }
 
 mark {
@@ -270,8 +277,54 @@ mark {
   .templateSearch {
     width: calc(100vw - 20px);
   }
+  .prose {
+    font-size: 110%;
+  }
+  .prose p,
+  .prose ol,
+  .prose ul {
+    max-width: calc(100vw - 1.62rem);
+  }
+  .prose pre {
+    max-width: calc(100vw - 1.62rem);
+    overflow: scroll;
+  }
 }
 
 .hljs {
   background: #000 !important;
+}
+
+table {
+  border-collapse: separate !important;
+  border-spacing: 0;
+  border-style: hidden;
+}
+th,
+td {
+  padding: 10px !important;
+  font-size: 14px;
+  border: 0.5px solid #2f2f2f;
+}
+tbody {
+  border-radius: 4px;
+}
+
+table tr:first-child th:first-child {
+  border-top-left-radius: 4px;
+}
+
+table tr:first-child th:last-child {
+  border-top-right-radius: 4px;
+}
+
+table tr:last-child td:first-child {
+  border-bottom-left-radius: 4px;
+}
+
+table tr:last-child td:last-child {
+  border-bottom-right-radius: 4px;
+}
+th {
+  background: #1a1a1a;
 }

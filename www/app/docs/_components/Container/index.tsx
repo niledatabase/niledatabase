@@ -9,7 +9,7 @@ export default function Container({
 }) {
   return (
     <Body background={null}>
-      <Navigation className="border-gray border-b-[1px] bg-black" />
+      <Navigation className="lg:border-gray lg:border-b-[1px] lg:bg-black" />
       <main className="min-h-screen mx-auto container bg-no-repeat bg-top bg-[size:100%] bg-docs">
         <div className="flex flex-row">{children}</div>
       </main>

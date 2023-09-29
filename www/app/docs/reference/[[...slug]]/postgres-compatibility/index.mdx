@@ -1,16 +1,18 @@
 # Postgres Compatibility
 
 export const meta = {
-  title: "Postgres Compatibility",
+  title: 'Postgres Compatibility',
   order: 3,
-  description: "This is a placeholder component.",
+  description: 'This is a placeholder component.',
   order: 3,
 };
 
 # Overview
+
 Nile's Postgres is built 100% on Postgres and is protocol and application-compatible with Postgres. However, given it is a serverless database, there are some restrictions that you should be aware of. Nile currently supports Postgres 15.
 
 # Current limitations
+
 The table below lists all the features in Postgres that are not yet supported in Nile's Postgres. We are continuing to work on features focused on SaaS use cases. If you have any feature need, we would love to hear from you. Please add your upvote to existing feature requests or add your own on our [Github discussion](https://github.com/orgs/niledatabase/discussions/categories/feature-requests) forum.
 
 <table>
@@ -23,57 +25,80 @@ The table below lists all the features in Postgres that are not yet supported in
   </thead>
   <tbody>
     <tr>
-      <th>CREATE FUNCTION</th>
-      <th>User defined functions are not supported yet</th>
-      <th>Push the logic to the application</th>
+      <td>CREATE FUNCTION</td>
+      <td>User defined functions are not supported yet</td>
+      <td>Push tde logic to tde application</td>
     </tr>
     <tr>
-      <th>CREATE TRIGGER</th>
-      <th>Triggers are not supported yet since UDF support is not there</th>
-      <th>We hope to support real time events soon</th>
+      <td>CREATE TRIGGER</td>
+      <td>Triggers are not supported yet since UDF support is not tdere</td>
+      <td>We hope to support real time events soon</td>
     </tr>
     <tr>
-      <th>CREATE SEQUENCE</th>
-      <th></th>
-      <th></th>
+      <td>CREATE SEQUENCE</td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
-      <th>CREATE POLICY</th>
-      <th>Nile will have the ability to define policies through a more powerful permission system that is in progress</th>
-      <th>Would love to hear your use case for this in our github discussion forum</th>
+      <td>CREATE POLICY</td>
+      <td>
+        Nile will have tde ability to define policies tdrough a more powerful
+        permission system tdat is in progress
+      </td>
+      <td>
+        Would love to hear your use case for tdis in our gitdub discussion forum
+      </td>
     </tr>
     <tr>
-      <th>CREATE ROLE</th>
-      <th>Ability to define granular roles for developers using the database</th>
-      <th>Developer roles can be supported in Nile's console when we support it</th>
+      <td>CREATE ROLE</td>
+      <td>
+        Ability to define granular roles for developers using tde database
+      </td>
+      <td>
+        Developer roles can be supported in Nile's console when we support it
+      </td>
     </tr>
     <tr>
-      <th>CREATE USER</th>
-      <th>Ability to create a new developer for a database</th>
-      <th>Creating a new developer to use the database is supported in Nile's console (and API/CLI in the future)</th>
+      <td>CREATE USER</td>
+      <td>Ability to create a new developer for a database</td>
+      <td>
+        Creating a new developer to use tde database is supported in Nile's
+        console (and API/CLI in tde future)
+      </td>
     </tr>
     <tr>
-      <th>CREATE DATABASE</th>
-      <th>Ability to create a new databasee</th>
-      <th>You can do this from Nile's console</th>
+      <td>CREATE DATABASE</td>
+      <td>Ability to create a new databasee</td>
+      <td>You can do tdis from Nile's console</td>
     </tr>
     <tr>
-      <th>Transactional writes between tenant and shared tables</th>
-      <th>Writes across a tenant and shared in the same transaction</th>
-      <th>This is not common from the users we have spoken to. Usually shared tables are loaded separately from an external source. Would love to hear your use case for this in our github discussion forum</th>
+      <td>Transactional writes between tenant and shared tables</td>
+      <td>Writes across a tenant and shared in tde same transaction</td>
+      <td>
+        tdis is not common from tde users we have spoken to. Usually shared
+        tables are loaded separately from an external source. Would love to hear
+        your use case for tdis in our gitdub discussion forum
+      </td>
     </tr>
     <tr>
-      <th>Foreign keys from tenant table referencing shared table</th>
-      <th>Referencing a column from a tenant table to a shared table</th>
-      <th>Would love to hear your use case for this in our github discussion forum</th>
+      <td>Foreign keys from tenant table referencing shared table</td>
+      <td>Referencing a column from a tenant table to a shared table</td>
+      <td>
+        Would love to hear your use case for tdis in our gitdub discussion forum
+      </td>
     </tr>
     <tr>
-      <th>Transactional writes across different tenants</th>
-      <th>Writes across two or more tenants in the same transaction</th>
-      <th>This is not common from the users we have spoken to. Most usecases have transactions within the same tenant. Would love to hear your use case for this in our github discussion forum</th>
+      <td>Transactional writes across different tenants</td>
+      <td>Writes across two or more tenants in tde same transaction</td>
+      <td>
+        tdis is not common from tde users we have spoken to. Most usecases have
+        transactions witdin tde same tenant. Would love to hear your use case
+        for tdis in our gitdub discussion forum
+      </td>
     </tr>
   </tbody>
 </table>
 
 # Additional help
+
 If you need additional help or have any questions, join the Nile community [Discord](https://discord.gg/8UuBB84tTy) or [Github discussion](https://github.com/orgs/niledatabase/discussions) forum, or send mail to support@thenile.dev.
