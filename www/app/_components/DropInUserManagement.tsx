@@ -5,11 +5,7 @@ export default function DropInUserManagement() {
   return (
     <div className="flex w-full flex-col">
       <div className="flex flex-col text-center align-middle flex-1">
-        <Heading text="Drop in tenant and user management">
-          <div className="opacity-60 text-xl hidden lg:block">
-            Build In Days. Scale For Years.
-          </div>
-        </Heading>
+        <Heading text="Drop in tenant and user management"></Heading>
       </div>
       <div className="hidden md:block">
         <Video poster="user-mgmt.jpg" src="user-mgmt.mp4" />
