@@ -62,10 +62,11 @@ export default function CustomerDashboards() {
           <div className="py-4 px-5 flex flex-row gap-5 items-center">
             <div className="icon rounded-[20px] flex justify-center items-center">
               <Image
+                className="scale-[2]"
                 src="/icons/person.svg"
                 alt="wireframe globe"
-                width={41}
-                height={40}
+                width={24}
+                height={24}
               />
             </div>
             <div className="bg-gradient-white bg-clip-text text-transparent text-base">

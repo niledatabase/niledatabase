@@ -45,12 +45,12 @@ export default function MobileNav({
 }) {
   useEffect(() => {
     if (open) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflowY = "hidden";
     } else {
-      document.body.style.overflow = "scroll";
+      document.body.style.overflowY = "scroll";
     }
     return () => {
-      document.body.style.overflow = "scroll";
+      document.body.style.overflowY = "scroll";
     };
   }, [open]);
   return (
@@ -66,8 +66,8 @@ export default function MobileNav({
                 } transition-opacity`}
                 src="/icons/close.svg"
                 alt="white X"
-                width={24}
-                height={24}
+                width={25}
+                height={25}
               />
               <Image
                 className={`absolute opacity-${
@@ -75,8 +75,8 @@ export default function MobileNav({
                 } transition-opacity`}
                 src="/icons/menu.svg"
                 alt="three lines"
-                width={24}
-                height={24}
+                width={21}
+                height={17}
               />
             </div>
           </button>

@@ -30,12 +30,12 @@ export function ContactForm({
 
   useEffect(() => {
     if (show) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflowY = "hidden";
     } else {
-      document.body.style.overflow = "scroll";
+      document.body.style.overflowY = "scroll";
     }
     return () => {
-      document.body.style.overflow = "scroll";
+      document.body.style.overflowY = "scroll";
     };
   }, [show]);
 

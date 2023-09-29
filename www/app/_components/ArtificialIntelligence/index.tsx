@@ -62,7 +62,7 @@ export default function ArtificialIntelligence() {
       <div className="flex flex-col text-center align-middle flex-1 mb-[87px]">
         <Heading text=" Full stack generative AI experience" />
       </div>
-      <div className="flex flex-col lg:flex-row place-items-center rounded-[24px] border border-gray">
+      <div className="flex flex-col lg:flex-row place-items-center rounded-[24px] border border-gray overflow-hidden">
         <div className="flex lg:w-1/2 flex-col">
           <div className="py-4 px-5 flex flex-row gap-5 place-items-top">
             <div className="z-10 relative shrink-0 items-start flex justify-center">
@@ -110,7 +110,7 @@ export default function ArtificialIntelligence() {
         <div className="flex lg:w-1/2">
           <Image
             src="/ai.png"
-            alt="location pin"
+            alt="intricate orange android"
             width={464}
             height={464}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -188,7 +188,7 @@ export default function ArtificialIntelligence() {
             </div>
           </div>
           <ChatBlurbStacked />
-          <div className="lg:w-1/2 lg:pl-2 mx-auto lg:mx-0 w-[94vw] overflow-hidden">
+          <div className="lg:w-1/2 lg:pl-2 mx-auto lg:mx-0 md:w-[77vw] w-[90vw] overflow-hidden overflow-x-scroll">
             <div className="border border-gray rounded-[24px] px-8 py-3 w-full bg-[#000] h-full relative overflow-hidden">
               <div className="absolute bottom-0 bg-fader left-0 right-0 top-[70%]"></div>
               <div className="pb-8">
