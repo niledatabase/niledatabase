@@ -51,11 +51,28 @@ Selecting the flights that start from SFO
 ```sql
 select * from flights where from_location='SFO';
 
-id  |  name  | from_location.    | to_location.   |   departure_time    |    arrival_time
------+--------+------------------+----------------+---------------------+---------------------
- 643 | United | SFO              | NY             | 2023-12-22 19:10:25 | 2016-12-23 05:10:25
-(1 row)
-```
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>from_location</th>
+      <th>to_location</th>
+      <th>departure_time</th>
+      <th>arrival_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>643</td>
+      <td>United</td>
+      <td>SFO</td>
+      <td>NY</td>
+      <td>2023-12-22 19:10:25</td>
+      <td>2016-12-23 05:10:25</td>
+    </tr>
+  </tbody>
+</table>
 
 You can also query by joining multiple shared tables. We can join the “flights” table with “airports” table to get more detailed information about the destination from where the flights are leaving.
 
