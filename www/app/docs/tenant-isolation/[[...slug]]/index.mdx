@@ -168,7 +168,71 @@ await client.conversations.list()
   </tbody>
 </table>
 ## Querying across tenants
+While Nile provides tenant isolation, it also provides the ability for you to query across tenants and shared tables. This is typically useful during development, production debugging or to do basic analytics across customers. Our customer dashboard already provides you useful analytics but you can always run raw SQL queries for more information. When no tenant context is set, the connection can access across all the tenant DBs irrespective of where the tenants are located (any region, multitenant or dedicated infrastructure). 
 
+1. Querying the total no of customers
+
+```sql
+select count(*) as no_of_customers from tenants;
+```
+<table>
+  <thead>
+    <tr>
+      <th>no_of_customers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+2. Querying the total no of candidates per customer
+```sql
+select 
+t1.id as customer_id,t1.name as customer_name,count(c1.id) as no_of_candidates 
+from candidates c1 right join tenants t1 
+on c1.tenant_id=t1.id 
+group by t1.id,t1.name;
+```
+<table>
+  <thead>
+    <tr>
+      <th>customer_id</th>
+      <th>customer_name</th>
+      <th>no_of_candidates</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>018ad859-3977-7c0d-8de1-7c6add417cdb</td>
+      <td>customer 1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>018ade1a-7830-7981-b23f-f3a7f7b8f09f</td>
+      <td>customer 2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>018ade1a-7843-7e60-9686-714bab650998</td>
+      <td>customer 3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>018ade1a-7854-7612-9126-7496dcbc7b62</td>
+      <td>customer 4</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>018ade1a-7891-76df-afb2-3ed96235c62c</td>
+      <td>customer 5</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+
+3. Finding the number of customers that have atleast one candidate added in the last one week
 
 ## What is tenant performance isolation?
 
