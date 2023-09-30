@@ -14,10 +14,18 @@ Tenant is the basic building block for SaaS and Nile. Nile’s Postgres comes wi
 
 ```sql
 select * from tenants;
-
-id | name | created | updated | deleted
-----+------+---------+---------+---------
 ```
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>created</th>
+      <th>updated</th>
+      <th>deleted</th>
+    </tr>
+  </thead>
+</table>
 
 The tenants table has an id that uniquely identifies a tenant, a name of the tenant (customer or workspace etc) and a few other columns for bookkeeping.
 
@@ -32,10 +40,27 @@ You can see how a uuid is automatically inserted into the id column for the cust
 
 ```sql
 select * from tenants;
-                  id                  |   name    |          created           |          updated           | deleted
---------------------------------------+-----------+----------------------------+----------------------------+---------
- 018ac98e-b37a-731b-b03a-6617e8fd5266 | customer1 | 2023-09-24 23:38:07.097633 | 2023-09-24 23:38:07.097633 |
 ```
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>created</th>
+      <th>updated</th>
+      <th>deleted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>customer1</td>
+      <td>2023-09-24 23:38:07.097633</td>
+      <td>2023-09-24 23:38:07.097633</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
 The insert version shown here is the most simple option. You would be able to specify the location (any supported region in the world) or the deployment mode (place tenants on a dedicated instance) of a tenant for more fine grained control. You would also be able to extend the tenants table to add more metadata (covered in later sections).
 
@@ -75,12 +100,36 @@ You can now repeat the same thing for another customer.
 insert into tenants (name) VALUES ('customer2');
 
 select * from tenants;
+ ```
+ <table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>created</th>
+      <th>updated</th>
+      <th>deleted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>customer1</td>
+      <td>2023-09-24 23:38:07.097633</td>
+      <td>2023-09-24 23:38:07.097633</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
+      <td>customer2</td>
+      <td>2023-09-25 02:40:32.964067</td>
+      <td>2023-09-25 02:40:32.964067</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
-id                  |   name    |          created           |          updated           | deleted
---------------------------------------+-----------+----------------------------+----------------------------+---------
- 018ac98e-b37a-731b-b03a-6617e8fd5266 | customer1 | 2023-09-24 23:38:07.097633 | 2023-09-24 23:38:07.097633 |
- 018aca35-b8c4-7674-882c-30ae56d7b479 | customer2 | 2023-09-25 02:40:32.964067 | 2023-09-25 02:40:32.964067 |
-
+```sql
 -- insert employees for the second customer
 insert into employees (tenant_id, id, name, age, address, start_date, title)
 values
@@ -88,14 +137,78 @@ values
   ('018aca35-b8c4-7674-882c-30ae56d7b479',1532,'Mark',27,'Manchester,UK','2022-10-10 12:09:22-06','support engineer'),
   ('018aca35-b8c4-7674-882c-30ae56d7b479',8645,'Sam',42,'Liverpool,UK','2015-08-04 04:03:12-05','product manager');
 
---------------------------------------+------+--------+-----+----------------------+---------------------+--------------------------
- 018ac98e-b37a-731b-b03a-6617e8fd5266 | 1345 | Jason  |  30 | Sunnyvale,California | 2016-12-22 19:10:25 | software engineer
- 018ac98e-b37a-731b-b03a-6617e8fd5266 | 2423 | Minnie |  24 | Seattle,Washingtom   | 2018-11-11 12:09:22 | sales engineer
- 018ac98e-b37a-731b-b03a-6617e8fd5266 | 4532 | Shiva  |  32 | Fremont, California  | 2019-09-05 04:03:12 | product manager
- 018aca35-b8c4-7674-882c-30ae56d7b479 | 5643 | John   |  36 | London,UK            | 2017-12-12 19:10:25 | senior software engineer
- 018aca35-b8c4-7674-882c-30ae56d7b479 | 1532 | Mark   |  27 | Manchester,UK        | 2022-10-10 12:09:22 | support engineer
- 018aca35-b8c4-7674-882c-30ae56d7b479 | 8645 | Sam    |  42 | Liverpool,UK         | 2015-08-04 04:03:12 | product manager
+select * from employees;
 ```
+
+<table>
+  <thead>
+    <tr>
+      <th>tenant_id</th>
+      <th>id</th>
+      <th>name</th>
+      <th>age</th>
+      <th>address</th>
+      <th>start_date</th>
+      <th>title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>1345</td>
+      <td>Jason</td>
+      <td>30</td>
+      <td>Sunnyvale,California</td>
+      <td>2016-12-22 19:10:25</td>
+      <td>software engineer</td>
+    </tr>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>2423</td>
+      <td>Minnie</td>
+      <td>24</td>
+      <td>Seattle,Washington</td>
+      <td>2018-11-11 12:09:22</td>
+      <td>sales engineer</td>
+    </tr>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>4532</td>
+      <td>Shiva</td>
+      <td>32</td>
+      <td>Fremont, California</td>
+      <td>2019-09-05 04:03:12</td>
+      <td>product manager</td>
+    </tr>
+    <tr>
+      <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
+      <td>5643</td>
+      <td>John</td>
+      <td>36</td>
+      <td>London,UK</td>
+      <td>2017-12-12 19:10:25</td>
+      <td>senior software engineer</td>
+    </tr>
+    <tr>
+      <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
+      <td>1532</td>
+      <td>Mark</td>
+      <td>27</td>
+      <td>Manchester,UK</td>
+      <td>2022-10-10 12:09:22</td>
+      <td>support engineer</td>
+    </tr>
+    <tr>
+      <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
+      <td>8645</td>
+      <td>Sam</td>
+      <td>42</td>
+      <td>Liverpool,UK</td>
+      <td>2015-08-04 04:03:12</td>
+      <td>product manager</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Querying tenant data
 
@@ -106,11 +219,49 @@ SaaS applications only query a specific tenant data at any given of time. This r
 set nile.tenant_id = '018ac98e-b37a-731b-b03a-6617e8fd5266';
 
 select * from employees
---------------------------------------+------+--------+-----+----------------------+---------------------+-------------------
- 018ac98e-b37a-731b-b03a-6617e8fd5266 | 1345 | Jason  |  30 | Sunnyvale,California | 2016-12-22 19:10:25 | software engineer
- 018ac98e-b37a-731b-b03a-6617e8fd5266 | 2423 | Minnie |  24 | Seattle,Washingtom   | 2018-11-11 12:09:22 | sales engineer
- 018ac98e-b37a-731b-b03a-6617e8fd5266 | 4532 | Shiva  |  32 | Fremont, California  | 2019-09-05 04:03:12 | product manager
 ```
+<table>
+  <thead>
+    <tr>
+      <th>tenant_id</th>
+      <th>id</th>
+      <th>name</th>
+      <th>age</th>
+      <th>address</th>
+      <th>start_date</th>
+      <th>title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>1345</td>
+      <td>Jason</td>
+      <td>30</td>
+      <td>Sunnyvale,California</td>
+      <td>2016-12-22 19:10:25</td>
+      <td>software engineer</td>
+    </tr>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>2423</td>
+      <td>Minnie</td>
+      <td>24</td>
+      <td>Seattle,Washington</td>
+      <td>2018-11-11 12:09:22</td>
+      <td>sales engineer</td>
+    </tr>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>4532</td>
+      <td>Shiva</td>
+      <td>32</td>
+      <td>Fremont, California</td>
+      <td>2019-09-05 04:03:12</td>
+      <td>product manager</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Extending tenant information
 
