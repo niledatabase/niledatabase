@@ -35,7 +35,6 @@ Inserting a new customer or tenant could use SQL, one of our SDKs or REST APIs. 
 -- create a record for the first customer
 insert into tenants (name) VALUES ('customer1');
 ```
-
 You can see how a uuid is automatically inserted into the id column for the customer. This id can be used for all future reference to ‘customer1’.
 
 ```sql
@@ -139,7 +138,6 @@ values
 
 select * from employees;
 ```
-
 <table>
   <thead>
     <tr>
@@ -266,17 +264,14 @@ select * from employees
 ## Extending tenant information
 
 While Nile’s Postgres has a built in table to store tenants information, it is not strongly opinionated and lets you extend the table to add more columns (read about built in tables). This lets you to store additional metadata for a tenant. You can start storing the address and phone number of each tenant by adding those columns to the tenants table.
-
 ```sql
 ALTER TABLE tenants
   ADD phone_number text,
   ADD address text;
 ```
-
 ## Foreign keys across tenant tables
 
 Extending the employee management SaaS example, we can add information to track the benefits plan that each employee has opted. The ‘benefits’ table has the plan that each employee has opted for and the cost of the plan per year. The employee id is a foreign key reference to the id in the employees table. All the standard behavior of foreign keys are applicable. You can read more about Foreign keys in the official [Postgres docs](https://www.postgresql.org/docs/current/tutorial-fk.html).
-
 ```sql
 create table benefits (
   tenant_id uuid,
@@ -295,7 +290,6 @@ Note in this example that the foreign key is for the composite tenant_id,employe
 ## Transactions for tenants
 
 A common use case would be for SaaS applications to update multiple tables of the same tenant transactionally. For example, you may want to add a new employee record to the ‘employees’ table and their benefits to the ‘benefits’ table transactionally for a specific customer.
-
 ```sql
 BEGIN;
 insert into employees (tenant_id, id, name, age, address, start_date, title)
@@ -311,7 +305,6 @@ COMMIT;
 ## Deleting tenants
 
 Deleting tenants would typically be used when a customer/tenant deletes their account. You may also want to delete a tenant to save cost when a customer churns due to no activity in the application. The behavior of deleting a tenant would be schema dependent. If the schema has cascading set, all the tenants data will be deleted when a tenant is removed from the tenants table.
-
 ```sql
 delete from tenants where id='018aca35-b8c4-7674-882c-30ae56d7b479';
 ```
