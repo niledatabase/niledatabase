@@ -119,11 +119,19 @@ select * from candidates;
 
 In a typical SaaS application, you would want to access the data of a specific tenant when user accesses the application. You also want to make sure the data from another tenant is not seen. This is typically hard without implementing complex permissions at the application level or enforcing row level security policies in Postgres which is hard to maintain, debug and error prone. Nile has first class support for this at the SQL and all our SDKs which makes tenant isolation very trivial to do. At the SQL layer, setting a session context to a specific tenant is equivalent to pointing the connection to a specific tenant DB. You can still access shared tables in this mode but the other virtual tenant DBs are not accessible. We also provide a very simple user context mode which adds additional security on top of the tenant context. Read more about this in user authorization.
 
-```sql
+<CodeGroups title="Tenant isolation">
+    ```sql
 -- set session context to the tenant you want to access.
 set nile.tenant_id = '018ade1a-7830-7981-b23f-f3a7f7b8f09f';
 select * from candidates;
 ```
+ ```typescript
+import ApiClient from '@example/protocol-api'
+const client = new ApiClient(token)
+await client.conversations.list()
+    ```
+</CodeGroups>
+
 <table>
   <thead>
     <tr>
