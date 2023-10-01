@@ -233,7 +233,21 @@ group by t1.id,t1.name;
 </table>
 
 3. Finding the number of customers that have atleast one candidate added in the last one week
-
+```sql
+select tenant_id from candidates where (CURRENT_DATE - applied_date::date) < 30;
+```
+<table>
+  <thead>
+    <tr>
+      <th>tenant_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>018ade1a-7843-7e60-9686-714bab650998</td>
+    </tr>
+  </tbody>
+</table>
 ## What is tenant performance isolation?
 
 ## How does Nile achieve performance isolation between tenants?
