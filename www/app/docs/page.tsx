@@ -26,16 +26,6 @@ const languages = [
     icon: "java.svg",
     path: "/docs/getting-started/languages/java",
   },
-  {
-    name: "Ruby",
-    icon: "ruby.svg",
-    path: "/docs/getting-started/languages/ruby",
-  },
-  {
-    name: "Prisma",
-    icon: "prisma.svg",
-    path: "/docs/getting-started/languages/prisma",
-  },
 ];
 export default async function Home() {
   const templates = await loadTemplates();
