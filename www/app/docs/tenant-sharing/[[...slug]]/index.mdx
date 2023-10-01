@@ -50,12 +50,30 @@ Selecting the flights that start from SFO
 
 ```sql
 select * from flights where from_location='SFO';
-
-id  |  name  | from_location.    | to_location.   |   departure_time    |    arrival_time
------+--------+------------------+----------------+---------------------+---------------------
- 643 | United | SFO              | NY             | 2023-12-22 19:10:25 | 2016-12-23 05:10:25
-(1 row)
 ```
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>from_location</th>
+      <th>to_location</th>
+      <th>departure_time</th>
+      <th>arrival_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>643</td>
+      <td>United</td>
+      <td>SFO</td>
+      <td>NY</td>
+      <td>2023-12-22 19:10:25</td>
+      <td>2016-12-23 05:10:25</td>
+    </tr>
+  </tbody>
+</table>
 
 You can also query by joining multiple shared tables. We can join the “flights” table with “airports” table to get more detailed information about the destination from where the flights are leaving.
 
@@ -80,12 +98,26 @@ values
 select flights.id, flights.name, flights.from_location, airports.address
 from flights, airports
 where flights.from_destination=airports.code;
-
-id   |  name  | from_destination |         address
------+--------+------------------+-------------------------
- 643 | United | SFO              | San Francisco, CA 94128
-(1 row)
 ```
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>from_location</th>
+      <th>address</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>643</td>
+      <td>United</td>
+      <td>SFO</td>
+      <td>San Francisco, CA 94128</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Joining data between tenant aware and shared tables
 
@@ -119,14 +151,53 @@ select bookings.booking_id, bookings.employee_id, flights.name,
        flights.arrival_time, bookings.total_price
 from bookings,flights
 where bookings.booking_id=flights.id;
-
-booking_id | employee_id |      name      | from_destination | to_destination |   departure_time    |    arrival_time     | total_price
-------------+-------------+----------------+------------------+----------------+---------------------+---------------------+-------------
-       1345 | 2           | United         | SFO              | NY             | 2023-12-22 19:10:25 | 2016-12-23 05:10:25 | 200.00
-       2456 | 3           | Indian Airways | Mumbai           | Delhi          | 2024-11-23 19:10:25 | 2024-11-23 01:10:25 | 150.00
-       3240 | 4           | Indian Airways | Mumbai           | Delhi          | 2024-11-23 19:10:25 | 2024-11-23 01:10:25 | 250.00
-(3 rows)
 ```
+<table>
+  <thead>
+    <tr>
+      <th>booking_id</th>
+      <th>employee_id</th>
+      <th>name</th>
+      <th>from_destination</th>
+      <th>to_destination</th>
+      <th>departure_time</th>
+      <th>arrival_time</th>
+      <th>total_price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1345</td>
+      <td>2</td>
+      <td>United</td>
+      <td>SFO</td>
+      <td>NY</td>
+      <td>2023-12-22 19:10:25</td>
+      <td>2016-12-23 05:10:25</td>
+      <td>200.00</td>
+    </tr>
+    <tr>
+      <td>2456</td>
+      <td>3</td>
+      <td>Indian Airways</td>
+      <td>Mumbai</td>
+      <td>Delhi</td>
+      <td>2024-11-23 19:10:25</td>
+      <td>2024-11-23 01:10:25</td>
+      <td>150.00</td>
+    </tr>
+     <tr>
+      <td>3240</td>
+      <td>4</td>
+      <td>Indian Airways</td>
+      <td>Mumbai</td>
+      <td>Delhi</td>
+      <td>2024-11-23 19:10:25</td>
+      <td>2024-11-23 01:10:25</td>
+      <td>250.00</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Foreign keys for shared tables
 
