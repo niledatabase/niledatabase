@@ -20,7 +20,7 @@ export const dynamicParams = true
 export const revalidate = 0
 export const fetchCache = 'force-no-store'
 
-export const { api, db } = Server({
+const { api, db } = Server({
     workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
     database: String(process.env.NEXT_PUBLIC_DATABASE),
     api: {

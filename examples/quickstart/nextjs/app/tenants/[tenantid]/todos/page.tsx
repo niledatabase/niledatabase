@@ -20,7 +20,7 @@ export const revalidate = 0
 export const fetchCache = 'force-no-store'
 
 
-export const nile = Server({
+const nile = Server({
     workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
     database: String(process.env.NEXT_PUBLIC_DATABASE),
     api: {
@@ -66,14 +66,14 @@ export default async function Page({ params }: { params: { tenantid: string } })
 
     return (
             <Stack spacing={2} width={"50%"}>
-              <Typography level="h2" textAlign={"center"} sx={{textTransform: 'uppercase',}}>{tenant.name}'s Todos</Typography>
+              <Typography level="h2" textAlign={"center"} sx={{textTransform: 'uppercase',}}>{tenant.name}&apos;s Todos</Typography>
               <List variant="plain" size="lg">
                 <ListItem>
                   <AddForm tenantid={tenantID} />
                 </ListItem>
                 <ListDivider />
                   {todos.map((todo: any) => (
-                    <div style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>
+                    <div key={todo.id} style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>
                       {/* TODO: todos need IDs */}
                       <ListItem key={todo.id}>
                       <DoneForm tenantid={tenantID} title={todo.title} complete={todo.complete}/>
