@@ -3,3 +3,20 @@
 export const meta = {
   order: 5,
 };
+One of the key benefits of tenant virtualization in Nile’s Postgres is that you can decide on placement strategies for individual tenants instead of an entire database. While tenants are placed differently, you would the clients to work seamlessly and route correctly. Placements are of two types
+
+1. Regional placement. You may want to place individual tenants (customers) in different regions in the world for compliance or latency reasons. 
+2. Infrastructure placement. You may want to place tenants in a multitenant or dedicated infrastructure. The decision for this will depend on the customer needs, cost and level of isolation needed.
+
+Nile plans to support both types of placements. This feature is in progress and we would love to hear from you on our Github discussion forum or Discord community.
+
+The documentation here is subjected to change based on user feedback but the capability to have fine grained control over tenants will be supported in Nile’s Postgres.
+
+## Regional placement
+
+We wanted to make global placements really easy while abstracting all the hard parts to manage them. We would support the ability to locate a tenant in any location globally while creating the tenant. We hope to also support the ability to move tenants from one location to another with a simple update statement to the region of the tenant. This will probably come after we support placement during creation. The Nile SDK will seamlessly route to where the tenant is located. The shared tables (check “Sharing Tenants” section) will be accessible across all the tenants irrespective of where the tenant is located. 
+
+```sql
+insert into tenants (name, region) values ('customer 1', 'aws-us-east1');
+insert into tenants (name, region) values ('customer 2', 'aws-eu-west1');
+```
