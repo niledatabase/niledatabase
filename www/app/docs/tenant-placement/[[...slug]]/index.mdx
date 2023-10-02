@@ -5,3 +5,5 @@ export const meta = {
 };
 
 One of the key benefits of tenant virtualization in Nile’s Postgres is that you can decide on placement strategies for individual tenants instead of an entire database. While tenants are placed differently, you would want the clients to work seamlessly and route correctly.  Placements are of two types
+1. Regional placement. You may want to place individual tenants (customers) in different regions in the world for compliance or latency reasons. 
+2. Infrastructure placement. You may want to place tenants in a multitenant or dedicated infrastructure. The decision for this will depend on the customer needs, cost and level of isolation needed.
