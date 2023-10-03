@@ -14,8 +14,7 @@ export default function Home() {
   return (
     <div>
       <div className={styles.center}>
-        <Stack gap={10} sx={{ maxWidth: '40rem' }} alignItems={'center'}>
-          <Typography level="h3">Nile Get Started</Typography>
+        <Stack gap={5} sx={{ maxWidth: '40rem' }} alignItems={'center'}>
           <ErrorBox />
            {/* These components are simple wrappers around Nile's React components. 
            It is needed because Nile's React components are client-side only. */}
