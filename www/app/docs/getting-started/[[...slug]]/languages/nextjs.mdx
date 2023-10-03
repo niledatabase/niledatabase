@@ -152,7 +152,7 @@ We use Nile SDK to query the database for all the tenants that the current user 
 
 and then we render the list of tenants as a list of links:
 
-```React
+```typescript
   <List variant="outlined">
     {tenants.map((tenant: any) => (
           <ListItem key={tenant.id}>
