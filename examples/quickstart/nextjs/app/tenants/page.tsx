@@ -37,7 +37,7 @@ const { api, db } = Server({
   });
 
 export default async function Page() {
-  console.log(db.client.config.connection)
+  // Get user details from the auth cookie
   const userId = getUserId(cookies().get('authData'))
   const userName = getUserName(cookies().get('authData'));
   console.log("userId:" + userId); // logging this so we can troubleshoot the query below when/if needed. 
