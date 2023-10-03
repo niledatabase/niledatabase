@@ -5,7 +5,8 @@ import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListDivider from '@mui/joy/ListDivider';
 import Stack from '@mui/joy/Stack';
-import Checkbox from '@mui/joy/Checkbox';
+import NextLink from 'next/link'
+import MUILink from '@mui/joy/Link';
 import Server from "@theniledev/server";
 import { cookies } from 'next/headers';
 import { getUserId, getUserToken } from "@/utils/AuthUtils";
@@ -67,6 +68,7 @@ export default async function Page({ params }: { params: { tenantid: string } })
     return (
             <Stack spacing={2} width={"50%"}>
               <Typography level="h2" textAlign={"center"} sx={{textTransform: 'uppercase',}}>{tenant.name}&apos;s Todos</Typography>
+                <MUILink href="/tenants" component={NextLink} justifyContent={"center"}>(Back to tenant selection) </MUILink>
               <List variant="plain" size="lg">
                 <ListItem>
                   <AddForm tenantid={tenantID} />

@@ -3,6 +3,7 @@ import styles from './page.module.css'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
+import Stack from '@mui/joy/Stack';
 import Link from '@mui/joy/Link';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
@@ -45,6 +46,11 @@ export default function RootLayout({
           </a>
         </div>
       </div>
+      <div>
+        <Stack> 
+        <Typography level="h2">Nile's Get Started Todo SaaS app</Typography>
+        </Stack>
+      </div>
           {children}
           <div className={styles.grid}>
         <Card variant="outlined"
@@ -53,7 +59,7 @@ export default function RootLayout({
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
             {/* TODO: Point to actual quickstart docs */}
-          <Link overlay href="https://niledatabase-www.vercel.app/docs">
+          <Link overlay href="https://niledatabase-www.vercel.app/docs/getting-started/languages/nextjs" target="_blank" rel="noopener">
             <img src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24}/>
             </Link>
           <CardContent>
@@ -67,7 +73,7 @@ export default function RootLayout({
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
             {/* TODO: Point to actual quickstart docs */}
-          <Link overlay href="https://console.thenile.dev">
+          <Link overlay href="https://console.thenile.dev"  target="_blank" rel="noopener">
             <img src="/nile_logo.svg" alt="Nile Logo" className={styles.logo} height={24}/>
             </Link>
           <CardContent>
@@ -81,7 +87,7 @@ export default function RootLayout({
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
             {/* TODO: Point to actual quickstart docs */}
-          <Link overlay href="https://niledatabase-www.vercel.app/templates">
+          <Link overlay href="https://niledatabase-www.vercel.app/templates"  target="_blank" rel="noopener">
             <img src="/nile_logo.svg" alt="Nile Logo" className={styles.logo} height={24}/>
             </Link>
           <CardContent>

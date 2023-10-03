@@ -2,7 +2,8 @@ import Server from "@theniledev/server";
 import { cookies } from 'next/headers';
 import styles from '../page.module.css';
 import { getUserId, getUserName } from "@/utils/AuthUtils";
-import Link from 'next/link'
+import NextLink from 'next/link'
+import MUILink from '@mui/joy/Link';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Divider from '@mui/joy/Divider';
@@ -65,13 +66,13 @@ export default async function Page() {
             <List variant="outlined">
               {tenants.map((tenant: any) => (
                     <ListItem key={tenant.id}>
-                      <ListItemButton><Link href={`/tenants/${tenant.id}/todos`}>{tenant.name}</Link></ListItemButton>
+                      <ListItemButton><NextLink href={`/tenants/${tenant.id}/todos`}>{tenant.name}</NextLink></ListItemButton>
                     </ListItem>
                 ))}
             </List>
           </CardContent>
           <CardContent>
-                <Typography level="body-md" textAlign="center"> You are logged in as {userName} <Link href="/logout">(Logout)</Link></Typography>
+                <Typography level="body-md" textAlign="center"> You are logged in as {userName} <MUILink href="/logout" component={NextLink}>(Logout)</MUILink></Typography>
           </CardContent>
           </Card>
 
