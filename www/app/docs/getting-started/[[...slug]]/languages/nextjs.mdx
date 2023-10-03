@@ -70,7 +70,7 @@ NILE_USER = "018ad484-0d52-7274-8639-057814be60c3"
 NILE_PASSWORD = "0d11b8e5-fbbc-4639-be44-8ab72947ec5b"
 
 # The URL of the Nile API
-# Use this to instantiate Nile Server context for server-side use of the "api" SDK
+# Use this to instantiate Nile Server context for server-side use of the api SDK
 NEXT_PUBLIC_NILE_API=https://api.thenile.dev 
 
 # Uncomment if you want to try Google Auth
@@ -142,7 +142,6 @@ We use Nile SDK to query the database for all the tenants that the current user 
   let tenants:any = [];
   
   if (userId) {
-    // TODO: Replace with API call to get tenants for user when the SDK supports this
     tenants = await db("tenants")
       .select("tenants.id","tenants.name")
       .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
@@ -156,7 +155,9 @@ and then we render the list of tenants as a list of links:
   <List variant="outlined">
     {tenants.map((tenant: any) => (
           <ListItem key={tenant.id}>
-            <ListItemButton component={NextLink} href={`/tenants/${tenant.id}/todos`}>{tenant.name}</ListItemButton>
+            <ListItemButton component={NextLink} href={`/tenants/${tenant.id}/todos`}>
+              {tenant.name}
+            </ListItemButton>
           </ListItem>
       ))}
   </List>
@@ -221,10 +222,11 @@ You can find the logic for adding a task in `app/tenants/[tenantid]/todos/todo-a
 As you can see, we again use the tenant context to insert the new task:
 
 ```typescript
- await db.raw(`
-        set nile.tenant_id = '${tenantid}'; 
-        set nile.user_id = '${userId}';
-        insert into todos (tenant_id, title, complete) values ('${tenantid}','${title}',false);`) 
+await db.raw(`
+set nile.tenant_id = '${tenantid}'; 
+set nile.user_id = '${userId}';
+insert into todos (tenant_id, title, complete) 
+  values ('${tenantid}','${title}',false);`) 
 ```
 
 or update an existing one:
