@@ -26,7 +26,7 @@ export default function RootLayout({
         <main className={styles.main}>
         <div className={styles.description}>
         <div>
-          <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24}/>
+          <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
         </div>
         <div>
           <a
@@ -48,7 +48,7 @@ export default function RootLayout({
       </div>
       <div>
         <Stack> 
-        <Typography level="h2">Nile&apos;s Get Started Todo SaaS app</Typography>
+        <Typography level="h2">Nile&apos;s Get Started Todo Application</Typography>
         </Stack>
       </div>
           {children}
@@ -60,7 +60,7 @@ export default function RootLayout({
               }}>
             {/* TODO: Point to actual quickstart docs */}
           <Link overlay href="https://niledatabase-www.vercel.app/docs/getting-started/languages/nextjs" target="_blank" rel="noopener">
-            <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24}/>
+            <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
             </Link>
           <CardContent>
             <Typography>Getting started guide</Typography>
@@ -74,7 +74,7 @@ export default function RootLayout({
               }}>
             {/* TODO: Point to actual quickstart docs */}
           <Link overlay href="https://console.thenile.dev"  target="_blank" rel="noopener">
-            <Image src="/nile_logo.svg" alt="Nile Logo" className={styles.logo} height={24}/>
+            <Image src="/nile_logo.svg" alt="Nile Logo" className={styles.logo} height={24} width={100}/>
             </Link>
           <CardContent>
             <Typography>Sign up to Nile</Typography>
@@ -88,7 +88,7 @@ export default function RootLayout({
               }}>
             {/* TODO: Point to actual quickstart docs */}
           <Link overlay href="https://niledatabase-www.vercel.app/templates"  target="_blank" rel="noopener">
-            <Image src="/nile_logo.svg" alt="Nile Logo" className={styles.logo} height={24}/>
+            <Image src="/nile_logo.svg" alt="Nile Logo" className={styles.logo} height={24} width={100} />
             </Link>
           <CardContent>
             <Typography>Try additional templates</Typography>

@@ -40,6 +40,7 @@ export default async function Page() {
   console.log(db.client.config.connection)
   const userId = getUserId(cookies().get('authData'))
   const userName = getUserName(cookies().get('authData'));
+  console.log("userId:" + userId); // logging this so we can troubleshoot the query below when/if needed. 
   let tenants:any = [];
   
   if (userId) {
@@ -56,7 +57,6 @@ export default async function Page() {
           <Card  variant="outlined"> {/* TODO: need drop shadow */}
           {/* TODO: Avatar or Icon with small DB image*/}
           <CardContent > 
-            <Typography level="title-md" textAlign="center">Select Tenant</Typography>
             <div style={{display: 'flex', justifyContent: 'center', padding:'1rem'}}><AddForm /></div>
           </CardContent>
           <Divider>or</Divider>
@@ -66,7 +66,7 @@ export default async function Page() {
             <List variant="outlined">
               {tenants.map((tenant: any) => (
                     <ListItem key={tenant.id}>
-                      <ListItemButton><NextLink href={`/tenants/${tenant.id}/todos`}>{tenant.name}</NextLink></ListItemButton>
+                      <ListItemButton component={NextLink} href={`/tenants/${tenant.id}/todos`}>{tenant.name}</ListItemButton>
                     </ListItem>
                 ))}
             </List>
