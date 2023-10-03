@@ -3,7 +3,7 @@ import { Template } from "./types";
 export const NextJSQuickstart: Template = {
   name: "NextJS application with Nile",
   description: "Learn about Nile concepts from a Todo app in NextJS",
-  author: "gwenshap",
+  author: "Nile",
   imageSrc: "/templates/TodoApp.png",
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/master/examples/quickstart/nextjs/README.md",
@@ -21,7 +21,7 @@ export const NodeJSQuickstart: Template = {
   // what the template does
   description: "Learn about Nile concepts from a Todo app in NodeJS",
   // who made it
-  author: "gwenshap",
+  author: "Nile",
   // the location of the thumbnail. could be in /public/templates, or a CDN
   imageSrc: "/templates/nad.jpg",
   // the readmeURL should be publically accessible.
@@ -42,7 +42,7 @@ export const JavaQuickstart: Template = {
   // what the template does
   description: "Learn about Nile concepts from a Todo app in Java",
   // who made it
-  author: "gwenshap",
+  author: "Nile",
   // the location of the thumbnail. could be in /public/templates, or a CDN
   imageSrc: "/templates/nad.jpg",
   // the readmeURL should be publically accessible.
