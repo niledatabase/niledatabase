@@ -1,5 +1,20 @@
 import { Template } from "./types";
 
+export const NextJSQuickstart: Template = {
+  name: "NextJS application with Nile",
+  description: "Learn about Nile concepts from a Todo app in NextJS",
+  author: "gwenshap",
+  imageSrc: "/templates/TodoApp.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/master/examples/quickstart/nextjs/README.md",
+  // A key/value string/string. What is put here will show up on the site exactly
+  metadata: {
+    Framework: "NextJS 13",
+    "Use Case": "Building SaaS",
+    Publisher: "Nile",
+  },
+};
+
 export const NodeJSQuickstart: Template = {
   // A great name, preferably unique, name for the template
   name: "NodeJS application with Nile",
