@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "workspaces": [
-    "www", "examples/quickstart/nextjs", "examples/user_management/authn_quickstart"
+    "www", "examples/quickstart/nextjs", "examples/user_management/email_login/NextJS"
   ],
   "scripts": {
     "dev": "turbo run dev",

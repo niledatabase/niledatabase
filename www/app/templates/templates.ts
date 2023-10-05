@@ -21,7 +21,7 @@ export const EmailLogin: Template = {
   author: "Nile",
   imageSrc: "/templates/EmailLogin.png",
   readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/master/examples/user_management/authn_quickstart/README.md",
+    "https://github.com/niledatabase/niledatabase/blob/master/examples/user_management/email_login/NextJS/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
     Framework: "NextJS 13",
