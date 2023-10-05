@@ -12,8 +12,8 @@ export default function Login() {
   const { push } = useRouter();
   return (
     <NileContext>
-      <Stack gap={2} sx={{ maxWidth: '40rem' }}>
-        <Typography level="h1">Log in</Typography>
+      <Stack gap={2} >
+        <Typography level="h2">Log in</Typography>
         <UserLoginForm onSuccess={(response) => push('/dashboard')} 
         />
         <p>

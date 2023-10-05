@@ -8,11 +8,11 @@ export default function Dashboard() {
   const userToken = cookies().get('token')?.value
 
   return (
-    <main className={styles.main}>
+    <div>
       { userToken ?
         <AuthDataPanel token={userToken} />:
         <Typography>No authentication data found in cookies.</Typography>
       }
-    </main>
+      </div>
   )
 }

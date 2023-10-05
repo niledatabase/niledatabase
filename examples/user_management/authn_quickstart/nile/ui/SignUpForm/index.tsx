@@ -16,8 +16,8 @@ export default function SignUp() {
   const [newTenant, setNewTenant] = useState<string | undefined>();
   return (
     <NileContext>
-      <Stack gap={2} sx={{ maxWidth: '40ch' }}>
-        <Typography level="h1">Sign up</Typography>
+      <Stack gap={2}>
+        <Typography level="h2">Sign up</Typography>
         {Object.keys(res).length > 0 && (
           <Stack>
             <Stack gap={2} direction="row">

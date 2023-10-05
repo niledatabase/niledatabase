@@ -1,6 +1,13 @@
 import { Inter } from 'next/font/google';
+import Image from 'next/image';
+import styles from './page.module.css'
 
 import Themer from './layout/themer';
+import Stack from '@mui/joy/Stack';
+import Link from '@mui/joy/Link';
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import Typography from '@mui/joy/Typography';
 
 import './globals.css';
 
@@ -17,12 +24,82 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // nextjs does not like the hydration mismatch
-    // instead of having everything be a client, let it flicker if we're wrong.
-    <html lang="en" data-joy-color-scheme="dark">
+    <html lang="en">
       <body className={inter.className}>
         <Themer />
-        {children}
+        <main className={styles.main}>
+        <div className={styles.description}>
+        <div>
+          <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
+        </div>
+        <div>
+          <a
+            href="https://thenile.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Created by{' '}
+            <Image
+              src="/nile_logo.svg"
+              alt="Nile Logo"
+              className={styles.vercelLogo}
+              width={100}
+              height={24}
+              priority
+            />
+          </a>
+        </div>
+      </div>
+      <div>
+        <Stack> 
+        <Typography level="h2">Email AuthN Example</Typography>
+        </Stack>
+      </div>
+          {children}
+          <div className={styles.grid}>
+        <Card variant="outlined"
+              sx={{
+                '--card-padding': '1rem',
+                '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
+              }}>
+            {/* TODO: Point to actual quickstart docs */}
+          <Link overlay href="https://niledatabase-www.vercel.app/docs/getting-started/languages/nextjs" target="_blank" rel="noopener">
+            <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
+            </Link>
+          <CardContent>
+            <Typography>Getting started guide</Typography>
+          </CardContent>
+        </Card>
+
+        <Card variant="outlined"
+              sx={{
+                '--card-padding': '1rem',
+                '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
+              }}>
+            {/* TODO: Point to actual quickstart docs */}
+          <Link overlay href="https://console.thenile.dev"  target="_blank" rel="noopener">
+            <Image src="/nile_logo.svg" alt="Nile Logo" className={styles.logo} height={24} width={100}/>
+            </Link>
+          <CardContent>
+            <Typography>Sign up to Nile</Typography>
+          </CardContent>
+        </Card>
+
+        <Card variant="outlined"
+              sx={{
+                '--card-padding': '1rem',
+                '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
+              }}>
+            {/* TODO: Point to actual quickstart docs */}
+          <Link overlay href="https://niledatabase-www.vercel.app/templates"  target="_blank" rel="noopener">
+            <Image src="/nile_logo.svg" alt="Nile Logo" className={styles.logo} height={24} width={100} />
+            </Link>
+          <CardContent>
+            <Typography>Try additional templates</Typography>
+          </CardContent>
+        </Card>
+      </div>
+        </main>
       </body>
     </html>
   );
