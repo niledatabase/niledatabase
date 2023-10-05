@@ -42,7 +42,13 @@ export default function SignUp() {
           }
 
           onSuccess={(response) => {
-            setRes(response);
+            if (response) {
+              setRes(response);
+            } else {
+              // not supposed to happen
+              setRes({});
+            }
+
           }}
         />
         <p>
