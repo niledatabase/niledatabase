@@ -5,7 +5,7 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import MUILink from '@mui/joy/Link';
 import NextLink from 'next/link';
-import Input from '@mui/joy/Input';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
@@ -14,10 +14,10 @@ import NileContext from '@/nile/ui/NileContext';
 export default function SignUp() {
   const [res, setRes] = useState({});
   const [newTenant, setNewTenant] = useState<string | undefined>();
+  const { push } = useRouter();
   return (
     <NileContext>
       <Stack gap={2}>
-        <Typography level="h2">Sign up</Typography>
         {Object.keys(res).length > 0 && (
           <Stack>
             <Stack gap={2} direction="row">
@@ -41,15 +41,7 @@ export default function SignUp() {
             ]
           }
 
-          onSuccess={(response) => {
-            if (response) {
-              setRes(response);
-            } else {
-              // not supposed to happen
-              setRes({});
-            }
-
-          }}
+          onSuccess={(response) => {push('/');}}
         />
         <p>
           Already a user? <MUILink href="/" component={NextLink}>Log in here</MUILink>

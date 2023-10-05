@@ -32,6 +32,7 @@ export default function RootLayout({
         <div>
           <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
         </div>
+        <Typography level="h2">Email Login Example</Typography>
         <div>
           <a
             href="https://thenile.dev"
@@ -52,7 +53,7 @@ export default function RootLayout({
       </div>
       <div>
         <Stack> 
-        <Typography level="h2">Email AuthN Example</Typography>
+
         </Stack>
       </div>
           {children}
