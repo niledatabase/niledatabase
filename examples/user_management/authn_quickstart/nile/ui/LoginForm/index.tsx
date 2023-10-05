@@ -13,7 +13,6 @@ export default function Login() {
   return (
     <NileContext>
       <Stack gap={2} >
-        <Typography level="h2">Log in</Typography>
         <UserLoginForm onSuccess={(response) => push('/dashboard')} 
         />
         <p>
