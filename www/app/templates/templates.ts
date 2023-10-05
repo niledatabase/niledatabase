@@ -15,6 +15,21 @@ export const NextJSQuickstart: Template = {
   },
 };
 
+export const EmailLogin: Template = {
+  name: "Email Login Example",
+  description: "Learn about simple Authentication with Nile",
+  author: "Nile",
+  imageSrc: "/templates/EmailLogin.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/master/examples/user_management/authn_quickstart/README.md",
+  // A key/value string/string. What is put here will show up on the site exactly
+  metadata: {
+    Framework: "NextJS 13",
+    "Use Case": "SaaS Authentication",
+    Publisher: "Nile",
+  },
+};
+
 export const NodeJSQuickstart: Template = {
   // A great name, preferably unique, name for the template
   name: "NodeJS application with Nile",
