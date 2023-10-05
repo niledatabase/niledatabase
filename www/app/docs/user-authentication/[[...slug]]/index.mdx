@@ -4,8 +4,23 @@ export const meta = {
   order: 6,
 };
 
+Nile makes it really easy to add user authentication to your SaaS application. Nile simplifies SaaS user authentication in the following ways
+
+1. Provides support to manage user authentication within a tenant from the UI all the way to the database. For example, adding users to a tenant, inviting other users to a tenant, tenant (or organization) membership are fully handled for you.
+2. Tenant level overrides to manage different types of authentication for different customers. For example, you might want to support only social logins for your free tier customers vs enterprise logins for your paid customers. This is trivial to enable by using Nile’s customer dashboard and enabling different authentication mechanism for each tenant or directly update Postgres with SQL.
+3. Ensures the database is the single source of truth for users. A common problem using another third party service is to find a way to synchronize the user data to the database which is prone to data loss and eventual consistency problems. With Nile’s Postgres, the users are owned by you.
+4. Extend the user model for supporting other features in a Postgres native way. You can simply add columns to the user table and join them with other tables to build additional functionality.
+
+Nile currently supports a few types of authentication with an aggressive plan to add support for more use cases. We would love to hear from you if you have additional feature requirements or have issues getting started with Nile’s user management. Join our Github discussion forum or Discord community to discuss more.
+### Email login
 <Cards>
   <Card file="./quick-start/nextjs.mdx" root="user-authentication" />
-  <Card file="./social/google.mdx" root="user-authentication" />
-  <Card file="./enterprise/okta.mdx" root="user-authentication" />
+</Cards>
+### Social logins
+<Cards>
+  <Card file="./social-login/google.mdx" root="user-authentication" />
+</Cards>
+### Enterprise logins
+<Cards>
+  <Card file="./enterprise-login/okta.mdx" root="user-authentication" />
 </Cards>
