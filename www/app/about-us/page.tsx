@@ -10,7 +10,7 @@ export default function Home() {
       <div className="flex gap-5 items-center flex-col">
         <Image src="/about-logo.png" alt="nile logo" width={150} height={151} />
         <div className="text-lg opacity-60">Our Mission</div>
-        <PageHeader title="Empower developers to accelerate the next billion modern SaaS" />
+        <PageHeader title="Enable developers to accelerate the next billion modern SaaS" />
       </div>
       <Divider />
       <HeroBottom />
