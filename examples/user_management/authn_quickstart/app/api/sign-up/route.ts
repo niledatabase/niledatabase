@@ -1,6 +1,7 @@
 import { api } from '@/nile/Server';
 
 export async function POST(req: Request) {
+  console.log(await req.clone().json());
 
   const res = await api.auth.signUp(req);
 
