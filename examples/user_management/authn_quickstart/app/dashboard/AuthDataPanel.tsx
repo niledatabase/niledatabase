@@ -3,7 +3,7 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
-import { Grid } from "@mui/joy";
+import Grid from '@mui/joy/Grid';
 import Box from "@mui/joy/Box"
 import jwt_decode from "jwt-decode";
 import NextLink from 'next/link'
@@ -24,6 +24,7 @@ export default function AuthDataPanel(prop: { token: string }) {
 
 
   return (
+    <div>
     <Grid container spacing={2}>
       <Grid xs={12} sm={6} md={6}>
         <Stack gap={2} sx={{ maxWidth: '40ch' }}>
@@ -106,5 +107,7 @@ export default function AuthDataPanel(prop: { token: string }) {
         </Stack>
       </Grid>
     </Grid>
+      
+  </div>
   )
 }
