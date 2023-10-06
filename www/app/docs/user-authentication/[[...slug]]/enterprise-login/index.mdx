@@ -6,3 +6,12 @@ export const meta = {
   description: "This is a placeholder component.",
   order: 4,
 };
+Nile uses OpenID Connect (OIDC) protocol for identity authentication and user information sharing. This helps to provide integration with OKTA, Azure AD or Google workspaces.
+
+1. OIDC enables secure and standardized user authentication. It allows users to log in using an existing identity provider (IdP) credentials, such as OKTA, Google workspaces or Azure AD. This simplifies the authentication process and improves the user experience.
+2. Users can log in once to their trusted IdP and then access multiple SaaS applications without having to enter their credentials separately for each one. This streamlines the user experience.
+3. OIDC provides a standardized way to request and exchange user profile information and attributes. Nile can retrieve user information, such as email addresses, names, and profile pictures, from the IdP. This information can be used to personalize the user experience.
+
+<Cards>
+  <Card file="./enterprise-login/okta.mdx" root="user-authentication" />
+</Cards>
