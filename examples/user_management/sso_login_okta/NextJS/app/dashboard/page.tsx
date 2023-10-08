@@ -10,11 +10,11 @@ export default function Dashboard() {
   const authData = authCookie ? JSON.parse(authCookie.value) as AuthCookieData : null;
 
   return (
-    <main className={styles.main}>
+    <div>
       { authData ?
         <AuthDataPanel authData={authData} /> :
         <Typography>No authentication data found in cookies.</Typography>
       }
-    </main>
+      </div>
   )
 }

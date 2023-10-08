@@ -32,8 +32,7 @@ export default function SignUp() {
               {
                 name: 'newTenant',
                 label: 'Tenant Name',
-                //@ts-ignore // TODO: can't figure out how to import the type definition, hopefully the transpiler is smarter
-                type: "text",
+                //@ts-ignore // TODO: can't figure out how to import the type definition
                 defaultValue: '',
                 placeholder: 'Name for your new tenant',
                 required: false,

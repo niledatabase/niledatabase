@@ -1,6 +1,6 @@
 'use client';
 
-import { FormAttributeType, NileProvider, UserSignupForm } from '@theniledev/react';
+import { NileProvider, UserSignupForm } from '@theniledev/react';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
@@ -19,7 +19,8 @@ export default function SignUp() {
               {
                 name: 'newTenant',
                 label: 'Tenant Name',
-                type: FormAttributeType.Text,
+                //@ts-ignore // TODO: can't figure out how to import the type definition
+                type: "text",
                 defaultValue: '',
                 required: false,
               }
