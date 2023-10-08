@@ -28,7 +28,7 @@ export default function RootLayout({
         <main className={styles.main}>
         <div className={styles.description}>
         <div>
-          <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
+          <Image src="/Okta_Wordmark_CMYK_Black.png" alt="Okta Logo" className={styles.logo} height={29} width={77}/>
         </div>
         <Typography level="h2">Okta SSO Login Example</Typography>
         <div>
@@ -62,7 +62,7 @@ export default function RootLayout({
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
           <Link overlay href="https://niledatabase-www.vercel.app/docs/user-authentication/enterprise-login/okta" target="_blank" rel="noopener">
-            <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
+            <Image src="/Okta_Wordmark_CMYK_Black.png" alt="Okta Logo" className={styles.logo} height={29} width={77}/>
             </Link>
           <CardContent>
             <Typography>Getting started guide</Typography>
