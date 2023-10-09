@@ -1,4 +1,9 @@
 import { api } from '@/nile/Server';
 
-export const PUT = api.auth.updateProvider;
-export const POST = api.auth.createProvider;
+export async function PUT(req: Request) {
+    return await api.auth.updateProvider(req);
+}
+
+export async function POST(req: Request) {
+    return await api.auth.createProvider(req);
+  }
