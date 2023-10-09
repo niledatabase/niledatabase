@@ -27,7 +27,8 @@ export const EmailLogin: Template = {
     Framework: "NextJS 13",
     "Use Case": "SaaS Authentication",
     Publisher: "Nile",
-  },
+  }
+};
   
 export const SocialLoginGoogle: Template = {
   name: "Social Login with Google",
