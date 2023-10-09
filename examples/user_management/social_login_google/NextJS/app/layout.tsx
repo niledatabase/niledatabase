@@ -29,8 +29,9 @@ export default function RootLayout({
         <Themer />
         <main className={styles.main}>
         <div className={styles.description}>
-        <div>
-          <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
+        <div style={{fontSize:"18px", alignItems:"center", display:"flex"}}>
+          <Image src="/g-logo.png" alt="Google Logo" className={styles.logo} height={40} width={40} style={{float:"left", padding:"8px"}}/>
+          SSO 
         </div>
         <Typography level="h2">Google SSO Login Example</Typography>
         <div>
@@ -64,7 +65,8 @@ export default function RootLayout({
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
           <Link overlay href="https://niledatabase-www.vercel.app/docs/user-authentication/social-login/google" target="_blank" rel="noopener">
-            <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
+            <Image src="/g-logo.png" alt="Google Logo" className={styles.logo} height={40} width={40} style={{float:"left", padding:"8px"}}/>
+            <Typography level="title-md"> SSO</Typography>
             </Link>
           <CardContent>
             <Typography>Getting started guide</Typography>
