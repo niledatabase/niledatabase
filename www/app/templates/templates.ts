@@ -28,7 +28,37 @@ export const EmailLogin: Template = {
     "Use Case": "SaaS Authentication",
     Publisher: "Nile",
   },
+  
+export const SocialLoginGoogle: Template = {
+  name: "Social Login with Google",
+  description: "Build social login with Google and Nile",
+  author: "Nile",
+  imageSrc: "/templates/GoogleSocialLogin.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/master/examples/user_management/social_login_google/NextJS/README.md",
+  // A key/value string/string. What is put here will show up on the site exactly
+  metadata: {
+    Framework: "NextJS 13",
+    "Use Case": "SaaS Authentication, Social Login",
+    Publisher: "Nile",
+  },
 };
+
+export const OktaSSOLogin: Template = {
+  name: "SSO Login with Okta",
+  description: "Build enterprise SSO with Okta and Nile",
+  author: "Nile",
+  imageSrc: "/templates/OktaSSOLogin.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/master/examples/user_management/sso_login_okta/NextJS/README.md",
+  // A key/value string/string. What is put here will show up on the site exactly
+  metadata: {
+    Framework: "NextJS 13",
+    "Use Case": "SaaS Authentication, Enterprise SSO",
+    Publisher: "Nile",
+  },
+};
+  
 
 export const NodeJSQuickstart: Template = {
   // A great name, preferably unique, name for the template
