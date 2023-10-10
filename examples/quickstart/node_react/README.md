@@ -85,6 +85,7 @@ curl  -X GET \
 ```
 
 ## More things you can do
+
 ### Running the app with Docker
 
 You can build a docker container that runs this app, and exposes the webapp on port 3006 (the NodeJS and REST API are not exposed). To build and run the container:
@@ -112,7 +113,7 @@ fly deploy --ha=false --vm-memory 1024
 
 We recommend running this example on NodeJS 18 (current long term stable release).
 
-When attempting to run this on NodeJS 20.5.0, you may see:
+When attempting to run this on NodeJS v20, you may see:
 
 ```js
 [api] TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /Users/gwen/workspaces/niledatabase/examples/quickstart/node_react/src/be/app.ts
@@ -129,4 +130,4 @@ When attempting to run this on NodeJS 20.5.0, you may see:
 [api]   code: 'ERR_UNKNOWN_FILE_EXTENSION'
 ```
 
-If you know how to fix this, contributions are more than welcome.
+Due to this open issue in ts-node: https://github.com/TypeStrong/ts-node/issues/1997
