@@ -5,7 +5,7 @@ export enum NavigationRoots {
   UserAuthentication = "user-authentication",
   UserAuthorization = "user-authorization",
   TenantIsolation = "tenant-isolation",
-  AI = "ai",
+  AI = "ai-embeddings",
   Backups = "backups",
   Dashboard = "dashboard",
   Extensions = "extensions",
