@@ -4,12 +4,12 @@ export default function CustomerDashboards() {
   return (
     <div className="flex-1">
       <Heading text="Instant Customer Dashboards" />
-      <div className="overflow-hidden">
+      <div className="overflow-hidden mt-12">
         <Image
-          src="/customer-dashboards.svg"
+          src="/dashboard.png"
           alt="UI dashboards"
           width={1206}
-          height={732}
+          height={800}
         />
       </div>
       <div className="flex flex-col lg:flex-row justify-center mt-[89px] flex-wrap">

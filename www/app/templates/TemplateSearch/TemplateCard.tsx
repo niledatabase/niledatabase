@@ -6,14 +6,14 @@ export default function TemplateCard(props: Template) {
   const { name, description, author, imageSrc } = props;
   return (
     <div className="lg:w-1/3 md:w-1/2">
-      <div className="p-4">
+      <div className="p-4 h-full max-w-xs sm:max-w-none">
         <Link
           href={`/templates/${encodeURIComponent(name)}`}
-          className="rounded-[20px] border border-gray overflow-hidden block"
+          className="rounded-[8px] border border-gray overflow-hidden h-full flex flex-col"
         >
-          <div className="bg-[#2D2D2D] overflow-hidden">
+          <div className="bg-[#2D2D2D] overflow-hidden h-[218px] relative">
             <Image
-              className="w-full"
+              className="w-full h-full absolute object-cover object-left-top"
               src={imageSrc}
               alt={name}
               width={382}
@@ -21,10 +21,12 @@ export default function TemplateCard(props: Template) {
               sizes={sizes}
             />
           </div>
-          <div className="flex flex-col gap-3 px-8 py-4">
-            <div className="text-[17px]">{name}</div>
-            <div className="text-[17px] text-[#8A8F98] h-[48px] overflow-scroll">
-              {description}
+          <div className="flex flex-col gap-3 px-8 py-4 justify-between flex-1">
+            <div>
+              <div className="text-[17px]">{name}</div>
+              <div className="text-[17px] text-[#8A8F98] h-[48px] overflow-scroll">
+                {description}
+              </div>
             </div>
             <div>
               <span className="text-[17px]">
