@@ -11,7 +11,7 @@ export default function SnapshotVideo(props: {
   const { src, poster, className } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
   const isVisible = useIntersection(videoRef, {
-    rootMargin: "-100px",
+    rootMargin: "-10px",
   });
 
   useEffect(() => {

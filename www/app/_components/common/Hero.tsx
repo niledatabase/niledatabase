@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Image from "next/image";
 import GetStartedButton from "./GetStartedButton";
 import GradientButton from "./GradientButton";
 import PageHeader, { OverrideClasses } from "./PageHeader";
@@ -20,7 +20,7 @@ export function HeroText(props: OverrideClasses & { title?: string }) {
 
 export function HeroBottom(props: OverrideClasses) {
   return (
-    <div className={"lg:w-[784px] flex flex-col place-content-center"}>
+    <div className={"lg:w-[784px] flex flex-col items-center"}>
       <div className="px-4 lg:px-0 mt-32">
         <div className="text-[56px] bg-gradient-text bg-clip-text text-transparent mb-3 text-center leading-[64px]">
           Postgres purpose built for modern SaaS
@@ -36,6 +36,13 @@ export function HeroBottom(props: OverrideClasses) {
           </div>
         </div>
       </div>
+      <Image
+        className="mt-16 -mb-44 relative -z-[2001]"
+        src="nile-outline-logo.svg"
+        width="646"
+        height="239"
+        alt="nile outlined logo"
+      />
     </div>
   );
 }

@@ -4,16 +4,17 @@ export const meta = {
   order: 3,
 };
 
-All SaaS applications provide service to multiple customers or tenants. Isolating each tenant's data from another tenant is so basic yet hard to do. Nile enables tenant data isolation without any complex, buggy code or dealing with messy row-level security policies. With Postgres being tenant-aware in Nile, this becomes straightforward. 
+All SaaS applications provide service to multiple customers or tenants. Isolating each tenant's data from another tenant is so basic yet hard to do. Nile enables tenant data isolation without any complex, buggy code or dealing with messy row-level security policies. With Postgres being tenant-aware in Nile, this becomes straightforward.
 
 ## What is tenant data isolation?
 
-A SaaS application serves many tenants. The data for each tenant belongs to the tenant and should not be accessible to other tenants. The users who belong to a specific tenant can access the data they have access to for that tenant. This seems so obvious but yet so hard to achieve in practice. 
+A SaaS application serves many tenants. The data for each tenant belongs to the tenant and should not be accessible to other tenants. The users who belong to a specific tenant can access the data they have access to for that tenant. This seems so obvious but yet so hard to achieve in practice.
 
 In Nile, you can think about it as a single Postgres that has many virtual tenant DBs. You can control where these virtual DBs should be placed. This can be on multitenant or dedicated instances. You get to decide while creating the tenant. This can also be in any region of the world. Nile enables isolation with a single line of code in your application. Nile also ensures user authorization is enforced within a tenant if you use our user management (more about this later)
 ![Tenant Isolation](/docs/tenant-isolation.png)
 
 ## Enforcing tenant data isolation
+
 Nile makes it really easy to enforce tenant data isolation. Let us take a recruiting SaaS product that helps a company to source, interview and hire candidates for different jobs open to be filled. A simplified version will have a ‘candidates’ table that tracks all the candidates in flight. The list of candidate is private to each company using the recruiting product. Given that the candidate information needs to be private to each company, let us create a tenant aware table in Nile’s Postgres.
 
 ```sql
@@ -56,6 +57,7 @@ Now we have a table of candidates for multiple customers populated.
 ```sql
 select * from candidates;
 ```
+
 <table>
   <thead>
     <tr>
@@ -117,21 +119,24 @@ select * from candidates;
   </tbody>
 </table>
 
-In a typical SaaS application, you would want to access the data of a specific tenant when user accesses the application. You also want to make sure the data from another tenant is not seen. This is typically hard without implementing complex permissions at the application level or enforcing row level security policies in Postgres which is hard to maintain, debug and error prone. 
+In a typical SaaS application, you would want to access the data of a specific tenant when user accesses the application. You also want to make sure the data from another tenant is not seen. This is typically hard without implementing complex permissions at the application level or enforcing row level security policies in Postgres which is hard to maintain, debug and error prone.
 
 Nile has first class support for tenant isolation at for SQL and all our SDKs which makes it very trivial to do. At the SQL layer, setting a session context to a specific tenant is equivalent to pointing the connection to a specific tenant DB. You can still access shared tables in this mode but the other virtual tenant DBs are not accessible. We also provide a very simple user context mode which adds additional security on top of the tenant context. Read more about this in user authorization.
 
 <CodeGroups>
-    ```sql
+
+```sql
 -- set session context to the tenant you want to access.
 set nile.tenant_id = '018ade1a-7830-7981-b23f-f3a7f7b8f09f';
 select * from candidates;
 ```
- ```typescript
-import ApiClient from '@example/protocol-api'
-const client = new ApiClient(token)
-await client.conversations.list()
-    ```
+
+```typescript
+import ApiClient from "@example/protocol-api";
+const client = new ApiClient(token);
+await client.conversations.list();
+```
+
 </CodeGroups>
 
 <table>
@@ -167,14 +172,23 @@ await client.conversations.list()
     </tr>
   </tbody>
 </table>
+
 ## Querying across tenants
-While Nile provides tenant isolation, it also provides the ability for you to query across tenants and shared tables. This is typically useful during development, production debugging or to do basic analytics across customers. Our customer dashboard already provides you useful analytics but you can always run raw SQL queries for more information. When no tenant context is set, the connection can access across all the tenant DBs irrespective of where the tenants are located (any region, multitenant or dedicated infrastructure). 
+
+While Nile provides tenant isolation, it also provides
+the ability for you to query across tenants and shared tables. This is typically
+useful during development, production debugging or to do basic analytics across customers.
+Our customer dashboard already provides you useful analytics but you can always run
+raw SQL queries for more information. When no tenant context is set, the connection
+can access across all the tenant DBs irrespective of where the tenants are located
+(any region, multitenant or dedicated infrastructure).
 
 1. Querying the total no of customers
 
 ```sql
 select count(*) as no_of_customers from tenants;
 ```
+
 <table>
   <thead>
     <tr>
@@ -188,13 +202,13 @@ select count(*) as no_of_customers from tenants;
   </tbody>
 </table>
 2. Querying the total no of candidates per customer
+
 ```sql
-select 
-t1.id as customer_id,t1.name as customer_name,count(c1.id) as no_of_candidates 
-from candidates c1 right join tenants t1 
-on c1.tenant_id=t1.id 
-group by t1.id,t1.name;
+select t1.id as customer_id,t1.name
+as customer_name,count(c1.id) as no_of_candidates from candidates c1 right join tenants
+t1 on c1.tenant_id=t1.id group by t1.id,t1.name;
 ```
+
 <table>
   <thead>
     <tr>
@@ -233,9 +247,11 @@ group by t1.id,t1.name;
 </table>
 
 3. Finding the number of customers that have atleast one candidate added in the last one week
+
 ```sql
 select tenant_id from candidates where (CURRENT_DATE - applied_date::date) < 30;
 ```
+
 <table>
   <thead>
     <tr>
@@ -248,10 +264,29 @@ select tenant_id from candidates where (CURRENT_DATE - applied_date::date) < 30;
     </tr>
   </tbody>
 </table>
+
 ## What is tenant performance isolation?
-Apart from data isolation, another key isolation for SaaS applications is to ensure the performance of one tenant is not impacting other tenants. This is usually called noisy neighbor problem. The most trivial way to achieve this at the database level is to have a separate database per tenant. There are obvious downsides to this approach from operational overhead (schema rollouts, monitoring, capacity planning), cost (lower utilization) and application complexity (metadata management, routing). The other extreme is to have all tenants on the same database and solve tenant isolation problems by scaling up or application level quotas. This approach has the benefit of having lesser operational complexity and lower cost. Practically, all SaaS applications ends up with a hybrid model depending on their use cases and customer needs. 
+
+Apart from data isolation, another key isolation
+for SaaS applications is to ensure the performance of one tenant is not impacting
+other tenants. This is usually called noisy neighbor problem. The most trivial way
+to achieve this at the database level is to have a separate database per tenant.
+There are obvious downsides to this approach from operational overhead (schema rollouts,
+monitoring, capacity planning), cost (lower utilization) and application complexity
+(metadata management, routing). The other extreme is to have all tenants on the same
+database and solve tenant isolation problems by scaling up or application level quotas.
+This approach has the benefit of having lesser operational complexity and lower cost.
+Practically, all SaaS applications ends up with a hybrid model depending on their
+use cases and customer needs.
+
 ## How does Nile achieve performance isolation between tenants?
-Nile’s Postgres by default places tenants in a multitenant model but provides the flexibility to also place some of the tenants in dedicated infrastructure (coming soon). The most ideal scenario is to receive predictable workload throughout the day from all tenants. You could then scale the infrastructure for that workload. However, in practice, you would typically get random peak workloads from different tenants. This makes it hard to plan for. 
+
+Nile’s Postgres by default places tenants in a multitenant model but provides
+the flexibility to also place some of the tenants in dedicated infrastructure (coming
+soon). The most ideal scenario is to receive predictable workload throughout the
+day from all tenants. You could then scale the infrastructure for that workload.
+However, in practice, you would typically get random peak workloads from different
+tenants. This makes it hard to plan for.{' '}
 
 There are different approaches to tackle this problem. You could either over provision for the worst case and waste resources or have the ability to instantly auto scale. Another thing with multitenant workloads is that as demand increases, the total workload tends to flatten out and becomes much more predictable to plan for. As scale increases, this gets easier. Another approach is to move tenants between machines to rebalance depending on workload distribution and infrastructure utilization. Nile employs all these approaches to ensure tenants never get impacted by the performance of other tenants. A future plan is to also allow users to specify the resource quota for each tenant which Nile can enforce. This would help to avoid spending too much resources for some of your tenants (example, your free tier customers can have more aggressive quotas).
 ![Tenant Isolation](/docs/tenant-performance-isolation.png)

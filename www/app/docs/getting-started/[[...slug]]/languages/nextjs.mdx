@@ -71,7 +71,7 @@ NILE_PASSWORD = "0d11b8e5-fbbc-4639-be44-8ab72947ec5b"
 
 # The URL of the Nile API
 # Use this to instantiate Nile Server context for server-side use of the api SDK
-NEXT_PUBLIC_NILE_API=https://api.thenile.dev 
+NEXT_PUBLIC_NILE_API=https://api.thenile.dev
 
 # Uncomment if you want to try Google Auth
 # AUTH_TYPE=google
@@ -106,13 +106,13 @@ tenants join todos on tenants.id=todos.tenant_id
 
 ## 7. How does it work?
 
-There are a few moving pieces here, so let's break it down. 
+There are a few moving pieces here, so let's break it down.
 
-This example uses NextJS `app router`, so the application landing page is in `app/page.tsx`. 
-You can see the user authentication components `<GoogleAuthPanel />` and `<BasicLoginForm />` there. 
+This example uses NextJS `app router`, so the application landing page is in `app/page.tsx`.
+You can see the user authentication components `<GoogleAuthPanel />` and `<BasicLoginForm />` there.
 If you are interested in learning how to use Nile for authentication, check out the [authentication tutorials](/docs/user-authentication).
 
-This explanation will focus on creating tenants, selecting tenants and adding tasks. 
+This explanation will focus on creating tenants, selecting tenants and adding tasks.
 
 ### 7.1. Configuring Nile SDK
 
@@ -128,7 +128,7 @@ We do this in every component and while it is a bit of boiler plate (which you c
     },
 ```
 
-The `basePath` configuration is the URL that `nile.api` methods will call. This component calls Nile APIs directly, and therefore we set `basePath` to `NEXT_PUBLIC_NILE_API`. 
+The `basePath` configuration is the URL that `nile.api` methods will call. This component calls Nile APIs directly, and therefore we set `basePath` to `NEXT_PUBLIC_NILE_API`.
 
 There are other components, for example basic login and signup that for web security reasons cannot call Nile APIs directly. Instead, they should call the application server, which in turn calls Nile APIs. In this case, the `basePath` should be set to `NEXT_PUBLIC_BASE_PATH`.
 
@@ -138,29 +138,29 @@ Next thing we do in `app/tenants/page.tsx` is to list all the tenants for the cu
 We use Nile SDK to query the database for all the tenants that the current user is a member of:
 
 ```typescript
-  const userId = getUserId(cookies().get('authData'))
-  let tenants:any = [];
-  
-  if (userId) {
-    tenants = await db("tenants")
-      .select("tenants.id","tenants.name")
-      .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-      .where("tenant_users.user_id", "=", userId);
-  };
+const userId = getUserId(cookies().get("authData"));
+let tenants: any = [];
+
+if (userId) {
+  tenants = await db("tenants")
+    .select("tenants.id", "tenants.name")
+    .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
+    .where("tenant_users.user_id", "=", userId);
+}
 ```
 
 and then we render the list of tenants as a list of links:
 
 ```typescript
-  <List variant="outlined">
-    {tenants.map((tenant: any) => (
-          <ListItem key={tenant.id}>
-            <ListItemButton component={NextLink} href={`/tenants/${tenant.id}/todos`}>
-              {tenant.name}
-            </ListItemButton>
-          </ListItem>
-      ))}
-  </List>
+<List variant="outlined">
+  {tenants.map((tenant: any) => (
+    <ListItem key={tenant.id}>
+      <ListItemButton component={NextLink} href={`/tenants/${tenant.id}/todos`}>
+        {tenant.name}
+      </ListItemButton>
+    </ListItem>
+  ))}
+</List>
 ```
 
 It looks a bit like magic, but [NextJS server fetching](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#fetching-data-on-the-server-with-third-party-libraries) and Nile SDK are integrated together to make this happen.
@@ -181,7 +181,7 @@ In `createTenant` method, we use Nile SDK to create a new tenant and link it to 
     const createTenantResponse = await nile.api.tenants.createTenant({
       name: tenantName,
     });
-  } 
+  }
 ```
 
 This call inserts a new tenant to `tenants` table, and also inserts a new row to `tenant_users` table, linking the current user to the new tenant.
@@ -191,31 +191,31 @@ By setting `nile.token = userToken` we are telling Nile SDK to use the user's to
 
 ### 7.4 Listing tasks
 
-When you create a tenant or select an existing tenant, you are taken to the tenant's todo list. 
+When you create a tenant or select an existing tenant, you are taken to the tenant's todo list.
 The code for this page is in `app/tenants/[tenantid]/todos/page.tsx`.
 
 We could have used the same logic to list todos for a tenant as we did for listing tenants for a user, but we wanted to show you a different way to do this.
 Instead of using SQL `where` clauses to get only todos for this specific tenant, we are relying on Nile's tenant isolation feature:
 
 ```typescript
-        const res = await nile.db.raw(`
+const res = await nile.db.raw(`
         set nile.tenant_id = '${tenantID}'; 
         set nile.user_id = '${userId}';
-        SELECT * FROM todos order by title`) 
+        SELECT * FROM todos order by title`);
 ```
 
-The first two lines set the tenant and user context for this query. 
+The first two lines set the tenant and user context for this query.
 Then we run a simple SQL query to get all the todos.
 
 Behind the scenes, Nile does two things:
 
-* Check that the user is a member of the tenant and indeed has access to these todos
-* Apply tenant isolation and execute the query in a "virtual tenant DB". 
+- Check that the user is a member of the tenant and indeed has access to these todos
+- Apply tenant isolation and execute the query in a "virtual tenant DB".
 
 This also means that you don't need to implement the 3-way join between `todo`, `tenants` and `tenant_users`, so the code is simpler and more performant.
 
 ### 7.5 Adding a task
-  
+
 When you click on the "+" to add a new task or on the checkbox to mark it as done, we again rely on NextJS server actions to make things simple.
 You can find the logic for adding a task in `app/tenants/[tenantid]/todos/todo-actions.tsx`.
 
@@ -226,7 +226,7 @@ await db.raw(`
 set nile.tenant_id = '${tenantid}'; 
 set nile.user_id = '${userId}';
 insert into todos (tenant_id, title, complete) 
-  values ('${tenantid}','${title}',false);`) 
+  values ('${tenantid}','${title}',false);`);
 ```
 
 or update an existing one:
@@ -235,7 +235,7 @@ or update an existing one:
 await db.raw(`
         set nile.tenant_id = '${tenantid}'; 
         set nile.user_id = '${userId}';
-        update todos set complete='${complete}' where title='${title}';`) 
+        update todos set complete='${complete}' where title='${title}';`);
 ```
 
 By setting the context, Nile will validate that the user indeed has permission to add tasks for this tenant.
@@ -248,8 +248,8 @@ This example is a good starting point for building your own application with Nil
 You have learned basic Nile concepts and how to use them with Nile SDK and NextJS:
 
 You can learn more about Nile's tenant virtualization features in the following tutorials:
+
 - [Tenant management](/docs/tenant-management)
 - [Tenant isolation](/docs/tenant-isolation)
 
 And you can explore Nile's JS SDK in the [SDK reference](/docs/reference/sdk-reference).
-

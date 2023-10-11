@@ -54,6 +54,7 @@ module.exports = {
         docs: "url('/hero-docs.png')",
         templates: "url('/hero-templates.png')",
         "console-video": "url('/hero-bg-video.png')",
+        "video-bg": "url('/video-bg.png')",
         brown:
           "linear-gradient(162deg, #FF9F30 -0.84%, #B1AFE5 48.53%, #2295B7 100%)",
         blue: "linear-gradient(162deg, #FF9F30 -0.84%, #B1AFE5 48.53%, #2295B7 100%);",

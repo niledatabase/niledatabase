@@ -6,7 +6,7 @@ export default function Hero() {
   return (
     <>
       <HeroText />
-      <div className="flex flex-row items-center lg:justify-between gap-6 mt-28 w-full flex-wrap lg:flex-nowrap justify-around">
+      <div className="flex flex-row items-center lg:space-between gap-6 mt-28 w-full flex-wrap xl:flex-nowrap justify-around">
         <div className="flex flex-col gap-3 items-center px-4 py-5">
           <Image
             src="/multi-tenant.jpg"

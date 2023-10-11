@@ -48,7 +48,9 @@ export default function Navigation({
           <div className="hidden lg:show lg:flex flex-row">
             <div className="flex flex-row gap-4">
               <GithubCta />
-              <GradientButton>Sign Up</GradientButton>
+              <Link href="http://console.thenile.dev" target="_blank">
+                <GradientButton>Sign Up</GradientButton>
+              </Link>
             </div>
           </div>
         </div>

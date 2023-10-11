@@ -75,7 +75,7 @@ export default function TemplateSearch({
           </GradientButton>
         </div>
       )}
-      <div className="flex flex-row flex-wrap justify-start md:justify-center mt-[20px] overflow-hidden overflow-x-scroll w-screen md:w-auto">
+      <div className="flex flex-row flex-wrap justify-center mt-[20px] overflow-hidden overflow-x-scroll w-screen md:w-auto">
         {!filtered.length ? (
           <Empty />
         ) : (
