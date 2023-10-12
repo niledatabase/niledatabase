@@ -2,14 +2,13 @@ import React from 'react';
 import Stack from '@mui/joy/Stack';
 import Input from '@mui/joy/Input';
 
-import { GoogleLoginButton, NileProvider } from '@theniledev/react';
+import { GoogleLoginButton, NileProvider} from '@theniledev/react';
 
 export default function Auth() {
   const [newTenant, setNewTenant] = React.useState();
-
   // TODO: Replace with env vars (or better yet, remove cause Nile SDK has the right default)
   return (
-    <NileProvider basePath="https://api.thenile.dev">
+    <NileProvider basePath={process.env.REACT_APP_NILE_API}>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
         <Stack gap={2}>
           <Stack>
@@ -20,8 +19,8 @@ export default function Auth() {
             />
           </Stack>
           <GoogleLoginButton
-            workspace={process.env.NEXT_PUBLIC_WORKSPACE}
-            database={process.env.NEXT_PUBLIC_DATABASE}
+            workspace={process.env.REACT_APP_NILE_WORKSPACE}
+            database={process.env.REACT_APP_NILE_DATABASE}
             newTenantName={newTenant}
           />
         </Stack>

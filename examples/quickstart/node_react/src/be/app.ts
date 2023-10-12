@@ -1,7 +1,8 @@
 import "dotenv/config";
 import express from "express";
+import jwtDecode from 'jwt-decode';
+import { toCookieData, NileJWTPayload } from "./authUtils";
 import Server from "@theniledev/server";
-import Knex from "knex";
 
 export const { db } = Server({
   workspace: "", // leaving this empty, as we don't need it for this example
@@ -17,6 +18,7 @@ export const { db } = Server({
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 
 const PORT = process.env.PORT || 3000;
 
@@ -107,5 +109,28 @@ app.get("/insecure/all_todos", async (req, res) => {
     res.status(500).json({
       message: "Internal Server Error",
     });
+  }
+});
+
+app.post('/auth/handler', async (req, res) => {
+  const formData = req.body;
+  console.log("form data: " + JSON.stringify(formData));
+  const event = formData.event;
+  let location: string;
+
+  try {
+    // detect error response early. The exception handler can handle all errors.
+    if (event === 'AUTH_ERROR') {
+      throw new Error(formData.get('error'));
+    }
+    const accessToken = String(formData.get('access_token'));
+    const decodedJWT = jwtDecode<NileJWTPayload>(accessToken);
+    const cookieData = toCookieData(formData, decodedJWT);
+    res.cookie('authData', JSON.stringify(cookieData), {maxAge: 3600, secure: process.env.NODE_ENV !== 'development'});
+    res.redirect(302, "/tenants"); // once user is authenticated, redirect to tenants page
+  } catch (e: any) {
+    console.log("error while handling auth response:" + e.message);
+    res.cookie('errorData', JSON.stringify(e.message), {maxAge: 100, secure: process.env.NODE_ENV !== 'development'});
+    res.redirect(302, "/"); // if there is an error, redirect to home page
   }
 });
