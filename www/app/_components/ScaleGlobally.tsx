@@ -50,7 +50,7 @@ export default function DropInUserManagement() {
       </div>
       <div className="flex flex-col lg:flex-row items-center justify-center -mb-32">
         <div className="flex lg:w-1/2">
-          <Video poster="earth.svg" src="earth.mp4" className="aspect-square" />
+          <Video poster="earth.jpg" src="earth.mp4" className="aspect-square" />
         </div>
         <div className="flex lg:w-1/2 -mt-[220px] lg:mt-0 items-center justify-center">
           <Video poster="globe.svg" src="global.mp4" />

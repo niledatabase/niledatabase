@@ -26,6 +26,7 @@ export default function SnapshotVideo(props: {
       muted
       ref={videoRef}
       loop
+      playsInline
       poster={`/video/${poster}`}
     >
       <source src={`/video/${src}`} />

@@ -96,23 +96,6 @@ export default async function Home() {
             community. Contribute your own template to help others.
           </div>
         </div>
-        <div className="flex justify-center lg:justify-end w-full -mb-6">
-          <div>
-            <GradientButton href="/templates" variant="soft">
-              <div className="flex flex-row gap-2 items-start w-[170px]">
-                <Image
-                  src="/icons/plus.svg"
-                  alt="orange plus sign"
-                  width={24}
-                  height={24}
-                />
-                <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
-                  Add Your Template
-                </span>
-              </div>
-            </GradientButton>
-          </div>
-        </div>
         <TemplateSearch
           templates={templates}
           searchEnabled={false}

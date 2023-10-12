@@ -83,7 +83,7 @@ export default function Tutorials() {
         })}
       </div>
       <div className="flex justify-center mt-10">
-        <Link href="https://www.youtube.com/@saas-dev">
+        <Link href="https://launchpass.com/all-about-saas" target="_blank">
           <GradientButton variant="soft">
             <Image
               src="/icons/community.svg"

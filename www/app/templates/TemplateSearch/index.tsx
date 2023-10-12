@@ -11,7 +11,7 @@ const Empty = () => {
 export default function TemplateSearch({
   templates,
   searchEnabled = true,
-  showButton = true,
+  showButton = false,
 }: {
   templates: Template[];
   searchEnabled?: boolean;

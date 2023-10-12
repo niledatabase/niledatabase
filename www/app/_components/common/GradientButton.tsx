@@ -36,7 +36,7 @@ export default function GradientButton({
   }, []);
   return (
     <button
-      className={`flex-1 bg-black rounded-xl relative z-10${
+      className={`flex-1 bg-black rounded-xl relative z-[9]${
         className ? ` ${className}` : ""
       }`}
       type={type}

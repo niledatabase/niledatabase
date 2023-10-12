@@ -40,7 +40,7 @@ export default function Pricing() {
                     $0/month
                   </div>
                   <button className="flex flex-row gap-2 text-[16px] gradientButton my-[24px] leading-[24px] after:rounded-[12px] px-1 w-full !justify-between">
-                    <span>Get Started</span>
+                    <span>Join the waitlist</span>
                     <Image
                       className="invert"
                       src="/icons/arrow.svg"

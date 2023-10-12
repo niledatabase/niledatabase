@@ -8,13 +8,7 @@ import { GithubCta } from "./GithubCta";
 import GradientButton from "../GradientButton";
 import { useCallback, useState } from "react";
 
-export default function Navigation({
-  className,
-  dark,
-}: {
-  className?: string;
-  dark?: boolean;
-}) {
+export default function Navigation({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const toggleOpen = useCallback(() => {
     setOpen(!open);

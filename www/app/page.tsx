@@ -14,9 +14,9 @@ export default function Home() {
     <Container>
       <Hero />
       <div className="border rounded-2xl border-gray p-2 relative bg-black">
-        <div className="bg-video-bg absolute -left-[25%] top-0 bottom-0 right-[100%] -z-10 bg-[size:100%] opacity-60 bg-center" />
+        <div className="w-[10%] bg-video-bg absolute -left-[10%] top-0 bottom-0 right-[100%] -z-10 opacity-60 bg-center bg-no-repeat bg-cover" />
         <Video poster="dashboard.webp" src="snapshot.mp4" />
-        <div className="bg-video-bg absolute left-[100%] top-0 bottom-0 -right-[25%] -z-10 bg-[size:100%] opacity-60 rotate-180 bg-center" />
+        <div className="w-[10%] bg-video-bg absolute left-[100%] top-0 bottom-0 -right-[10%] -z-10 opacity-60 rotate-180 bg-center bg-no-repeat bg-cover" />
       </div>
       <Divider />
       <Virtualization />

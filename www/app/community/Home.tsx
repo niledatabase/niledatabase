@@ -52,17 +52,6 @@ export default async function Home() {
             Get started with one of the hundreds of Nile templates built by the
             community. Contribute your own template to help others.
           </div>
-          <GradientButton href="/templates" variant="soft">
-            <Image
-              src="/icons/plus.svg"
-              alt="orange plus sign"
-              width={24}
-              height={24}
-            />
-            <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
-              Add Your Template
-            </span>
-          </GradientButton>
         </div>
         <TemplateSearch templates={templates} searchEnabled={false} />
         <div className="flex justify-center mt-10">
