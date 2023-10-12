@@ -13,10 +13,10 @@ export default function Subscribe() {
     <div className="relative ">
       <input
         ref={ref}
-        className={`bg-[#141414] border border-[#373737] rounded-[20px] text-[17px] py-5 px-10 min-w-[500px] mb-3 placeholder:opacity-40`}
+        className={`bg-[#141414] border border-[#373737] rounded-[20px] text-[17px] py-5 px-10 lg:min-w-[500px] mb-3 placeholder:opacity-40`}
         placeholder="Email Address"
       />
-      <div className="absolute right-[8px] top-[9px]">
+      <div className="absolute lg:right-[8px] lg:top-[9px]">
         <button
           className={`transition-all duration-500 flex flex-row gap-2 text-lg gradientButton font-medium after:rounded-[12px] ${
             submitted ? "w-[484px]" : "w-[170px]"

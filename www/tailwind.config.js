@@ -48,6 +48,7 @@ module.exports = {
           "linear-gradient(100deg, #F4C587 0%, #D6D3E9 60.42%, #99D2EC 95.31%)",
         "gradient-text-144":
           "linear-gradient(144deg, #FDC066 0%, #D8D3E9 51.00%, #7BD1ED 100%)",
+        visualization: "url('/virtualization.svg')",
         footer: "url('/footer-bg.svg')",
         base: "url('/bg-pattern.webp')",
         community: "url('/hero-community.png')",

@@ -92,7 +92,7 @@ export function ContactForm({
         onSubmit={handleSubmit((values) => doSubmit(values))}
         className={`transition-opacity fixed top-1/2  left-1/2 -translate-x-1/2 -translate-y-1/2 z-[51]`}
       >
-        <div className="bg-[#000] px-12 py-6 rounded-[24px] gap-5 flex flex-col min-w-[60ch] relative">
+        <div className="bg-[#000] px-12 py-6 rounded-[24px] gap-5 flex flex-col min-w-[40ch] lg:min-w-[60ch] relative">
           <div className="bg-gradient-text bg-clip-text text-transparent text-[48px]">
             Talk to Us
           </div>

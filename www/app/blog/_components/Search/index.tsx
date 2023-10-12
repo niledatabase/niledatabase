@@ -55,7 +55,7 @@ function RefinementList() {
     [items]
   );
   return (
-    <div className="flex flex-row items-center gap-6 overflow-y-scroll md:max-w-[400px] lg:max-w-[1000px]">
+    <div className="flex flex-row items-center gap-6 overflow-y-scroll lg:max-w-[1000px] w-screen">
       {sortedItems.map((item) => (
         <RefinementItem key={item.label} item={item} refine={refine} />
       ))}
@@ -134,9 +134,9 @@ function SearchBox() {
 
   return (
     <div
-      className={`transition-[left] duration-[500ms] absolute right-0 ${widths[width]}`}
+      className={`transition-[left] duration-[500ms] md:absolute right-0  ${widths[width]}`}
     >
-      <div className="absolute w-[100px] h-[52px] bg-horizontal-fade -left-[76px] -top-[1px]"></div>
+      <div className="hidden md:block absolute w-[100px] h-[52px] bg-horizontal-fade -left-[76px] -top-[1px]"></div>
       <div
         className={`py-1 w-full flex flex-row relative z-10 px-2 border border-[#242627] bg-black rounded-[12px] items-center gap-[10px]`}
       >
@@ -176,7 +176,7 @@ export default function Search() {
   return (
     <InstantSearch searchClient={searchClient} indexName="blog">
       <div className="flex flex-col gap-4 w-full">
-        <div className="flex flex-row items-center gap-4 justify-between -mt-5 z-10 relative">
+        <div className="flex flex-col md:flex-row items-center gap-4 justify-between -mt-5 z-10 relative">
           <RefinementList />
           <SearchBox />
         </div>

@@ -20,7 +20,7 @@ const wrapperVariants = {
 export default function MobileSidenav({ navBar, page }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [menuItem, setMenuItem] = useState("");
+  const [menuItem, setMenuItem] = useState("Documentation menu");
   const [activeItem, setActiveItem] = useState<HTMLDivElement>();
 
   const toggleOpen = useCallback(() => {
@@ -50,6 +50,7 @@ export default function MobileSidenav({ navBar, page }: Props) {
     }
   }, [activeItem]);
 
+  console.log(page);
   return (
     <div className="block lg:hidden">
       <div
@@ -89,11 +90,11 @@ export default function MobileSidenav({ navBar, page }: Props) {
         </ul>
       </aside>
       <div
-        className="fixed bottom-0 right-0 left-0 z-10 bg-black h-[66px] overflow-hidden"
+        className="fixed bottom-0 right-0 left-0 z-[11] bg-black h-[66px] overflow-hidden"
         onClick={toggleOpen}
       >
         <div className="h-px w-full bg-divider-bold z-10"></div>
-        <div className="flex flex-row justify-between h-full items-center px-4">
+        <div className="flex flex-row justify-between h-full items-center px-3">
           {menuItem}
 
           <Image

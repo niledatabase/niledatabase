@@ -37,7 +37,7 @@ export function HeroBottom(props: OverrideClasses) {
         </div>
       </div>
       <Image
-        className="mt-16 -mb-44 relative -z-[2001]"
+        className="mt-16 -mb-36 lg:-mb-44 relative -z-[2001] px-12 lg:px-0"
         src="nile-outline-logo.svg"
         width="646"
         height="239"

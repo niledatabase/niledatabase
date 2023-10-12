@@ -6,15 +6,7 @@ import { sizes } from "../common/sizes";
 export default function Virtualization() {
   return (
     <div className="relative">
-      <Image
-        className="absolute top-[17%] lg:top-0 left-0 right-0 -z-10 w-full scale-[300%] lg:scale-x-125 lg:scale-y-100 blur-lg"
-        src="/virtualization.svg"
-        alt="orange and green blurred gradient"
-        sizes={sizes}
-        width={1440}
-        height={744}
-      />
-
+      <div className="absolute top-0 left-0 right-0 bottom-0 bg-visualization bg-no-repeat bg-[size:200%] md:bg-[size:100%] blur-lg -z-10 bg-[center_top_2rem]"></div>
       <div className="relative pb-10 mt-20">
         <Heading text="Built-in Tenant virtualization"></Heading>
       </div>
