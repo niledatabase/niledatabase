@@ -2,12 +2,21 @@ import Heading from "../_components/common/Heading";
 
 const rows = [
   {}, // placeholder for header
-  { title: "Love Developers", content: <>Content</> },
-  { title: "Missing Driven", content: <>Content</> },
+  { 
+    title: "Love Developers",
+    content: (
+      <>
+        Content Content Content Content Content Content
+        Content Content Content Content Content Content
+        Content Content Content Content Content Content
+      </>
+    ), 
+  },
+  { title: "Mission Driven", content: <>Content</> },
   { title: "First Principles Thinking", content: <>Content</> },
-  { title: "Strive for Worldclass", content: <>Content</> },
+  { title: "Strive for World-Class", content: <>Content</> },
   {
-    title: "Intensively Execute",
+    title: "Intensely Execute and Iterate",
     content: (
       <>
         Content Content Content Content Content Content Content Content Content
