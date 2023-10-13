@@ -1,12 +1,12 @@
 import Image from "next/image";
-import Container from "./_components/Container";
-import SideNavigation from "./_components/SideNavigation";
-import PageHeader from "../_components/common/PageHeader";
-import Divider from "../_components/common/Divider";
-import TemplateSearch from "../templates/TemplateSearch";
-import loadTemplates from "../templates/dataFetcher";
-import { CommunityLinks } from "../_components/common/CommunityLinks";
-import GradientButton from "../_components/common/GradientButton";
+import Container from "../../_components/Container";
+import SideNavigation from "../../_components/SideNavigation";
+import PageHeader from "../../_components/common/PageHeader";
+import Divider from "../../_components/common/Divider";
+import TemplateSearch from "../../templates/TemplateSearch";
+import loadTemplates from "../../templates/dataFetcher";
+import { CommunityLinks } from "../../_components/common/CommunityLinks";
+import GradientButton from "../../_components/common/GradientButton";
 import Link from "next/link";
 
 const languages = [
