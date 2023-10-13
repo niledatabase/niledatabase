@@ -61,4 +61,22 @@ pg_vector supports three types of vector similarity operators
 </table>
 
 You could use any one of them to find the distance between vectors.
+For a real world application, you would typically do chunking to compute embeddings for large documents. For the purpose of the example, we can assume that these are small documents.
+To get the L2 distance 
+
+```sql
+SELECT embedding <-> '[3,1,2]' AS distance FROM wiki_documents;
+```
+
+For inner product, multiply by -1 (since `<#>` returns the negative inner product)
+
+```sql
+SELECT (embedding <#> '[3,1,2]') * -1 AS inner_product FROM wiki_documents;
+```
+
+For cosine similarity, use 1 - cosine distance
+
+```sql
+SELECT 1 - (embedding <=> '[3,1,2]') AS cosine_similarity FROM wiki_documents;
+```
 
