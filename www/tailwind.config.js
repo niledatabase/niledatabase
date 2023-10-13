@@ -56,6 +56,10 @@ module.exports = {
         templates: "url('/hero-templates.png')",
         "console-video": "url('/hero-bg-video.png')",
         "video-bg": "url('/video-bg.png')",
+        blueBlur: "url('/bg-blue.svg')",
+        blueBlurText: "radial-gradient(#7CD1ED7a, rgba(0, 0, 0, 0.00) 80%)",
+        orangeBlur: "url('/bg-orange.svg')",
+        orangeBlurText: "radial-gradient(#f4c5877a, rgba(0, 0, 0, 0.00) 80%)",
         brown:
           "linear-gradient(162deg, #FF9F30 -0.84%, #B1AFE5 48.53%, #2295B7 100%)",
         blue: "linear-gradient(162deg, #FF9F30 -0.84%, #B1AFE5 48.53%, #2295B7 100%);",

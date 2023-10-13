@@ -18,7 +18,7 @@ export default function Footer() {
           Postgres purpose built for modern SaaS
         </div>
         <Subscribe />
-        <div className="flex flex-row gap-4 items-center">
+        <div className="flex flex-row gap-4 items-center mt-14 lg:mt-0">
           <span className="w-36 h-px bg-divider-bold rounded-sm" />
           <span>or</span>
           <span className="w-36 h-px bg-divider-bold rounded-sm" />

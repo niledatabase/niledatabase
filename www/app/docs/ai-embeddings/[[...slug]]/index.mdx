@@ -17,7 +17,7 @@ For example,
 There are standard problems in implementing generative AI such as increasing accuracy and total throughput of the system. In addition, there are some unique challenges with SaaS to achieve a great experience.
 
 1. Fine tuning the large language model to be domain and customer aware is complex. Typically, large language models are trained on publicly available data. In SaaS, majority of the data are specific to a particular domain and also unique to a specific customer. For example, in a corporate wiki application, employees would want to search on their companies documents. This requires feeding domain and customer context to the model.
-2. Ability to store embedding per tenant and scale them independently. Embeddings grow large, really fast. This is because the data set for each customer can get pretty large. You would need to figure how to store embeddings in multiple databases to scale the embeddings for each tenant independently. 
+2. Ability to store embedding per tenant and scale them independently. Embeddings grow large, really fast. This is because the data set for each customer can get pretty large. You would need to figure how to store embeddings in multiple databases to scale the embeddings for each tenant independently.
 3. Low latency search is challenging if your customers are in different parts of the globe. The queries to find similarities are already resource intensive. You want to store the embeddings closer to your customer to be able to execute similarity searches with low latency.
 
 ## What are embeddings?
@@ -25,17 +25,16 @@ There are standard problems in implementing generative AI such as increasing acc
 In generative AI development, embeddings refer to numerical representations of data that capture meaningful relationships, semantics, or context within the data. These representations are often used to convert high-dimensional, categorical, or unstructured data into lower-dimensional, continuous vectors that can be processed by machine learning models.
 
 1. **Word Embeddings**
-    
-    Word embeddings are one of the most common types of embeddings. They represent words from a vocabulary as dense numerical vectors in a lower-dimensional space. Word embeddings capture semantic and syntactic relationships between words. For example, words with similar meanings will have similar embeddings, and word arithmetic can be performed using embeddings (e.g., "king" - "man" + "woman" ≈ "queen"). Well-known word embedding methods include Word2Vec, GloVe, FastText, and BERT.
-    
+
+   Word embeddings are one of the most common types of embeddings. They represent words from a vocabulary as dense numerical vectors in a lower-dimensional space. Word embeddings capture semantic and syntactic relationships between words. For example, words with similar meanings will have similar embeddings, and word arithmetic can be performed using embeddings (e.g., "king" - "man" + "woman" ≈ "queen"). Well-known word embedding methods include Word2Vec, GloVe, FastText, and BERT.
+
 2. **Sentence and Document Embeddings**:
-    
-    Instead of representing individual words, sentence and document embeddings represent entire sentences, paragraphs, or documents as numerical vectors.These embeddings aim to capture the overall meaning and context of the text. They are useful for applications like text summarization, document classification, and sentiment analysis. Models like BERT and the Universal Sentence Encoder can generate sentence and document embeddings.
-    
+
+   Instead of representing individual words, sentence and document embeddings represent entire sentences, paragraphs, or documents as numerical vectors.These embeddings aim to capture the overall meaning and context of the text. They are useful for applications like text summarization, document classification, and sentiment analysis. Models like BERT and the Universal Sentence Encoder can generate sentence and document embeddings.
+
 3. **Image Embeddings**:
-    
-    In computer vision, image embeddings represent images as vectors in a lower-dimensional space. Image embeddings capture visual features, allowing generative AI models to understand and generate images or perform tasks like image search and object detection. Convolutional Neural Networks (CNNs) are commonly used to generate image embeddings.
-    
+
+   In computer vision, image embeddings represent images as vectors in a lower-dimensional space. Image embeddings capture visual features, allowing generative AI models to understand and generate images or perform tasks like image search and object detection. Convolutional Neural Networks (CNNs) are commonly used to generate image embeddings.
 
 There are many ways to compare embeddings. L2 distance (Euclidean distance), inner product, and cosine distance are different similarity or dissimilarity measures used to compare vectors in multi-dimensional spaces.
 

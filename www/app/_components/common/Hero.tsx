@@ -1,6 +1,4 @@
 import Image from "next/image";
-import GetStartedButton from "./GetStartedButton";
-import GradientButton from "./GradientButton";
 import PageHeader, { OverrideClasses } from "./PageHeader";
 import Subscribe from "@/app/blog/_components/Footer/Subscribe";
 import Footer from "@/app/blog/_components/Footer";
@@ -20,15 +18,15 @@ export function HeroText(props: OverrideClasses & { title?: string }) {
   );
 }
 
-export function HeroBottom(props: OverrideClasses) {
+export function HeroBottom() {
   return (
-    <div className={"lg:w-[784px] flex flex-col items-center"}>
+    <div className={"w-[320px] lg:w-[784px] flex flex-col items-center"}>
       <div className="px-4 lg:px-0 mt-32">
         <Footer />
       </div>
       <Image
         className="mt-16 -mb-36 lg:-mb-44 relative -z-[2001] px-12 lg:px-0"
-        src="nile-outline-logo.svg"
+        src="/nile-outline-logo.svg"
         width="646"
         height="239"
         alt="nile outlined logo"

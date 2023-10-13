@@ -19,7 +19,7 @@ export default async function Home() {
       <TemplateSearch templates={templates} />
       <Divider />
       <div className="py-12">
-        <HeroBottom titleClasses="!leading-[64px] !text-[56px]" />
+        <HeroBottom />
       </div>
     </Container>
   );
