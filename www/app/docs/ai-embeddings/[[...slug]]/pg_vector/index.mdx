@@ -79,4 +79,70 @@ For cosine similarity, use 1 - cosine distance
 ```sql
 SELECT 1 - (embedding <=> '[3,1,2]') AS cosine_similarity FROM wiki_documents;
 ```
+## Vector Indexes
+
+`pgvector` supports two types of indexes:
+
+- HNSW
+- IVFFlat
+
+### HNSW
+
+An HNSW index creates a multilayer graph. It has slower build times and uses more memory than IVFFlat, but has better query performance (in terms of speed-recall tradeoff). There’s no training step like IVFFlat, so the index can be created without any data in the table.
+
+Add an index for each distance function you want to use.
+
+```sql
+CREATE INDEX ON wiki_documents USING hnsw (embedding vector_l2_ops);
+```
+
+Inner product
+
+```sql
+CREATE INDEX ON wiki_documents USING hnsw (embedding vector_ip_ops);
+```
+
+Cosine distance
+
+```sql
+CREATE INDEX ON wiki_documents USING hnsw (embedding vector_cosine_ops);
+```
+
+Vectors with up to 2,000 dimensions can be indexed.
+
+### IVFLAT
+
+An IVFFlat index divides vectors into lists, and then searches a subset of those lists that are closest to the query vector. It has faster build times and uses less memory than HNSW, but has lower query performance (in terms of speed-recall tradeoff).
+
+Three keys to achieving good recall are:
+
+1. Create the index *after* the table has some data
+2. Choose an appropriate number of lists - a good place to start is `rows / 1000` for up to 1M rows and `sqrt(rows)` for over 1M rows
+3. When querying, specify an appropriate number of probes (higher is better for recall, lower is better for speed) - a good place to start is `sqrt(lists)`
+
+Add an index for each distance function you want to use.
+
+L2 distance
+
+```
+CREATE INDEX ON wiki_documents USING ivfflat (embedding vector_l2_ops) WITH (lists = 100);
+```
+
+Inner product
+
+```
+CREATE INDEX ON wiki_documents USING ivfflat (embedding vector_ip_ops) WITH (lists = 100);
+```
+
+Cosine distance
+
+```
+CREATE INDEX ON wiki_documents USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+```
+
+Vectors with up to 2,000 dimensions can be indexed.
+
+You can read more about pg_vector on their [github](https://github.com/pgvector/pgvector/blob/master/README.md)
+
+If you have any feedback or questions on building AI-native SaaS applications on Nile, please do reach out on our Github discussion forum or our Discord community.
 
