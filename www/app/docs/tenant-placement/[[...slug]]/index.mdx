@@ -4,34 +4,41 @@ export const meta = {
   order: 5,
 };
 
-One of the key benefits of tenant virtualization in Nile’s Postgres is that you can decide on placement strategies for individual tenants instead of an entire database. While tenants are placed differently, you would want the clients to work seamlessly and route correctly.  Placements are of two types
-1. Regional placement. You may want to place individual tenants (customers) in different regions in the world for compliance or latency reasons. 
+One of the key benefits of tenant virtualization in Nile’s Postgres is that you can decide on placement strategies for individual tenants instead of an entire database. While tenants are placed differently, you would want the clients to work seamlessly and route correctly. Placements are of two types
+
+1. Regional placement. You may want to place individual tenants (customers) in different regions in the world for compliance or latency reasons.
 2. Infrastructure placement. You may want to place tenants in a multitenant or dedicated infrastructure. The decision for this will depend on the customer needs, cost and level of isolation needed.
 Nile plans to support both types of placements. This feature is in progress and we would love to hear from you on our [Github discussion forum](https://github.com/orgs/niledatabase/discussions) or [Discord community](https://discord.gg/8UuBB84tTy).
 
 The documentation here is subjected to change based on user feedback but the capability to have fine grained control over tenants will be supported in Nile’s Postgres.
 
 ## Regional placement
-We wanted to make global placements really easy while abstracting all the hard parts to manage them. We would support the ability to locate a tenant in any location globally while creating the tenant. We hope to also support the ability to move tenants from one location to another with a simple update statement to the region of the tenant. This will probably come after we support placement during creation. The Nile SDK will seamlessly route to where the tenant is located. The shared tables (check 'Sharing Tenants' section) will be accessible across all the tenants irrespective of where the tenant is located. 
+
+We wanted to make global placements really easy while abstracting all the hard parts to manage them. We would support the ability to locate a tenant in any location globally while creating the tenant. We hope to also support the ability to move tenants from one location to another with a simple update statement to the region of the tenant. This will probably come after we support placement during creation. The Nile SDK will seamlessly route to where the tenant is located. The shared tables (check 'Sharing Tenants' section) will be accessible across all the tenants irrespective of where the tenant is located.
+
 ```sql
 insert into tenants (name, region) values ('customer 1', 'aws-us-east1');
 
 insert into tenants (name, region) values ('customer 2', 'aws-eu-west1');
 ```
+
 ## Infrastructure placement
 
 A very common pattern with SaaS is to control what infrastructure are specific customers placed. There are many reasons to do this. A customer might explicitly want their data to be placed in an isolated database for security reasons, the tenant could be a critical customer for the business or your isolation strategy could be to simple place every tenant in a dedicated database.
 
 Placing a tenant on a dedicated mode. The default instance would be used in this case.
+
 ```sql
-insert into tenants (name, region, deployment_mode) 
+insert into tenants (name, region, deployment_mode)
 values ('customer 2', 'aws-us-east1', 'dedicated');
 ```
 
-Given dedicated may not be instantly provisioned in all cases, the status field would indicate if the tenant is ready to be used. 
+Given dedicated may not be instantly provisioned in all cases, the status field would indicate if the tenant is ready to be used.
+
 ```sql
 select * from tenants;
 ```
+
 <table>
   <thead>
     <tr>
@@ -58,10 +65,12 @@ select * from tenants;
     </tr>
   </tbody>
 </table>
-The tenant would be ready after a few seconds or minutes. 
+The tenant would be ready after a few seconds or minutes.
+
 ```sql
 select * from tenants;
 ```
+
 <table>
   <thead>
     <tr>

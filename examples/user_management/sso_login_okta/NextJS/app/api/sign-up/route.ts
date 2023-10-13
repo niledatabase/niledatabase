@@ -4,15 +4,13 @@ export async function POST(req: Request) {
   // clone because the SDK will read it, but we need to name the tenant later
   const data = req.clone();
   const payload = await new Response(data.body).json();
-
   // sign the user up
   const response = await api.auth.signUp(req);
-
   // basic protection, to expose server errors
-  const headers = response.headers;
-  const contentType = headers.get('content-type');
-  if (contentType?.includes('text/plain')) {
+  if (response.status >= 400) {
+    console.log('got error response from nile')
     const body = await new Response(response.body).text();
+    console.log(`Sign-up error returned from Nile: ${response.status} ${body}`);
     return new Response(body, { status: response.status });
   }
 

@@ -48,12 +48,14 @@ module.exports = {
           "linear-gradient(100deg, #F4C587 0%, #D6D3E9 60.42%, #99D2EC 95.31%)",
         "gradient-text-144":
           "linear-gradient(144deg, #FDC066 0%, #D8D3E9 51.00%, #7BD1ED 100%)",
+        visualization: "url('/virtualization.svg')",
         footer: "url('/footer-bg.svg')",
         base: "url('/bg-pattern.webp')",
         community: "url('/hero-community.png')",
         docs: "url('/hero-docs.png')",
         templates: "url('/hero-templates.png')",
         "console-video": "url('/hero-bg-video.png')",
+        "video-bg": "url('/video-bg.png')",
         brown:
           "linear-gradient(162deg, #FF9F30 -0.84%, #B1AFE5 48.53%, #2295B7 100%)",
         blue: "linear-gradient(162deg, #FF9F30 -0.84%, #B1AFE5 48.53%, #2295B7 100%);",

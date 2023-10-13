@@ -21,7 +21,7 @@ const convertName = (name: string) => {
   return language;
 };
 export default function CodeGroups(props: Props) {
-  const [active, setActive] = useState("hljs language-bash");
+  const [active, setActive] = useState();
   const { title, method, pathname, children } = props;
   const items: ReactNode[] = Children.toArray(children);
 
@@ -52,17 +52,23 @@ export default function CodeGroups(props: Props) {
           })}
         </div>
       </div>
-      <div className="px-4 py-2 flex flex-row items-middle gap-2 border-b border-lightGray">
-        <span className="bg-gradient-text bg-clip-text text-transparent">
-          {method}
-        </span>
-        - <span className="text-sm flex items-center">{pathname}</span>
-      </div>
+      {method && (
+        <div className="px-4 py-2 flex flex-row items-middle gap-2 border-b border-lightGray">
+          <span className="bg-gradient-text bg-clip-text text-transparent">
+            {method}
+          </span>
+          - <span className="text-sm flex items-center">{pathname}</span>
+        </div>
+      )}
 
       <div className="relative">
-        {items.map((child) => {
+        {items.map((child, idx) => {
           if (isObject(child) && "props" in child) {
             const { className } = child?.props.children.props;
+            if (!active && idx === 0) {
+              setActive(className);
+            }
+
             return (
               <div
                 key={className}

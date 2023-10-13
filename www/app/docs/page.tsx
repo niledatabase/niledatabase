@@ -48,14 +48,16 @@ export default async function Home() {
         </div>
         <Divider />
         <div className="lg:px-14">
-          <div className="text-3xl mb-10">Get Started</div>
+          <div className="text-3xl mb-10 lg:text-left text-center">
+            Get Started
+          </div>
           <div className="flex flex-wrap flex-row gap-6 max-w-[936px] mx-auto justify-center">
             {languages.map(({ name, icon, path }) => {
               return (
                 <Link
                   key={path}
                   href={path}
-                  className="flex flex-col min-w-[216px] items-center"
+                  className="flex flex-col lg:min-w-[216px] items-center"
                 >
                   <div className="icon rounded-[20px] flex justify-center">
                     <Image
@@ -75,8 +77,10 @@ export default async function Home() {
         <div className="lg:px-14">
           <div className="flex flex-col">
             <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
-              <div className="text-3xl">Start with one of our templates</div>
-              <div>
+              <div className="text-3xl text-center md:text-left">
+                Start with one of our templates
+              </div>
+              <div className="hidden lg:block">
                 <GradientButton href="/templates" variant="soft">
                   <Image
                     src="/icons/templates.svg"
@@ -95,6 +99,19 @@ export default async function Home() {
               searchEnabled={false}
               showButton={false}
             />
+            <div className="block lg:hidden mx-auto">
+              <GradientButton href="/templates" variant="soft">
+                <Image
+                  src="/icons/templates.svg"
+                  alt="book cover"
+                  width={24}
+                  height={24}
+                />
+                <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                  More templates
+                </span>
+              </GradientButton>
+            </div>
           </div>
         </div>
         <Divider />

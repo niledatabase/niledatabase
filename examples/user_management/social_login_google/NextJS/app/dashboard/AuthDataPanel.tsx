@@ -5,16 +5,50 @@ import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import { Grid } from "@mui/joy";
 import Box from "@mui/joy/Box"
+import NextLink from 'next/link'
+import MUILink from '@mui/joy/Link';
+import Server from "@theniledev/server";
+
+const UNKNOWN = "none";
 
 export type AuthDataPanelProps = {
   authData: AuthCookieData;
 }
 
-export default function AuthDataPanel(props: AuthDataPanelProps) {
+const nile = Server({
+  workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
+  database: String(process.env.NEXT_PUBLIC_DATABASE),
+  api: {
+    basePath: String(process.env.NEXT_PUBLIC_NILE_API), // note that this page talks to Nile API directly
+  },
+});
+
+async function getTenantName(userToken: string, tenantId: string) {
+  nile.token = userToken;
+  nile.tenantId = tenantId;
+  // Get tenant name doesn't need any input parameters because it uses the tenant ID from the context
+  const resp = await nile.api.tenants.getTenant();
+  if (resp.status >= 200 && resp.status < 300) {
+    const tenant = await resp.json();
+    return tenant.name;
+  }
+  return UNKNOWN;
+}
+
+export default async function AuthDataPanel(props: AuthDataPanelProps) {
   const { authData } = props;
+  console.log (authData);
+  let tenantName: string | undefined;
+
+  if (authData.accessToken && authData.tenantId) {
+    tenantName = await getTenantName(authData?.accessToken, authData.tenantId);
+  } else {
+    tenantName = UNKNOWN;
+  }
+
   return (
     <Grid container spacing={2}>
-      <Grid xs={12} sm={10} md={6}>
+      <Grid xs={12} sm={12} md={6}>
         <Stack gap={2} sx={{ maxWidth: '40ch' }}>
           <Typography level="h3">Authentication Data</Typography>
 
@@ -26,6 +60,18 @@ export default function AuthDataPanel(props: AuthDataPanelProps) {
               </CardContent>
             </Card>
           }
+
+        {/* We are showing details of the first tenant here.
+        examples/quickstart/NextJS/app/tenants has an example of how to let users pick a tenant */}
+        <Card>
+          <CardContent >
+              <Typography level="title-lg">Tenant Information</Typography>
+              <Typography level="title-sm">Tenant Name</Typography>
+              <Typography level="title-sm">{tenantName}</Typography>
+              <Typography level="title-sm">Tenant ID</Typography>
+              <Typography level="body-sm">{authData.tenantId || UNKNOWN }</Typography>
+          </CardContent >
+        </Card>
 
           <Card>
             <CardContent >
@@ -41,9 +87,7 @@ export default function AuthDataPanel(props: AuthDataPanelProps) {
               <Typography level="title-sm">Email Address</Typography>
               <Typography level="body-sm">{authData.tokenData?.email}</Typography>
               <Typography level="title-sm">Picture</Typography>
-              <Typography level="body-sm">{authData.tokenData?.picture || "none"}</Typography>
-              <Typography level="title-sm">Tenant Identifier</Typography>
-              <Typography level="body-sm">{authData.tenantId || "none"}</Typography>
+              <Typography level="body-sm">{authData.tokenData?.picture || UNKNOWN }</Typography>
             </CardContent>
           </Card>
 
@@ -77,7 +121,7 @@ export default function AuthDataPanel(props: AuthDataPanelProps) {
 
         </Stack>
       </Grid>
-      <Grid xs={0} sm={2} md={6}>
+      <Grid xs={12} sm={12} md={6}>
         <Stack gap={2} sx={{ maxWidth: '40ch' }}>
           <Typography level="h3">Raw Cookie Data</Typography>
           <Card>
@@ -96,6 +140,10 @@ export default function AuthDataPanel(props: AuthDataPanelProps) {
               </Box>
             </CardContent>
           </Card>
+          <Card>
+            <CardContent>
+                <MUILink href="/api/logout" overlay sx={{justifyContent: "center"}} component={NextLink}>Logout</MUILink>
+            </CardContent></Card>
         </Stack>
       </Grid>
     </Grid>

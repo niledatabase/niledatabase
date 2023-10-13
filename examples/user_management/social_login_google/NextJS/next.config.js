@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
 
-module.exports = nextConfig
+module.exports = {
+    webpack: (config) => {
+      // nextjs does not play nice with knex, which @theniledev/server uses under the hood
+      config.externals.push({
+        knex: 'commonjs knex',
+      });
+      return config;
+    },
+  };

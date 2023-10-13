@@ -4,5 +4,6 @@ export type Template = {
   author: string;
   imageSrc: string;
   readmeUrl: string;
+  demoUrl: string;
   metadata: Record<string, string>;
 };

@@ -5,8 +5,9 @@ export const NextJSQuickstart: Template = {
   description: "Learn about Nile concepts from a Todo app in NextJS",
   author: "Nile",
   imageSrc: "/templates/TodoApp.png",
+  demoUrl: "https://nextjs-quickstart-omega.vercel.app/",
   readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/master/examples/quickstart/nextjs/README.md",
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/nextjs/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
     Framework: "NextJS 13",
@@ -20,12 +21,45 @@ export const EmailLogin: Template = {
   description: "Learn about simple Authentication with Nile",
   author: "Nile",
   imageSrc: "/templates/EmailLogin.png",
+  demoUrl: "https://login-okta-demo.vercel.app/",
   readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/master/examples/user_management/email_login/NextJS/README.md",
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/email_login/NextJS/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
     Framework: "NextJS 13",
     "Use Case": "SaaS Authentication",
+    Publisher: "Nile",
+  },
+};
+
+export const SocialLoginGoogle: Template = {
+  name: "Social Login with Google",
+  description: "Build social login with Google and Nile",
+  author: "Nile",
+  imageSrc: "/templates/GoogleSocialLogin.png",
+  demoUrl: "https://niledatabase-google-sso.vercel.app",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/social_login_google/NextJS/README.md",
+  // A key/value string/string. What is put here will show up on the site exactly
+  metadata: {
+    Framework: "NextJS 13",
+    "Use Case": "SaaS Authentication, Social Login",
+    Publisher: "Nile",
+  },
+};
+
+export const OktaSSOLogin: Template = {
+  name: "SSO Login with Okta",
+  description: "Build enterprise SSO with Okta and Nile",
+  author: "Nile",
+  imageSrc: "/templates/OktaSSOLogin.png",
+  demoUrl: "https://login-okta-demo.vercel.app/",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/sso_login_okta/NextJS/README.md",
+  // A key/value string/string. What is put here will show up on the site exactly
+  metadata: {
+    Framework: "NextJS 13",
+    "Use Case": "SaaS Authentication, Enterprise SSO",
     Publisher: "Nile",
   },
 };
@@ -39,10 +73,11 @@ export const NodeJSQuickstart: Template = {
   author: "Nile",
   // the location of the thumbnail. could be in /public/templates, or a CDN
   imageSrc: "/templates/nad.jpg",
+  demoUrl: "https://demo-todo-node.fly.dev",
   // the readmeURL should be publically accessible.
   // It should also be the real github url, not the raw readme
   readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/master/examples/quickstart/node_react/README.md",
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/node_react/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
     Framework: "NodeJS",
@@ -58,12 +93,13 @@ export const JavaQuickstart: Template = {
   description: "Learn about Nile concepts from a Todo app in Java",
   // who made it
   author: "Nile",
+  demoUrl: "",
   // the location of the thumbnail. could be in /public/templates, or a CDN
   imageSrc: "/templates/nad.jpg",
   // the readmeURL should be publically accessible.
   // It should also be the real github url, not the raw readme
   readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/master/examples/quickstart/java/README.md",
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/java/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
     Framework: "Java, Spring Boot 3, Hibernate",
@@ -82,9 +118,11 @@ export const placeholderTemplate: Template = {
   author: "jrea",
   // the location of the thumbnail. could be in /public/templates, or a CDN
   imageSrc: "/templates/nad.jpg",
+  // the FQDN for where the demo is running
+  demoUrl: "https://demo.demo"
   // the readmeURL should be publically accessible.
   // It should also be the real github url, not the raw readme
-  readmeUrl: "https://github.com/niledatabase/nile-js/blob/master/README.md",
+  readmeUrl: "https://github.com/niledatabase/nile-js/blob/main/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
     Framework: "MUI",

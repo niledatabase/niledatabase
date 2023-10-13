@@ -32,13 +32,36 @@ export default async function TemplateDetail(pageProps: PageProps) {
   }
 
   const fileName = cleanTemplateReadme(template);
+  console.log(template);
 
-  const content = fs.readFileSync(
-    path.resolve(`app/templates/_build/readmes/${fileName}`),
-    "utf-8"
-  );
-  const { metadata, name, imageSrc } = template;
-  const linkUrl = template.readmeUrl.replace(/\/blob.+/, "");
+  let content;
+  try {
+    content = fs.readFileSync(
+      path.resolve(`app/templates/_build/readmes/${fileName}`),
+      "utf-8"
+    );
+  } catch (e) {
+    // build failed (probably this as a private repo, get it locally instead)
+    try {
+      const localFile = `${fileName
+        .replace("niledatabase.niledatabase.blob.main", "")
+        .replace("README.md", "")
+        .split(".")
+        .join("/")}README.md`;
+      content = fs.readFileSync(
+        path.join(__dirname, "../../../../../../", localFile),
+        "utf-8"
+      );
+    } catch (e) {}
+  }
+  if (!content) {
+    return notFound();
+  }
+  const { metadata, name, imageSrc, demoUrl } = template;
+  const linkUrl = `https://github.com${template.readmeUrl
+    .replace("https://github.com", "")
+    .replace("README.md", "")
+    .replace("/blob/", "/tree/")}`;
 
   return (
     <Container background={null}>
@@ -60,9 +83,14 @@ export default async function TemplateDetail(pageProps: PageProps) {
             })}
           </div>
           <div className="flex flex-row gap-4 mt-4">
-            <Link href={linkUrl} className="w-full">
+            <Link href={demoUrl} className="w-full" target="_blank">
               <button className="gradientButton font-medium p-2 w-full after:rounded-md">
-                Use
+                Demo
+              </button>
+            </Link>
+            <Link href={linkUrl} className="w-full" target="_blank">
+              <button className="gradientBorderButton font-medium h-full w-full before:rounded-md">
+                Repo
               </button>
             </Link>
           </div>

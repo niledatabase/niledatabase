@@ -5,9 +5,9 @@ import GoogleAuthPanel from "@/app/components/GoogleAuthPanel";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
+    <div>
       <ErrorBox />
       <GoogleAuthPanel />
-    </main>
+      </div>
   );
 }

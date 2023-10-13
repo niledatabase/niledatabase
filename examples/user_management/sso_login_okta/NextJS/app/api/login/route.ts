@@ -1,3 +1,5 @@
 import { api } from '@/nile/Server';
 
-export const POST = api.auth.login;
+export async function POST(req: Request) {
+    return await api.auth.login(req);
+  }

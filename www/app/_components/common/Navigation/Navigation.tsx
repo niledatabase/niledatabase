@@ -8,13 +8,7 @@ import { GithubCta } from "./GithubCta";
 import GradientButton from "../GradientButton";
 import { useCallback, useState } from "react";
 
-export default function Navigation({
-  className,
-  dark,
-}: {
-  className?: string;
-  dark?: boolean;
-}) {
+export default function Navigation({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const toggleOpen = useCallback(() => {
     setOpen(!open);
@@ -48,7 +42,9 @@ export default function Navigation({
           <div className="hidden lg:show lg:flex flex-row">
             <div className="flex flex-row gap-4">
               <GithubCta />
-              <GradientButton>Sign Up</GradientButton>
+              <Link href="http://console.thenile.dev" target="_blank">
+                <GradientButton>Sign Up</GradientButton>
+              </Link>
             </div>
           </div>
         </div>

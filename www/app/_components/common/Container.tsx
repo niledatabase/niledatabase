@@ -13,7 +13,7 @@ export default function Container({
   return (
     <Body background={background}>
       <Navigation />
-      <main className="flex flex-col items-center justify-between px-4 py-4 pb-0 lg:px-24 lg:py-16 container mx-auto">
+      <main className="flex flex-col items-center justify-between px-4 py-4 pb-0 2xl:px-24 2xl:py-16 container mx-auto">
         {children}
         <Divider />
         <Footer />

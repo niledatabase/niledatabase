@@ -4,9 +4,6 @@ import Link from "next/link";
 export function Links({ className }: { className?: string }) {
   return (
     <>
-      <Link className={className} href="/docs">
-        Docs
-      </Link>
       <Link href="/about-us" className={`whitespace-nowrap ${className}`}>
         About Us
       </Link>
