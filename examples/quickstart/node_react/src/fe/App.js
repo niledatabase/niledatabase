@@ -18,7 +18,7 @@ function App() {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
-    fetch("/tenants")
+    fetch("/api/tenants")
       .then((res) => res.json())
       .then((data) => setData(data));
   }, []);
@@ -71,7 +71,7 @@ function App() {
                     aria-label={item.name}
                     sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
                     component="a"
-                    href={`/tenants/${item.id}/todos`}
+                    href={`/api/tenants/${item.id}/todos`}
                   >
                     Explore
                   </Button>
@@ -89,10 +89,10 @@ function App() {
               Create new tenant
             </Typography>
             <form
-              onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+              onSubmit={(event) => {
                 event.preventDefault();
                 const tenant = event.currentTarget.elements[0].value;
-                fetch("/tenants", {
+                fetch("/api/tenants", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
@@ -103,7 +103,6 @@ function App() {
                 })
                   .then((resp) => resp.json())
                   .then((datum) => {
-                    debugger;
                     console.log(datum);
                     data.push({ name: tenant, id: datum.id });
                     setData(data);

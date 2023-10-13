@@ -9,7 +9,7 @@ import Auth from "./auth";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Auth />,
     errorElement: <ErrorPage />,
   },
   {
@@ -17,8 +17,8 @@ const router = createBrowserRouter([
     element: <Todos />,
   },
   {
-    path: "/auth",
-    element: <Auth />,
+    path: "/tenants",
+    element: <App />,
   }
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
