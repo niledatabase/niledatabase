@@ -1,9 +1,9 @@
-import Heading from "../_components/common/Heading";
+import Heading from '../_components/common/Heading';
 
 const rows = [
   {}, // placeholder for header
   {
-    title: "Love Developers",
+    title: 'Love Developers',
     content: (
       <>
         We have a maniacal focus on developer experience. We take great pride in
@@ -15,7 +15,7 @@ const rows = [
     ),
   },
   {
-    title: "Mission Driven",
+    title: 'Mission Driven',
     content: (
       <>
         Our mission is to enable developers to accelerate the next billion
@@ -27,7 +27,7 @@ const rows = [
     ),
   },
   {
-    title: "First Principles Thinking",
+    title: 'First Principles Thinking',
     content: (
       <>
         To build something truly groundbreaking, you need to break every past
@@ -39,7 +39,7 @@ const rows = [
     ),
   },
   {
-    title: "Strive for World-Class",
+    title: 'Strive for World-Class',
     content: (
       <>
         We want to create a company that is among the best in the world. We
@@ -52,7 +52,7 @@ const rows = [
     ),
   },
   {
-    title: "Intensely Execute and Iterate",
+    title: 'Mission Driven',
     content: (
       <>
         Iteration velocity has a significant impact. We move fast, build
