@@ -1,12 +1,12 @@
-import Container from "@/app/_components/common/Container";
-import Divider from "@/app/_components/common/Divider";
-import { HeroBottom, HeroText } from "@/app/_components/common/Hero";
-import PageHeader from "@/app/_components/common/PageHeader";
-import Image from "next/image";
-import Heading from "../_components/common/Heading";
-import OurStory from "./OurStory";
-import HowWeWork from "./HowWeWork";
-import Backers from "./Backers";
+import Container from '@/app/_components/common/Container';
+import Divider from '@/app/_components/common/Divider';
+import { HeroBottom, HeroText } from '@/app/_components/common/Hero';
+import PageHeader from '@/app/_components/common/PageHeader';
+import Image from 'next/image';
+import Heading from '../_components/common/Heading';
+import OurStory from './OurStory';
+import HowWeWork from './HowWeWork';
+import Backers from './Backers';
 
 export default function Home() {
   return (
@@ -21,7 +21,7 @@ export default function Home() {
           />
           <div className="text-lg opacity-60">Our Mission</div>
           <PageHeader
-            title="Enable developers to accelerate the next billion modern SaaS"
+            title="To enable developers to accelerate the next billion modern SaaS applications"
             titleClasses="lg:!text-[56px]"
           />
           <Divider />
