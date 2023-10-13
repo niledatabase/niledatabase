@@ -4,6 +4,67 @@ export const meta = {
   order: 8,
 };
 
-<Cards>
-  <Card file="./index.mdx" root="ai-embeddings" />
-</Cards>
+Generative AI is truly transforming every industry and vertical in SaaS. It significantly improves the experience of the product, the value the user receives and increases the overall productivity.
+
+For example,
+
+1. A corporate wiki (eg. Confluence, Notion) where the employees can perform semantic search on their companies data
+2. A chatbot for a CRM (eg. Salesforce, Hubspot) that sales reps can use to ask questions about past and future customer deals and can have a back and forth conversation
+3. An autopilot for developers in their code repository (Github, Gitlab) to improve productivity. The autopilot should run on the companies code as well apart from learning on public repositories.
+
+## Challenges with AI in SaaS
+
+There are standard problems in implementing generative AI such as increasing accuracy and total throughput of the system. In addition, there are some unique challenges with SaaS to achieve a great experience.
+
+1. Fine tuning the large language model to be domain and customer aware is complex. Typically, large language models are trained on publicly available data. In SaaS, majority of the data are specific to a particular domain and also unique to a specific customer. For example, in a corporate wiki application, employees would want to search on their companies documents. This requires feeding domain and customer context to the model.
+2. Ability to store embedding per tenant and scale them independently. Embeddings grow large, really fast. This is because the data set for each customer can get pretty large. You would need to figure how to store embeddings in multiple databases to scale the embeddings for each tenant independently. 
+3. Low latency search is challenging if your customers are in different parts of the globe. The queries to find similarities are already resource intensive. You want to store the embeddings closer to your customer to be able to execute similarity searches with low latency.
+
+## What are embeddings?
+
+In generative AI development, embeddings refer to numerical representations of data that capture meaningful relationships, semantics, or context within the data. These representations are often used to convert high-dimensional, categorical, or unstructured data into lower-dimensional, continuous vectors that can be processed by machine learning models.
+
+1. **Word Embeddings**
+    
+    Word embeddings are one of the most common types of embeddings. They represent words from a vocabulary as dense numerical vectors in a lower-dimensional space. Word embeddings capture semantic and syntactic relationships between words. For example, words with similar meanings will have similar embeddings, and word arithmetic can be performed using embeddings (e.g., "king" - "man" + "woman" ≈ "queen"). Well-known word embedding methods include Word2Vec, GloVe, FastText, and BERT.
+    
+2. **Sentence and Document Embeddings**:
+    
+    Instead of representing individual words, sentence and document embeddings represent entire sentences, paragraphs, or documents as numerical vectors.These embeddings aim to capture the overall meaning and context of the text. They are useful for applications like text summarization, document classification, and sentiment analysis. Models like BERT and the Universal Sentence Encoder can generate sentence and document embeddings.
+    
+3. **Image Embeddings**:
+    
+    In computer vision, image embeddings represent images as vectors in a lower-dimensional space. Image embeddings capture visual features, allowing generative AI models to understand and generate images or perform tasks like image search and object detection. Convolutional Neural Networks (CNNs) are commonly used to generate image embeddings.
+    
+
+There are many ways to compare embeddings. L2 distance (Euclidean distance), inner product, and cosine distance are different similarity or dissimilarity measures used to compare vectors in multi-dimensional spaces.
+
+Let's use sentence embeddings to explain how embeddings help with finding the similarity between sentences:
+
+**Example Sentences**:
+
+**Sentence 1**: "The sun rises in the east every morning."
+
+**Sentence 2**: "The moon sets in the west at night."
+
+**Sentence 3**: "Bananas are a source of potassium."
+
+**Sentence Embeddings** (Hypothetical Values in a 4-dimensional space):
+
+- Sentence 1 Embedding: [2.2, 1.0, -0.8, 0.9]
+- Sentence 2 Embedding: [2.0, 1.3, 0.9, 1.1]
+- Sentence 3 Embedding: [0.6, 2.4, 2.1, 0.8]
+
+**Similarity Calculation**:
+
+We'll use cosine similarity to measure the similarity between sentence embeddings. The closer the cosine similarity value is to 1, the more similar the sentences are:
+
+- Cosine Similarity between Sentence 1 and Sentence 2 ≈ 0.979
+- Cosine Similarity between Sentence 1 and Sentence 3 ≈ 0.089
+- Cosine Similarity between Sentence 2 and Sentence 3 ≈ 0.083
+
+In this example, we used sentence embeddings to represent the entire sentences in a four-dimensional space. The cosine similarity between Sentence 1 and Sentence 2 is approximately 0.979, indicating high similarity because both sentences share a similar context related to celestial objects and directions. Sentence 3, which discusses a different topic, has lower similarity with both Sentence 1 and Sentence 2.
+
+## Support for embeddings in Nile - pg_vector
+
+Embeddings in Nile is enabled using pg_vector, the Postgres extension. This extension is enabled by default in Nile and is available to be used once you create a database. You can read more about how to use pg_vector and build a real world AI native SaaS application in the pg_vector section.
