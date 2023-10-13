@@ -1,7 +1,7 @@
 import Image from "next/image";
-import GetStartedButton from "./GetStartedButton";
-import GradientButton from "./GradientButton";
 import PageHeader, { OverrideClasses } from "./PageHeader";
+import Subscribe from "@/app/blog/_components/Footer/Subscribe";
+import Footer from "@/app/blog/_components/Footer";
 
 export function HeroText(props: OverrideClasses & { title?: string }) {
   return (
@@ -12,33 +12,21 @@ export function HeroText(props: OverrideClasses & { title?: string }) {
         {...props}
       />
       <div className="flex flex-row gap-4 items-center justify-center pt-5">
-        <GetStartedButton />
+        <Subscribe />
       </div>
     </div>
   );
 }
 
-export function HeroBottom(props: OverrideClasses) {
+export function HeroBottom() {
   return (
-    <div className={"lg:w-[784px] flex flex-col items-center"}>
+    <div className={"w-[320px] lg:w-[784px] flex flex-col items-center"}>
       <div className="px-4 lg:px-0 mt-32">
-        <div className="text-[56px] bg-gradient-text bg-clip-text text-transparent mb-3 text-center leading-[64px]">
-          Postgres purpose built for modern SaaS
-        </div>
-        <div className="flex flex-row gap-4 items-center justify-center pt-5">
-          <GetStartedButton />
-          <div>
-            <GradientButton variant="soft" href="/contact-us">
-              <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
-                Contact Us
-              </span>
-            </GradientButton>
-          </div>
-        </div>
+        <Footer />
       </div>
       <Image
         className="mt-16 -mb-36 lg:-mb-44 relative -z-[2001] px-12 lg:px-0"
-        src="nile-outline-logo.svg"
+        src="/nile-outline-logo.svg"
         width="646"
         height="239"
         alt="nile outlined logo"

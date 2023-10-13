@@ -21,18 +21,7 @@ export function NavMenu({ open }: { open: boolean }) {
             <div className="flex flex-col gap-10 py-20 px-4">
               <Links className="text-xl" />
               <div className="flex flex-row">
-                <div className="w-1/2 flex">
-                  <Link
-                    href="http://console.thenile.dev"
-                    target="_blank"
-                    className="pr-2 w-full flex"
-                  >
-                    <GradientButton>Sign Up</GradientButton>
-                  </Link>
-                </div>
-                <div className="w-1/2">
-                  <GithubCta />
-                </div>
+                <GithubCta />
               </div>
             </div>
           </div>
@@ -62,9 +51,6 @@ export default function MobileNav({
     <div className="absolute top-0 right-0 lg:hidden">
       <div>
         <div className="flex flex-row gap-4 p-4">
-          <Link href="http://console.thenile.dev" target="_blank">
-            <GradientButton>Sign Up</GradientButton>
-          </Link>
           <button className="cusor-pointer relative" onClick={toggleOpen}>
             <div className="w-[24px] h-[24px]">
               <Image

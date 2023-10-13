@@ -275,6 +275,11 @@ mark {
 .templateSearch {
   background: black;
 }
+@media (max-width: 1280px) {
+  .prose {
+    max-width: 50ch;
+  }
+}
 @media (max-width: 1024px) {
   .templateSearch {
     width: calc(100vw - 3rem);
@@ -334,4 +339,12 @@ table tr:last-child td:last-child {
 }
 th {
   background: #1a1a1a;
+}
+
+.gapFiller {
+  box-shadow: -1px 0px 0 rgba(223, 239, 254, 0.14);
+}
+.gapFiller-right {
+  filter: drop-shadow(-1px 0 0 rgba(223, 239, 254, 0.14));
+  box-shadow: 1px 0px 0 rgba(223, 239, 254, 0.14);
 }

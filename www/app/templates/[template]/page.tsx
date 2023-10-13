@@ -11,6 +11,7 @@ import Image from "next/image";
 import { sizes } from "@/app/_components/common/sizes";
 
 import cleanTemplateReadme from "../_build/cleanTemplateReadme.mjs";
+import Heading from "@/app/_components/common/Heading";
 
 type PageProps = {
   params?: {
@@ -32,15 +33,14 @@ export default async function TemplateDetail(pageProps: PageProps) {
   }
 
   const fileName = cleanTemplateReadme(template);
-  console.log(template);
 
   let content;
   try {
-    content = fs.readFileSync(
-      path.resolve(`app/templates/_build/readmes/${fileName}`),
-      "utf-8"
-    );
+    const location = path.resolve(`app/templates/_build/readmes/${fileName}`);
+    console.log("attempting to locate", location);
+    content = fs.readFileSync(location, "utf-8");
   } catch (e) {
+    console.log("not found");
     // build failed (probably this as a private repo, get it locally instead)
     try {
       const localFile = `${fileName
@@ -48,11 +48,17 @@ export default async function TemplateDetail(pageProps: PageProps) {
         .replace("README.md", "")
         .split(".")
         .join("/")}README.md`;
-      content = fs.readFileSync(
-        path.join(__dirname, "../../../../../../", localFile),
-        "utf-8"
+      const location = path.resolve(
+        path.join(__dirname, "../../../../../../", localFile)
       );
-    } catch (e) {}
+      console.log("attempting to locate", location);
+
+      content = fs.readFileSync(location, "utf-8");
+
+      console.log("found", location);
+    } catch (e) {
+      console.log("not found");
+    }
   }
   if (!content) {
     return notFound();
@@ -65,10 +71,10 @@ export default async function TemplateDetail(pageProps: PageProps) {
 
   return (
     <Container background={null}>
-      <div className="flex flex-row w-full justify-around">
-        <div className="flex w-1/3 pr-4 flex-col">
+      <div className="flex flex-col lg:flex-row w-full justify-around items-center lg:items-start">
+        <div className="flex lg:w-1/3 pr-4 flex-col mb-5">
           <div className="w-full">
-            <div className="text-[64px]">{name}</div>
+            <Heading text={name} textAlign="left" />
             {Object.keys(metadata).map((key) => {
               const val = metadata[key];
               return (
@@ -77,7 +83,7 @@ export default async function TemplateDetail(pageProps: PageProps) {
                   className="flex flex-row justify-between border-b border-b-[#1B1B1B] py-3 last-of-type:border-none"
                 >
                   <div className="text-lg opacity-60">{key}</div>
-                  <div className="text-lg opacity-60">{val}</div>
+                  <div className="text-lg opacity-60 text-right">{val}</div>
                 </div>
               );
             })}
