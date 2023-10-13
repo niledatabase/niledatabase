@@ -12,9 +12,33 @@ const rows = [
       </>
     ), 
   },
-  { title: "Mission Driven", content: <>Content</> },
-  { title: "First Principles Thinking", content: <>Content</> },
-  { title: "Strive for World-Class", content: <>Content</> },
+  { title: "Mission Driven", 
+    content: (
+      <>
+        Content Content Content Content Content Content
+        Content Content Content Content Content Content
+        Content Content Content Content Content Content
+      </> 
+    ),
+  },
+  { title: "First Principles Thinking", 
+    content: (
+      <>
+        Content Content Content Content Content Content
+        Content Content Content Content Content Content
+        Content Content Content Content Content Content
+      </> 
+    ),
+  },
+  { title: "Strive for World-Class", 
+    content: (
+      <>
+        Content Content Content Content Content Content
+        Content Content Content Content Content Content
+        Content Content Content Content Content Content
+      </>
+    ),
+  },
   {
     title: "Intensely Execute and Iterate",
     content: (
