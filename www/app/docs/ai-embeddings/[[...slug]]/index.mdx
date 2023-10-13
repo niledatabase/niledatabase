@@ -20,8 +20,6 @@ There are standard problems in implementing generative AI such as increasing acc
 2. Ability to store embedding per tenant and scale them independently. Embeddings grow large, really fast. This is because the data set for each customer can get pretty large. You would need to figure how to store embeddings in multiple databases to scale the embeddings for each tenant independently. 
 3. Low latency search is challenging if your customers are in different parts of the globe. The queries to find similarities are already resource intensive. You want to store the embeddings closer to your customer to be able to execute similarity searches with low latency.
 
-## High level architecture
-
 ## What are embeddings?
 
 In generative AI development, embeddings refer to numerical representations of data that capture meaningful relationships, semantics, or context within the data. These representations are often used to convert high-dimensional, categorical, or unstructured data into lower-dimensional, continuous vectors that can be processed by machine learning models.
