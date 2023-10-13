@@ -24,7 +24,7 @@ export default function Todos() {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
-    fetch(`/tenants/${tenantId}/todos`)
+    fetch(`/api/tenants/${tenantId}/todos`)
       .then((res) => res.json())
       .then((data) => setData(data));
   }, [tenantId]);
@@ -100,7 +100,7 @@ export default function Todos() {
               event.preventDefault();
               const title = event.currentTarget.elements[0].value;
               const complete = event.currentTarget.elements[1].checked;
-              fetch(`/tenants/${tenantId}/todos`, {
+              fetch(`/api/tenants/${tenantId}/todos`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
