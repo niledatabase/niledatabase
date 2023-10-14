@@ -8,7 +8,8 @@ import Typography from '@mui/joy/Typography';
 import './css/globals.css'
 import styles from './css/page.module.css'
 import { ReactComponent as NileLogo } from './images/nile_logo.svg';
-import { ReactComponent as NodeLogo } from './images/node.svg';
+import { ReactComponent as NodeLogoRight } from './images/node_logo_r.svg';
+import { ReactComponent as NodeLogoBottom } from './images/node_logo_b.svg';
 
 export default function Layout({children}) {
   return (
@@ -17,7 +18,7 @@ export default function Layout({children}) {
         <main className={styles.main}>
         <div className={styles.description}>
         <div>
-          <NodeLogo className={styles.logo} />
+          <NodeLogoRight width="133.5px" height="82px" />
         </div>
         <div>
           <a
@@ -25,8 +26,8 @@ export default function Layout({children}) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Created by{' '}
-            <NileLogo className={styles.logo} />
+            Created by{'    '}
+            <NileLogo width="100px" height="37px" style={{marginLeft:"15px"}}/>
           </a>
         </div>
       </div>
@@ -41,22 +42,21 @@ export default function Layout({children}) {
               sx={{
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
-              }}>
+                }}>
           <Link overlay href="https://niledatabase-www.vercel.app/docs/getting-started/languages/nextjs" target="_blank" rel="noopener">
-            <NodeLogo className={styles.logo} />
+          <NodeLogoBottom width="115.6px" height="70.8px"/>
             </Link>
           <CardContent>
             <Typography>Getting started guide</Typography>
           </CardContent>
         </Card>
-
         <Card variant="outlined"
               sx={{
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
           <Link overlay href="https://console.thenile.dev"  target="_blank" rel="noopener">
-            <NileLogo className={styles.logo} />
+          <NileLogo width="120px" height="44.4px" />
             </Link>
           <CardContent>
             <Typography>Sign up to Nile</Typography>
@@ -69,7 +69,7 @@ export default function Layout({children}) {
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
           <Link overlay href="https://niledatabase-www.vercel.app/templates"  target="_blank" rel="noopener">
-            <NileLogo className={styles.logo} />
+          <NileLogo width="120px" height="44.4px" />
           </Link>
           <CardContent>
             <Typography>Try additional templates</Typography>
