@@ -67,8 +67,8 @@ export default async function Page({ params }: { params: { tenantid: string } })
 
     return (
             <Stack spacing={2} width={"50%"}>
-              <Typography level="h2" textAlign={"center"} sx={{textTransform: 'uppercase',}}>{tenant.name}&apos;s Todos</Typography>
-                <MUILink href="/tenants" component={NextLink} justifyContent={"center"}>(Back to tenant selection) </MUILink>
+              <Typography level="h2" textAlign={"center"} sx={{textTransform: 'uppercase', margin:"10px"}}>{tenant.name}&apos;s Todos</Typography>
+              <MUILink href="/tenants" component={NextLink} justifyContent={"center"}>(Back to tenant selection) </MUILink>
               <List variant="plain" size="lg">
                 <ListItem>
                   <AddForm tenantid={tenantID} />

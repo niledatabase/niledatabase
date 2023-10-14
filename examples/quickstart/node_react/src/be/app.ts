@@ -84,6 +84,37 @@ app.get("/api/tenants", async (req, res) => {
   }
 });
 
+// Return tenant details. 
+// Note that this just passes the request over to Nile. 
+// It is necessary because the browser can't call Nile APIs directly due to CORS restrictions.
+app.get("/api/tenants/:tenantId", async (req, res) => {
+  const { tenantId } = req.params;
+  nile.tenantId = tenantId; // set tenant ID for subsequenct operations
+  const userToken = getUserToken(req.cookies);
+  if (!userToken) {
+    res.status(401).json({
+      message: "Unauthorized",
+    });
+  }
+  nile.token = userToken;
+  // Get tenant name doesn't need any input parameters because it uses the tenant ID from the context
+  try {
+    const tenantResponse = await nile.api.tenants.getTenant();
+    if (tenantResponse.status === 401) {
+      res.status(401).json({
+        message: "Unauthorized. Please log in again.",
+      });
+    }
+    const tenant = await tenantResponse.json();
+    res.json(tenant);
+  } catch (error: any) {
+    console.log(error.message);
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+});
+
 app.post("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
     const { tenantId } = req.params;

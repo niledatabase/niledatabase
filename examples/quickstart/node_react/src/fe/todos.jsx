@@ -9,27 +9,36 @@ import Input from "@mui/joy/Input";
 import ListDivider from "@mui/joy/ListDivider";
 import Checkbox from "@mui/joy/Checkbox";
 import { useParams } from "react-router";
-import {Link} from 'react-router-dom'
+import {Link as ReactLink} from 'react-router-dom'
+import MUILink from '@mui/joy/Link';
 
 
 export default function Todos() {
   const params = useParams();
   const tenantId = params.tenantId;
 
-  const [data, setData] = React.useState(null);
+  const [todos, setTodos] = React.useState(null);
+  const [tenantName, setTenantName] = React.useState(null); 
   const [isPending, startTransition] = React.useTransition();
 
   React.useEffect(() => {
     fetch(`/api/tenants/${tenantId}/todos`)
       .then((res) => res.json())
-      .then((data) => setData(data));
+      .then((data) => setTodos(data));
+  }, [tenantId]);
+
+  React.useEffect(() => {
+    fetch(`/api/tenants/${tenantId}`)
+      .then((res) => res.json())
+      .then((data) => setTenantName(data.name));
   }, [tenantId]);
 
   return (
-    <div id="todo">
-      <Stack spacing={2} width={"50%"}>
-      <Typography level="h2" textAlign={"center"} sx={{textTransform: 'uppercase',}}>$PLACEHOLDER_TENANT_NAME Todos</Typography>
-      <Link to="/tenants" justifyContent={"center"}>(Back to tenant selection) </Link>
+      <Stack spacing={2} mt={2} sx={{minWidth:"50%",backgroundColor:'white'}}>
+      <Typography level="h2" textAlign={"center"} sx={{textTransform: 'uppercase', margin: "10px"}}>{tenantName}'s Todos</Typography>
+      <div style={{justifyContent: "center", display:"flex", margin:"10px"}}>
+      <MUILink component={ReactLink} to="/tenants" justifyContent={"center"}>(Back to tenant selection) </MUILink>
+      </div>
       <List variant="plain" size="lg">
       <ListItem>
           <form name="newtodo" id="newtodo" onSubmit={(event) => {
@@ -42,9 +51,9 @@ export default function Todos() {
           </form>
         </ListItem>
         <ListDivider />
-        {!data 
+        {!todos 
           ? <Typography level="h2"> Loading...</Typography>
-          : data.map((todo) => (
+          : todos.map((todo) => (
                 <div key={todo.title} style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>
                 {/* TODO: todos need IDs */}
                 <ListItem key={todo.title}>
@@ -60,7 +69,6 @@ export default function Todos() {
             ))}
         </List>
       </Stack>
-    </div>
   );
 
   function handleAdd (title) {
@@ -77,13 +85,13 @@ export default function Todos() {
       .then((resp) => resp.json())
       .then((datum) => {
         console.log(datum);
-        var current_data = data.slice(); // need to copy so React will notice state change
-        current_data.push({
+        var curr_state = todos.slice(); // need to copy so React will notice state change
+        curr_state.push({
           title: datum[0].title,
           id: datum[0].id,
           complete: datum[0].complete,
         });
-        setData(current_data);
+        setTodos(curr_state);
       })
       .catch((error) => {
         console.error(error);
