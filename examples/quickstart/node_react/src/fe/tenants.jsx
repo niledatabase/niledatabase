@@ -73,7 +73,7 @@ function Tenants() {
           ? "Loading..."
           : data.map((tenant) => (
             <ListItem key={tenant.id}>
-              <ListItemButton href={`/tenants/${tenant.id}/todos`}>{tenant.name}</ListItemButton>
+              <ListItemButton component={Link} to={`/tenants/${tenant.id}/todos`}>{tenant.name}</ListItemButton>
             </ListItem>
             ))}
       </List>
