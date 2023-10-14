@@ -10,13 +10,12 @@ import ModalDialog from "@mui/joy/ModalDialog";
 import Modal from "@mui/joy/Modal";
 import Add from "@mui/icons-material/Add";
 import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import Cookies from 'js-cookie'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Layout from './layout';
 
 function getUserName() {
@@ -26,14 +25,13 @@ function getUserName() {
     const bestName = authData.tokenData?.name || authData.tokenData?.email || authData.tokenData?.given_name || authData.tokenData?.family_name;
     return bestName;
   } else {
-    return 'Unknown';
+    return null;
   }
 }
 function Tenants() {
   const [data, setData] = React.useState(null);
   const [open, setOpen] = React.useState(false);
-  console.log(Cookies.get('authData'));
-  const userName = getUserName();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     fetch("/api/tenants")
@@ -41,8 +39,14 @@ function Tenants() {
       .then((data) => setData(data));
   }, []);
 
+  const userName = getUserName();
+  
+  // if user is not logged in, redirect to login page
+  if (!userName) {
+    return navigate("/login");
+  }
+
   return (
-    <Layout>
     <div className={styles.center}>
       <Card  variant="outlined">
       <CardContent > 
@@ -106,6 +110,7 @@ function Tenants() {
                     data.push({ name: tenant, id: datum.id });
                     setData(data);
                     setOpen(false);
+                    navigate(`/tenants/${datum.id}/todos`);
                   })
                   .catch((error) => {
                     console.error(error);
@@ -123,7 +128,6 @@ function Tenants() {
           </ModalDialog>
         </Modal>
       </div>
-      </Layout>
   );
 }
 

@@ -13,9 +13,7 @@ import { ReactComponent as NodeLogoBottom } from './images/node_logo_b.svg';
 
 export default function Layout({children}) {
   return (
-    <html lang="en">
-      <body fontFamily="Inter">
-        <main className={styles.main}>
+        <main className={styles.main} fontFamily="Inter">
         <div className={styles.description}>
         <div>
           <NodeLogoRight width="133.5px" height="82px" />
@@ -77,7 +75,5 @@ export default function Layout({children}) {
         </Card>
       </div>
         </main>
-      </body>
-    </html>
   )
 }

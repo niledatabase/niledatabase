@@ -1,14 +1,12 @@
 import React from 'react';
 import Stack from '@mui/joy/Stack';
 import styles from './css/page.module.css'
-import Layout from './layout';
 
 import { GoogleLoginButton, NileProvider} from '@theniledev/react';
 
 export default function Auth() {
   // TODO: Replace with env vars (or better yet, remove cause Nile SDK has the right default)
   return (
-    <Layout>
     <NileProvider basePath={process.env.REACT_APP_NILE_API}>
     <div>
       <div className={styles.center}>
@@ -21,6 +19,5 @@ export default function Auth() {
       </div>
       </div>
     </NileProvider>
-    </Layout>
   )
 }
