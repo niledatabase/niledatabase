@@ -13,7 +13,7 @@ import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
 
-function App() {
+function Tenants() {
   const [data, setData] = React.useState(null);
   const [open, setOpen] = React.useState(false);
 
@@ -129,4 +129,4 @@ function App() {
   );
 }
 
-export default App;
+export default Tenants;
