@@ -45,13 +45,17 @@ export default interface AuthCookieData {
       return undefined;
     }
   }
-  
-  export function getUserName(rawAuthCookie: any): string | null | undefined {
+
+  export function isLoggedin(rawAuthCookie: any): boolean {
     try {
-      const authData = JSON.parse(rawAuthCookie.value) as AuthCookieData;
-      const bestName = authData.tokenData?.name || authData.tokenData?.email || authData.tokenData?.given_name || authData.tokenData?.family_name;
-      return bestName;
+      const authData = JSON.parse(rawAuthCookie.authData) as AuthCookieData;
+      return (
+        authData.accessToken != null 
+        && authData.tokenData != null
+        && authData.tokenData.exp != null
+        && authData.tokenData.exp > (Date.now() / 1000))!; // asserting that due to the not null checks above, this is indeed a boolean
     } catch (e) {
-      return undefined;
+      return false;
     }
   }
+  

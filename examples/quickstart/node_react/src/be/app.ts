@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import jwtDecode from 'jwt-decode';
-import { toCookieData, NileJWTPayload, getUserToken, getUserId } from "./authUtils";
+import { toCookieData, NileJWTPayload, getUserToken, getUserId, isLoggedin } from "./authUtils";
 import Server from "@theniledev/server";
 import cookieParser from "cookie-parser";
 
@@ -24,6 +24,17 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
+
+// Middleware to check if user is authenticated, important to load it *after* cookie parser
+app.use('/api/tenants', (req, res, next) => {
+  if (!isLoggedin(req.cookies)) {
+    console.log("can't serve " + req.path + " - user not logged in")
+    return res.status(401).json({
+      message: "Unauthorized. Try logging in again.",
+    });
+  }
+  next();
+});
 
 const PORT = process.env.PORT || 3000;
 
@@ -91,17 +102,13 @@ app.get("/api/tenants/:tenantId", async (req, res) => {
   const { tenantId } = req.params;
   nile.tenantId = tenantId; // set tenant ID for subsequenct operations
   const userToken = getUserToken(req.cookies);
-  if (!userToken) {
-    res.status(401).json({
-      message: "Unauthorized",
-    });
-  }
   nile.token = userToken;
+
   // Get tenant name doesn't need any input parameters because it uses the tenant ID from the context
   try {
     const tenantResponse = await nile.api.tenants.getTenant();
     if (tenantResponse.status === 401) {
-      res.status(401).json({
+      return res.status(401).json({
         message: "Unauthorized. Please log in again.",
       });
     }
@@ -115,6 +122,7 @@ app.get("/api/tenants/:tenantId", async (req, res) => {
   }
 });
 
+// add new task for tenant
 app.post("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
     const { tenantId } = req.params;
@@ -137,6 +145,28 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
   }
 });
 
+// update tasks for tenant - note that we don't handle partial updates here
+// TODO: This should be for specific todo ID, not all todos with same title
+app.put("/api/tenants/:tenantId/todos", async (req, res) => {
+  const userId = getUserId(req.cookies);
+  
+  try {
+    const { tenantId } = req.params;
+    const { title, complete } = req.body;
+    await nile.db.raw(`
+    set nile.tenant_id = '${tenantId}'; 
+    set nile.user_id = '${userId}';
+    update todos set complete='${complete}' where title='${title}';`)
+    res.sendStatus(200);
+  } catch(error: any) {
+    console.log(error.message);
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+});
+
+// get all tasks for tenant
 app.get("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
     const { tenantId } = req.params;
@@ -145,7 +175,7 @@ app.get("/api/tenants/:tenantId/todos", async (req, res) => {
 
     // Tenant context not actually working yet...
     // const todos = await db('todos').withTenant(tenantId).select('*');
-    const todos = await nile.db("todos").select("*").where("tenant_id", tenantId);
+    const todos = await nile.db("todos").select("*").where("tenant_id", tenantId).orderBy("title");
     res.json(todos);
   } catch (error: any) {
     console.log(error.message);
@@ -168,6 +198,8 @@ app.get("/insecure/all_todos", async (req, res) => {
   }
 });
 
+
+// Handle logins via Nile's OIDC / OAuth2 flow
 app.post('/auth/handler', async (req, res) => {
   const formData = req.body;
   const event = formData.event;

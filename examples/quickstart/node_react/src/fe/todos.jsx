@@ -51,22 +51,24 @@ export default function Todos() {
           </form>
         </ListItem>
         <ListDivider />
-        {!todos 
-          ? <Typography level="h2"> Loading...</Typography>
-          : todos.map((todo) => (
-                <div key={todo.title} style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>
-                {/* TODO: todos need IDs */}
-                <ListItem key={todo.title}>
-                <Checkbox 
-                    label={<Typography>{todo.title}</Typography>}
-                    checked={todo.complete} 
-                    onChange={() => startTransition(
-                      () => completeTodo(tenantId, todo.title, !todo.complete)
-                    )}/>
-                </ListItem>
-                <ListDivider />
-              </div>
-            ))}
+        { (() => {
+            if (!todos) {
+              return <Typography level="h2" textAlign={"center"}> Loading...</Typography>
+            } else if (!Array.isArray(todos)) {
+              return <Typography level="h2" textAlign={"center"}> Error: {todos.message}</Typography>
+            } else {
+            return todos.map((todo) => (
+              <div key={todo.title} style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>
+              {/* TODO: todos need IDs */}
+              <ListItem key={todo.title}>
+              <Checkbox 
+                  label={<Typography>{todo.title}</Typography>}
+                  checked={todo.complete} 
+                  onChange={() => completeTodo(tenantId, todo.title, !todo.complete)}/>
+              </ListItem>
+              <ListDivider />
+            </div>
+          ))}})()}
         </List>
       </Stack>
   );
@@ -99,6 +101,31 @@ export default function Todos() {
   };
 
   function completeTodo(tenantId, title, complete) {
-    //TBD
+    fetch(`/api/tenants/${tenantId}/todos`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title,
+        complete: complete,
+      }),
+    })
+      .then((resp) => {
+        console.log(resp);
+        if (resp.status !== 200) {
+          throw new Error("Error: " + resp.message + " " + resp.status);
+        }
+        var curr_state = todos.slice(); // need to copy so React will notice state change
+        curr_state.forEach((todo) => {
+          if (todo.title === title) {
+            todo.complete = complete;
+          }
+        });
+        setTodos(curr_state);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }
