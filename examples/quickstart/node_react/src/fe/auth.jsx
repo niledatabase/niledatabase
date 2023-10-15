@@ -1,11 +1,20 @@
 import React from 'react';
 import Stack from '@mui/joy/Stack';
 import styles from './css/page.module.css'
+import Cookies from 'js-cookie';
+import { useSearchParams } from 'react-router-dom';
 
 import { GoogleLoginButton, NileProvider} from '@theniledev/react';
 
+
+
 export default function Auth() {
-  // TODO: Replace with env vars (or better yet, remove cause Nile SDK has the right default)
+  // handle logouts here
+  const [searchParams, setSearchParams] = useSearchParams();
+  if (searchParams.has('logout')) {
+    Cookies.remove('authData');
+  }
+
   return (
     <NileProvider basePath={process.env.REACT_APP_NILE_API}>
     <div>

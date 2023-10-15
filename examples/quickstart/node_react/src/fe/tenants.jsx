@@ -16,7 +16,6 @@ import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import Cookies from 'js-cookie'
 import { Link, useNavigate } from "react-router-dom";
-import Layout from './layout';
 
 function getUserName() {
   const raw = Cookies.get('authData');
@@ -28,9 +27,12 @@ function getUserName() {
     return null;
   }
 }
+
 function Tenants() {
   const [data, setData] = React.useState(null);
   const [open, setOpen] = React.useState(false);
+  const [userName, setUserName] = React.useState(null);
+
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -39,12 +41,9 @@ function Tenants() {
       .then((data) => setData(data));
   }, []);
 
-  const userName = getUserName();
-  
-  // if user is not logged in, redirect to login page
-  if (!userName) {
-    return navigate("/login");
-  }
+  React.useEffect(() => {
+    setUserName(getUserName());
+  }, []);
 
   return (
     <div className={styles.center}>
@@ -69,17 +68,24 @@ function Tenants() {
       <CardContent>
       <Typography level="title-md" textAlign="center" padding={2}>Use Existing Tenant</Typography>
       <List variant="outlined">
-        {!data
-          ? "Loading..."
-          : data.map((tenant) => (
-            <ListItem key={tenant.id}>
-              <ListItemButton component={Link} to={`/tenants/${tenant.id}/todos`}>{tenant.name}</ListItemButton>
-            </ListItem>
-            ))}
+        { (() => { 
+            if (!data) {
+              return <Typography level="h2" textAlign={"center"}> Loading...</Typography>
+            } else if (!Array.isArray(data)) {
+              return <Typography level="h2" textAlign={"center"}> Error: {data.message}</Typography>
+            } else {
+              return data.map((tenant) => (
+                <ListItem key={tenant.id}>
+                  <ListItemButton component={Link} to={`/tenants/${tenant.id}/todos`}>{tenant.name}</ListItemButton>
+                </ListItem>
+                ))
+            }
+          })()
+        }
       </List>
       </CardContent>
       <CardContent>
-                <Typography level="body-md" textAlign="center"> You are logged in as {userName} <Link to="/logout">(Logout)</Link></Typography>
+                <Typography level="body-md" textAlign="center"> You are logged in as {userName} <Link to="/?logout">(Logout)</Link></Typography>
           </CardContent>
       </Card>
         <Modal open={open} onClose={() => setOpen(false)}>
