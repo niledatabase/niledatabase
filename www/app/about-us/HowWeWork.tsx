@@ -6,9 +6,7 @@ const rows = [
     title: "Love Developers",
     content: (
       <>
-        Content Content Content Content Content Content
-        Content Content Content Content Content Content
-        Content Content Content Content Content Content
+        We have a maniacal focus on developer experience. We take great pride in ensuring developers love building their applications on Nile. Developers have a high bar, and we will strive to exceed their expectations every time. This is achieved by showing love, being honest, and taking great pains to make the developer’s life easy. 
       </>
     ), 
   },
