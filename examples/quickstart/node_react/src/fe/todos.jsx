@@ -1,145 +1,131 @@
 import React from "react";
-import Table from "@mui/joy/Table";
 import Stack from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
-import Button from "@mui/joy/Button";
 import Add from "@mui/icons-material/Add";
-import Modal from "@mui/joy/Modal";
-import ModalDialog from "@mui/joy/ModalDialog";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
+import List from "@mui/joy/List";
+import ListItem from "@mui/joy/ListItem";
+import IconButton from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
+import ListDivider from "@mui/joy/ListDivider";
 import Checkbox from "@mui/joy/Checkbox";
 import { useParams } from "react-router";
-import Chip from "@mui/joy/Chip";
-import Sheet from "@mui/joy/Sheet/Sheet";
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import Link from '@mui/joy/Link';
+import {Link as ReactLink} from 'react-router-dom'
+import MUILink from '@mui/joy/Link';
+
 
 export default function Todos() {
   const params = useParams();
   const tenantId = params.tenantId;
 
-  const [data, setData] = React.useState(null);
-  const [open, setOpen] = React.useState(false);
+  const [todos, setTodos] = React.useState(null);
+  const [tenantName, setTenantName] = React.useState(null); 
+  const [isPending, startTransition] = React.useTransition();
 
   React.useEffect(() => {
     fetch(`/api/tenants/${tenantId}/todos`)
       .then((res) => res.json())
-      .then((data) => setData(data));
+      .then((data) => setTodos(data));
+  }, [tenantId]);
+
+  React.useEffect(() => {
+    fetch(`/api/tenants/${tenantId}`)
+      .then((res) => res.json())
+      .then((data) => setTenantName(data.name));
   }, [tenantId]);
 
   return (
-    <div id="todo">
-      <Breadcrumbs>
-        <Link href="/"> Tenant List </Link>
-        <Link href={`/tenants/${tenantId}/todos`}> Tenant {tenantId} </Link>
-      </Breadcrumbs>
-      <Stack
-        direction="column"
-        flexWrap="wrap"
-        useFlexGap
-        sx={{ paddingLeft: "5rem", paddingTop: "5rem" }}
-      >
-        <Typography level="h1"> Lots to do:</Typography>
-        <Sheet sx={{ padding: "0.5rem" }}>
-          <Button
-            variant="solid"
-            size="md"
-            color="primary"
-            aria-label="add-todo"
-            startDecorator={<Add />}
-            onClick={() => setOpen(true)}
-            sx={{ fontWeight: 600, color: "#282c34", bgcolor: "#6FE2FF" }}
-          >
-            {" "}
-            Add Todo
-          </Button>
-        </Sheet>
-        {!data ? (
-          <Typography level="h2"> Loading...</Typography>
-        ) : (
-          <Table
-            aria-label="basic table"
-            variant="outline"
-            size="lg"
-            sx={{ padding: "2rem", width: "80%" }}
-          >
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Completed</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((todo) => (
-                <tr key={todo.id}>
-                  <td>{todo.title}</td>
-                  <td>
-                    <Chip color={todo.complete ? "success" : "danger"}>
-                      {todo.complete ? "yay" : "nope"}
-                    </Chip>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
-      </Stack>
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <ModalDialog
-          aria-labelledby="basic-modal-dialog-title"
-          aria-describedby="basic-modal-dialog-description"
-          sx={{ maxWidth: 500 }}
-        >
-          <Typography id="basic-modal-dialog-title" level="h2">
-            New Task
-          </Typography>
-          <form
-            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-              event.preventDefault();
-              const title = event.currentTarget.elements[0].value;
-              const complete = event.currentTarget.elements[1].checked;
-              fetch(`/api/tenants/${tenantId}/todos`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  title: title,
-                  complete: complete,
-                }),
-              })
-                .then((resp) => resp.json())
-                .then((datum) => {
-                  console.log(datum);
-                  data.push({
-                    title: datum[0].title,
-                    id: datum[0].id,
-                    complete: datum[0].complete,
-                  });
-                  setData(data);
-                  setOpen(false);
-                })
-                .catch((error) => {
-                  console.error(error);
-                  setOpen(false);
-                });
-            }}
-          >
-            <Stack spacing={5} direction="column">
-              <FormControl sx={{ padding: "0.5rem" }}>
-                <FormLabel>Title</FormLabel>
-                <Input autoFocus required />
-              </FormControl>
-              <FormControl sx={{ padding: "0.5rem" }}>
-                <Checkbox label="Done?" color="success" />
-              </FormControl>
-              <Button type="submit">Submit</Button>
-            </Stack>
+      <Stack spacing={2} mt={2} sx={{minWidth:"50%",backgroundColor:'white'}}>
+      <Typography level="h2" textAlign={"center"} sx={{textTransform: 'uppercase', margin: "10px"}}>{tenantName}'s Todos</Typography>
+      <div style={{justifyContent: "center", display:"flex", margin:"10px"}}>
+      <MUILink component={ReactLink} to="/tenants" justifyContent={"center"}>(Back to tenant selection) </MUILink>
+      </div>
+      <List variant="plain" size="lg">
+      <ListItem>
+          <form name="newtodo" id="newtodo" onSubmit={(event) => {
+            event.preventDefault();
+            const title = event.currentTarget.elements[1].value; // first element is the button
+            handleAdd(title);
+          }} style={{display:'flex', flexWrap:'nowrap', width:'100%'}}>
+            <IconButton type="submit"> <Add /> </IconButton>
+            <Input placeholder="Add task" variant="outlined" id="todo" name="todo" sx={{width:'80%'}}></Input>
           </form>
-        </ModalDialog>
-      </Modal>
-    </div>
+        </ListItem>
+        <ListDivider />
+        { (() => {
+            if (!todos) {
+              return <Typography level="h2" textAlign={"center"}> Loading...</Typography>
+            } else if (!Array.isArray(todos)) {
+              return <Typography level="h2" textAlign={"center"}> Error: {todos.message}</Typography>
+            } else {
+            return todos.map((todo) => (
+              <div key={todo.title} style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>
+              {/* TODO: todos need IDs */}
+              <ListItem key={todo.title}>
+              <Checkbox 
+                  label={<Typography>{todo.title}</Typography>}
+                  checked={todo.complete} 
+                  onChange={() => completeTodo(tenantId, todo.title, !todo.complete)}/>
+              </ListItem>
+              <ListDivider />
+            </div>
+          ))}})()}
+        </List>
+      </Stack>
   );
+
+  function handleAdd (title) {
+    fetch(`/api/tenants/${tenantId}/todos`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title,
+        complete: false, // new todos are always incomplete
+      }),
+    })
+      .then((resp) => resp.json())
+      .then((datum) => {
+        console.log(datum);
+        var curr_state = todos.slice(); // need to copy so React will notice state change
+        curr_state.push({
+          title: datum[0].title,
+          id: datum[0].id,
+          complete: datum[0].complete,
+        });
+        setTodos(curr_state);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  function completeTodo(tenantId, title, complete) {
+    fetch(`/api/tenants/${tenantId}/todos`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title,
+        complete: complete,
+      }),
+    })
+      .then((resp) => {
+        console.log(resp);
+        if (resp.status !== 200) {
+          throw new Error("Error: " + resp.message + " " + resp.status);
+        }
+        var curr_state = todos.slice(); // need to copy so React will notice state change
+        curr_state.forEach((todo) => {
+          if (todo.title === title) {
+            todo.complete = complete;
+          }
+        });
+        setTodos(curr_state);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 }

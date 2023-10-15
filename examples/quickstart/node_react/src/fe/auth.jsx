@@ -1,29 +1,31 @@
 import React from 'react';
 import Stack from '@mui/joy/Stack';
-import Input from '@mui/joy/Input';
+import styles from './css/page.module.css'
+import Cookies from 'js-cookie';
+import { useSearchParams } from 'react-router-dom';
 
 import { GoogleLoginButton, NileProvider} from '@theniledev/react';
 
+
+
 export default function Auth() {
-  const [newTenant, setNewTenant] = React.useState();
-  // TODO: Replace with env vars (or better yet, remove cause Nile SDK has the right default)
+  // handle logouts here
+  const [searchParams, setSearchParams] = useSearchParams();
+  if (searchParams.has('logout')) {
+    Cookies.remove('authData');
+  }
+
   return (
     <NileProvider basePath={process.env.REACT_APP_NILE_API}>
-      <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
-        <Stack gap={2}>
-          <Stack>
-            <Input
-              size="sm"
-              placeholder="Tenant Name"
-              onChange={(event) => setNewTenant(event.target.value)}
-            />
-          </Stack>
+    <div>
+      <div className={styles.center}>
+        <Stack gap={5} sx={{ maxWidth: '40rem' }} alignItems={'center'}>
           <GoogleLoginButton
             workspace={process.env.REACT_APP_NILE_WORKSPACE}
             database={process.env.REACT_APP_NILE_DATABASE}
-            newTenantName={newTenant}
           />
         </Stack>
+      </div>
       </div>
     </NileProvider>
   )

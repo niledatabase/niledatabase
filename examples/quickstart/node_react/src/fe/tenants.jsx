@@ -1,21 +1,39 @@
 import React from "react";
+import styles from './css/page.module.css';
 import Card from "@mui/joy/Card";
 import Typography from "@mui/joy/Typography";
-import AspectRatio from "@mui/joy/AspectRatio";
 import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
+import Divider from '@mui/joy/Divider';
 import Stack from "@mui/joy/Stack";
 import ModalDialog from "@mui/joy/ModalDialog";
 import Modal from "@mui/joy/Modal";
 import Add from "@mui/icons-material/Add";
 import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
-import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
+import List from '@mui/joy/List';
+import ListItem from '@mui/joy/ListItem';
+import ListItemButton from '@mui/joy/ListItemButton';
+import Cookies from 'js-cookie'
+import { Link, useNavigate } from "react-router-dom";
 
-function App() {
+function getUserName() {
+  const raw = Cookies.get('authData');
+  const authData = raw ? JSON.parse(decodeURIComponent(raw)) : null;
+  if (authData) {
+    const bestName = authData.tokenData?.name || authData.tokenData?.email || authData.tokenData?.given_name || authData.tokenData?.family_name;
+    return bestName;
+  } else {
+    return null;
+  }
+}
+
+function Tenants() {
   const [data, setData] = React.useState(null);
   const [open, setOpen] = React.useState(false);
+  const [userName, setUserName] = React.useState(null);
+
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     fetch("/api/tenants")
@@ -23,20 +41,16 @@ function App() {
       .then((data) => setData(data));
   }, []);
 
+  React.useEffect(() => {
+    setUserName(getUserName());
+  }, []);
+
   return (
-    <CssVarsProvider>
-      <Stack
-        spacing={5}
-        margin={5}
-        direction="row"
-        flexWrap="wrap"
-        useFlexGap
-        maxWidth={800}
-      >
-        <Typography level="h1" color="primary">
-          Choose a tenant or create a new one
-        </Typography>
-        <Button
+    <div className={styles.center}>
+      <Card  variant="outlined">
+      <CardContent > 
+        <div style={{display: 'flex', justifyContent: 'center', padding:'1rem'}}>
+          <div><Button
           variant="solid"
           size="md"
           color="primary"
@@ -46,39 +60,34 @@ function App() {
           sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
         >
           CREATE TENANT
-        </Button>
-      </Stack>
-      <Stack spacing={5} margin={5} direction="row" flexWrap="wrap" useFlexGap>
-        {!data
-          ? "Loading..."
-          : data.map((item) => (
-              <Card key={item.id}>
-                <div>
-                  <Typography level="title-lg">{item.name}</Typography>
-                </div>
-                <AspectRatio sx={{ width: 300 }}>
-                  <img
-                    src={`https://picsum.photos/seed/${item.name}/300/300`}
-                    loading="lazy"
-                    alt=""
-                  />
-                </AspectRatio>
-                <CardContent orientation="horizontal">
-                  <Button
-                    variant="solid"
-                    size="md"
-                    color="primary"
-                    aria-label={item.name}
-                    sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
-                    component="a"
-                    href={`/api/tenants/${item.id}/todos`}
-                  >
-                    Explore
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+        </Button></div>
 
+        </div>
+      </CardContent>
+      <Divider>or</Divider>
+      <CardContent>
+      <Typography level="title-md" textAlign="center" padding={2}>Use Existing Tenant</Typography>
+      <List variant="outlined">
+        { (() => { 
+            if (!data) {
+              return <Typography level="h2" textAlign={"center"}> Loading...</Typography>
+            } else if (!Array.isArray(data)) {
+              return <Typography level="h2" textAlign={"center"}> Error: {data.message}</Typography>
+            } else {
+              return data.map((tenant) => (
+                <ListItem key={tenant.id}>
+                  <ListItemButton component={Link} to={`/tenants/${tenant.id}/todos`}>{tenant.name}</ListItemButton>
+                </ListItem>
+                ))
+            }
+          })()
+        }
+      </List>
+      </CardContent>
+      <CardContent>
+                <Typography level="body-md" textAlign="center"> You are logged in as {userName} <Link to="/?logout">(Logout)</Link></Typography>
+          </CardContent>
+      </Card>
         <Modal open={open} onClose={() => setOpen(false)}>
           <ModalDialog
             aria-labelledby="basic-modal-dialog-title"
@@ -86,7 +95,7 @@ function App() {
             sx={{ maxWidth: 500 }}
           >
             <Typography id="basic-modal-dialog-title" level="h2">
-              Create new tenant
+              Name
             </Typography>
             <form
               onSubmit={(event) => {
@@ -107,6 +116,7 @@ function App() {
                     data.push({ name: tenant, id: datum.id });
                     setData(data);
                     setOpen(false);
+                    navigate(`/tenants/${datum.id}/todos`);
                   })
                   .catch((error) => {
                     console.error(error);
@@ -116,7 +126,6 @@ function App() {
             >
               <Stack spacing={2}>
                 <FormControl>
-                  <FormLabel>Name</FormLabel>
                   <Input autoFocus required />
                 </FormControl>
                 <Button type="submit">Submit</Button>
@@ -124,9 +133,8 @@ function App() {
             </form>
           </ModalDialog>
         </Modal>
-      </Stack>
-    </CssVarsProvider>
+      </div>
   );
 }
 
-export default App;
+export default Tenants;
