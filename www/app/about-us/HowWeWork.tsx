@@ -27,9 +27,7 @@ const rows = [
   { title: "Strive for World-Class", 
     content: (
       <>
-        Content Content Content Content Content Content
-        Content Content Content Content Content Content
-        Content Content Content Content Content Content
+        We want to create a company that is among the best in the world. We believe that excellence can only be achieved by constantly pushing ourselves to meet high standards in everything we do. Even the smallest details are given immense attention and we work tirelessly to ensure that they are perfect. We know what greatness looks like and we are relentless in our pursuit of it.
       </>
     ),
   },
