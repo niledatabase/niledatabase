@@ -1,4 +1,4 @@
-import Heading from '../_components/common/Heading';
+import Heading from "../_components/common/Heading";
 
 export default function OurStory() {
   return (
