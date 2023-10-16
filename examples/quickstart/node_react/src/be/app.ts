@@ -42,9 +42,7 @@ app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 
 // endpoint to create new tenants
 app.post("/api/tenants", async (req, res) => {
-  console.log("body: " + JSON.stringify(req.body));
   const { name } = req.body;
-  console.log("tenant name:" + JSON.stringify(name));
 
   if (!name) {
     res.status(400).json({
@@ -61,7 +59,6 @@ app.post("/api/tenants", async (req, res) => {
       name: name,
     });
     const tenant = await createTenantResponse.json();
-    console.log("new tenant: " + JSON.stringify(tenant));
     res.json(tenant);
   } catch (error: any) {
     console.log("error creating tenant: " + error.message);
@@ -74,7 +71,6 @@ app.post("/api/tenants", async (req, res) => {
 // return list of tenants for current user
 app.get("/api/tenants", async (req, res) => {
   const userId = getUserId(req.cookies);
-  console.log("user id: " + userId);
   let tenants:any = [];
 
   try {
@@ -84,11 +80,10 @@ app.get("/api/tenants", async (req, res) => {
         .select("tenants.id","tenants.name")
         .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
         .where("tenant_users.user_id", "=", userId);
-      console.log("tenants: " + JSON.stringify(tenants));
       res.json(tenants);
     }; // if we don't have a user id, return empty array. TODO: Will be better to redirect to login page
   } catch (error: any) {
-    console.log(error.message);
+    console.log("error listing tenants: " + error.message);
     res.status(500).json({
       message: "Internal Server Error",
     });
@@ -115,7 +110,7 @@ app.get("/api/tenants/:tenantId", async (req, res) => {
     const tenant = await tenantResponse.json();
     res.json(tenant);
   } catch (error: any) {
-    console.log(error.message);
+    console.log("error getting tenant details: " + error.message);
     res.status(500).json({
       message: "Internal Server Error",
     });
@@ -138,7 +133,7 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
 
     res.json(newTodo);
   } catch (error: any) {
-    console.log(error.message);
+    console.log("error adding task: "+ error.message);
     res.status(500).json({
       message: "Internal Server Error",
     });
@@ -147,19 +142,15 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
 
 // update tasks for tenant - note that we don't handle partial updates here
 // TODO: This should be for specific todo ID, not all todos with same title
-app.put("/api/tenants/:tenantId/todos", async (req, res) => {
-  const userId = getUserId(req.cookies);
-  
+// TODO: Use Nile User Context which will validate that the user has permission to update this tenant
+app.put("/api/tenants/:tenantId/todos", async (req, res) => {  
   try {
     const { tenantId } = req.params;
     const { title, complete } = req.body;
-    await nile.db.raw(`
-    set nile.tenant_id = '${tenantId}'; 
-    set nile.user_id = '${userId}';
-    update todos set complete='${complete}' where title='${title}';`)
+    await nile.db("todos").update('complete', complete).where("tenant_id", tenantId).andWhere("title", title);
     res.sendStatus(200);
   } catch(error: any) {
-    console.log(error.message);
+    console.log("error updating tasks: " + error.message);
     res.status(500).json({
       message: "Internal Server Error",
     });
@@ -178,7 +169,7 @@ app.get("/api/tenants/:tenantId/todos", async (req, res) => {
     const todos = await nile.db("todos").select("*").where("tenant_id", tenantId).orderBy("title");
     res.json(todos);
   } catch (error: any) {
-    console.log(error.message);
+    console.log( "error listing tasks: " + error.message);
     res.status(500).json({
       message: "Internal Server Error",
     });
@@ -191,7 +182,7 @@ app.get("/insecure/all_todos", async (req, res) => {
     const todos = await nile.db("todos").select("*");
     res.json(todos);
   } catch (error: any) {
-    console.log(error.message);
+    console.log("error in insecure endpoint: " + error.message);
     res.status(500).json({
       message: "Internal Server Error",
     });
@@ -217,7 +208,7 @@ app.post('/auth/handler', async (req, res) => {
     res.cookie('authData', JSON.stringify(cookieData), {secure: process.env.NODE_ENV !== 'development'});
     res.redirect(303, fe_url+"/tenants"); // once user is authenticated, redirect to tenants page
   } catch (e: any) {
-    console.log("error while handling auth response:" + e.message);
+    console.log("error while handling auth response: " + e.message);
     res.cookie('errorData', JSON.stringify(e.message), {secure: process.env.NODE_ENV !== 'development'});
     res.redirect(303,fe_url+"/"); // if there is an error, redirect to home page
   }
