@@ -13,9 +13,7 @@ const rows = [
   { title: "Mission Driven", 
     content: (
       <>
-        Content Content Content Content Content Content
-        Content Content Content Content Content Content
-        Content Content Content Content Content Content
+        Our mission is to enable developers to accelerate the next billion modern SaaS. We want to build the best platform on the planet that helps us to achieve our mission. This requires intense focus, and we cannot allow anything else to distract us. We will make incremental progress every day towards our mission.
       </> 
     ),
   },
