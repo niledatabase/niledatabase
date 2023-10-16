@@ -85,7 +85,7 @@ function Tenants() {
       </List>
       </CardContent>
       <CardContent>
-                <Typography level="body-md" textAlign="center"> You are logged in as {userName} <Link to="/?logout">(Logout)</Link></Typography>
+                <Typography level="body-md" textAlign="center"> You are logged in as {userName} </Typography>
           </CardContent>
       </Card>
         <Modal open={open} onClose={() => setOpen(false)}>
