@@ -14,8 +14,8 @@ export const nile = Server({
   db: {
     connection: {
       host: process.env.NILE_DB_HOST,
-      user: process.env.NILE_USER,
-      password: process.env.NILE_PASSWORD,
+      user: process.env.NILE_DB_USER,
+      password: process.env.NILE_DB_PASSWORD,
     },
   },
 });
