@@ -20,7 +20,7 @@ export default function Virtualization() {
               <Image src="/icons/lock.svg" alt="lock" width={24} height={25} />
             </div>
             <div className="opacity-60 text-[18px] text-center lg:text-left">
-              100% secure with no cross tenant access
+              100% secure with no cross-tenant access
             </div>
           </div>
           <div className="flex  flex-col lg:flex-row gap-5 items-center">
