@@ -17,8 +17,7 @@ Nile is the first serverless Postgres purpose-built for modern SaaS. We are in p
 - Fully integrated ready to use UI components
 - Extensive support for popular Postgres extensions
 
-<img width="1438" alt="Screen Shot 2023-10-15 at 5 49 49 PM" src="https://github.com/niledatabase/niledatabase/assets/2977624/3cdcd694-be3f-41ed-ab5e-bbc6753fe845">
-
+<img width="1437" alt="Screen Shot 2023-10-15 at 5 52 35 PM" src="https://github.com/niledatabase/niledatabase/assets/2977624/be1c2140-ef66-48ca-9df9-b74c0033877e">
 
 ## Documentation
 
