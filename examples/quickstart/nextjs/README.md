@@ -10,7 +10,7 @@ This template shows how to use Nile with NextJS 13 for a multi-tenant todo list 
 
 ### 1. Create a new database
 
-Signup to Nile - https://console.thenile.dev and choose "Yes, let's get started". Follow the prompts to create a new workspace and a database.
+Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already and choose "Yes, let's get started". Follow the prompts to create a new workspace and a database.
 
 ### 2. Create todo table
 
@@ -82,7 +82,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 If all went well, your browser should show you the first page in the app, asking you to login or sign up.
 
-After you sign up as a user of this example app, you'll be able to see this user by going back to [Nile Console](https://console.thenile.dev) and running `select * from users` in the query editor.
+After you sign up as a user of this example app, you'll be able to see this user by going back to Nile Console and running `select * from users` in the query editor.
 
 Login with the new user, and you can create a new tenant and add tasks for the tenant. You can see the changes in your Nile database by running
 

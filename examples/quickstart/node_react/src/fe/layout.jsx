@@ -65,7 +65,7 @@ export default function Layout({children}) {
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
-          <Link overlay href="https://console.thenile.dev"  target="_blank" rel="noopener">
+          <Link overlay href="https://thenile.dev"  target="_blank" rel="noopener">
           <NileLogo width="120px" height="44.4px" />
             </Link>
           <CardContent>
