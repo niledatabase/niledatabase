@@ -2,17 +2,40 @@ import Heading from "../_components/common/Heading";
 
 const rows = [
   {}, // placeholder for header
-  { title: "Love Developers", content: <>Content</> },
-  { title: "Missing Driven", content: <>Content</> },
-  { title: "First Principles Thinking", content: <>Content</> },
-  { title: "Strive for Worldclass", content: <>Content</> },
-  {
-    title: "Intensively Execute",
+  { 
+    title: "Love Developers",
     content: (
       <>
-        Content Content Content Content Content Content Content Content Content
-        Content Content Content Content Content Content Content Content Content
-        Content Content Content Content Content
+        We have a maniacal focus on developer experience. We take great pride in ensuring developers love building their applications on Nile. Developers have a high bar, and we will strive to exceed their expectations every time. This is achieved by showing love, being honest, and taking great pains to make the developer’s life easy. 
+      </>
+    ), 
+  },
+  { title: "Mission Driven", 
+    content: (
+      <>
+        Our mission is to enable developers to accelerate the next billion modern SaaS. We want to build the best platform on the planet that helps us to achieve our mission. This requires intense focus, and we cannot allow anything else to distract us. We will make incremental progress every day towards our mission.
+      </> 
+    ),
+  },
+  { title: "First Principles Thinking", 
+    content: (
+      <>
+        To build something truly groundbreaking, you need to break every past assumption about a problem and try to build solutions from first principles. The assumptions of the past may not hold in the new world. We must break down problems into their fundamental truths and build upon them. We challenge ourselves constantly to be first principles thinkers.
+      </> 
+    ),
+  },
+  { title: "Strive for World-Class", 
+    content: (
+      <>
+        We want to create a company that is among the best in the world. We believe that excellence can only be achieved by constantly pushing ourselves to meet high standards in everything we do. Even the smallest details are given immense attention and we work tirelessly to ensure that they are perfect. We know what greatness looks like and we are relentless in our pursuit of it.
+      </>
+    ),
+  },
+  {
+    title: "Intensely Execute and Iterate",
+    content: (
+      <>
+        Iteration velocity has a significant impact. We move fast, build high-quality products, and iterate rapidly on user feedback. We will optimize for quick feedback loops and learn. We are not done when we ship v0. We persist in improving the experience and the value we deliver. Every next version we ship will make the product significantly better.
       </>
     ),
   },

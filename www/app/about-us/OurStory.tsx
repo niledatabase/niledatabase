@@ -15,29 +15,13 @@ export default function OurStory() {
         <div className="w-1/2">
           <div className="p-10">
             <p className="mb-2 opacity-60">
-              In the heart of Silicon Valley, a group of visionary engineers and
-              tech enthusiasts came together with a singular mission: to
-              revolutionize the way SaaS products are built and scaled. They
-              recognized the limitations of existing database solutions and felt
-              a strong urge to challenge the status quo. Thus, NileDatabase was
-              born.
+            Over the course of six years at Confluent, we transformed the company from being primarily on-premise to a globally successful SaaS company. Through this journey, we learned the challenges of building a SaaS product and what it takes to launch and scale to thousands of customers and tens of thousands of users.
             </p>
             <p className="mb-2 opacity-60">
-              NileDatabase wasn't just another database solution; it was a
-              promise. A promise to build from first principles, ensuring that
-              every line of code and every algorithm was optimized for the
-              modern SaaS landscape. The team believed that by reimagining the
-              database infrastructure, they could accelerate the development and
-              advancement of the next billion SaaS products.
+            Most of our problems in building SaaS were around data, and yet the database had little to offer. We spent significant time managing tenants, building organization and user management, supporting different tenant deployment models, storing and moving data to different parts of the organization, tracking usage and billing individual customers, and handling many other SaaS problems.
             </p>
             <p className="mb-2 opacity-60">
-              As days turned into nights and nights into days, the NileDatabase
-              team worked tirelessly, refining their product and ensuring it met
-              the highest standards of performance, scalability, and security.
-              They knew that their solution had the potential to be a
-              game-changer, not just for established tech giants but for budding
-              startups and entrepreneurs eager to make their mark in the SaaS
-              world.
+            We became fixated on the idea of making the process of building and scaling SaaS products easier. This obsession drove us to create Nile, with the goal of building something truly wonderful that could help thousands of developers create world-class SaaS products.
             </p>
           </div>
         </div>
