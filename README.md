@@ -6,7 +6,7 @@
 
 # Nile
 
-Nile is the first serverless Postgres purpose-built for modern SaaS. We are in private beta currently. You can get an invite by signing up at https://www.thenile.dev/
+**Nile is the first serverless Postgres purpose-built for modern SaaS. We are in private beta currently. You can get an invite by signing up at https://www.thenile.dev/**
 
 - Built in tenant virtualization
 - Drop in tenant and user management
