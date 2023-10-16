@@ -20,9 +20,7 @@ const rows = [
   { title: "First Principles Thinking", 
     content: (
       <>
-        Content Content Content Content Content Content
-        Content Content Content Content Content Content
-        Content Content Content Content Content Content
+        To build something truly groundbreaking, you need to break every past assumption about a problem and try to build solutions from first principles. The assumptions of the past may not hold in the new world. We must break down problems into their fundamental truths and build upon them. We challenge ourselves constantly to be first principles thinkers.
       </> 
     ),
   },
