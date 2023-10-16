@@ -10,7 +10,7 @@ This template shows how to use Nile in NodeJS and React for a multi-tenant todo 
 
 ### 1. Create a new database
 
-Signup to Nile - https://console.thenile.dev and choose "Yes, let's get started". Follow the prompts to create a new workspace and a database.
+Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already and choose "Yes, let's get started". Follow the prompts to create a new workspace and a database.
 
 ### 2. Create todo table
 

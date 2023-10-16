@@ -8,7 +8,7 @@ This example demonstrates how to integrate an application with Nile to authentic
 
 ## Setup & Run
 
-- If you haven't already, you need to create a database: Signup to Nile - https://console.thenile.dev and choose "Yes, let's get started". Follow the prompts to create a new workspace and a database.
+- Start by creating a database: Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already and choose "Yes, let's get started". Follow the prompts to create a new workspace and a database.
 
 - Install dependencies with `yarn install` or `npm install`. 
 
@@ -26,4 +26,4 @@ This example demonstrates how to integrate an application with Nile to authentic
 
 - Open [http://localhost:3000](http://localhost:3000) to try the app.
 
-- You can now signup and login via the example app. Then you can switch back to [Nile Console](https://console.thenile.dev) and see the users in your database with `select * from users`
+- You can now signup and login via the example app. Then you can switch back to Nile Console and see the users in your database with `select * from users`
