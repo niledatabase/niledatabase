@@ -4,7 +4,7 @@ export default function Elastic() {
   return (
     <div className="flex w-full flex-col">
       <div className="flex flex-col text-center align-middle flex-1 mb-[87px]">
-        <Heading text="Effortlessly Elastic" />
+        <Heading text="Effortlessly elastic" />
       </div>
       <div className="flex flex-col lg:flex-row items-center">
         <div className="lg:w-1/2 relative z-[11]">

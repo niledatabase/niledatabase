@@ -1,14 +1,12 @@
-```typescript
-const nile = new Server.default(serverConfig);
-const { user_id } = await nile.api.users.createUser({
-  email: "someone@somecompany.com",
-  password: "notsafetohardcode",
-});
-// add user to tenant
-await nile.db.insert({ tenant_id, user_id }).into("tenant_users");
+```sql
+CREATE TABLE wiki_documents(
+    tenant_id uuid,
+    id integer,
+    embedding vector(3)
+    );
 
-const tenantUsers = await nile
-  .db("tenant_users")
-  .withTenant(tenantId)
-  .where("auth_oidc", true);
+INSERT INTO wiki_documents (tenant_id,id, embedding)
+VALUES ('018ade1a-7843-7e60-9686-714bab650998',1, '[1,2,3]');
+
+SELECT 1 - (embedding <=> '[3,1,2]') AS cosine_similarity FROM wiki_documents;
 ```

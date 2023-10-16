@@ -74,7 +74,7 @@ export default function Hero() {
           />
           <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base  whitespace-nowrap">
             Seamless Tenant-Aware <br />
-            AI-native Applications
+            AI-Native Applications
           </div>
         </div>
         <div className="flex flex-col gap-3 items-center px-4 py-5 ">

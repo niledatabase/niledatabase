@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function CustomerDashboards() {
   return (
     <div className="flex-1">
-      <Heading text="Instant Customer Dashboards" />
+      <Heading text="Instant customer dashboards" />
       <div className="overflow-hidden mt-12">
         <Image
           src="/dashboard.png"
