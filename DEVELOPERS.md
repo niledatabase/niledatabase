@@ -1,15 +1,64 @@
-# Getting started
+# Contributing to Nile
 
-This repo is a work in progress, and as such, this file may become out of date quickly. Feel free to update this file as needed. It may be out of date at the time of reading.
+## Getting started
 
-### Local development
+Thank you for your interest in contributing to [Nile](https://thenile.dev). We appreciate it and looking forward to working together.
 
-Turborepo is used to manage and run this monorepo.
+Here are a few ways you can contribute:
 
-1. Install the dependencies in the root of the repo.
-2. Run the desired application
-   available commands
-   ```sh
-   npm run dev:docs
-   npm run dev:www
-   ```
+- Open issues to report any questions or concerns related to Nile, its documentation, templates or examples.
+- Respond to issues with advice or suggestions.
+- Participate in coversations in [our Discord](https://discord.com/invite/8UuBB84tTy) and [Github discussions](https://github.com/orgs/niledatabase/discussions)
+- Contribute fixes and improvements to the docs and examples in this repository
+- Contribute new documents and examples
+
+It is important to us that contributing to Nile will be a pleasant experience, if necessary, please refer to our [code of conduct](./CODE_OF_CONDUCT.md) for participation guidelines.
+
+## Contributing Code and Documentation
+
+### Cloning the repository
+
+1. Start by forking this repository. Either from github UI or their CLI:
+
+    ```bash
+    gh repo fork https://github.com/niledatabase/niledatabase
+    ```
+
+2. Then clone your fork:
+
+    ```bash
+    git clone https://github.com/<github_username>/niledatabase.git
+    cd niledatabase
+    ```
+
+### Directory Structure
+
+To get started, it helps to be familiar with how this repository is layed out. Here's an overview of the key directories:
+
+```bash
+/
+|-- www
+   |-- app/docs
+   |-- app/templates
+|-- examples
+    |-- quickstart
+        |-- <language>
+    |-- user_management
+        |-- <feature>
+           |-- <language>
+```
+
+As we can see, we have separate directories for our [website](./www/DEVELOPERS.md), [documentation](./www/app/docs//README.md), [templates](./www/app/templates/README.md) and [examples](./examples/README.md). Each is a bit different, so they each have a separate developer guide with more details on how to make changes and validate them locally.
+
+### Creating a Pull Request
+
+Once you have changes to contribute, please open a pull request from a branch in your fork to this repository, and we will review it promptly.
+
+To make the review process more pleasant, please make sure the pull request includes:
+
+- The type of change you are making (correcting a mistake in the docs, new document, fix an issue in an example, enhance an example)
+- The intent of the change. What was the situation before the change, what is the situation after and why is the new situation better.
+
+## Discuss with the Community
+
+If you are stuck, need help, or wondering if a certain contribution will be welcome, please ask! Either in [our Discord](https://discord.com/invite/8UuBB84tTy) or [Github discussions](https://github.com/orgs/niledatabase/discussions)
