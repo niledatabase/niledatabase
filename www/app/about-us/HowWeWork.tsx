@@ -35,9 +35,7 @@ const rows = [
     title: "Intensely Execute and Iterate",
     content: (
       <>
-        Content Content Content Content Content Content Content Content Content
-        Content Content Content Content Content Content Content Content Content
-        Content Content Content Content Content
+        Iteration velocity is crucial to our success. We move fast, always striving to create high-quality products and iterate rapidly on user feedback. We optimize for quick feedback loops and learn from them. We are never satisfied with shipping just the first version; we persist in improving the experience and the value we deliver. Every next version we release will make the product significantly better, and we are committed to achieving that goal.
       </>
     ),
   },
