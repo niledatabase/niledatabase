@@ -35,7 +35,7 @@ const rows = [
     title: "Intensely Execute and Iterate",
     content: (
       <>
-        Iteration velocity is crucial to our success. We move fast, always striving to create high-quality products and iterate rapidly on user feedback. We optimize for quick feedback loops and learn from them. We are never satisfied with shipping just the first version; we persist in improving the experience and the value we deliver. Every next version we release will make the product significantly better, and we are committed to achieving that goal.
+        Iteration velocity has a significant impact. We move fast, build high-quality products, and iterate rapidly on user feedback. We will optimize for quick feedback loops and learn. We are not done when we ship v0. We persist in improving the experience and the value we deliver. Every next version we ship will make the product significantly better.
       </>
     ),
   },
