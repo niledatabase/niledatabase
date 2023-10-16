@@ -1,8 +1,8 @@
-"use client";
-import GradientButton from "@/app/_components/common/GradientButton";
-import Subscribe from "./Subscribe";
-import { useCallback, useState } from "react";
-import { ContactForm } from "@/app/contact-us/_components/Contact";
+'use client';
+import GradientButton from '@/app/_components/common/GradientButton';
+import Subscribe from './Subscribe';
+import { useCallback, useState } from 'react';
+import { ContactForm } from '@/app/contact-us/_components/Contact';
 
 export default function Footer() {
   const [show, setShow] = useState(false);
