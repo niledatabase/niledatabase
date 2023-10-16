@@ -7,13 +7,16 @@ import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import './css/globals.css'
 import styles from './css/page.module.css'
+import { Route, useLocation, Link as RLink } from "react-router-dom";
 import { ReactComponent as NileLogo } from './images/nile_logo.svg';
 import { ReactComponent as NodeLogoRight } from './images/node_logo_r.svg';
 import { ReactComponent as NodeLogoBottom } from './images/node_logo_b.svg';
 
 export default function Layout({children}) {
+  console.log(window.location.pathname)
   return (
         <main className={styles.main} fontFamily="Inter">
+        <div style={{display: 'flex', flexDirection:'column', width:'100%'}}>
         <div className={styles.description}>
         <div>
           <NodeLogoRight width="133.5px" height="82px" />
@@ -29,6 +32,15 @@ export default function Layout({children}) {
           </a>
         </div>
       </div>
+      {
+      window.location.pathname === "/" ? null : 
+            <div className={styles.logout}>
+              <Link href="/?logout" style={{color:"black"}}>[ Logout ]</Link>
+            </div>
+      }
+      </div>
+
+
       <div>
         <Stack> 
         <Typography level="h2">Yet Another Todo Application</Typography>
@@ -41,7 +53,7 @@ export default function Layout({children}) {
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
                 }}>
-          <Link overlay href="https://niledatabase-www.vercel.app/docs/getting-started/languages/nextjs" target="_blank" rel="noopener">
+          <Link overlay href="https://niledatabase-www.vercel.app/docs/getting-started/languages/node" target="_blank" rel="noopener">
           <NodeLogoBottom width="115.6px" height="70.8px"/>
             </Link>
           <CardContent>

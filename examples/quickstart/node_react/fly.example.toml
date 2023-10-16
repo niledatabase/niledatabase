@@ -1,0 +1,78 @@
+# fly.toml app configuration file generated for demo-todo-node on 2023-09-11T17:04:30-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "demo-todo-node"
+primary_region = "sjc"
+
+[build]
+
+[env]
+  DANGEROUSLY_DISABLE_HOST_CHECK = "true"
+	NILE_DB_USER = 
+	NILE_DB_PASSWORD = 
+	NILE_WORKSPACE = 
+	NILE_DATABASE = 
+	NILE_DB_HOST = "db.thenile.dev" 
+	NILE_API_BASE_PATH = "https://api.thenile.dev" 
+	FE_URL = "https://demo-todo-node.fly.dev" 
+	REACT_APP_NILE_DATABASE = 
+	REACT_APP_NILE_WORKSPACE = 
+	REACT_APP_NILE_API = "https://api.thenile.dev"
+
+# Frontend serving
+[[services]]
+  http_checks = []
+  internal_port = 3006
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
+
+# Node backend
+[[services]]
+  http_checks = []
+  internal_port = 3000
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 3001
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 3000
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
