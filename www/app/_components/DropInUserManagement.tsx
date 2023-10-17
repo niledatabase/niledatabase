@@ -26,7 +26,7 @@ export default function DropInUserManagement() {
               />
             </div>
             <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base z-10 relative">
-            Per tenant user management controls. Enable tenant level overrides for different authentication methods
+              Tenant-level user authentication and authorization controls
             </div>
           </div>
         </div>
@@ -41,8 +41,7 @@ export default function DropInUserManagement() {
               />
             </div>
             <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base z-10 relative">
-              User and auth tables built in and synced automatically for
-              application development
+              Manage organizations, user invites, and multiple membership support
             </div>
           </div>
         </div>
@@ -57,7 +56,7 @@ export default function DropInUserManagement() {
               />
             </div>
             <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base z-10 relative">
-              Built in basic auth, social logins and enterprise support
+              Built-in basic auth, social logins, and enterprise login support
             </div>
           </div>
         </div>
@@ -72,7 +71,7 @@ export default function DropInUserManagement() {
               />
             </div>
             <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base z-10 relative">
-              Support for Google, Github, OKTA and more
+              Postgres as the source of truth for user data
             </div>
           </div>
         </div>
