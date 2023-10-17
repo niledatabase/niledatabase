@@ -17,7 +17,7 @@ export default function Hero() {
             priority
           />
           <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base whitespace-nowrap">
-            Built-in Multi <br />
+            Built-In Multi <br />
             Tenant Virtualization
           </div>
         </div>
@@ -31,7 +31,7 @@ export default function Hero() {
             priority
           />
           <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base  whitespace-nowrap">
-            Drop in User <br />
+            Drop-In User <br />
             Management
           </div>
         </div>
@@ -45,8 +45,8 @@ export default function Hero() {
             priority
           />
           <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base  whitespace-nowrap">
-            Onboard Once,
-            <br /> Distribute Globally
+            Onboard Tenants Once,
+            <br /> Place Globally
           </div>
         </div>
         <div className="flex flex-col gap-3 items-center px-4 py-5 ">
@@ -73,8 +73,8 @@ export default function Hero() {
             priority
           />
           <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base  whitespace-nowrap">
-            Artificial <br />
-            Intelligence
+            Seamless Tenant-Aware <br />
+            AI-Native Applications
           </div>
         </div>
         <div className="flex flex-col gap-3 items-center px-4 py-5 ">

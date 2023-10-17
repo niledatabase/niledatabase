@@ -50,7 +50,7 @@ export default function Pricing() {
                       priority
                     />
                   </button>
-                  <div className="opacity-60 text-lg">Limit of 2 databases</div>
+                  <div className="opacity-60 text-lg">Limit of 10 databases</div>
                   <div className="bg-divider-bold h-px my-6" />
                   <div className="text-lg flex gap-4 flex-col">
                     <div className="opacity-60">
@@ -58,9 +58,11 @@ export default function Pricing() {
                     </div>
                     <ul className="flex gap-4 flex-col">
                       <Bullet>Unlimited API Requests</Bullet>
-                      <Bullet>Up to 50 Tenants</Bullet>
                       <Bullet>Unlimited Users</Bullet>
-                      <Bullet>Up to 20GB of Storage</Bullet>
+                      <Bullet>Up to 100 Tenants per workspace</Bullet>
+                      <Bullet>2B row reads/ month per workspace</Bullet>
+                      <Bullet>20M row writes/ month per workspace</Bullet>
+                      <Bullet>Up to 10GB of Storage per workspace</Bullet>
                       <Bullet>Social & Enterprise Auth</Bullet>
                       <Bullet>Community & email support</Bullet>
                     </ul>
@@ -81,17 +83,15 @@ export default function Pricing() {
                 <div className="my-[24px]">
                   <ContactUs />
                 </div>
-                <div className="opacity-60 text-lg">Limit of 2 databases</div>
+                <div className="opacity-60 text-lg">Unlimited databases</div>
                 <div className="bg-divider-bold h-px my-6" />
                 <div className="text-lg flex gap-4 flex-col">
                   <div className="opacity-60">Start your application with:</div>
                   <ul className="flex gap-4 flex-col">
-                    <Bullet>Unlimited API Requests</Bullet>
-                    <Bullet>Up to 50 Tenants</Bullet>
-                    <Bullet>Unlimited Users</Bullet>
-                    <Bullet>Up to 20GB of Storage</Bullet>
-                    <Bullet>Social & Enterprise Auth</Bullet>
-                    <Bullet>Community & email support</Bullet>
+                    <Bullet>Custom pricing</Bullet>
+                    <Bullet>Volume discounts</Bullet>
+                    <Bullet>Unlimited connections</Bullet>
+                    <Bullet>Private Slack channel</Bullet>
                   </ul>
                 </div>
               </div>

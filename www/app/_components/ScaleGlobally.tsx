@@ -5,7 +5,7 @@ export default function DropInUserManagement() {
   return (
     <div className="flex w-full flex-col">
       <div className="flex flex-col text-center align-middle flex-1 mb-[87px]">
-        <Heading text="Onboard Tenants once, Place globally" />
+        <Heading text="Onboard tenants once, place globally" />
       </div>
       <div className="flex flex-col md:flex-row gap-4 justify-center">
         <div className="py-5 px-4 md:w-1/3 itemDivider flex flex-row gap-5">

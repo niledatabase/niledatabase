@@ -8,7 +8,7 @@ export default function Virtualization() {
     <div className="relative">
       <div className="absolute top-0 left-0 right-0 bottom-0 bg-visualization bg-no-repeat bg-[size:200%] md:bg-[size:100%] blur-lg -z-10 bg-[center_top_2rem]"></div>
       <div className="relative pb-10 mt-20">
-        <Heading text="Built-in Tenant virtualization"></Heading>
+        <Heading text="Built-in tenant virtualization"></Heading>
       </div>
       <div className="flex flex-col xl:flex-row justify-between mb-20 bg-[#000] rounded-[20px] p-[56px] lg:m-0 md:mx-6">
         <div className="flex gap-8 flex-col lg:pr-6 mb-4">
@@ -20,7 +20,7 @@ export default function Virtualization() {
               <Image src="/icons/lock.svg" alt="lock" width={24} height={25} />
             </div>
             <div className="opacity-60 text-[18px] text-center lg:text-left">
-              100% secure with no cross tenant access
+              100% secure with no cross-tenant access
             </div>
           </div>
           <div className="flex  flex-col lg:flex-row gap-5 items-center">
@@ -57,19 +57,19 @@ export default function Virtualization() {
       <div className="flex-row w-full pb-6 hidden lg:flex">
         <div className="w-1/2 px-[20px]">
           <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3">
-            Tenant Level Backups
+            Tenant level backups
           </div>
         </div>
         <div className="w-1/2 px-[20px]">
           <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3">
-            Performance Isolation Across Tenants
+            Performance isolation across tenants
           </div>
         </div>
       </div>
       <div className="flex flex-col lg:flex-row justify-around">
         <div className="lg:w-1/2 px-[20px] flex flex-col gap-6">
           <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3 block lg:hidden text-center">
-            Tenant Level Backups
+            Tenant level backups
           </div>
           <div className="flex flex-row gap-5 items-center">
             <div className="z-10 relative icon rounded-[20px] flex justify-center">
@@ -119,8 +119,8 @@ export default function Virtualization() {
         </div>
         <div className="lg:w-1/2 px-[20px] flex flex-col gap-6">
           <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3 block lg:hidden text-center mt-10">
-            Performance Isolation
-            <br /> Across Tenants
+            Performance isolation
+            <br /> across tenants
           </div>
 
           <div className="flex flex-row gap-5 items-center">
