@@ -73,8 +73,8 @@ export default function ArtificialIntelligence() {
                 height={32}
               />
             </div>
-            <div className="bg-gradient-text bg-clip-text text-transparent leading-normal text-xl z-10 relative">
-              Build intelligent SaaS applications with any machine learning
+            <div className="bg-gradient-white bg-clip-text text-transparent leading-normal text-xl z-10 relative">
+              Build intelligent SaaS applications with any large language
               models of your choice (OpenAI, Hugging Face and more)
             </div>
           </div>
