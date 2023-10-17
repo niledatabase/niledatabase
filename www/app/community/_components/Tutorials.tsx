@@ -7,8 +7,8 @@ export default function Tutorials() {
   return (
     <>
       <Heading text="Learn from our Tutorials" textAlign="left" />
-      <div className="text-xl opacity-60 text-center lg:text-left mb-10">
-        Get started with one of the hundreds of Nile tutorials
+      <div className="text-xl opacity-80 text-center lg:text-left mb-10">
+        Get started with one of our Nile tutorials
       </div>
 
       <div className="flex justify-center mt-10">

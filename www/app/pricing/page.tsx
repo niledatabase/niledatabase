@@ -15,7 +15,7 @@ function Bullet({ children }: { children: string | JSX.Element }) {
         height={8}
         priority
       />
-      <span className="opacity-60">{children}</span>
+      <span className="opacity-80">{children}</span>
     </li>
   );
 }
@@ -46,7 +46,7 @@ export default function Pricing() {
                   </div>
                   <div className="bg-divider-bold h-px my-6" />
                   <div className="text-lg flex gap-4 flex-col">
-                    <div className="opacity-60">
+                    <div className="opacity-80">
                       Start your application with:
                     </div>
                     <ul className="flex gap-4 flex-col">
@@ -76,10 +76,10 @@ export default function Pricing() {
                 <div className="my-[24px]">
                   <ContactUs />
                 </div>
-                <div className="opacity-60 text-lg">Unlimited databases</div>
+                <div className="opacity-80 text-lg">Unlimited databases</div>
                 <div className="bg-divider-bold h-px my-6" />
                 <div className="text-lg flex gap-4 flex-col">
-                  <div className="opacity-60">Start your application with:</div>
+                  <div className="opacity-80">Start your application with:</div>
                   <ul className="flex gap-4 flex-col">
                     <Bullet>Custom pricing</Bullet>
                     <Bullet>Volume discounts</Bullet>

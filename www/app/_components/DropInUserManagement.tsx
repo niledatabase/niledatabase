@@ -25,8 +25,8 @@ export default function DropInUserManagement() {
                 height={72}
               />
             </div>
-            <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base z-10 relative">
-              Authentication across tables, events and metrics
+            <div className="opacity-80 text-[18px] bg-clip-text text-center z-10 relative">
+              Tenant-level user authentication and authorization controls
             </div>
           </div>
         </div>
@@ -40,24 +40,8 @@ export default function DropInUserManagement() {
                 height={72}
               />
             </div>
-            <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base z-10 relative">
-              User and auth tables built in and synced automatically for
-              application development
-            </div>
-          </div>
-        </div>
-        <div className="py-4 px-5 md:w-1/2 lg:w-1/4">
-          <div className="py-4 px-5 itemDivider">
-            <div className="flex flex-row relative align-middle justify-center mb-3">
-              <Image
-                src="/frame-4.svg"
-                alt="lightning bolt"
-                width={236}
-                height={72}
-              />
-            </div>
-            <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base z-10 relative">
-              Built in basic auth, social logins and enterprise support
+            <div className="opacity-80 text-[18px] bg-clip-text text-center z-10 relative">
+              Manage organizations, user invites, and multiple membership support
             </div>
           </div>
         </div>
@@ -71,8 +55,23 @@ export default function DropInUserManagement() {
                 height={72}
               />
             </div>
-            <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base z-10 relative">
-              Support for Google, Github, OKTA and more
+            <div className="opacity-80 text-[18px] bg-clip-text text-center z-10 relative">
+              Built-in basic auth, social logins, and enterprise login support
+            </div>
+          </div>
+        </div>
+        <div className="py-4 px-5 md:w-1/2 lg:w-1/4">
+          <div className="py-4 px-5 itemDivider">
+            <div className="flex flex-row relative align-middle justify-center mb-3">
+              <Image
+                src="/frame-4.svg"
+                alt="lightning bolt"
+                width={236}
+                height={72}
+              />
+            </div>
+            <div className="opacity-80 text-[18px] bg-clip-text text-center z-10 relative">
+              Postgres as the source of truth for user data
             </div>
           </div>
         </div>

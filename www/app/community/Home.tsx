@@ -48,7 +48,7 @@ export default async function Home() {
       <div className="flex gap-4 flex-col">
         <Heading text="Templates" textAlign="left" />
         <div className="flex flex-row justify-between pb-10 w-full">
-          <div className="text-xl opacity-60 w-1/2">
+          <div className="text-xl opacity-80 w-1/2">
             Get started with one of the hundreds of Nile templates built by the
             community. Contribute your own template to help others.
           </div>

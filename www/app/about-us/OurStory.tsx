@@ -14,14 +14,15 @@ export default function OurStory() {
         </div>
         <div className="lg:w-1/2">
           <div className="p-10">
-            <p className="mb-2 opacity-60">
+
+            <p className="mb-2 opacity-80">
               Over the course of six years at Confluent, we transformed the
               company from being primarily on-premise to a globally successful
               SaaS company. Through this journey, we learned the challenges of
               building a SaaS product and what it takes to launch and scale to
               thousands of customers and tens of thousands of users.
             </p>
-            <p className="mb-2 opacity-60">
+            <p className="mb-2 opacity-80">
               Most of our problems in building SaaS were around data, and yet
               the database had little to offer. We spent significant time
               managing tenants, building organization and user management,
@@ -30,7 +31,7 @@ export default function OurStory() {
               billing individual customers, and handling many other SaaS
               problems.
             </p>
-            <p className="mb-2 opacity-60">
+            <p className="mb-2 opacity-80">
               We became fixated on the idea of making the process of building
               and scaling SaaS products easier. This obsession drove us to
               create Nile, with the goal of building something truly wonderful

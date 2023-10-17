@@ -17,7 +17,7 @@ export default function Elastic() {
                 height={40}
               />
             </div>
-            <div className="bg-gradient-text bg-clip-text text-transparent leading-normal text-xl z-10 relative">
+            <div className="bg-gradient-white bg-clip-text text-transparent leading-normal text-xl z-10 relative">
               Truly serverless - &quot;Think queries, not machines&quot;
             </div>
           </div>
@@ -30,7 +30,7 @@ export default function Elastic() {
                 height={40}
               />
             </div>
-            <div className="bg-gradient-text bg-clip-text text-transparent leading-normal text-xl z-10 relative">
+            <div className="bg-gradient-white bg-clip-text text-transparent leading-normal text-xl z-10 relative">
               Pay for what you use
             </div>
           </div>
@@ -43,7 +43,7 @@ export default function Elastic() {
                 height={40}
               />
             </div>
-            <div className="bg-gradient-text bg-clip-text text-transparent leading-normal text-xl z-10 relative">
+            <div className="bg-gradient-white bg-clip-text text-transparent leading-normal text-xl z-10 relative">
               Scales to zero with instant availability
             </div>
           </div>
@@ -56,7 +56,7 @@ export default function Elastic() {
                 height={40}
               />
             </div>
-            <div className="bg-gradient-text bg-clip-text text-transparent leading-normal text-xl z-10 relative">
+            <div className="bg-gradient-white bg-clip-text text-transparent leading-normal text-xl z-10 relative">
               Scale to millions of tenants
             </div>
           </div>
@@ -69,7 +69,7 @@ export default function Elastic() {
                 height={40}
               />
             </div>
-            <div className="bg-gradient-text bg-clip-text text-transparent leading-normal text-xl z-10 relative">
+            <div className="bg-gradient-white bg-clip-text text-transparent leading-normal text-xl z-10 relative">
               Limitless connections as you grow
             </div>
           </div>

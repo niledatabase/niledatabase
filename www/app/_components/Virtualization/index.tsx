@@ -19,7 +19,7 @@ export default function Virtualization() {
             <div className="z-10 relative icon rounded-[20px] flex justify-center">
               <Image src="/icons/lock.svg" alt="lock" width={24} height={25} />
             </div>
-            <div className="opacity-60 text-[18px] text-center lg:text-left">
+            <div className="opacity-80 text-[18px] text-center lg:text-left">
               100% secure with no cross-tenant access
             </div>
           </div>
@@ -32,7 +32,7 @@ export default function Virtualization() {
                 height={24}
               />
             </div>
-            <div className="opacity-60 text-[18px] text-center lg:text-left">
+            <div className="opacity-80 text-[18px] text-center lg:text-left">
               No more struggle with row level security
             </div>
           </div>
@@ -45,7 +45,7 @@ export default function Virtualization() {
                 height={25}
               />
             </div>
-            <div className="opacity-60 text-[18px] text-center lg:text-left">
+            <div className="opacity-80 text-[18px] text-center lg:text-left">
               Securely share data across tenants using shared tables
             </div>
           </div>
@@ -80,7 +80,7 @@ export default function Virtualization() {
                 height={25}
               />
             </div>
-            <div className="opacity-60 text-[18px]">
+            <div className="opacity-80 text-[18px]">
               Instant restoration from backups for your customers
             </div>
           </div>
@@ -93,7 +93,7 @@ export default function Virtualization() {
                 height={24}
               />
             </div>
-            <div className="opacity-60 text-[18px]">
+            <div className="opacity-80 text-[18px]">
               No hacky or buggy scripts to restore specific customers
             </div>
           </div>
@@ -106,7 +106,7 @@ export default function Virtualization() {
                 height={25}
               />
             </div>
-            <div className="opacity-60 text-[18px]">
+            <div className="opacity-80 text-[18px]">
               Manage different backup strategies per tenant
             </div>
           </div>
@@ -132,7 +132,7 @@ export default function Virtualization() {
                 height={24}
               />
             </div>
-            <div className="opacity-60 text-[18px]">
+            <div className="opacity-80 text-[18px]">
               Hot tenants have no impact on other tenants
             </div>
           </div>
@@ -146,7 +146,7 @@ export default function Virtualization() {
                 height={24}
               />
             </div>
-            <div className="opacity-60 text-[18px]">
+            <div className="opacity-80 text-[18px]">
               Performance insights per tenant
             </div>
           </div>
@@ -160,7 +160,7 @@ export default function Virtualization() {
                 height={24}
               />
             </div>
-            <div className="opacity-60 text-[18px]">
+            <div className="opacity-80 text-[18px]">
               Predictable performance for each tenant
             </div>
           </div>
