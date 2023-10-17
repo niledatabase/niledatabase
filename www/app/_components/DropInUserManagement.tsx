@@ -26,7 +26,7 @@ export default function DropInUserManagement() {
               />
             </div>
             <div className="bg-gradient-white bg-clip-text text-transparent text-center text-base z-10 relative">
-              Authentication across tables, events and metrics
+            Per tenant user management controls. Enable tenant level overrides for different authentication methods
             </div>
           </div>
         </div>
