@@ -18,7 +18,8 @@ export default function DropInUserManagement() {
             />
           </div>
           <div className="text-xl opacity-60 relative z-10">
-            A single database that spans the globe
+            Place isolated tenant databases globally with the user experience, 
+            operational simplicity, and cost efficiency of a single database
           </div>
         </div>
         <div className="py-5 px-4 md:w-1/3  itemDivider flex flex-row gap-5">
@@ -31,7 +32,7 @@ export default function DropInUserManagement() {
             />
           </div>
           <div className="text-xl opacity-60 relative z-10">
-            Place tenants in any region
+            Store tenants’s data closer to their application for low latency and satisfy compliance requirements
           </div>
         </div>
         <div className="py-5 px-4 md:w-1/3 itemDivider flex flex-row gap-5">
@@ -44,7 +45,7 @@ export default function DropInUserManagement() {
             />
           </div>
           <div className="text-xl opacity-60 relative z-10">
-            We deploy, we route, we manage
+            We deploy, we route, and we manage. Seamless schema migrations, incremental rollouts, and client-side routing.
           </div>
         </div>
       </div>
