@@ -87,7 +87,7 @@ export default function ArtificialIntelligence() {
                 height={32}
               />
             </div>
-            <div className="bg-gradient-text bg-clip-text text-transparent leading-normal text-xl z-10 relative">
+            <div className="bg-gradient-white bg-clip-text text-transparent leading-normal text-xl z-10 relative">
               Store vector embeddings per tenant or share embeddings across
               tenants
             </div>
@@ -101,7 +101,7 @@ export default function ArtificialIntelligence() {
                 height={40}
               />
             </div>
-            <div className="bg-gradient-text bg-clip-text text-transparent leading-normal text-xl z-10 relative">
+            <div className="bg-gradient-white bg-clip-text text-transparent leading-normal text-xl z-10 relative">
               Deploy embeddings closer to your customers for latency or
               compliance
             </div>
