@@ -65,7 +65,7 @@ module.exports = {
         blue: "linear-gradient(162deg, #FF9F30 -0.84%, #B1AFE5 48.53%, #2295B7 100%);",
         fader: "linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, #000 50%);",
         "gradient-white":
-          "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.5) 100%)",
+          "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.7) 100%)",
       },
     },
   },

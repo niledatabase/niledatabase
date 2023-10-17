@@ -11,7 +11,7 @@ export default function Subscribe() {
     <div className="relative ">
       <input
         ref={ref}
-        className={`bg-[#141414] border border-[#373737] rounded-[20px] text-[17px] py-5 px-10 lg:min-w-[500px] mb-3 placeholder:opacity-40 focus:outline-[orange]`}
+        className={`bg-[#141414] border border-[#373737] rounded-[20px] text-[17px] py-5 px-10 lg:min-w-[500px] mb-3 placeholder:opacity-40 focus:outline-none`}
         placeholder="Email Address"
       />
       <div className="absolute lg:right-[8px] lg:top-[9px] right-[32px]">
@@ -48,7 +48,7 @@ export default function Subscribe() {
             />
           </div>
           <div
-            className={`absolute whitespace-nowrap ${
+            className={`absolute whitespace-nowrap pointer-events-none ${
               submitted ? "opacity-100" : "opacity-0"
             } trasition-opacity delay-500 duration-500`}
           >

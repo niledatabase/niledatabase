@@ -45,7 +45,7 @@ export default async function Footer({ className }: { className?: string }) {
           </div>
           <div className="flex flex-row flex-wrap gap-20 p-2">
             <div className="flex flex-col gap-5">
-              <Link href="/docs" className="text-[16px]">
+              <Link href="/docs" className="text-[16px] opacity-70">
                 Documentation
               </Link>
               <Link

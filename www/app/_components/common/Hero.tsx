@@ -20,7 +20,9 @@ export function HeroText(props: OverrideClasses & { title?: string }) {
 
 export function HeroBottom() {
   return (
-    <div className={"w-[320px] lg:w-[784px] flex flex-col items-center"}>
+    <div
+      className={"w-[320px] lg:w-[784px] flex flex-col items-center mx-auto"}
+    >
       <div className="px-4 lg:px-0 mt-32">
         <Footer />
       </div>
