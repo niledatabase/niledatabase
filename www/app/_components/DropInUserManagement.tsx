@@ -25,7 +25,7 @@ export default function DropInUserManagement() {
                 height={72}
               />
             </div>
-            <div className="opacity-60 text-[18px] bg-clip-text text-transparent text-center text-base z-10 relative">
+            <div className="opacity-60 text-[18px] bg-clip-text text-center z-10 relative">
               Tenant-level user authentication and authorization controls
             </div>
           </div>
