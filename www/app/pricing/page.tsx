@@ -3,6 +3,7 @@ import Container from "../_components/common/Container";
 import PageHeader from "../_components/common/PageHeader";
 import FAQ from "./_components/FAQ";
 import ContactUs from "./_components/ContactUs";
+import JoinWaitlist from "./_components/JoinWaitlist";
 
 function Bullet({ children }: { children: string | JSX.Element }) {
   return (
@@ -28,7 +29,7 @@ export default function Pricing() {
         color="white"
       />
       <div className="flex w-full mt-20 justify-center">
-        <div className="flex flex-col lg:flex-row w-full justify-center lg:gap-0 gap-2 items-center">
+        <div className="flex flex-col lg:flex-row w-full justify-center lg:gap-0 gap-2 items-start">
           <div className="md:w-1/2 flex lg:justify-end">
             <div className="mr-2">
               <div className="grayBorder rounded-[20px] lg:min-w-[392px]">
@@ -39,18 +40,10 @@ export default function Pricing() {
                   <div className="bg-gradient-text bg-clip-text text-transparent text-[24px] leading-[32px] w-fit">
                     $0/month
                   </div>
-                  <button className="flex flex-row gap-2 text-[16px] gradientButton my-[24px] leading-[24px] after:rounded-[12px] px-1 w-full !justify-between">
-                    <span>Join the waitlist</span>
-                    <Image
-                      className="invert"
-                      src="/icons/arrow.svg"
-                      alt="arrow"
-                      width={25}
-                      height={30}
-                      priority
-                    />
-                  </button>
-                  <div className="opacity-60 text-lg">Limit of 10 databases</div>
+                  <JoinWaitlist />
+                  <div className="opacity-60 text-lg">
+                    Limit of 10 databases
+                  </div>
                   <div className="bg-divider-bold h-px my-6" />
                   <div className="text-lg flex gap-4 flex-col">
                     <div className="opacity-60">

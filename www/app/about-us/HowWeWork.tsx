@@ -70,21 +70,21 @@ export default function HowWeWork() {
   return (
     <>
       <Heading text="How We Work" />
-      <div className="relative">
-        <div className="absolute top-0 -left-[30%] right-[50%] bottom-0 -z-10">
+      <div className="relative self-start min-w-[100vw] lg:min-w-fit overflow-scroll  lg:overflow-visible">
+        <div className="hidden lg:block absolute top-0 -left-[30%] right-[50%] bottom-0 -z-10">
           <div className="bg-orangeBlur absolute top-0 left-0 right-0 bottom-0 bg-[center_left] bg-[size:100%] no-repeat blur-3xl "></div>
           <div className="relative left-[16%] w-1/2 bg-orangeBlurText bg-clip-text text-transparent font-mono text-[12px] leading-[18px]">
             {Text}
           </div>
         </div>
-        <div className="absolute top-0 -right-[30%] left-[50%] bottom-0 -z-10">
+        <div className="hidden lg:block absolute top-0 -right-[30%] left-[50%] bottom-0 -z-10">
           <div className="bg-blueBlur absolute top-0 left-0 right-0 bottom-0 bg-[center_left] bg-[size:100%] no-repeat blur-3xl"></div>
           <div className="relative -right-[32%] w-1/2 bg-blueBlurText bg-clip-text text-transparent font-mono text-[12px] leading-[18px]">
             {Text}
           </div>
         </div>
-        <div className="py-2 px-2.5 border border-gray rounded-md bg-[#000]">
-          <div className="table bg-divider">
+        <div className="py-2 px-2.5 border border-gray rounded-md bg-[#000] w-screen lg:w-auto overflow-y-scroll">
+          <div className="table bg-divider min-w-[1000px]">
             {rows.map((row, idx) => {
               if (idx === 0) {
                 return (
@@ -110,32 +110,28 @@ export default function HowWeWork() {
               if (idx === rows.length - 1) {
                 return (
                   <div key={row.title} className="flex-row table-row">
-                    <div className="table-cell bg-[#000] -translate-x-[1px] border-gray border-b rounded-bl-[4px] gapFiller-right p-4">
+                    <div className="table-cell bg-[#000] -translate-x-[1px] border-gray border-b rounded-bl-[4px] gapFiller-right p-4 align-top">
                       <span className="opacity-40">{idx}</span>
                     </div>
-                    <div className="table-cell bg-[#000] border-gray border-b text-[24px] whitespace-nowrap p-4">
-                      <span className="opacity-50">{row.title}</span>
+                    <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4  align-top">
+                      {row.title}
                     </div>
-                    <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right rounded-br-[4px] p-4">
-                      <span className="opacity-50">{row.content}</span>
+                    <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right rounded-br-[4px] p-4  align-top">
+                      {row.content}
                     </div>
                   </div>
                 );
               }
               return (
                 <div key={row.title} className="flex-row table-row">
-                  <div className="table-cell bg-[#000] -translate-x-[1px] border-gray gapFiller-right border-b p-4">
+                  <div className="table-cell bg-[#000] -translate-x-[1px] border-gray gapFiller-right border-b p-4 align-top">
                     <span className="opacity-40">{idx}</span>
                   </div>
-                  <div className="table-cell bg-[#000] border-gray border-b text-[24px] whitespace-nowrap p-4">
-                    <span className={`opacity-${100 - 10 * idx}`}>
-                      {row.title}
-                    </span>
+                  <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4 align-top">
+                    {row.title}
                   </div>
-                  <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right p-4">
-                    <span className={`opacity-${100 - 10 * idx}`}>
-                      {row.content}
-                    </span>
+                  <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right p-4 align-top">
+                    {row.content}
                   </div>
                 </div>
               );

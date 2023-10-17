@@ -16,32 +16,49 @@ export default function Navigation({ className }: { className?: string }) {
   return (
     <>
       <NavMenu open={open} />
-      <div
-        className={`flex flex-row flex-1 w-screen sticky top-0 z-30 navBlur ${className}`}
-      >
-        <div className="flex flex-row items-center justify-between px-10 lg:px-28 flex-1 lg:h-auto h-[76px]">
-          <div className="items-center flex lg:block lg:items-start lg:w-44">
-            <Link href="/">
-              <Image
-                src="/logo.svg"
-                alt="Nile Logo"
-                width={80}
-                height={30}
-                priority
-                className="m-auto scale-[1.3] lg:m-0 lg:scale-100 lg:translate-y-0"
-              />
-            </Link>
-          </div>
-          <MobileNav open={open} toggleOpen={toggleOpen} />
-
-          <div className="hidden lg:flex flex-row">
-            <div className="flex gap-8 py-5 px-2.5">
-              <Links />
+      <div className={`w-screen sticky top-0 z-30 navBlur ${className ?? ""}`}>
+        <div className="text-center p-2 bg-orange w-full text-[16px] text-[black] flex flex-row gap-1 items-center justify-center">
+          Nile is in private beta.{" "}
+          <Link
+            href="/blog/launch"
+            className="underline flex flex-row hover:opacity-70"
+          >
+            Learn more
+            <Image
+              className="invert -ml-1"
+              src="/icons/arrow.svg"
+              alt="arrow"
+              width={25}
+              height={30}
+              priority
+            />
+          </Link>
+        </div>
+        <div className="flex flex-col lg:items-center justify-between px-4 pb-0 2xl:px-24 container mx-auto">
+          <div className="flex flex-row items-center justify-between w-full lg:h-auto h-[76px]">
+            <div className="items-center flex lg:block lg:items-start lg:w-44">
+              <Link href="/">
+                <Image
+                  src="/logo.svg"
+                  alt="Nile Logo"
+                  width={80}
+                  height={30}
+                  priority
+                  className="m-auto scale-[1.3] translate-x-[10px] lg:m-0 lg:scale-100 lg:translate-y-0"
+                />
+              </Link>
             </div>
-          </div>
-          <div className="hidden lg:show lg:flex flex-row">
-            <div className="flex flex-row gap-4">
-              <GithubCta />
+            <MobileNav open={open} toggleOpen={toggleOpen} />
+
+            <div className="hidden lg:flex flex-row">
+              <div className="flex gap-8 py-5 px-2.5">
+                <Links className="font-semibold" />
+              </div>
+            </div>
+            <div className="hidden lg:show lg:flex flex-row">
+              <div className="flex flex-row gap-4">
+                <GithubCta />
+              </div>
             </div>
           </div>
         </div>

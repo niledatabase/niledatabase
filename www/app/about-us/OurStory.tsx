@@ -5,14 +5,14 @@ export default function OurStory() {
     <>
       <Heading text="Our story" />
       <div className="flex flex-col md:flex-row">
-        <div className="w-1/2 flex">
+        <div className="lg:w-1/2 flex">
           <div className="p-10 flex justify-center align-middle w-full h-full">
             <div className="h-full w-full border border-gray rounded-lg p-1">
               <div className="bg-gray rounded-lg w-full h-full"></div>
             </div>
           </div>
         </div>
-        <div className="w-1/2">
+        <div className="lg:w-1/2">
           <div className="p-10">
             <p className="mb-2 opacity-60">
               Over the course of six years at Confluent, we transformed the

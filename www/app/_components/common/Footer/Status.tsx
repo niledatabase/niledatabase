@@ -86,7 +86,7 @@ export default async function Status() {
   const text = getText(status);
 
   return (
-    <div className="mt-40 flex flex-row gap-4 items-center pb-10">
+    <div className="mt-40 flex flex-row gap-4 items-center pb-10 px-4">
       {color && <div className={variants[color]}></div>}
       <div className="text-[#A1A1AA]">
         <Link href="https://nile.instatus.com/" target="_blank">
