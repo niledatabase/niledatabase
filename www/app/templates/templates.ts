@@ -4,7 +4,7 @@ export const NextJSQuickstart: Template = {
   name: "NextJS application with Nile",
   description: "Learn about Nile concepts from a Todo app in NextJS",
   author: "Nile",
-  imageSrc: "/templates/TodoApp.png",
+  imageSrc: "/templates/NextJSTodoApp.png",
   demoUrl: "https://nextjs-quickstart-omega.vercel.app/",
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/nextjs/README.md",
@@ -72,7 +72,7 @@ export const NodeJSQuickstart: Template = {
   // who made it
   author: "Nile",
   // the location of the thumbnail. could be in /public/templates, or a CDN
-  imageSrc: "/templates/nad.jpg",
+  imageSrc: "/templates/NodeTodoApp.png",
   demoUrl: "https://demo-todo-node.fly.dev",
   // the readmeURL should be publically accessible.
   // It should also be the real github url, not the raw readme
