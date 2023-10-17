@@ -90,10 +90,10 @@ export default function Search() {
           className={`bg-transparent w-full border-none text-lg leading-10 focus:outline-none py-[1px] px-[20px] text-left`}
           spellCheck={false}
         >
-          <span className="opacity-60">Search</span>
+          <span className="opacity-80">Search</span>
         </button>
         <div className="bg-lightGray rounded-[8px] p-1.5 mr-1">
-          <span className="opacity-60"> ⌘K</span>
+          <span className="opacity-80"> ⌘K</span>
         </div>
       </div>
       {showSearch && (

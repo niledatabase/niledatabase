@@ -25,7 +25,7 @@ export default function DropInUserManagement() {
                 height={72}
               />
             </div>
-            <div className="opacity-60 text-[18px] bg-clip-text text-center z-10 relative">
+            <div className="opacity-80 text-[18px] bg-clip-text text-center z-10 relative">
               Tenant-level user authentication and authorization controls
             </div>
           </div>
@@ -40,7 +40,7 @@ export default function DropInUserManagement() {
                 height={72}
               />
             </div>
-            <div className="opacity-60 text-[18px] bg-clip-text text-center z-10 relative">
+            <div className="opacity-80 text-[18px] bg-clip-text text-center z-10 relative">
               Manage organizations, user invites, and multiple membership support
             </div>
           </div>
@@ -55,7 +55,7 @@ export default function DropInUserManagement() {
                 height={72}
               />
             </div>
-            <div className="opacity-60 text-[18px] bg-clip-text text-center z-10 relative">
+            <div className="opacity-80 text-[18px] bg-clip-text text-center z-10 relative">
               Built-in basic auth, social logins, and enterprise login support
             </div>
           </div>
@@ -70,7 +70,7 @@ export default function DropInUserManagement() {
                 height={72}
               />
             </div>
-            <div className="opacity-60 text-[18px] bg-clip-text text-center z-10 relative">
+            <div className="opacity-80 text-[18px] bg-clip-text text-center z-10 relative">
               Postgres as the source of truth for user data
             </div>
           </div>

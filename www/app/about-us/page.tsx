@@ -19,7 +19,7 @@ export default function Home() {
             width={150}
             height={151}
           />
-          <div className="text-lg opacity-60">Our Mission</div>
+          <div className="text-lg opacity-80">Our Mission</div>
           <PageHeader
             title="Enable developers to accelerate the next billion modern SaaS"
             titleClasses="lg:!text-[56px]"

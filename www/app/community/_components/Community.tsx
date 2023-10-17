@@ -57,7 +57,7 @@ export default function Tutorials() {
         </div>
       </Heading>
       <div className="flex justify-center">
-        <div className="text-xl opacity-60 w-2/3 flex justify-center text-center">
+        <div className="text-xl opacity-80 w-2/3 flex justify-center text-center">
           Watch the SaaS podcast to learn numerous SaaS problems and solutions
           tackled by hundreds of SaaS companies from the cummunity
         </div>
