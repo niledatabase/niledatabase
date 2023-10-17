@@ -12,7 +12,7 @@ function ChatBlurbContent() {
           width={24}
           height={24}
         />
-        <div className="bg-gradient-white bg-clip-text text-transparent text-lg">
+        <div className="opacity-60 text-[18px] bg-clip-text">
           Conversational UI modules integrated end to end
         </div>
       </div>
@@ -23,7 +23,7 @@ function ChatBlurbContent() {
           width={24}
           height={24}
         />
-        <div className="bg-gradient-white bg-clip-text text-transparent text-lg">
+        <div className="opacity-60 text-[18px] bg-clip-text">
           Embeddings and metadata in one system
         </div>
       </div>
@@ -35,7 +35,7 @@ function ChatBlurbContent() {
           width={24}
           height={24}
         />
-        <div className="bg-gradient-white bg-clip-text text-transparent text-lg">
+        <div className="opacity-60 text-[18px] bg-clip-text">
           Effortlessly scale your embeddings
         </div>
       </div>
@@ -73,7 +73,7 @@ export default function ArtificialIntelligence() {
                 height={32}
               />
             </div>
-            <div className="bg-gradient-white bg-clip-text text-transparent leading-normal text-xl z-10 relative">
+            <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
               Build intelligent SaaS applications with any large language
               models of your choice (OpenAI, Hugging Face and more)
             </div>
@@ -87,7 +87,7 @@ export default function ArtificialIntelligence() {
                 height={32}
               />
             </div>
-            <div className="bg-gradient-white bg-clip-text text-transparent leading-normal text-xl z-10 relative">
+            <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
               Store vector embeddings per tenant or share embeddings across
               tenants
             </div>
@@ -101,7 +101,7 @@ export default function ArtificialIntelligence() {
                 height={40}
               />
             </div>
-            <div className="bg-gradient-white bg-clip-text text-transparent leading-normal text-xl z-10 relative">
+            <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
               Deploy embeddings closer to your customers for latency or
               compliance
             </div>
@@ -207,7 +207,7 @@ export default function ArtificialIntelligence() {
                 width={24}
                 height={24}
               />
-              <div className="bg-gradient-white bg-clip-text text-transparent text-lg">
+              <div className="opacity-60 text-[18px] bg-clip-text">
                 Delight your customers with world class AI + SaaS experience
               </div>
             </div>
@@ -218,7 +218,7 @@ export default function ArtificialIntelligence() {
                 width={24}
                 height={24}
               />
-              <div className="bg-gradient-white bg-clip-text text-transparent text-lg">
+              <div className="opacity-60 text-[18px] bg-clip-text">
                 Get more value from your product by increasing productivity
               </div>
             </div>
@@ -230,7 +230,7 @@ export default function ArtificialIntelligence() {
                 width={24}
                 height={24}
               />
-              <div className="bg-gradient-white bg-clip-text text-transparent text-lg">
+              <div className="opacity-60 text-[18px] bg-clip-text">
                 Personalized experience  
               </div>
             </div>
