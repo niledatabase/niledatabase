@@ -16,7 +16,7 @@ export default function Hero() {
             sizes={sizes}
             priority
           />
-          <div className="opacity-20 bg-clip-text text-center text-base whitespace-nowrap">
+          <div className="opacity-80 bg-clip-text text-center text-base whitespace-nowrap">
             Built-In Multi <br />
             Tenant Virtualization
           </div>
