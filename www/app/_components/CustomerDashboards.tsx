@@ -39,7 +39,7 @@ export default function CustomerDashboards() {
               />
             </div>
             <div className="opacity-60 text-[18px] bg-clip-text">
-              Dive deeper into specific customers using per-tenant metrics
+              Dive into specific customers using per-tenant metrics
             </div>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function CustomerDashboards() {
               />
             </div>
             <div className="opacity-60 text-[18px] bg-clip-text">
-              Configure social and enterprise login settings for each customer
+              Configure authentication settings per customer with single click
             </div>
           </div>
         </div>
