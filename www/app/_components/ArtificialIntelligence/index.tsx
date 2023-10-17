@@ -60,7 +60,7 @@ export default function ArtificialIntelligence() {
   return (
     <div className="flex w-full flex-col">
       <div className="flex flex-col text-center align-middle flex-1 mb-[87px]">
-        <Heading text=" Full stack generative AI experience" />
+        <Heading text="Seamless tenant-aware AI-native applications" />
       </div>
       <div className="flex flex-col lg:flex-row place-items-center rounded-[24px] border border-gray overflow-hidden">
         <div className="flex lg:w-1/2 flex-col">
