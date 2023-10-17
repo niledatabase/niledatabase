@@ -17,8 +17,8 @@ export default function CustomerDashboards() {
           <div className="py-4 px-5 flex flex-row gap-5 items-center">
             <div className="icon rounded-[20px] flex justify-center">
               <Image
-                src="/icons/globe.svg"
-                alt="wireframe globe"
+                src="/icons/growth.svg"
+                alt="wireframe growth"
                 width={41}
                 height={40}
               />
@@ -32,8 +32,8 @@ export default function CustomerDashboards() {
           <div className="py-4 px-5 flex flex-row gap-5 items-center">
             <div className="icon rounded-[20px] flex justify-center">
               <Image
-                src="/icons/pin.svg"
-                alt="wireframe globe"
+                src="/icons/deepdive.svg"
+                alt="wireframe deepdive"
                 width={41}
                 height={40}
               />
@@ -47,7 +47,7 @@ export default function CustomerDashboards() {
           <div className="py-4 px-5 flex flex-row gap-5 items-center">
             <div className="icon rounded-[20px] flex justify-center items-center">
               <Image
-                src="/icons/rocket.svg"
+                src="/icons/manageprofiles.svg"
                 alt="wireframe globe"
                 width={41}
                 height={40}
@@ -63,7 +63,7 @@ export default function CustomerDashboards() {
             <div className="icon rounded-[20px] flex justify-center items-center">
               <Image
                 className="scale-[2]"
-                src="/icons/person.svg"
+                src="/icons/authpertenant.svg"
                 alt="wireframe globe"
                 width={24}
                 height={24}
