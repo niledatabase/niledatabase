@@ -21,7 +21,7 @@ export default function Home() {
           />
           <div className="text-lg opacity-80">Our Mission</div>
           <PageHeader
-            title="Enable developers to accelerate the next billion modern SaaS"
+            title="To enable developers to accelerate the next billion modern SaaS applications"
             titleClasses="lg:!text-[56px]"
           />
           <Divider />

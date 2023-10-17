@@ -1,6 +1,6 @@
 # Getting started
 
-Thank you for looking into contributing to Nile documentation. 
+Thank you for looking into contributing to Nile documentation.
 
 If you haven't yet reviewed our [developer guide](../DEVELOPERS.md), it is worth taking a look. If you are in a hurry, the gist is:
 

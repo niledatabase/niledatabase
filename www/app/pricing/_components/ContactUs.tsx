@@ -11,7 +11,7 @@ export default function ContactUs() {
     setShow(!show);
   }, [show]);
   return (
-    <>
+    <div className="py-[25px]">
       <ContactForm show={show} setShow={setShow} />
       <GradientButton className="w-full" onClick={showModal}>
         <div className="w-full flex flex-row justify-between items-center">
@@ -25,6 +25,6 @@ export default function ContactUs() {
           />
         </div>
       </GradientButton>
-    </>
+    </div>
   );
 }
