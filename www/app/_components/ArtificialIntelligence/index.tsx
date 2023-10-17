@@ -13,7 +13,7 @@ function ChatBlurbContent() {
           height={24}
         />
         <div className="opacity-60 text-[18px] bg-clip-text">
-        Build intelligent SaaS applications with any large language models of your choice (OpenAI, Hugging Face and more)
+        Build intelligent SaaS applications with any large language models of your choice from OpenAI, Hugging Face and more
         </div>
       </div>
       <div className="flex flex-row gap-3">
@@ -24,7 +24,7 @@ function ChatBlurbContent() {
           height={24}
         />
         <div className="opacity-60 text-[18px] bg-clip-text">
-          Build domain specific conversational UIs, chat bots and semantic search products
+          Build domain specific conversational UIs, chatbots and semantic search products
         </div>
       </div>
 
@@ -208,7 +208,7 @@ export default function ArtificialIntelligence() {
                 height={24}
               />
               <div className="opacity-60 text-[18px] bg-clip-text">
-                Delight your customers with world class AI + SaaS experience
+                Store vector embeddings per tenant or share embeddings across tenants
               </div>
             </div>
             <div className="flex flex-row gap-3">
@@ -219,7 +219,7 @@ export default function ArtificialIntelligence() {
                 height={24}
               />
               <div className="opacity-60 text-[18px] bg-clip-text">
-                Get more value from your product by increasing productivity
+              Deploy embeddings closer to your customers for latency or compliance needs
               </div>
             </div>
 
@@ -231,7 +231,7 @@ export default function ArtificialIntelligence() {
                 height={24}
               />
               <div className="opacity-60 text-[18px] bg-clip-text">
-                Personalized experience  
+                Index embeddings and query efficiently
               </div>
             </div>
           </div>
