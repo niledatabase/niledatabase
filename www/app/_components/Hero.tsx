@@ -30,7 +30,7 @@ export default function Hero() {
             sizes={sizes}
             priority
           />
-          <div className="opacity-20 bg-clip-text text-center text-base  whitespace-nowrap">
+          <div className="opacity-80 bg-clip-text text-center text-base  whitespace-nowrap">
             Drop-In User <br />
             Management
           </div>
@@ -44,7 +44,7 @@ export default function Hero() {
             sizes={sizes}
             priority
           />
-          <div className="opacity-20 bg-clip-text text-center text-base  whitespace-nowrap">
+          <div className="opacity-80 bg-clip-text text-center text-base  whitespace-nowrap">
             Onboard Tenants Once,
             <br /> Place Globally
           </div>
@@ -58,7 +58,7 @@ export default function Hero() {
             sizes={sizes}
             priority
           />
-          <div className="opacity-20 bg-clip-text text-center text-base  whitespace-nowrap">
+          <div className="opacity-80 bg-clip-text text-center text-base  whitespace-nowrap">
             Instant Customer <br />
             Dashboards
           </div>
@@ -72,7 +72,7 @@ export default function Hero() {
             sizes={sizes}
             priority
           />
-          <div className="opacity-20 bg-clip-text text-center text-base  whitespace-nowrap">
+          <div className="opacity-80 bg-clip-text text-center text-base  whitespace-nowrap">
             Seamless Tenant-Aware <br />
             AI-Native Applications
           </div>
@@ -86,7 +86,7 @@ export default function Hero() {
             sizes={sizes}
             priority
           />
-          <div className="opacity-20 bg-clip-text text-center text-base  whitespace-nowrap">
+          <div className="opacity-80 bg-clip-text text-center text-base  whitespace-nowrap">
             Effortlessly <br />
             Elastic
           </div>
