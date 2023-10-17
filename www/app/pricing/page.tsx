@@ -40,25 +40,10 @@ export default function Pricing() {
                   <div className="bg-gradient-text bg-clip-text text-transparent text-[24px] leading-[32px] w-fit">
                     $0/month
                   </div>
-
-                  <button className="flex flex-row gap-2 text-[16px] gradientButton my-[24px] leading-[24px] after:rounded-[12px] px-1 w-full !justify-between">
-                    <span>Join the waitlist</span>
-                    <Image
-                      className="invert"
-                      src="/icons/arrow.svg"
-                      alt="arrow"
-                      width={25}
-                      height={30}
-                      priority
-                    />
-                  </button>
-                  <div className="opacity-80 text-lg">Limit of 10 databases</div>
-
                   <JoinWaitlist />
                   <div className="opacity-60 text-lg">
                     Limit of 10 databases
                   </div>
-
                   <div className="bg-divider-bold h-px my-6" />
                   <div className="text-lg flex gap-4 flex-col">
                     <div className="opacity-80">
