@@ -24,7 +24,7 @@ export default function CustomerDashboards() {
               />
             </div>
             <div className="bg-gradient-white bg-clip-text text-transparent text-base">
-              Built in basic auth, social logins and enterprise support
+              Track the growth of customers, users, and queries at all times
             </div>
           </div>
         </div>
@@ -39,7 +39,7 @@ export default function CustomerDashboards() {
               />
             </div>
             <div className="bg-gradient-white bg-clip-text text-transparent text-base">
-              Support for Google, Github, OKTA and more
+              Dive deeper into specific customers using per-tenant metrics
             </div>
           </div>
         </div>
@@ -54,7 +54,7 @@ export default function CustomerDashboards() {
               />
             </div>
             <div className="bg-gradient-white bg-clip-text text-transparent text-base">
-              Authentication across tables, events and metrics
+              Manage user profiles for each tenant right from the dashboard
             </div>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function CustomerDashboards() {
               />
             </div>
             <div className="bg-gradient-white bg-clip-text text-transparent text-base">
-              User and auth tables built in and synced automatically
+              Configure social and enterprise login settings for each customer
             </div>
           </div>
         </div>
