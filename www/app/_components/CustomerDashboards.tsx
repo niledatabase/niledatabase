@@ -70,7 +70,7 @@ export default function CustomerDashboards() {
               />
             </div>
             <div className="opacity-60 text-[18px] bg-clip-text">
-              Configure authentication settings per customer with single click
+              Configure auth settings per customer with single click
             </div>
           </div>
         </div>
