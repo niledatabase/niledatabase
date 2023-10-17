@@ -16,7 +16,7 @@ export default function Hero() {
             sizes={sizes}
             priority
           />
-          <div className="bg-clip-text text-transparent text-center text-base whitespace-nowrap">
+          <div className="bg-clip-text text-center text-base whitespace-nowrap">
             Built-In Multi <br />
             Tenant Virtualization
           </div>
