@@ -49,7 +49,7 @@ export default function DropInUserManagement() {
           <div className="py-4 px-5 itemDivider">
             <div className="flex flex-row relative align-middle justify-center mb-3">
               <Image
-                src="/frame-4.svg"
+                src="/frame-1.svg"
                 alt="lightning bolt"
                 width={236}
                 height={72}
@@ -64,7 +64,7 @@ export default function DropInUserManagement() {
           <div className="py-4 px-5 itemDivider">
             <div className="flex flex-row relative align-middle justify-center mb-3">
               <Image
-                src="/frame-1.svg"
+                src="/frame-4.svg"
                 alt="lightning bolt"
                 width={236}
                 height={72}
