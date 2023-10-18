@@ -7,12 +7,12 @@ export default function Tutorials() {
   return (
     <>
       <Heading text="Learn from our Tutorials" textAlign="left" />
-      <div className="text-xl opacity-80 text-center lg:text-left mb-10">
+      <div className="text-xl opacity-60 text-center lg:text-left mb-10">
         Get started with one of our Nile tutorials
       </div>
 
       <div className="flex justify-center mt-10">
-        <Link href="https://www.youtube.com/@saas-dev">
+        <Link href="https://www.youtube.com/@niledev">
           <GradientButton variant="soft">
             <Image
               src="/icons/tutorials.svg"
