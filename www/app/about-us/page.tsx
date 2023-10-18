@@ -31,8 +31,6 @@ export default function Home() {
       <Divider />
       <OurStory />
       <Divider />
-      <Backers />
-      <Divider />
       <HeroBottom />
     </Container>
   );
