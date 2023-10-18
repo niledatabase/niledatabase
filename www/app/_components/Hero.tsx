@@ -92,19 +92,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-      <div className="flex flex-row gap-1.5 py-10">
-        <span className="bg-gradient-white bg-clip-text text-transparent">
-          Backed by
-        </span>
-        <Image
-          src="/benchmark.svg"
-          alt="benchmark logo"
-          width={114}
-          height={21}
-          priority
-          className="opacity-50"
-        />
-      </div>
     </>
   );
 }
