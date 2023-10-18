@@ -13,7 +13,7 @@ function ChatBlurbContent() {
           height={24}
         />
         <div className="opacity-60 text-[18px] bg-clip-text">
-        Build intelligent SaaS applications with any large language models of your choice from OpenAI, Hugging Face and more
+        Work with any large language models of your choice from OpenAI, Hugging Face and more
         </div>
       </div>
       <div className="flex flex-row gap-3">
@@ -74,8 +74,7 @@ export default function ArtificialIntelligence() {
               />
             </div>
             <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
-              Build intelligent SaaS applications with any large language
-              models of your choice (OpenAI, Hugging Face and more)
+              Delight your users with world class AI + SaaS experience
             </div>
           </div>
           <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
@@ -88,8 +87,7 @@ export default function ArtificialIntelligence() {
               />
             </div>
             <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
-              Store vector embeddings per tenant or share embeddings across
-              tenants
+              Built-in support for pg_vector extension
             </div>
           </div>
           <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
@@ -231,7 +229,7 @@ export default function ArtificialIntelligence() {
                 height={24}
               />
               <div className="opacity-60 text-[18px] bg-clip-text">
-                Index embeddings and query efficiently
+                Index embeddings and query them efficiently
               </div>
             </div>
           </div>
