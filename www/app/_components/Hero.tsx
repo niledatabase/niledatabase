@@ -10,15 +10,15 @@ export default function Hero() {
         <div className="flex flex-col gap-3 items-center px-4 py-5">
           <Image
             src="/multi-tenant.jpg"
-            alt="built-in multi tenant virtualization icon"
+            alt="built-in tenant virtualization icon"
             width={100}
             height={100}
             sizes={sizes}
             priority
           />
           <div className="opacity-80 bg-clip-text text-center text-base whitespace-nowrap">
-            Built-In Multi <br />
-            Tenant Virtualization
+            Built-In Tenant <br />
+            Virtualization
           </div>
         </div>
         <div className="flex flex-col gap-3 items-center px-4 py-5">
