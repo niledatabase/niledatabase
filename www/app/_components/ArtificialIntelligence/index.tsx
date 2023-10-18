@@ -74,7 +74,7 @@ export default function ArtificialIntelligence() {
               />
             </div>
             <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
-              Delight your users with world-class AI + SaaS experience
+              Build your high-performance AI-native SaaS application with vector embeddings
             </div>
           </div>
           <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
@@ -87,7 +87,7 @@ export default function ArtificialIntelligence() {
               />
             </div>
             <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
-              Built-in support for pg_vector extension
+              Store your vector embeddings with your customer data, improving efficiency and performance
             </div>
           </div>
           <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
@@ -100,8 +100,7 @@ export default function ArtificialIntelligence() {
               />
             </div>
             <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
-              Deploy embeddings closer to your customers for latency or
-              compliance
+              Use open-source pgvector for Postgres to store, index, and query embeddings for each tenant
             </div>
           </div>
         </div>

@@ -19,9 +19,9 @@ export default function Home() {
             width={150}
             height={151}
           />
-          <div className="text-lg opacity-80">Our Mission</div>
+          <div className="text-lg opacity-60">Our Mission</div>
           <PageHeader
-            title="To enable developers to accelerate the next billion modern SaaS applications"
+            title="To enable developers to accelerate the next billion modern SaaS"
             titleClasses="lg:!text-[56px]"
           />
           <Divider />
@@ -30,8 +30,6 @@ export default function Home() {
       </div>
       <Divider />
       <OurStory />
-      <Divider />
-      <Backers />
       <Divider />
       <HeroBottom />
     </Container>
