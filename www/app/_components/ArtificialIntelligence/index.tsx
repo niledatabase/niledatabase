@@ -130,16 +130,14 @@ export default function ArtificialIntelligence() {
                     />
                   </div>
                   <div className="text-left border border-[#393939] rounded-[20px] px-[20px] py-[12px] opacity-60 bg-[#000]">
-                    Hello, I've been trying to integrate your software with our
-                    company's CRM, but I'm encountering an error message every
-                    time I attempt to connect them.
+                    Could you share the key design decisions we made in the company last month based on our technical docs?
                   </div>
                 </div>
                 <div className="flex flex-row items-end gap-2 max-w-[90%] ml-auto">
                   <div className="text-left border border-[#131313] rounded-[20px] px-[20px] py-[12px] bg-[#1F2123]">
-                    Hello, I've been trying to integrate your software with our
-                    company's CRM, but I'm encountering an error message every
-                    time I attempt to connect them.
+                    Sure, I can help with that. Here are the key design decisions we made last month<br />
+                    1. Decided to create a new region in Europe.<br />
+                    2. Store the logs in S3 for long term storage
                   </div>
                   <div className="border border-[#fff] rounded-[36px] p-1 shrink-0 bg-icon">
                     <Image
