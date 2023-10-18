@@ -7,7 +7,7 @@ function ChatBlurbContent() {
     <>
       <div className="flex flex-row gap-3">
         <Image
-          src="/icons/chat-bubble.svg"
+          src="/icons/models.svg"
           alt="location pin"
           width={24}
           height={24}
@@ -18,7 +18,7 @@ function ChatBlurbContent() {
       </div>
       <div className="flex flex-row gap-3">
         <Image
-          src="/icons/gpt-text.svg"
+          src="/icons/chat.svg"
           alt="location pin"
           width={24}
           height={24}
@@ -30,7 +30,7 @@ function ChatBlurbContent() {
 
       <div className="flex flex-row gap-3">
         <Image
-          src="/icons/expand.svg"
+          src="/icons/scale.svg"
           alt="expand icon"
           width={24}
           height={24}
@@ -197,7 +197,7 @@ export default function ArtificialIntelligence() {
           <div className="lg:w-1/2 flex-col justify-start gap-4 pl-2 flex mx-auto lg:mx-0">
             <div className="flex flex-row gap-3">
               <Image
-                src="/icons/brain.svg"
+                src="/icons/store.svg"
                 alt="brain"
                 width={24}
                 height={24}
@@ -208,7 +208,7 @@ export default function ArtificialIntelligence() {
             </div>
             <div className="flex flex-row gap-3">
               <Image
-                src="/icons/cog.svg"
+                src="/icons/deploy.svg"
                 alt="settings cog"
                 width={24}
                 height={24}
@@ -220,7 +220,7 @@ export default function ArtificialIntelligence() {
 
             <div className="flex flex-row gap-3">
               <Image
-                src="/icons/person.svg"
+                src="/icons/query.svg"
                 alt="person icon"
                 width={24}
                 height={24}
