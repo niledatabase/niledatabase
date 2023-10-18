@@ -86,6 +86,8 @@ export const NodeJSQuickstart: Template = {
   },
 };
 
+// TBD: add when we are happy with the demo
+/*
 export const JavaQuickstart: Template = {
   // A great name, preferably unique, name for the template
   name: "Java application with Nile",
@@ -107,6 +109,7 @@ export const JavaQuickstart: Template = {
     Publisher: "Nile",
   },
 };
+*/
 
 /*
 export const placeholderTemplate: Template = {
