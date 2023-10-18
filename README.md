@@ -25,9 +25,7 @@ Nile has built primitives in standard Postgres to make it world-class for SaaS u
 
 ## Documentation
 
-For full documentation (We are in private beta. You can get an invite by signing up at https://www.thenile.dev/)
-
-We would love contributions, check out our [guidelines](./DEVELOPERS.md)
+Nile is in private beta. For documentation, you can get an invite by signing up at https://www.thenile.dev/.
 
 ## Community & Support
 
