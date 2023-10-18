@@ -25,7 +25,7 @@ export default function Pricing() {
       <PageHeader
         titleClasses="mt-5"
         title="Build your modern Saas for free"
-        subtitle="Launch your first SaaS application for free and grow your business"
+        subtitle="Launch your first SaaS application in days and grow your business"
         color="white"
       />
       <div className="flex w-full mt-20 justify-center">
