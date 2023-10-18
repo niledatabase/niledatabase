@@ -21,7 +21,7 @@ export const EmailLogin: Template = {
   description: "Learn about simple Authentication with Nile",
   author: "Nile",
   imageSrc: "/templates/EmailLogin.png",
-  demoUrl: "https://login-okta-demo.vercel.app/",
+  demoUrl: "https://email-authn.vercel.app/",
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/email_login/NextJS/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
@@ -86,6 +86,8 @@ export const NodeJSQuickstart: Template = {
   },
 };
 
+// TBD: add when we are happy with the demo
+/*
 export const JavaQuickstart: Template = {
   // A great name, preferably unique, name for the template
   name: "Java application with Nile",
@@ -107,6 +109,7 @@ export const JavaQuickstart: Template = {
     Publisher: "Nile",
   },
 };
+*/
 
 /*
 export const placeholderTemplate: Template = {
