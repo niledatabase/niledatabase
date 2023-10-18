@@ -21,7 +21,7 @@ Nile has built primitives in standard Postgres to make it world-class for SaaS u
 - Fully integrated ready to use UI components
 - Extensive support for popular Postgres extensions
 
-<img width="1437" alt="Screen Shot 2023-10-15 at 5 52 35 PM" src="https://github.com/niledatabase/niledatabase/assets/2977624/be1c2140-ef66-48ca-9df9-b74c0033877e">
+<img width="1437" alt="Screen Shot 2023-10-15 at 5 52 35 PM" src="https://github.com/niledatabase/niledatabase/assets/2977624/d9c6c52c-7241-41aa-8d2f-27249f4884eb">
 
 ## Documentation
 
