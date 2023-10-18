@@ -1,5 +1,5 @@
 <p align="center">
-<img width="1356" alt="Screen Shot 2023-06-21 at 7 35 32 PM" src="https://github.com/niledatabase/niledatabase/assets/2977624/5273f334-f7ee-4b11-87da-5835897a3639">
+<img width="1356" alt="Screen Shot 2023-06-21 at 7 35 32 PM" src="https://github.com/niledatabase/niledatabase/assets/2977624/ab6c0f96-510c-4f87-b53d-02179a71d376">
 </p>
 
 ---
