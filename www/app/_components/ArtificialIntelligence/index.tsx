@@ -12,8 +12,8 @@ function ChatBlurbContent() {
           width={24}
           height={24}
         />
-        <div className="opacity-80 text-[18px] bg-clip-text">
-          Conversational UI modules integrated end to end
+        <div className="opacity-60 text-[18px] bg-clip-text">
+        Work with any large language models of your choice from OpenAI, Hugging Face and more
         </div>
       </div>
       <div className="flex flex-row gap-3">
@@ -23,8 +23,8 @@ function ChatBlurbContent() {
           width={24}
           height={24}
         />
-        <div className="opacity-80 text-[18px] bg-clip-text">
-          Embeddings and metadata in one system
+        <div className="opacity-60 text-[18px] bg-clip-text">
+          Build domain specific conversational UIs, chatbots and semantic search products
         </div>
       </div>
 
@@ -35,8 +35,8 @@ function ChatBlurbContent() {
           width={24}
           height={24}
         />
-        <div className="opacity-80 text-[18px] bg-clip-text">
-          Effortlessly scale your embeddings
+        <div className="opacity-60 text-[18px] bg-clip-text">
+          Effortlessly scale your embeddings as your AI use case grows
         </div>
       </div>
     </>
@@ -73,9 +73,8 @@ export default function ArtificialIntelligence() {
                 height={32}
               />
             </div>
-            <div className="opacity-80 text-[18px] bg-clip-text leading-normal z-10 relative">
-              Build intelligent SaaS applications with any large language
-              models of your choice (OpenAI, Hugging Face and more)
+            <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
+              Delight your users with world-class AI + SaaS experience
             </div>
           </div>
           <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
@@ -87,9 +86,8 @@ export default function ArtificialIntelligence() {
                 height={32}
               />
             </div>
-            <div className="opacity-80 text-[18px] bg-clip-text leading-normal z-10 relative">
-              Store vector embeddings per tenant or share embeddings across
-              tenants
+            <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
+              Built-in support for pg_vector extension
             </div>
           </div>
           <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
@@ -101,7 +99,7 @@ export default function ArtificialIntelligence() {
                 height={40}
               />
             </div>
-            <div className="opacity-80 text-[18px] bg-clip-text leading-normal z-10 relative">
+            <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
               Deploy embeddings closer to your customers for latency or
               compliance
             </div>
@@ -207,8 +205,8 @@ export default function ArtificialIntelligence() {
                 width={24}
                 height={24}
               />
-              <div className="opacity-80 text-[18px] bg-clip-text">
-                Delight your customers with world class AI + SaaS experience
+              <div className="opacity-60 text-[18px] bg-clip-text">
+                Store vector embeddings per tenant or share embeddings across tenants
               </div>
             </div>
             <div className="flex flex-row gap-3">
@@ -218,8 +216,8 @@ export default function ArtificialIntelligence() {
                 width={24}
                 height={24}
               />
-              <div className="opacity-80 text-[18px] bg-clip-text">
-                Get more value from your product by increasing productivity
+              <div className="opacity-60 text-[18px] bg-clip-text">
+              Deploy embeddings closer to your customers for latency or compliance needs
               </div>
             </div>
 
@@ -230,8 +228,8 @@ export default function ArtificialIntelligence() {
                 width={24}
                 height={24}
               />
-              <div className="opacity-80 text-[18px] bg-clip-text">
-                Personalized experience  
+              <div className="opacity-60 text-[18px] bg-clip-text">
+                Index embeddings and query them efficiently
               </div>
             </div>
           </div>

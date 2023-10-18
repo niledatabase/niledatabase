@@ -15,7 +15,7 @@ export default function Footer() {
       <ContactForm show={show} setShow={setShow} />
       <div className="flex items-center justify-center flex-col gap-4">
         <div className="bg-gradient-text bg-clip-text text-transparent leading-normal text-[48px] z-10 relative mb-9 text-center">
-          Postgres purpose built for modern SaaS
+          Postgres built for modern SaaS
         </div>
         <Subscribe />
         <div className="flex flex-row gap-4 items-center mt-14 lg:mt-0">
