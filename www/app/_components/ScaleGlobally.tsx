@@ -17,7 +17,7 @@ export default function DropInUserManagement() {
               height={40}
             />
           </div>
-          <div className="opacity-80 text-[18px] relative z-10">
+          <div className="opacity-60 text-[18px] relative z-10">
             Place isolated tenant databases globally with the user experience, 
             operational simplicity, and cost efficiency of a single database
           </div>
@@ -31,8 +31,8 @@ export default function DropInUserManagement() {
               height={40}
             />
           </div>
-          <div className="opacity-80 text-[18px] relative z-10">
-            Store tenants’s data closer to their application for low latency and satisfy compliance requirements
+          <div className="opacity-60 text-[18px] relative z-10">
+            Store tenant’s data closer to their application for low latency and satisfy compliance requirements
           </div>
         </div>
         <div className="py-5 px-4 md:w-1/3 itemDivider flex flex-row gap-5">
@@ -44,7 +44,7 @@ export default function DropInUserManagement() {
               height={40}
             />
           </div>
-          <div className="opacity-80 text-[18px] relative z-10">
+          <div className="opacity-60 text-[18px] relative z-10">
             We deploy, we route, and we manage. Seamless schema migrations, incremental rollouts, and client-side routing.
           </div>
         </div>

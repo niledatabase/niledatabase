@@ -74,7 +74,7 @@ export default function ArtificialIntelligence() {
               />
             </div>
             <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
-              Delight your users with world class AI + SaaS experience
+              Delight your users with world-class AI + SaaS experience
             </div>
           </div>
           <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
