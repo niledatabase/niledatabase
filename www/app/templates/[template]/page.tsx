@@ -112,7 +112,7 @@ export default async function TemplateDetail(pageProps: PageProps) {
             sizes={sizes}
             priority
           />
-          <article className="opacity-60 flex-1 w-full mt-4">
+          <article className="prose prose-invert flex-1 w-full mt-4">
             <Markdown contents={content} />
           </article>
         </div>
