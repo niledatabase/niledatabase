@@ -67,7 +67,7 @@ export default function Page() {
   
   # This endpoint will show you all todos for all tenants
   # For demo purposes, we excluded it from the tenant isolation.
-  curl -X GET '${backendServer}/insecure/all_todos'
+  curl -X GET '${backendServer}/insecure/all_todos'` 
 
   return (
     <Stack direction="column" spacing={2}>
