@@ -12,7 +12,7 @@ export default function OurStory() {
               <Image
                 src="/team.png"
                 alt="the team"
-                width={440}
+                width={540}
                 height={440}
               />
             </div>
