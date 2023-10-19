@@ -5,6 +5,8 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.WebRequestInterceptor;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Map;
 import java.util.UUID;
 import com.example.todowebapp.tenantcontext.ThreadLocalContext;
@@ -24,6 +26,7 @@ public class TenantInterceptor implements WebRequestInterceptor {
         String tenantParam = (String) pathVariables.get("tenant_id");
         UUID tenantId = UUID.fromString(tenantParam);
         ThreadLocalContext.setTenantID(tenantId);
+
     }
 
     @Override

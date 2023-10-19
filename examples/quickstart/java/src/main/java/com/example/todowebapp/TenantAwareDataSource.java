@@ -20,7 +20,16 @@ public class TenantAwareDataSource extends HikariDataSource {
             // Any query we run on this connection will only ever return data the belongs to this tenant
             ThreadLocalContext.getTenantID().ifPresentOrElse(
                     tenantID -> setContext(sql, "SET nile.tenant_id = '" + tenantID + "'"),
-                    () -> setContext(sql, "RESET nile.tenant_id")
+                    // reset the user ID even if it was not set, Nile requires that before resetting the tenant ID
+                    () -> setContext(sql, "RESET nile.user_id; RESET nile.tenant_id;")
+            );
+        }
+
+        try (Statement sql = connection.createStatement()) {
+            // This also sets the User ID, if it exists
+            ThreadLocalContext.getUser().ifPresentOrElse(
+                    userID -> setContext(sql, "SET nile.user_id = '" + userID + "'"),
+                    () -> setContext(sql, "RESET nile.user_id")
             );
         }
 

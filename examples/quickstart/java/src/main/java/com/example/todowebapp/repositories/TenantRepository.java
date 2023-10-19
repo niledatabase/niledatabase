@@ -1,5 +1,6 @@
 package com.example.todowebapp.repositories;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,5 +12,5 @@ import com.example.todowebapp.models.Tenant;
 // UUID is the type of the primary key
 
 public interface TenantRepository extends JpaRepository<Tenant, UUID> {
-
+    List<Tenant> findByUsers_Id(UUID Id);
 }

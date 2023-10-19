@@ -1,11 +1,14 @@
 package com.example.todowebapp.models;
 
+import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 
 @Entity(name = "tenants") // Map this class to a table named "tenants"
@@ -13,6 +16,23 @@ public class Tenant {
 	@Id
 	private UUID id;
 	private String name;
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+
+	@JsonIgnore
+	@ManyToMany
+	@JoinTable(
+			name = "tenant_users",
+			schema = "users",
+			joinColumns = @JoinColumn(name = "tenant_id"),
+			inverseJoinColumns = @JoinColumn(name = "user_id"))
+	Set<User> users;
 
 	public UUID getId() {
 		return id;
