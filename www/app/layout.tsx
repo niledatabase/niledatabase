@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Nile Database",
-  description: "Serverless postgres for Modern SaaS",
+  description: "Serverless Postgres for modern SaaS",
 };
 
 export default function RootLayout({
