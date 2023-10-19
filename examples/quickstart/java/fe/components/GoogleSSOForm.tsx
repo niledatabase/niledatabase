@@ -3,11 +3,19 @@
 
 import React from 'react';
 import Stack from '@mui/joy/Stack';
-import Input from '@mui/joy/Input';
+import Cookies from 'js-cookie';
+import { useSearchParams } from 'next/navigation'
 
 import { GoogleLoginButton, NileProvider } from '@niledatabase/react';
 
 export default function GoogleAuthPanel() {
+
+    // handle logouts here
+    const searchParams = useSearchParams();
+    if (searchParams.has('logout')) {
+      Cookies.remove('authData');
+    }
+
     {/* Note that in this case we tell the client-side component to talk to Nile directly, not the local API. 
         This is specific for Google SSO */}
   return (
