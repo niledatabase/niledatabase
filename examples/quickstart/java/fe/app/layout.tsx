@@ -28,6 +28,7 @@ export default function RootLayout({
         <div>
         <Image src="/java.svg" alt="Java Logo" className={styles.logo} width={49.125} height={60}/>
         </div>
+        <Typography level="h2">Yet Another Todo Application</Typography>
         <div>
           <a
             href="https://thenile.dev"
@@ -47,9 +48,6 @@ export default function RootLayout({
       }
       </div>
       <div>
-        <Stack> 
-        <Typography level="h2">Yet Another Todo Application</Typography>
-        </Stack>
       </div>
           {children}
           <div className={styles.grid}>
