@@ -26,10 +26,10 @@ export default function Home() {
           />
           <Divider />
         </div>
-        <HowWeWork />
+        <OurStory />
       </div>
       <Divider />
-      <OurStory />
+      <HowWeWork />
       <Divider />
       <HeroBottom />
     </Container>
