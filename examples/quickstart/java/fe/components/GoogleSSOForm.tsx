@@ -5,7 +5,7 @@ import React from 'react';
 import Stack from '@mui/joy/Stack';
 import Input from '@mui/joy/Input';
 
-import { GoogleLoginButton, NileProvider } from '@theniledev/react';
+import { GoogleLoginButton, NileProvider } from '@niledatabase/react';
 
 export default function GoogleAuthPanel() {
     {/* Note that in this case we tell the client-side component to talk to Nile directly, not the local API. 
