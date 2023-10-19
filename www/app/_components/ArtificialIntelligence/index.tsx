@@ -67,7 +67,7 @@ export default function ArtificialIntelligence() {
           <div className="py-4 px-5 flex flex-row gap-5 place-items-top">
             <div className="z-10 relative shrink-0 items-start flex justify-center">
               <Image
-                src="/icons/gpt.svg"
+                src="/icons/ai-native.svg"
                 alt="location pin"
                 width={32}
                 height={32}
@@ -80,7 +80,7 @@ export default function ArtificialIntelligence() {
           <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
             <div className="z-10 relative shrink-0 items-start  rounded-[20px] flex justify-center">
               <Image
-                src="/icons/vector.svg"
+                src="/icons/customer.svg"
                 alt="location pin"
                 width={32}
                 height={32}
@@ -93,7 +93,7 @@ export default function ArtificialIntelligence() {
           <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
             <div className="z-10 relative shrink-0 items-start  rounded-[20px] flex justify-center">
               <Image
-                src="/icons/speedometer.svg"
+                src="/icons/oss.svg"
                 alt="location pin"
                 width={40}
                 height={40}
