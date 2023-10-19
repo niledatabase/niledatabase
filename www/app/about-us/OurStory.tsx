@@ -12,8 +12,8 @@ export default function OurStory() {
               <Image
                 src="/team.png"
                 alt="the team"
-                width={400}
-                height={250}
+                layout="fill"
+                objectFit="contain"
               />
             </div>
           </div>
