@@ -86,8 +86,7 @@ export const NodeJSQuickstart: Template = {
   },
 };
 
-// TBD: add when we are happy with the demo
-/*
+
 export const JavaQuickstart: Template = {
   // A great name, preferably unique, name for the template
   name: "Java application with Nile",
@@ -95,9 +94,9 @@ export const JavaQuickstart: Template = {
   description: "Learn about Nile concepts from a Todo app in Java",
   // who made it
   author: "Nile",
-  demoUrl: "",
+  demoUrl: "https://java-quickstart-demo.vercel.app/",
   // the location of the thumbnail. could be in /public/templates, or a CDN
-  imageSrc: "/templates/nad.jpg",
+  imageSrc: "/templates/JavaTodoApp.png",
   // the readmeURL should be publically accessible.
   // It should also be the real github url, not the raw readme
   readmeUrl:
@@ -109,7 +108,7 @@ export const JavaQuickstart: Template = {
     Publisher: "Nile",
   },
 };
-*/
+
 
 /*
 export const placeholderTemplate: Template = {
