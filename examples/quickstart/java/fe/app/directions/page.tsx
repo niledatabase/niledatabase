@@ -71,7 +71,7 @@ export default function Page() {
 
   return (
     <Stack direction="column" spacing={2}>
-            <Typography level="body-md" style={{whiteSpace: 'pre-line'}}> {introText} </Typography>
+            <Typography level="body-md" style={{whiteSpace: 'pre-line', padding: '0 0 2rem 0'}}> {introText} </Typography>
             {isClient ? 
                 <SyntaxHighlighter language="bash" 
                     useInlineStyles={false}
