@@ -38,7 +38,7 @@ public class TodoWebapp {
             // This is because we rely on the path to know which tenant is making the request
             // The implication is that everyone can view all tenants, but that's fine for this demo
             registry.addWebRequestInterceptor(new TenantInterceptor()).addPathPatterns("/tenants/{tenant_id}/**");
-            registry.addInterceptor(userInterceptor).excludePathPatterns("/insecure");
+            registry.addInterceptor(userInterceptor).excludePathPatterns("/insecure/**");
         }
     }
 }

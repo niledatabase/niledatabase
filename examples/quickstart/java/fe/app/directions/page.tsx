@@ -63,11 +63,11 @@ export default function Page() {
   --user '${userID}:'
 
   # List your tenants:
-  curl -X GET '${backendServer}/tenants' --user '${userID}:' \\
+  curl -X GET '${backendServer}/tenants' --user '${userID}:'
   
   # This endpoint will show you all todos for all tenants
   # For demo purposes, we excluded it from the tenant isolation.
-  curl -X GET '${backendServer}/insecure/all_todos'   --user '${userID}:'` 
+  curl -X GET '${backendServer}/insecure/all_todos'
 
   return (
     <Stack direction="column" spacing={2}>

@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Component
 public class UserInterceptor implements HandlerInterceptor {
-    @Value("${app.require-userid}")
+    @Value("${app.require-userid:false}")
     private boolean isUserRequired;
 
     @Override
