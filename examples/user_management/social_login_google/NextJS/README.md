@@ -1,12 +1,16 @@
 # Google Authentication with Nile in Next.js
 
 This example demonstrates how to integrate an application with Nile to authenticate users with 
-Google. It has a [companion guide]() in our docs.
+Google.
+
+- [Live demo](https://niledatabase-google-sso.vercel.app)
+- [Video guide - TBD](TBD)
+- [Step by step guide](https://niledatabase-www.vercel.app/docs/user-authentication/social-login/google)
 
 > You need to have Google configured in your Nile workspace to use this example.
-> Read [the guide]() to learn how.
+> Read [the guide](https://niledatabase-www.vercel.app/docs/user-authentication/social-login/google) to learn how.
 
-## Setup & Run 
+## Setup & Run
 
 Install dependencies with `yarn install` or `npm install`. 
 
