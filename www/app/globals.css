@@ -46,7 +46,8 @@ body {
 }
 
 .gradientBorderButton,
-.gradientBorderButtonFade {
+.gradientBorderButtonFade,
+.gradientBorderButtonLaunch {
   position: relative;
   display: flex;
   align-items: center;
@@ -65,6 +66,19 @@ body {
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+}
+.gradientBorderButtonLaunch::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+  padding: 1px;
+  background: linear-gradient(144deg, #fdc066 0%, #d8d3e9 51%, #7bd1ed 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: gradient 6s ease infinite;
+  background-size: 200% 200%;
 }
 
 .gradientBorderButtonFade::before {
@@ -124,11 +138,13 @@ html .navBlur {
   position: relative;
   display: flex;
   align-items: center;
-  border: double 1px transparent;
+  border: solid 1px transparent;
   border-radius: 3rem;
   border-bottom: none;
   border-left: none;
   border-right: none;
+  padding-bottom: 110px;
+  margin-bottom: -58px;
 
   background-image: linear-gradient(black, black),
     linear-gradient(
@@ -347,4 +363,20 @@ th {
 .gapFiller-right {
   filter: drop-shadow(-1px 0 0 rgba(223, 239, 254, 0.14));
   box-shadow: 1px 0px 0 rgba(223, 239, 254, 0.14);
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+td {
+  font-size: 16px;
 }

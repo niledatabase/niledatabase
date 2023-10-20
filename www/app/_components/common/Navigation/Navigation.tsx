@@ -5,7 +5,6 @@ import "./storeScroll";
 import { Links } from "./Links";
 import MobileNav, { NavMenu } from "./MobileNav";
 import { GithubCta } from "./GithubCta";
-import GradientButton from "../GradientButton";
 import { useCallback, useState } from "react";
 
 export default function Navigation({ className }: { className?: string }) {
@@ -17,23 +16,6 @@ export default function Navigation({ className }: { className?: string }) {
     <>
       <NavMenu open={open} />
       <div className={`w-screen sticky top-0 z-30 navBlur ${className ?? ""}`}>
-        <div className="text-center p-2 bg-orange w-full text-[16px] text-[black] flex flex-row gap-1 items-center justify-center">
-          Nile is in private beta.{" "}
-          <Link
-            href="/blog/launch"
-            className="underline flex flex-row hover:opacity-70"
-          >
-            Learn more
-            <Image
-              className="invert -ml-1"
-              src="/icons/arrow.svg"
-              alt="arrow"
-              width={25}
-              height={30}
-              priority
-            />
-          </Link>
-        </div>
         <div className="flex flex-col lg:items-center justify-between px-4 pb-0 2xl:px-24 container mx-auto">
           <div className="flex flex-row items-center justify-between w-full lg:h-auto h-[76px]">
             <div className="items-center flex lg:block lg:items-start lg:w-44">

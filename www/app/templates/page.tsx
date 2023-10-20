@@ -8,15 +8,17 @@ import Container from "@/app/_components/common/Container";
 export default async function Home() {
   const templates = await loadTemplates();
   return (
-    <Container background="templates">
-      <PageHeader
-        title="Find your Template"
-        subtitle="Quickly build your SaaS application with these pre built templates"
-        subtitleClasses="mb-[120px]"
-      />
-      <div className="mt-20" />
-      <Divider />
-      <TemplateSearch templates={templates} />
+    <Container background={null}>
+      <div className="relative md:bg-templates bg-[center_110px] bg-[size:80%] bg-no-repeat xl:pb-[86px]">
+        <PageHeader
+          title="Find your template"
+          subtitle="Quickly build your SaaS application with these pre built templates"
+          subtitleClasses="pb-8 lg:pb-[120px]"
+        />
+      </div>
+      <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-20">
+        <TemplateSearch templates={templates} />
+      </div>
       <Divider />
       <div className="py-12">
         <HeroBottom />

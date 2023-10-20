@@ -89,12 +89,10 @@ export default async function Home() {
       </div>
       <Divider />
       <div className="flex gap-4 flex-col container">
-        <Heading text="Templates" textAlign="left" />
-        <div className="flex flex-col lg:flex-row justify-between pb-10 w-full gap-4">
-          <div className="text-center text-xl opacity-80 lg:text-left ">
-            Get started with one of our Nile templates built by the
-            community. Contribute your own template to help others.
-          </div>
+        <Heading text="Templates" />
+        <div className="text-center text-xl opacity-80">
+          Get started with one of our Nile templates built by the community.
+          Contribute your own template to help others.
         </div>
         <TemplateSearch
           templates={templates}

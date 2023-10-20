@@ -13,7 +13,8 @@ function ChatBlurbContent() {
           height={24}
         />
         <div className="opacity-60 text-[18px] bg-clip-text">
-        Work with any large language models of your choice from OpenAI, Hugging Face and more
+          Work with any large language models of your choice from OpenAI,
+          Hugging Face and more
         </div>
       </div>
       <div className="flex flex-row gap-3">
@@ -24,7 +25,8 @@ function ChatBlurbContent() {
           height={24}
         />
         <div className="opacity-60 text-[18px] bg-clip-text">
-          Build domain specific conversational UIs, chatbots and semantic search products
+          Build domain specific conversational UIs, chatbots and semantic search
+          products
         </div>
       </div>
 
@@ -59,10 +61,10 @@ function ChatBlurbStacked() {
 export default function ArtificialIntelligence() {
   return (
     <div className="flex w-full flex-col">
-      <div className="flex flex-col text-center align-middle flex-1 mb-[87px]">
+      <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-20 mt-20 -z-20">
         <Heading text="Seamless tenant-aware AI-native applications" />
       </div>
-      <div className="flex flex-col lg:flex-row place-items-center rounded-[24px] border border-gray overflow-hidden">
+      <div className="flex flex-col lg:flex-row place-items-center rounded-[24px] border border-gray overflow-hidden bg-[#000] -mt-3">
         <div className="flex lg:w-1/2 flex-col">
           <div className="py-4 px-5 flex flex-row gap-5 place-items-top">
             <div className="z-10 relative shrink-0 items-start flex justify-center">
@@ -74,7 +76,8 @@ export default function ArtificialIntelligence() {
               />
             </div>
             <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
-              Build your high-performance AI-native SaaS application with vector embeddings
+              Build your high-performance AI-native SaaS application with vector
+              embeddings
             </div>
           </div>
           <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
@@ -87,7 +90,8 @@ export default function ArtificialIntelligence() {
               />
             </div>
             <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
-              Store your vector embeddings with your customer data, improving efficiency and performance
+              Store your vector embeddings with your customer data, improving
+              efficiency and performance
             </div>
           </div>
           <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
@@ -100,7 +104,8 @@ export default function ArtificialIntelligence() {
               />
             </div>
             <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
-              Use open-source pgvector for Postgres to store, index, and query embeddings for each tenant
+              Use open-source pgvector for Postgres to store, index, and query
+              embeddings for each tenant
             </div>
           </div>
         </div>
@@ -130,13 +135,17 @@ export default function ArtificialIntelligence() {
                     />
                   </div>
                   <div className="text-left border border-[#393939] rounded-[20px] px-[20px] py-[12px] opacity-60 bg-[#000]">
-                    Could you share the key design decisions we made in the company last month based on our technical docs?
+                    Could you share the key design decisions we made in the
+                    company last month based on our technical docs?
                   </div>
                 </div>
                 <div className="flex flex-row items-end gap-2 max-w-[90%] ml-auto">
                   <div className="text-left border border-[#131313] rounded-[20px] px-[20px] py-[12px] bg-[#1F2123]">
-                    Sure, I can help with that. Here are the key design decisions we made last month<br />
-                    1. Decided to create a new region in Europe.<br />
+                    Sure, I can help with that. Here are the key design
+                    decisions we made last month
+                    <br />
+                    1. Decided to create a new region in Europe.
+                    <br />
                     2. Store the logs in S3 for long term storage
                   </div>
                   <div className="border border-[#fff] rounded-[36px] p-1 shrink-0 bg-icon">
@@ -203,7 +212,8 @@ export default function ArtificialIntelligence() {
                 height={24}
               />
               <div className="opacity-60 text-[18px] bg-clip-text">
-                Store vector embeddings per tenant or share embeddings across tenants
+                Store vector embeddings per tenant or share embeddings across
+                tenants
               </div>
             </div>
             <div className="flex flex-row gap-3">
@@ -214,7 +224,8 @@ export default function ArtificialIntelligence() {
                 height={24}
               />
               <div className="opacity-60 text-[18px] bg-clip-text">
-              Deploy embeddings closer to your customers for latency or compliance needs
+                Deploy embeddings closer to your customers for latency or
+                compliance needs
               </div>
             </div>
 

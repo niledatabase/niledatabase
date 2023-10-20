@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function DropInUserManagement() {
   return (
     <div className="flex w-full flex-col">
-      <div className="flex flex-col text-center align-middle flex-1">
+      <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-20 mt-20">
         <Heading text="Drop-in tenant and user management"></Heading>
       </div>
       <div className="hidden md:block">
@@ -41,7 +41,8 @@ export default function DropInUserManagement() {
               />
             </div>
             <div className="opacity-80 text-[18px] bg-clip-text text-center z-10 relative">
-              Manage organizations, user invites, and multiple membership support
+              Manage organizations, user invites, and multiple membership
+              support
             </div>
           </div>
         </div>

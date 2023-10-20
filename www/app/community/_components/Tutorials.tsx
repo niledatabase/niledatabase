@@ -6,8 +6,8 @@ import Heading from "@/app/_components/common/Heading";
 export default function Tutorials() {
   return (
     <>
-      <Heading text="Learn from our Tutorials" textAlign="left" />
-      <div className="text-xl opacity-60 text-center lg:text-left mb-10">
+      <Heading text="Learn from our Tutorials" />
+      <div className="text-xl opacity-60 text-center mb-10">
         Get started with one of our Nile tutorials
       </div>
 

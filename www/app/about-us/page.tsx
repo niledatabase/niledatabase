@@ -24,10 +24,9 @@ export default function Home() {
             title="To enable developers to accelerate the next billion modern SaaS"
             titleClasses="lg:!text-[56px]"
           />
-          <Divider />
         </div>
-        <OurStory />
       </div>
+      <OurStory />
       <Divider />
       <HowWeWork />
       <Divider />
