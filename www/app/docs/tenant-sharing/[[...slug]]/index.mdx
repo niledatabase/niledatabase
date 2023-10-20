@@ -124,8 +124,8 @@ where flights.from_destination=airports.code;
 Tenant aware tables can be joined with shared tables to provide relevant information for a specific tenant. For example, let us consider a bookings table that has all the flights booked by employees of a specific company(or tenant) with id **7543a610-f068-45fa-8ba0-7bc884bd29c2**. Each booking will refer to the flights id in the ‘flights’ table. It would be trivial to show detailed flight information along with every booking by joining the two tables.
 
 ```sql
--- the bookings table where each row represents a single booking for a
--- specific employee within a customer/tenant
+-- the bookings table where each row represents a single booking 
+-- for a specific employee within a customer/tenant
 create table bookings (
   tenant_id uuid,
   booking_id integer,
@@ -134,7 +134,8 @@ create table bookings (
   total_price float,
   PRIMARY KEY(tenant_id,booking_id));
 
--- inserting rows for all the bookings done by employees in a specific tenant
+-- inserting rows for all the bookings done by employees in a 
+-- specific tenant
 insert into bookings (tenant_id, booking_id, employee_id, flight_id, total_price)
 values
   ('7543a610-f068-45fa-8ba0-7bc884bd29c2',1345,2,643, 200.00),
@@ -144,8 +145,8 @@ values
 -- set tenant context to ensure selects are isolated only to this tenant
 set nile.tenant_id = '7543a610-f068-45fa-8ba0-7bc884bd29c2';
 
--- join query between bookings and flights to display each booking info in the
--- application with detailed information about the flight
+-- join query between bookings and flights to display each booking info 
+-- in the application with detailed information about the flight
 select bookings.booking_id, bookings.employee_id, flights.name,
        flights.from_location, flights.to_location, flights.departure_time,
        flights.arrival_time, bookings.total_price
@@ -205,7 +206,8 @@ where bookings.booking_id=flights.id;
 A shared table can have a foreign key reference to another shared table. In the travel example, the flights table can have a reference to the airport id. So, the ‘flights’ table can be modified to have an airport id column that is a foreign reference to the id column in the ‘airports’ table
 
 ```sql
--- flights table's airport_id is a reference to the id column in table airports
+-- flights table's airport_id is a reference to the id column 
+-- in table airports
 create table flights (
   id integer PRIMARY KEY,
   airport_id integer,
