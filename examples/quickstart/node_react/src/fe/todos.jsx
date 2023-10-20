@@ -19,7 +19,6 @@ export default function Todos() {
 
   const [todos, setTodos] = React.useState(null);
   const [tenantName, setTenantName] = React.useState(null); 
-  const [isPending, startTransition] = React.useTransition();
 
   React.useEffect(() => {
     fetch(`/api/tenants/${tenantId}/todos`)
