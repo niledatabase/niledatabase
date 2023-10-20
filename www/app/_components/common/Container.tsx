@@ -13,12 +13,10 @@ export default function Container({
   return (
     <Body background={background}>
       <Navigation />
-      <main className="flex flex-col lg:items-center justify-between container mx-auto">
-        <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
-          {children}
-          <Divider />
-          <Footer />
-        </div>
+      <main className="flex flex-col lg:items-center justify-between">
+        {children}
+        <Divider />
+        <Footer />
       </main>
     </Body>
   );

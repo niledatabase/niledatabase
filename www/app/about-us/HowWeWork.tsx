@@ -69,7 +69,7 @@ const rows = [
 export default function HowWeWork() {
   return (
     <>
-      <Heading text="How We Work" />
+      <Heading text="How we work" />
       <div className="relative self-start min-w-[100vw] lg:min-w-fit overflow-scroll  lg:overflow-visible mt-10">
         <div className="hidden lg:block absolute top-0 -left-[30%] right-[50%] bottom-0 -z-10">
           <div className="bg-orangeBlur absolute top-0 left-0 right-0 bottom-0 bg-[center_left] bg-[size:100%] no-repeat blur-3xl "></div>
@@ -118,7 +118,7 @@ export default function HowWeWork() {
                         {row.title}
                       </div>
                       <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right rounded-br-[4px] p-4  align-top text-[16px]">
-                        {row.content}
+                        <span className="opacity-60">{row.content}</span>
                       </div>
                     </div>
                   );
@@ -132,7 +132,7 @@ export default function HowWeWork() {
                       {row.title}
                     </div>
                     <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right p-4 align-top text-[16px]">
-                      {row.content}
+                      <span className="opacity-60">{row.content}</span>
                     </div>
                   </div>
                 );

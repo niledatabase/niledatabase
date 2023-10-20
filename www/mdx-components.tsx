@@ -2,6 +2,7 @@ import type { MDXComponents } from "mdx/types";
 import Cards, { Card } from "./app/docs/_components/Cards";
 import CodeGroups from "./app/docs/_components/CodeGroups";
 import { Col, Row } from "./app/docs/_components/Layout";
+import Head from "next/head";
 
 // This file allows you to provide custom React components
 // to be used in MDX files. You can import and use any
@@ -19,5 +20,6 @@ export const useMDXComponents = (components: MDXComponents): MDXComponents => {
     CodeGroups: (props) => <CodeGroups {...props} />,
     Col: (props) => <Col {...props} />,
     Row: (props) => <Row {...props} />,
+    head: ({ children }) => <Head>{children}</Head>,
   };
 };

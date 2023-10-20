@@ -2,6 +2,8 @@
 
 export const meta = {
   order: 2,
+  title: "Tenant Management",
+  Description: "How to do tenant management using niledatabase",
 };
 
 ## **What is a tenant?**
@@ -218,7 +220,7 @@ select * from employees;
 SaaS applications only query a specific tenant data at any given of time. This requires isolating data to ensure user of one tenant does not read the data of another tenant. You can do this in Nile’s Postgres by simply using the nile.tenant_id session parameter in SQL or directly using our SDK. A good way to think about this is that setting the session context to a tenant is equivalent to pointing to a specific tenant DB. This ensures that all queries are directed to that specific tenant DB. At the same time, you still have access to shared tables (see shared table section).
 
 ```sql
--- set the session context to a specific tenant 
+-- set the session context to a specific tenant
 -- who needs to be isolated.
 set nile.tenant_id = '018ac98e-b37a-731b-b03a-6617e8fd5266';
 

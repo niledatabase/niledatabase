@@ -23,12 +23,12 @@ export default function TemplateCard(props: Template) {
           </div>
           <div className="flex flex-col gap-3 px-8 py-4 justify-between flex-1">
             <div>
-              <div className="text-[17px]">{name}</div>
-              <div className="text-[17px] text-[#8A8F98] h-[48px] overflow-scroll">
+              <div className="text-[17px] text-left">{name}</div>
+              <div className="text-[17px] text-[#8A8F98] h-[48px] text-left">
                 {description}
               </div>
             </div>
-            <div>
+            <div className="text-left">
               <span className="text-[17px]">
                 <span className="text-[#8A8F98]">By:</span> {author}
               </span>
