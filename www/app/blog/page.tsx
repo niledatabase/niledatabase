@@ -62,11 +62,19 @@ export default async function Blog() {
   const { default: FirstArticle, metadata } = await import(`${mostRecent}`);
   return (
     <Container background={null}>
-      <HeroArticle fileName={mostRecent} {...metadata} content={FirstArticle} />
-      <Divider />
-      <Search />
-      <Divider />
-      <Footer />
+      <div className="container mx-auto">
+        <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
+          <HeroArticle
+            fileName={mostRecent}
+            {...metadata}
+            content={FirstArticle}
+          />
+          <Divider />
+          <Search />
+          <Divider />
+          <Footer />
+        </div>
+      </div>
     </Container>
   );
 }
