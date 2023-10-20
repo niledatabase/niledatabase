@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import { Inter } from "next/font/google";
+import GTag from "@/app/_components/Body/GTag";
 
 export type Background = null | "base" | "community" | "templates" | "circular";
 const aeonik = localFont({
@@ -34,6 +35,7 @@ export default function Body({
         background ? variants[background] : null
       }`}
     >
+      <GTag />
       {background === "circular" && (
         <div className="w-screen absolute pointer-events-none -z-10 top-0 bg-circular opacity-[0.15] h-[60%]" />
       )}
