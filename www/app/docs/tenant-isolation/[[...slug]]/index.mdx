@@ -204,8 +204,8 @@ select count(*) as no_of_customers from tenants;
 2. Querying the total no of candidates per customer
 
 ```sql
-select t1.id as customer_id,t1.name
-as customer_name,count(c1.id) as no_of_candidates from candidates c1 right join tenants
+select t1.id as customer_id,t1.name as customer_name,
+count(c1.id) as no_of_candidates from candidates c1 right join tenants
 t1 on c1.tenant_id=t1.id group by t1.id,t1.name;
 ```
 
@@ -249,7 +249,8 @@ t1 on c1.tenant_id=t1.id group by t1.id,t1.name;
 3. Finding the number of customers that have atleast one candidate added in the last one week
 
 ```sql
-select tenant_id from candidates where (CURRENT_DATE - applied_date::date) < 30;
+select tenant_id from candidates 
+where (CURRENT_DATE - applied_date::date) < 30;
 ```
 
 <table>
