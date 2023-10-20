@@ -1,5 +1,5 @@
-import Heading from '../_components/common/Heading';
-import Image from 'next/image';
+import Heading from "../_components/common/Heading";
+import Image from "next/image";
 
 export default function OurStory() {
   return (
