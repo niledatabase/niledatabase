@@ -10,7 +10,7 @@ export default function Divider({ flip }: { flip?: boolean }) {
   return (
     <div className={classes}>
       <div className="relative h-[99%] overflow-hidden">
-        <div className="absolute top-0 left-0 right-0, bottom-0 bgDivider h-16"></div>
+        <div className="absolute top-0 left-0 right-0 bottom-0 bgDivider h-16"></div>
         <div className="absolute top-0 left-30 right-30 bottom-[40px] bg-divider-glow w-full"></div>
       </div>
     </div>

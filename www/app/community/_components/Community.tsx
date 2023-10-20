@@ -51,7 +51,7 @@ export default function Tutorials() {
               height={61}
             />
           </div>
-          <h2 className="lg:leading-[64px] leading-[40px] md:text-center text-left text-[32px] lg:text-[56px] font-normal text-white">
+          <h2 className="lg:leading-[64px] leading-[40px] text-center text-[32px] lg:text-[56px] font-normal text-white">
             SaaS Developer Community
           </h2>
         </div>

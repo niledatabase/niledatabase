@@ -13,7 +13,7 @@ const variants = {
   community:
     "bg-no-repeat bg-top lg:bg-[size:105%] bg-[size:200%] bg-community",
   templates:
-    "bg-no-repeat md:bg-[size:105%] bg-templates xl:bg-[size:80%] 2xl:bg-[center_top] xl:bg-[center_top] md:bg-[center_100px] lg:bg-[center_120px] bg-[center_-50px] bg-[size:420%] sm:bg-[size:158%]",
+    "bg-no-repeat md:bg-[size:105%] bg-templates xl:bg-[size:120%] 2xl:bg-[size:80%] 2xl:bg-[center_top] xl:bg-[center_top] md:bg-[center_100px] lg:bg-[center_120px] bg-[center_-50px] bg-[size:420%] sm:bg-[size:158%]",
   circular: "",
 };
 

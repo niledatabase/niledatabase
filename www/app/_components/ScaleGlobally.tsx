@@ -4,10 +4,10 @@ import Image from "next/image";
 export default function DropInUserManagement() {
   return (
     <div className="flex w-full flex-col">
-      <div className="flex flex-col text-center align-middle flex-1 mb-[87px]">
+      <div className="flex flex-col text-center align-middle flex-1 mb-[87px]  bgDivider pt-20 mt-20">
         <Heading text="Onboard tenants once, place globally" />
       </div>
-      <div className="flex flex-col md:flex-row gap-4 justify-center">
+      <div className="flex flex-col md:flex-row gap-4 justify-center bg-[#000]">
         <div className="py-5 px-4 md:w-1/3 itemDivider flex flex-row gap-5">
           <div className="z-10 relative icon rounded-[20px] flex justify-center">
             <Image
@@ -18,7 +18,7 @@ export default function DropInUserManagement() {
             />
           </div>
           <div className="opacity-60 text-[18px] relative z-10">
-            Place isolated tenant databases globally with the user experience, 
+            Place isolated tenant databases globally with the user experience,
             operational simplicity, and cost efficiency of a single database
           </div>
         </div>
@@ -32,7 +32,8 @@ export default function DropInUserManagement() {
             />
           </div>
           <div className="opacity-60 text-[18px] relative z-10">
-            Store tenant’s data closer to their application for low latency and satisfy compliance requirements
+            Store tenant’s data closer to their application for low latency and
+            satisfy compliance requirements
           </div>
         </div>
         <div className="py-5 px-4 md:w-1/3 itemDivider flex flex-row gap-5">
@@ -45,7 +46,8 @@ export default function DropInUserManagement() {
             />
           </div>
           <div className="opacity-60 text-[18px] relative z-10">
-            We deploy, we route, and we manage. Seamless schema migrations, incremental rollouts, and client-side routing.
+            We deploy, we route, and we manage. Seamless schema migrations,
+            incremental rollouts, and client-side routing.
           </div>
         </div>
       </div>

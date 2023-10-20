@@ -7,10 +7,10 @@ export default function Virtualization() {
   return (
     <div className="relative">
       <div className="absolute top-0 left-0 right-0 bottom-0 bg-visualization bg-no-repeat bg-[size:200%] md:bg-[size:100%] blur-lg -z-10 bg-[center_top_2rem]"></div>
-      <div className="relative pb-10 mt-20">
+      <div className="relative pb-10 mt-20 bgDivider -z-20 pt-20">
         <Heading text="Built-in tenant virtualization"></Heading>
       </div>
-      <div className="flex flex-col xl:flex-row justify-between mb-20 bg-[#000] rounded-[20px] p-[56px] lg:m-0 md:mx-6">
+      <div className="flex flex-col xl:flex-row justify-between mb-20 bg-[#000] rounded-[20px] py-[56px] px-[20px] lg:m-0 md:mx-6">
         <div className="flex gap-8 flex-col lg:pr-6 mb-4">
           <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3 text-center lg:text-left">
             Native tenant data isolation

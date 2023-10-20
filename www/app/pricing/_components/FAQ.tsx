@@ -1,7 +1,7 @@
 "use client";
 import Heading from "@/app/_components/common/Heading";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import faqs from "./faqs";
 import useGoToHash from "@/app/_components/common/useGoToHash";
 const variants = {
@@ -35,7 +35,11 @@ const ExpandItem = (props: {
           priority
         />
       </div>
-      <div className={`${show ? "visible" : "invisible"}`}>{content}</div>
+      <div
+        className={`${show ? "visible" : "invisible"} opacity-60 text-[18px]`}
+      >
+        {content}
+      </div>
     </div>
   );
 };

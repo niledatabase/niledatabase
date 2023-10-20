@@ -1,9 +1,9 @@
-import Heading from '../_components/common/Heading';
+import Heading from "../_components/common/Heading";
 
 const rows = [
   {}, // placeholder for header
   {
-    title: 'Love Developers',
+    title: "Love Developers",
     content: (
       <>
         We have a maniacal focus on developer experience. We take great pride in
@@ -15,7 +15,7 @@ const rows = [
     ),
   },
   {
-    title: 'Mission Driven',
+    title: "Mission Driven",
     content: (
       <>
         Our mission is to enable developers to accelerate the next billion
@@ -27,7 +27,7 @@ const rows = [
     ),
   },
   {
-    title: 'First Principles Thinking',
+    title: "First Principles Thinking",
     content: (
       <>
         To build something truly groundbreaking, you need to break every past
@@ -39,7 +39,7 @@ const rows = [
     ),
   },
   {
-    title: 'Strive for World-Class',
+    title: "Strive for World-Class",
     content: (
       <>
         We want to create a company that is among the best in the world. We
@@ -52,7 +52,7 @@ const rows = [
     ),
   },
   {
-    title: 'Mission Driven',
+    title: "Intensely Execute and Iterate",
     content: (
       <>
         Iteration velocity has a significant impact. We move fast, build
@@ -70,7 +70,7 @@ export default function HowWeWork() {
   return (
     <>
       <Heading text="How We Work" />
-      <div className="relative self-start min-w-[100vw] lg:min-w-fit overflow-scroll  lg:overflow-visible">
+      <div className="relative self-start min-w-[100vw] lg:min-w-fit overflow-scroll  lg:overflow-visible mt-10">
         <div className="hidden lg:block absolute top-0 -left-[30%] right-[50%] bottom-0 -z-10">
           <div className="bg-orangeBlur absolute top-0 left-0 right-0 bottom-0 bg-[center_left] bg-[size:100%] no-repeat blur-3xl "></div>
           <div className="relative left-[16%] w-1/2 bg-orangeBlurText bg-clip-text text-transparent font-mono text-[12px] leading-[18px]">
@@ -83,59 +83,61 @@ export default function HowWeWork() {
             {Text}
           </div>
         </div>
-        <div className="py-2 px-2.5 border border-gray rounded-md bg-[#000] w-screen lg:w-auto overflow-y-scroll">
-          <div className="table bg-divider min-w-[1000px]">
-            {rows.map((row, idx) => {
-              if (idx === 0) {
-                return (
-                  <div className="table-header-group" key={row.title}>
-                    <div className="table-cell py-1 px-4 bg-[#000] -translate-x-[1px] border-gray border-b border-t gapFiller-right rounded-tl-[4px]">
-                      <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
-                        ID
-                      </span>
+        <div className="lg:px-32">
+          <div className="py-2 px-2.5 border border-gray rounded-md bg-[#000] w-screen lg:w-auto overflow-y-scroll">
+            <div className="table bg-divider min-w-[1000px]">
+              {rows.map((row, idx) => {
+                if (idx === 0) {
+                  return (
+                    <div className="table-header-group" key={row.title}>
+                      <div className="table-cell py-1 px-4 bg-[#000] -translate-x-[1px] border-gray border-b border-t gapFiller-right rounded-tl-[4px]">
+                        <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
+                          ID
+                        </span>
+                      </div>
+                      <div className="table-cell py-1 px-4 bg-[#000] border-gray border-b border-t">
+                        <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
+                          Values
+                        </span>
+                      </div>
+                      <div className="table-cell py-1 px-4 bg-[#000] translate-x-[1px] border-gray  border-b border-t bourder-r rounded-tr-[4px] gapFiller-right">
+                        <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
+                          Description
+                        </span>
+                      </div>
                     </div>
-                    <div className="table-cell py-1 px-4 bg-[#000] border-gray border-b border-t">
-                      <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
-                        Values
-                      </span>
+                  );
+                }
+                if (idx === rows.length - 1) {
+                  return (
+                    <div key={row.title} className="flex-row table-row">
+                      <div className="table-cell bg-[#000] -translate-x-[1px] border-gray border-b rounded-bl-[4px] gapFiller-right p-4 align-top">
+                        <span className="opacity-40">{idx}</span>
+                      </div>
+                      <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4  align-top">
+                        {row.title}
+                      </div>
+                      <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right rounded-br-[4px] p-4  align-top text-[16px]">
+                        {row.content}
+                      </div>
                     </div>
-                    <div className="table-cell py-1 px-4 bg-[#000] translate-x-[1px] border-gray  border-b border-t bourder-r rounded-tr-[4px] gapFiller-right">
-                      <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
-                        Description
-                      </span>
-                    </div>
-                  </div>
-                );
-              }
-              if (idx === rows.length - 1) {
+                  );
+                }
                 return (
                   <div key={row.title} className="flex-row table-row">
-                    <div className="table-cell bg-[#000] -translate-x-[1px] border-gray border-b rounded-bl-[4px] gapFiller-right p-4 align-top">
+                    <div className="table-cell bg-[#000] -translate-x-[1px] border-gray gapFiller-right border-b p-4 align-top">
                       <span className="opacity-40">{idx}</span>
                     </div>
-                    <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4  align-top">
+                    <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4 align-top">
                       {row.title}
                     </div>
-                    <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right rounded-br-[4px] p-4  align-top">
+                    <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right p-4 align-top text-[16px]">
                       {row.content}
                     </div>
                   </div>
                 );
-              }
-              return (
-                <div key={row.title} className="flex-row table-row">
-                  <div className="table-cell bg-[#000] -translate-x-[1px] border-gray gapFiller-right border-b p-4 align-top">
-                    <span className="opacity-40">{idx}</span>
-                  </div>
-                  <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4 align-top">
-                    {row.title}
-                  </div>
-                  <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right p-4 align-top">
-                    {row.content}
-                  </div>
-                </div>
-              );
-            })}
+              })}
+            </div>
           </div>
         </div>
       </div>

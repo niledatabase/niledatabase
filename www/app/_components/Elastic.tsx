@@ -3,10 +3,10 @@ import Image from "next/image";
 export default function Elastic() {
   return (
     <div className="flex w-full flex-col">
-      <div className="flex flex-col text-center align-middle flex-1 mb-[87px]">
+      <div className="flex flex-col text-center align-middle flex-1 mb-[87px]  bgDivider pt-20 mt-20">
         <Heading text="Effortlessly elastic" />
       </div>
-      <div className="flex flex-col lg:flex-row items-center">
+      <div className="flex flex-col lg:flex-row items-center bg-[#000]">
         <div className="lg:w-1/2 relative z-[11]">
           <div className="py-4 px-5 flex flex-row gap-5 items-center">
             <div className="z-10 relative icon rounded-[20px] flex justify-center">
@@ -74,17 +74,17 @@ export default function Elastic() {
             </div>
           </div>
         </div>
-        <div className="lg:w-1/2 relative flex items-center justify-center">
+        <div className="lg:w-1/2 relative flex items-center justify-center overflow-hidden lg:overflow-visible">
           <div className="z-10 absolute -top-[10%] left-0 right-0 h-[21%] blur-[22px] bg-[#000]"></div>
           <div className="z-10 absolute -bottom-[10%] left-0 right-0 h-[21%] blur-[22px] bg-[#000]"></div>
-          <div className="z-10 absolute top-0 -left-[12%] lg:left-0 bottom-0 w-[21%] blur-[22px] bg-[#000]"></div>
-          <div className="z-10 absolute top-0 bottom-0 -right-[12%] lg:right-0 w-[21%] blur-[22px] bg-[#000]"></div>
+          <div className="z-10 absolute top-0 -left-[12%] lg:-left-[16px] bottom-0 w-[21%] blur-[22px] bg-[#000]"></div>
+          <div className="z-10 absolute top-0 bottom-0 -right-[12%] lg:-right-[16px] w-[21%] blur-[22px] bg-[#000]"></div>
           <Image
             className="relative"
             src="/elastic.png"
             alt="spiral intertube with orange, pink, and teal gradient"
-            width={440}
-            height={440}
+            width={540}
+            height={540}
           />
         </div>
       </div>

@@ -57,7 +57,7 @@ export function BaseListItem({
   }, [expanded]);
   return (
     <li className={itemClasses.join(" ")}>
-      <Link href={href}>
+      <Link href={href} className="w-full">
         {item.method && (
           <span className="text-sm bg-gradient-text bg-clip-text text-transparent mr-3 border-lightGray border rounded-[6px] py-1 px-2">
             {item.method}

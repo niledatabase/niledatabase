@@ -46,7 +46,7 @@ export default function TemplateSearch({
   return (
     <div className="templateSearch flex flex-col gap-[24px] w-full">
       {searchEnabled && (
-        <div className="flex flex-row gap-2 flex-1 w-full -mt-12 relative z-10 lg:px-6 md:px-24 px-6">
+        <div className="flex flex-row gap-2 flex-1 w-full -mt-16 relative z-10 lg:px-8 md:px-24 px-6">
           <Image
             src="/icons/search.svg"
             alt="looking glass"

@@ -9,13 +9,15 @@ export default function GradientButton({
   children,
   variant,
   className,
+  subclasses: _subz,
 }: {
   href?: string;
   onClick?: () => void;
   type?: "submit" | "button";
   children: (string | JSX.Element)[] | string | JSX.Element;
-  variant?: "soft";
+  variant?: "soft" | "launch";
   className?: string;
+  subclasses?: string;
 }) {
   const { push } = useRouter();
   const handleClick = useMemo<MouseEventHandler<HTMLButtonElement> | undefined>(
@@ -30,10 +32,19 @@ export default function GradientButton({
   );
   const subClasses = useMemo(() => {
     if (variant === "soft") {
-      return "py-3 px-4 bg-clip-text text-transparent gradientBorderButtonFade subpixel-antialiased bg-black overflow-hidden whitespace-nowrap";
+      return `py-3 px-4 bg-clip-text text-transparent gradientBorderButtonFade subpixel-antialiased bg-black overflow-hidden whitespace-nowrap${
+        _subz ? ` ${_subz}` : ""
+      }`;
     }
-    return "bg-gradient-text-144 py-3 px-4 bg-clip-text text-transparent gradientBorderButton subpixel-antialiased bg-black overflow-hidden whitespace-nowrap";
-  }, []);
+    if (variant === "launch") {
+      return `bg-gradient-text-144 py-3 px-4 bg-clip-text text-transparent gradientBorderButtonLaunch subpixel-antialiased bg-black overflow-hidden whitespace-nowrap${
+        _subz ? ` ${_subz}` : ""
+      }`;
+    }
+    return `bg-gradient-text-144 py-3 px-4 bg-clip-text text-transparent gradientBorderButton subpixel-antialiased bg-black overflow-hidden whitespace-nowrap${
+      _subz ? ` ${_subz}` : ""
+    }`;
+  }, [_subz]);
   return (
     <button
       className={`flex-1 bg-black rounded-xl relative z-[9]${
