@@ -17,9 +17,9 @@ const languages = [
     path: "/docs/getting-started/languages/nextjs",
   },
   {
-    name: "React",
-    icon: "react.svg",
-    path: "/docs/getting-started/languages/react",
+    name: "Node",
+    icon: "node.svg",
+    path: "/docs/getting-started/languages/node",
   },
   {
     name: "Java",
