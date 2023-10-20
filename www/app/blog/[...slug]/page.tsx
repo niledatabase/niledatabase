@@ -8,7 +8,10 @@ import Heading from "@/app/_components/common/Heading";
 import Image from "next/image";
 import Footer from "../_components/Footer";
 import Divider from "@/app/_components/common/Divider";
-export default async function BlogPage(props: { params: { slug: string[] } }) {
+import { Metadata, ResolvingMetadata } from "next";
+type Props = { params: { slug: string[] } };
+
+async function getBlog(props: Props) {
   const {
     params: {
       slug: [slug],
@@ -24,6 +27,10 @@ export default async function BlogPage(props: { params: { slug: string[] } }) {
   const article = file.split("/").reverse();
   const { default: Article, metadata } = await import(`../${article[0]}`);
   const { publishDate, readLength } = parseMetadata(file, Article);
+  return { metadata, publishDate, readLength, Article };
+}
+export default async function BlogPage(props: Props) {
+  const { metadata, publishDate, readLength, Article } = await getBlog(props);
   return (
     <Container background={null}>
       <div className="bg-[#2D2D2D] rounded-xl w-[800px] h-[505px] overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex">
@@ -58,4 +65,20 @@ export default async function BlogPage(props: { params: { slug: string[] } }) {
       <Footer />
     </Container>
   );
+}
+
+export async function generateMetadata(
+  props: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const blog = await getBlog(props);
+  const previousImages = (await parent).openGraph?.images || [];
+  return {
+    ...blog.metadata,
+    description: blog.metadata.sizzle,
+    openGraph: {
+      images: [blog.metadata.image, ...previousImages],
+    },
+  };
 }

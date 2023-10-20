@@ -18,6 +18,10 @@ type Props = {
   image?: string;
 };
 
+export const metadata = {
+  title: "niledatabase Blog",
+  description: "All things database SaaS",
+};
 function HeroArticle(props: Props) {
   const { fileName, title, authors: _authors, content, sizzle, image } = props;
   const { publishDate, slug, readLength } = parseMetadata(fileName, content);
