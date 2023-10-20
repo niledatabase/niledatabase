@@ -112,10 +112,10 @@ export default function HowWeWork() {
                   return (
                     <div key={row.title} className="flex-row table-row">
                       <div className="table-cell bg-[#000] -translate-x-[1px] border-gray border-b rounded-bl-[4px] gapFiller-right p-4 align-top">
-                        <span className="opacity-40">{idx}</span>
+                        <span className="opacity-60">{idx}</span>
                       </div>
                       <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4  align-top">
-                        {row.title}
+                        <span className="opacity-60">{row.title}</span>
                       </div>
                       <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right rounded-br-[4px] p-4  align-top text-[16px]">
                         <span className="opacity-60">{row.content}</span>
@@ -126,10 +126,10 @@ export default function HowWeWork() {
                 return (
                   <div key={row.title} className="flex-row table-row">
                     <div className="table-cell bg-[#000] -translate-x-[1px] border-gray gapFiller-right border-b p-4 align-top">
-                      <span className="opacity-40">{idx}</span>
+                      <span className="opacity-60">{idx}</span>
                     </div>
                     <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4 align-top">
-                      {row.title}
+                      <span className="opacity-60">{row.title}</span>
                     </div>
                     <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right p-4 align-top text-[16px]">
                       <span className="opacity-60">{row.content}</span>
