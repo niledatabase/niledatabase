@@ -1,10 +1,14 @@
 # Okta Authentication with Nile in Next.js
 
 This example demonstrates how to integrate an application with Nile to authenticate users with
-Okta. It has a [companion guide]() in our docs.
+Okta.
+
+- [Live demo](https://login-okta-demo.vercel.app/)
+- [Video guide - TBD](TBD)
+- [Step by step guide](https://niledatabase-www.vercel.app/docs/user-authentication/enterprise-login/okta)
 
 > You need to have Okta configured in your Nile workspace to use this example.
-> Read [the guide]() to learn how.
+> Read [the guide](https://niledatabase-www.vercel.app/docs/user-authentication/enterprise-login/okta) to learn how.
 
 ## Setup & Run
 

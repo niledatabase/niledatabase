@@ -2,9 +2,9 @@
 
 This example demonstrates how to integrate an application with Nile to authenticate users with simple email and password authentication.
 
-- [Live demo - TBD](TBD)
+- [Live demo](https://email-authn.vercel.app)
 - [Video guide - TBD](TBD)
-- [Step by step guide - TBD](https://niledatabase-www.vercel.app/docs/user-authentication/quick-start/nextjs)
+- [Step by step guide](https://niledatabase-www.vercel.app/docs/user-authentication/quick-start/nextjs)
 
 ## Setup & Run
 
