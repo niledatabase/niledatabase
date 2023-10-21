@@ -67,7 +67,7 @@ export default function Hero() {
             </div>
             <div className="flex flex-col gap-3 items-center px-4 py-5  w-[220px]">
               <Image
-                src="/distribute-globally.jpg"
+                src="/distribute-globally.png"
                 alt="Onboard once, Distribute Globally icon"
                 width={100}
                 height={100}
@@ -95,7 +95,7 @@ export default function Hero() {
             </div>
             <div className="flex flex-col gap-3 items-center px-4 py-5  w-[220px]">
               <Image
-                src="/artificial-intelligence.jpg"
+                src="/artificial-intelligence.png"
                 alt="Instant Customer Dashboards icon"
                 width={100}
                 height={100}
