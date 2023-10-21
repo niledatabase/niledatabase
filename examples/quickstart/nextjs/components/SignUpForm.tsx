@@ -6,8 +6,7 @@ import Link from '@mui/joy/Link';
 import Alert from '@mui/joy/Alert';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { UserSignupForm } from '@theniledev/react';
-import { NileProvider } from '@theniledev/react';
+import { NileProvider, UserSignupForm } from '@niledatabase/react';
 
 export default function SignUp() {
   const [error, setError] = useState<string | null>(null);
