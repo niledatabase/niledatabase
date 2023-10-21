@@ -10,7 +10,7 @@ const rows = [
         ensuring developers love building their applications on Nile. Developers
         have a high bar, and we will strive to exceed their expectations every
         time. This is achieved by showing love, being honest, and taking great
-        pains to make the developer’s life easy.
+        care to make the developer’s life easy.
       </>
     ),
   },
