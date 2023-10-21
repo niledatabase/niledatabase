@@ -1,4 +1,3 @@
-import Server from "@theniledev/server";
 import { cookies } from 'next/headers';
 import styles from '../page.module.css';
 import { getUserId, getUserName, getUserToken } from "@/utils/AuthUtils";

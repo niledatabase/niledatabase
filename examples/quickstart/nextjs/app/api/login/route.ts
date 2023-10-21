@@ -12,10 +12,6 @@ const nile = getNile();
 // The reason we need this is that this example supports both Google SSO (which has custom information) and user/password login which doesn't
 // Check the authentication quickstart for a simpler example of using the Nile SDK without custom cookies
 export async function POST(req: Request) {
-    console.log("got request");
-    const req_json = await req.clone().json();
-    console.log(req_json);
-
     const res = await nile.api.auth.login(req);
 
     // if signup was successful, we want to set the cookies
