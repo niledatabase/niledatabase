@@ -1,7 +1,7 @@
 import Server from "@theniledev/server";
 import { cookies } from 'next/headers';
 import styles from '../page.module.css';
-import { getUserId, getUserName } from "@/utils/AuthUtils";
+import { getUserId, getUserName, getUserToken } from "@/utils/AuthUtils";
 import NextLink from 'next/link'
 import MUILink from '@mui/joy/Link';
 import Card from '@mui/joy/Card';
@@ -12,6 +12,7 @@ import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import {AddForm} from '@/app/tenants/add-form';
+import {getNile} from '@/lib/NileServer'
 
 
 // Forcing to re-evaluate each time. 
@@ -21,37 +22,22 @@ export const dynamicParams = true
 export const revalidate = 0
 export const fetchCache = 'force-no-store'
 
-const { api, db } = Server({
-    workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
-    database: String(process.env.NEXT_PUBLIC_DATABASE),
-    api: {
-      basePath: String(process.env.NEXT_PUBLIC_NILE_API),
-    },
-    db: {
-      connection: {
-        host: process.env.NILE_DB_HOST,
-        user: process.env.NILE_USER,
-        password: process.env.NILE_PASSWORD,
-      },
-    },
-  });
-
 export default async function Page() {
-  // Get user details from the auth cookie
-  const userId = getUserId(cookies().get('authData'))
-  const userName = getUserName(cookies().get('authData'));
-  console.log("userId:" + userId); // logging this so we can troubleshoot the query below when/if needed. 
+  // Get user details from the auth cookie and use them to set Nile context
+  const nile = getNile();
+  nile.token = getUserToken(cookies().get('authData'))
+  nile.userId = getUserId(cookies().get('authData'))
+  nile.tenantId = null; // clear tenant ID since we need to list all tenants here
+  console.log("userId:" + nile.userId); // this is set in the layout
   let tenants:any = [];
   
-  if (userId) {
+  if (nile.userId) {
     // TODO: Replace with API call to get tenants for user when the SDK supports this
-    tenants = await db("tenants")
+    tenants = await nile.db("tenants")
       .select("tenants.id","tenants.name")
       .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-      .where("tenant_users.user_id", "=", userId);
+      .where("tenant_users.user_id", "=", nile.userId);
   };
-
-  console.log('tenants', tenants)
   return (
         <div className={styles.center}>
           <Card  variant="outlined"> {/* TODO: need drop shadow */}
@@ -72,7 +58,7 @@ export default async function Page() {
             </List>
           </CardContent>
           <CardContent>
-                <Typography level="body-md" textAlign="center"> You are logged in as {userName} <MUILink href="/logout" component={NextLink}>(Logout)</MUILink></Typography>
+                <Typography level="body-md" textAlign="center"> You are logged in as {getUserName(cookies().get('authData'))} <MUILink href="/logout" component={NextLink}>(Logout)</MUILink></Typography>
           </CardContent>
           </Card>
 
