@@ -25,11 +25,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-app.use((req, res, next) => {
-  console.log("begin handling of " + req.originalUrl);
-  next();
-});
-
 // Middleware to check if user is authenticated, important to load it *after* cookie parser
 app.use('/api/tenants', (req, res, next) => {
   // Technically we don't need to validate the token. Nile will do this for us. 
@@ -43,14 +38,12 @@ app.use('/api/tenants', (req, res, next) => {
   // If we are here, the user is logged in. Set the token and user ID in the context
   nile.token = getUserToken(req.cookies);
   nile.userId = getUserId(req.cookies);
-  nile.tenantId = null; // clear tenant ID from context, doing this here, so the next handler can set it if the info is available
   next();
 });
 
 // set the tenant ID in the context based on the URL parameter - this runs after the auth middleware
 app.param('tenantId', (req, res, next, tenantId) => {
   nile.tenantId = tenantId; 
-  console.log("setting tenant ID to " + tenantId);
   next();
 });
 
@@ -84,20 +77,20 @@ app.post("/api/tenants", async (req, res) => {
 
 // return list of tenants for current user
 app.get("/api/tenants", async (req, res) => {
-  const userId = getUserId(req.cookies);
   let tenants:any = [];
+  nile.tenantId = null; // clear tenant ID in case it was set before, because we need to show a list of all tenants
 
   try {
     // TODO: Replace with API call to get tenants for user when the SDK supports this
-    if (userId) {
+    if (nile.userId) { // since we check for login in the middleware, we know that the user ID is set
       tenants = await nile.db("tenants")
         .select("tenants.id","tenants.name")
         .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-        .where("tenant_users.user_id", "=", userId);
+        .where("tenant_users.user_id", "=", nile.userId);
       res.json(tenants);
-    }; // if we don't have a user id, return empty array. TODO: Will be better to redirect to login page
+    }; 
   } catch (error: any) {
-    console.log("error listing tenants: " + JSON.stringify(error));
+    console.log("error listing tenants: " + error.message);
     res.status(500).json({
       message: "Internal Server Error",
     });
@@ -167,8 +160,6 @@ app.put("/api/tenants/:tenantId/todos", async (req, res) => {
 // get all tasks for tenant
 app.get("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
-    console.log("running query with context"+ nile.tenantId)
-    console.log("request parameters are "+ JSON.stringify(req.params))
     // No need for a "where" clause here because we are setting the tenant ID in the context
     const todos = await nile.db("todos").select("*").orderBy("title");
     res.json(todos);
