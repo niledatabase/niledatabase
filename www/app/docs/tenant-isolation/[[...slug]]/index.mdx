@@ -186,6 +186,7 @@ can access across all the tenant DBs irrespective of where the tenants are locat
 1. Querying the total no of customers
 
 ```sql
+-- Calculate the total no of customers signed up for the product
 select count(*) as no_of_customers from tenants;
 ```
 
@@ -204,6 +205,9 @@ select count(*) as no_of_customers from tenants;
 2. Querying the total no of candidates per customer
 
 ```sql
+-- Calculates the total no of candidates per tenant that have
+-- applied for a job for a recruiting product. Can be used to define
+-- active tenants
 select t1.id as customer_id,t1.name as customer_name,
 count(c1.id) as no_of_candidates from candidates c1 
 right join tenants t1 on c1.tenant_id=t1.id group by t1.id,t1.name;
