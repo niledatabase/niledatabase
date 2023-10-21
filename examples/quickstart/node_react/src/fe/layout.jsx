@@ -7,7 +7,6 @@ import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import './css/globals.css'
 import styles from './css/page.module.css'
-import { Route, useLocation, Link as RLink } from "react-router-dom";
 import { ReactComponent as NileLogo } from './images/nile_logo.svg';
 import { ReactComponent as NodeLogoRight } from './images/node_logo_r.svg';
 import { ReactComponent as NodeLogoBottom } from './images/node_logo_b.svg';

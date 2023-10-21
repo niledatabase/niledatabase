@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import jwtDecode from 'jwt-decode';
 import { toCookieData, NileJWTPayload, getUserToken, getUserId, isLoggedin } from "./authUtils";
-import Server from "@theniledev/server";
+import Server from "@niledatabase/server";
 import cookieParser from "cookie-parser";
 
 export const nile = Server({
@@ -27,12 +27,23 @@ app.use(cookieParser())
 
 // Middleware to check if user is authenticated, important to load it *after* cookie parser
 app.use('/api/tenants', (req, res, next) => {
+  // Technically we don't need to validate the token. Nile will do this for us. 
+  // But it is nice to handle the error in one place and not in each handler
   if (!isLoggedin(req.cookies)) {
     console.log("can't serve " + req.path + " - user not logged in")
     return res.status(401).json({
       message: "Unauthorized. Try logging in again.",
     });
   }
+  // If we are here, the user is logged in. Set the token and user ID in the context
+  nile.token = getUserToken(req.cookies);
+  nile.userId = getUserId(req.cookies);
+  next();
+});
+
+// set the tenant ID in the context based on the URL parameter - this runs after the auth middleware
+app.param('tenantId', (req, res, next, tenantId) => {
+  nile.tenantId = tenantId; 
   next();
 });
 
@@ -50,10 +61,6 @@ app.post("/api/tenants", async (req, res) => {
     });
   };
 
-  const userToken = getUserToken(req.cookies);
-  nile.token = userToken;
-  let tenantID = null;
-
   try {
     const createTenantResponse = await nile.api.tenants.createTenant({
       name: name,
@@ -70,18 +77,18 @@ app.post("/api/tenants", async (req, res) => {
 
 // return list of tenants for current user
 app.get("/api/tenants", async (req, res) => {
-  const userId = getUserId(req.cookies);
   let tenants:any = [];
+  nile.tenantId = null; // clear tenant ID in case it was set before, because we need to show a list of all tenants
 
   try {
     // TODO: Replace with API call to get tenants for user when the SDK supports this
-    if (userId) {
+    if (nile.userId) { // since we check for login in the middleware, we know that the user ID is set
       tenants = await nile.db("tenants")
         .select("tenants.id","tenants.name")
         .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-        .where("tenant_users.user_id", "=", userId);
+        .where("tenant_users.user_id", "=", nile.userId);
       res.json(tenants);
-    }; // if we don't have a user id, return empty array. TODO: Will be better to redirect to login page
+    }; 
   } catch (error: any) {
     console.log("error listing tenants: " + error.message);
     res.status(500).json({
@@ -94,13 +101,8 @@ app.get("/api/tenants", async (req, res) => {
 // Note that this just passes the request over to Nile. 
 // It is necessary because the browser can't call Nile APIs directly due to CORS restrictions.
 app.get("/api/tenants/:tenantId", async (req, res) => {
-  const { tenantId } = req.params;
-  nile.tenantId = tenantId; // set tenant ID for subsequenct operations
-  const userToken = getUserToken(req.cookies);
-  nile.token = userToken;
-
-  // Get tenant name doesn't need any input parameters because it uses the tenant ID from the context
   try {
+    // Get tenant name doesn't need any input parameters because it uses the tenant ID from the context
     const tenantResponse = await nile.api.tenants.getTenant();
     if (tenantResponse.status === 401) {
       return res.status(401).json({
@@ -120,14 +122,13 @@ app.get("/api/tenants/:tenantId", async (req, res) => {
 // add new task for tenant
 app.post("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
-    const { tenantId } = req.params;
     const { title, complete } = req.body;
 
     const newTodo = await nile.db("todos")
       .insert({
         title: title,
         complete: complete || false,
-        tenant_id: tenantId,
+        tenant_id: nile.tenantId, // setting from context
       })
       .returning("*");
 
@@ -141,13 +142,12 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
 });
 
 // update tasks for tenant - note that we don't handle partial updates here
+// No need for where clause because we have the tenant in the context
 // TODO: This should be for specific todo ID, not all todos with same title
-// TODO: Use Nile User Context which will validate that the user has permission to update this tenant
 app.put("/api/tenants/:tenantId/todos", async (req, res) => {  
   try {
-    const { tenantId } = req.params;
     const { title, complete } = req.body;
-    await nile.db("todos").update('complete', complete).where("tenant_id", tenantId).andWhere("title", title);
+    await nile.db("todos").update('complete', complete).where("title", title);
     res.sendStatus(200);
   } catch(error: any) {
     console.log("error updating tasks: " + error.message);
@@ -160,13 +160,8 @@ app.put("/api/tenants/:tenantId/todos", async (req, res) => {
 // get all tasks for tenant
 app.get("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
-    const { tenantId } = req.params;
-
-    /*const tenantDB = prisma.$extends(forTenant(tenantId)) */
-
-    // Tenant context not actually working yet...
-    // const todos = await db('todos').withTenant(tenantId).select('*');
-    const todos = await nile.db("todos").select("*").where("tenant_id", tenantId).orderBy("title");
+    // No need for a "where" clause here because we are setting the tenant ID in the context
+    const todos = await nile.db("todos").select("*").orderBy("title");
     res.json(todos);
   } catch (error: any) {
     console.log( "error listing tasks: " + error.message);
