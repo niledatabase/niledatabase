@@ -8,7 +8,7 @@ import Alert from '@mui/joy/Alert';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { UserLoginForm, NileProvider } from '@theniledev/react';
+import { UserLoginForm, NileProvider } from '@niledatabase/react';
 
 export default function BasicLoginForm() {
   const { push } = useRouter();

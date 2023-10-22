@@ -1,23 +1,13 @@
-import Server from '@theniledev/server';
 import { cookies } from 'next/headers';
 import jwtDecode from 'jwt-decode';
 import { cookieOptions, NileJWTPayload, toCookieData } from '@/utils/AuthUtils';
+import { getNile } from '@/lib/NileServer';
 
-const nile = Server({
-    workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
-    database: String(process.env.NEXT_PUBLIC_DATABASE),
-  api: {
-    basePath: String(process.env.NEXT_PUBLIC_NILE_API),
-  }  
-});
+const nile = getNile();
 
 // Note that this route must exist in this exact location for user/password signup to work
 // Nile's SignUp component posts to this route, we call Nile's signup API via the SDK 
 export async function POST(req: Request) {
-    console.log("got request");
-    const req_json = await req.clone().json();
-    console.log(req_json);
-
     const res = await nile.api.auth.signUp(req);
 
     // if signup was successful, we want to set the cookies and headers, so it will log the user in too

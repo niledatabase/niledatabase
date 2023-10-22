@@ -1,15 +1,10 @@
-import Server from '@theniledev/server';
 import jwtDecode from 'jwt-decode';
 import { NileJWTPayload, cookieOptions } from '@/utils/AuthUtils';
 import { cookies } from 'next/headers';
+import {getNile} from '@/lib/NileServer';
 
-const nile = Server({
-    workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
-    database: String(process.env.NEXT_PUBLIC_DATABASE),
-  api: {
-    basePath: String(process.env.NEXT_PUBLIC_NILE_API),
-  }  
-});
+
+const nile = getNile();
 
 // Note that this route must exist in this exact location for user/password login to work
 // Nile's LoginForm component posts to this route, we call Nile's login API via the SDK 
@@ -17,10 +12,6 @@ const nile = Server({
 // The reason we need this is that this example supports both Google SSO (which has custom information) and user/password login which doesn't
 // Check the authentication quickstart for a simpler example of using the Nile SDK without custom cookies
 export async function POST(req: Request) {
-    console.log("got request");
-    const req_json = await req.clone().json();
-    console.log(req_json);
-
     const res = await nile.api.auth.login(req);
 
     // if signup was successful, we want to set the cookies

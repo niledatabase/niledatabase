@@ -2,37 +2,21 @@
 // ^^^ This has to run on the server because it uses database operations and updates the cache
 
 import { revalidatePath } from 'next/cache'
-import Server from '@theniledev/server'
 
 import { getUserToken } from "@/utils/AuthUtils";
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation'
+import { getNile } from '@/lib/NileServer';
 
-const nile = Server({
-    workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
-    database: String(process.env.NEXT_PUBLIC_DATABASE),
-    api: {
-      basePath: String(process.env.NEXT_PUBLIC_NILE_API),
-    },
-    db: {
-      connection: {
-        host: process.env.NILE_DB_HOST,
-        user: process.env.NILE_USER,
-        password: process.env.NILE_PASSWORD,
-      },
-    },
-  });
-
+const nile = getNile();
 
 export async function createTenant(prevState: any, formData: FormData) {
-    console.log ( formData);
     const tenantName = formData.get('tenantname')?.toString();
     if (!tenantName) {
         return { message: 'No tenant name provided' }
     };
 
-    const userToken = getUserToken(cookies().get('authData'));
-    nile.token = userToken;
+    console.log("creating tenant " + tenantName + " for user:" + nile.userId);
 
     let success = false; // needed because redirect can't be used in try-catch block
     let tenantID = null;
