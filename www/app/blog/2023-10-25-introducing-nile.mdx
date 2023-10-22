@@ -28,3 +28,263 @@ Isolating tenants into their own virtual DBs is great, but you will also want to
 The experience would be something as follows:
 
 Creating a new virtual tenant DB is as simple as a standard insert into the tenant's table. By default, the tenant will get created on a multitenant Postgres in the default region. You should be able to specify any location in the world or the infrastructure type if you want a dedicated Postgres for a tenant (more on this in the next section).
+```sql
+-- create a record for the first customer
+insert into tenants (name) VALUES ('customer1');
+```
+Creating a new table for each tenant should be like standard table creation, and the database should ensure all the virtual tenant DBs get the schema changes applied to them. Let us call them tenant-aware tables.
+```sql
+-- creating an employee table that is tenant aware
+create table employees (
+  tenant_id uuid,
+  id integer,
+  name text,
+  age integer,
+  address text,
+  start_date timestamp,
+  title text,
+  CONSTRAINT FK_tenants FOREIGN KEY(tenant_id) REFERENCES tenants(id),
+  CONSTRAINT PK_employee PRIMARY KEY(tenant_id,id));
+```
+With the table in place, you can add rows for a specific tenant. Let us say tenant “customer 1” has a few employees that must be added to the system. 
+```sql
+-- adding employees for customer 1
+insert into employees (tenant_id, id, name, age, address, start_date, title)
+values
+  ('018ac98e-b37a-731b-b03a-6617e8fd5266',1345,'Jason',30,'Sunnyvale,California','2016-12-22 19:10:25-07','software engineer'),
+  ('018ac98e-b37a-731b-b03a-6617e8fd5266',2423,'Minnie',24,'Seattle,Washingtom','2018-11-11 12:09:22-06','sales engineer'),
+  ('018ac98e-b37a-731b-b03a-6617e8fd5266',4532,'Shiva',32,'Fremont, California','2019-09-05 04:03:12-05','product manager');
+```
+Now, let us assume a second tenant, “customer 2” needs to be added to the system, and a few employees are added to this new tenant. This would again create another virtual tenant DB. The inserts will route to the right virtual tenant DB, but the experience will be like simply inserting into the employee's table.
+```sql
+-- create the second customer
+insert into tenants (name) VALUES ('customer2');
+
+-- insert employees for the second customer
+insert into employees (tenant_id, id, name, age, address, start_date, title)
+values
+  ('018aca35-b8c4-7674-882c-30ae56d7b479',5643,'John',36,'London,UK','2017-12-12 19:10:25-07','senior software engineer'),
+  ('018aca35-b8c4-7674-882c-30ae56d7b479',1532,'Mark',27,'Manchester,UK','2022-10-10 12:09:22-06','support engineer'),
+  ('018aca35-b8c4-7674-882c-30ae56d7b479',8645,'Sam',42,'Liverpool,UK','2015-08-04 04:03:12-05','product manager');
+```
+Now, to direct your queries only to a specific tenant DB, you should be able to specify the tenant ID in the session context, and you should get full isolation. If you use the client library, this would be even more trivial since the client will do this for you when you set it once. This should all work out of the box without struggle with complex permissions, managing multiple databases or error-prone row-level security policies.
+```sql
+-- set the session context to a specific tenant
+-- who needs to be isolated.
+set nile.tenant_id = '018ac98e-b37a-731b-b03a-6617e8fd5266';
+
+select * from employees
+```
+<table>
+  <thead>
+    <tr>
+      <th>tenant_id</th>
+      <th>id</th>
+      <th>name</th>
+      <th>age</th>
+      <th>address</th>
+      <th>start_date</th>
+      <th>title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>1345</td>
+      <td>Jason</td>
+      <td>30</td>
+      <td>Sunnyvale,California</td>
+      <td>2016-12-22 19:10:25</td>
+      <td>software engineer</td>
+    </tr>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>2423</td>
+      <td>Minnie</td>
+      <td>24</td>
+      <td>Seattle,Washington</td>
+      <td>2018-11-11 12:09:22</td>
+      <td>sales engineer</td>
+    </tr>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>4532</td>
+      <td>Shiva</td>
+      <td>32</td>
+      <td>Fremont, California</td>
+      <td>2019-09-05 04:03:12</td>
+      <td>product manager</td>
+    </tr>
+  </tbody>
+</table>
+The best part is you should still be able to query across the tenant DBs like a standard table if you don’t specify any context.
+```sql
+select * from employees
+```
+<table>
+  <thead>
+    <tr>
+      <th>tenant_id</th>
+      <th>id</th>
+      <th>name</th>
+      <th>age</th>
+      <th>address</th>
+      <th>start_date</th>
+      <th>title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>1345</td>
+      <td>Jason</td>
+      <td>30</td>
+      <td>Sunnyvale,California</td>
+      <td>2016-12-22 19:10:25</td>
+      <td>software engineer</td>
+    </tr>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>2423</td>
+      <td>Minnie</td>
+      <td>24</td>
+      <td>Seattle,Washington</td>
+      <td>2018-11-11 12:09:22</td>
+      <td>sales engineer</td>
+    </tr>
+    <tr>
+      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+      <td>4532</td>
+      <td>Shiva</td>
+      <td>32</td>
+      <td>Fremont, California</td>
+      <td>2019-09-05 04:03:12</td>
+      <td>product manager</td>
+    </tr>
+    <tr>
+      <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
+      <td>5643</td>
+      <td>John</td>
+      <td>36</td>
+      <td>London,UK</td>
+      <td>2017-12-12 19:10:25</td>
+      <td>senior software engineer</td>
+    </tr>
+    <tr>
+      <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
+      <td>1532</td>
+      <td>Mark</td>
+      <td>27</td>
+      <td>Manchester,UK</td>
+      <td>2022-10-10 12:09:22</td>
+      <td>support engineer</td>
+    </tr>
+    <tr>
+      <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
+      <td>8645</td>
+      <td>Sam</td>
+      <td>42</td>
+      <td>Liverpool,UK</td>
+      <td>2015-08-04 04:03:12</td>
+      <td>product manager</td>
+    </tr>
+  </tbody>
+</table>
+### Global and flexible tenant placement
+
+When building a modern SaaS application, three critical factors that need to be considered are latency, performance isolation, and compliance. At the same time, cost is also an important aspect to ensure that the value delivered is commensurate with the cost of serving the customer. The capability of a database to define how tenants are placed has a significant impact on achieving this balance.
+
+Placement can be of two types
+
+**Regional placement -** You want to place individual tenants (customers) in different regions worldwide for compliance or latency reasons. You should be able to create the tenant database in any available location without worrying about the number of databases or the operational complexity.
+```sql
+insert into tenants (name, region)
+values ('customer 1', 'aws-us-east1');
+
+insert into tenants (name, region)
+values ('customer 2', 'aws-eu-west1');
+```
+Infrastructure placement - You will want to place tenants in a multitenant or dedicated physical database. The decision for this will depend on the customer's needs, cost, and level of isolation needed. Typically, you would start to place all your customers in a multitenant database and then have the need to place some tenants on dedicated physical databases.
+```sql
+insert into tenants (name, region, deployment_mode)
+values ('customer 2', 'aws-us-east1', 'dedicated');
+```
+The client should be able to route to the right tenant without any work from the user. Also, while providing all the placement flexibility, the magic lies in providing the ability to manage all these tenants in different locations and placements like a single Postgres instance. 
+
+Apply schema changes across tenants
+```sql
+-- the bookings table where each row represents a single booking
+-- for a specific employee within a customer/tenant
+create table bookings (
+  tenant_id uuid,
+  booking_id integer,
+  employee_id text,
+  flight_id integer,
+  total_price float,
+  PRIMARY KEY(tenant_id,booking_id));
+```
+Query across tenants for insights like a single database
+```sql
+-- Calculates the total no of candidates per tenant that have
+-- applied for a job for a recruiting product. Can be used to define
+-- active tenants
+select t1.id as customer_id,t1.name as customer_name,
+count(c1.id) as no_of_candidates from candidates c1 
+right join tenants t1 on c1.tenant_id=t1.id group by t1.id,t1.name;
+```
+### First-class support for users
+### Domain and tenant-aware AI-native architecture
+
+Every SaaS application will be an AI-native application like every software application was a SaaS-native application when SaaS happened. SaaS revolutionized how software was delivered. AI will revolutionize how software is experienced. 
+
+AI for SaaS needs to be specific to the domain and tenant. For example, 
+
+1. A corporate wiki (e.g., Confluence, Notion) where the employees can perform a semantic search on their company data
+2. A chatbot for a CRM (e.g., Salesforce, Hubspot) that sales reps can use to ask questions about past and future customer deals and can have a back-and-forth conversation
+3. An autopilot for developers in their code repository (Github, Gitlab) to improve productivity. The autopilot should run on the company's code as well, apart from learning from public repositories.
+
+A powerful architecture to achieve this is Retrieval augmented generation(RAG). The idea is to prevent large language models from hallucinating by augmenting the prompt with relevant context. This is usually done by converting the tenant's data set and the query to a common format called embeddings. The prompt issued by the user belonging to a specific tenant will be augmented with more context from that tenant's embeddings. This helps LLMs to be more contextual and also more secure.
+
+A database for SaaS should have native support for storing vector embeddings per tenant. It should also help store the metadata relevant to each tenant and the embeddings. Given Postgres is our choice, pgvector extension combined with tenant virtualization would be powerful.
+```sql
+create table wiki_documents(tenant_id uuid, id integer, embedding vector(3));
+
+insert into wiki_documents(tenant_id, id, embedding)
+values ('018ade1a-7843-7e60-9686-714bab650998', 1, '[1,2,3]');
+
+select embedding <-> '[3,1,2]' as distance from wiki_documents;
+```
+You get the following benefits
+
+1. Embeddings and metadata computed and stored per tenant
+2. Embeddings and metadata are stored near the customer to speed up the first-byte response to a query
+3. HNSW and IVFLAT index support from pg_vector
+4. Unlimited scaling of embeddings since tenants can be distributed and sharded. HNSW is a pretty resource-intensive
+5. Purpose-built SDKs that integrate with LLM hosts such as OpenAI and Huggingface and vector embeddings.
+### Serverless and cloud-native
+
+Serverless is how developers will adopt databases in the next decade. Before anyone jumps to say, “There is no such thing as serverless. There are only other people's servers”, the intent of using serverless is to define the experience developers get. It does not mean that the database is implemented without any servers! A database for SaaS should be able to let developers focus on their queries, their use cases, and their applications. Developers don’t have to worry about managing capacity, the server configurations, or paying for capacity they don’t use. This gets even more complex if you want to manage multiple databases for each tenant. A database for SaaS should let you have any number of virtual tenant databases but give you all the goodness of serverless. It should enforce price limits and ensure developers don’t get a sticker shock. The goal of serverless is to care about developers, which is exactly what it should do.
+
+The second thing is that the database needs to be built for the cloud. This means leveraging the native cloud infrastructure to build a highly scalable and elastic system. It makes sense to decouple storage and compute and push storage to cloud storage like S3. This helps to keep the compute stateless and makes it easier to scale them quickly. You still want to shard the tenants across databases and regions to provide placement flexibility (regional and infrastructure placement) and scale the storage as needed.
+
+### Tenant-level insights and administration
+
+A huge part of building and running a SaaS application is to understand the growth and performance of the application and optimize it. This has been traditionally hard for SaaS. Most want a simple way to look up their active customers, their users, and their product usage and better understand how the different queries are performing for each customer. 
+
+A database for SaaS should have native support for this. Given it understands tenant boundaries, users within those tenants, and all the queries executed in that context, it would be trivial to show relevant insights to the developers. Developers should be able to understand the growth of the product, how the query performs for each tenant, and past trends. All the performance metrics, usage metrics, and even logs can be understood for each tenant. Postgres tools such as pg_stats, EXPLAIN, and ANALYZE should work and provide insights globally and by tenant.
+![“Nile Dashboard”](/blog/nile_dashboard.png)
+
+### World-class developer experience
+
+### And some more
+
+There are many more things I chose not to talk about now. Things like propagating real-time changes per tenant to the front end, supporting analytics to build data-centric applications, and leveraging usage data per tenant for monetization are all critical topics in building SaaS. In some cases, integrating with external systems would make much sense. We would love to hear your feedback and thoughts about this on our [GitHub discussion forum](https://github.com/niledatabase/niledatabase/discussions) or [Discord community](https://discord.gg/8UuBB84tTy).
+## Nile - a company to accelerate modern SaaS
+
+The mission of Nile is to enable developers to accelerate the next billion modern SaaS applications. A world-class modern SaaS will have ten key traits. They will be customer-centric, highly secure, extremely low latency, data-intensive, real-time, intelligent, collaborative, globally accessible, collaborative, highly available, and beautiful. What we will build at Nile will help accomplish this and truly change the future of SaaS. Nile will deliver on this promise.
+
+## Get Started!
+
+You can try out Nile by [signing up for our waitlist](https://www.thenile.dev/) today. We are onboarding new users every day. You can get started with one of our quickstarts. We also have [templates and demos](https://www.thenile.dev/templates) that will make it easy to get started. We would love to have you try out Nile, give us feedback, and help us build something truly world-class. If you need help, you can reach us on our [GitHub discussion forum](https://github.com/niledatabase/niledatabase/discussions) or our [Discord community](https://discord.gg/8UuBB84tTy). Follow us on [Twitter](https://twitter.com/niledatabase) or [Linkedin](https://www.linkedin.com/company/niledatabase/) to get regular updates.
+
+We are also looking to hire amazing engineers who can help with this mission. If you want to help with this, we would love to talk to you. We are building something truly wonderful and are excited about this journey!
