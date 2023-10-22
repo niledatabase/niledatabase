@@ -196,7 +196,7 @@ export default function ArtificialIntelligence() {
               <ChatBlurbStacked />
               <div className="lg:w-1/2 lg:pl-2 mx-auto lg:mx-0 md:w-[77vw] w-[90vw] overflow-hidden overflow-x-scroll">
                 <div className="border border-gray rounded-[24px] px-8 py-3 w-full bg-[#000] h-full relative overflow-hidden">
-                  <div className="absolute bottom-0 bg-fader left-0 right-0 top-[70%]"></div>
+                  <div className="absolute bottom-0 left-0 right-0 top-[70%]"></div>
                   <div className="pb-8">
                     <CodeSample />
                   </div>
