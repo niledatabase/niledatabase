@@ -1,0 +1,30 @@
+export const metadata = {
+  title: "Introducing Nile, Serverless Postgres for modern SaaS",
+  authors: ["sriramsub"],
+  image: "introducing_nile.jpeg",
+  sizzle:
+    "Introducing Nile, a Serverless Postgres for modern SaaS",
+  tags: ["database", "serverless", "postgres", "saas"],
+};
+
+I am thrilled to announce Nile, a serverless Postgres database designed for modern SaaS applications. All SaaS applications are multi-tenant, where a tenant is primarily a company, an organization, or a workspace that contains a group of users. Nile has built-in tenant virtualization in Postgres, allowing easy tenant data management (data isolation, performance isolation, backups), organization and user management, global tenant placement, domain and customer-specific LLM models, and more SaaS capabilities. Moreover, Nile's Postgres has been built for the cloud, enabling effortless scaling and a true serverless experience. You can [sign up for our waitlist](https://www.thenile.dev/) today to try it out.
+
+I’ll come to our new company shortly, but first, let me tell you our story about the challenges and hardships we experienced building modern SaaS.
+
+## What makes SaaS modern, and why is it hard?
+## Designing a database from first principles for modern SaaS
+
+A key insight we had as we spent multiple years looking into the different SaaS problems was that they were all connected to data and customers. All the features a SaaS application needs to support require being tenant-aware and involving data management in some form. Based on first principles, it was obvious to us that we needed to start with the database. What would an ideal database for SaaS look like? What foundational elements would it require? How can we create a fully integrated solution that simplifies the development and scaling of SaaS while also offering the flexibility for developers to integrate with their preferred tools seamlessly?
+### Postgres
+We needed to pick a database we would build our tooling around, and the obvious choice was Postgres. Postgres is a world-class database that is winning in the OLTP space. This trend will continue, and making Postgres easy for building SaaS is the best way for us to have the maximum impact. In my opinion, one of the biggest reasons for Postgres's success is its wide suite of features and extension flexibility. This is a great foundation to build the right tooling around it to make it world-class for SaaS. A  solution with Postgres should provide a fully integrated experience and still preserve the complete flexibility and extensibility of Postgres.
+![“Postgres Growth”](/blog/database_growth.png)
+
+### Built-in tenant virtualization
+
+The most foundational element in SaaS is a tenant. Every operation is around a tenant. It makes a lot of sense to build this concept into the database. Imagine having a lot of virtual tenant databases. These tenant databases can be co-located on one physical Postgres (multi-tenant) for better cost, or some tenants can be placed on a dedicated database for better isolation. The virtual tenant DBs can be located anywhere on the planet for low latency or compliance. The client can route to the right tenant seamlessly without any application code needed for routing. 
+
+Isolating tenants into their own virtual DBs is great, but you will also want to be able to share data across tenants where it makes sense. Backups should be available for each tenant, and it should be possible to restore from them instantaneously. Schema changes should be applied seamlessly across all the tenant DBs, and it should also be possible to do staged rollouts for different tenant tiers. While supporting all this, all the standard SQL capabilities should work across the tenants for admin operations. All the standard Postgres tooling should work. You want the experience of a single Postgres! This sounds like magic, and we can make this magic a reality. 
+
+The experience would be something as follows:
+
+Creating a new virtual tenant DB is as simple as a standard insert into the tenant's table. By default, the tenant will get created on a multitenant Postgres in the default region. You should be able to specify any location in the world or the infrastructure type if you want a dedicated Postgres for a tenant (more on this in the next section).
