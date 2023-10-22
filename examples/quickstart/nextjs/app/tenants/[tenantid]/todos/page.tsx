@@ -26,8 +26,13 @@ const nile = getNile();
 // Todo: replace "raw" context setting with nicer SDK
 export default async function Page({ params }: { params: { tenantid: string } }) {
     const nile = getNile();
-    console.log("using user " + nile.userId + " for tenant " + params.tenantid);
-    nile.tenantId = params.tenantid; // set tenant ID for subsequenct operations
+
+    // setting context for this page
+    nile.tenantId = params.tenantid;
+    nile.token = getUserToken(cookies().get('authData'))
+    nile.userId = getUserId(cookies().get('authData')) 
+
+    console.log("using user " + nile.userId + " for tenant " + nile.tenantId);
     const todos = await nile.db("todos").select("*"); // no need for where clause because we previously set Nile context
     console.log("todos:" + JSON.stringify(todos));
     // Get tenant name doesn't need any input parameters because it uses the tenant ID from the context
