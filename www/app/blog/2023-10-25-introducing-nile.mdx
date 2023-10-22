@@ -13,18 +13,16 @@ I’ll come to our new company shortly, but first, let me tell you our story abo
 
 ## What makes SaaS modern, and why is it hard?
 ## Designing a database from first principles for modern SaaS
-
-A key insight we had as we spent multiple years looking into the different SaaS problems was that they were all connected to data and customers. All the features a SaaS application needs to support require being tenant-aware and involving data management in some form. Based on first principles, it was obvious to us that we needed to start with the database. What would an ideal database for SaaS look like? What foundational elements would it require? How can we create a fully integrated solution that simplifies the development and scaling of SaaS while also offering the flexibility for developers to integrate with their preferred tools seamlessly?
+A key insight we had as we spent multiple years looking into the different SaaS problems was that they were all connected to data and customers. All the features a SaaS application needs to support require being tenant-aware and involving data management in some form. Based on first principles, it was obvious to us that we needed to start with the database. What would an ideal database for SaaS look like? What foundational elements would it require? How can we create a fully integrated solution that simplifies the development and scaling of SaaS while also offering the flexibility for developers to integrate with their preferred tools? Let us go over some key criteria that will help answer these questions.
 
 ### Postgres
-We needed to pick a database we would build our tooling around, and the obvious choice was Postgres. Postgres is a world-class database that is winning in the OLTP space. This trend will continue, and making Postgres easy for building SaaS is the best way for us to have the maximum impact. In my opinion, one of the biggest reasons for Postgres's success is its wide suite of features and extension flexibility. This is a great foundation to build the right tooling around it to make it world-class for SaaS. A  solution with Postgres should provide a fully integrated experience and still preserve the complete flexibility and extensibility of Postgres.
+We needed to pick a database we would build our tooling around, and the obvious choice was Postgres. Postgres is a world-class database that is winning in the OLTP space. This trend will continue, and making Postgres easy for building SaaS is the best way for us to have the maximum impact. In my opinion, one of the biggest reasons for Postgres's success is its wide suite of features and extension flexibility. This is a great foundation to build the right tooling around it, making it world-class for SaaS. A  solution with Postgres should provide a fully integrated experience and still preserve the complete flexibility and extensibility of Postgres. It should also work well with Postgres’s vast tooling ecosystem.
 ![“Postgres Growth”](/blog/database_growth.png)
 
 ### Built-in tenant virtualization
-The most foundational element in SaaS is a tenant. Every operation is around a tenant. It makes a lot of sense to build this concept into the database. Imagine having a lot of virtual tenant databases. These tenant databases can be co-located on one physical Postgres (multi-tenant) for better cost, or some tenants can be placed on a dedicated database for better isolation. The virtual tenant DBs can be located anywhere on the planet for low latency or compliance. The client can route to the right tenant seamlessly without any application code needed for routing. 
+The most foundational element in SaaS is a tenant. Every operation is around a tenant. It makes a lot of sense to build this core concept into the database. Imagine having a lot of virtual tenant databases. These tenant databases can be co-located on one physical Postgres (multi-tenant) for better cost, or some tenants can be placed on a dedicated database for better isolation. The virtual tenant DBs can be located anywhere on the planet for low latency or compliance. The client can route to the right tenant seamlessly without any application code needed for routing. 
 
 Isolating tenants into their own virtual DBs is great, but you will also want to be able to share data across tenants where it makes sense. Backups should be available for each tenant, and it should be possible to restore from them instantaneously. Schema changes should be applied seamlessly across all the tenant DBs, and it should also be possible to do staged rollouts for different tenant tiers. While supporting all this, all the standard SQL capabilities should work across the tenants for admin operations. All the standard Postgres tooling should work. You want the experience of a single Postgres! This sounds like magic, and we can make this magic a reality. 
-
 The experience would be something as follows:
 Creating a new virtual tenant DB is as simple as a standard insert into the tenant's table. By default, the tenant will get created on a multitenant Postgres in the default region. You should be able to specify any location in the world or the infrastructure type if you want a dedicated Postgres for a tenant (more on this in the next section).
 ```sql
@@ -45,7 +43,7 @@ create table employees (
   CONSTRAINT FK_tenants FOREIGN KEY(tenant_id) REFERENCES tenants(id),
   CONSTRAINT PK_employee PRIMARY KEY(tenant_id,id));
 ```
-With the table in place, you can add rows for a specific tenant. Let us say tenant “customer 1” has a few employees that must be added to the system. 
+With the table in place, you can add rows for a specific tenant. Let us say tenant “customer 1” has a few employees that must be added to the system.
 ```sql
 -- adding employees for customer 1
 insert into employees (tenant_id, id, name, age, address, start_date, title)
@@ -66,7 +64,7 @@ values
   ('018aca35-b8c4-7674-882c-30ae56d7b479',1532,'Mark',27,'Manchester,UK','2022-10-10 12:09:22-06','support engineer'),
   ('018aca35-b8c4-7674-882c-30ae56d7b479',8645,'Sam',42,'Liverpool,UK','2015-08-04 04:03:12-05','product manager');
 ```
-Now, to direct your queries only to a specific tenant DB, you should be able to specify the tenant ID in the session context, and you should get full isolation. If you use the client library, this would be even more trivial since the client will do this for you when you set it once. This should all work out of the box without struggle with complex permissions, managing multiple databases or error-prone row-level security policies.
+Now, to direct your queries only to a specific tenant DB, you should be able to specify the tenant ID in the session context, and you should get full isolation. If you use the client library, this would be even more trivial since the client will do this for you when you set it once. This should all work out of the box without struggling with complex permissions, managing multiple databases, or error-prone row-level security policies.
 ```sql
 -- set the session context to a specific tenant
 -- who needs to be isolated.
@@ -193,7 +191,6 @@ select * from employees
 When building a modern SaaS application, three critical factors that need to be considered are latency, performance isolation, and compliance. At the same time, cost is also an important aspect to ensure that the value delivered is commensurate with the cost of serving the customer. The capability of a database to define how tenants are placed has a significant impact on achieving this balance.
 
 Placement can be of two types
-
 **Regional placement -** You want to place individual tenants (customers) in different regions worldwide for compliance or latency reasons. You should be able to create the tenant database in any available location without worrying about the number of databases or the operational complexity.
 ```sql
 insert into tenants (name, region)
@@ -207,9 +204,9 @@ values ('customer 2', 'aws-eu-west1');
 insert into tenants (name, region, deployment_mode)
 values ('customer 2', 'aws-us-east1', 'dedicated');
 ```
-The client should be able to route to the right tenant without any work from the user. Also, while providing all the placement flexibility, the magic lies in providing the ability to manage all these tenants in different locations and placements like a single Postgres instance. 
+The client should be able to route to the right tenant without any work from the user. Also, while providing all the placement flexibility, the magic lies in providing the ability to manage all these tenants in different locations and placements like a single Postgres instance. Here are a couple of examples where this will be useful:
 
-Apply schema changes across tenants
+Make schema changes once, and the database should apply the change across all the virtual tenant DBs
 ```sql
 -- the bookings table where each row represents a single booking
 -- for a specific employee within a customer/tenant
@@ -269,9 +266,10 @@ A database for SaaS should have native support for this. Given it understands te
 ![“Nile Dashboard”](/blog/nile_dashboard.png)
 
 ### World-class developer experience
+Databases are still hard to use. While Postgres does a great job, there is still a lot of friction in the end-to-end developer journey to build SaaS applications with a cloud-native database. Developers should be able to test locally with the DB for a rapid feedback loop on their laptop, create test databases to apply schema changes, and then migrate to production. This whole experience should be integrated well with a change management system like GitHub. Everything we discussed so far also significantly improves the developer experience. Finally, having a deeply integrated ecosystem is so important to enable developers to use their favorite tools. This includes ensuring the full toolchain of Postgres is working and connecting with third-party services for a seamless experience.
 
 ### And some more
-There are many more things I chose not to talk about now. Things like propagating real-time changes per tenant to the front end, supporting analytics to build data-centric applications, and leveraging usage data per tenant for monetization are all critical topics in building SaaS. In some cases, integrating with external systems would make much sense. We would love to hear your feedback and thoughts about this on our [GitHub discussion forum](https://github.com/niledatabase/niledatabase/discussions) or [Discord community](https://discord.gg/8UuBB84tTy).
+There are many more things I chose not to talk about now. Things like propagating real-time changes per tenant to the front end, supporting analytics to build data-centric applications, and leveraging usage data per tenant for monetization are all critical topics in building SaaS. The tenant virtualization is the basic building block. Many SaaS tooling and integrations can be built on this foundation to make it easy to build and scale the product. We would love to hear your feedback and thoughts about this on our GitHub discussion forum or Discord community.
 ## Nile - a company to accelerate modern SaaS
 The mission of Nile is to enable developers to accelerate the next billion modern SaaS applications. A world-class modern SaaS will have ten key traits. They will be customer-centric, highly secure, extremely low latency, data-intensive, real-time, intelligent, collaborative, globally accessible, collaborative, highly available, and beautiful. What we will build at Nile will help accomplish this and truly change the future of SaaS. Nile will deliver on this promise.
 
