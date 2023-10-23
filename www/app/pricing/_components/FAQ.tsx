@@ -22,11 +22,19 @@ const ExpandItem = (props: {
   const [headerHeight, setHeader] = useState<string | Element>('');
   const classes = variants[show ? 'open' : 'closed'];
   const rows = useMemo(() => {
+<<<<<<< HEAD
     if (typeof document !== 'undefined') {
       const canvas = document.createElement('canvas');
       const canvasContext = canvas.getContext('2d');
       if (canvasContext) {
         canvasContext.font = '18px Roboto';
+=======
+    if (typeof document !== "undefined") {
+      const canvas = document.createElement("canvas");
+      const canvasContext = canvas.getContext("2d");
+      if (canvasContext) {
+        canvasContext.font = "18px Roboto";
+>>>>>>> 126b625 (chore: add placeholder community)
         const result = canvasContext.measureText(String(headerHeight)).width;
         return Math.ceil((result + PADDING) / window.innerWidth);
       }
