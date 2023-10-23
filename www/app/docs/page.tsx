@@ -9,6 +9,8 @@ import { CommunityLinks } from "../_components/common/CommunityLinks";
 import GradientButton from "../_components/common/GradientButton";
 import Link from "next/link";
 import { TutorialList } from "../community/_components/Tutorials";
+import NileBgMark from "@/public/icons/nile-bg-mark.svg";
+import Templates from "@/public/icons/templates.svg";
 
 const languages = [
   { name: "sql", icon: "sql.svg", path: "/docs/getting-started/languages/sql" },
@@ -37,7 +39,7 @@ export default async function Home() {
         <div className="flex flex-row items-start gap-2 mx-auto mt-20">
           <Image
             className="mt-2 hidden lg:block"
-            src="/icons/nile-bg-mark.svg"
+            src={NileBgMark}
             alt="nile logo"
             width={55}
             height={55}
@@ -84,8 +86,8 @@ export default async function Home() {
               <div className="hidden lg:block">
                 <GradientButton href="/templates" variant="soft">
                   <Image
-                    src="/icons/templates.svg"
                     alt="book cover"
+                    src={Templates}
                     width={24}
                     height={24}
                   />
@@ -103,7 +105,7 @@ export default async function Home() {
             <div className="block lg:hidden mx-auto">
               <GradientButton href="/templates" variant="soft">
                 <Image
-                  src="/icons/templates.svg"
+                  src={Templates}
                   alt="book cover"
                   width={24}
                   height={24}
@@ -123,7 +125,7 @@ export default async function Home() {
               <div className="hidden lg:block">
                 <GradientButton href="/templates" variant="soft">
                   <Image
-                    src="/icons/templates.svg"
+                    src={Templates}
                     alt="book cover"
                     width={24}
                     height={24}
@@ -139,7 +141,7 @@ export default async function Home() {
               <div>
                 <GradientButton href="/templates" variant="soft">
                   <Image
-                    src="/icons/templates.svg"
+                    src={Templates}
                     alt="book cover"
                     width={24}
                     height={24}

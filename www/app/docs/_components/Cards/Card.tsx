@@ -25,7 +25,6 @@ export default async function Card(props: Props) {
       return maybePart;
     })
     .join("/");
-  console.log(icon);
   return (
     <Link href={`/docs/${root}/${href}`} style={{ textDecoration: "none" }}>
       <div className="border-2 w-64 px-4 py-1 border-gray hover:border-lightGray transition-colors rounded-xl flex flex-row items-center gap-4 hover:bg-divider-glow">

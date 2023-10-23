@@ -1,6 +1,10 @@
 import Heading from "@/app/_components/common/Heading";
 import Video from "./Video";
 import Image from "next/image";
+import Frame1 from "@/public/frame-1.svg";
+import Frame2 from "@/public/frame-2.svg";
+import Frame3 from "@/public/frame-3.svg";
+import Frame4 from "@/public/frame-4.svg";
 export default function DropInUserManagement() {
   return (
     <div className="container mx-auto">
@@ -21,7 +25,7 @@ export default function DropInUserManagement() {
               <div className="py-4 px-5 itemDivider">
                 <div className="flex flex-row relative align-middle justify-center mb-3">
                   <Image
-                    src="/frame-2.svg"
+                    src={Frame2}
                     alt="lightning bolt"
                     width={236}
                     height={72}
@@ -36,7 +40,7 @@ export default function DropInUserManagement() {
               <div className="py-4 px-5 itemDivider">
                 <div className="flex flex-row relative align-middle justify-center mb-3">
                   <Image
-                    src="/frame-3.svg"
+                    src={Frame3}
                     alt="lightning bolt"
                     width={236}
                     height={72}
@@ -52,7 +56,7 @@ export default function DropInUserManagement() {
               <div className="py-4 px-5 itemDivider">
                 <div className="flex flex-row relative align-middle justify-center mb-3">
                   <Image
-                    src="/frame-1.svg"
+                    src={Frame1}
                     alt="lightning bolt"
                     width={236}
                     height={72}
@@ -68,7 +72,7 @@ export default function DropInUserManagement() {
               <div className="py-4 px-5 itemDivider">
                 <div className="flex flex-row relative align-middle justify-center mb-3">
                   <Image
-                    src="/frame-4.svg"
+                    src={Frame4}
                     alt="lightning bolt"
                     width={236}
                     height={72}

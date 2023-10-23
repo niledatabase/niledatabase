@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Status from "./Status";
 import Link from "next/link";
+import X from "@/public/x-white.svg";
+import LinkedIn from "@/public/linkedin.svg";
+import Github from "@/public/githubLogo-white.svg";
+import Logo from "@/public/logo.svg";
 export default async function Footer({ className }: { className?: string }) {
   return (
     <div
@@ -14,35 +18,36 @@ export default async function Footer({ className }: { className?: string }) {
           <div className="z-10 relative">
             <div className="flex flex-col lg:flex-row  justify-between w-full gap-32">
               <div className="flex flex-col gap-3 items-center lg:items-start">
-                <Image src="/logo.svg" alt="nile logo" width={80} height={30} />
+                <Image src={Logo} alt="nile logo" width={80} height={30} />
                 <div className="text-[#A1A1AA] text-lg">
                   Copyright &copy; {new Date().getFullYear()} Nile
                 </div>
-                <div className="flex flex-row gap-5">
-                  <Image
-                    src="/icons/twitter.svg"
-                    alt="twitter logo"
-                    width={15}
-                    height={14}
-                  />
-                  <Image
-                    src="/icons/facebook.svg"
-                    alt="facebook logo"
-                    width={15}
-                    height={14}
-                  />
-                  <Image
-                    src="/icons/linkedin.svg"
-                    alt="linkedin logo"
-                    width={15}
-                    height={14}
-                  />
-                  <Image
-                    src="/icons/youtube.svg"
-                    alt="youtube logo"
-                    width={15}
-                    height={14}
-                  />
+                <div className="flex flex-row gap-5 opacity-60">
+                  <Link href="https://x.com/niledatabase" target="_blank">
+                    <Image src={X} alt="twitter logo" width={15} height={14} />
+                  </Link>
+                  <Link
+                    href="https://www.linkedin.com/company/niledatabase/"
+                    target="_blank"
+                  >
+                    <Image
+                      src={LinkedIn}
+                      alt="linkedin logo"
+                      width={15}
+                      height={14}
+                    />
+                  </Link>
+                  <Link
+                    href="https://github.com/niledatabase/niledatabase"
+                    target="_blank"
+                  >
+                    <Image
+                      src={Github}
+                      alt="github octocat"
+                      width={15}
+                      height={14}
+                    />
+                  </Link>
                 </div>
               </div>
               <div className="flex flex-row flex-wrap gap-20 p-2">

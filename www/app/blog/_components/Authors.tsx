@@ -1,6 +1,6 @@
 import Image from "next/image";
 import authors from "../authors";
-
+import Zoidberg from "@/public/authors/zoidberg.png";
 export function Authors({ authors: _authors }: { authors: string[] }) {
   return (
     <div>
@@ -22,7 +22,7 @@ export function Authors({ authors: _authors }: { authors: string[] }) {
                   alt={`Dr. John A. Zoidberg, DFA`}
                   width={32}
                   height={32}
-                  src={`/authors/zoidberg.png`}
+                  src={Zoidberg}
                 />
               )}
             </div>

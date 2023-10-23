@@ -2,7 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import GradientButton from "@/app/_components/common/GradientButton";
 import Heading from "@/app/_components/common/Heading";
-import { last } from "lodash";
+import SaasCommunityLogo from "@/public/saas-community-logo.png";
+import Community from "@/public/icons/community.svg";
 
 const playerProps = {
   allowFullScreen: true,
@@ -43,7 +44,7 @@ export default function Tutorials() {
         <div className="flex flex-col lg:flex-row gap-4 justify-center">
           <div className="flex justify-center">
             <Image
-              src="/saas-community-logo.png"
+              src={SaasCommunityLogo}
               alt="purple cloud"
               width={93}
               height={61}
@@ -84,7 +85,7 @@ export default function Tutorials() {
         <Link href="https://launchpass.com/all-about-saas" target="_blank">
           <GradientButton variant="soft">
             <Image
-              src="/icons/community.svg"
+              src={Community}
               alt="orange halo person"
               width={24}
               height={24}

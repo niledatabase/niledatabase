@@ -4,12 +4,13 @@ import PageHeader from "../_components/common/PageHeader";
 import FAQ from "./_components/FAQ";
 import ContactUs from "./_components/ContactUs";
 import JoinWaitlist from "./_components/JoinWaitlist";
+import BulletIcon from "@/public/icons/bullet.svg";
 
 function Bullet({ children }: { children: string | JSX.Element }) {
   return (
     <li className="flex flex-row gap-2">
       <Image
-        src="/icons/bullet.svg"
+        src={BulletIcon}
         alt="gradient bullet"
         width={8}
         height={8}

@@ -9,6 +9,7 @@ import Image from "next/image";
 import Footer from "../_components/Footer";
 import Divider from "@/app/_components/common/Divider";
 import { Metadata, ResolvingMetadata } from "next";
+import Coffee from "@/public/blog/coffee.jpg";
 type Props = { params: { slug: string[] } };
 
 async function getBlog(props: Props) {
@@ -50,7 +51,7 @@ export default async function BlogPage(props: Props) {
                 alt="coffee"
                 width={800}
                 height={505}
-                src={`/blog/coffee.jpg`}
+                src={Coffee}
               />
             )}
           </div>

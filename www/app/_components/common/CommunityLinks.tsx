@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import Github from "@/public/github-text.svg";
+import Discord from "@/public/discord.svg";
+import X from "@/public/x.svg";
+
 export function CommunityLinks() {
   return (
     <div className="flex flex-col lg:flex-row w-full justify-between gap-10 items-center">
@@ -10,7 +14,7 @@ export function CommunityLinks() {
       >
         <div className="flex flex-col gap-10 itemDivider p-8 max-w-[296px]">
           <Image
-            src="/github-text.svg"
+            src={Github}
             alt="github text in black and white gradient"
             width={122}
             height={34}
@@ -24,7 +28,7 @@ export function CommunityLinks() {
       <Link href="https://discord.gg/8UuBB84tTy" target="_blank">
         <div className="flex flex-col gap-10 itemDivider p-8 max-w-[296px]">
           <Image
-            src="/discord.svg"
+            src={Discord}
             alt="github text in black and white gradient"
             width={189}
             height={52}
@@ -38,7 +42,7 @@ export function CommunityLinks() {
       <Link href="https://x.com/niledatabase" target="_blank">
         <div className="flex flex-col gap-10 itemDivider p-8 max-w-[296px]">
           <Image
-            src="/x.svg"
+            src={X}
             alt="github text in black and white gradient"
             width={47}
             height={44}
