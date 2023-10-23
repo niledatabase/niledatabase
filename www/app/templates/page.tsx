@@ -30,3 +30,11 @@ export default async function Home() {
     </Container>
   );
 }
+
+export const metadata = {
+  title: "Templates | Nile Database",
+  description: "Try out how easy it can be to develop SaaS",
+  openGraph: {
+    images: "opengraph/templates.jpg",
+  },
+};

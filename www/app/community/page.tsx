@@ -130,3 +130,11 @@ export default async function Home() {
     </Container>
   );
 }
+
+export const metadata = {
+  title: "Community | Nile Database",
+  description: "Join the community of SaaS developers",
+  openGraph: {
+    images: "opengraph/community.jpg",
+  },
+};
