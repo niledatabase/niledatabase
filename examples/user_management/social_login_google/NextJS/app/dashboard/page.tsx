@@ -26,11 +26,10 @@ export default function Dashboard() {
   if (authData.event === "LOGIN") {
     const allAud = authData.tokenData?.aud; // the audiences may include a tenant ID
     if (Array.isArray(allAud)) {
-      // audiences that are not 'nile' should be tenant IDs
-      // TODO: aud also includes the UUID of the database. We should filter that out too once there's a way to do it.
-      const tenantAud = allAud.filter(aud => aud !== "nile")
-      // we'll just show one tenant at random for now
-      authData.tenantId = tenantAud[0];
+      // the audience includes 'nile', 'database:xxxxx' (where xxxxx is the database id), and
+      // 'tenant:xxxxx' (where xxxxx is the tenant ID)
+      const tenant = allAud.find(claim => claim.startsWith('tenant:'));
+      authData.tenantId = tenant?.split(':')[1] || '';
     }
   }
 
