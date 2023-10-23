@@ -5,8 +5,6 @@ import Heading from "@/app/_components/common/Heading";
 import { last } from "lodash";
 
 const playerProps = {
-  // width: 372,
-  // height: 218,
   allowFullScreen: true,
   title: "YouTube video player",
   allow:

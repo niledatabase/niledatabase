@@ -22,13 +22,15 @@ const ExpandItem = (props: {
   const [headerHeight, setHeader] = useState<string | Element>("");
   const classes = variants[show ? "open" : "closed"];
   const rows = useMemo(() => {
-    const canvas = document.createElement("canvas");
-    const canvasContext = canvas.getContext("2d");
-    if (canvasContext) {
-      canvasContext.font = "18px Roboto";
-      const result = canvasContext.measureText(String(headerHeight)).width;
-      console.log(result, window.innerWidth, PADDING, header);
-      return Math.ceil((result + PADDING) / window.innerWidth);
+    if (typeof document !== "undefined") {
+      const canvas = document.createElement("canvas");
+      const canvasContext = canvas.getContext("2d");
+      if (canvasContext) {
+        canvasContext.font = "18px Roboto";
+        const result = canvasContext.measureText(String(headerHeight)).width;
+        console.log(result, window.innerWidth, PADDING, header);
+        return Math.ceil((result + PADDING) / window.innerWidth);
+      }
     }
     return 1;
   }, [headerHeight]);
