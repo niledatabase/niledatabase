@@ -8,19 +8,59 @@ import Box from "@mui/joy/Box"
 import jwt_decode from "jwt-decode";
 import NextLink from 'next/link'
 import MUILink from '@mui/joy/Link';
+import Server from "@niledatabase/server";
 
+const UNKNOWN = "none";
 
+const nile = Server({
+  workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
+  database: String(process.env.NEXT_PUBLIC_DATABASE),
+  api: {
+    basePath: String(process.env.NEXT_PUBLIC_NILE_API), // note that this page talks to Nile API directly
+  },
+});
 
-export default function AuthDataPanel(prop: { token: string }) {
+async function getTenantName(userToken: string, tenantId: string):Promise<string> {
+  nile.token = userToken;
+  nile.tenantId = tenantId;
+  // Get tenant name doesn't need any input parameters because it uses the tenant ID from the context
+  const resp = await nile.api.tenants.getTenant();
+  if (resp.status >= 200 && resp.status < 300) {
+    const tenant = await resp.json();
+    if (tenant.name) {
+      return tenant.name;
+    }
+  }
+  return UNKNOWN;
+}
+
+function getTenantId(aud: string[] | string | undefined): string {
+  if (Array.isArray(aud)) {
+    // audiences that are not 'nile' should be tenant IDs
+    // TODO: aud also includes the UUID of the database. We should filter that out too once there's a way to do it.
+    const tenantAud = aud.filter(aud => aud !== "nile"); 
+    // we'll just show one tenant at random for now
+    return tenantAud[0];
+  }
+  return UNKNOWN;
+}
+
+export default async function AuthDataPanel(prop: { token: string }) {
   var decoded:any = {};
   var error = "";
+  var tenantId = UNKNOWN;
+  var tenantName = UNKNOWN;
   try {
     decoded = jwt_decode(prop.token);
     console.log(decoded);
+    tenantId = getTenantId(decoded?.aud);
+    tenantName = await getTenantName(prop.token, tenantId);
+
   } catch (err: any) {
     error = err.message;
     console.log(err);
   }
+  
 
 
   return (
@@ -43,9 +83,9 @@ export default function AuthDataPanel(prop: { token: string }) {
             <CardContent >
               <Typography level="title-lg">Tenant Information</Typography>
               <Typography level="title-sm">Tenant Name</Typography>
-              <Typography level="title-sm">{}</Typography>
+              <Typography level="title-sm">{tenantName}</Typography>
               <Typography level="title-sm">Tenant ID</Typography>
-              <Typography level="title-sm">{}</Typography>
+              <Typography level="title-sm">{tenantId}</Typography>
             </CardContent >
           </Card>
 

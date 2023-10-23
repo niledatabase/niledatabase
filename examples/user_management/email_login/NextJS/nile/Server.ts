@@ -1,4 +1,4 @@
-import Server from '@theniledev/server';
+import Server from '@niledatabase/server';
 
 
 // @ts-ignore // Nile requires a bit more configuration, but this example doesn't use those

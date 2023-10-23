@@ -64,7 +64,7 @@ export default function Pricing() {
               </div>
             </div>
           </div>
-          <div className="md:w-1/2 flex justify-start">
+          <div className="w-full md:w-1/2 flex justify-start">
             <div className="grayBorder rounded-[20px] lg:min-w-[392px]">
               <div className="p-8 z-10 relative">
                 <div className="bg-gradient-text bg-clip-text text-transparent text-[40px] leading-[48px] w-fit">

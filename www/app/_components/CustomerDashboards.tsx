@@ -5,7 +5,7 @@ export default function CustomerDashboards() {
     <div className="container mx-auto">
       <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
         <div className="flex-1">
-          <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-20 mt-20 -z-20">
+          <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-10 mt-32 -z-20">
             <Heading text="Instant customer dashboards" />
           </div>
 

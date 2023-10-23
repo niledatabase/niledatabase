@@ -49,10 +49,10 @@ async function generateNestedObjects(input) {
           const nestedChild = item.items[0].items?.find(
             (item) => item.name === "index.mdx"
           );
-          item.order = nestedChild.order;
+          item.order = nestedChild?.order ?? 0;
         }
         if (indexChild) {
-          item.order = indexChild.order;
+          item.order = indexChild?.order ?? 0;
         }
       }
       if (item.items) {

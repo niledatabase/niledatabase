@@ -25,7 +25,6 @@ export default function CodeGroups(props: Props) {
   const { title, method, pathname, children } = props;
   const items: ReactNode[] = Children.toArray(children);
 
-  console.log(active);
   return (
     <div className="border border-gray rounded-[12px] overflow-hidden">
       <div className="bg-black p-4 flex-row flex justify-between">
