@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function OurStory() {
   return (
     <div className="flex w-full flex-col">
-      <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-20 mt-20">
+      <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-20 mt-20 -z-20">
         <Heading text="Our story" />
       </div>
       <div className="flex flex-col md:flex-row bg-[#000]">

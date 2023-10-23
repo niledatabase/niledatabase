@@ -11,7 +11,7 @@ export default function TableOfContents(props: Props) {
     return null;
   }
   return (
-    <div className="sticky top-0 h-full pt-20 hidden xl:block">
+    <div className="sticky top-0 h-full pt-20 hidden 2xl:block">
       <div className="relative">
         <div className="absolute top-0 bottom-0 w-[1px] bg-divider h-full -left-[1px]"></div>
         <div className="pl-8">
