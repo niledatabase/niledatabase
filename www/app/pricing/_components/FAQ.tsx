@@ -28,7 +28,6 @@ const ExpandItem = (props: {
       if (canvasContext) {
         canvasContext.font = "18px Roboto";
         const result = canvasContext.measureText(String(headerHeight)).width;
-        console.log(result, window.innerWidth, PADDING, header);
         return Math.ceil((result + PADDING) / window.innerWidth);
       }
     }

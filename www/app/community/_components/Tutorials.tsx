@@ -27,26 +27,7 @@ export default function Tutorials() {
       <div className="text-xl opacity-60 text-center mb-10">
         Get started with one of our Nile tutorials
       </div>
-      <div className="flex flex-col lg:flex-row flex-wrap mt-16 justify-center">
-        {videos.map((video) => {
-          return (
-            <div key={video.videoUrl} className="w-full lg:w-1/2 xl:w-1/3">
-              <div className="p-4">
-                <div className="border border-gray rounded-[20px] p-4 aspect-video">
-                  <iframe
-                    className="rounded-xl overflow-hidden w-full h-full"
-                    {...playerProps}
-                    src={video.videoUrl}
-                  />
-                </div>
-                <div className="text-[#F7F8F8] text-[17px] mt-3">
-                  {video.title}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <TutorialList />
       <div className="flex justify-center mt-10">
         <Link href="https://www.youtube.com/@niledev">
           <GradientButton variant="soft">
@@ -65,3 +46,24 @@ export default function Tutorials() {
     </>
   );
 }
+
+export const TutorialList = () => (
+  <div className="flex flex-col lg:flex-row flex-wrap mt-16 justify-center">
+    {videos.map((video) => {
+      return (
+        <div key={video.videoUrl} className="w-full lg:w-1/2 xl:w-1/3">
+          <div className="p-4">
+            <div className="border border-gray rounded-[20px] p-4 aspect-video">
+              <iframe
+                className="rounded-xl overflow-hidden w-full h-full"
+                {...playerProps}
+                src={video.videoUrl}
+              />
+            </div>
+            <div className="text-[#F7F8F8] text-[17px] mt-3">{video.title}</div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+);
