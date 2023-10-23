@@ -12,11 +12,11 @@ const playerProps = {
 const videos = [
   {
     title: "Getting Started - SQL",
-    videoUrl: "https://youtu.be/RKMXk-9B_2A",
+    videoUrl: "https://www.youtube.com/embed/xnji861fsf4?si=asdLXH-M3ACspuzf",
   },
   {
     title: "Build a Java application with Nile",
-    videoUrl: "https://youtu.be/xnji861fsf4",
+    videoUrl: "https://www.youtube.com/embed/RKMXk-9B_2A?si=QV1PNSd09YzsfDJo",
   },
 ];
 
