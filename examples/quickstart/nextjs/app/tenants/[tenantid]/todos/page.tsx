@@ -11,7 +11,7 @@ import { cookies } from 'next/headers';
 import { getUserId, getUserToken } from "@/utils/AuthUtils";
 import { AddForm } from "./add-form"
 import { DoneForm } from "./done-form"
-import { getNile } from '@/lib/NileServer';
+import { setNile, getNile } from "@/lib/NileServer"
 
 // Forcing to re-evaluate each time. 
 // This guarantees that users will only see their own data and not another user's data via cache
@@ -21,16 +21,11 @@ export const revalidate = 0
 export const fetchCache = 'force-no-store'
 
 
-const nile = getNile();
+
 
 // Todo: replace "raw" context setting with nicer SDK
 export default async function Page({ params }: { params: { tenantid: string } }) {
     const nile = getNile();
-
-    // setting context for this page
-    nile.tenantId = params.tenantid;
-    nile.token = getUserToken(cookies().get('authData'))
-    nile.userId = getUserId(cookies().get('authData')) 
 
     console.log("using user " + nile.userId + " for tenant " + nile.tenantId);
     const todos = await nile.db("todos").select("*"); // no need for where clause because we previously set Nile context

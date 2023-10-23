@@ -4,8 +4,9 @@
 import { revalidatePath } from 'next/cache'
 import { getNile } from '@/lib/NileServer';
 
-const nile = getNile();
+
 export async function addTodo(prevState: any, formData: FormData) {
+    const nile = getNile();
     const title = formData.get('todo')
     console.log("adding Todo " + title + " for tenant:" + nile.tenantId + " for user:" + nile.userId);
     try {
@@ -19,6 +20,7 @@ export async function addTodo(prevState: any, formData: FormData) {
   }
 
 export async function completeTodo( title:string, complete: boolean) {
+    const nile = getNile();
     console.log("updating Todo " + title + " to complete:" + complete + " for tenant:" + nile.tenantId + " for user:" + nile.userId);
     try {
         // no need for tenant ID in the where clause since it is part of the context

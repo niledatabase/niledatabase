@@ -8,9 +8,10 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation'
 import { getNile } from '@/lib/NileServer';
 
-const nile = getNile();
 
 export async function createTenant(prevState: any, formData: FormData) {
+
+    const nile = getNile(); 
     const tenantName = formData.get('tenantname')?.toString();
     if (!tenantName) {
         return { message: 'No tenant name provided' }

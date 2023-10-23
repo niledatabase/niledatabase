@@ -11,7 +11,7 @@ import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import {AddForm} from '@/app/tenants/add-form';
-import {getNile} from '@/lib/NileServer'
+import {getNile, setNile} from '@/lib/NileServer'
 
 
 // Forcing to re-evaluate each time. 
@@ -27,6 +27,8 @@ export default async function Page() {
   nile.token = getUserToken(cookies().get('authData'))
   nile.userId = getUserId(cookies().get('authData'))
   nile.tenantId = null; // clear tenant ID since we need to list all tenants here
+  setNile(nile);
+  console.log(getNile().userId)
   console.log("userId:" + nile.userId); // this is set in the layout
   let tenants:any = [];
   
