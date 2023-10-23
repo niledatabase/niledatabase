@@ -5,7 +5,7 @@ import PageHeader from "@/app/_components/common/PageHeader";
 import Image from "next/image";
 import OurStory from "./OurStory";
 import HowWeWork from "./HowWeWork";
-import { ResolvingMetadata } from "next";
+import AboutLogo from "@/public/about-logo.png";
 
 export default function Home() {
   return (
@@ -14,12 +14,7 @@ export default function Home() {
         <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
           <div className="flex gap-24 items-center flex-col">
             <div className="flex gap-4 items-center flex-col">
-              <Image
-                src="/about-logo.png"
-                alt="nile logo"
-                width={150}
-                height={151}
-              />
+              <Image src={AboutLogo} alt="nile logo" width={150} height={151} />
               <div className="text-lg opacity-60">Our Mission</div>
               <PageHeader
                 title="To enable developers to accelerate the next billion modern SaaS"

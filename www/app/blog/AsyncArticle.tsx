@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Authors } from "./_components/Authors";
 import { Metadata } from "./_components/Metadata";
 import { parseMetadata } from "./_components/parseMetadata";
+import Coffee from "@/public/blog/coffee.jpg";
 
 export async function AsyncArticle({ fileName }: { fileName: string }) {
   const { default: Article, metadata } = await import(`${fileName}`);
@@ -19,12 +20,7 @@ export async function AsyncArticle({ fileName }: { fileName: string }) {
               src={`/blog/${metadata.image}`}
             />
           ) : (
-            <Image
-              alt="coffee"
-              width={384}
-              height={242}
-              src={`/blog/coffee.jpg`}
-            />
+            <Image alt="coffee" width={384} height={242} src={Coffee} />
           )}
         </div>
         <Metadata

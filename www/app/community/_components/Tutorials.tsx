@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import GradientButton from "@/app/_components/common/GradientButton";
 import Heading from "@/app/_components/common/Heading";
+import TutorialsIcon from "@/public/icons/tutorials.svg";
 
 const playerProps = {
   allowFullScreen: true,
@@ -11,12 +12,28 @@ const playerProps = {
 };
 const videos = [
   {
-    title: "Getting Started - SQL",
-    videoUrl: "https://www.youtube.com/embed/xnji861fsf4?si=asdLXH-M3ACspuzf",
+    title: "Cloudflare",
+    videoUrl: "https://www.youtube.com/embed/DvblO-f2bqQ",
   },
   {
-    title: "Build a Java application with Nile",
-    videoUrl: "https://www.youtube.com/embed/RKMXk-9B_2A?si=QV1PNSd09YzsfDJo",
+    title: "Airtable",
+    videoUrl: "https://www.youtube.com/embed/KgzwybMkqVc",
+  },
+  {
+    title: "Loom",
+    videoUrl: "https://www.youtube.com/embed/3SIF03MHaxw",
+  },
+  {
+    title: "Promise of Serverless",
+    videoUrl: "https://www.youtube.com/embed/vLlSoHqTTN8",
+  },
+  {
+    title: "Multi-tenant Journey",
+    videoUrl: "https://www.youtube.com/embed/hR5kEfpZM4Y",
+  },
+  {
+    title: "RLS",
+    videoUrl: "https://www.youtube.com/embed/xwHZxZKecXw",
   },
 ];
 
@@ -32,7 +49,7 @@ export default function Tutorials() {
         <Link href="https://www.youtube.com/@niledev">
           <GradientButton variant="soft">
             <Image
-              src="/icons/tutorials.svg"
+              src={TutorialsIcon}
               alt="orange open book"
               width={24}
               height={24}

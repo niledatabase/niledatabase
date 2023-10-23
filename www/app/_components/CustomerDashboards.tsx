@@ -1,5 +1,10 @@
 import Heading from "@/app/_components/common/Heading";
 import Image from "next/image";
+import Dashboard from "@/public/dashboard.png";
+import Growth from "@/public/icons/growth.svg";
+import DeepDive from "@/public/icons/deepdive.svg";
+import Profiles from "@/public/icons/manageprofiles.svg";
+import Auth from "@/public/icons/authpertenant.svg";
 export default function CustomerDashboards() {
   return (
     <div className="container mx-auto">
@@ -11,7 +16,7 @@ export default function CustomerDashboards() {
         <div className="bg-[#000]">
           <div className="overflow-hidden flex justify-center ">
             <Image
-              src="/dashboard.png"
+              src={Dashboard}
               alt="UI dashboards"
               width={1206}
               height={800}
@@ -23,7 +28,7 @@ export default function CustomerDashboards() {
                 <div className="icon rounded-[20px] flex justify-center">
                   <Image
                     className="scale-150"
-                    src="/icons/growth.svg"
+                    src={Growth}
                     alt="wireframe growth"
                     width={41}
                     height={40}
@@ -39,7 +44,7 @@ export default function CustomerDashboards() {
                 <div className="icon rounded-[20px] flex justify-center">
                   <Image
                     className="scale-150"
-                    src="/icons/deepdive.svg"
+                    src={DeepDive}
                     alt="wireframe deepdive"
                     width={41}
                     height={40}
@@ -55,7 +60,7 @@ export default function CustomerDashboards() {
                 <div className="icon rounded-[20px] flex justify-center items-center">
                   <Image
                     className="scale-150"
-                    src="/icons/manageprofiles.svg"
+                    src={Profiles}
                     alt="wireframe globe"
                     width={41}
                     height={40}
@@ -71,7 +76,7 @@ export default function CustomerDashboards() {
                 <div className="icon rounded-[20px] flex justify-center items-center">
                   <Image
                     className="scale-[3]"
-                    src="/icons/authpertenant.svg"
+                    src={Auth}
                     alt="wireframe globe"
                     width={24}
                     height={24}

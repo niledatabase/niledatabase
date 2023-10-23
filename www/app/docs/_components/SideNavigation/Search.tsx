@@ -6,7 +6,8 @@ import Image from "next/image";
 import algoliasearch from "algoliasearch";
 import { InstantSearch, useHits, useSearchBox } from "react-instantsearch";
 import Link from "next/link";
-import { sizes } from "@/app/_components/common/sizes";
+import SearchIcon from "@/public/icons/search.svg";
+import Arrow from "@/public/icons/arrow.svg";
 
 const KEY = "NILE_DOCS_HISTORY";
 
@@ -81,8 +82,8 @@ export default function Search() {
       >
         <Image
           className="pl-2"
-          src="/icons/search.svg"
           alt="looking glass"
+          src={SearchIcon}
           width={32}
           height={32}
         />
@@ -168,7 +169,7 @@ function SearchBox({
     >
       <Image
         className="ml-3"
-        src="/icons/search.svg"
+        src={SearchIcon}
         alt="looking glass"
         width={32}
         height={32}
@@ -276,14 +277,7 @@ function Hit({ hit, allowHighlight = true }: any) {
           </div>
         )}
       </div>
-      <Image
-        src="/icons/arrow.svg"
-        alt="arrow"
-        width={25}
-        height={30}
-        sizes={sizes}
-        priority
-      />
+      <Image src={Arrow} alt="arrow" width={25} height={30} />
     </Link>
   );
 }

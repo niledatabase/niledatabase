@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import Arrow from "@/public/icons/arrow.svg";
 export default function JoinWaitlist() {
   const [submitted, setDidSubmit] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
@@ -33,7 +34,7 @@ export default function JoinWaitlist() {
         >
           <div>Join the waitlist</div>
           <Image
-            src="/arrow.svg"
+            src={Arrow}
             alt="get started arrow"
             width={15}
             height={20}

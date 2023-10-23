@@ -3,6 +3,7 @@ import debounce from "lodash/debounce";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import Arrow from "@/public/icons/arrow.svg";
 type FormValues = {
   email: string;
   message: string;
@@ -150,7 +151,7 @@ export function ContactForm({
             </span>
             <Image
               className="invert"
-              src="/icons/arrow.svg"
+              src={Arrow}
               alt="arrow"
               width={25}
               height={30}
@@ -183,7 +184,7 @@ export default function Contact(props: Props) {
             <span>Message</span>
             <Image
               className="invert"
-              src="/icons/arrow.svg"
+              src={Arrow}
               alt="arrow"
               width={25}
               height={30}

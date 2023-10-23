@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { RenderItems } from "./RenderItems";
+import Arrow from "@/public/icons/arrow.svg";
 
 type Props = {
   navBar: any;
@@ -98,7 +99,7 @@ export default function MobileSidenav({ navBar, page }: Props) {
 
           <Image
             alt="gray arrow"
-            src="/icons/arrow.svg"
+            src={Arrow}
             width={24}
             height={24}
             className={`${

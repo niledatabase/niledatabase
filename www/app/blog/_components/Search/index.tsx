@@ -11,6 +11,8 @@ import {
 import Link from "next/link";
 import { Authors } from "../Authors";
 import { Metadata } from "../Metadata";
+import Coffee from "@/public/blog/coffee.jpg";
+import SearchIcon from "@/public/icons/search.svg";
 
 const searchClient = algoliasearch(
   String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
@@ -96,12 +98,11 @@ function Hit({ hit }: any) {
               />
             ) : (
               <Image
-                priority
                 alt="coffee"
                 className="aspect-video w-full"
                 width={416}
                 height={216}
-                src={`/blog/coffee.jpg`}
+                src={Coffee}
               />
             )}
           </div>
@@ -142,7 +143,7 @@ function SearchBox() {
       >
         <Image
           className="ml-3"
-          src="/icons/search.svg"
+          src={SearchIcon}
           alt="looking glass"
           width={24}
           height={24}

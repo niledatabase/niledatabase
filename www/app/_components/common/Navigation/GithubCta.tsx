@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
+import Star from "@/public/githubStar.svg";
+import Logo from "@/public/githubLogo.svg";
 
 export function GithubCta() {
   return (
@@ -41,7 +43,7 @@ export function GithubCta() {
               </svg>
               <Image
                 className="absolute star top-[1px] left-[1px]"
-                src="/githubStar.svg"
+                src={Star}
                 alt="Github Logo"
                 width={20}
                 height={20}
@@ -51,12 +53,7 @@ export function GithubCta() {
             <span className="bg-gradient-white bg-clip-text text-transparent whitespace-nowrap">
               Star us on
             </span>
-            <Image
-              src="/githubLogo.svg"
-              alt="Github Logo"
-              width={20}
-              height={20}
-            />
+            <Image src={Logo} alt="Github Logo" width={20} height={20} />
           </div>
         </button>
       </Link>
