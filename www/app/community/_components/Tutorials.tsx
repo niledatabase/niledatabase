@@ -11,28 +11,12 @@ const playerProps = {
 };
 const videos = [
   {
-    title: "Cloudflare",
-    videoUrl: "https://www.youtube.com/embed/DvblO-f2bqQ",
+    title: "Getting Started - SQL",
+    videoUrl: "https://youtu.be/RKMXk-9B_2A",
   },
   {
-    title: "Airtable",
-    videoUrl: "https://www.youtube.com/embed/KgzwybMkqVc",
-  },
-  {
-    title: "Loom",
-    videoUrl: "https://www.youtube.com/embed/3SIF03MHaxw",
-  },
-  {
-    title: "Promise of Serverless",
-    videoUrl: "https://www.youtube.com/embed/vLlSoHqTTN8",
-  },
-  {
-    title: "Multi-tenant Journey",
-    videoUrl: "https://www.youtube.com/embed/hR5kEfpZM4Y",
-  },
-  {
-    title: "RLS",
-    videoUrl: "https://www.youtube.com/embed/xwHZxZKecXw",
+    title: "Build a Java application with Nile",
+    videoUrl: "https://youtu.be/xnji861fsf4",
   },
 ];
 
