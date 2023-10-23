@@ -1,12 +1,11 @@
 import Container from "@/app/_components/common/Container";
 import Divider from "@/app/_components/common/Divider";
-import { HeroBottom, HeroText } from "@/app/_components/common/Hero";
+import { HeroBottom } from "@/app/_components/common/Hero";
 import PageHeader from "@/app/_components/common/PageHeader";
 import Image from "next/image";
-import Heading from "../_components/common/Heading";
 import OurStory from "./OurStory";
 import HowWeWork from "./HowWeWork";
-import Backers from "./Backers";
+import { ResolvingMetadata } from "next";
 
 export default function Home() {
   return (
@@ -38,3 +37,11 @@ export default function Home() {
     </Container>
   );
 }
+
+export const metadata = {
+  title: "About us | Nile Database",
+  description: "What Nile Database is all about",
+  openGraph: {
+    images: "opengraph/about-us.jpg",
+  },
+};

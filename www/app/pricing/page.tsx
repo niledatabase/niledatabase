@@ -90,3 +90,12 @@ export default function Pricing() {
     </Container>
   );
 }
+
+export const metadata = {
+  title: "Pricing | Nile Database",
+  description:
+    "Launch your first SaaS application in days and grow your business",
+  openGraph: {
+    images: "opengraph/pricing.jpg",
+  },
+};
