@@ -1,10 +1,10 @@
 "use client";
 import { Links } from "./Links";
-import GradientButton from "../GradientButton";
 import Image from "next/image";
 import { GithubCta } from "./GithubCta";
 import { useEffect } from "react";
-
+import Close from "@/public/icons/close.svg";
+import Menu from "@/public/icons/menu.svg";
 export function NavMenu({ open }: { open: boolean }) {
   return (
     <div
@@ -56,7 +56,7 @@ export default function MobileNav({
                 className={`absolute opacity-${
                   open ? 100 : 0
                 } transition-opacity`}
-                src="/icons/close.svg"
+                src={Close}
                 alt="white X"
                 width={25}
                 height={25}
@@ -65,7 +65,7 @@ export default function MobileNav({
                 className={`absolute opacity-${
                   !open ? 100 : 0
                 } transition-opacity`}
-                src="/icons/menu.svg"
+                src={Menu}
                 alt="three lines"
                 width={21}
                 height={17}

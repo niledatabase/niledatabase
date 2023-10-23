@@ -8,7 +8,7 @@ import { Metadata } from "./_components/Metadata";
 import { parseMetadata } from "./_components/parseMetadata";
 import Footer from "./_components/Footer";
 import Search from "./_components/Search";
-
+import Coffee from "@/public/blog/coffee.jpg";
 type Props = {
   fileName: string;
   title: string;
@@ -43,7 +43,7 @@ function HeroArticle(props: Props) {
               alt="coffee"
               width={550}
               height={347}
-              src={`/blog/coffee.jpg`}
+              src={Coffee}
             />
           )}
         </div>

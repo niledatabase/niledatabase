@@ -1,6 +1,9 @@
-import Heading from "@/app/_components/common/Heading";
-import Video from "./Video";
-import Image from "next/image";
+import Heading from '@/app/_components/common/Heading';
+import Video from './Video';
+import Image from 'next/image';
+import Globe from '@/public/icons/globe.svg';
+import Rocket from '@/public/icons/rocket.svg';
+import Pin from '@/public/icons/pin.svg';
 export default function DropInUserManagement() {
   return (
     <div className="container mx-auto">
@@ -13,7 +16,7 @@ export default function DropInUserManagement() {
             <div className="py-5 px-4 md:w-1/3 itemDivider flex flex-row gap-5">
               <div className="z-10 relative icon rounded-[20px] flex justify-center">
                 <Image
-                  src="/icons/globe.svg"
+                  src={Globe}
                   alt="wireframe globe"
                   width={41}
                   height={40}
@@ -27,12 +30,7 @@ export default function DropInUserManagement() {
             </div>
             <div className="py-5 px-4 md:w-1/3  itemDivider flex flex-row gap-5">
               <div className="z-10 relative icon rounded-[20px] flex justify-center">
-                <Image
-                  src="/icons/pin.svg"
-                  alt="location pin"
-                  width={41}
-                  height={40}
-                />
+                <Image src={Pin} alt="location pin" width={41} height={40} />
               </div>
               <div className="opacity-60 text-[18px] relative z-10">
                 Store tenant’s data closer to their application for low latency
@@ -41,12 +39,7 @@ export default function DropInUserManagement() {
             </div>
             <div className="py-5 px-4 md:w-1/3 itemDivider flex flex-row gap-5">
               <div className="z-10 relative icon rounded-[20px] flex justify-center">
-                <Image
-                  src="/icons/rocket.svg"
-                  alt="location pin"
-                  width={41}
-                  height={40}
-                />
+                <Image src={Rocket} alt="location pin" width={41} height={40} />
               </div>
               <div className="opacity-60 text-[18px] relative z-10">
                 We deploy, we route, and we manage. Seamless schema migrations,

@@ -9,6 +9,7 @@ import Image from "next/image";
 import Footer from "../_components/Footer";
 import Divider from "@/app/_components/common/Divider";
 import { Metadata, ResolvingMetadata } from "next";
+import Coffee from "@/public/blog/coffee.jpg";
 type Props = { params: { slug: string[] } };
 
 async function getBlog(props: Props) {
@@ -33,35 +34,39 @@ export default async function BlogPage(props: Props) {
   const { metadata, publishDate, readLength, Article } = await getBlog(props);
   return (
     <Container background={null}>
-      <div className="bg-[#2D2D2D] rounded-xl w-[800px] h-[505px] overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex relative">
-        {metadata?.image ? (
-          <Image
-            className="object-cover object-center h-full w-full absolute"
-            alt={metadata.image}
-            width={800}
-            height={505}
-            src={`/blog/${metadata.image}`}
-          />
-        ) : (
-          <Image
-            className="object-cover object-center h-full w-full absolute"
-            alt="coffee"
-            width={800}
-            height={505}
-            src={`/blog/coffee.jpg`}
-          />
-        )}
-      </div>
-      <div className="flex flex-row gap-3 items-center mb-5">
-        <div className="opacity-60">{publishDate}</div>
-        <div className="opacity-[.43] text-[10px]">●</div>
-        <div className="opacity-60">{readLength} min read</div>
-        <div className="opacity-[.43] text-[10px]">●</div>
-        <Authors authors={metadata.authors} />
-      </div>
-      <Heading text={metadata.title} />
-      <div className="prose prose-invert mt-5">
-        <Article />
+      <div className="container mx-auto prose prose-invert">
+        <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
+          <div className="bg-[#2D2D2D] rounded-xl w-[800px] h-[505px] overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex relative">
+            {metadata?.image ? (
+              <Image
+                className="object-cover object-center h-full w-full absolute"
+                alt={metadata.image}
+                width={800}
+                height={505}
+                src={`/blog/${metadata.image}`}
+              />
+            ) : (
+              <Image
+                className="object-cover object-center h-full w-full absolute"
+                alt="coffee"
+                width={800}
+                height={505}
+                src={Coffee}
+              />
+            )}
+          </div>
+          <div className="flex flex-row gap-3 items-center mb-5">
+            <div className="opacity-60">{publishDate}</div>
+            <div className="opacity-[.43] text-[10px]">●</div>
+            <div className="opacity-60">{readLength} min read</div>
+            <div className="opacity-[.43] text-[10px]">●</div>
+            <Authors authors={metadata.authors} />
+          </div>
+          <Heading text={metadata.title} />
+          <div className="mt-5">
+            <Article />
+          </div>
+        </div>
       </div>
       <Divider />
       <Footer />

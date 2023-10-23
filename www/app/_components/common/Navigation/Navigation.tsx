@@ -6,6 +6,7 @@ import { Links } from "./Links";
 import MobileNav, { NavMenu } from "./MobileNav";
 import { GithubCta } from "./GithubCta";
 import { useCallback, useState } from "react";
+import Logo from "@/public/logo.svg";
 
 export default function Navigation({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
@@ -21,7 +22,7 @@ export default function Navigation({ className }: { className?: string }) {
             <div className="items-center flex lg:block lg:items-start lg:w-44">
               <Link href="/">
                 <Image
-                  src="/logo.svg"
+                  src={Logo}
                   alt="Nile Logo"
                   width={80}
                   height={30}
