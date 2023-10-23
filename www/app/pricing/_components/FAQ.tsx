@@ -1,14 +1,15 @@
 "use client";
 import Heading from "@/app/_components/common/Heading";
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import faqs from "./faqs";
 import useGoToHash from "@/app/_components/common/useGoToHash";
 const variants = {
-  open: "h-auto",
-  closed: "h-[62px] opacity-60 hover:opacity-100",
+  open: "!h-auto",
+  closed: "opacity-60 hover:opacity-100",
 };
 
+const PADDING = 72;
 const ExpandItem = (props: {
   header: JSX.Element | string;
   content: JSX.Element | string;
@@ -18,14 +19,38 @@ const ExpandItem = (props: {
     return setShow(!show);
   }, [show]);
   const { header, content } = props;
+  const [headerHeight, setHeader] = useState<string | Element>("");
   const classes = variants[show ? "open" : "closed"];
+  const rows = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    const canvasContext = canvas.getContext("2d");
+    if (canvasContext) {
+      canvasContext.font = "18px Roboto";
+      const result = canvasContext.measureText(String(headerHeight)).width;
+      console.log(result, window.innerWidth, PADDING, header);
+      return Math.ceil((result + PADDING) / window.innerWidth);
+    }
+    return 1;
+  }, [headerHeight]);
   return (
     <div
       onClick={toggleShow}
       className={`overflow-hidden transition-all ${classes} flex flex-col  border border-gray rounded-[12px] px-[20px] py-[16px] items-start cursor-pointer`}
+      style={{
+        height: `${Math.max(62, 48 * rows)}px`,
+      }}
     >
       <div className="flex flex-row w-full justify-between">
-        <span className="text-[20px]">{header}</span>
+        <span
+          className="text-[20px]"
+          ref={(node) => {
+            if (node) {
+              setHeader(header as unknown as Element);
+            }
+          }}
+        >
+          {header}
+        </span>
         <Image
           className={`transition-all ${show ? "rotate-90" : "rotate-0"}`}
           src="/icons/arrow.svg"

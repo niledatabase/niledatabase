@@ -6,7 +6,7 @@ export default function DropInUserManagement() {
     <div className="container mx-auto">
       <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
         <div className="flex w-full flex-col">
-          <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-20 mt-20">
+          <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-20 mt-20 -z-20">
             <Heading text="Drop-in tenant and user management"></Heading>
           </div>
           <div className="hidden md:block">

@@ -54,7 +54,7 @@ export default function DropInUserManagement() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col lg:flex-row items-center justify-center -mb-32">
+          <div className="flex flex-col lg:flex-row items-center justify-center -mb-32 -z-30">
             <div className="flex lg:w-1/2">
               <Video
                 poster="earth.jpg"

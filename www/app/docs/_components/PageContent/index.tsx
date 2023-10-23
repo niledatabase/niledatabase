@@ -44,7 +44,7 @@ function PageContent(props: Props) {
             <Component />
           </article>
           {toc.length > 1 && (
-            <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-border h-full hidden xl:block"></div>
+            <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-border h-full hidden 2xl:block"></div>
           )}
         </div>
         <TableOfContents toc={toc} />
