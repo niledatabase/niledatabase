@@ -1,15 +1,16 @@
-"use client";
-import { useEffect, useState } from "react";
-import { Fragment } from "react";
-import Image from "next/image";
-import Link from "next/link";
+'use client';
+import { useEffect, useState } from 'react';
+import { Fragment } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import Arrow from '@/public/icons/arrow.svg';
 const itemOnPage = (item: any) => {
-  return `/${item.slug?.join("/").replace(/\/?(index)?\.mdx/, "")}`;
+  return `/${item.slug?.join('/').replace(/\/?(index)?\.mdx/, '')}`;
 };
 const getPage = (indexed: any, remaining: any, page: string) => {
   const indexHref = `/${indexed?.slug
-    ?.join("/")
-    .replace(/\/?(index)?\.mdx/, "")}`;
+    ?.join('/')
+    .replace(/\/?(index)?\.mdx/, '')}`;
   const itemHref = itemOnPage(remaining);
   return (
     (indexed && page.includes(indexHref)) ||
@@ -30,22 +31,22 @@ export function BaseListItem({
   activeCallback?: (page: string, item: any) => void;
 }) {
   const [expanded, setExpanded] = expander;
-  const href = `/${item.slug?.join("/").replace(/\/?(index)?\.mdx/, "")}`;
+  const href = `/${item.slug?.join('/').replace(/\/?(index)?\.mdx/, '')}`;
   const onPage = page === href || page === `${href}`;
   const itemClasses = [
-    "active:font-bold",
-    "text-[17px]",
-    "py-2",
-    "transition-all",
-    "hover:opacity-100",
-    "flex",
-    "flex-row",
-    "justify-between",
-    "whitespace-break-spaces",
-    expander[0] ? "" : "h-content",
+    'active:font-bold',
+    'text-[17px]',
+    'py-2',
+    'transition-all',
+    'hover:opacity-100',
+    'flex',
+    'flex-row',
+    'justify-between',
+    'whitespace-break-spaces',
+    expander[0] ? '' : 'h-content',
     onPage
-      ? "border-l-[1px] -ml-[10px] pl-[10px] opacity-100"
-      : "overflow-hidden opacity-60",
+      ? 'border-l-[1px] -ml-[10px] pl-[10px] opacity-100'
+      : 'overflow-hidden opacity-60',
   ];
 
   useEffect(() => {
@@ -56,7 +57,7 @@ export function BaseListItem({
     }
   }, [expanded]);
   return (
-    <li className={itemClasses.join(" ")}>
+    <li className={itemClasses.join(' ')}>
       <Link href={href} className="w-full">
         {item.method && (
           <span className="text-sm bg-gradient-text bg-clip-text text-transparent mr-3 border-lightGray border rounded-[6px] py-1 px-2">
@@ -74,11 +75,11 @@ export function BaseListItem({
         >
           <Image
             alt="gray arrow"
-            src="/icons/arrow.svg"
+            src={Arrow}
             width={24}
             height={24}
             className={`${
-              expander[0] ? "rotate-90" : "rotate-0 opacity-40"
+              expander[0] ? 'rotate-90' : 'rotate-0 opacity-40'
             } transition-all`}
           />
         </div>
@@ -122,8 +123,8 @@ function RenderItem({
     );
   }
 
-  const indexed = item.items.find((item: any) => item.name === "index.mdx");
-  const remaining = item.items.filter((item: any) => item.name !== "index.mdx");
+  const indexed = item.items.find((item: any) => item.name === 'index.mdx');
+  const remaining = item.items.filter((item: any) => item.name !== 'index.mdx');
   const onPage = getPage(indexed, remaining, page);
 
   useEffect(() => {
@@ -144,7 +145,7 @@ function RenderItem({
         />
         <ul
           className={`transition-all ml-1 pl-2 border-l-[1px] border-gray ${
-            expander[0] ? "opacity-100" : "h-[0px] opacity-0 overflow-hidden"
+            expander[0] ? 'opacity-100' : 'h-[0px] opacity-0 overflow-hidden'
           }`}
         >
           {remaining && (

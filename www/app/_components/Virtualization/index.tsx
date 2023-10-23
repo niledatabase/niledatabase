@@ -1,7 +1,17 @@
 import Image from "next/image";
 import Heading from "@/app/_components/common/Heading";
 import Video from "../Video";
-import { sizes } from "../common/sizes";
+import Lock from "@/public/icons/lock.svg";
+import RLS from "@/public/icons/rls.svg";
+import Share from "@/public/icons/share.svg";
+import Backups from "@/public/icons/backups.svg";
+import Bug from "@/public/icons/bug.svg";
+import File from "@/public/icons/file.svg";
+import HotTenant from "@/public/icons/hot-tenant.svg";
+import Performance from "@/public/icons/performance.svg";
+import Metrics from "@/public/icons/metrics.svg";
+
+import Backup from "@/public/video/tenant-backup.gif";
 
 export default function Virtualization() {
   return (
@@ -19,12 +29,7 @@ export default function Virtualization() {
               </div>
               <div className="flex flex-col lg:flex-row gap-5 items-center">
                 <div className="z-10 relative icon rounded-[20px] flex justify-center">
-                  <Image
-                    src="/icons/lock.svg"
-                    alt="lock"
-                    width={24}
-                    height={25}
-                  />
+                  <Image src={Lock} alt="lock" width={24} height={25} />
                 </div>
                 <div className="opacity-80 text-[18px] text-center lg:text-left">
                   100% secure with no cross-tenant access
@@ -33,7 +38,7 @@ export default function Virtualization() {
               <div className="flex  flex-col lg:flex-row gap-5 items-center">
                 <div className="z-10 relative icon rounded-[20px] flex justify-center">
                   <Image
-                    src="/icons/rls.svg"
+                    src={RLS}
                     alt="table with lock"
                     width={24}
                     height={24}
@@ -46,7 +51,7 @@ export default function Virtualization() {
               <div className="flex  flex-col lg:flex-row gap-5 items-center">
                 <div className="z-10 relative icon rounded-[20px] flex justify-center">
                   <Image
-                    src="/icons/share.svg"
+                    src={Share}
                     alt="circles with interconnected dots"
                     width={24}
                     height={25}
@@ -80,12 +85,7 @@ export default function Virtualization() {
               </div>
               <div className="flex flex-row gap-5 items-center">
                 <div className="z-10 relative icon rounded-[20px] flex justify-center">
-                  <Image
-                    src="/icons/backups.svg"
-                    alt="lock"
-                    width={24}
-                    height={25}
-                  />
+                  <Image src={Backups} alt="lock" width={24} height={25} />
                 </div>
                 <div className="opacity-80 text-[18px]">
                   Instant restoration from backups for your customers
@@ -94,7 +94,7 @@ export default function Virtualization() {
               <div className="flex flex-row gap-5 items-center">
                 <div className="z-10 relative icon rounded-[20px] flex justify-center">
                   <Image
-                    src="/icons/bug.svg"
+                    src={Bug}
                     alt="table with lock"
                     width={24}
                     height={24}
@@ -107,7 +107,7 @@ export default function Virtualization() {
               <div className="flex flex-row gap-5 items-center mb-5">
                 <div className="z-10 relative icon rounded-[20px] flex justify-center">
                   <Image
-                    src="/icons/file.svg"
+                    src={File}
                     alt="circles with interconnected dots"
                     width={24}
                     height={25}
@@ -118,7 +118,7 @@ export default function Virtualization() {
                 </div>
               </div>
               <Image
-                src="/video/tenant-backup.gif"
+                src={Backup}
                 alt="gif showing data isolation"
                 width={672}
                 height={258}
@@ -132,12 +132,7 @@ export default function Virtualization() {
 
               <div className="flex flex-row gap-5 items-center">
                 <div className="z-10 relative icon rounded-[20px] flex justify-center">
-                  <Image
-                    src="/icons/hot-tenant.svg"
-                    alt="lock"
-                    width={24}
-                    height={24}
-                  />
+                  <Image src={HotTenant} alt="lock" width={24} height={24} />
                 </div>
                 <div className="opacity-80 text-[18px]">
                   Hot tenants have no impact on other tenants
@@ -147,7 +142,7 @@ export default function Virtualization() {
                 <div className="z-10 relative icon rounded-[20px] flex justify-center">
                   <Image
                     className="scale-[2]"
-                    src="/icons/performance.svg"
+                    src={Performance}
                     alt="table with lock"
                     width={24}
                     height={24}
@@ -161,7 +156,7 @@ export default function Virtualization() {
                 <div className="z-10 relative icon rounded-[20px] flex justify-center">
                   <Image
                     className="scale-[2]"
-                    src="/icons/metrics.svg"
+                    src={Metrics}
                     alt="circles with interconnected dots"
                     width={24}
                     height={24}

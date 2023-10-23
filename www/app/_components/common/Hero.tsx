@@ -2,6 +2,7 @@ import Image from "next/image";
 import PageHeader, { OverrideClasses } from "./PageHeader";
 import Subscribe from "@/app/blog/_components/Footer/Subscribe";
 import Footer from "@/app/blog/_components/Footer";
+import NileOutlinedLogo from "@/public/nile-outline-logo.svg";
 
 export function HeroText(props: OverrideClasses & { title?: string }) {
   return (
@@ -28,7 +29,7 @@ export function HeroBottom() {
       </div>
       <Image
         className="mt-16 -mb-36 lg:-mb-44 relative -z-[2001] px-12 lg:px-0"
-        src="/nile-outline-logo.svg"
+        src={NileOutlinedLogo}
         width="646"
         height="239"
         alt="nile outlined logo"

@@ -20,7 +20,7 @@ export default function Heading(props: Props) {
   const headerRef = useRef<HTMLDivElement>(null);
   const headerVisible = useIntersection(headerRef, { rootMargin });
   return (
-    <div ref={headerRef} className="w-full">
+    <div ref={headerRef} className="w-full px-2">
       <div
         className={`transition-all ${
           headerVisible

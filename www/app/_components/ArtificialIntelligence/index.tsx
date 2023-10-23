@@ -2,28 +2,35 @@ import Heading from "@/app/_components/common/Heading";
 import Image from "next/image";
 import CodeSample from "./code.mdx";
 
+import AI from "@/public/ai.png";
+import OpenAI from "@/public/openai-logo.svg";
+import HuggingFace from "@/public/hugging-face-logo.svg";
+import Replicate from "@/public/replicate-logo.svg";
+
+import Models from "@/public/icons/models.svg";
+import Chat from "@/public/icons/chat.svg";
+import Scale from "@/public/icons/scale.svg";
+import AINative from "@/public/icons/ai-native.svg";
+import Customer from "@/public/icons/customer.svg";
+import OSS from "@/public/icons/oss.svg";
+import PersonCircle from "@/public/icons/person-circle.svg";
+import RobotCircle from "@/public/icons/robot-circle.svg";
+import Store from "@/public/icons/store.svg";
+import Deploy from "@/public/icons/deploy.svg";
+import Query from "@/public/icons/query.svg";
+
 function ChatBlurbContent() {
   return (
     <>
       <div className="flex flex-row gap-3">
-        <Image
-          src="/icons/models.svg"
-          alt="location pin"
-          width={24}
-          height={24}
-        />
+        <Image src={Models} alt="location pin" width={24} height={24} />
         <div className="opacity-60 text-[18px] bg-clip-text">
           Work with any large language models of your choice from OpenAI,
           Hugging Face and more
         </div>
       </div>
       <div className="flex flex-row gap-3">
-        <Image
-          src="/icons/chat.svg"
-          alt="location pin"
-          width={24}
-          height={24}
-        />
+        <Image src={Chat} alt="location pin" width={24} height={24} />
         <div className="opacity-60 text-[18px] bg-clip-text">
           Build domain specific conversational UIs, chatbots and semantic search
           products
@@ -31,12 +38,7 @@ function ChatBlurbContent() {
       </div>
 
       <div className="flex flex-row gap-3">
-        <Image
-          src="/icons/scale.svg"
-          alt="expand icon"
-          width={24}
-          height={24}
-        />
+        <Image src={Scale} alt="expand icon" width={24} height={24} />
         <div className="opacity-60 text-[18px] bg-clip-text">
           Effortlessly scale your embeddings as your AI use case grows
         </div>
@@ -71,8 +73,8 @@ export default function ArtificialIntelligence() {
               <div className="py-4 px-5 flex flex-row gap-5 place-items-top">
                 <div className="z-10 relative shrink-0 items-start flex justify-center">
                   <Image
-                    src="/icons/ai-native.svg"
-                    alt="location pin"
+                    src={AINative}
+                    alt="artificial intelligence"
                     width={32}
                     height={32}
                   />
@@ -85,7 +87,7 @@ export default function ArtificialIntelligence() {
               <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
                 <div className="z-10 relative shrink-0 items-start  rounded-[20px] flex justify-center">
                   <Image
-                    src="/icons/customer.svg"
+                    src={Customer}
                     alt="location pin"
                     width={32}
                     height={32}
@@ -98,12 +100,7 @@ export default function ArtificialIntelligence() {
               </div>
               <div className="py-4 px-5 flex flex-row gap-5 place-items-center">
                 <div className="z-10 relative shrink-0 items-start  rounded-[20px] flex justify-center">
-                  <Image
-                    src="/icons/oss.svg"
-                    alt="location pin"
-                    width={40}
-                    height={40}
-                  />
+                  <Image src={OSS} alt="location pin" width={40} height={40} />
                 </div>
                 <div className="opacity-60 text-[18px] bg-clip-text leading-normal z-10 relative">
                   Use open-source pgvector for Postgres to store, index, and
@@ -113,7 +110,7 @@ export default function ArtificialIntelligence() {
             </div>
             <div className="flex lg:w-1/2">
               <Image
-                src="/ai.png"
+                src={AI}
                 alt="intricate orange android"
                 width={464}
                 height={464}
@@ -130,7 +127,7 @@ export default function ArtificialIntelligence() {
                     <div className="flex flex-row items-end gap-2 max-w-[90%]">
                       <div className="border border-[#393939] rounded-[36px] p-1 shrink-0">
                         <Image
-                          src="/icons/person-circle.svg"
+                          src={PersonCircle}
                           alt="location pin"
                           width={24}
                           height={24}
@@ -152,7 +149,7 @@ export default function ArtificialIntelligence() {
                       </div>
                       <div className="border border-[#fff] rounded-[36px] p-1 shrink-0 bg-icon">
                         <Image
-                          src="/icons/robot-circle.svg"
+                          src={RobotCircle}
                           alt="location pin"
                           width={24}
                           height={24}
@@ -167,7 +164,7 @@ export default function ArtificialIntelligence() {
                     <div className="flex flex-row items-center justify-between">
                       <div className="w-1/3 flex justify-center">
                         <Image
-                          src="/openai-logo.svg"
+                          src={OpenAI}
                           alt="location pin"
                           width={100}
                           height={28}
@@ -175,7 +172,7 @@ export default function ArtificialIntelligence() {
                       </div>
                       <div className="w-1/3 flex justify-center">
                         <Image
-                          src="/hugging-face-logo.svg"
+                          src={HuggingFace}
                           alt="location pin"
                           width={137}
                           height={36}
@@ -183,7 +180,7 @@ export default function ArtificialIntelligence() {
                       </div>
                       <div className="w-1/3 flex justify-center">
                         <Image
-                          src="/replicate-logo.svg"
+                          src={Replicate}
                           alt="location pin"
                           width={104}
                           height={24}
@@ -207,12 +204,7 @@ export default function ArtificialIntelligence() {
               <ChatBlurb />
               <div className="lg:w-1/2 flex-col justify-start gap-4 pl-2 flex mx-auto lg:mx-0">
                 <div className="flex flex-row gap-3">
-                  <Image
-                    src="/icons/store.svg"
-                    alt="brain"
-                    width={24}
-                    height={24}
-                  />
+                  <Image src={Store} alt="brain" width={24} height={24} />
                   <div className="opacity-60 text-[18px] bg-clip-text">
                     Store vector embeddings per tenant or share embeddings
                     across tenants
@@ -220,7 +212,7 @@ export default function ArtificialIntelligence() {
                 </div>
                 <div className="flex flex-row gap-3">
                   <Image
-                    src="/icons/deploy.svg"
+                    src={Deploy}
                     alt="settings cog"
                     width={24}
                     height={24}
@@ -232,12 +224,7 @@ export default function ArtificialIntelligence() {
                 </div>
 
                 <div className="flex flex-row gap-3">
-                  <Image
-                    src="/icons/query.svg"
-                    alt="person icon"
-                    width={24}
-                    height={24}
-                  />
+                  <Image src={Query} alt="person icon" width={24} height={24} />
                   <div className="opacity-60 text-[18px] bg-clip-text">
                     Index embeddings and query them efficiently
                   </div>

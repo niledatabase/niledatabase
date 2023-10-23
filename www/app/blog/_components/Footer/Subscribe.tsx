@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
-import { sizes } from "@/app/_components/common/sizes";
 import { useRef, useState } from "react";
+import Arrow from "@/public/icons/arrow.svg";
 
 export default function Subscribe() {
   const ref = useRef<HTMLInputElement>(null);
@@ -33,19 +33,12 @@ export default function Subscribe() {
           }}
         >
           <div
-            className={`flex flex-row  duration-500 ${
+            className={`flex flex-row duration-500 ${
               submitted ? "opacity-0" : "opacity-100"
             } trasition-opacity gap-[24px]`}
           >
-            <div>Join the waitlist</div>
-            <Image
-              src="/arrow.svg"
-              alt="get started arrow"
-              width={15}
-              height={20}
-              sizes={sizes}
-              priority
-            />
+            <div className="whitespace-nowrap">Join the waitlist</div>
+            <Image className="invert" src={Arrow} alt="get started arrow" />
           </div>
           <div
             className={`absolute whitespace-nowrap pointer-events-none ${

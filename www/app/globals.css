@@ -205,7 +205,7 @@ html .navBlur {
     );
   background-origin: border-box;
   background-clip: padding-box, border-box;
-  width: 100%;
+  display: flex;
 }
 .grayBorder::before {
   position: absolute;

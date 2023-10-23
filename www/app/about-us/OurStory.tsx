@@ -1,5 +1,6 @@
 import Heading from "../_components/common/Heading";
 import Image from "next/image";
+import Team from "@/public/team.png";
 
 export default function OurStory() {
   return (
@@ -13,7 +14,7 @@ export default function OurStory() {
             <div className="border border-gray rounded-lg p-1">
               <Image
                 className="rounded-md"
-                src="/team.png"
+                src={Team}
                 alt="the team"
                 width={540}
                 height={440}

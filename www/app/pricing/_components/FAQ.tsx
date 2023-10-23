@@ -3,6 +3,7 @@ import Heading from "@/app/_components/common/Heading";
 import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 import faqs from "./faqs";
+import Arrow from "@/public/icons/arrow.svg";
 import useGoToHash from "@/app/_components/common/useGoToHash";
 const variants = {
   open: "!h-auto",
@@ -28,7 +29,6 @@ const ExpandItem = (props: {
       if (canvasContext) {
         canvasContext.font = "18px Roboto";
         const result = canvasContext.measureText(String(headerHeight)).width;
-        console.log(result, window.innerWidth, PADDING, header);
         return Math.ceil((result + PADDING) / window.innerWidth);
       }
     }
@@ -55,7 +55,7 @@ const ExpandItem = (props: {
         </span>
         <Image
           className={`transition-all ${show ? "rotate-90" : "rotate-0"}`}
-          src="/icons/arrow.svg"
+          src={Arrow}
           alt="arrow"
           width={25}
           height={30}

@@ -3,6 +3,8 @@ import PageHeader from "@/app/_components/common/PageHeader";
 
 import Image from "next/image";
 import Contact from "./_components/Contact";
+import Heart from "@/public/heart.svg";
+import Arrow from "@/public/icons/arrow.svg";
 export default function ContactUs() {
   return (
     <Container background="circular">
@@ -13,7 +15,7 @@ export default function ContactUs() {
             <div className="flex flex-row mt-5 items-center w-full justify-center text-[40px] z-10">
               We
               <Image
-                src="/heart.svg"
+                src={Heart}
                 alt="orange 8-bit heart"
                 width={62}
                 height={62}
@@ -26,7 +28,7 @@ export default function ContactUs() {
                 <span>Join Community</span>
                 <Image
                   className="invert"
-                  src="/icons/arrow.svg"
+                  src={Arrow}
                   alt="arrow"
                   width={25}
                   height={30}

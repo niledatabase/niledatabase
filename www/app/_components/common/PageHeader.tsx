@@ -7,9 +7,9 @@ export type ColorConfig = Record<ConfigOptions, OverrideClasses>;
 
 const base = {
   titleClasses:
-    "leading-[40px] text-[32px] lg:leading-[72px] lg:text-[64px] text-center",
+    "leading-[40px] text-[32px] lg:leading-[72px] lg:text-[64px] text-center px-2",
   subtitleClasses:
-    "text-xl font-inter mt-2 text-center opacity-80 text-[18px] leading-[28px] lg:font-normal lg:leading-10 tracking-[0.4px]",
+    "text-xl font-inter mt-2 text-center opacity-80 text-[18px] leading-[28px] lg:font-normal lg:leading-10 tracking-[0.4px] px-2",
 };
 
 const colorClasses: ColorConfig = {

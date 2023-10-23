@@ -1,15 +1,19 @@
-import Container from "@/app/_components/common/Container";
-import Divider from "@/app/_components/common/Divider";
-import GradientButton from "@/app/_components/common/GradientButton";
-import Heading from "@/app/_components/common/Heading";
-import PageHeader from "@/app/_components/common/PageHeader";
-import Image from "next/image";
-import TemplateSearch from "../templates/TemplateSearch";
-import loadTemplates from "../templates/dataFetcher";
-import Link from "next/link";
-import Tutorials from "./_components/Tutorials";
-import Community from "./_components/Community";
-
+import Container from '@/app/_components/common/Container';
+import Divider from '@/app/_components/common/Divider';
+import GradientButton from '@/app/_components/common/GradientButton';
+import Heading from '@/app/_components/common/Heading';
+import PageHeader from '@/app/_components/common/PageHeader';
+import Image from 'next/image';
+import TemplateSearch from '../templates/TemplateSearch';
+import loadTemplates from '../templates/dataFetcher';
+import Link from 'next/link';
+import Tutorials from './_components/Tutorials';
+import Community from './_components/Community';
+import Heart from '@/public/heart.svg';
+import GithubText from '@/public/github-text.svg';
+import Discord from '@/public/discord.svg';
+import X from '@/public/x.svg';
+import Templates from '@/public/icons/templates.svg';
 export default async function Home() {
   const templates = await loadTemplates();
   return (
@@ -22,7 +26,7 @@ export default async function Home() {
                 <div className="flex flex-row mt-5 items-center w-full justify-center">
                   We
                   <Image
-                    src="/heart.svg"
+                    src={Heart}
                     alt="orange 8-bit heart"
                     width={98}
                     height={98}
@@ -49,7 +53,7 @@ export default async function Home() {
             >
               <div className="flex flex-col gap-10 itemDivider p-8">
                 <Image
-                  src="/github-text.svg"
+                  src={GithubText}
                   alt="github text in black and white gradient"
                   width={122}
                   height={34}
@@ -63,8 +67,8 @@ export default async function Home() {
             <Link href="https://discord.gg/8UuBB84tTy" target="_blank">
               <div className="flex flex-col gap-6 itemDivider p-8">
                 <Image
-                  src="/discord.svg"
-                  alt="github text in black and white gradient"
+                  src={Discord}
+                  alt="discord text in black and white gradient"
                   width={191}
                   height={52}
                   className="z-10 relative"
@@ -77,8 +81,8 @@ export default async function Home() {
             <Link href="https://x.com/niledatabase" target="_blank">
               <div className="flex flex-col gap-8 itemDivider p-8">
                 <Image
-                  src="/x.svg"
-                  alt="github text in black and white gradient"
+                  src={X}
+                  alt="X text in black and white gradient"
                   width={47}
                   height={44}
                   className="z-10 relative"
@@ -105,7 +109,7 @@ export default async function Home() {
               <div>
                 <GradientButton href="/templates" variant="soft">
                   <Image
-                    src="/icons/templates.svg"
+                    src={Templates}
                     alt="book cover"
                     width={24}
                     height={24}
@@ -130,3 +134,11 @@ export default async function Home() {
     </Container>
   );
 }
+
+export const metadata = {
+  title: 'Community | Nile Database',
+  description: 'Join the community of SaaS developers',
+  openGraph: {
+    images: 'opengraph/community.jpg',
+  },
+};

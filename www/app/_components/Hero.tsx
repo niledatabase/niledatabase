@@ -3,6 +3,14 @@ import { sizes } from "@/app/_components/common/sizes";
 import Image from "next/image";
 import GradientButton from "./common/GradientButton";
 import Link from "next/link";
+import multiTenant from "@/public/multi-tenant.png";
+import userManagement from "@/public/user-management.png";
+import distributeGlobally from "@/public/distribute-globally.png";
+import instantCustomerDashboards from "@/public/instant-dashboards.png";
+import artificialIntelligence from "@/public/artificial-intelligence.png";
+import elastic from "@/public/elastic-button.png";
+import benchmark from "@/public/benchmark.svg";
+import arrow from "@/public/icons/arrow.svg";
 
 export default function Hero() {
   return (
@@ -24,7 +32,7 @@ export default function Hero() {
                   <span className="underline">Learn more</span>
                   <Image
                     className="-ml-1"
-                    src="/icons/arrow.svg"
+                    src={arrow}
                     alt="arrow"
                     width={25}
                     height={30}
@@ -41,11 +49,10 @@ export default function Hero() {
           <div className="flex flex-col md:flex-row flex-1 justify-center items-center">
             <div className="flex flex-col gap-3 items-center px-4 py-5 w-[220px]">
               <Image
-                src="/multi-tenant.png"
+                src={multiTenant}
                 alt="built-in tenant virtualization icon"
                 width={100}
                 height={100}
-                sizes={sizes}
               />
               <div className="opacity-80 bg-clip-text text-center text-base whitespace-nowrap">
                 Built-In Tenant <br />
@@ -54,11 +61,10 @@ export default function Hero() {
             </div>
             <div className="flex flex-col gap-3 items-center px-4 py-5  w-[220px]">
               <Image
-                src="/user-management.png"
+                src={userManagement}
                 alt="drop in user management icon"
                 width={100}
                 height={100}
-                sizes={sizes}
               />
               <div className="opacity-80 bg-clip-text text-center text-base  whitespace-nowrap">
                 Drop-In User <br />
@@ -67,11 +73,10 @@ export default function Hero() {
             </div>
             <div className="flex flex-col gap-3 items-center px-4 py-5  w-[220px]">
               <Image
-                src="/distribute-globally.png"
+                src={distributeGlobally}
                 alt="Onboard once, Distribute Globally icon"
                 width={100}
                 height={100}
-                sizes={sizes}
               />
               <div className="opacity-80 bg-clip-text text-center text-base  whitespace-nowrap">
                 Onboard Tenants Once,
@@ -82,11 +87,10 @@ export default function Hero() {
           <div className="flex flex-col md:flex-row flex-1 justify-center items-center">
             <div className="flex flex-col gap-3 items-center px-4 py-5 w-[220px]">
               <Image
-                src="/instant-dashboards.png"
+                src={instantCustomerDashboards}
                 alt="Instant Customer Dashboards icon"
                 width={100}
                 height={100}
-                sizes={sizes}
               />
               <div className="opacity-80 bg-clip-text text-center text-base  whitespace-nowrap">
                 Instant Customer <br />
@@ -95,11 +99,10 @@ export default function Hero() {
             </div>
             <div className="flex flex-col gap-3 items-center px-4 py-5  w-[220px]">
               <Image
-                src="/artificial-intelligence.png"
+                src={artificialIntelligence}
                 alt="Instant Customer Dashboards icon"
                 width={100}
                 height={100}
-                sizes={sizes}
               />
               <div className="opacity-80 bg-clip-text text-center text-base">
                 Seamless Tenant-Aware <br />
@@ -108,11 +111,10 @@ export default function Hero() {
             </div>
             <div className="flex flex-col gap-3 items-center px-4 py-5 w-[220px] ">
               <Image
-                src="/elastic-button.png"
+                src={elastic}
                 alt=" Effortlessly Elastic icon"
                 width={100}
                 height={100}
-                sizes={sizes}
               />
               <div className="opacity-80 bg-clip-text text-center text-base">
                 Effortlessly <br />
@@ -126,7 +128,7 @@ export default function Hero() {
             Backed by
           </span>
           <Image
-            src="/benchmark.svg"
+            src={benchmark}
             alt="benchmark logo"
             width={114}
             height={21}
