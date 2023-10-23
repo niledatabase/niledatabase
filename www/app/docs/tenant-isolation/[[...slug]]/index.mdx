@@ -1,7 +1,9 @@
 # Tenant Isolation
 
-export const meta = {
+export const metadata = {
   order: 3,
+  title: "Tenant isolation",
+  description: "Isolating each tenant's data from another tenant",
 };
 
 All SaaS applications provide service to multiple customers or tenants. Isolating each tenant's data from another tenant is so basic yet hard to do. Nile enables tenant data isolation without any complex, buggy code or dealing with messy row-level security policies. With Postgres being tenant-aware in Nile, this becomes straightforward.
@@ -209,7 +211,7 @@ select count(*) as no_of_customers from tenants;
 -- applied for a job for a recruiting product. Can be used to define
 -- active tenants
 select t1.id as customer_id,t1.name as customer_name,
-count(c1.id) as no_of_candidates from candidates c1 
+count(c1.id) as no_of_candidates from candidates c1
 right join tenants t1 on c1.tenant_id=t1.id group by t1.id,t1.name;
 ```
 

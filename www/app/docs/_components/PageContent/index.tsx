@@ -3,6 +3,7 @@ import { MDXProps } from "mdx/types";
 import { PageContentProps } from "./types";
 import SideNavigation, { NavigationRoots } from "../SideNavigation";
 import TableOfContents from "./TableOfContents";
+import findDocFile from "../../_utils/findDocFile";
 import "highlight.js/styles/github-dark.css";
 
 type Props = {
@@ -43,7 +44,7 @@ function PageContent(props: Props) {
             <Component />
           </article>
           {toc.length > 1 && (
-            <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-border h-full hidden xl:block"></div>
+            <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-border h-full hidden 2xl:block"></div>
           )}
         </div>
         <TableOfContents toc={toc} />
@@ -57,35 +58,9 @@ export default async function Page(props: PageContentProps) {
   const page = params?.slug
     ?.map((str: string) => decodeURIComponent(str))
     .join("/");
-  // on the index page
-  if (params && Object.keys(params).length === 0) {
-    try {
-      const { default: Component } = await import(
-        `../../${root}/[[...slug]]/index.mdx`
-      );
-      return <PageContent Component={Component} page={page} root={root} />;
-    } catch (e) {
-      // its ok to not have in index page
-    }
+  const { Component } = await findDocFile({ params, page, root });
+  if (!Component) {
+    return notFound();
   }
-
-  try {
-    const { default: Component } = await import(
-      `../../${root}/[[...slug]]/${page}.mdx`
-    );
-    return <PageContent Component={Component} page={page} root={root} />;
-  } catch (e) {
-    // try again
-  }
-
-  try {
-    const { default: Component } = await import(
-      `../../${root}/[[...slug]]/${page}/index.mdx`
-    );
-    return <PageContent Component={Component} page={page} root={root} />;
-  } catch (e) {
-    // do nothing
-  }
-
-  return notFound();
+  return <PageContent Component={Component} page={page} root={root} />;
 }

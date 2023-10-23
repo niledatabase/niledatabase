@@ -14,7 +14,7 @@ export function NavMenu({ open }: { open: boolean }) {
     >
       <div className="fixed -right-[329px] -top-[197px] w-[224px] h-[534px] -rotate-45 rounded-[534px] blur-[67px] bg-brown z-30 pointer-events-none" />
       <div className="fixed opacity-50 bottom-0 -left-[69%] w-[186px] h-[710px] -rotate-45 rounded-[710px] blur-[67px] bg-blue z-30 pointer-events-none" />
-      <div className="absolute top-0 right-0 z-20">
+      <div className="fixed top-0 right-0 z-20">
         <div className={`transition-all ${open ? "opacity-100" : "opacity-0"}`}>
           <div className="fixed top-0 left-0 right-0 bottom-0 bg-black">
             <div className="flex flex-col gap-10 py-32 px-4">

@@ -50,7 +50,6 @@ export default function MobileSidenav({ navBar, page }: Props) {
     }
   }, [activeItem]);
 
-  console.log(page);
   return (
     <div className="block lg:hidden">
       <div

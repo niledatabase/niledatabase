@@ -13,14 +13,14 @@ type Props = { params: { slug: string[] } };
 
 async function getBlog(props: Props) {
   const {
-    params: {
-      slug: [slug],
-    },
+    params: { slug },
   } = props;
+  const [lastSlug] = slug.reverse();
   const files = await glob("app/blog/**.mdx");
   const file = files.find((file) => {
-    return file.includes(slug);
+    return file.includes(lastSlug);
   });
+
   if (!file || !file[0]) {
     return notFound();
   }
@@ -33,9 +33,10 @@ export default async function BlogPage(props: Props) {
   const { metadata, publishDate, readLength, Article } = await getBlog(props);
   return (
     <Container background={null}>
-      <div className="bg-[#2D2D2D] rounded-xl w-[800px] h-[505px] overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex">
+      <div className="bg-[#2D2D2D] rounded-xl w-[800px] h-[505px] overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex relative">
         {metadata?.image ? (
           <Image
+            className="object-cover object-center h-full w-full absolute"
             alt={metadata.image}
             width={800}
             height={505}
@@ -43,6 +44,7 @@ export default async function BlogPage(props: Props) {
           />
         ) : (
           <Image
+            className="object-cover object-center h-full w-full absolute"
             alt="coffee"
             width={800}
             height={505}
