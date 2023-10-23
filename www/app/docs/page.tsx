@@ -8,6 +8,7 @@ import loadTemplates from "../templates/dataFetcher";
 import { CommunityLinks } from "../_components/common/CommunityLinks";
 import GradientButton from "../_components/common/GradientButton";
 import Link from "next/link";
+import { TutorialList } from "../community/_components/Tutorials";
 
 const languages = [
   { name: "sql", icon: "sql.svg", path: "/docs/getting-started/languages/sql" },
@@ -119,6 +120,22 @@ export default async function Home() {
           <div className="flex flex-col">
             <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
               <div className="text-3xl">Learn from our tutorials</div>
+              <div className="hidden lg:block">
+                <GradientButton href="/templates" variant="soft">
+                  <Image
+                    src="/icons/templates.svg"
+                    alt="book cover"
+                    width={24}
+                    height={24}
+                  />
+                  <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                    More tutorials
+                  </span>
+                </GradientButton>
+              </div>
+            </div>
+            <TutorialList />
+            <div className="lg:hidden flex justify-center">
               <div>
                 <GradientButton href="/templates" variant="soft">
                   <Image

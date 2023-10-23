@@ -1,12 +1,12 @@
-'use client';
-import Heading from '@/app/_components/common/Heading';
-import Image from 'next/image';
-import { useCallback, useMemo, useState } from 'react';
-import faqs from './faqs';
-import useGoToHash from '@/app/_components/common/useGoToHash';
+"use client";
+import Heading from "@/app/_components/common/Heading";
+import Image from "next/image";
+import { useCallback, useMemo, useState } from "react";
+import faqs from "./faqs";
+import useGoToHash from "@/app/_components/common/useGoToHash";
 const variants = {
-  open: '!h-auto',
-  closed: 'opacity-60 hover:opacity-100',
+  open: "!h-auto",
+  closed: "opacity-60 hover:opacity-100",
 };
 
 const PADDING = 72;
@@ -19,24 +19,15 @@ const ExpandItem = (props: {
     return setShow(!show);
   }, [show]);
   const { header, content } = props;
-  const [headerHeight, setHeader] = useState<string | Element>('');
-  const classes = variants[show ? 'open' : 'closed'];
+  const [headerHeight, setHeader] = useState<string | Element>("");
+  const classes = variants[show ? "open" : "closed"];
   const rows = useMemo(() => {
-<<<<<<< HEAD
-    if (typeof document !== 'undefined') {
-      const canvas = document.createElement('canvas');
-      const canvasContext = canvas.getContext('2d');
-      if (canvasContext) {
-        canvasContext.font = '18px Roboto';
-=======
     if (typeof document !== "undefined") {
       const canvas = document.createElement("canvas");
       const canvasContext = canvas.getContext("2d");
       if (canvasContext) {
         canvasContext.font = "18px Roboto";
->>>>>>> 126b625 (chore: add placeholder community)
         const result = canvasContext.measureText(String(headerHeight)).width;
-        console.log(result, window.innerWidth, PADDING, header);
         return Math.ceil((result + PADDING) / window.innerWidth);
       }
     }
@@ -62,7 +53,7 @@ const ExpandItem = (props: {
           {header}
         </span>
         <Image
-          className={`transition-all ${show ? 'rotate-90' : 'rotate-0'}`}
+          className={`transition-all ${show ? "rotate-90" : "rotate-0"}`}
           src="/icons/arrow.svg"
           alt="arrow"
           width={25}
@@ -71,7 +62,7 @@ const ExpandItem = (props: {
         />
       </div>
       <div
-        className={`${show ? 'visible' : 'invisible'} opacity-60 text-[18px]`}
+        className={`${show ? "visible" : "invisible"} opacity-60 text-[18px]`}
       >
         {content}
       </div>
