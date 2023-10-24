@@ -27,14 +27,12 @@ Login and sign-up requests return an authentication token in the form of a [JWT]
 
 You can login to an existing developer account with your email and password and receive an authentication token.
 
-<Row>
-  <Col>
+<div className="grid grid-cols-2 gap-4">
+    <div>
     Unlike most Nile endpoints, this endpoint will produce either JSON or plain text depending on the `Accept` header you specify.
-
     For a full response that includes the developer information, use `Accept: application/json`.
+    </div>
 
-  </Col>
-  <Col>
     <CodeGroups
       title={"JSON Authentication Request"}
       method={"POST"}
@@ -50,13 +48,9 @@ You can login to an existing developer account with your email and password and 
       }'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
+
     The response will include the developer id and token with metadata.
-  </Col>
-  <Col>
+
     <CodeGroups
       title={"JSON Authentication Response"}
       response={"200"}
@@ -73,13 +67,9 @@ You can login to an existing developer account with your email and password and 
       }
     ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
+
     If you only want the token, use `Accept: text/plain`.
-  </Col>
-  <Col>
+
     <CodeGroups
       title={"Plaintext Authentication Request"}
       method={"POST"}
@@ -95,13 +85,10 @@ You can login to an existing developer account with your email and password and 
     }'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
+
+
     The response will be a plain text JWT.
-  </Col>
-  <Col>
+
     <CodeGroups
       title={"Plaintext Authentication Response"}
       response={"200"}
@@ -111,23 +98,17 @@ You can login to an existing developer account with your email and password and 
       eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjoibmlsZSIsImlhdCI6MTY5ODA3NjE0MywiZXhwIjoxNjk4MDc5NzQzLCJzdWIiOiIwMThiNDRhNC02YjExLTc5YWItOTkxMC00NjBhZTQ4YmMyOTUiLCJqdGkiOiIxYTI2YWYzNS1lMzZkLTQwMDktODkyOC00ZTgxYjAyYjVkYTgiLCJzY29wZSI6ImRhc2hib2FyZCBxdWVyeSJ9.UFCxn2k11aStEF6lO8FU8ppobP5uLRneLb69_FgSZ4s2B34EX96jDiZwluy5KmEcvcjxUegQ1kMgD2Z-aJuWj5zt4IEt-sMvvZJwE-Luyd8Wzs6w3HEFtkDTi3XvX6lex5SJXg30VZr1zme0PaDL_6zwj7_C9PCIODTlFGrB-z0nWub3c8P9wcTMwQ-9kz0_m__scEW_g1B-XLC8u9gWzrEIIPpgXHRara6E99u_udQ9wJ0lReHqcePllaEZbOYuFsygZ_sueSI5keR14eY1mOSN-GygMzxmNORYavF4KdzmyfwGF3JiAuiX5JVRkaezCrxtlD7aoPdlsBYBpOCmOQ
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+ </div>
 
 Use your access token in the `Authorization` header of subsequent requests.
 
-<Row>
-  <Col>Pass the JWT as a `Bearer` token.</Col>
-  <Col>
-    <CodeGroups
-      title={"API Requests"}
-      method={"GET"}
-      pathname={"/developers/me"}
-    >
-      ```bash curl 'https://api.thenile.dev/developers/me' \ --header
-      'Authorization: Bearer
-      eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjoibmlsZSIsImlhdCI6MTY5ODA3NjE0MywiZXhwIjoxNjk4MDc5NzQzLCJzdWIiOiIwMThiNDRhNC02YjExLTc5YWItOTkxMC00NjBhZTQ4YmMyOTUiLCJqdGkiOiIxYTI2YWYzNS1lMzZkLTQwMDktODkyOC00ZTgxYjAyYjVkYTgiLCJzY29wZSI6ImRhc2hib2FyZCBxdWVyeSJ9.UFCxn2k11aStEF6lO8FU8ppobP5uLRneLb69_FgSZ4s2B34EX96jDiZwluy5KmEcvcjxUegQ1kMgD2Z-aJuWj5zt4IEt-sMvvZJwE-Luyd8Wzs6w3HEFtkDTi3XvX6lex5SJXg30VZr1zme0PaDL_6zwj7_C9PCIODTlFGrB-z0nWub3c8P9wcTMwQ-9kz0_m__scEW_g1B-XLC8u9gWzrEIIPpgXHRara6E99u_udQ9wJ0lReHqcePllaEZbOYuFsygZ_sueSI5keR14eY1mOSN-GygMzxmNORYavF4KdzmyfwGF3JiAuiX5JVRkaezCrxtlD7aoPdlsBYBpOCmOQ'
-      ```
-    </CodeGroups>
-  </Col>
-</Row>
+<div className="grid grid-cols-2 gap-4">
+  Pass the JWT as a `Bearer` token.
+  <CodeGroups title={"API Requests"} method={"GET"} pathname={"/developers/me"}>
+    ```bash curl 'https://api.thenile.dev/developers/me' \ --header
+    'Authorization: Bearer
+    eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjoibmlsZSIsImlhdCI6MTY5ODA3NjE0MywiZXhwIjoxNjk4MDc5NzQzLCJzdWIiOiIwMThiNDRhNC02YjExLTc5YWItOTkxMC00NjBhZTQ4YmMyOTUiLCJqdGkiOiIxYTI2YWYzNS1lMzZkLTQwMDktODkyOC00ZTgxYjAyYjVkYTgiLCJzY29wZSI6ImRhc2hib2FyZCBxdWVyeSJ9.UFCxn2k11aStEF6lO8FU8ppobP5uLRneLb69_FgSZ4s2B34EX96jDiZwluy5KmEcvcjxUegQ1kMgD2Z-aJuWj5zt4IEt-sMvvZJwE-Luyd8Wzs6w3HEFtkDTi3XvX6lex5SJXg30VZr1zme0PaDL_6zwj7_C9PCIODTlFGrB-z0nWub3c8P9wcTMwQ-9kz0_m__scEW_g1B-XLC8u9gWzrEIIPpgXHRara6E99u_udQ9wJ0lReHqcePllaEZbOYuFsygZ_sueSI5keR14eY1mOSN-GygMzxmNORYavF4KdzmyfwGF3JiAuiX5JVRkaezCrxtlD7aoPdlsBYBpOCmOQ'
+    ```
+  </CodeGroups>
+</div>

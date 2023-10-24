@@ -6,11 +6,9 @@ export const metadata = {
 
 # Create a User
 
-<Row>
-  <Col>
+<div className="grid grid-cols-2 gap-4">
     Create a new user by providing an email address and password. Email addresses must be unique within a database. You may provide an optional `preferredName` for the user.
-  </Col>
-  <Col>
+
     <CodeGroups
       title={"Create User Request"}
       method={"POST"}
@@ -25,13 +23,9 @@ export const metadata = {
       }'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
+
     The response includes the user id and an access token for the user. The access token can be used to perform API operations on the user's behalf.
-  </Col>
-  <Col>
+
     <CodeGroups
       title={"Response"}
       response={"201"}
@@ -49,14 +43,8 @@ export const metadata = {
       }
       ```
     </CodeGroups>
-  </Col>
-</Row>
 
-<Row>
-  <Col>
     You can also create a user and a new tenant for that user in a single request by specifying the `newTenant` attribute.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Create User with Tenant Request"}
       method={"POST"}
@@ -72,13 +60,7 @@ export const metadata = {
       }'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
     The response includes the user id and an access token, and the `tenants` array includes the id of the new tenant.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Create User with Tenant Response"}
       response={"201"}
@@ -98,5 +80,5 @@ export const metadata = {
       }
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+</div>

@@ -6,11 +6,8 @@ export const metadata = {
 
 # Update a Tenant
 
-<Row>
-  <Col>
+    <div className="grid grid-cols-2 gap-4">
     You can rename tenants with a PUT request.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Update Tenant Request"}
       method={"PUT"}
@@ -24,13 +21,7 @@ export const metadata = {
       }'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
     The response includes the generated tenant id and the name you provided.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Update Tenant Response"}
       response={"200"}
@@ -43,5 +34,5 @@ export const metadata = {
       }
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+</div>

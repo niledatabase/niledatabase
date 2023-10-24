@@ -6,11 +6,8 @@ export const metadata = {
 
 # Create a Workspace
 
-<Row>
-  <Col>
+    <div className="grid grid-cols-2 gap-4">
     Create a new workspace by providing a workspace name. Workspace names must be unique across Nile. Your company or application name is a good choice for a workspace name.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Create Workspace Request"}
       method={"POST"}
@@ -24,13 +21,7 @@ export const metadata = {
       }'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
     The response will include your workspace name and slug. The name is the human-readable name you provided. The slug is a URL-safe version of the name that you'll use in API paths.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Create Workspace Response"}
       response={"201"}
@@ -43,5 +34,5 @@ export const metadata = {
       }
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+</div>

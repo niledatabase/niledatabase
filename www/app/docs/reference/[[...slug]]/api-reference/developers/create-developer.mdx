@@ -6,11 +6,8 @@ export const metadata = {
 
 # Create a Developer
 
-<Row>
-  <Col>
+    <div className="grid grid-cols-2 gap-4">
     Create a new developer account with an email address and password in a POST request to `https://api.thenile.dev/developers`.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Create Developer Request"}
       method={"POST"}
@@ -25,13 +22,7 @@ export const metadata = {
       }'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
     The response will include your developer id and email. Your password is never returned, and is stored as a salted, hashed credential.
-  </Col>
-  <Col>
     <CodeGroups
       title={"JSON Authentication Response"}
       response={"201"}
@@ -45,8 +36,8 @@ export const metadata = {
       }
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+</div>
 
 Once created, you'll need to [login with your credentials](/docs/reference/api-reference/developers/login-developer) in order to generate an access token to use in subsequent requests.
 

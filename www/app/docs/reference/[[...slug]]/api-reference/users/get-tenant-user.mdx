@@ -6,11 +6,8 @@ export const metadata = {
 
 # Get User in a Tenant
 
-<Row>
-  <Col>
+<div className="grid grid-cols-2 gap-4">
     Get a specific user by id, if that users is a member of the tenant. If not, the response will be `404`.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Get User Request"}
       method={"GET"}
@@ -21,13 +18,7 @@ export const metadata = {
       --header 'Authorization: Bearer <string>'
         ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
     The response includes all information for the user.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Get User Response"}
       response={"200"}
@@ -47,5 +38,4 @@ export const metadata = {
       }
       ```
     </CodeGroups>
-  </Col>
-</Row>
+</div>

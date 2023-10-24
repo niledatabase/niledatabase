@@ -6,11 +6,9 @@ export const metadata = {
 
 # Login User
 
-<Row>
-  <Col>
+<div className="grid grid-cols-2 gap-4">
     Login a user with the email address and password provided during sign-up.
-  </Col>
-  <Col>
+
     <CodeGroups
       title={"User Authentication Request"}
       method={"POST"}
@@ -25,13 +23,9 @@ export const metadata = {
       }'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
+
     The response will include the user id, tenant list, and token with metadata.
-  </Col>
-  <Col>
+
     <CodeGroups
       title={"User Authentication Response"}
       response={"200"}
@@ -51,5 +45,5 @@ export const metadata = {
       }
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+</div>

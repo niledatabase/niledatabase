@@ -6,11 +6,8 @@ export const metadata = {
 
 # Create a Tenant
 
-<Row>
-  <Col>
+<div className="grid grid-cols-2 gap-4">
     Create a new tenant by providing a tenant name. Tenant names must be unique within a database.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Create Tenant Request"}
       method={"POST"}
@@ -24,13 +21,9 @@ export const metadata = {
       }'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
+
     The response includes the generated tenant id and the name you provided.
-  </Col>
-  <Col>
+
     <CodeGroups
       title={"Create Tenant Response"}
       response={"201"}
@@ -43,5 +36,5 @@ export const metadata = {
       }
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+  </div>

@@ -8,11 +8,8 @@ export const metadata = {
 
 Retrieve information about the holder of an access token.
 
-<Row>
-  <Col>
+    <div className="grid grid-cols-2 gap-4">
     Use the JWT generated when you [logged in](/docs/reference/api-reference/developers/login-developer) as a bearer token.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Identify Developer Request"}
       method={"GET"}
@@ -23,13 +20,7 @@ Retrieve information about the holder of an access token.
       --header 'Authorization: Bearer <string>'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
     The response will contain the developer id, email address and workspaces associated with the holder of the access token.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Identify Developer Response"}
       response={"200"}
@@ -43,5 +34,5 @@ Retrieve information about the holder of an access token.
       }
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+</div>

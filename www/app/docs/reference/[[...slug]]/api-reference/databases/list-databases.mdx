@@ -6,11 +6,8 @@ export const metadata = {
 
 # List Databases
 
-<Row>
-  <Col>
+    <div className="grid grid-cols-2 gap-4">
     List the databases in the workspace.
-  </Col>
-  <Col>
     <CodeGroups
       title={"List Database Request"}
       method={"GET"}
@@ -21,13 +18,7 @@ export const metadata = {
       --header 'Authorization: Bearer <string>'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
     The response includes the database id, name and workspace for each database.
-  </Col>
-  <Col>
     <CodeGroups
       title={"List Workspace Response"}
       response={"200"}
@@ -54,5 +45,5 @@ export const metadata = {
       ]
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+</div>
