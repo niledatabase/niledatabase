@@ -1,4 +1,5 @@
-import CodeGroups from "../../../_components/CodeGroups";export const metadata = {
+import CodeGroups from "../../../_components/CodeGroups";
+export const metadata = {
   title: "API Reference",
   description:
     "Describes basic concepts, response codes, authentication and rate limiting aspects of Nile APIs.",
@@ -32,6 +33,7 @@ You can login to an existing developer account with your email and password and 
     Unlike most Nile endpoints, this endpoint will produce either JSON or plain text depending on the `Accept` header you specify.
 
     For a full response that includes the developer information, use `Accept: application/json`.
+
   </Col>
   <Col>
     <CodeGroups
@@ -116,18 +118,16 @@ You can login to an existing developer account with your email and password and 
 Use your access token in the `Authorization` header of subsequent requests.
 
 <Row>
-  <Col>
-    Pass the JWT as a `Bearer` token.
-  </Col>
+  <Col>Pass the JWT as a `Bearer` token.</Col>
   <Col>
     <CodeGroups
       title={"API Requests"}
       method={"GET"}
       pathname={"/developers/me"}
     >
-      ```bash
-      curl 'https://api.thenile.dev/developers/me' \
-      --header 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjoibmlsZSIsImlhdCI6MTY5ODA3NjE0MywiZXhwIjoxNjk4MDc5NzQzLCJzdWIiOiIwMThiNDRhNC02YjExLTc5YWItOTkxMC00NjBhZTQ4YmMyOTUiLCJqdGkiOiIxYTI2YWYzNS1lMzZkLTQwMDktODkyOC00ZTgxYjAyYjVkYTgiLCJzY29wZSI6ImRhc2hib2FyZCBxdWVyeSJ9.UFCxn2k11aStEF6lO8FU8ppobP5uLRneLb69_FgSZ4s2B34EX96jDiZwluy5KmEcvcjxUegQ1kMgD2Z-aJuWj5zt4IEt-sMvvZJwE-Luyd8Wzs6w3HEFtkDTi3XvX6lex5SJXg30VZr1zme0PaDL_6zwj7_C9PCIODTlFGrB-z0nWub3c8P9wcTMwQ-9kz0_m__scEW_g1B-XLC8u9gWzrEIIPpgXHRara6E99u_udQ9wJ0lReHqcePllaEZbOYuFsygZ_sueSI5keR14eY1mOSN-GygMzxmNORYavF4KdzmyfwGF3JiAuiX5JVRkaezCrxtlD7aoPdlsBYBpOCmOQ'
+      ```bash curl 'https://api.thenile.dev/developers/me' \ --header
+      'Authorization: Bearer
+      eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjoibmlsZSIsImlhdCI6MTY5ODA3NjE0MywiZXhwIjoxNjk4MDc5NzQzLCJzdWIiOiIwMThiNDRhNC02YjExLTc5YWItOTkxMC00NjBhZTQ4YmMyOTUiLCJqdGkiOiIxYTI2YWYzNS1lMzZkLTQwMDktODkyOC00ZTgxYjAyYjVkYTgiLCJzY29wZSI6ImRhc2hib2FyZCBxdWVyeSJ9.UFCxn2k11aStEF6lO8FU8ppobP5uLRneLb69_FgSZ4s2B34EX96jDiZwluy5KmEcvcjxUegQ1kMgD2Z-aJuWj5zt4IEt-sMvvZJwE-Luyd8Wzs6w3HEFtkDTi3XvX6lex5SJXg30VZr1zme0PaDL_6zwj7_C9PCIODTlFGrB-z0nWub3c8P9wcTMwQ-9kz0_m__scEW_g1B-XLC8u9gWzrEIIPpgXHRara6E99u_udQ9wJ0lReHqcePllaEZbOYuFsygZ_sueSI5keR14eY1mOSN-GygMzxmNORYavF4KdzmyfwGF3JiAuiX5JVRkaezCrxtlD7aoPdlsBYBpOCmOQ'
       ```
     </CodeGroups>
   </Col>

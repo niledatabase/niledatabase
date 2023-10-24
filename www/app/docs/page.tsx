@@ -141,7 +141,10 @@ export default async function Home() {
             <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
               <div className="text-3xl">Dig into our REST API</div>
               <div>
-                <GradientButton href="/docs/reference/api-reference/index" variant="soft">
+                <GradientButton
+                  href="/docs/reference/api-reference/index"
+                  variant="soft"
+                >
                   <Image
                     src="/icons/templates.svg"
                     alt="book cover"
