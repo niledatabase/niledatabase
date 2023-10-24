@@ -10,7 +10,7 @@ import Typography from '@mui/joy/Typography';
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
-import {AddFormModal} from '@/app/tenants/add-form-modal';
+import {AddForm} from '@/app/tenants/add-form';
 import {getNile, setNile} from '@/lib/NileServer'
 
 
@@ -44,7 +44,7 @@ export default async function Page() {
           <Card  variant="outlined"> {/* TODO: need drop shadow */}
           {/* TODO: Avatar or Icon with small DB image*/}
           <CardContent > 
-            <div style={{display: 'flex', justifyContent: 'center', padding:'1rem'}}><AddFormModal /></div>
+            <div style={{display: 'flex', justifyContent: 'center', padding:'1rem'}}><AddForm /></div>
           </CardContent>
           <Divider>or</Divider>
           <CardContent> 
