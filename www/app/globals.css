@@ -292,6 +292,11 @@ mark {
 .templateSearch {
   background: black;
 }
+@media (min-width: 1536px) {
+  .prose {
+    max-width: 90ch !important;
+  }
+}
 @media (max-width: 1280px) {
   .prose {
     max-width: 50ch;
@@ -380,4 +385,11 @@ th {
 
 td {
   font-size: 16px;
+}
+
+iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border-radius: 20px;
 }
