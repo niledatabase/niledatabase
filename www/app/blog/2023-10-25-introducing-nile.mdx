@@ -255,6 +255,18 @@ select * from employees
     </tr>
   </tbody>
 </table>
+One last thing is that while there are virtual tenant DBs, you may also want to share data across tenants. There are quite a few [use cases](https://website-git-more-fixes-niledatabase.vercel.app/docs/tenant-sharing) for this. In such cases, it should be easy to create tables that can be accessed across the tenants. These tables should be available to all tenants irrespective of where they are located, and all the standard queries should work across the tenant virtual DBs and shared tables.
+```sql
+-- list of flights that a corporate travel booking site can use to share across all the tenants.
+-- employees in different tenants can view these flight data to book tickets
+create table flights (
+id integer PRIMARY KEY,
+name text,
+from_location text,
+to_location text,
+departure_time TIMESTAMP,
+arrival_time TIMESTAMP);
+```
 
 ### Global and flexible tenant placement
 
