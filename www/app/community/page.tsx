@@ -1,19 +1,19 @@
-import Container from '@/app/_components/common/Container';
-import Divider from '@/app/_components/common/Divider';
-import GradientButton from '@/app/_components/common/GradientButton';
-import Heading from '@/app/_components/common/Heading';
-import PageHeader from '@/app/_components/common/PageHeader';
-import Image from 'next/image';
-import TemplateSearch from '../templates/TemplateSearch';
-import loadTemplates from '../templates/dataFetcher';
-import Link from 'next/link';
-import Tutorials from './_components/Tutorials';
-import Community from './_components/Community';
-import Heart from '@/public/heart.svg';
-import GithubText from '@/public/github-text.svg';
-import Discord from '@/public/discord.svg';
-import X from '@/public/x.svg';
-import Templates from '@/public/icons/templates.svg';
+import Container from "@/app/_components/common/Container";
+import Divider from "@/app/_components/common/Divider";
+import GradientButton from "@/app/_components/common/GradientButton";
+import Heading from "@/app/_components/common/Heading";
+import PageHeader from "@/app/_components/common/PageHeader";
+import Image from "next/image";
+import TemplateSearch from "../templates/TemplateSearch";
+import loadTemplates from "../templates/dataFetcher";
+import Link from "next/link";
+import Tutorials from "./_components/Tutorials";
+import Community from "./_components/Community";
+import Heart from "@/public/heart.svg";
+import GithubText from "@/public/github-text.svg";
+import Discord from "@/public/discord.svg";
+import X from "@/public/x.svg";
+import Templates from "@/public/icons/templates.svg";
 export default async function Home() {
   const templates = await loadTemplates();
   return (
@@ -136,9 +136,9 @@ export default async function Home() {
 }
 
 export const metadata = {
-  title: 'Community | Nile Database',
-  description: 'Join the community of SaaS developers',
+  title: "Community | Nile Database",
+  description: "Join the community of SaaS developers",
   openGraph: {
-    images: 'opengraph/community.jpg',
+    images: "opengraph/community.jpg",
   },
 };

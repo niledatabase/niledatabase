@@ -1,9 +1,9 @@
-import Heading from '@/app/_components/common/Heading';
-import Video from './Video';
-import Image from 'next/image';
-import Globe from '@/public/icons/globe.svg';
-import Rocket from '@/public/icons/rocket.svg';
-import Pin from '@/public/icons/pin.svg';
+import Heading from "@/app/_components/common/Heading";
+import Video from "./Video";
+import Image from "next/image";
+import Globe from "@/public/icons/globe.svg";
+import Rocket from "@/public/icons/rocket.svg";
+import Pin from "@/public/icons/pin.svg";
 export default function DropInUserManagement() {
   return (
     <div className="container mx-auto">
@@ -50,13 +50,13 @@ export default function DropInUserManagement() {
           <div className="flex flex-col lg:flex-row items-center justify-center -mb-32 -z-30">
             <div className="flex lg:w-1/2">
               <Video
-                poster="earth.jpg"
+                poster="earth.webp"
                 src="earth.mp4"
                 className="aspect-square"
               />
             </div>
             <div className="flex lg:w-1/2 -mt-[220px] lg:mt-0 items-center justify-center">
-              <Video poster="globe.svg" src="global.mp4" />
+              <Video poster="globe.webp" src="global.mp4" />
             </div>
           </div>
         </div>
