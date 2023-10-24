@@ -9,7 +9,7 @@ export const nile = Server({
   workspace: String(process.env.NILE_WORKSPACE), 
   database: String(process.env.NILE_DATABASE),
   api: {
-    basePath: process.env.NILE_API_BASE_PATH,
+    basePath: String(process.env.NILE_API_BASE_PATH)
   },
   db: {
     connection: {
@@ -19,6 +19,8 @@ export const nile = Server({
     },
   },
 });
+
+const fe_url = process.env.FE_URL || "http://localhost:3006";
 
 const app = express();
 app.use(express.json());
@@ -189,7 +191,6 @@ app.get("/insecure/all_todos", async (req, res) => {
 app.post('/auth/handler', async (req, res) => {
   const formData = req.body;
   const event = formData.event;
-  const fe_url = process.env.FE_URL || "http://localhost:3006";
 
   // note that we are responding with 303 redirects in order to trigger a GET request for client-side redirect
   try {
@@ -207,4 +208,62 @@ app.post('/auth/handler', async (req, res) => {
     res.cookie('errorData', JSON.stringify(e.message), {secure: process.env.NODE_ENV !== 'development'});
     res.redirect(303,fe_url+"/"); // if there is an error, redirect to home page
   }
+});
+
+// handle email signups
+app.post('/api/sign-up', async (req, res) => {
+  const resp = await nile.api.auth.signUp(
+    {
+      email: req.body.email,
+      password: req.body.password,
+    }
+  );
+
+  // if signup was successful, we want to set the cookies and headers, so it will log the user in too
+  // Note that this is optional, check the authentication quickstart for a simpler example of using the Nile SDK for authentication
+  if (resp && resp.status >= 200 && resp.status < 300) {
+      const body =  await resp.json();
+      const accessToken = body.token.jwt;
+      const decodedJWT = jwtDecode<NileJWTPayload>(accessToken);
+      const cookieData = {
+          accessToken: accessToken,
+          tokenData: decodedJWT,
+        };
+      res.cookie('authData', JSON.stringify(cookieData), {secure: process.env.NODE_ENV !== 'development'});
+      res.status(resp.status).json(JSON.stringify(body));
+    } else  {
+      // The API sends errors in plain text, so we need to handle them before trying to parse the JSON
+      const body = await resp.text();
+      const err = "got error response: " + body + " " + resp.status;
+      console.log(err);
+      res.status(resp.status).json(JSON.stringify(body));
+  }
+});
+
+// handle email logins
+app.post('/api/login', async (req, res) => {
+  const resp = await nile.api.auth.login({
+    email: req.body.email,
+    password: req.body.password,
+  });
+
+  // if signup was successful, we want to set the cookies
+  if (resp && resp.status >= 200 && resp.status < 300) {
+      const body =  await resp.json();
+      const accessToken = body.token.jwt;
+      const decodedJWT = jwtDecode<NileJWTPayload>(accessToken);
+      const cookieData = {
+          accessToken: accessToken,
+          tokenData: decodedJWT,
+          };
+      res.cookie('authData', JSON.stringify(cookieData), {secure: process.env.NODE_ENV !== 'development'});
+      res.status(resp.status).json(JSON.stringify(body));
+  } else  {
+      // The API sends errors in plain text, so we need to handle them before trying to parse the JSON
+      const body = await resp.text();
+      const err = "got error response: " + body + " " + resp.status;
+      console.log(err);
+      res.status(resp.status).json(JSON.stringify(body));
+  }
+
 });
