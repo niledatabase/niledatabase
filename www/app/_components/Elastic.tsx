@@ -1,12 +1,12 @@
-import Heading from '@/app/_components/common/Heading';
-import Image from 'next/image';
+import Heading from "@/app/_components/common/Heading";
+import Image from "next/image";
 
-import Serverless from '@/public/icons/serverless.svg';
-import Money from '@/public/icons/money.svg';
-import Bolt from '@/public/icons/bolt.svg';
-import People from '@/public/icons/people.svg';
-import Link from '@/public/icons/link.svg';
-import ElasticImage from '@/public/elastic.png';
+import Serverless from "@/public/icons/serverless.svg";
+import Money from "@/public/icons/money.svg";
+import Bolt from "@/public/icons/bolt.svg";
+import People from "@/public/icons/people.svg";
+import Link from "@/public/icons/link.svg";
+import ElasticImage from "@/public/elastic.png";
 export default function Elastic() {
   return (
     <div className="container mx-auto">

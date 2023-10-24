@@ -4,9 +4,14 @@ import { useRef, useState } from "react";
 import Arrow from "@/public/icons/arrow.svg";
 export default function JoinWaitlist() {
   const [submitted, setDidSubmit] = useState(false);
+  console.log(submitted, "what the hell?");
   const ref = useRef<HTMLInputElement>(null);
   return (
-    <div className="relative mt-[24px] flex flex-col gap-2">
+    <div
+      className={`relative mt-[24px] flex flex-col gap-2${
+        submitted ? " pointer-events-none" : ""
+      }`}
+    >
       <input
         ref={ref}
         className={`w-full bg-[#141414] border border-[#373737] rounded-[12px] text-[16px] py-2.5 px-4 placeholder:opacity-40 focus:outline-none`}
@@ -14,7 +19,7 @@ export default function JoinWaitlist() {
       />
       <button
         onClick={async () => {
-          if (ref.current?.value) {
+          if (ref.current?.value && !submitted) {
             const res = await fetch(`/api/subscribe`, {
               method: "POST",
               body: JSON.stringify({ email: ref.current.value }),
@@ -28,9 +33,10 @@ export default function JoinWaitlist() {
         className="flex flex-row gap-2 text-[16px] gradientButton mb-[24px] leading-[24px] after:rounded-[12px] px-1 w-full"
       >
         <div
-          className={`flex flex-row  duration-500 ${
-            submitted ? "opacity-0" : "opacity-100"
-          } trasition-opacity gap-[24px] justify-between w-full`}
+          className="flex flex-row  duration-500 trasition-opacity gap-[24px] justify-between w-full"
+          style={{
+            opacity: submitted ? 0 : 100,
+          }}
         >
           <div>Join the waitlist</div>
           <Image
@@ -42,9 +48,10 @@ export default function JoinWaitlist() {
           />
         </div>
         <div
-          className={`absolute whitespace-nowrap pointer-events-none ${
-            submitted ? "opacity-100" : "opacity-0"
-          } trasition-opacity delay-500 duration-500 -ml-2`}
+          className="absolute whitespace-nowrap pointer-events-none trasition-opacity delay-500 duration-500 -ml-2"
+          style={{
+            opacity: submitted ? 100 : 0,
+          }}
         >
           Thanks for joining! We&apos;ll contact you shortly.
         </div>

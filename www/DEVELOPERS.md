@@ -19,13 +19,19 @@ Turborepo is used to manage and run this monorepo.
    npm install
    ```
 
-2. Run the website and docs locally:
+2. Built the website and docs initially:
+
+   ```sh
+   npm run build:www
+   ```
+
+3. Run the website and docs locally:
 
    ```sh
    npm run dev:www
    ```
 
-3. Now you can make any change, fix or improvement you'd like and see the result locally.
+4. Now you can make any change, fix or improvement you'd like and see the result locally.
 
 - See [docs](./app/docs/README.md) for more details about adding/revising documentation
 

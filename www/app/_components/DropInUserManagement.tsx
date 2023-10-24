@@ -14,10 +14,10 @@ export default function DropInUserManagement() {
             <Heading text="Drop-in tenant and user management"></Heading>
           </div>
           <div className="hidden md:block">
-            <Video poster="user-mgmt.jpg" src="user-mgmt.mp4" />
+            <Video poster="user-mgmt.webp" src="user-mgmt.mp4" />
           </div>
           <div className="block md:hidden my-5">
-            <Video poster="user-mgmt-vert.jpg" src="user-mgmt-vert.mp4" />
+            <Video poster="user-mgmt-vert.webp" src="user-mgmt-vert.mp4" />
           </div>
 
           <div className="flex flex-col md:flex-row w-full justify-center flex-wrap">

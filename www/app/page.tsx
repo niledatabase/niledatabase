@@ -18,7 +18,7 @@ export default function Home() {
       <Hero />
       <div className="flex flex-row w-full justify-center">
         <div className="w-[20%] bg-video-bg -z-10 opacity-60 bg-[center_right] bg-no-repeat bg-contain" />
-        <div className="border rounded-2xl border-gray p-2 relative bg-black max-w-7xl">
+        <div className="border rounded-2xl border-gray p-2 relative bg-black max-w-7xl w-100">
           <Video poster="dashboard.webp" src="snapshot.mp4" />
         </div>
         <div className="w-[20%] bg-video-bg -z-10 opacity-60 -scale-100 bg-[center_right] bg-no-repeat bg-contain" />

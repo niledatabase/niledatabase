@@ -1,0 +1,57 @@
+export const metadata = {
+  title: "Create tenant user",
+  order: 2,
+  method: "POST",
+};
+
+# Create User with a Tenant Association
+
+Users are not nested under tenants; a single user may have access to multiple tenants. But this endpoint allows you to create a user with a tenant association in a single request.
+
+<Row>
+  <Col>
+    Create a new user by providing an email address and password. The user will be associated with the tenant in the request path.
+  </Col>
+  <Col>
+    <CodeGroups
+      title={"Create User Request"}
+      method={"POST"}
+      pathname={"/workspaces/:workspaceSlug/databases/:databaseName/tenants/:tenantId/users"}
+    >
+      ```bash
+      curl 'https://api.thenile.dev/workspaces/<string>/databases/<string>/tenants/<string>/users' \
+      --data-raw '{
+        "email": "<string>",
+        "password": "<string>",
+        "preferredName": "<string>"
+      }'
+      ```
+    </CodeGroups>
+  </Col>
+</Row>
+<Row>
+  <Col>
+    The response includes the user id and an access token for the user. The access token can be used to perform API operations on the user's behalf.
+  </Col>
+  <Col>
+    <CodeGroups
+      title={"Create User Response"}
+      response={"201"}
+      pathname={"/workspaces/:workspaceSlug/databases/:databaseName/tenants/:tenantId/users"}
+    >
+      ```json
+      {
+        "id": "018b6216-27a1-7e2b-aa83-67d7ba500982",
+        "tenants": [
+          "018b61ec-af9e-77e5-b27f-77239cd4a0bc"
+        ],
+        "token": {
+          "jwt": "eyEhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjpbImRhdGFiYXNlOjAxOGI2MWJjLWNmMmMtNzM5Mi05MmE2LWYxYTgxMWNmNDQxOSIsIm5pbGUiXSwiaWF0IjoxNjk4MTU3NzAxLCJleHAiOjE2OTgxNjEzMDEsInN1YiI6IjAxOGI2MjE2LTI3YTEtN2UyYi1hYTgzLTY3ZDdiYTUwMDk4MiIsImp0aSI6ImM1OGU0MjExLTJkMTItNDEwZS05MDYwLTRhYjUyYmYxOGQ4MiIsIm5hbWUiOiJwc2NrYXVnaHQiLCJlbWFpbCI6InNjb3R0aWN1c0Btc24uY29tIiwic2NvcGUiOiJkYXNoYm9hcmQifQ.XrdLCZX7VxpTtaKx-Ho2sAB2thOTr2bOo8PzxvjnfdmT9KdBVWBtullOmrUcz18Txo_8S960JxPo4LWYdYw91pdLJ2PNcuFNEFiRLQFmkpOH7v7TjJ6cdm9pniE8aOGkWJpjAMuLg767vEFJIsoRRFPR9v30dN0Sh0OgDpUIYWn6ngW16Y6OhpiNPHveQ-And4vAlS3-cc0sI_uDMyEke_BoZ-8mKXCB3JqtZrmcAXqYeiubxdd8WdEEDCSrwE9Tr9sUkQORV-O6CsIvKxBKx32KaFiFWs5izjqityvKOvGpNF-h3dAsVVK1Y0GgDmgWHu0TWi6ctdH2wGtkMMeNFw",
+          "maxAge": 3600,
+          "type": "ACCESS_TOKEN"
+        }
+      }
+      ```
+    </CodeGroups>
+  </Col>
+</Row>
