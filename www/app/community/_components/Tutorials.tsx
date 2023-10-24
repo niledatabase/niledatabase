@@ -13,15 +13,15 @@ const playerProps = {
 const videos = [
   {
     title: "Getting Started - SQL",
-    videoUrl: "https://www.youtube.com/embed/xnji861fsf4?si=asdLXH-M3ACspuzf",
+    videoUrl: "https://www.youtube.com/embed/RKMXk-9B_2A?si=QV1PNSd09YzsfDJo",
   },
   {
     title: "Building a NodeJS Web Application with Nile",
-    videoUrl: "https://www.youtube.com/embed/xnji861fsf4?si=7QcCQcD6IZXbufc3"
+    videoUrl: "https://www.youtube.com/embed/6Lm3-YeLzks?si=A5VNbZ5lgD40PRwm"
   },
   {
     title: "Build a Java application with Nile",
-    videoUrl: "https://www.youtube.com/embed/RKMXk-9B_2A?si=QV1PNSd09YzsfDJo",
+    videoUrl: "https://www.youtube.com/embed/xnji861fsf4?si=asdLXH-M3ACspuzf",
   },
 ];
 
