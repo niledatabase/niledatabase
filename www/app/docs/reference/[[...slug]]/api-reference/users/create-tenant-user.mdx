@@ -8,11 +8,8 @@ export const metadata = {
 
 Users are not nested under tenants; a single user may have access to multiple tenants. But this endpoint allows you to create a user with a tenant association in a single request.
 
-<Row>
-  <Col>
+<div className="grid grid-cols-2 gap-4">
     Create a new user by providing an email address and password. The user will be associated with the tenant in the request path.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Create User Request"}
       method={"POST"}
@@ -27,13 +24,8 @@ Users are not nested under tenants; a single user may have access to multiple te
       }'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
+
     The response includes the user id and an access token for the user. The access token can be used to perform API operations on the user's behalf.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Create User Response"}
       response={"201"}
@@ -53,5 +45,5 @@ Users are not nested under tenants; a single user may have access to multiple te
       }
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+</div>

@@ -6,11 +6,8 @@ export const metadata = {
 
 # Get a User
 
-<Row>
-  <Col>
+    <div className="grid grid-cols-2 gap-4">
     Get a specific user by id. When using a developer token, you'll be able to access all users in the database. When using a user token, you'll only be able to access your own user.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Get User Request"}
       method={"GET"}
@@ -21,13 +18,7 @@ export const metadata = {
       --header 'Authorization: Bearer <string>'
         ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
     The response includes all user information. The `tenants` array contains the ids of all tenants the user is a member of.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Get User Response"}
       response={"200"}
@@ -46,6 +37,6 @@ export const metadata = {
         "picture": null
       }
       ```
-    </CodeGroups>
-  </Col>
-</Row>
+
+  </CodeGroups>
+</div>

@@ -8,11 +8,9 @@ export const metadata = {
 
 Deleting a tenant through the API does not delete the tenant's data. Instead, it marks the tenant as deleted. The tenant will no longer be able to access the database, but the data will still be available in the database.
 
-<Row>
-  <Col>
+<div className="grid grid-cols-2 gap-4">
     Mark a tenant as deleted with a DELETE request.
-  </Col>
-  <Col>
+
     <CodeGroups
       title={"Delete Tenant Request"}
       method={"DELETE"}
@@ -23,13 +21,9 @@ Deleting a tenant through the API does not delete the tenant's data. Instead, it
     --header 'Authorization: Bearer <string>'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
+
     When a tenant is successfully marked as deleted, a response with status code 204 is returned.
-  </Col>
-  <Col>
+
     <CodeGroups
       title={"Delete Tenant Response"}
       response={"204"}
@@ -38,5 +32,5 @@ Deleting a tenant through the API does not delete the tenant's data. Instead, it
     ```json
     ```
     </CodeGroups>
-  </Col>
-</Row>
+
+</div>

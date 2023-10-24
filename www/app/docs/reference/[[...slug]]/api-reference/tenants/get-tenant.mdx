@@ -6,11 +6,9 @@ export const metadata = {
 
 # Get a Tenant
 
-<Row>
-  <Col>
+<div className="grid grid-cols-2 gap-4">
+
     Get a specific tenant by its id.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Get Tenant Request"}
       method={"GET"}
@@ -21,13 +19,8 @@ export const metadata = {
       --header 'Authorization: Bearer <string>'
         ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
+
     The response includes the id and name of the tenant.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Get Tenant Response"}
       response={"200"}
@@ -40,5 +33,5 @@ export const metadata = {
       }
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+</div>

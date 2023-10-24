@@ -6,11 +6,8 @@ export const metadata = {
 
 # Create Database
 
-<Row>
-  <Col>
+    <div className="grid grid-cols-2 gap-4">
     Create a new database by providing a database name. Names must be unique within a workspace, and they must follow Postgres naming rules. The name must start with a letter or an underscore and can contain only letters, numbers, and underscores. The name cannot be longer than 63 characters.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Create Database Request"}
       method={"POST"}
@@ -24,13 +21,7 @@ export const metadata = {
       }'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
     The response contains the database id, name, and workspace information.
-  </Col>
-  <Col>
     <CodeGroups
       title={"Create Database Response"}
       response={"201"}
@@ -47,5 +38,5 @@ export const metadata = {
       }
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+</div>

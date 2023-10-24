@@ -2,8 +2,10 @@ import { glob } from "glob";
 import ignore from "./globIgnore.mjs";
 import { processFile } from "./processFile.mjs";
 
+const BASE_ORDER = 0;
+
 function sortOrder(a, b) {
-  return (a?.order || 0) - (b?.order || 0);
+  return (a?.order || BASE_ORDER) - (b?.order || BASE_ORDER);
 }
 
 async function generateNestedObjects(input) {
@@ -29,7 +31,7 @@ async function generateNestedObjects(input) {
           existingItem = {
             name: segment,
             items: [],
-            order: 0,
+            order: BASE_ORDER,
           };
         }
         currentLevel.push(existingItem);
@@ -49,10 +51,10 @@ async function generateNestedObjects(input) {
           const nestedChild = item.items[0].items?.find(
             (item) => item.name === "index.mdx"
           );
-          item.order = nestedChild?.order ?? 0;
+          item.order = nestedChild?.order ?? BASE_ORDER;
         }
         if (indexChild) {
-          item.order = indexChild?.order ?? 0;
+          item.order = indexChild?.order ?? BASE_ORDER;
         }
       }
       if (item.items) {

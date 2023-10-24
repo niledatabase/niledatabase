@@ -6,11 +6,9 @@ export const metadata = {
 
 # List Workspaces
 
-<Row>
-  <Col>
+<div className="grid grid-cols-2 gap-4">
     List all of the workspaces that you have access to.
-  </Col>
-  <Col>
+
     <CodeGroups
       title={"List Workspace Request"}
       method={"GET"}
@@ -21,13 +19,8 @@ export const metadata = {
       --header 'Authorization: Bearer <string>'
       ```
     </CodeGroups>
-  </Col>
-</Row>
-<Row>
-  <Col>
+
     The response includes the name and slug of every workspace you are authorized to access.
-  </Col>
-  <Col>
     <CodeGroups
       title={"List Workspace Response"}
       response={"200"}
@@ -46,5 +39,5 @@ export const metadata = {
       ]
       ```
     </CodeGroups>
-  </Col>
-</Row>
+
+</div>
