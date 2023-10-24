@@ -56,7 +56,7 @@ module.exports = {
         docs: "url('/hero-docs.png')",
         templates: "url('/hero-templates.png')",
         "console-video": "url('/hero-bg-video.png')",
-        "video-bg": "url('/video-bg.png')",
+        "video-bg": "url('/video-bg.webp')",
         blueBlur: "url('/bg-blue.svg')",
         blueBlurText: "radial-gradient(#7CD1ED7a, rgba(0, 0, 0, 0.00) 80%)",
         orangeBlur: "url('/bg-orange.svg')",

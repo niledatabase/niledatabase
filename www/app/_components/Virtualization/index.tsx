@@ -63,7 +63,7 @@ export default function Virtualization() {
               </div>
             </div>
             <div className="xl:w-[603px] xl:shrink-0">
-              <Video src="data-isolation.mp4" poster={"data-isolation.png"} />
+              <Video src="data-isolation.mp4" poster={"data-isolation.webp"} />
             </div>
           </div>
           <div className="flex-row w-full pb-6 hidden lg:flex">
@@ -166,7 +166,7 @@ export default function Virtualization() {
                   Predictable performance for each tenant
                 </div>
               </div>
-              <Video src="perf-iso.mp4" poster={"perf-iso.png"} />
+              <Video src="perf-iso.mp4" poster={"perf-iso.webp"} />
             </div>
           </div>
         </div>

@@ -8,7 +8,7 @@ export default function Subscribe() {
   const [submitted, setDidSubmit] = useState(false);
 
   return (
-    <div className="relative ">
+    <div className={`relative${submitted ? " pointer-events-none" : ""}`}>
       <input
         ref={ref}
         className={`bg-[#141414] border border-[#373737] rounded-[20px] text-[17px] py-5 px-10 lg:min-w-[500px] mb-3 placeholder:opacity-40 focus:outline-none`}
