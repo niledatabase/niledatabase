@@ -1,0 +1,47 @@
+export const metadata = {
+  title: "Identify developer",
+  order: 3,
+  method: "GET",
+};
+
+# Identify Developer
+
+Retrieve information about the holder of an access token.
+
+<Row>
+  <Col>
+    Use the JWT generated when you [logged in](/docs/reference/api-reference/developers/login-developer) as a bearer token.
+  </Col>
+  <Col>
+    <CodeGroups
+      title={"Identify Developer Request"}
+      method={"GET"}
+      pathname={"/developers/me"}
+    >
+      ```bash
+      curl 'https://api.thenile.dev/developers/me' \
+      --header 'Authorization: Bearer <string>'
+      ```
+    </CodeGroups>
+  </Col>
+</Row>
+<Row>
+  <Col>
+    The response will contain the developer id, email address and workspaces associated with the holder of the access token.
+  </Col>
+  <Col>
+    <CodeGroups
+      title={"Identify Developer RESPONSE"}
+      method={"200"}
+      pathname={"/developers/me"}
+    >
+      ```json
+      {
+        "id": "018b5dfd-63b7-7883-9442-4ce0be51caf8",
+        "email": "your-email@your-domain.tld",
+        "workspaces": []
+      }
+      ```
+    </CodeGroups>
+  </Col>
+</Row>

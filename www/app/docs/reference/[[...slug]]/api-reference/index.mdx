@@ -1,6 +1,4 @@
-# API Reference
-
-export const metadata = {
+import CodeGroups from "../../../_components/CodeGroups";export const metadata = {
   title: "API Reference",
   description:
     "Describes basic concepts, response codes, authentication and rate limiting aspects of Nile APIs.",
@@ -9,53 +7,128 @@ export const metadata = {
 
 # Introduction
 
-Describes basic concepts, response codes, authentication and rate limiting aspects of Nile APIs
-With the API, developers can maange tenants (add, update or delete), create and delete databases, manage user lifecylce, implement authentication (basic auth, social logins and enterprise) and other management operations.
+Hello Developer! Our REST API has been designed to provide you a secure, straightforward interface for interacting with Nile. We speak JSON, use standard HTTP verbs, return standard HTTP response codes, and strive for no surprises.
 
-## Basic Concepts
+The root URL for all requests is [https://api.thenile.dev](https://api.thenile.dev).
 
-The Nile API is built on REST architecture. We enforce HTTPS in every request to improve data security, integrity, and privacy.
-All requests contain the following base URL:
+Most requests require that you specify your workspace slug and database name in the URL path. For example:
 
 ```bash
-https://api.thenile.dev
+https://api.thenile.dev/workspaces/my-workspace/databases/database-one/
 ```
-
-## Authentication
-
-## Response codes
-
-Nile uses standard HTTP codes to indicate the success or failure of your requests.
-
-2xx HTTP codes correspond to success, 4xx codes are for user facing failures, and 5xx codes are for server side issues.
-
-<table>
-  <tr>
-    <th>Status</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>20x</td>
-    <td>Successful Request</td>
-  </tr>
-  <tr>
-    <td>401</td>
-    <td>Unauthorized</td>
-  </tr>
-  <tr>
-    <td>404</td>
-    <td>Resource not found</td>
-  </tr>
-  <tr>
-    <td>409</td>
-    <td>Resource already exist</td>
-  </tr>
-  <tr>
-    <td>5xx</td>
-    <td>Error on Nile servers</td>
-  </tr>
-</table>
 
 ## Rate limiting
 
-The API is currently subject to our terms of service. We could introduce rate limits in the future.
+The API is currently subject to our terms of service. We may introduce rate limits in the future.
+
+# Authentication
+
+Login and sign-up requests return an authentication token in the form of a [JWT](https://jwt.io/). This token must be included in the `Authorization` header of all subsequent requests as a `Bearer` token.
+
+You can login to an existing developer account with your email and password and receive an authentication token.
+
+<Row>
+  <Col>
+    Unlike most Nile endpoints, this endpoint will produce either JSON or plain text depending on the `Accept` header you specify.
+
+    For a full response that includes the developer information, use `Accept: application/json`.
+  </Col>
+  <Col>
+    <CodeGroups
+      title={"JSON Authentication Request"}
+      method={"POST"}
+      pathname={"/developers/login"}
+    >
+      ```bash
+      curl 'https://api.thenile.dev/developers/login' \
+      --header 'Content-Type: application/json' \
+      --header 'Accept: application/json' \
+      --data '{
+        "email": "<string>",
+        "password": "<string>"
+      }'
+      ```
+    </CodeGroups>
+  </Col>
+</Row>
+<Row>
+  <Col>
+    The response will include the developer id and token with metadata.
+  </Col>
+  <Col>
+    <CodeGroups
+      title={"JSON Authentication Response"}
+      method={"200"}
+      pathname={"/developers/login"}
+    >
+    ```json
+      {
+        "id": "018b44a4-6b11-79ab-9910-460ae48bc295",
+        "token": {
+          "jwt": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjoibmlsZSIsImlhdCI6MTY5ODA3NjE0MywiZXhwIjoxNjk4MDc5NzQzLCJzdWIiOiIwMThiNDRhNC02YjExLTc5YWItOTkxMC00NjBhZTQ4YmMyOTUiLCJqdGkiOiIxYTI2YWYzNS1lMzZkLTQwMDktODkyOC00ZTgxYjAyYjVkYTgiLCJzY29wZSI6ImRhc2hib2FyZCBxdWVyeSJ9.UFCxn2k11aStEF6lO8FU8ppobP5uLRneLb69_FgSZ4s2B34EX96jDiZwluy5KmEcvcjxUegQ1kMgD2Z-aJuWj5zt4IEt-sMvvZJwE-Luyd8Wzs6w3HEFtkDTi3XvX6lex5SJXg30VZr1zme0PaDL_6zwj7_C9PCIODTlFGrB-z0nWub3c8P9wcTMwQ-9kz0_m__scEW_g1B-XLC8u9gWzrEIIPpgXHRara6E99u_udQ9wJ0lReHqcePllaEZbOYuFsygZ_sueSI5keR14eY1mOSN-GygMzxmNORYavF4KdzmyfwGF3JiAuiX5JVRkaezCrxtlD7aoPdlsBYBpOCmOQ",
+          "maxAge": 3600,
+          "type": "ACCESS_TOKEN"
+        }
+      }
+    ```
+    </CodeGroups>
+  </Col>
+</Row>
+<Row>
+  <Col>
+    If you only want the token, use `Accept: text/plain`.
+  </Col>
+  <Col>
+    <CodeGroups
+      title={"Plaintext Authentication Request"}
+      method={"POST"}
+      pathname={"/developers/login"}
+    >
+      ```bash
+      curl 'https://api.thenile.dev/developers/login' \
+      --header 'Content-Type: application/json' \
+      --header 'Accept: text/plain' \
+      --data '{
+      "email": "<string>",
+      "password": "<string>"
+    }'
+      ```
+    </CodeGroups>
+  </Col>
+</Row>
+<Row>
+  <Col>
+    The response will be a plain text JWT.
+  </Col>
+  <Col>
+    <CodeGroups
+      title={"Plaintext Authentication Response"}
+      method={"200"}
+      pathname={"/developers/login"}
+    >
+      ```text
+      eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjoibmlsZSIsImlhdCI6MTY5ODA3NjE0MywiZXhwIjoxNjk4MDc5NzQzLCJzdWIiOiIwMThiNDRhNC02YjExLTc5YWItOTkxMC00NjBhZTQ4YmMyOTUiLCJqdGkiOiIxYTI2YWYzNS1lMzZkLTQwMDktODkyOC00ZTgxYjAyYjVkYTgiLCJzY29wZSI6ImRhc2hib2FyZCBxdWVyeSJ9.UFCxn2k11aStEF6lO8FU8ppobP5uLRneLb69_FgSZ4s2B34EX96jDiZwluy5KmEcvcjxUegQ1kMgD2Z-aJuWj5zt4IEt-sMvvZJwE-Luyd8Wzs6w3HEFtkDTi3XvX6lex5SJXg30VZr1zme0PaDL_6zwj7_C9PCIODTlFGrB-z0nWub3c8P9wcTMwQ-9kz0_m__scEW_g1B-XLC8u9gWzrEIIPpgXHRara6E99u_udQ9wJ0lReHqcePllaEZbOYuFsygZ_sueSI5keR14eY1mOSN-GygMzxmNORYavF4KdzmyfwGF3JiAuiX5JVRkaezCrxtlD7aoPdlsBYBpOCmOQ
+      ```
+    </CodeGroups>
+  </Col>
+</Row>
+
+Use your access token in the `Authorization` header of subsequent requests.
+
+<Row>
+  <Col>
+    Pass the JWT as a `Bearer` token.
+  </Col>
+  <Col>
+    <CodeGroups
+      title={"API Requests"}
+      method={"GET"}
+      pathname={"/developers/me"}
+    >
+      ```bash
+      curl 'https://api.thenile.dev/developers/me' \
+      --header 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjoibmlsZSIsImlhdCI6MTY5ODA3NjE0MywiZXhwIjoxNjk4MDc5NzQzLCJzdWIiOiIwMThiNDRhNC02YjExLTc5YWItOTkxMC00NjBhZTQ4YmMyOTUiLCJqdGkiOiIxYTI2YWYzNS1lMzZkLTQwMDktODkyOC00ZTgxYjAyYjVkYTgiLCJzY29wZSI6ImRhc2hib2FyZCBxdWVyeSJ9.UFCxn2k11aStEF6lO8FU8ppobP5uLRneLb69_FgSZ4s2B34EX96jDiZwluy5KmEcvcjxUegQ1kMgD2Z-aJuWj5zt4IEt-sMvvZJwE-Luyd8Wzs6w3HEFtkDTi3XvX6lex5SJXg30VZr1zme0PaDL_6zwj7_C9PCIODTlFGrB-z0nWub3c8P9wcTMwQ-9kz0_m__scEW_g1B-XLC8u9gWzrEIIPpgXHRara6E99u_udQ9wJ0lReHqcePllaEZbOYuFsygZ_sueSI5keR14eY1mOSN-GygMzxmNORYavF4KdzmyfwGF3JiAuiX5JVRkaezCrxtlD7aoPdlsBYBpOCmOQ'
+      ```
+    </CodeGroups>
+  </Col>
+</Row>
