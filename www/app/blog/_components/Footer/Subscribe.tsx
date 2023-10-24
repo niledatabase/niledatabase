@@ -33,17 +33,19 @@ export default function Subscribe() {
           }}
         >
           <div
-            className={`flex flex-row duration-500 ${
-              submitted ? "opacity-0" : "opacity-100"
-            } trasition-opacity gap-[24px]`}
+            className="flex flex-row duration-500 trasition-opacity gap-[24px]"
+            style={{
+              opacity: submitted ? 0 : 100,
+            }}
           >
             <div className="whitespace-nowrap">Join the waitlist</div>
             <Image className="invert" src={Arrow} alt="get started arrow" />
           </div>
           <div
-            className={`absolute whitespace-nowrap pointer-events-none ${
-              submitted ? "opacity-100" : "opacity-0"
-            } trasition-opacity delay-500 duration-500`}
+            className={`absolute whitespace-nowrap pointer-events-none trasition-opacity delay-500 duration-500`}
+            style={{
+              opacity: submitted ? 100 : 0,
+            }}
           >
             Thanks for joining! We&apos;ll be contacting you shortly.
           </div>
