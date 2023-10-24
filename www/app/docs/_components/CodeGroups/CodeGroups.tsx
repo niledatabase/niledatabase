@@ -7,6 +7,7 @@ type Props = {
   method: "POST" | "GET" | "DELETE" | "PUT";
   pathname: string;
   children: JSX.Element[];
+  response: string;
 };
 const variants = {
   base: "hidden",
@@ -20,9 +21,18 @@ const convertName = (name: string) => {
   const [, language] = name?.match(/language-(.+)/) ?? [];
   return language;
 };
+function getTabName(name: string, response: string) {
+  if (name === "bash") {
+    return "cURL";
+  }
+  if (response) {
+    return response;
+  }
+  return name;
+}
 export default function CodeGroups(props: Props) {
   const [active, setActive] = useState();
-  const { title, method, pathname, children } = props;
+  const { title, method, pathname, children, response } = props;
   const items: ReactNode[] = Children.toArray(children);
 
   return (
@@ -44,7 +54,7 @@ export default function CodeGroups(props: Props) {
                   onClick={() => setActive(className)}
                   key={className}
                 >
-                  {tab}
+                  {getTabName(tab, response)}
                 </span>
               );
             }
@@ -60,7 +70,7 @@ export default function CodeGroups(props: Props) {
         </div>
       )}
 
-      <div className="relative">
+      <div className="relative text-[16px]">
         {items.map((child, idx) => {
           if (isObject(child) && "props" in child) {
             const { className } = child?.props.children.props;
