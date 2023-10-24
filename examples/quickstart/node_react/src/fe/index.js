@@ -6,12 +6,17 @@ import ErrorPage from "./error-page";
 import Todos from "./todos";
 import Auth from "./auth";
 import Layout from './layout';
+import SignUp from "./SignUpForm.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Auth />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "/signup",
+    element: <SignUp />,
   },
   {
     path: "tenants/:tenantId/todos",
