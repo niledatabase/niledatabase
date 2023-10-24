@@ -7,17 +7,22 @@ export const metadata = {
   tags: ["database", "serverless", "postgres", "saas"],
 };
 
-I am thrilled to announce Nile, a serverless Postgres database designed for modern SaaS applications. All SaaS applications are multi-tenant, where a tenant is primarily a company, an organization, or a workspace that contains a group of users. Nile has built-in tenant virtualization in Postgres, allowing easy tenant data management (data isolation, performance isolation, backups), organization and user management, global and flexible tenant placement, domain and customer-specific vector embeddings, and more SaaS capabilities. Moreover, Nile's Postgres has been built for the cloud, enabling effortless scaling and a true serverless experience. You can sign up for our waitlist today to try it out.
+I am thrilled to announce Nile, a serverless Postgres database designed for modern SaaS applications. All SaaS applications are multi-tenant, where a tenant is primarily a company, an organization, or a workspace that contains a group of users. Nile has built-in tenant virtualization in Postgres, allowing easy tenant data management (data isolation, performance isolation, backups), organization and user management, global and flexible tenant placement, domain and customer-specific vector embeddings, and more SaaS capabilities. Moreover, Nile's Postgres has been built for the cloud, enabling effortless scaling and a true serverless experience. You can [sign up for our waitlist](https://www.thenile.dev/) today to try it out.
 I’ll come to our new company shortly, but first, let me tell you our story about the challenges and hardships we experienced building modern SaaS.
 
-## What makes SaaS modern, and why is it hard?
+# What makes SaaS modern, and why is it hard?
+
 SaaS is a pretty overloaded term at this point, and it would be useful to specify how we define it. For us, any application that needs to serve multiple tenants is a SaaS. A tenant can be a company, an organization, or a workspace in your product that contains a group of users. Few examples:
+
 1. GitHub helps a group of developers manage and deploy their code. The group of developers can belong to a company or a community.
 2. Salesforce or Hubspot makes it easy for sales reps in a company to manage their leads. Their customers are companies, with users being the sales reps.
 3. Ring is a home security company that provides alarm services to different households. Each household has a group of users using their alarm service.
 4. Flexport helps businesses to ship goods to different parts of the world. The employees of companies are the users of the platform.
+
 It is clear from these examples that SaaS is a delivery mechanism and will be leveraged by every vertical, including technology, hardware, manufacturing, industrial, legal, etc. Our insight is that 95% of companies fall into this category, and there is a big potential to simplify the life of developers building these products.
+
 I was at Confluent, a data streaming company, for six years, where we helped transform the company from primarily on-premise to a globally successful SaaS company. Through this journey, we learned the challenges of building a SaaS product and what it takes to launch and scale to thousands of customers and tens of thousands of users. Most of our problems in building SaaS were around data, but the database had little to offer. We spent significant time managing tenants, building organization and user management, supporting different tenant deployment models, storing and moving data to different parts of the organization, tracking usage and billing individual customers, and handling many other SaaS problems. We learned much about the problems and what a modern SaaS product needs to support. When we spoke to many other companies from different verticals, the problems were similar.
+
 It will be useful to define what makes a SaaS modern based on our experience. I will then detail the challenges in building some of them in this blog and hold off on the rest for future blogs.
 ## **Customer or tenant-centric**
 
@@ -26,45 +31,67 @@ A SaaS application provides services to multiple tenants or organizations. Users
 There are many other considerations to be made - where is the tenant’s data located, what happens when a tenant's data is deleted, how long you will keep data backups for each tenant, how you can restore a specific tenant’s data, how many tenants you can support, what are the compliance needs for each customer, etc.
 ![“Github Organization”](/blog/github_organization.png)
 This is hard. You typically start with a single database and place all the customers on it. You tackle data isolation between tenants by implementing brittle permission logic at the application level or complex, hard-to-debug SQL policies in databases like Postgres, which supports row-level security. You turn on daily backups but have little idea how to restore data for specific tenants when customers lose data. You end up writing some hacky scripts that are slow and buggy to parse through the backups and extract the tenant data. Once the application has users, you hit your first performance issue. Some customers are pushing more load, or their dataset is causing queries to take more resources. This impacts other customers as well. You need help determining which customer is causing the impact and which ones are being impacted. There may also be a need to keep some of the customers in their own dedicated database, and you need to build metadata and sharding logic at the application layer to manage all this. Schema changes and rollouts become more complex. You detest the idea of creating more databases near your customers for latency or compliance reasons due to all the operational overhead. This was our story and every other SaaS company's story.
+
 ## **Secure at every step**
 
 Modern SaaS is all about being secure by default. Security needs to exist at different levels. The data that belongs to one tenant cannot be exposed to another tenant under any circumstances. This is commonly referred to as tenant data isolation. Users should only be able to see the data of tenants to whom they have access. Most applications need to provide modern authentication support, such as social logins and enterprise logins. There has to be support for a fine-grained permission model for users within a tenant. The same user can have different permission policies across different tenants. 
 
-These security needs seem simple but very hard to get right for a multi-tenant application in practice. Most authentication solutions focus on only users and leave developers to think about tenants and the interaction between users and tenants. Organization management is an entire suite of problems that needs deep coordination with the tenant's data in the database. One other critical decision that needs to be made is where the user data resides. Ideally, the primary database should be the source of truth for user data. If not, you must figure out how to sync the data between a third-party service and your primary database. This is a hard problem in distributed systems. Synchronizing user data from a third-party service requires a reliable way to copy it to the primary database, even when failures happen. This cannot be accomplished by stateless event services like webhooks, where you can lose data. You need a reliable replayable event stream to synchronize it. Even with that, you have to deal with eventual consistency in your application. Another option is a two-phase commit between the database and the external service, which is impractical. The cleanest approach is to build auth on top of your source of truth database.
+These security needs seem simple but very hard to get right for a multi-tenant application in practice. Most authentication solutions focus on only users and leave developers to think about tenants and the interaction between users and tenants. Organization management is an entire suite of problems that needs deep coordination with the tenant's data in the database. One other critical decision that needs to be made is where the user data resides. Ideally, the primary database should be the source of truth for user data. If not, you must figure out how to sync the data between a third-party service and your primary database. This is a hard problem in distributed systems. Synchronizing user data from a third-party service requires a reliable way to copy it to the primary database, even when failures happen. This cannot be accomplished by stateless event services like webhooks, where you can lose data. You need a reliable replayable event stream to synchronize it. Even with that, you have to deal with eventual consistency in your application. Another option is a two-phase commit between the database and the external service, which is impractical. The cleanest approach is to build auth on top of your source of truth database. 
+
 ## **Globally available and scales seamlessly**
+
+All SaaS applications are global companies from day one. This means customers can be from anywhere in the world. Also, these companies can have different compliance needs regarding data retention and deletions. These customers will also expect the application to be really fast. It should be possible to experience single-digit latencies irrespective of the location. Faster applications lead to better customer retention and growth. Finally, some customers are going to grow faster than others. They still expect the same performance and service irrespective of how large they grow in load or data size. 
+
+Creating and managing multiple databases across different parts of the globe is hard. It creates challenges with schema migrations, monitoring, cost to serve, in-house sharding, application layer routing based on tenant location, etc. In addition, while we spend days trying to make the server side of performance great, the last mile of receiving the response from the server to the client constitutes a significant part of the latency today. For example, the network latency between Sydney, Australia, and New York, USA, is around 200 ms on average. This is probably 10x more than the server-side latency of the database. In an ideal world, you want every tenant’s data to be located near them but have the user experience as simple as managing a single database.
+![“Latency Graph"](/blog/latency_graph.png)
 
 ## AI-native experience
 
+With the rise of GPT and other open-source large language models, AI-native applications have gained massive traction. Instead of AI being a separate vertical, AI will become more immersive in interacting with SaaS applications. For example, GitHub Copilot provides a seamless experience for developers to use as a coding assistant.  Notion provides an AI assistant that helps to write documents, rephrase existing writeups, and summarize long articles (like this one). Hubspot provides a personal chatbot for salespeople to have conversations about their leads and pipelines. It is obvious from these examples where this is heading. New product designs will have AI built in from the start.
+
+The hard part of building the AI infrastructure for SaaS is that you cannot use the large language models directly. They are trained on public data and will typically provide incorrect results. They need tenant-specific data to give relevant results. In addition, there are compliance and security issues with sharing all the private data of tenants to a large language model. This requires building architectures like RAG (more about this later) that require creating tenant-specific vector embeddings, storing them, and augmenting the LLM prompt with the tenant context. This will help with avoiding the hallucination problem and also keep the data secure. The latency of querying these embeddings is another challenge, and network latency from the user to the database will further exacerbate it. Finally, vector indexes like HNSW take significant resources and need horizontal scaling if the embeddings grow fast.
+
 ## **Fast and responsive**
 
-Fast, responsive SaaS applications are modern. Traditionally, unlike consumer applications, SaaS has not focused much on latency. This has changed, and enterprise users expect a snappy application experience. Today, all SaaS businesses want to serve the global market from day one. With serverless and edge computing advancements, moving a tenant's data close to their location becomes critical to achieving a low latency experience. 
+Saas users expect a pretty snappy experience. Fast and responsive experiences are table stakes. Traditionally, the performance of SaaS applications has been ignored. Most applications built for the enterprise are slow and janky. With products like GitHub, Stripe, and Linear, the expectations for SaaS are rapidly changing. The hard part is to ensure all the users of the application experience consistent performance irrespective of their location or their scale. 
 
-## **Beautiful and easy-to-use UX**
+Building low-latency SaaS is harder than it might seem at first. This is because latency depends on tenant performance isolation, where the data is located, the data size, caching, and finally, the performance of the database. The easiest approach to tenant performance isolation would be to have dedicated databases for each tenant, which adds significant operational complexity and developer experience takes a nose dive. Similarly, placing every tenant at a location close to them will require a lot of databases that will turn out to be expensive and a nightmare to manage. The ideal scenario would be to get the tenant performance isolation and location flexibility with all the benefits of a single database.
+
+I will provide brief thoughts on the remaining five and hold off on detailed thoughts for future writeups.
 
 ## **Data-centric**
 
+Data-driven applications are becoming the norm. Almost all SaaS applications can be enhanced by providing valuable data insights to the users through the application. GitHub provides insights about contributors, the number of PRs, issues created, etc, that help make better decisions on managing a repository. A task management application like JIRA or Linear provides insights into task creation and resolution trends and how a team is progressing. Building these data-centric experiences is still a challenge for front-end engineers. 
+
 ## **Real-time**
 
-## **Collaborative**
+Real-time is about pushing data as they happen to the application. You want to display the change in data or have the application take some actions when a certain event happens. SaaS is all about workflows, and real-time plays a key role in defining those flows.  For example, showing a new user when they get added to the system can be as simple as pushing that event to the front end to update the state. All application users within a tenant need to see the new change immediately. Another use case is when you want the user information added to your marketing tool to run campaigns when they sign up. This needs to be real-time since you want to send out relevant emails to the user based on their onboarding steps. Building these flows and connecting all these systems require multiple moving parts today.
 
-Applications like Figma and Notion have a collaborative experience. Many more SaaS applications are starting to support this experience. 
+## **Collaborative and Offline mode**
+
+Applications like Figma and Notion have a collaborative experience built into the product. In addition, you can work offline and sync your data layer if you don’t have an internet connection. Many more SaaS applications will support this experience. It helps with increasing engagement in the product and a much superior experience depending on the use case. This is hard to do since you want to maintain the local state with each user and then reconcile the changes on the server side with the database from time to time. Techniques like CRDTs can be used to accomplish this but need good integrations with the database to make it simple to implement.
 
 ## **Monetizable**
 
 The SaaS business model inherently requires monetizing the service provided. There is a big shift towards usage-based billing from just charging for the number of seats, especially in these market conditions. The complexity of collecting usage and billing on it is not easy. A SaaS database can make this work out of the box since it has all the usage data needed to enforce billing. It can integrate with multiple billing providers to make this process very seamless.
-## Designing a database from first principles for modern SaaS
+
+# Designing a database from first principles for modern SaaS
+
 A key insight we had as we spent multiple years looking into the different SaaS problems was that they were all connected to data and customers. All the features a SaaS application needs to support require being tenant-aware and involving data management in some form. Based on first principles, it was obvious to us that we needed to start with the database. What would an ideal database for SaaS look like? What foundational elements would it require? How can we create a fully integrated solution that simplifies the development and scaling of SaaS while also offering the flexibility for developers to integrate with their preferred tools? Let us go over some key criteria that will help answer these questions.
 
 ### Postgres
-We needed to pick a database we would build our tooling around, and the obvious choice was Postgres. Postgres is a world-class database that is winning in the OLTP space. This trend will continue, and making Postgres easy for building SaaS is the best way for us to have the maximum impact. In my opinion, one of the biggest reasons for Postgres's success is its wide suite of features and extension flexibility. This is a great foundation to build the right tooling around it, making it world-class for SaaS. A  solution with Postgres should provide a fully integrated experience and still preserve the complete flexibility and extensibility of Postgres. It should also work well with Postgres’s vast tooling ecosystem.
+
+We needed to pick a database we would build our tooling around, and the obvious choice was Postgres. Postgres is a world-class database that is winning in the OLTP space. This trend will continue, and making Postgres easy for building SaaS is the best way for us to have the maximum impact. In my opinion, one of the biggest reasons for Postgres's success is its wide suite of features and extension flexibility. This is a great foundation to build the right tooling around it, making it world-class for SaaS. A  solution with Postgres should provide a fully integrated experience and still preserve the complete flexibility and extensibility of Postgres[. It](http://Postgres.It) should also work well with Postgres’s vast tooling ecosystem.
 ![“Postgres Growth”](/blog/database_growth.png)
 
 ### Built-in tenant virtualization
+
 The most foundational element in SaaS is a tenant. Every operation is around a tenant. It makes a lot of sense to build this core concept into the database. Imagine having a lot of virtual tenant databases. These tenant databases can be co-located on one physical Postgres (multi-tenant) for better cost, or some tenants can be placed on a dedicated database for better isolation. The virtual tenant DBs can be located anywhere on the planet for low latency or compliance. The client can route to the right tenant seamlessly without any application code needed for routing. 
 
 Isolating tenants into their own virtual DBs is great, but you will also want to be able to share data across tenants where it makes sense. Backups should be available for each tenant, and it should be possible to restore from them instantaneously. Schema changes should be applied seamlessly across all the tenant DBs, and it should also be possible to do staged rollouts for different tenant tiers. While supporting all this, all the standard SQL capabilities should work across the tenants for admin operations. All the standard Postgres tooling should work. You want the experience of a single Postgres! This sounds like magic, and we can make this magic a reality. 
 
 The experience would be something as follows:
+
 Creating a new virtual tenant DB is as simple as a standard insert into the tenant's table. By default, the tenant will get created on a multitenant Postgres in the default region. You should be able to specify any location in the world or the infrastructure type if you want a dedicated Postgres for a tenant (more on this in the next section).
 ```sql
 -- create a record for the first customer
@@ -230,11 +257,13 @@ select * from employees
 </table>
 
 ### Global and flexible tenant placement
+
 When building a modern SaaS application, three critical factors that need to be considered are latency, performance isolation, and compliance. At the same time, cost is also an important aspect to ensure that the value delivered is commensurate with the cost of serving the customer. The capability of a database to define how tenants are placed has a significant impact on achieving this balance.
 
 Placement can be of two types
 
 **Regional placement** 
+
 You want to place individual tenants (customers) in different regions worldwide for compliance or latency reasons. You should be able to create the tenant database in any available location without worrying about the number of databases or the operational complexity.
 ```sql
 insert into tenants (name, region)
@@ -250,7 +279,6 @@ insert into tenants (name, region, deployment_mode)
 values ('customer 2', 'aws-us-east1', 'dedicated');
 ```
 The client should be able to route to the right tenant without any work from the user. Also, while providing all the placement flexibility, the magic lies in providing the ability to manage all these tenants in different locations and placements like a single Postgres instance. Here are a couple of examples where this will be useful:
-
 Make schema changes once, and the database should apply the change across all the virtual tenant DBs
 ```sql
 -- the bookings table where each row represents a single booking
@@ -275,6 +303,7 @@ right join tenants t1 on c1.tenant_id=t1.id group by t1.id,t1.name;
 ### First-class support for users
 
 ### Domain and tenant-aware AI-native architecture
+
 Every SaaS application will be an AI-native application like every software application was a SaaS-native application when SaaS happened. SaaS revolutionized how software was delivered. AI will revolutionize how software is experienced. 
 
 AI for SaaS needs to be specific to the domain and tenant. For example, 
@@ -302,24 +331,30 @@ You get the following benefits with such a system:
 5. Purpose-built SDKs that integrate with LLM hosts such as OpenAI and Huggingface and vector embeddings.
 
 ### Serverless and cloud-native
+
 Serverless is how developers will adopt databases in the next decade. Before anyone jumps to say, “There is no such thing as serverless. There are only other people's servers”, the intent of using serverless is to define the experience developers get. It does not mean that the database is implemented without any servers! A database for SaaS should allow developers to focus on their queries, use cases, and core application logic. Developers don’t have to worry about managing capacity, the server configurations, or paying for capacity they don’t use. This gets even more complex if you want to manage multiple databases for each tenant. A database should let you have any number of virtual tenant databases but give you all the goodness of serverless. It should enforce price limits and ensure developers don’t get a sticker shock. The goal of serverless is to care about developers, which is exactly what it should do.
 
 The second thing is that the database needs to be built for the cloud. This means leveraging the native cloud infrastructure to build a highly scalable and elastic system. It makes sense to decouple storage and compute and push storage to cloud storage like S3. This helps to keep the compute stateless and makes it easier to scale them quickly. You still want to shard the tenants across databases and regions to provide placement flexibility (regional and infrastructure placement) and scale the storage as needed. 
 
 ### Tenant-level insights and administration
+
 A huge part of building and running a SaaS application is to understand the growth and performance of each tenant and optimize it. This has been traditionally hard for SaaS. Most want a simple way to look up their active customers, users, and product usage to understand better how the different queries are performing for each customer. 
 
 The database should have native support for this. Given it understands tenant boundaries, users within those tenants, and all the queries executed in that context, it would be trivial to show relevant insights to the developers. Developers should be able to understand the growth of the product, how the query performs for each tenant, and past trends. All the performance metrics, usage metrics, and even logs can be understood for each tenant. Postgres tools such as pg_stats, EXPLAIN, and ANALYZE should work and provide insights by tenant.
 ![“Nile Dashboard”](/blog/nile_dashboard.png)
 
 ### World-class developer experience
+
 Databases are still hard to use. While Postgres does a great job, there is still a lot of friction in the end-to-end developer journey to build SaaS applications with a cloud-native database. Developers should be able to test locally with the DB for a rapid feedback loop on their laptop, create test databases to apply schema changes, and then migrate to production. This whole experience should be integrated well with a change management system like GitHub. Lastly, ensuring a thriving developer community around the database is key to helping each other and learning quickly.
 
 ### And some more
-There are many more things I chose not to talk about now. Things like propagating real-time changes per tenant to the front end, supporting analytics to build data-centric applications, and leveraging usage data per tenant for monetization are all critical topics in building SaaS. The tenant virtualization is the basic building block. Many SaaS tooling and integrations can be built on this foundation to make it easy to build and scale the product. We would love to hear your feedback and thoughts about this on our GitHub discussion forum or Discord community.
-## Nile - a company to accelerate modern SaaS
+
+There are many more things I chose not to talk about now. Things like propagating real-time changes per tenant to the front end, supporting analytics to build data-centric applications, and leveraging usage data per tenant for monetization are all critical topics in building SaaS. The tenant virtualization is the basic building block. Many SaaS tooling and integrations can be built on this foundation to make it easy to build and scale the product. We would love to hear your feedback and thoughts about this on our [GitHub discussion forum](https://github.com/niledatabase/niledatabase/discussions) or [Discord community](https://discord.gg/8UuBB84tTy).
+
+# Nile - a company to accelerate modern SaaS
+
 Nile is a company that was started to make the database that I explained a reality. The mission of Nile is to enable developers to accelerate the next billion modern SaaS applications. What we will build at Nile will help accomplish this and truly change the future of SaaS. Nile will deliver on this promise. If you are building SaaS, we would love to talk to you. If you are an amazing engineer, we would love to have you join us in this mission. 
 
-You can try out Nile by signing up for our waitlist today. We are onboarding new users every day. You can get started with one of our quickstarts. We also have templates and demos that will make it easy to get started. We would love to have you try out Nile, give us feedback, and help us build something truly world-class. If you need help, you can reach us on our GitHub discussion forum or our Discord community. Follow us on Twitter or Linkedin to get regular updates.
+You can try out Nile by [signing up for our waitlist](https://www.thenile.dev/) today. We are onboarding new users every day. You can get started with one of our quickstarts. We also have [templates and demos](https://www.thenile.dev/templates) that will make it easy to get started. We would love to have you try out Nile, give us feedback, and help us build something truly world-class. If you need help, you can reach us on our [GitHub discussion forum](https://github.com/niledatabase/niledatabase/discussions) or our [Discord community](https://discord.gg/8UuBB84tTy). Follow us on [Twitter](https://twitter.com/niledatabase) or [Linkedin](https://www.linkedin.com/company/niledatabase/) to get regular updates.
 
 We are building something truly wonderful and are excited about this journey!
