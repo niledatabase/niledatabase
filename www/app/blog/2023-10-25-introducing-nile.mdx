@@ -313,6 +313,11 @@ count(c1.id) as no_of_candidates from candidates c1
 right join tenants t1 on c1.tenant_id=t1.id group by t1.id,t1.name;
 ```
 ### First-class support for users
+The first basic primitive of a database built for SaaS is tenants. The second is users. Managing users in the context of tenants is complex, and having built it in support of it will make application development significantly faster. In addition, it will help to store user data in the database with strong consistency and correctness. Authentication should provide a suite of tools that makes it easy to drop in a form to get end-to-end authentication supported for tenants and users in minutes. This should support the entire lifecycle of tenant or organization management, including inviting users to an organization, deleting an organization that soft deletes the tenants in the underlying database, and providing overrides for each tenant to configure custom authentications.
+![“Auth Code"](/blog/authcode.png)
+
+For permissions, basic enforcement of what data users get access to should be easier than it is today. When a user belongs to a specific tenant, access should automatically be restricted to other tenants. You don’t need application logic or complex SQL policies to enforce and maintain this. In addition, permissions should have a flexible language to help define fine-grained column-level resource permissions. The best part is that no instrumentations are required in code, which is often buggy due to the different paths that need to be secured. Instead, permission at source is the strongest security guarantee you can get.
+While the database should provide a fantastic solution out of the box, it should also be flexible for users to bring their own auth. This includes building your own auth or integrating another third-party auth with the database. Great developer platforms can provide flexibility and let developers have finer control over how they want to build out their applications.
 
 ### Domain and tenant-aware AI-native architecture
 
