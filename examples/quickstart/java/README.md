@@ -3,7 +3,7 @@
 This template shows how to use Nile with Java and Spring Boot 3 for building a multi-tenant todo list application.
 
 - [Live demo](https://java-quickstart-demo.vercel.app)
-- [Video guide - TBD](TBD)
+- [Video guide](https://youtu.be/xnji861fsf4?feature=shared)
 - [Step by step guide](https://niledatabase-www.vercel.app/docs/getting-started/languages/java)
 
 
