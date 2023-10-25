@@ -168,48 +168,50 @@ set nile.tenant_id = '018ac98e-b37a-731b-b03a-6617e8fd5266';
 select * from employees
 ```
 
-<table>
-  <thead>
-    <tr>
-      <th>tenant_id</th>
-      <th>id</th>
-      <th>name</th>
-      <th>age</th>
-      <th>address</th>
-      <th>start_date</th>
-      <th>title</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
-      <td>1345</td>
-      <td>Jason</td>
-      <td>30</td>
-      <td>Sunnyvale,California</td>
-      <td>2016-12-22 19:10:25</td>
-      <td>software engineer</td>
-    </tr>
-    <tr>
-      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
-      <td>2423</td>
-      <td>Minnie</td>
-      <td>24</td>
-      <td>Seattle,Washington</td>
-      <td>2018-11-11 12:09:22</td>
-      <td>sales engineer</td>
-    </tr>
-    <tr>
-      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
-      <td>4532</td>
-      <td>Shiva</td>
-      <td>32</td>
-      <td>Fremont, California</td>
-      <td>2019-09-05 04:03:12</td>
-      <td>product manager</td>
-    </tr>
-  </tbody>
-</table>
+<div className="w-full overflow-y-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th>tenant_id</th>
+        <th>id</th>
+        <th>name</th>
+        <th>age</th>
+        <th>address</th>
+        <th>start_date</th>
+        <th>title</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+        <td>1345</td>
+        <td>Jason</td>
+        <td>30</td>
+        <td>Sunnyvale,California</td>
+        <td>2016-12-22 19:10:25</td>
+        <td>software engineer</td>
+      </tr>
+      <tr>
+        <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+        <td>2423</td>
+        <td>Minnie</td>
+        <td>24</td>
+        <td>Seattle,Washington</td>
+        <td>2018-11-11 12:09:22</td>
+        <td>sales engineer</td>
+      </tr>
+      <tr>
+        <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+        <td>4532</td>
+        <td>Shiva</td>
+        <td>32</td>
+        <td>Fremont, California</td>
+        <td>2019-09-05 04:03:12</td>
+        <td>product manager</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 **The best part is you should still be able to query across the tenant DBs like a
 standard table if you don’t specify any context.**
 
@@ -217,84 +219,97 @@ standard table if you don’t specify any context.**
 select * from employees
 ```
 
-<table>
-  <thead>
-    <tr>
-      <th>tenant_id</th>
-      <th>id</th>
-      <th>name</th>
-      <th>age</th>
-      <th>address</th>
-      <th>start_date</th>
-      <th>title</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
-      <td>1345</td>
-      <td>Jason</td>
-      <td>30</td>
-      <td>Sunnyvale,California</td>
-      <td>2016-12-22 19:10:25</td>
-      <td>software engineer</td>
-    </tr>
-    <tr>
-      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
-      <td>2423</td>
-      <td>Minnie</td>
-      <td>24</td>
-      <td>Seattle,Washington</td>
-      <td>2018-11-11 12:09:22</td>
-      <td>sales engineer</td>
-    </tr>
-    <tr>
-      <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
-      <td>4532</td>
-      <td>Shiva</td>
-      <td>32</td>
-      <td>Fremont, California</td>
-      <td>2019-09-05 04:03:12</td>
-      <td>product manager</td>
-    </tr>
-    <tr>
-      <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
-      <td>5643</td>
-      <td>John</td>
-      <td>36</td>
-      <td>London,UK</td>
-      <td>2017-12-12 19:10:25</td>
-      <td>senior software engineer</td>
-    </tr>
-    <tr>
-      <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
-      <td>1532</td>
-      <td>Mark</td>
-      <td>27</td>
-      <td>Manchester,UK</td>
-      <td>2022-10-10 12:09:22</td>
-      <td>support engineer</td>
-    </tr>
-    <tr>
-      <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
-      <td>8645</td>
-      <td>Sam</td>
-      <td>42</td>
-      <td>Liverpool,UK</td>
-      <td>2015-08-04 04:03:12</td>
-      <td>product manager</td>
-    </tr>
-  </tbody>
-</table>
+<div className="w-full overflow-y-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th>tenant_id</th>
+        <th>id</th>
+        <th>name</th>
+        <th>age</th>
+        <th>address</th>
+        <th>start_date</th>
+        <th>title</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+        <td>1345</td>
+        <td>Jason</td>
+        <td>30</td>
+        <td>Sunnyvale,California</td>
+        <td>2016-12-22 19:10:25</td>
+        <td>software engineer</td>
+      </tr>
+      <tr>
+        <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+        <td>2423</td>
+        <td>Minnie</td>
+        <td>24</td>
+        <td>Seattle,Washington</td>
+        <td>2018-11-11 12:09:22</td>
+        <td>sales engineer</td>
+      </tr>
+      <tr>
+        <td>018ac98e-b37a-731b-b03a-6617e8fd5266</td>
+        <td>4532</td>
+        <td>Shiva</td>
+        <td>32</td>
+        <td>Fremont, California</td>
+        <td>2019-09-05 04:03:12</td>
+        <td>product manager</td>
+      </tr>
+      <tr>
+        <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
+        <td>5643</td>
+        <td>John</td>
+        <td>36</td>
+        <td>London,UK</td>
+        <td>2017-12-12 19:10:25</td>
+        <td>senior software engineer</td>
+      </tr>
+      <tr>
+        <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
+        <td>1532</td>
+        <td>Mark</td>
+        <td>27</td>
+        <td>Manchester,UK</td>
+        <td>2022-10-10 12:09:22</td>
+        <td>support engineer</td>
+      </tr>
+      <tr>
+        <td>018aca35-b8c4-7674-882c-30ae56d7b479</td>
+        <td>8645</td>
+        <td>Sam</td>
+        <td>42</td>
+        <td>Liverpool,UK</td>
+        <td>2015-08-04 04:03:12</td>
+        <td>product manager</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 While there’s a need for virtual tenant DBs that isolate data, there’s also a need
 to [share data across tenants](https://www.thenile.dev/docs/tenant-sharing). It should
 be easy to create shared tables that can be accessed by/[across] all tenants and
 are globally available. All standard queries should work seamlessly both on tenant-aware
-and shared tables ```sql -- list of flights that a corporate travel booking site
-can use to share across all the tenants. -- employees in different tenants can view
-these flight data to book tickets create table flights ( id integer PRIMARY KEY,
-name text, from_location text, to_location text, departure_time TIMESTAMP, arrival_time
-TIMESTAMP); ```
+and shared tables
+
+```sql
+
+-- list of flights that a corporate travel booking site can use to share across all the tenants.
+-- employees in different tenants can view these flight data to book tickets
+create table flights (
+  id integer PRIMARY KEY,
+  name text,
+  from_location text,
+  to_location text,
+  departure_time TIMESTAMP,
+  arrival_time TIMESTAMP
+);
+
+```
 
 ### Global and flexible tenant placement
 

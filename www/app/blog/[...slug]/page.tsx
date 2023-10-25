@@ -69,7 +69,7 @@ export default async function BlogPage(props: Props) {
             <Authors authors={metadata.authors} />
           </div>
           <Heading text={metadata.title} />
-          <div className="mt-5 flex flex-col justify-center items-center">
+          <div className="mt-5 flex flex-col items-center md:items-start">
             <Article />
           </div>
         </div>
