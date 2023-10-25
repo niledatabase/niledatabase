@@ -23,5 +23,12 @@
     "sizzle": "At Nile, we’re making it easier for companies to build world-class control planes for their infra SaaS products",
     "authors": ["miki"],
     "tags": ["database"]
+  },
+  {
+    "title": "Introducing Nile, Serverless Postgres for modern SaaS",
+    "authors": ["ram"],
+    "image": "introducing_nile.png",
+    "sizzle":"I am thrilled to announce Nile, a serverless Postgres database designed for modern SaaS applications.",
+    "tags": ["database", "serverless", "postgres", "saas"]
   }
 ]
