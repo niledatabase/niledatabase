@@ -17,7 +17,7 @@ const videos = [
   },
   {
     title: "Building a NodeJS Web Application with Nile",
-    videoUrl: "https://www.youtube.com/embed/6Lm3-YeLzks?si=A5VNbZ5lgD40PRwm"
+    videoUrl: "https://www.youtube.com/embed/6Lm3-YeLzks?si=A5VNbZ5lgD40PRwm",
   },
   {
     title: "Build a Java application with Nile",

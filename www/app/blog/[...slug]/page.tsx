@@ -55,7 +55,7 @@ export default async function BlogPage(props: Props) {
               />
             )}
           </div>
-          <div className="flex flex-row gap-3 items-center mb-5">
+          <div className="flex flex-row gap-3 items-center mb-5 w-full justify-center">
             <div className="opacity-60">{publishDate}</div>
             <div className="opacity-[.43] text-[10px]">●</div>
             <div className="opacity-60">{readLength} min read</div>

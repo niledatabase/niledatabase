@@ -37,9 +37,11 @@ async function run() {
     const output = renderToStaticMarkup(React.createElement(Content));
     const cleaned = output
       .toString()
-      .replace(/<.*?>/gm, "")
-      .replace(/\n+/, "")
-      .split(/\s+/);
+      .replace(/<.+><\/.+>/gm, "")
+      .replace(/\[.*?\]\(.*?\)/gm, "")
+      .replace(/[#\.,\*\?\-:'!]/gm, "")
+      .replace(/```.+```/gm, "")
+      .split(/\s/);
     metadata.readLength = Math.floor(cleaned.length / 238);
     out.push(metadata);
   }
