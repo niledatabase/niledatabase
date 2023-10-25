@@ -87,7 +87,6 @@ const investors = [
 export default function Backers() {
   const firstHalf = investors.slice(0, investors.length / 2);
   const secondHalf = investors.slice(firstHalf.length + 1, investors.length);
-  console.log(firstHalf, secondHalf);
   return (
     <div className="flex flex-col gap-24 items-center">
       <Heading text="Backed by amazing people" />

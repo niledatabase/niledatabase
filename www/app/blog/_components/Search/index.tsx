@@ -53,27 +53,20 @@ function RefinementItem({
 function RefinementList() {
   const { items, refine } = useRefinementList({ attribute: "tags" });
   const sortedItems = useMemo(
-    () => items.sort((a, b) => a.value.localeCompare(b.value)),
+    () => items.sort((a, b) => a.value.localeCompare(b.value, "en")),
     [items]
   );
+  useEffect(() => {
+    if (items.length && typeof document !== "undefined") {
+      const serverSide = document.querySelector(".server-side-refinements");
+      serverSide?.setAttribute("style", "display:none");
+    }
+  }, [items.length]);
   return (
-    <div className="flex flex-row items-center gap-6 overflow-y-scroll lg:max-w-[1000px] w-screen">
+    <div className="flex flex-row items-center gap-6 overflow-y-scroll lg:max-w-[1000px] w-screen min-h-[42px]">
       {sortedItems.map((item) => (
         <RefinementItem key={item.label} item={item} refine={refine} />
       ))}
-    </div>
-  );
-}
-function Hits() {
-  const { hits } = useHits();
-  return (
-    <div className="flex flex-row flex-wrap justify-start">
-      {!hits.length && (
-        <div className="text-4xl">No blogs match your criteria.</div>
-      )}
-      {hits.map((hit) => {
-        return <Hit hit={hit} key={hit.objectID} />;
-      })}
     </div>
   );
 }
@@ -86,7 +79,7 @@ function Hit({ hit }: any) {
     <div className="w-full md:w-1/2 lg:w-1/3">
       <div className="p-4">
         <Link href={`/blog/${slug}`}>
-          <div className="bg-[#2D2D2D] rounded-xl overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex">
+          <div className="bg-[#2D2D2D] rounded-xl overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex aspect-video w-full">
             {hit?.image ? (
               <Image
                 className="aspect-video w-full"
@@ -173,16 +166,46 @@ function SearchBox() {
   );
 }
 
+function Hits() {
+  const { hits } = useHits();
+  const { query } = useSearchBox();
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const serverSide = document.querySelector(".server-side-hits");
+      if (query) {
+        serverSide?.setAttribute("style", "display:none");
+      } else {
+        serverSide?.setAttribute("style", "display:flex");
+      }
+    }
+  }, [query]);
+
+  if (!query) {
+    return;
+  }
+
+  return (
+    <div className="flex flex-row flex-wrap justify-start">
+      {!hits.length && (
+        <div className="text-4xl">No blogs match your criteria.</div>
+      )}
+      {hits.map((hit) => {
+        return <Hit hit={hit} key={hit.objectID} />;
+      })}
+    </div>
+  );
+}
 export default function Search() {
   return (
-    <InstantSearch searchClient={searchClient} indexName="blog">
-      <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-4 w-full">
+      <InstantSearch searchClient={searchClient} indexName="blog">
         <div className="flex flex-col md:flex-row items-center gap-4 justify-between -mt-5 z-10 relative">
           <RefinementList />
           <SearchBox />
         </div>
         <Hits />
-      </div>
-    </InstantSearch>
+      </InstantSearch>
+    </div>
   );
 }
