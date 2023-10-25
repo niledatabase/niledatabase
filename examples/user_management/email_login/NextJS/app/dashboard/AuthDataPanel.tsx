@@ -36,11 +36,10 @@ async function getTenantName(userToken: string, tenantId: string):Promise<string
 
 function getTenantId(aud: string[] | string | undefined): string {
   if (Array.isArray(aud)) {
-    // audiences that are not 'nile' should be tenant IDs
-    // TODO: aud also includes the UUID of the database. We should filter that out too once there's a way to do it.
-    const tenantAud = aud.filter(aud => aud !== "nile"); 
-    // we'll just show one tenant at random for now
-    return tenantAud[0];
+    // the audience includes 'nile', 'database:xxxxx' (where xxxxx is the database id), and
+    // 'tenant:xxxxx' (where xxxxx is the tenant ID)
+    const tenant = aud.find(claim => claim.startsWith('tenant:'));
+    return tenant?.split(':')[1] || UNKNOWN;
   }
   return UNKNOWN;
 }
@@ -60,8 +59,6 @@ export default async function AuthDataPanel(prop: { token: string }) {
     error = err.message;
     console.log(err);
   }
-  
-
 
   return (
     <div>
@@ -140,14 +137,14 @@ export default async function AuthDataPanel(prop: { token: string }) {
               </Box>
             </CardContent>
           </Card>
-          <Card>            
+          <Card>
             <CardContent>
                 <MUILink href="/api/logout" overlay sx={{justifyContent: "center"}} component={NextLink}>Logout</MUILink>
             </CardContent></Card>
         </Stack>
       </Grid>
     </Grid>
-      
+
   </div>
   )
 }
