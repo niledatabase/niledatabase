@@ -92,7 +92,7 @@ There is a big shift towards usage-based billing from just charging for the numb
 
 # Designing a database from first principles for modern SaaS
 
-TBD
+We had a few key criteria that we wanted to take into consideration when we designed the database. We had to pick a good relational database that was highly performant, and extensible with growing popularity. We wanted to consider supporting multiple tenants and how the experience can still be like a single database. The ability to place tenants anywhere on the planet while not losing any of the benefits of a single database in one location was critical. On top of the tenant model, we wanted to design a foundational user model to help support all the user management capabilities. We also had to think about how we will enable vector embedding per tenant and how to support scaling them. Finally, the ability to scale instantaneously and reduce the cost of storage was key factors.
 
 ### Postgres
 
