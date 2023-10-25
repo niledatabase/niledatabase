@@ -28,7 +28,7 @@ export default function Hero() {
             >
               <div className="">
                 <div className="text-center p-2 w-full text-[14px] flex flex-row gap-1 items-center justify-center text-white">
-                  Nile is in private beta.{ }
+                  Nile is in private beta.{" "}
                   <span className="underline">Learn more</span>
                   <Image
                     className="-ml-1"

@@ -70,73 +70,80 @@ export default function HowWeWork() {
   return (
     <>
       <Heading text="How we work" />
-      <div className="relative self-start min-w-[100vw] lg:min-w-fit overflow-scroll  lg:overflow-visible mt-10">
-        <div className="hidden lg:block absolute top-0 -left-[30%] right-[50%] bottom-0 -z-10">
-          <div className="bg-orangeBlur absolute top-0 left-0 right-0 bottom-0 bg-[center_left] bg-[size:100%] no-repeat blur-3xl "></div>
-          <div className="relative left-[16%] w-1/2 bg-orangeBlurText bg-clip-text text-transparent font-mono text-[12px] leading-[18px]">
-            {Text}
+      <div className="self-start relative w-full mt-8">
+        <div className="flex-row justify-between absolute -z-20 h-full hidden md:flex">
+          <div className="relative ml-20">
+            <div className="bg-orangeBlur absolute top-0 left-0 right-0 bottom-0 bg-[center] bg-[size:100%] no-repeat blur-3xl "></div>
+            <div className="relative bg-orangeBlurText bg-clip-text text-transparent font-mono text-[12px] leading-[18px] text-justify h-full">
+              {Text}
+              {Text}
+            </div>
+          </div>
+          <div className="w-96"></div>
+          <div className="relative mr-20 ml-96">
+            <div className="bg-blueBlur absolute top-0 left-0 right-0 bottom-0 bg-[center] bg-[size:100%] no-repeat blur-3xl"></div>
+            <div className="relative right-0 bg-blueBlurText bg-clip-text text-transparent font-mono text-[12px] leading-[18px] text-justify h-full">
+              {Text}
+              {Text}
+            </div>
           </div>
         </div>
-        <div className="hidden lg:block absolute top-0 -right-[30%] left-[50%] bottom-0 -z-10">
-          <div className="bg-blueBlur absolute top-0 left-0 right-0 bottom-0 bg-[center_left] bg-[size:100%] no-repeat blur-3xl"></div>
-          <div className="relative -right-[32%] w-1/2 bg-blueBlurText bg-clip-text text-transparent font-mono text-[12px] leading-[18px]">
-            {Text}
-          </div>
-        </div>
-        <div className="lg:px-32">
-          <div className="py-2 px-2.5 border border-gray rounded-md bg-[#000] w-screen lg:w-auto overflow-y-scroll">
-            <div className="table bg-divider min-w-[1000px]">
-              {rows.map((row, idx) => {
-                if (idx === 0) {
-                  return (
-                    <div className="table-header-group" key={row.title}>
-                      <div className="table-cell py-1 px-4 bg-[#000] -translate-x-[1px] border-gray border-b border-t gapFiller-right rounded-tl-[4px]">
-                        <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
-                          ID
-                        </span>
+        <div className="container mx-auto">
+          <div className="lg:px-32">
+            <div className="py-2 px-2.5 border border-gray rounded-md bg-[#000] w-screen lg:w-auto overflow-y-scroll">
+              <div className="table bg-divider min-w-[1000px]">
+                {rows.map((row, idx) => {
+                  if (idx === 0) {
+                    return (
+                      <div className="table-header-group" key={row.title}>
+                        <div className="table-cell py-1 px-4 bg-[#000] -translate-x-[1px] border-gray border-b border-t gapFiller-right rounded-tl-[4px]">
+                          <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
+                            ID
+                          </span>
+                        </div>
+                        <div className="table-cell py-1 px-4 bg-[#000] border-gray border-b border-t">
+                          <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
+                            Values
+                          </span>
+                        </div>
+                        <div className="table-cell py-1 px-4 bg-[#000] translate-x-[1px] border-gray  border-b border-t bourder-r rounded-tr-[4px] gapFiller-right">
+                          <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
+                            Description
+                          </span>
+                        </div>
                       </div>
-                      <div className="table-cell py-1 px-4 bg-[#000] border-gray border-b border-t">
-                        <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
-                          Values
-                        </span>
+                    );
+                  }
+                  if (idx === rows.length - 1) {
+                    return (
+                      <div key={row.title} className="flex-row table-row">
+                        <div className="table-cell bg-[#000] -translate-x-[1px] border-gray border-b rounded-bl-[4px] gapFiller-right p-4 align-top">
+                          <span className="opacity-60">{idx}</span>
+                        </div>
+                        <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4  align-top">
+                          <span className="opacity-80">{row.title}</span>
+                        </div>
+                        <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right rounded-br-[4px] p-4  align-top text-[16px]">
+                          <span className="opacity-60">{row.content}</span>
+                        </div>
                       </div>
-                      <div className="table-cell py-1 px-4 bg-[#000] translate-x-[1px] border-gray  border-b border-t bourder-r rounded-tr-[4px] gapFiller-right">
-                        <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
-                          Description
-                        </span>
-                      </div>
-                    </div>
-                  );
-                }
-                if (idx === rows.length - 1) {
+                    );
+                  }
                   return (
                     <div key={row.title} className="flex-row table-row">
-                      <div className="table-cell bg-[#000] -translate-x-[1px] border-gray border-b rounded-bl-[4px] gapFiller-right p-4 align-top">
+                      <div className="table-cell bg-[#000] -translate-x-[1px] border-gray gapFiller-right border-b p-4 align-top">
                         <span className="opacity-60">{idx}</span>
                       </div>
-                      <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4  align-top">
+                      <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4 align-top">
                         <span className="opacity-80">{row.title}</span>
                       </div>
-                      <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right rounded-br-[4px] p-4  align-top text-[16px]">
+                      <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right p-4 align-top text-[16px]">
                         <span className="opacity-60">{row.content}</span>
                       </div>
                     </div>
                   );
-                }
-                return (
-                  <div key={row.title} className="flex-row table-row">
-                    <div className="table-cell bg-[#000] -translate-x-[1px] border-gray gapFiller-right border-b p-4 align-top">
-                      <span className="opacity-60">{idx}</span>
-                    </div>
-                    <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4 align-top">
-                      <span className="opacity-80">{row.title}</span>
-                    </div>
-                    <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right p-4 align-top text-[16px]">
-                      <span className="opacity-60">{row.content}</span>
-                    </div>
-                  </div>
-                );
-              })}
+                })}
+              </div>
             </div>
           </div>
         </div>

@@ -24,11 +24,11 @@ export default function Home() {
           </div>
           <OurStory />
           <Divider />
-          <HowWeWork />
-          <Divider />
-          <HeroBottom />
         </div>
       </div>
+      <HowWeWork />
+      <Divider />
+      <HeroBottom />
     </Container>
   );
 }
