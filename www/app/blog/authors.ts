@@ -13,9 +13,9 @@ const authors: Authors = {
     name: "Miki Pokryvailo",
     borderColor: "#FDC066",
   },
-  ram : {
+  ram: {
     name: "Sriram Subramanian",
-    borderColor: '#ECC9A3',
+    borderColor: "#ECC9A3",
   },
 };
 export default authors;
