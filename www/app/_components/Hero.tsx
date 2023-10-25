@@ -115,7 +115,7 @@ export default function Hero() {
               />
               <div className="opacity-80 bg-clip-text text-center text-base">
                 Seamless Tenant-Aware <br />
-                AI-Native Applications
+                Vector Embeddings
               </div>
             </div>
             <div className="flex flex-col gap-3 items-center px-4 py-5 w-[220px] ">
