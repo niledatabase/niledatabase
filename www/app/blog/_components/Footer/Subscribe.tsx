@@ -8,16 +8,20 @@ export default function Subscribe() {
   const [submitted, setDidSubmit] = useState(false);
 
   return (
-    <div className={`relative${submitted ? " pointer-events-none" : ""}`}>
+    <div
+      className={`flex flex-col relative${
+        submitted ? " pointer-events-none" : ""
+      }`}
+    >
       <input
         ref={ref}
         className={`bg-[#141414] border border-[#373737] rounded-[20px] text-[17px] py-5 px-10 lg:min-w-[500px] mb-3 placeholder:opacity-40 focus:outline-none`}
         placeholder="Email Address"
       />
-      <div className="absolute lg:right-[8px] lg:top-[9px] right-[32px]">
+      <div className="md:absolute lg:right-[8px] lg:top-[9px] md:right-[32px] -right-[19px]">
         <button
           className={`transition-all duration-500 flex flex-row gap-2 text-lg gradientButton font-medium after:rounded-[12px] ${
-            submitted ? "w-[484px]" : "w-[200px]"
+            submitted ? "lg:w-[484px] w-[300px]" : "w-[200px]"
           }`}
           onClick={async () => {
             if (ref.current?.value) {
@@ -42,7 +46,7 @@ export default function Subscribe() {
             <Image className="invert" src={Arrow} alt="get started arrow" />
           </div>
           <div
-            className={`absolute whitespace-nowrap pointer-events-none trasition-opacity delay-500 duration-500`}
+            className={`absolute lg:whitespace-nowrap pointer-events-none trasition-opacity delay-500 duration-500 leading-[18px]`}
             style={{
               opacity: submitted ? 100 : 0,
             }}
