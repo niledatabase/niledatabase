@@ -66,7 +66,7 @@ export default function ArtificialIntelligence() {
       <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
         <div className="flex w-full flex-col">
           <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-20 mt-20 -z-20">
-            <Heading text="Seamless tenant-aware AI-native applications" />
+            <Heading text="Seamless tenant-aware vector embeddings" />
           </div>
           <div className="flex flex-col lg:flex-row place-items-center rounded-[24px] border border-gray overflow-hidden bg-[#000] -mt-3">
             <div className="flex lg:w-1/2 flex-col">
