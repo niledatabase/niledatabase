@@ -68,6 +68,10 @@ The hard part of building the AI infrastructure for SaaS is that you cannot use 
 
 ## Highly available and scalable
 
+Everyone wants their application to be highly available. SaaS applications used to have weekend maintenance schedules to upgrade the database. Some applications still do! This is no longer acceptable for most users. The expectation is to have 99.99 percentile availability. Also, as the application scales, users want things to work as they used to. They don’t want any interruption in service or any performance degradation.
+
+Building a fully automated technology to manage tenant health proactively is not trivial. You have a service impact if you cannot do zero downtime upgrades. Similarly, you would have customer impact when it takes too long to restore specific tenant data from backups, or developers are manually trying to add more capacity due to a sudden spike in workload or lack of isolation.
+
 In addition to these five principles, modern SaaS also has a few other considerations that are quickly becoming standard.
 
 **Data-centric** 
