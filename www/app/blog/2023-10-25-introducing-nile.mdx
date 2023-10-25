@@ -6,7 +6,7 @@ export const metadata = {
   tags: ["database", "serverless", "postgres", "saas"],
 };
 
-I am thrilled to announce Nile, a serverless Postgres database designed for modern SaaS applications. Modern SaaS applications are multi-tenant. We’re the first database that virtualizes tenants into the database. This enables seamless tenant isolation, per-tenant backups, and placement on multi-tenant or dedicated infrastructure, anywhere on the planet. You can do all this with the experience of a single Postgres! You don’t have to manage multiple databases, build complex permissions for isolation, or write buggy scripts to read specific tenant data from backups. On top of the tenant model, we provide opt-in user management capabilities, customer-specific vector embeddings, and instant tenant admin dashboards. You can do all of this with very little code. Moreover, Nile's Postgres is built for the cloud, enabling effortless scaling and a true serverless experience. You can sign up for our waitlist today to try it out.
+I am thrilled to announce Nile, a serverless Postgres database designed for modern SaaS applications. Modern SaaS applications are multi-tenant. We’re the first database that virtualizes tenants into the database. This enables seamless tenant isolation, per-tenant backups, and placement on multi-tenant or dedicated infrastructure, anywhere on the planet. You can do all this with the experience of a single Postgres! You don’t have to manage multiple databases, build complex permissions for isolation, or write buggy scripts to read specific tenant data from backups. On top of the tenant model, we provide opt-in user management capabilities, customer-specific vector embeddings, and instant tenant admin dashboards. You can do all of this with very little code. Moreover, Nile's Postgres is built for the cloud, enabling effortless scaling and a true serverless experience. You can [sign up for our waitlist](https://www.thenile.dev/) today to try it out.
 
 Before Nile, I spent six years at Confluent, helping transform the company from primarily on-premise to a successful global SaaS company. Through this journey, I learned the challenges of launching and scaling a SaaS product to thousands of customers and tens of thousands of users. We spent significant time managing and isolating tenants, supporting different tenant deployment models, dealing with long downtimes to restore tenant data from backups, and optimizing per-tenant performance. We also had to build the organization and user management capabilities, store and move data to different parts of the company, track usage, bill individual customers, and handle many other SaaS problems. When we spoke to many other companies from different verticals, the problems were similar. All these problems in building SaaS were around data, but the database had little to offer. 
 
@@ -78,7 +78,7 @@ SaaS applications can be enhanced by providing valuable data insights to the use
 
 This falls into two categories: pushing data as they happen to the application and executing complex business workflows as events happen. Building these flows and connecting all these systems require multiple moving parts today.
 
-**Collaborative and Offline mode**
+**Collaborative and offline mode**
 
 Applications like Figma and Notion have a collaborative experience built into the product. In addition, you can work offline and sync your data later if you don’t have an internet connection. Techniques like CRDTs needed to solve this are not easy to use.
 
@@ -108,7 +108,7 @@ The experience would be something as follows:
 -- create a record for the first customer
 insert into tenants (name) VALUES ('customer1');
 ```
-Creating a new table for each tenant should be like standard table creation, and the database should ensure all the virtual tenant DBs get the schema changes applied to them. Let us call them tenant-aware tables.
+**Creating a new table for each tenant should be like standard table creation**, and the database should ensure all the virtual tenant DBs get the schema changes applied to them. Let us call them tenant-aware tables.
 ```sql
 -- creating an employee table that is tenant aware
 create table employees (
@@ -143,7 +143,7 @@ values
   ('018aca35-b8c4-7674-882c-30ae56d7b479',1532,'Mark',27,'Manchester,UK','2022-10-10 12:09:22-06','support engineer'),
   ('018aca35-b8c4-7674-882c-30ae56d7b479',8645,'Sam',42,'Liverpool,UK','2015-08-04 04:03:12-05','product manager');
 ```
-Directing queries to a specific tenant DB and getting full data isolation should be as easy as specifying the tenant ID in the session context. The client library can even abstract this by invoking this for you, depending on what tenant_id is trying to access data. This should all work out of the box without struggling with complex permissions, managing multiple databases, or dealing with error-prone row-level security policies.
+**Directing queries to a specific tenant DB and getting full data isolation should be as easy as specifying the tenant ID in the session context**  . The client library can even abstract this by invoking this for you, depending on what tenant_id is trying to access data. This should all work out of the box without struggling with complex permissions, managing multiple databases, or dealing with error-prone row-level security policies.
 ```sql
 -- set the session context to a specific tenant
 -- who needs to be isolated.
@@ -266,7 +266,7 @@ select * from employees
     </tr>
   </tbody>
 </table>
-While there’s a need for virtual tenant DBs [that isolate data], there’s also a need to share data across tenants. It should be easy to create shared tables that can be accessed by/[across] all tenants and are globally available. All standard queries should work seamlessly both on tenant-aware and shared tables
+While there’s a need for virtual tenant DBs that isolate data, there’s also a need to [share data across tenants](https://www.thenile.dev/docs/tenant-sharing). It should be easy to create shared tables that can be accessed by/[across] all tenants and are globally available. All standard queries should work seamlessly both on tenant-aware and shared tables
 ```sql
 -- list of flights that a corporate travel booking site can use to share across all the tenants.
 -- employees in different tenants can view these flight data to book tickets
@@ -331,6 +331,7 @@ The first basic primitive of a database built for SaaS is tenants. The second is
 ![“Auth Code"](/blog/authcode.png)
 
 For permissions, basic enforcement of what data users get access to should be easier than it is today. When a user belongs to a specific tenant, access should automatically be restricted to other tenants. You don’t need application logic or complex SQL policies to enforce and maintain this. In addition, permissions should have a flexible language to help define fine-grained column-level resource permissions. The best part is that no instrumentations are required in code, which is often buggy due to the different paths that need to be secured. Instead, permission at source is the strongest security guarantee you can get.
+
 While the database should provide a fantastic solution out of the box, it should also be flexible for users to bring their own auth. This includes building your own authentication or integrating another third-party auth with the database. Great developer platforms can provide flexibility and let developers have finer control over how they want to build out their applications.
 
 ### Domain and tenant-aware AI-native architecture
