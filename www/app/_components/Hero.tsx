@@ -18,7 +18,7 @@ export default function Hero() {
       <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
         <div className="flex justify-center mb-5">
           <Link
-            href="/blog/launch"
+            href="https://www.thenile.dev/blog/introducing-nile"
             className="flex flex-row hover:opacity-70 relative"
           >
             <GradientButton
@@ -28,7 +28,7 @@ export default function Hero() {
             >
               <div className="">
                 <div className="text-center p-2 w-full text-[14px] flex flex-row gap-1 items-center justify-center text-white">
-                  Nile is in private beta.{"https://www.thenile.dev/blog/introducing-nile"}
+                  Nile is in private beta.{ }
                   <span className="underline">Learn more</span>
                   <Image
                     className="-ml-1"
