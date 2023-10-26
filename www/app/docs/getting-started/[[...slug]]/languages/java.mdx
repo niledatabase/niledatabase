@@ -32,7 +32,11 @@ In this tutorial, you will learn about Nile's tenant virtualization features, wh
 After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
 
 ```sql
-create table todos (id uuid, tenant_id uuid, title varchar(256), complete boolean);
+create table todos (
+    id uuid,
+    tenant_id uuid,
+    title varchar(256),
+    complete boolean);
 ```
 
 You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
