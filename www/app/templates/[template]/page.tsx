@@ -71,8 +71,8 @@ export default async function TemplateDetail(pageProps: PageProps) {
 
   return (
     <Container background={null}>
-      <div className="flex flex-col lg:flex-row w-full justify-around items-center lg:items-start">
-        <div className="flex lg:w-1/3 pr-4 flex-col mb-5">
+      <div className="flex flex-col lg:flex-row w-full justify-center items-center lg:items-start">
+        <div className="flex lg:w-1/3 pr-4 flex-col mb-5 pt-10 max-w-lg">
           <div className="w-full">
             <Heading text={name} textAlign="left" />
             {Object.keys(metadata).map((key) => {
@@ -80,9 +80,11 @@ export default async function TemplateDetail(pageProps: PageProps) {
               return (
                 <div
                   key={`${key}-${val}`}
-                  className="flex flex-row justify-between border-b border-b-[#1B1B1B] py-3 last-of-type:border-none"
+                  className="flex flex-row justify-between border-b border-b-[#1B1B1B] py-3 last-of-type:border-none gap-8"
                 >
-                  <div className="text-lg opacity-60">{key}</div>
+                  <div className="text-lg opacity-60 whitespace-nowrap">
+                    {key}
+                  </div>
                   <div className="text-lg opacity-60 text-right">{val}</div>
                 </div>
               );
