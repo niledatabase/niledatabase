@@ -18,7 +18,7 @@ Sign up for an invite to [Nile](https://thenile.dev) if you don't have one alrea
 After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
 
 ```sql
-    create table todos (tenant_id uuid, title varchar(256), complete boolean);
+    create table todos (id uuid, tenant_id uuid, title varchar(256), complete boolean);
 ```
 
 If all went well, you'll see the new table in the panel on the left hand side of the query editor. You can also see Nile's built-in tenant table next to it.
