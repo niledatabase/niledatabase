@@ -80,7 +80,7 @@ export default function HowWeWork() {
             </div>
           </div>
           <div className="w-96"></div>
-          <div className="relative mr-20 pl-96">
+          <div className="relative pr-20 xl:pl-96">
             <div className="bg-blueBlur absolute top-0 left-0 right-0 bottom-0 bg-[center] bg-[size:100%] no-repeat blur-3xl"></div>
             <div className="relative right-0 bg-blueBlurText bg-clip-text text-transparent font-mono text-[12px] leading-[18px] text-justify h-full">
               {Text}

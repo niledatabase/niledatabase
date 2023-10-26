@@ -40,10 +40,11 @@ export default function JoinWaitlist() {
         >
           <div>Join the waitlist</div>
           <Image
+            className="invert"
             src={Arrow}
             alt="get started arrow"
-            width={15}
-            height={20}
+            width={25}
+            height={25}
             priority
           />
         </div>
