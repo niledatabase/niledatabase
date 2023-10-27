@@ -156,30 +156,6 @@ export default async function Home() {
         </div>
         <Divider />
         <div className="lg:px-14">
-          <div className="flex flex-col">
-            <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
-              <div className="text-3xl">Dig into our REST API</div>
-              <div>
-                <GradientButton
-                  href="/docs/reference/api-reference/index"
-                  variant="soft"
-                >
-                  <Image
-                    src="/icons/templates.svg"
-                    alt="book cover"
-                    width={24}
-                    height={24}
-                  />
-                  <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
-                    API Reference
-                  </span>
-                </GradientButton>
-              </div>
-            </div>
-          </div>
-        </div>
-        <Divider />
-        <div className="lg:px-14">
           <div className="text-3xl text-center mb-10">
             Join the community to share and get help
           </div>

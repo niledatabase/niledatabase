@@ -21,94 +21,64 @@ https://api.thenile.dev/workspaces/my-workspace/databases/database-one/
 
 The API is currently subject to our terms of service. We may introduce rate limits in the future.
 
-# Authentication
+# User Authentication
 
-Login and sign-up requests return an authentication token in the form of a [JWT](https://jwt.io/). This token must be included in the `Authorization` header of all subsequent requests as a `Bearer` token.
+User login and sign-up requests return an authentication token in the form of a [JWT](https://jwt.io/). This token must be included in the `Authorization` header of all subsequent requests as a `Bearer` token.
 
-You can login to an existing developer account with your email and password and receive an authentication token.
+- For more details, see the [Create User](/docs/reference/api-reference/users/create-user) and [Login User](/docs/reference/api-reference/users/login-user) operations.
+- Check out our [user management examples](https://github.com/niledatabase/niledatabase/tree/main/examples/user_management) to see usage in an application.
 
 <div className="grid grid-cols-2 gap-4">
-    <div>
-    Unlike most Nile endpoints, this endpoint will produce either JSON or plain text depending on the `Accept` header you specify.
-    For a full response that includes the developer information, use `Accept: application/json`.
-    </div>
+  Login a user with the email address and password provided during sign-up.
 
-    <CodeGroups
-      title={"JSON Authentication Request"}
-      method={"POST"}
-      pathname={"/developers/login"}
-    >
-      ```bash
-      curl 'https://api.thenile.dev/developers/login' \
-      --header 'Content-Type: application/json' \
-      --header 'Accept: application/json' \
-      --data '{
-        "email": "<string>",
-        "password": "<string>"
-      }'
-      ```
-    </CodeGroups>
-
-    The response will include the developer id and token with metadata.
-
-    <CodeGroups
-      title={"JSON Authentication Response"}
-      response={"200"}
-      pathname={"/developers/login"}
-    >
-    ```json
-      {
-        "id": "018b44a4-6b11-79ab-9910-460ae48bc295",
-        "token": {
-          "jwt": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjoibmlsZSIsImlhdCI6MTY5ODA3NjE0MywiZXhwIjoxNjk4MDc5NzQzLCJzdWIiOiIwMThiNDRhNC02YjExLTc5YWItOTkxMC00NjBhZTQ4YmMyOTUiLCJqdGkiOiIxYTI2YWYzNS1lMzZkLTQwMDktODkyOC00ZTgxYjAyYjVkYTgiLCJzY29wZSI6ImRhc2hib2FyZCBxdWVyeSJ9.UFCxn2k11aStEF6lO8FU8ppobP5uLRneLb69_FgSZ4s2B34EX96jDiZwluy5KmEcvcjxUegQ1kMgD2Z-aJuWj5zt4IEt-sMvvZJwE-Luyd8Wzs6w3HEFtkDTi3XvX6lex5SJXg30VZr1zme0PaDL_6zwj7_C9PCIODTlFGrB-z0nWub3c8P9wcTMwQ-9kz0_m__scEW_g1B-XLC8u9gWzrEIIPpgXHRara6E99u_udQ9wJ0lReHqcePllaEZbOYuFsygZ_sueSI5keR14eY1mOSN-GygMzxmNORYavF4KdzmyfwGF3JiAuiX5JVRkaezCrxtlD7aoPdlsBYBpOCmOQ",
-          "maxAge": 3600,
-          "type": "ACCESS_TOKEN"
-        }
-      }
-    ```
-    </CodeGroups>
-
-    If you only want the token, use `Accept: text/plain`.
-
-    <CodeGroups
-      title={"Plaintext Authentication Request"}
-      method={"POST"}
-      pathname={"/developers/login"}
-    >
-      ```bash
-      curl 'https://api.thenile.dev/developers/login' \
-      --header 'Content-Type: application/json' \
-      --header 'Accept: text/plain' \
-      --data '{
+  <CodeGroups
+    title={"User Authentication Request"}
+    method={"POST"}
+    pathname={"/workspaces/:workspaceSlug/databases/:databaseName/users/login"}
+  >
+    ```bash
+    curl 'https://api.thenile.dev/workspaces/<string>/databases/<string>/users/login' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
       "email": "<string>",
       "password": "<string>"
     }'
-      ```
-    </CodeGroups>
-
-
-    The response will be a plain text JWT.
-
-    <CodeGroups
-      title={"Plaintext Authentication Response"}
-      response={"200"}
-      pathname={"/developers/login"}
-    >
-      ```text
-      eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjoibmlsZSIsImlhdCI6MTY5ODA3NjE0MywiZXhwIjoxNjk4MDc5NzQzLCJzdWIiOiIwMThiNDRhNC02YjExLTc5YWItOTkxMC00NjBhZTQ4YmMyOTUiLCJqdGkiOiIxYTI2YWYzNS1lMzZkLTQwMDktODkyOC00ZTgxYjAyYjVkYTgiLCJzY29wZSI6ImRhc2hib2FyZCBxdWVyeSJ9.UFCxn2k11aStEF6lO8FU8ppobP5uLRneLb69_FgSZ4s2B34EX96jDiZwluy5KmEcvcjxUegQ1kMgD2Z-aJuWj5zt4IEt-sMvvZJwE-Luyd8Wzs6w3HEFtkDTi3XvX6lex5SJXg30VZr1zme0PaDL_6zwj7_C9PCIODTlFGrB-z0nWub3c8P9wcTMwQ-9kz0_m__scEW_g1B-XLC8u9gWzrEIIPpgXHRara6E99u_udQ9wJ0lReHqcePllaEZbOYuFsygZ_sueSI5keR14eY1mOSN-GygMzxmNORYavF4KdzmyfwGF3JiAuiX5JVRkaezCrxtlD7aoPdlsBYBpOCmOQ
-      ```
-    </CodeGroups>
-
- </div>
-
-Use your access token in the `Authorization` header of subsequent requests.
-
-<div className="grid grid-cols-2 gap-4">
-  Pass the JWT as a `Bearer` token.
-  <CodeGroups title={"API Requests"} method={"GET"} pathname={"/developers/me"}>
-    ```bash curl 'https://api.thenile.dev/developers/me' \ --header
-    'Authorization: Bearer
-    eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjoibmlsZSIsImlhdCI6MTY5ODA3NjE0MywiZXhwIjoxNjk4MDc5NzQzLCJzdWIiOiIwMThiNDRhNC02YjExLTc5YWItOTkxMC00NjBhZTQ4YmMyOTUiLCJqdGkiOiIxYTI2YWYzNS1lMzZkLTQwMDktODkyOC00ZTgxYjAyYjVkYTgiLCJzY29wZSI6ImRhc2hib2FyZCBxdWVyeSJ9.UFCxn2k11aStEF6lO8FU8ppobP5uLRneLb69_FgSZ4s2B34EX96jDiZwluy5KmEcvcjxUegQ1kMgD2Z-aJuWj5zt4IEt-sMvvZJwE-Luyd8Wzs6w3HEFtkDTi3XvX6lex5SJXg30VZr1zme0PaDL_6zwj7_C9PCIODTlFGrB-z0nWub3c8P9wcTMwQ-9kz0_m__scEW_g1B-XLC8u9gWzrEIIPpgXHRara6E99u_udQ9wJ0lReHqcePllaEZbOYuFsygZ_sueSI5keR14eY1mOSN-GygMzxmNORYavF4KdzmyfwGF3JiAuiX5JVRkaezCrxtlD7aoPdlsBYBpOCmOQ'
     ```
   </CodeGroups>
+
+The response will include the user id, tenant list, and token with metadata.
+
+  <CodeGroups
+    title={"User Authentication Response"}
+    response={"200"}
+    pathname={"/workspaces/:workspaceSlug/databases/:databaseName/users/login"}
+  >
+    ```json
+    {
+      "id": "018b6216-27a1-7e2b-aa83-67d7ba500982",
+      "tenants": [
+        "018b61ec-af9e-77e5-b27f-77239cd4a0bc"
+      ],
+      "token": {
+        "jwt": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3RoZW5pbGUuZGV2IiwiYXVkIjpbImRhdGFiYXNlOjAxOGI2MWJjLWNmMmMtNzM5Mi05MmE2LWYxYTgxMWNmNDQxOSIsIm5pbGUiXSwiaWF0IjoxNjk4MTU5MDQ0LCJleHAiOjE2OTgxNjI2NDQsInN1YiI6IjAxOGI2MjE2LTI3YTEtN2UyYi1hYTgzLTY3ZDdiYTUwMDk4MiIsImp0aSI6IjkxN2I1MDA1LTRjNWEtNDdiYy1hNDE5LTc4M2Y5MzI5ZTdkMyIsIm5hbWUiOiJwc2NrYXVnaHQiLCJlbWFpbCI6InNjb3R0aWN1c0Btc24uY29tIiwic2NvcGUiOiJkYXNoYm9hcmQifQ.jxtxzgi6N66OXaeEZwjH4i_wIxvGDak4iAh4XHICzdtQYKnqc4tvBmQ3xxyjvy_u_wmwOMdw_YJlqGwiWVL5TJyyVuHTBV8z-EuXxV-rIMR7OPMRTY6PfQ7r0d_ivUoTY1uX4FLvNdj2cNP6z_VczWGwKdMQ04UJ4jNSD-eVpLOF-bjd0_w9huOaMyepK8SFURGKpdZe5qKS8ahl4W7kOKbJHonQ8SVKI8Xr0Rp3gLM4B2PjkUZL0ImICxlLcpz3q0PdL54nEU8iGFnlSrppAD5VzYK1H9Wfa9ycGDkSWGP4IejD7hHX3xAv-M8Uo1n2W-Pw4hECHkWInNHtmlRQZw",
+        "maxAge": 3600,
+        "type": "ACCESS_TOKEN"
+      }
+    }
+    ```
+  </CodeGroups>
+
+Use the JWT as a `Bearer` token in the `Authorization` header of subsequent requests.
+
+  <CodeGroups
+    title={"API Requests"}
+    method={"GET"}
+    pathname={"/workspaces/:workspaceSlug/databases/:databaseName/users/me"}
+  >
+    ```bash
+    curl 'https://api.thenile.dev/workspaces/<string>/databases/<string>/users/me' \
+    --header 'Authorization: Bearer <string>'
+    ```
+  </CodeGroups>
+
 </div>
