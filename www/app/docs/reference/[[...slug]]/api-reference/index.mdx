@@ -25,8 +25,8 @@ The API is currently subject to our terms of service. We may introduce rate limi
 
 User login and sign-up requests return an authentication token in the form of a [JWT](https://jwt.io/). This token must be included in the `Authorization` header of all subsequent requests as a `Bearer` token.
 
-* For more details, see the [Create User](/docs/reference/api-reference/users/create-user) and [Login User](/docs/reference/api-reference/users/login-user) operations.
-* Check out our [user management examples](https://github.com/niledatabase/niledatabase/tree/main/examples/user_management) to see usage in an application.
+- For more details, see the [Create User](/docs/reference/api-reference/users/create-user) and [Login User](/docs/reference/api-reference/users/login-user) operations.
+- Check out our [user management examples](https://github.com/niledatabase/niledatabase/tree/main/examples/user_management) to see usage in an application.
 
 <div className="grid grid-cols-2 gap-4">
   Login a user with the email address and password provided during sign-up.
@@ -46,7 +46,7 @@ User login and sign-up requests return an authentication token in the form of a 
     ```
   </CodeGroups>
 
-  The response will include the user id, tenant list, and token with metadata.
+The response will include the user id, tenant list, and token with metadata.
 
   <CodeGroups
     title={"User Authentication Response"}
@@ -68,7 +68,7 @@ User login and sign-up requests return an authentication token in the form of a 
     ```
   </CodeGroups>
 
-  Then use the JWT as a `Bearer` token in the `Authorization` header of subsequent requests.
+Then use the JWT as a `Bearer` token in the `Authorization` header of subsequent requests.
 
   <CodeGroups
     title={"API Requests"}
