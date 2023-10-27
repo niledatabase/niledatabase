@@ -1,9 +1,8 @@
 import { cookies } from 'next/headers';
 import jwtDecode from 'jwt-decode';
-import { cookieOptions, NileJWTPayload, toCookieData } from '@/utils/AuthUtils';
-import { getNile } from '@/lib/NileServer';
-
-const nile = getNile();
+import { cookieOptions, NileJWTPayload, toCookieData } from '@/lib/AuthUtils';
+import { revalidatePath } from 'next/cache';
+import nile from '@/lib/NileServer';
 
 // Note that this route must exist in this exact location for user/password signup to work
 // Nile's SignUp component posts to this route, we call Nile's signup API via the SDK 
@@ -21,6 +20,7 @@ export async function POST(req: Request) {
             tokenData: decodedJWT,
           };
         cookies().set('authData', JSON.stringify(cookieData), cookieOptions(3600));
+        revalidatePath('/')
         return new Response(JSON.stringify(body), { status: 201 });
       } else  {
         // The API sends errors in plain text, so we need to handle them before trying to parse the JSON
@@ -28,5 +28,4 @@ export async function POST(req: Request) {
         console.log("got error response: " + body + " " + res.status);
         return new Response(body, { status: res.status });
     }
-} 
-
+}

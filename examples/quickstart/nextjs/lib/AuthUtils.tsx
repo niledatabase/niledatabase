@@ -1,5 +1,5 @@
 import { JwtPayload } from "jwt-decode";
-import { Underdog } from "next/font/google";
+import nile from '@/lib/NileServer'
 
 export default interface AuthCookieData {
   accessToken: string | undefined;
@@ -70,5 +70,24 @@ export function getUserName(rawAuthCookie: any): string | null | undefined {
     return bestName;
   } catch (e) {
     return undefined;
+  }
+}
+
+// This will configure the global Nile Server instance with the current user and tenant (if exists)
+// Note that this isn't thread-safe, so if you call this, don't block before using the Nile instance
+// TBD: replace with the thread-safe version in the SDK
+export function configureNile(rawAuthCookie: any, tenantId: string | null | undefined): boolean {
+  try {
+    const authData = JSON.parse(rawAuthCookie.value) as AuthCookieData;
+    nile.token = authData.accessToken;
+    nile.userId = authData.tokenData?.sub;
+    if (tenantId) {
+      nile.tenantId = tenantId;
+    } else {
+      nile.tenantId = null;
+    }
+    return true;
+  } catch {
+    return false;
   }
 }
