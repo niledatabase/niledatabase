@@ -30,6 +30,7 @@ Lets imagine that we are building a todo list app and create our first table:
 
 ```sql
 create table todos (
+    id uuid DEFAULT (gen_random_uuid()),
     tenant_id uuid,
     title varchar(256),
     complete boolean);

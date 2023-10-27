@@ -33,6 +33,7 @@ After you created a database, you will land in Nile's query editor. Since our ap
 
 ```sql
 create table todos (
+    id uuid,
     tenant_id uuid,
     title varchar(256),
     complete boolean);
