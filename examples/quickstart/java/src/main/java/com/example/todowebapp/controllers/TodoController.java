@@ -34,10 +34,10 @@ public class TodoController {
 
     // list all todos for a tenant
     @GetMapping
-    public @ResponseBody Iterable<Todo> getAllTodos(@PathVariable UUID tenant_id) {
+    public @ResponseBody Iterable<Todo> getAllTodos() {
         // Because we use a tenant-aware data source, this operation is safe
         // It will only return results for the tenant in the request
-        // We can use the build-in `findAll` and don't need to create a custom `findByTenantId` method for every Entity
+        // We can use the built-in `findAll` and don't need to create a custom `findByTenantId` method for every Entity
         return todoRepository.findAll();
     }
 }
