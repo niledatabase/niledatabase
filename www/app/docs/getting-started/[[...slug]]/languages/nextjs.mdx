@@ -118,19 +118,33 @@ This explanation will focus on creating tenants, selecting tenants and adding ta
 
 All the signup and login methods eventually route users to `/tenants`. You'll find the code in `app/tenants/page.tsx`.
 
-The first thing we do here is initialize the Nile SDK with the environment variables you provided earlier.
-
-We do this in every component and while it is a bit of boiler plate (which you can abstract away in your own application), it is important to understand the use of `basePath` configuration:
+The first thing we do in this page is to configure Nile SDK for the current user:
 
 ```typescript
-    api: {
-      basePath: String(process.env.NEXT_PUBLIC_NILE_API),
-    },
+configureNile(cookies().get('authData'), null);
+```
+
+This method configures a shared instance of `nile` that is used throughout the application.
+This instance is a singleton, which you get by calling Nile SDK's `Server` method, which we are doing in '@/lib/NileServer'
+This is also where all the environment variables we've set earlier are being used, so lets take a look at this file:
+
+```typescript
+const nile =  Server(
+        ...
+        api: {
+          basePath: String(process.env.NEXT_PUBLIC_NILE_API),
+        },
+        ...);
 ```
 
 The `basePath` configuration is the URL that `nile.api` methods will call. This component calls Nile APIs directly, and therefore we set `basePath` to `NEXT_PUBLIC_NILE_API`.
+Note that there are other components, for example basic login and signup that for web security reasons cannot call Nile APIs directly. Instead, they should call the application server, which in turn calls Nile APIs. In this case, the `basePath` should be set to `NEXT_PUBLIC_BASE_PATH`.
 
-There are other components, for example basic login and signup that for web security reasons cannot call Nile APIs directly. Instead, they should call the application server, which in turn calls Nile APIs. In this case, the `basePath` should be set to `NEXT_PUBLIC_BASE_PATH`.
+So every page, route and function in our app can use the same `nile` instance to access Nile APIs and DB. 
+
+But, we need to make sure we are using the right user and tenant context.
+So we call `configureNile` and pass in the cookies and the tenant ID. 
+After this point, we can use `nile` to access the database and APIs, and it will use the right user and tenant context.
 
 ### 7.2 Listing tenants
 
@@ -138,15 +152,10 @@ Next thing we do in `app/tenants/page.tsx` is to list all the tenants for the cu
 We use Nile SDK to query the database for all the tenants that the current user is a member of:
 
 ```typescript
-const userId = getUserId(cookies().get("authData"));
-let tenants: any = [];
-
-if (userId) {
   tenants = await db("tenants")
     .select("tenants.id", "tenants.name")
     .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-    .where("tenant_users.user_id", "=", userId);
-}
+    .where("tenant_users.user_id", "=", nile.userId);
 ```
 
 and then we render the list of tenants as a list of links:
@@ -173,8 +182,7 @@ Create tenant logic is in `app/tenants/tenant-actions.tsx`.
 In `createTenant` method, we use Nile SDK to create a new tenant and link it to the current user.
 
 ```typescript
-  const userToken = getUserToken(cookies().get('authData'));
-  nile.token = userToken;
+  configureNile(cookies().get('authData'), null); // we don't have a tenant yet
 
   let tenantID = null;
   try {
@@ -198,13 +206,11 @@ We could have used the same logic to list todos for a tenant as we did for listi
 Instead of using SQL `where` clauses to get only todos for this specific tenant, we are relying on Nile's tenant isolation feature:
 
 ```typescript
-const res = await nile.db.raw(`
-        set nile.tenant_id = '${tenantID}'; 
-        set nile.user_id = '${userId}';
-        SELECT * FROM todos order by title`);
+configureNile(cookies().get('authData'), params.tenantid);
+const todos = await nile.db("todos").select("*"); // no need for where clause because we previously set Nile context
 ```
 
-The first two lines set the tenant and user context for this query.
+Note that this time we are configuring Nile with the tenant ID too. Previously we only used the user because there was no tenant yet.
 Then we run a simple SQL query to get all the todos.
 
 Behind the scenes, Nile does two things:
@@ -222,30 +228,27 @@ You can find the logic for adding a task in `app/tenants/[tenantid]/todos/todo-a
 As you can see, we again use the tenant context to insert the new task:
 
 ```typescript
-await db.raw(`
-set nile.tenant_id = '${tenantid}'; 
-set nile.user_id = '${userId}';
-insert into todos (tenant_id, title, complete) 
-  values ('${tenantid}','${title}',false);`);
+configureNile(cookies().get('authData'), tenantId);
+await nile.db("todos").insert({tenant_id: nile.tenantId, title: title, complete: false})
 ```
 
 or update an existing one:
 
 ```typescript
-await db.raw(`
-        set nile.tenant_id = '${tenantid}'; 
-        set nile.user_id = '${userId}';
-        update todos set complete='${complete}' where title='${title}';`);
+configureNile(cookies().get('authData'), tenantId);
+await nile.db("todos").update({complete: complete}).where({title: title})
 ```
 
-By setting the context, Nile will validate that the user indeed has permission to add tasks for this tenant.
+By setting the context, Nile will validate that the user indeed has permission to add tasks for this tenant, 
+and will make sure we only update tasks for the current tenant.
+
 We don't want just anyone handing us tasks and telling us to do them, right?
 
 ## 8. What's next?
 
 This example is a good starting point for building your own application with Nile.
 
-You have learned basic Nile concepts and how to use them with Nile SDK and NextJS:
+You have learned basic Nile concepts and how to use them with Nile SDK and NextJS.
 
 You can learn more about Nile's tenant virtualization features in the following tutorials:
 
