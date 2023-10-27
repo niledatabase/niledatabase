@@ -8,15 +8,14 @@ const initialState = {
   message: null,
 }
 
-export function DoneForm({ tenantId, title, complete }: { tenantId: string, title: string, complete: boolean }) {
+export function DoneForm({ tenantId, todo }: { tenantId: string, todo : {id: string, title: string, complete: boolean} }) {
   const [isPending, startTransition] = useTransition();
-
   return (
-        <Checkbox
-          label={<Typography>{title}</Typography>}
-          checked={complete}
+       <Checkbox
+          label={<Typography>{todo.title}</Typography>}
+          checked={todo.complete}
           onChange={() => startTransition(
-            () => { completeTodo(tenantId, title, !complete) }
+            () => { completeTodo(tenantId, todo.id, !todo.complete) }
         )}/>
   )
 }
