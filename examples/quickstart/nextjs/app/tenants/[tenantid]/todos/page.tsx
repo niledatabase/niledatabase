@@ -1,4 +1,3 @@
-
 import styles from '@/app/page.module.css';
 import Typography from '@mui/joy/Typography';
 import List from '@mui/joy/List';
@@ -8,10 +7,10 @@ import Stack from '@mui/joy/Stack';
 import NextLink from 'next/link'
 import MUILink from '@mui/joy/Link';
 import { cookies } from 'next/headers';
-import { getUserId, getUserToken } from "@/utils/AuthUtils";
+import { configureNile, getUserId, getUserToken } from "@/lib/AuthUtils";
 import { AddForm } from "./add-form"
 import { DoneForm } from "./done-form"
-import { getNile } from '@/lib/NileServer';
+import nile from '@/lib/NileServer';
 
 // Forcing to re-evaluate each time. 
 // This guarantees that users will only see their own data and not another user's data via cache
@@ -20,19 +19,12 @@ export const dynamicParams = true
 export const revalidate = 0
 export const fetchCache = 'force-no-store'
 
-
-const nile = getNile();
-
 // Todo: replace "raw" context setting with nicer SDK
 export default async function Page({ params }: { params: { tenantid: string } }) {
-    const nile = getNile();
 
-    // setting context for this page
-    nile.tenantId = params.tenantid;
-    nile.token = getUserToken(cookies().get('authData'))
-    nile.userId = getUserId(cookies().get('authData')) 
+    configureNile(cookies().get('authData'), params.tenantid);
 
-    console.log("using user " + nile.userId + " for tenant " + nile.tenantId);
+    console.log("showing todos for user " + nile.userId + " for tenant " + nile.tenantId);
     const todos = await nile.db("todos").select("*"); // no need for where clause because we previously set Nile context
     console.log("todos:" + JSON.stringify(todos));
     // Get tenant name doesn't need any input parameters because it uses the tenant ID from the context
@@ -44,14 +36,14 @@ export default async function Page({ params }: { params: { tenantid: string } })
                 <MUILink href="/tenants" component={NextLink} justifyContent={"center"}>(Back to tenant selection) </MUILink>
               <List variant="plain" size="lg">
                 <ListItem>
-                  <AddForm />
+                  <AddForm tenantid={nile.tenantId!} />
                 </ListItem>
                 <ListDivider />
                   {todos.map((todo: any) => (
                     <div key={todo.id} style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>
                       {/* TODO: todos need IDs */}
                       <ListItem key={todo.id}>
-                      <DoneForm title={todo.title} complete={todo.complete}/>
+                      <DoneForm tenantId={nile.tenantId!} title={todo.title} complete={todo.complete}/>
                       </ListItem>
                       <ListDivider />
                     </div>
@@ -59,5 +51,4 @@ export default async function Page({ params }: { params: { tenantid: string } })
               </List>
             </Stack>
     );
-
   }

@@ -2,11 +2,18 @@
 // ^^^ This has to run on the server because it uses database operations and updates the cache
 
 import { revalidatePath } from 'next/cache'
-import { getNile } from '@/lib/NileServer';
+import { cookies } from 'next/headers';
+import nile from '@/lib/NileServer';
+import { configureNile } from '@/lib/AuthUtils';
 
-const nile = getNile();
-export async function addTodo(prevState: any, formData: FormData) {
+// We to configure Nile in each async function because
+// the SDK doesn't support references to pre-configured instances
+// TODO: replace with Nile instances when the SDK supports this
+
+export async function addTodo(tenantId: string, prevState: any, formData: FormData) {
+    console.log("got tenant id:" + tenantId)
     const title = formData.get('todo')
+    configureNile(cookies().get('authData'), tenantId);
     console.log("adding Todo " + title + " for tenant:" + nile.tenantId + " for user:" + nile.userId);
     try {
         // need to set tenant ID because it is a required field
@@ -18,10 +25,11 @@ export async function addTodo(prevState: any, formData: FormData) {
     }
   }
 
-export async function completeTodo( title:string, complete: boolean) {
-    console.log("updating Todo " + title + " to complete:" + complete + " for tenant:" + nile.tenantId + " for user:" + nile.userId);
+export async function completeTodo( tenantId: string, title:string, complete: boolean) {
+        configureNile(cookies().get('authData'), tenantId);
+        console.log("updating Todo " + title + " for tenant:" + nile.tenantId + " for user:" + nile.userId);
     try {
-        // no need for tenant ID in the where clause since it is part of the context
+        // Tenant ID and user ID are in the context, so we don't need to specify them as query filters
         await nile.db("todos").update({complete: complete}).where({title: title})
         revalidatePath('/tenants/${tenantID}/todos')
     } catch (e) {

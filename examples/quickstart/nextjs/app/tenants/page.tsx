@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import styles from '../page.module.css';
-import { getUserId, getUserName, getUserToken } from "@/utils/AuthUtils";
+import { configureNile, getUserName } from "@/lib/AuthUtils";
 import NextLink from 'next/link'
 import MUILink from '@mui/joy/Link';
 import Card from '@mui/joy/Card';
@@ -11,8 +11,7 @@ import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import {AddForm} from '@/app/tenants/add-form';
-import {getNile} from '@/lib/NileServer'
-
+import nile from '@/lib/NileServer'
 
 // Forcing to re-evaluate each time. 
 // This guarantees that users will only see their own data and not another user's data via cache
@@ -22,12 +21,8 @@ export const revalidate = 0
 export const fetchCache = 'force-no-store'
 
 export default async function Page() {
-  // Get user details from the auth cookie and use them to set Nile context
-  const nile = getNile();
-  nile.token = getUserToken(cookies().get('authData'))
-  nile.userId = getUserId(cookies().get('authData'))
-  nile.tenantId = null; // clear tenant ID since we need to list all tenants here
-  console.log("userId:" + nile.userId); // this is set in the layout
+  configureNile(cookies().get('authData'), null); // we don't have a tenant yet
+  console.log("showing tenants page for user: " + nile.userId);
   let tenants:any = [];
   
   if (nile.userId) {
@@ -37,6 +32,7 @@ export default async function Page() {
       .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
       .where("tenant_users.user_id", "=", nile.userId);
   };
+
   return (
         <div className={styles.center}>
           <Card  variant="outlined"> {/* TODO: need drop shadow */}
@@ -60,7 +56,6 @@ export default async function Page() {
                 <Typography level="body-md" textAlign="center"> You are logged in as {getUserName(cookies().get('authData'))} <MUILink href="/logout" component={NextLink}>(Logout)</MUILink></Typography>
           </CardContent>
           </Card>
-
         </div>
   );
 }

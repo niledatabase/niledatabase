@@ -13,8 +13,9 @@ const initialState = {
   message: null,
 }
 
-export function AddForm() {
-  const [state, formAction] = useFormState(addTodo, initialState)
+export function AddForm({ tenantid }: { tenantid: string }) {
+  const addTodoWithTenant = addTodo.bind(null, tenantid);
+  const [state, formAction] = useFormState(addTodoWithTenant, initialState);
 
   return (
     <form name="newtodo" id="newtodo" action={formAction} style={{display:'flex', flexWrap:'nowrap', width:'100%'}}>

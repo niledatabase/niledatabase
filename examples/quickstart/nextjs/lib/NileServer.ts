@@ -4,12 +4,7 @@ import Server from '@niledatabase/server';
 // Initialize the Nile server object for reuse in all pages
 // Note that the Nile server configuration points to Nile APIs as the base path
 
-  export const getNile = () => {
-    //@ts-ignore
-    if (!global.nile) {
-    // save Nile instance in global object for reuse
-    //@ts-ignore
-      global.nile = Server({
+const nile =  Server({
         workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
         database: String(process.env.NEXT_PUBLIC_DATABASE),
         api: {
@@ -22,8 +17,6 @@ import Server from '@niledatabase/server';
             password: process.env.NILE_PASSWORD,
           },
         },
-      });
-    }
-        //@ts-ignore
-    return global.nile;
-}
+       });
+
+export default nile;

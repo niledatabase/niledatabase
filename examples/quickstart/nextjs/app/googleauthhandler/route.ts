@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import { cookies } from 'next/headers';
-import { NileJWTPayload, cookieOptions, toCookieData} from '@/utils/AuthUtils';
+import { NileJWTPayload, cookieOptions, toCookieData} from '@/lib/AuthUtils';
 
 // Google SSO redirect posts Nile's response to this route
 // This route then redirects the user to the appropriate page

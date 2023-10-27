@@ -3,14 +3,13 @@
 
 import { revalidatePath } from 'next/cache'
 
-import { getUserToken } from "@/utils/AuthUtils";
+import { configureNile} from "@/lib/AuthUtils";
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation'
-import { getNile } from '@/lib/NileServer';
-
-const nile = getNile();
+import nile from '@/lib/NileServer';
 
 export async function createTenant(prevState: any, formData: FormData) {
+    configureNile(cookies().get('authData'), null); // we don't have a tenant yet
     const tenantName = formData.get('tenantname')?.toString();
     if (!tenantName) {
         return { message: 'No tenant name provided' }
@@ -27,7 +26,7 @@ export async function createTenant(prevState: any, formData: FormData) {
       });
       const tenant = await createTenantResponse.json();
       tenantID = tenant.id;
-      console.log('tenantID', tenantID);
+      console.log('created tenant with tenantID: ', tenantID);
       revalidatePath('/tenants')
       success = true;
     } catch (e) {
