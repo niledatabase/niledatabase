@@ -8,37 +8,36 @@ export const metadata = {
 
 Retrieve information about the holder of an access token.
 
-    <div className="grid grid-cols-2 gap-4">
-    Use the JWT generated during [user creation](/docs/reference/api-reference/users/create-user) or [user login](/docs/reference/api-reference/users/login-user) as a bearer token. (If you use your developer token, this will return 404.)
-    <CodeGroups
-      title={"Identify User Request"}
-      method={"GET"}
-      pathname={"/workspaces/:workspaceSlug/databases/:databaseName/users/me"}
-    >
-      ```bash
-      curl 'https://api.thenile.dev/workspaces/<string>/databases/<string>/users/me' \
-      --header 'Authorization: Bearer <string>'
-        ```
-    </CodeGroups>
-    The response will contain the user id, email address and tenants associated with the holder of the access token.
-    <CodeGroups
-      title={"Identify User Response"}
-      response={"200"}
-      pathname={"/workspaces/:workspaceSlug/databases/:databaseName/users/me"}
-    >
-      ```json
-      {
-        "id": "018b6216-27a1-7e2b-aa83-67d7ba500982",
-        "tenants": [
-          "018b61ec-af9e-77e5-b27f-77239cd4a0bc"
-        ],
-        "email": "an.important.user@mail.tld",
-        "name": "Important User",
-        "givenName": null,
-        "familyName": null,
-        "picture": null
-      }
+<div className="grid grid-cols-2 gap-4">
+  Use the JWT generated during [user creation](/docs/reference/api-reference/users/create-user) or [user login](/docs/reference/api-reference/users/login-user) as a bearer token. (If you use your developer token, this will return 404.)
+  <CodeGroups
+    title={"Identify User Request"}
+    method={"GET"}
+    pathname={"/workspaces/:workspaceSlug/databases/:databaseName/users/me"}
+  >
+    ```bash
+    curl 'https://api.thenile.dev/workspaces/<string>/databases/<string>/users/me' \
+    --header 'Authorization: Bearer <string>'
       ```
-    </CodeGroups>
-
+  </CodeGroups>
+  The response will contain the user id, email address and tenants associated with the holder of the access token.
+  <CodeGroups
+    title={"Identify User Response"}
+    response={"200"}
+    pathname={"/workspaces/:workspaceSlug/databases/:databaseName/users/me"}
+  >
+    ```json
+    {
+      "id": "018b6216-27a1-7e2b-aa83-67d7ba500982",
+      "tenants": [
+        "018b61ec-af9e-77e5-b27f-77239cd4a0bc"
+      ],
+      "email": "an.important.user@mail.tld",
+      "name": "Important User",
+      "givenName": null,
+      "familyName": null,
+      "picture": null
+    }
+    ```
+  </CodeGroups>
 </div>
