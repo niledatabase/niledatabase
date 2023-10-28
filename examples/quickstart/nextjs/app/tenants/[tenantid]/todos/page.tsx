@@ -25,7 +25,7 @@ export default async function Page({ params }: { params: { tenantid: string } })
     configureNile(cookies().get('authData'), params.tenantid);
 
     console.log("showing todos for user " + nile.userId + " for tenant " + nile.tenantId);
-    const todos = await nile.db("todos").select("*"); // no need for where clause because we previously set Nile context
+    const todos = await nile.db("todos").select("*").orderBy("title"); // no need for where clause because we previously set Nile context
     console.log("todos:" + JSON.stringify(todos));
     // Get tenant name doesn't need any input parameters because it uses the tenant ID from the context
     const resp = await nile.api.tenants.getTenant();
@@ -41,9 +41,9 @@ export default async function Page({ params }: { params: { tenantid: string } })
                 <ListDivider />
                   {todos.map((todo: any) => (
                     <div key={todo.id} style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>
-                      {/* TODO: todos need IDs */}
                       <ListItem key={todo.id}>
-                      <DoneForm tenantId={nile.tenantId!} title={todo.title} complete={todo.complete}/>
+
+                      <DoneForm tenantId={nile.tenantId!} todo={todo}/>
                       </ListItem>
                       <ListDivider />
                     </div>

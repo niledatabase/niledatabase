@@ -11,7 +11,6 @@ import { configureNile } from '@/lib/AuthUtils';
 // TODO: replace with Nile instances when the SDK supports this
 
 export async function addTodo(tenantId: string, prevState: any, formData: FormData) {
-    console.log("got tenant id:" + tenantId)
     const title = formData.get('todo')
     configureNile(cookies().get('authData'), tenantId);
     console.log("adding Todo " + title + " for tenant:" + nile.tenantId + " for user:" + nile.userId);
@@ -25,12 +24,12 @@ export async function addTodo(tenantId: string, prevState: any, formData: FormDa
     }
   }
 
-export async function completeTodo( tenantId: string, title:string, complete: boolean) {
+export async function completeTodo( tenantId: string, id:string, complete: boolean) {
         configureNile(cookies().get('authData'), tenantId);
-        console.log("updating Todo " + title + " for tenant:" + nile.tenantId + " for user:" + nile.userId);
+        console.log("updating Todo " + id + " for tenant:" + nile.tenantId + " for user:" + nile.userId);
     try {
         // Tenant ID and user ID are in the context, so we don't need to specify them as query filters
-        await nile.db("todos").update({complete: complete}).where({title: title})
+        await nile.db("todos").update({complete: complete}).where({id: id})
         revalidatePath('/tenants/${tenantID}/todos')
     } catch (e) {
         console.error(e)

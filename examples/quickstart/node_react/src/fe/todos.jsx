@@ -57,13 +57,13 @@ export default function Todos() {
               return <Typography level="h2" textAlign={"center"}> Error: {todos.message}</Typography>
             } else {
             return todos.map((todo) => (
-              <div key={todo.title} style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>
+              <div key={todo.id} style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>
               {/* TODO: todos need IDs */}
-              <ListItem key={todo.title}>
+              <ListItem key={todo.id}>
               <Checkbox 
                   label={<Typography>{todo.title}</Typography>}
                   checked={todo.complete} 
-                  onChange={() => completeTodo(tenantId, todo.title, !todo.complete)}/>
+                  onChange={() => completeTodo(tenantId, todo)}/>
               </ListItem>
               <ListDivider />
             </div>
@@ -99,15 +99,16 @@ export default function Todos() {
       });
   };
 
-  function completeTodo(tenantId, title, complete) {
+  function completeTodo(tenantId, todo) {
+    const newComplete = !todo.complete;
     fetch(`/api/tenants/${tenantId}/todos`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title: title,
-        complete: complete,
+        id: todo.id,
+        complete: newComplete,
       }),
     })
       .then((resp) => {
@@ -116,11 +117,7 @@ export default function Todos() {
           throw new Error("Error: " + resp.message + " " + resp.status);
         }
         var curr_state = todos.slice(); // need to copy so React will notice state change
-        curr_state.forEach((todo) => {
-          if (todo.title === title) {
-            todo.complete = complete;
-          }
-        });
+        curr_state.find((t) => t.id === todo.id).complete = newComplete;
         setTodos(curr_state);
       })
       .catch((error) => {
