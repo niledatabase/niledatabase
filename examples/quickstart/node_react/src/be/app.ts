@@ -145,11 +145,10 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
 
 // update tasks for tenant - note that we don't handle partial updates here
 // No need for where clause because we have the tenant in the context
-// TODO: This should be for specific todo ID, not all todos with same title
 app.put("/api/tenants/:tenantId/todos", async (req, res) => {  
   try {
-    const { title, complete } = req.body;
-    await nile.db("todos").update('complete', complete).where("title", title);
+    const { id, complete } = req.body;
+    await nile.db("todos").update('complete', complete).where("id", id);
     res.sendStatus(200);
   } catch(error: any) {
     console.log("error updating tasks: " + error.message);
