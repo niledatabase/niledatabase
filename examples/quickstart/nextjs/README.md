@@ -4,7 +4,7 @@ This template shows how to use Nile with NextJS 13 for a multi-tenant todo list 
 
 - [Live demo](https://nextjs-quickstart-omega.vercel.app)
 - [Video guide - TBD](TBD)
-- [Step by step guide](https://niledatabase-www.vercel.app/docs/getting-started/languages/nextjs)
+- [Step by step guide](https://thenile.dev/docs/getting-started/languages/nextjs)
 
 ## Getting Started
 
