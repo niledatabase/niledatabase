@@ -1,16 +1,15 @@
 import express from "express";
-import {db, tenantDB, tenantContext} from './db/db';
+import {tenantDB, tenantContext} from './db/db';
 import { tenants as tenantSchema, todos as todoSchema } from './db/schema';
 import { eq } from "drizzle-orm";
-import { pathToRegexp, match } from "path-to-regexp";
-
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+import { match } from "path-to-regexp";
 
 const PORT = process.env.PORT || 3001;
 
+const app = express();
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // set the tenant ID in the context based on the URL parameter
 app.use((req, res, next) => {
@@ -105,7 +104,6 @@ app.put("/api/tenants/:tenantId/todos", async (req, res) => {
 // get all tasks for tenant
 app.get("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
-    const tenantId = req.params.tenantId;
     // No need for a "where" clause here because we are setting the tenant ID in the context
     const todos = await tenantDB(async (tx) => {
       return await tx.select().from(todoSchema);

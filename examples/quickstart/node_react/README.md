@@ -4,7 +4,7 @@ This template shows how to use Nile in NodeJS and React for a multi-tenant todo 
 
 - [Live demo](https://demo-todo-node.fly.dev)
 - [Video guide](https://youtu.be/6Lm3-YeLzks)
-- [Step by step guide](https://niledatabase-www.vercel.app/docs/getting-started/languages/node)
+- [Step by step guide](https://thenile.dev/docs/getting-started/languages/node)
 
 ## Getting Started
 

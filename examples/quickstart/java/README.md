@@ -4,7 +4,7 @@ This template shows how to use Nile with Java and Spring Boot 3 for building a m
 
 - [Live demo](https://java-quickstart-demo.vercel.app)
 - [Video guide](https://youtu.be/xnji861fsf4?feature=shared)
-- [Step by step guide](https://niledatabase-www.vercel.app/docs/getting-started/languages/java)
+- [Step by step guide](https://thenile.dev/docs/getting-started/languages/java)
 
 
 ## Getting Started

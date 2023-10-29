@@ -1,9 +1,9 @@
-# Multi-tenant todo list backend service with Nile, Express and Drizzle
+# Multi-tenant todo list backend service with Nile and Drizzle
 
 This example shows how to use Nile in NodeJS and React for a multi-tenant todo list application.
 
 - [Video guide - TBD]()
-- [Step by step guide - TBD]()
+- [Step by step guide](https://thenile.dev/docs/getting-started/languages/drizzle)
 
 ## Getting Started
 
