@@ -28,11 +28,11 @@ In the left-hand menu, click on "Settings" and then select "Credentials". Genera
 
 ### 4. Setting the environment
 
-If you haven't cloned this repository yet, now will be an excellent time to do so.
+If you haven't cloned this project yet, now will be an excellent time to do so. Since it uses NextJS, we can use `create-next-app` for this:
 
 ```bash
-git clone https://github.com/niledatabase/niledatabase
-cd niledatabase/examples/quickstart/nextjs
+npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs nile-todo
+cd nile-todo
 ```
 
 Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name.
