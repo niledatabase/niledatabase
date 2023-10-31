@@ -16,5 +16,8 @@ export var useMDXComponents = function () {
     Row: function () {
       return null;
     },
+    CopyToClipboard: function () {
+      return null;
+    },
   };
 };

@@ -1,9 +1,10 @@
-import type { MDXComponents } from "mdx/types";
-import Cards, { Card } from "./app/docs/_components/Cards";
-import CodeGroups from "./app/docs/_components/CodeGroups";
-import { Col, Row } from "./app/docs/_components/Layout";
-import Head from "next/head";
-import Image from "next/image";
+import type { MDXComponents } from 'mdx/types';
+import Cards, { Card } from './app/docs/_components/Cards';
+import CodeGroups from './app/docs/_components/CodeGroups';
+import CopyToClipboard from './app/docs/_components/CopyToClipboard';
+import { Col, Row } from './app/docs/_components/Layout';
+import Head from 'next/head';
+import Image from 'next/image';
 
 // This file allows you to provide custom React components
 // to be used in MDX files. You can import and use any
@@ -23,5 +24,8 @@ export const useMDXComponents = (components: MDXComponents): MDXComponents => {
     Row: (props) => <Row {...props} />,
     head: ({ children }) => <Head>{children}</Head>,
     Image: (props) => <Image {...props} />,
+    pre: ({ children }) => (
+      <CopyToClipboard>{children as JSX.Element}</CopyToClipboard>
+    ),
   };
 };
