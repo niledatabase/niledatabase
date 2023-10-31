@@ -412,3 +412,7 @@ iframe {
 .prose pre {
   width: 100%;
 }
+
+.code-block:hover svg > g {
+  opacity: 1;
+}
