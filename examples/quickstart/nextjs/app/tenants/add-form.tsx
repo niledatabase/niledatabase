@@ -1,7 +1,6 @@
 'use client'
 // @ts-expect-error -- useFormState is new and lacks type definitions
 import { experimental_useFormState as useFormState } from 'react-dom'
-import { experimental_useFormStatus as useFormStatus } from 'react-dom'
 import { useState } from 'react'
 import Button from '@mui/joy/Button'
 import Typography from '@mui/joy/Typography'

@@ -3,20 +3,17 @@
 
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers';
-import nile from '@/lib/NileServer';
-import { configureNile } from '@/lib/AuthUtils';
+import { configureNile} from '@/lib/NileServer';
 
-// We to configure Nile in each async function because
-// the SDK doesn't support references to pre-configured instances
-// TODO: replace with Nile instances when the SDK supports this
 
 export async function addTodo(tenantId: string, prevState: any, formData: FormData) {
+    // Each  a Nile instance is connected to our current tenant DB with the current user permissions
+    const tenantNile = configureNile(cookies().get('authData'), tenantId);
     const title = formData.get('todo')
-    configureNile(cookies().get('authData'), tenantId);
-    console.log("adding Todo " + title + " for tenant:" + nile.tenantId + " for user:" + nile.userId);
+    console.log("adding Todo " + title + " for tenant:" +tenantNile.tenantId + " for user:" + tenantNile.userId);
     try {
-        // need to set tenant ID because it is a required field
-        await nile.db("todos").insert({tenant_id: nile.tenantId, title: title, complete: false})
+        // need to set tenant ID because it is part of the primary key
+        await tenantNile.db("todos").insert({tenant_id: tenantNile.tenantId, title: title, complete: false})
         revalidatePath('/tenants/${tenantID}/todos')
     } catch (e) {
         console.error(e)
@@ -25,11 +22,12 @@ export async function addTodo(tenantId: string, prevState: any, formData: FormDa
   }
 
 export async function completeTodo( tenantId: string, id:string, complete: boolean) {
-        configureNile(cookies().get('authData'), tenantId);
-        console.log("updating Todo " + id + " for tenant:" + nile.tenantId + " for user:" + nile.userId);
+        // Each  a Nile instance is connected to our current tenant DB with the current user permissions
+        const tenantNile = configureNile(cookies().get('authData'), tenantId);
+        console.log("updating Todo " + id + " for tenant:" + tenantNile.tenantId + " for user:" + tenantNile.userId);
     try {
         // Tenant ID and user ID are in the context, so we don't need to specify them as query filters
-        await nile.db("todos").update({complete: complete}).where({id: id})
+        await tenantNile.db("todos").update({complete: complete}).where({id: id})
         revalidatePath('/tenants/${tenantID}/todos')
     } catch (e) {
         console.error(e)
