@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import styles from '../page.module.css';
-import { configureNile, getUserName } from "@/lib/AuthUtils";
+import {getUserName } from "@/lib/AuthUtils";
 import NextLink from 'next/link'
 import MUILink from '@mui/joy/Link';
 import Card from '@mui/joy/Card';
@@ -11,7 +11,7 @@ import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import {AddForm} from '@/app/tenants/add-form';
-import nile from '@/lib/NileServer'
+import {configureNile} from '@/lib/NileServer'
 
 // Forcing to re-evaluate each time. 
 // This guarantees that users will only see their own data and not another user's data via cache
@@ -21,7 +21,9 @@ export const revalidate = 0
 export const fetchCache = 'force-no-store'
 
 export default async function Page() {
-  configureNile(cookies().get('authData'), null); // we don't have a tenant yet
+  // This is the tenant selector, so we use Nile with just the current user and reset tenant_id if already set
+  // if Nile is already configured for this user, it will reuse the existing Nile instance
+  const nile = configureNile(cookies().get('authData'), undefined); 
   console.log("showing tenants page for user: " + nile.userId);
   let tenants:any = [];
   

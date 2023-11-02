@@ -1,4 +1,5 @@
 import Server from '@niledatabase/server';
+import AuthCookieData from '@/lib/AuthUtils';
 
 
 // Initialize the Nile server object for reuse in all pages
@@ -20,3 +21,16 @@ const nile =  Server({
        });
 
 export default nile;
+
+// This returns a reference to the Nile server object, configured with the user's auth token and tenantID (if any)
+// If Nile already have a connection to the same tenant database for the same user, we'll return an existing connection
+export function configureNile(rawAuthCookie: any, tenantId: string | null | undefined)  {
+    const authData = JSON.parse(rawAuthCookie.value) as AuthCookieData;
+    return nile.getInstance({
+      tenantId: tenantId,
+      userId: authData.tokenData?.sub,
+      api: {
+        token: authData.accessToken,
+      }
+    })
+}
