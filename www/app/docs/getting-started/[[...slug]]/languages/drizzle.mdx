@@ -8,7 +8,7 @@ export const metadata = {
 
 # Build a backend service with Nile and Drizzle
 
-In this tutorial, you will learn about Nile's tenant virtualization features, while building a backend service for a todo list application. 
+In this tutorial, you will learn about Nile's tenant virtualization features, while building a backend service for a todo list application.
 We'll use Drizzle as the ORM to interact with the database, Express as the web framework and NodeJS as the runtime.
 
 ## 1. Create a database
@@ -39,7 +39,7 @@ See the `tenant_id` column? By specifying this column, You are making the table 
 
 ## 3. Get credentials
 
-In the left-hand menu, click on "Settings" and then select "Connection". 
+In the left-hand menu, click on "Settings" and then select "Connection".
 
 Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
 
@@ -109,7 +109,7 @@ You should see all the todos you created, and the tenants they belong to.
 
 ## 7. How does it work?
 
-Let's take a look at the code. The web application starting point is in ``src/app.ts``. 
+Let's take a look at the code. The web application starting point is in `src/app.ts`.
 
 It creates an Express app, and sets up some of the usual middleware:
 
@@ -119,6 +119,7 @@ app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 ```
+
 The interesting parts are the middleware that sets up the tenant context, and `tenantDB` which wraps Drizzle and passes the tenant context to Nile.
 
 Lets look at them one by one.
@@ -129,17 +130,19 @@ Immediately after the middleware that sets up the Express app, we add a middlewa
 
 ```typescript
 app.use((req, res, next) => {
-  const fn = match("/api/tenants/:tenantId/todos", { decode: decodeURIComponent });
+  const fn = match("/api/tenants/:tenantId/todos", {
+    decode: decodeURIComponent,
+  });
   const m = fn(req.path);
 
   //@ts-ignore
   const tenantId = m?.params?.tenantId;
-  console.log('setting context to tenant: ' + tenantId)
+  console.log("setting context to tenant: " + tenantId);
   tenantContext.run(tenantId, next);
-})
+});
 ```
 
-This may look a bit magical, but let me explain. This middleware grabs the tenant id from the URL and sets it in the tenant context. 
+This may look a bit magical, but let me explain. This middleware grabs the tenant id from the URL and sets it in the tenant context.
 This context is an instance of `AsyncLocalStorage` - which provides a way to store data that is global and unique per execution context.
 The data we are storing is the tenant ID, and by passing `next` as the second argument to `tenantContext.run` we are making sure that all the code that runs after this middleware will have access to the tenant ID.
 
@@ -149,18 +152,19 @@ Now lets take a look at `db/db.ts` - this is where we set up Drizzle and connect
 
 ```typescript
 const client = new Client({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
 });
 
 // Drizzle expects the connection to be open when using a client. Alternatively, you can use a pool
-await client.connect()
+await client.connect();
 
 // check the connection
-const res = await client.query('SELECT $1::text as message', ['Client connected to Nile'])
-console.log(res.rows[0].message)
+const res = await client.query("SELECT $1::text as message", [
+  "Client connected to Nile",
+]);
+console.log(res.rows[0].message);
 
-
-export const db = drizzle(client,{ logger: true });
+export const db = drizzle(client, { logger: true });
 ```
 
 But the interesting part is the `tenantDB` function. This is where we wrap Drizzle with Nile's tenant virtualization features.
@@ -170,30 +174,28 @@ We get the tenant ID from the tenant context, which we set earlier in the middle
 
 ```typescript
 return db.transaction(async (tx) => {
-            const tenantId = tenantContext.getStore();
-            // clean old context
-            await tx.execute(
-                sql`reset nile.tenant_id`
-            );
-            // if there's a tenant ID, set it in the context
-            if (tenantId) {
-                await tx.execute(sql`set nile.tenant_id = '${sql.raw(tenantId)}'`);
-            }
-            return cb(tx)
-        })
+  const tenantId = tenantContext.getStore();
+  // clean old context
+  await tx.execute(sql`reset nile.tenant_id`);
+  // if there's a tenant ID, set it in the context
+  if (tenantId) {
+    await tx.execute(sql`set nile.tenant_id = '${sql.raw(tenantId)}'`);
+  }
+  return cb(tx);
+});
 ```
 
 ### 7.3 Tieing it all together - handling a request for all todos for a tenant
 
 Now that we understand how the tenant context and `tenantDB` work, lets take a look at how we use them to handle a request for all todos for a tenant.
-We are using the `tenantDB` function to execute a query that returns all the todos for a tenant. 
+We are using the `tenantDB` function to execute a query that returns all the todos for a tenant.
 The query doesn't need to include the tenant ID in the `where` clause, because `tenantDB` will set it in the context.
 
 ```typescript
-    const todos = await tenantDB(async (tx) => {
-      return await tx.select().from(todoSchema);
-    })
-    res.json(todos);
+const todos = await tenantDB(async (tx) => {
+  return await tx.select().from(todoSchema);
+});
+res.json(todos);
 ```
 
 ### 7.4 But wait, what's todoSchema and tenantSchema?
