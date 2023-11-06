@@ -132,7 +132,7 @@ All the signup and login methods eventually route users to `/tenants`. You'll fi
 The first thing we do in this page is to configure Nile SDK for the current user:
 
 ```typescript
-configureNile(cookies().get('authData'), null);
+configureNile(cookies().get("authData"), null);
 ```
 
 This method configures a shared instance of `nile` that is used throughout the application.
@@ -151,10 +151,10 @@ const nile =  Server(
 The `basePath` configuration is the URL that `nile.api` methods will call. This component calls Nile APIs directly, and therefore we set `basePath` to `NEXT_PUBLIC_NILE_API`.
 Note that there are other components, for example basic login and signup that for web security reasons cannot call Nile APIs directly. Instead, they should call the application server, which in turn calls Nile APIs. In this case, the `basePath` should be set to `NEXT_PUBLIC_BASE_PATH`.
 
-So every page, route and function in our app can use the same `nile` instance to access Nile APIs and DB. 
+So every page, route and function in our app can use the same `nile` instance to access Nile APIs and DB.
 
 But, we need to make sure we are using the right user and tenant context.
-So we call `configureNile` and pass in the cookies and the tenant ID. 
+So we call `configureNile` and pass in the cookies and the tenant ID.
 After this point, we can use `nile` to access the database and APIs, and it will use the right user and tenant context.
 
 ### 7.2 Listing tenants
@@ -163,10 +163,10 @@ Next thing we do in `app/tenants/page.tsx` is to list all the tenants for the cu
 We use Nile SDK to query the database for all the tenants that the current user is a member of:
 
 ```typescript
-  tenants = await db("tenants")
-    .select("tenants.id", "tenants.name")
-    .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-    .where("tenant_users.user_id", "=", nile.userId);
+tenants = await db("tenants")
+  .select("tenants.id", "tenants.name")
+  .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
+  .where("tenant_users.user_id", "=", nile.userId);
 ```
 
 and then we render the list of tenants as a list of links:
@@ -217,7 +217,7 @@ We could have used the same logic to list todos for a tenant as we did for listi
 Instead of using SQL `where` clauses to get only todos for this specific tenant, we are relying on Nile's tenant isolation feature:
 
 ```typescript
-configureNile(cookies().get('authData'), params.tenantid);
+configureNile(cookies().get("authData"), params.tenantid);
 const todos = await nile.db("todos").select("*"); // no need for where clause because we previously set Nile context
 ```
 
@@ -239,18 +239,20 @@ You can find the logic for adding a task in `app/tenants/[tenantid]/todos/todo-a
 As you can see, we again use the tenant context to insert the new task:
 
 ```typescript
-configureNile(cookies().get('authData'), tenantId);
-await nile.db("todos").insert({tenant_id: nile.tenantId, title: title, complete: false})
+configureNile(cookies().get("authData"), tenantId);
+await nile
+  .db("todos")
+  .insert({ tenant_id: nile.tenantId, title: title, complete: false });
 ```
 
 or update an existing one:
 
 ```typescript
-configureNile(cookies().get('authData'), tenantId);
-await nile.db("todos").update({complete: complete}).where({title: title})
+configureNile(cookies().get("authData"), tenantId);
+await nile.db("todos").update({ complete: complete }).where({ title: title });
 ```
 
-By setting the context, Nile will validate that the user indeed has permission to add tasks for this tenant, 
+By setting the context, Nile will validate that the user indeed has permission to add tasks for this tenant,
 and will make sure we only update tasks for the current tenant.
 
 We don't want just anyone handing us tasks and telling us to do them, right?

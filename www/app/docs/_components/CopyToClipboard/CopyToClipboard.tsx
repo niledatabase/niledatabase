@@ -1,5 +1,5 @@
-'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+"use client";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function CopyToClipboard({
   children,
@@ -18,9 +18,9 @@ export default function CopyToClipboard({
         .catch((e) => {
           // iframes may cause this to fail, so be quiet.
         });
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         // *, because this is just going to be publically accessible docs
-        window.parent.postMessage({ copy: textInput.current.textContent }, '*');
+        window.parent.postMessage({ copy: textInput.current.textContent }, "*");
       }
     }
     timer.current = setTimeout(() => {
@@ -34,7 +34,7 @@ export default function CopyToClipboard({
     };
   }, []);
 
-  const showCopyButton = children?.props.className?.includes('hljs');
+  const showCopyButton = children?.props.className?.includes("hljs");
 
   if (!showCopyButton) {
     return <pre>{children}</pre>;
@@ -54,7 +54,7 @@ export default function CopyToClipboard({
           width="14px"
           height="14px"
           className={`${
-            copied ? 'opacity-100' : 'opacity-0'
+            copied ? "opacity-100" : "opacity-0"
           } absolute transition-opacity`}
         >
           <path
@@ -71,7 +71,7 @@ export default function CopyToClipboard({
           viewBox="0 0 14 14"
           fill="none"
           className={`${
-            copied ? 'opacity-0' : 'opacity-100'
+            copied ? "opacity-0" : "opacity-100"
           } absolute transition-opacity`}
         >
           <g opacity="0.5">
