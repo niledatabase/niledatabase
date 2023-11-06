@@ -3,7 +3,7 @@ name: Format with prettier
 on:
   pull_request:
     branches:
-      - 'master'
+      - 'main'
 
 jobs:
   format:

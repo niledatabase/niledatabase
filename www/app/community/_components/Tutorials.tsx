@@ -25,8 +25,8 @@ const videos = [
   },
   {
     title: "Built a NextJS application with Nile",
-    videoUrl: "https://www.youtube.com/embed/Eo0dDROnJGg?si=qS4Rg8LAyIkK4zfB"
-  }
+    videoUrl: "https://www.youtube.com/embed/Eo0dDROnJGg?si=qS4Rg8LAyIkK4zfB",
+  },
 ];
 
 export default function Tutorials() {
