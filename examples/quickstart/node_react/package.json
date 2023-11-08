@@ -29,7 +29,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.4",
