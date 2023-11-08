@@ -9,8 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@niledatabase/react": "^1.0.0-alpha.197",
-    "@niledatabase/server": "^1.0.0-alpha.197",
+    "@mui/joy": "^5.0.0-beta.14",
+    "@niledatabase/react": "latest",
+    "@niledatabase/server": "latest",
     "@types/node": "^20.6.3",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
