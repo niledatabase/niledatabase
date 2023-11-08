@@ -94,25 +94,23 @@ Install dependencies with `yarn install` or `npm install`.
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 If all went well, your browser should show you the first page in the app, asking you to login or sign up.
 
-After you sign up as a user of this example app, you'll be able to see this user by going back to Nile Console and running `select * from users` in the query editor.
+After you sign up as a user of this example app, you'll be able to see this user by going back to Nile Console and looking at the users table  
+
+```sql
+select * from users;
+```
 
 Login with the new user, and you can create a new tenant and add tasks for the tenant. You can see the changes in your Nile database by running
 
 ```sql
 select tenants.name, title, complete from
-tenants join todos on tenants.id=todos.tenant_id
+tenants join todos on tenants.id=todos.tenant_id;
 ```
 
 ## 7. How does it work?
@@ -218,7 +216,8 @@ Instead of using SQL `where` clauses to get only todos for this specific tenant,
 
 ```typescript
 configureNile(cookies().get("authData"), params.tenantid);
-const todos = await nile.db("todos").select("*"); // no need for where clause because we previously set Nile context
+-- no need for where clause because we previously set Nile context
+const todos = await nile.db("todos").select("*");
 ```
 
 Note that this time we are configuring Nile with the tenant ID too. Previously we only used the user because there was no tenant yet.
