@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mui/joy": "^5.0.0-beta.14",
+    "@mui/joy": "^5.0.0-beta.11",
     "@niledatabase/react": "latest",
     "@niledatabase/server": "latest",
     "@types/node": "^20.6.3",
