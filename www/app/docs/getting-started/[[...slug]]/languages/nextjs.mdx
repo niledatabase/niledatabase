@@ -88,7 +88,11 @@ NEXT_PUBLIC_NILE_API=https://api.thenile.dev
 # AUTH_TYPE=google
 ```
 
-Install dependencies with `yarn install` or `npm install`.
+Install dependencies
+
+```bash
+npm install
+```
 
 ### 5. Run the application
 
@@ -216,7 +220,7 @@ Instead of using SQL `where` clauses to get only todos for this specific tenant,
 
 ```typescript
 configureNile(cookies().get("authData"), params.tenantid);
--- no need for where clause because we previously set Nile context
+// no need for where clause because we previously set Nile context
 const todos = await nile.db("todos").select("*");
 ```
 
