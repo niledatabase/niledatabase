@@ -17,5 +17,9 @@ const authors: Authors = {
     name: "Sriram Subramanian",
     borderColor: "#ECC9A3",
   },
+  joseph: {
+    name: "Joseph Rea",
+    borderColor: "#FDC066",
+  },
 };
 export default authors;

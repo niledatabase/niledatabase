@@ -1,0 +1,190 @@
+export const metadata = {
+  title: "Tenant Virtualization in Postgres with 5 lines of code",
+  authors: ["gwenshap", "joseph"],
+  image: "lines_of_code.png",
+  sizzle:
+    "Nile's serverless Postgres promises easy tenant isolation with a single database experience, requiring minimal code. Doubtful? A quick code walkthrough will prove it.",
+  tags: ["database", "serverless", "postgres", "saas", "multitenant", "nextjs"],
+};
+
+[We make big claims about Nile's serverless Postgres](https://www.thenile.dev/blog/app/blog/introducing-nile).
+We say that we provide seamless tenant isolation with a single-database experience, and you can use all this with very little code.
+Perhaps you are skeptical? Lets take dive into a code example and you'll see for yourself.
+
+The snippets I'll share here are part of our [NextJS template](https://www.thenile.dev/templates/NextJS%20application%20with%20Nile).
+You can **[sign up for our waitlist](https://www.thenile.dev/)** today to try it out.
+
+Nile is a serverless Postgres database designed for modern SaaS applications. Modern SaaS applications are multi-tenant.
+Nile virtualizes tenants to enable seamless tenant isolation (data and performance isolation), per-tenant backups, and placement
+on multi-tenant or dedicated infrastructure anywhere on the planet. You can do all this with the experience of a single
+Postgres! You don't have to manage multiple databases, build complex permissions for isolation, or write buggy scripts
+to read specific tenant data from backups. On top of the tenant model, we provide opt-in user management capabilities,
+customer-specific vector embeddings, and instant tenant admin dashboards. You can do all of this with very little code.
+Moreover, Nile's Postgres is built for the cloud, enabling effortless scaling and a true serverless experience.
+
+## 5 lines of code that do… everything
+
+Here is a key snippet from our NextJS template, which use Nile's SDK to connect to Nile and get some data.
+These four lines handle connection pooling, data isolation, routing, authentication and enforcing access rules without RLS.
+
+```tsx
+const tenantNile = configureNile(cookies().get("authData"), params.tenantid);
+console.log("showing todos for tenant " + tenantNile.tenantId);
+const todos = await tenantNile.db("todos").select("*").orderBy("title");
+const resp = await tenantNile.api.tenants.getTenant();
+const tenant = await resp.json();
+```
+
+At surface level, you can see how this implement the following functionality:
+
+- Retrieve a connection to Nile
+- Query Nile for a list of todos, based on the tenant who made the request
+- Call the Nile API to get the name of that tenant
+
+The [rest of the page](https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/nextjs/app/tenants/%5Btenantid%5D/todos/page.tsx#L33)
+is just a bit of React that renders this information nicely on the screen.
+
+While these few lines of code look simple, there's a lot you don't see here. Nile handles all the stuff you no longer need
+to worry about:
+
+**Connecting to a virtualized database for a specific tenant**. All you have to do is provide Nile a tenant ID and user auth data and a secure connection will be made for you. The virtual tenant database can be on shared or dedicated infrastructure. Maybe they are placed in a different region. Nile handles the routing for you.
+
+**Connection management**. Nile SDK will reuse existing connections where possible, or start new connections as needed. Additionally, because Nile includes built-in server-side connection pooling, the overhead of starting new connections is reduced, so one less thing to worry about.
+
+**Where clauses every...where**. Looking back at the query that gets a list of todos,
+
+```jsx
+await tenantNile.db("todos").select("*").orderBy("title");
+```
+
+Notice it does not have a “where” clause. If you are rolling your own solution for a tenant aware database,
+you may have added `tenant_id` columns to every table in your database. Not only do you need to manage your tenant
+IDs in your app in some fashion, you also need to update all of your SQL to be sure data is “isolated” — but is it? —
+and every query is going to need a `where tenant_id = 'x'`, and sometimes more than one.
+
+You may have opted to escape this problem by using Postgres RLS. This often works well at the beginning, when you only a
+few simple policies. But in our experience, over time the complexity of RLS grows exponentially, as does the time spent
+troubleshooting it and the latency of the queries.
+
+By specifying the tenant, Nile creates a connection specifically to a virtual tenant database which only contains data only
+for a specific tenant.
+
+**User authorization and identity**. When we created the Nile connection, we also added the user's auth data. What if the
+logged-in user doesn’t have access to the current tenant? The query will return an error. Nile enforces the user
+authorization **and** identity for you, on every tenant, for every user.
+
+**API Authentication**. When we make the API call for the tenant name, there's no direct API authentication, nor did we
+specify which tenant id should be used for the request. It just… worked. Because Nile already managed the connection
+(both to the database and API), there is no longer a need to manage any of this directly. Nile already has this
+information and applies it for you.
+
+## How does it even work?
+
+Consider the following detailed list on using a connection to the virtual tenant database in Nile:
+
+1. Connect to Nile
+2. `set nile.tenant_id=....`
+3. ????
+4. Profit (from your successful SaaS)
+
+Which means that all you, a masterful developer, needs to do is to figure out the current tenant for the request
+(in my example, from the path parameters, but it can also come from the headers), get a connection to database
+(usually from a pool), and `set nile.tenant_id=...` before running queries.
+
+While it sounds simple, it turns out that with most things, like figuring out why grandma's cookies are better than yours,
+its is not trivial.
+
+At first glance, it may look like this code does what we need:
+
+```tsx
+await db.raw('set nile.tenant_id=...`);
+const todos = await db("todos").select("*").orderBy("title");
+```
+
+But don't be fooled by these two lines of code. IT'S A TRAP. In the context of a connection pool, the second line is not
+guaranteed to run on the same connection as the first, so while you might think you are working with a connection to the
+virtual tenant DB, you are actually working in two separate ones. The first that sets the tenant context, and the other
+does a select… that returns all of the data in the table. Ooops.
+
+Therefore, we must **guarantee** the queries that are run execute on the _exact_ same connection that has the context.
+And the only way to do that is to control the connection pool. Which is exactly what the NileSDK does. It implements its
+own tenant-aware connection pooling. So when you do `const tenantNile = configureNile(cookies().get('authData'), params.tenantid);`
+You get a connection to the correct virtual tenant db, which allows you to keep using the database with confidence.
+
+The only remaining bit worth mentioning is that `configureNile()` is actually a thin wrapper around Nile's actual methods.
+While it is reasonable to use a single instance and configure it on the fly, you may also want to have multiple
+connection pools for specific tenants as your SaaS app grows. In the example repo, there are two important methods
+used to accomplish this.
+
+The first is the configuration of the main Nile object, `Server()`
+
+```tsx
+const nile = Server({
+  workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
+  database: String(process.env.NEXT_PUBLIC_DATABASE),
+  api: {
+    basePath: String(process.env.NEXT_PUBLIC_NILE_API),
+  },
+  db: {
+    connection: {
+      host: process.env.NILE_DB_HOST,
+      user: process.env.NILE_USER,
+      password: process.env.NILE_PASSWORD,
+    },
+  },
+});
+```
+
+This simply returns an object with what we call “base configuration”. It is a singleton and has it's own connection pool
+(as well as manages its sub-instances' connection pools), but is does not connect to any specific tenant — yet.
+You could do things like list all tenants in the DB, or all users… anything you'd like to do outside of the context of a
+tenant.
+
+Then, for getting a connection to the specific tenant DB, we call `nile.getInstance`
+
+```tsx
+export function configureNile(
+  rawAuthCookie: any,
+  tenantId: string | null | undefined
+) {
+  const authData = JSON.parse(rawAuthCookie.value) as AuthCookieData;
+  return nile.getInstance({
+    tenantId: tenantId,
+    userId: authData.tokenData?.sub,
+    api: {
+      token: authData.accessToken,
+    },
+  });
+}
+```
+
+This creates the configuration that `getInstance` expects out of the path params and the cookie.
+
+We know that different developers have different preferences - maybe the userId is on the path, or maybe the tenantId is in
+the headers. The SDK is flexible enough to support the most complicated use case, but will also work by default by
+setting up it's own auth tenant ID user auth management, but ultimately, it is up to you.
+
+## What if I can't or won't use the Nile SDK?
+
+Listen. We get it. Everyone has their own development flow. Maybe you don't even use JS. Or maybe you do, but you really
+love Drizzle and the two of you are inseparable. We understand developers have the languages and frameworks that they
+love, and Nile will meet you where you are.
+
+For right now, that does mean that you'll have to do some things that Nile SDK does automatically, namely figuring out how
+to grab the tenant Id from each request and apply it to your connection pool, in whatever framework you use.
+
+We have two examples to guide you on how its done. One is [NodeJS with Drizzle](https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/drizzle),
+and the other is [Java with Spring Boot](https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs). Both share common patterns - we use middleware (or interceptors, in Spring terminology) to grab the tenantId, and wrap the connection pool code that runs the queries with a thread-safe context that sets `nile.tenant_id`
+
+### What's next?
+
+The mission of Nile is to enable developers to accelerate the next billion modern SaaS applications.
+Which means that we want to help **you** build an amazing SaaS.
+
+You can try out Nile by **[signing up for our waitlist](https://www.thenile.dev/)** today.
+We are onboarding new users every day. You can get started with one of our **[templates and demos](https://www.thenile.dev/templates)**.
+We would love to have you try out Nile and give us feedback. If you need help, you can reach us on our
+**[GitHub discussion forum](https://github.com/orgs/niledatabase/discussions)** or our
+**[Discord community](https://discord.com/invite/8UuBB84tTy)**.
+
+And don't forget to share your amazing SaaS with us 🙏

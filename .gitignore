@@ -19,6 +19,11 @@ lerna-debug.log*
 .npm
 node_modules
 
+# deps
+!/package-lock.json
+yarn.lock
+!/yarn.lock
+
 # Optional eslint cache
 .eslintcache
 
