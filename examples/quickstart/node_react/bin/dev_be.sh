@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
-ts-node src/be/app.ts
+cd src/be
+cp ../../.env .
+node --loader ts-node/esm app.ts
