@@ -19,7 +19,7 @@ const authors: Authors = {
   },
   joseph: {
     name: "Joseph Rea",
-    borderColor: "#FDC066"
-  }
+    borderColor: "#FDC066",
+  },
 };
 export default authors;
