@@ -59,7 +59,7 @@ Install dependencies with `npm install`.
 
 ### 5. Running the app
 
-You can start both NodeJS api server and the React frontend with `npm start`.
+You can start both NodeJS api server and the React frontend with `npm run start`.
 
 If all went well, your browser should show you the first page in the app, asking you to create a tenant. Feel free to create a tenant or 5.
 
