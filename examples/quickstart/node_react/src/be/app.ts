@@ -8,12 +8,8 @@ import cookieParser from "cookie-parser";
 export const nile = Server({
   workspace: String(process.env.NILE_WORKSPACE), 
   database: String(process.env.NILE_DATABASE),
-  api: {
-    basePath: String(process.env.NILE_API_BASE_PATH)
-  },
   db: {
     connection: {
-      host: process.env.NILE_DB_HOST,
       user: process.env.NILE_DB_USER,
       password: process.env.NILE_DB_PASSWORD,
     },
