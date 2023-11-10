@@ -63,15 +63,15 @@ Rename `.env.example` to `.env`
 Update NILE_USER and NILE_PASSWORD with the credentials you picked up in the previous step. It should look something like this:
 
 ```bash
-# This is the env vars for Node.js app. The DB credentials are very secret, so make sure you keep this file safe
+# This is the env vars for Node.js app.
 NILE_DB_USER = "018b4937-2bbf-70fd-9075-37154198fa1e"
 NILE_DB_PASSWORD = "358844ef-cb09-4758-ae77-bec13b801101"
 NILE_WORKSPACE = "my_workspace"
 NILE_DATABASE = "my_database"
-FE_URL = "http://localhost:3006" # replace with the URL of your frontend, this is for the post-authentication redirect
+FE_URL = "http://localhost:3006" # URL of the frontend, for the post-auth redirect
 
 
-# These end up in the user's browser, so nothing secret should ever start with REACT_APP_...
+# These end up in the user's browser, so don't put any secrets here.
 REACT_APP_NILE_DATABASE = "my_workspace"
 REACT_APP_NILE_WORKSPACE = "my_database"
 ```
@@ -157,7 +157,8 @@ The example uses Nile's tenant isolation to guarantee that each tenant can only 
 
 ```js
 app.get("/api/tenants/:tenantId/todos", async (req, res) => {
-  // No need for a "where" clause here because we are setting the tenant context in the middleware
+  // No need for a "where" clause here
+  // we are setting the tenant context in the middleware
   const todos = await nile.db("todos").select("*").orderBy("title");
   res.json(todos);
 });
