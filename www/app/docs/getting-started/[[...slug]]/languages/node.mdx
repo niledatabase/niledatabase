@@ -94,9 +94,9 @@ Go to http://localhost:3000 in a browser to see the app.
 
 You can try a few things in the app:
 
-* Sign up as a new user
-* Create a tenant
-* Create a todo task
+- Sign up as a new user
+- Create a tenant
+- Create a todo task
 
 ### 6. Check the data in Nile
 
@@ -119,7 +119,7 @@ The client is initialized with the credentials you provided in the `.env` file:
 
 ```js
 export const nile = Server({
-  workspace: String(process.env.NILE_WORKSPACE), 
+  workspace: String(process.env.NILE_WORKSPACE),
   database: String(process.env.NILE_DATABASE),
   db: {
     connection: {
@@ -133,8 +133,8 @@ export const nile = Server({
 The application uses Express middleware to capture the tenant identity for the current request and set Nile context:
 
 ```js
-app.param('tenantId', (req, res, next, tenantId) => {
-  nile.tenantId = tenantId; 
+app.param("tenantId", (req, res, next, tenantId) => {
+  nile.tenantId = tenantId;
   next();
 });
 ```
@@ -157,9 +157,9 @@ The example uses Nile's tenant isolation to guarantee that each tenant can only 
 
 ```js
 app.get("/api/tenants/:tenantId/todos", async (req, res) => {
-    // No need for a "where" clause here because we are setting the tenant context in the middleware
-    const todos = await nile.db("todos").select("*").orderBy("title");
-    res.json(todos);
+  // No need for a "where" clause here because we are setting the tenant context in the middleware
+  const todos = await nile.db("todos").select("*").orderBy("title");
+  res.json(todos);
 });
 ```
 
