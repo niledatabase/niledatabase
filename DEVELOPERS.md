@@ -58,6 +58,7 @@ To make the review process more pleasant, please make sure the pull request incl
 
 - The type of change you are making (correcting a mistake in the docs, new document, fix an issue in an example, enhance an example)
 - The intent of the change. What was the situation before the change, what is the situation after and why is the new situation better.
+- Make sure you run `npm run format` and commit the changes it makes. This will make our linter happy.
 
 ## Discuss with the Community
 
