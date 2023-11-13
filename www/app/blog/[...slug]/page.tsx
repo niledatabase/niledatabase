@@ -9,7 +9,7 @@ import Image from "next/image";
 import Footer from "../_components/Footer";
 import Divider from "@/app/_components/common/Divider";
 import { Metadata, ResolvingMetadata } from "next";
-import Coffee from "@/public/blog/coffee.jpg";
+import Coffee from "@/public/blog/coffee.webp";
 type Props = { params: { slug: string[] } };
 
 async function getBlog(props: Props) {

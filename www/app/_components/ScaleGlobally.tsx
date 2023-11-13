@@ -51,7 +51,7 @@ export default function DropInUserManagement() {
             <div className="flex lg:w-1/2">
               <Video
                 poster="earth.webp"
-                src="earth.mp4"
+                src="earth.webm"
                 className="aspect-square"
               />
             </div>

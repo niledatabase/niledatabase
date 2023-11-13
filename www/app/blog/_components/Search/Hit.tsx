@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Authors } from "../Authors";
 import { Metadata } from "../Metadata";
-import Coffee from "@/public/blog/coffee.jpg";
+import Coffee from "@/public/blog/coffee.webp";
 
 export default function Hit({ hit }: any) {
   const [, publishDate] = /.+(\d{4}-\d{2}-\d{2}).+/.exec(hit.objectID) ?? [];

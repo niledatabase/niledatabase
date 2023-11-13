@@ -3,7 +3,7 @@ import authors from "../authors";
 import Zoidberg from "@/public/authors/zoidberg.png";
 export function Authors({ authors: _authors }: { authors: string[] }) {
   return (
-    <div>
+    <div className="flex flex-row gap-2 flex-wrap">
       {_authors?.map((author) => {
         const _auth = authors[author];
         const imageClasses = `border-2 border-[#7CD1ED] border-[${_auth?.borderColor}] rounded-[33px] h-[32px] w-[32px] flex items-center justify-center overflow-hidden`;

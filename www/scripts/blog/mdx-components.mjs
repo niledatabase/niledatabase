@@ -19,5 +19,8 @@ export var useMDXComponents = function () {
     CopyToClipboard: function () {
       return null;
     },
+    Video: function () {
+      return null;
+    },
   };
 };

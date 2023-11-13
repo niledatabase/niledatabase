@@ -10,7 +10,7 @@ import algoliasearch from "algoliasearch/lite";
 import Footer from "./_components/Footer";
 import Search from "./_components/Search";
 import Hit from "./_components/Search/Hit";
-import Coffee from "@/public/blog/coffee.jpg";
+import Coffee from "@/public/blog/coffee.webp";
 import { RefinementList } from "./_components/Search/RefinementList";
 import uniq from "lodash/uniq";
 type Props = {
