@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Authors } from "./_components/Authors";
 import { Metadata } from "./_components/Metadata";
 import { parseMetadata } from "./_components/parseMetadata";
-import Coffee from "@/public/blog/coffee.jpg";
+import Coffee from "@/public/blog/coffee.webp";
 
 export async function AsyncArticle({ fileName }: { fileName: string }) {
   const { default: Article, metadata } = await import(`${fileName}`);

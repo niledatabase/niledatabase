@@ -29,6 +29,8 @@ async function upload(output) {
 
 async function run() {
   const files = await glob("app/blog/**.mdx");
+  // remove the 1st for the search, since it will be handled seperately
+  files.shift();
   const out = [];
   for (const fileName of files) {
     const file = path.join(__dirname, "../app/www/../../../", fileName);

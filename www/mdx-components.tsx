@@ -1,6 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 import Cards, { Card } from "./app/docs/_components/Cards";
 import CodeGroups from "./app/docs/_components/CodeGroups";
+import Video from "./app/_components/Video";
 import CopyToClipboard from "./app/docs/_components/CopyToClipboard";
 import { Col, Row } from "./app/docs/_components/Layout";
 import Head from "next/head";
@@ -27,5 +28,6 @@ export const useMDXComponents = (components: MDXComponents): MDXComponents => {
     pre: ({ children }) => (
       <CopyToClipboard>{children as JSX.Element}</CopyToClipboard>
     ),
+    Video: (props) => <Video {...props} baseSrc="" />,
   };
 };

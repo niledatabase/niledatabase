@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import { Authors } from "../Authors";
 import { Metadata } from "../Metadata";
-import Coffee from "@/public/blog/coffee.jpg";
+import Coffee from "@/public/blog/coffee.webp";
 import SearchIcon from "@/public/icons/search.svg";
 
 const searchClient = algoliasearch(

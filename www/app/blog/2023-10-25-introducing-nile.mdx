@@ -43,7 +43,7 @@ There are many other considerations:
 - How many tenants can you support?
 - What are the compliance needs for each customer, etc?
 
-![“Github Organization”](/blog/github_organization.png)
+![“Github Organization”](/blog/github_organization.webp)
 
 **Everything about tenant management is hard.** You typically start with a single database and place all the tenants on it. You tackle data isolation between tenants by implementing brittle permission logic at the application level or complex, hard-to-debug, row-level security policies in databases like Postgres. You turn on daily backups but have little idea how to restore data for specific tenants when customers lose data. You end up writing some hacky scripts that are slow and buggy to parse through the backups and extract the tenant data. Once the application has users, you run into your first performance issue. Some tenants are pushing more load, and others have large datasets causing queries to take more resources. This impacts other customers as well. You need help determining which customer is causing the impact and which ones are being impacted. To solve this, you migrate some tenants to dedicated databases, which requires building metadata and sharding logic at the application layer to manage all this. Schema changes, rollouts, monitoring, and developer experience become more complex. This was our story and every other SaaS company's story.
 
