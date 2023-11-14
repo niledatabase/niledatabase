@@ -16,10 +16,10 @@ export default function Navigation({ className }: { className?: string }) {
   return (
     <>
       <NavMenu open={open} />
-      <div className={`w-screen sticky top-0 z-30 navBlur ${className ?? ""}`}>
-        <div className="flex flex-col lg:items-center justify-between px-4 pb-0 2xl:px-24 container mx-auto">
+      <div className={`w-fill sticky top-0 z-30 navBlur ${className ?? ""}`}>
+        <div className="container flex flex-col justify-between px-4 pb-0 mx-auto lg:items-center 2xl:px-24">
           <div className="flex flex-row items-center justify-between w-full lg:h-auto h-[76px]">
-            <div className="items-center flex lg:block lg:items-start lg:w-44">
+            <div className="flex items-center lg:block lg:items-start lg:w-44">
               <Link href="/">
                 <Image
                   src={Logo}
@@ -33,12 +33,12 @@ export default function Navigation({ className }: { className?: string }) {
             </div>
             <MobileNav open={open} toggleOpen={toggleOpen} />
 
-            <div className="hidden lg:flex flex-row">
+            <div className="flex-row hidden lg:flex">
               <div className="flex gap-8 py-5 px-2.5">
                 <Links className="font-semibold" />
               </div>
             </div>
-            <div className="hidden lg:show lg:flex flex-row">
+            <div className="flex-row hidden lg:show lg:flex">
               <div className="flex flex-row gap-4">
                 <GithubCta />
               </div>
