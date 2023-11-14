@@ -79,3 +79,24 @@ curl  -X GET \
 curl  -X GET \
   'http://localhost:3001/insecure/all_todos'
 ```
+
+## Running a Docker Image
+
+You can build and run a Docker image of this example by running:
+
+```text
+docker build -t todo-drizzle .
+docker run -p 3001:3001 todo-drizzle
+```
+
+If you have Fly.io account, you can deploy on Fly.io by running:
+
+```text
+fly launch
+fly secrets set DATABASE_URL=... 
+fly deploy
+fly scale memory 1024
+fly scale count 1
+```
+
+You can use `fly.example.toml` as reference.

@@ -21,6 +21,7 @@
     "postgres": "^3.4.1"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.10",
     "@types/express": "^4.17.20",
     "@types/pg": "^8.10.7",
     "drizzle-kit": "^0.19.13",
