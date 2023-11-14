@@ -79,28 +79,3 @@ curl  -X GET \
 curl  -X GET \
   'http://localhost:3001/insecure/all_todos'
 ```
-
-### Known Issues
-
-#### NodeJS 20.5.0
-
-We recommend running this example on NodeJS 18 (current long term stable release).
-
-When attempting to run this on NodeJS v20, you may see:
-
-```js
-[api] TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /Users/gwen/workspaces/niledatabase/examples/quickstart/node_react/src/be/app.ts
-[api]     at new NodeError (node:internal/errors:405:5)
-[api]     at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:99:9)
-[api]     at defaultGetFormat (node:internal/modules/esm/get_format:142:36)
-[api]     at defaultLoad (node:internal/modules/esm/load:91:20)
-[api]     at nextLoad (node:internal/modules/esm/hooks:733:28)
-[api]     at load (/Users/gwen/.nvm/versions/node/v20.5.0/lib/node_modules/ts-node/dist/child/child-loader.js:19:122)
-[api]     at nextLoad (node:internal/modules/esm/hooks:733:28)
-[api]     at Hooks.load (node:internal/modules/esm/hooks:377:26)
-[api]     at MessagePort.handleMessage (node:internal/modules/esm/worker:168:24)
-[api]     at [nodejs.internal.kHybridDispatch] (node:internal/event_target:778:20) {
-[api]   code: 'ERR_UNKNOWN_FILE_EXTENSION'
-```
-
-Due to this open issue in ts-node: https://github.com/TypeStrong/ts-node/issues/1997

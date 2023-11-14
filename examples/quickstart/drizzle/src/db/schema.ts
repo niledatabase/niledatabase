@@ -1,8 +1,10 @@
 import {sql} from "drizzle-orm"
-import { pgTable, primaryKey, uuid, text, timestamp, varchar, boolean} from "drizzle-orm/pg-core";
+import { pgTable, pgSchema, primaryKey, uuid, text, timestamp, varchar, boolean} from "drizzle-orm/pg-core";
+
+export const usersSchema = pgSchema("users")
 
 export const tenants = pgTable("tenants", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").default(sql`gen_random_uuid()`).primaryKey(),
     name: text("name"),
     created: timestamp("created"),
     updated: timestamp("updated"),
@@ -20,6 +22,20 @@ export const todos = pgTable("todos", {
       pk: primaryKey(table.tenantId, table.id),
     };
   });
+
+// we need this for the deployed demo, where we authenticate users
+// this is minimal modeling of the tables in the DB without relations and without all the fields. 
+export const users = usersSchema.table("users", {
+    id: uuid("id").primaryKey(),
+    name: text("name"),
+    email: text("email"),
+});
+
+export const tenant_users = usersSchema.table("tenant_users", {
+  tenant_id: uuid("tenant_id"),
+  user_id: uuid("user_id"),
+});
+
 
 
 
