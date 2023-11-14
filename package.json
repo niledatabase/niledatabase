@@ -8,7 +8,8 @@
     "examples/user_management/email_login/NextJS", 
     "examples/user_management/sso_login_okta/NextJS",
     "examples/user_management/social_login_google/NextJS",
-    "examples/quickstart/java/fe"
+    "examples/quickstart/java/fe",
+    "examples/quickstart/drizzle/fe"
   ],
   "scripts": {
     "dev": "turbo run dev",
