@@ -108,6 +108,28 @@ export const JavaQuickstart: Template = {
   },
 };
 
+export const DrizzleQuickstart: Template = {
+  // A great name, preferably unique, name for the template
+  name: "Backend service with Drizzle and Nile",
+  // what the template does
+  description: "Learn how to use Nile with Drizzle ORM",
+  // who made it
+  author: "Nile",
+  demoUrl: "https://nile-drizzle-quickstart.vercel.app/",
+  // the location of the thumbnail. could be in /public/templates, or a CDN
+  imageSrc: "/templates/DrizzleTodoApp.png",
+  // the readmeURL should be publically accessible.
+  // It should also be the real github url, not the raw readme
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/drizzle/README.md",
+  // A key/value string/string. What is put here will show up on the site exactly
+  metadata: {
+    Framework: "NodeJS, Drizzle ORM, Express",
+    "Use Case": "Building SaaS",
+    Publisher: "Nile",
+  },
+};
+
 /*
 export const placeholderTemplate: Template = {
   // A great name, preferably unique, name for the template
