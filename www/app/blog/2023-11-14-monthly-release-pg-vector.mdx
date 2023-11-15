@@ -1,0 +1,94 @@
+export const metadata = {
+  title: "Announcing Nile monthly launches - pg_vector, instant DBs and more",
+  authors: ["gwenshap"],
+  image: "monthly_releases/cover.webp",
+  sizzle:
+    "Nile announces plans for monthly feature updates. The first monthly launch, called Aswan, includes the addition of pg_vector for storing tenant-specific embeddings, instant databases and more. The monthly release schedule will provide Nile user's frequent updates. It will help Nile users keep up with a fast moving space and help Nile focus on feedback and rapid iteration.",
+  tags: ["serverless", "postgres", "saas", "pgvector", "release", "announcement"],
+};
+
+The great pyramid wasn't built in a day, and great databases similarly evolve over time. The recent launch of Nile database is only v0. The first step in our mutual journey. In this blog we'll outline our plan for the next steps and explain the philosophy behind them.
+
+Nile is a serverless Postgres database designed for modern SaaS applications. And being serverless, you don't need to do anything to enjoy the features that will be announced in each monthly launch. As we release new features, we'll automatically upgrade Nile workspaces and databases behind the scenes.
+
+You can [sign up for our waitlist](https://www.thenile.dev/) today to start using Nile. Follow us on Twitter or LinkedIn to stay informed about our latest updates.
+
+Modern SaaS applications are multi-tenant. Nile virtualizes tenants to enable seamless tenant isolation (data and performance isolation), per-tenant backups, and placement on multi-tenant or dedicated infrastructure anywhere on the planet. You can do all this with the experience of a single Postgres! You don't have to manage multiple databases, build complex permissions for isolation, or write buggy scripts to read specific tenant data from backups. On top of the tenant model, we provide opt-in user management capabilities, customer-specific vector embeddings, and instant tenant admin dashboards. You can do all of this with very little code. Moreover, Nile's Postgres is built for the cloud, enabling effortless scaling and a true serverless experience.
+
+## Nile's First Monthly Launch:
+
+The first monthly launch is happening... right now. This release, code-named “Aswan”, includes:
+
+### Embedding storage with pg_vector
+
+AI can be transformative for many SaaS applications, but using only publicly available generative AI models that were trained on publicly available data will not get you far when building SaaS. Most SaaS applications require domain-specific and tenant-specific data. For example an AI assistant for sales teams needs to be trained on the company’s product manuals, sales processes and general sales methodologies.
+
+A common way of implementing this type of training is known as RAG: Retrieval-augumented generation. In this technique, you train a different model on the domain and tenant-specific information, this provides you with vector embeddings that represent the model. You then store the results in a vector store. When answering a user question, you first use the embeddings to find relevant information from the tenant and domain specific documents, and include this information when prompting the generative AI model for responses. The result is the best of both worlds - an answer that includes both internal and external data.
+
+Until now, there was no great way to store tenant-specific embeddings safely and efficiently. You could mix all tenant embeddings in a single vector store, and try to isolate them at the application level. Or you could try to run a vector store per tenant. The former is high risk and the latter is high effort.
+
+Nile is a tenant-aware database with tenant isolation built-in. With the addition of pg_vector, storing tenant-specific embeddings is trivial.
+
+Read more about the use of [generative AI in SaaS and the benefits for using Nile.](https://www.thenile.dev/docs/ai-embeddings)
+
+{/*TBD: Cool video of pg_vector queries*/}
+
+### Instant Databases
+
+Creating databases in Nile was already a snap, but we've made them even easier. Now you can create a database with a single click. No need to wait, Nile will create it instantly and you can start using it right away.
+
+<Video src="/blog/monthly_releases/instant_db.webm" />
+
+### In-product quickstart
+
+Taking the first steps with Nile is now even easier. After signing up and creating your first database, you can click on “Quick start” and follow an interactive introduction to Nile.
+
+<Video src="/blog/monthly_releases/in_product_qs.webm" />
+
+### Features by Community Request
+
+You asked and we delivered: 
+
+**Nile + Drizzle template.** Developers asked us “do you work with Drizzle”? And yes, we do indeed. Now you can get started with Nile + Drizzle with template.
+
+We want to deliver community-favorite features every month. [Let us know what you want to see next](https://www.thenile.dev/community)!
+
+## Why Monthly Launches?
+
+When I started my career it was common knowledge that new versions of the software will be released every 2 years. Then it became every year and these days quarterly releases are quite common.
+
+There are three reasons why releases are getting faster:
+
+**The world is moving faster, and we all need to keep up.**
+
+Imagine adopting a new database and then waiting two years for it to add a vector store. We live in exciting times where things that previously sounded like sci-fi are now table stakes in most verticals. SaaS businesses can't rely on vendors that are not rapidly delivering updates. Being 2 years behind these days is unthinkable. After all, in the SaaS business, the competitor is exactly one click away.
+
+**Customers have lower overhead for adopting new versions**.
+
+Traditionally, companies took a very long time to upgrade a database. In 2011, I got a very lucrative contract with a large healthcare organization to restore a database. The database was running a version that was released in 1992. 20 years is an exceptionally slow upgrade cycle, but it was “common knowledge” that no one upgrades every 3 month either.
+
+These days we are seeing that customers are a lot more aggressive about upgrading their databases. In fact, as long as the vendor makes upgrades transparent and does not break compatibility, customers will happily adopt the new features when they become available. We know this from our experience running Kafka in Confluent Cloud.
+
+**Vendors have lower overhead for releasing new versions.** 
+
+Back in the day, a release was serious business. Companies printed CDs and books with documentation, designed boxes, packed and shrink-wrapped. This was “production” in the most physical sense and it took months of lead time. These days, a “package” isn’t a box and an “image” is not a CD. They are all bytes on the cloud. There is no limit to how fast we can ship new versions. In fact, great SaaS businesses ship to production multiple times a day.
+
+So, it vendors can ship updates on any schedule, and customers will happily adopt the updates and ask for more - is there even a limit to how fast software can and should ship?
+
+The answer is that there is probably no limit on how often software is shipped, but there is a limit on how often software can launch. What does this mean?
+
+Shipping is any change that goes from code to production. It will include bug fixes, minor UI tweaks, new metrics… a lot of things that are not always worth talking about. Of course it will also include exciting major features, ones that are worthy of a conversation.
+
+Launching is the act of creating this conversation. It is pointing out new features and saying “Look over here, this software just got better, pay attention!”.  And this is where we believe the bottlenecks are found. Customer attention is a limited and valuable resource.
+
+On one hand, we want to be respectful to our customers and our product, and not continuously draw attention to every minor improvement.  On the other hand, we do want to draw attention to meaningful improvements and also make sure our customers are aware of the smaller improvements that become available to them.
+
+We believe that the current common practice of quarterly releases is too slow for developers building SaaS. We are very excited about our roadmap and can’t imagine waiting three month before delivering it to you.
+
+Therefore, monthly launches.
+
+## Feedback and Iterations
+
+A key benefit of monthly launches is that it allows us to respond faster to feedback. We are eager to hear from the developer community: Which features you love and we should double down on? What could be useful but not quite there yet? What Nile features will make it 100x easier for you to build SaaS?
+
+[Sign up for our waitlist](https://www.thenile.dev/) today to start using Nile, and leave your feedback in our [Discord and/or Github](https://www.thenile.dev/community).
