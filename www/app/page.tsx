@@ -9,9 +9,6 @@ import Elastic from "./_components/Elastic";
 import ArtificialIntelligence from "./_components/ArtificialIntelligence";
 import Container from "@/app/_components/common/Container";
 import { HeroBottom } from "@/app/_components/common/Hero";
-import GradientButton from "./_components/common/GradientButton";
-import Link from "next/link";
-import Image from "next/image";
 export default function Home() {
   return (
     <Container>
