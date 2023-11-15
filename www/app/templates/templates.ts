@@ -2,7 +2,8 @@ import { Template } from "./types";
 
 export const NextJSQuickstart: Template = {
   name: "NextJS multi-tenant application with Nile",
-  description: "Learn about Nile concepts from a Todo multi-tenant app in NextJS",
+  description:
+    "Learn about Nile concepts from a Todo multi-tenant app in NextJS",
   author: "Nile",
   imageSrc: "/templates/NextJSTodoApp.png",
   demoUrl: "https://nextjs-quickstart-omega.vercel.app/",
@@ -18,7 +19,8 @@ export const NextJSQuickstart: Template = {
 
 export const EmailLogin: Template = {
   name: "Email Login Example for multi-tenant application",
-  description: "Learn about simple Authentication for multi-tenant application with Nile",
+  description:
+    "Learn about simple Authentication for multi-tenant application with Nile",
   author: "Nile",
   imageSrc: "/templates/EmailLogin.png",
   demoUrl: "https://email-authn.vercel.app/",
@@ -34,7 +36,8 @@ export const EmailLogin: Template = {
 
 export const SocialLoginGoogle: Template = {
   name: "Social Login for multi-tenant application with Google",
-  description: "Build social login for multi-tenant application with Google and Nile",
+  description:
+    "Build social login for multi-tenant application with Google and Nile",
   author: "Nile",
   imageSrc: "/templates/GoogleSocialLogin.png",
   demoUrl: "https://niledatabase-google-sso.vercel.app",
@@ -50,7 +53,8 @@ export const SocialLoginGoogle: Template = {
 
 export const OktaSSOLogin: Template = {
   name: "SSO Login for multi-tenant application with Okta",
-  description: "Build multi-tenant application using enterprise SSO login with Okta and Nile",
+  description:
+    "Build multi-tenant application using enterprise SSO login with Okta and Nile",
   author: "Nile",
   imageSrc: "/templates/OktaSSOLogin.png",
   demoUrl: "https://login-okta-demo.vercel.app/",
@@ -68,7 +72,8 @@ export const NodeJSQuickstart: Template = {
   // A great name, preferably unique, name for the template
   name: "NodeJS multi-tenant application with Nile",
   // what the template does
-  description: "Learn about Nile concepts from a Todo multi-tenant app in NodeJS",
+  description:
+    "Learn about Nile concepts from a Todo multi-tenant app in NodeJS",
   // who made it
   author: "Nile",
   // the location of the thumbnail. could be in /public/templates, or a CDN
@@ -112,7 +117,8 @@ export const DrizzleQuickstart: Template = {
   // A great name, preferably unique, name for the template
   name: "Drizzle multi-tenant application with Nile",
   // what the template does
-  description: "Learn about Nile concepts from a Todo multi-tenant app in Drizzle",
+  description:
+    "Learn about Nile concepts from a Todo multi-tenant app in Drizzle",
   // who made it
   author: "Nile",
   demoUrl: "https://nile-drizzle-quickstart.vercel.app/",
