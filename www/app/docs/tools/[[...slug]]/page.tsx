@@ -10,7 +10,7 @@ export default async function Page(props: Props) {
     <Container>
       <PageContent
         params={props.params}
-        root={NavigationRoots.TenantPlacement}
+        root={NavigationRoots.Tools}
       />
     </Container>
   );
@@ -21,7 +21,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { metadata } = await findDocFile({
     ...props,
-    root: NavigationRoots.TenantPlacement,
+    root: NavigationRoots.Tools,
   });
 
   const previousImages = (await parent).openGraph?.images || [];

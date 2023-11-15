@@ -18,4 +18,5 @@ export enum NavigationRoots {
   TenantManagement = "tenant-management",
   TenantPlacement = "tenant-placement",
   TenantSharing = "tenant-sharing",
+  Tools = "tools"
 }
