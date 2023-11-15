@@ -1,10 +1,17 @@
 export const metadata = {
   title: "Announcing Nile monthly launches - pg_vector, instant DBs and more",
   authors: ["gwenshap"],
-  image: "monthly_releases/cover.webp",
+  image: "2023-11-14-monthly-release-pg-vector/cover.webp",
   sizzle:
     "Nile announces plans for monthly feature updates. The first monthly launch, called Aswan, includes the addition of pg_vector for storing tenant-specific embeddings, instant databases and more. The monthly release schedule will provide Nile user's frequent updates. It will help Nile users keep up with a fast moving space and help Nile focus on feedback and rapid iteration.",
-  tags: ["serverless", "postgres", "saas", "pgvector", "release", "announcement"],
+  tags: [
+    "serverless",
+    "postgres",
+    "saas",
+    "pgvector",
+    "release",
+    "announcement",
+  ],
 };
 
 The great pyramid wasn't built in a day, and great databases similarly evolve over time. The recent launch of Nile database is only v0. The first step in our mutual journey. In this blog we'll outline our plan for the next steps and explain the philosophy behind them.
@@ -31,23 +38,29 @@ Nile is a tenant-aware database with tenant isolation built-in. With the additio
 
 Read more about the use of [generative AI in SaaS and the benefits for using Nile.](https://www.thenile.dev/docs/ai-embeddings)
 
-{/*TBD: Cool video of pg_vector queries*/}
+{/* TBD: Cool video of pg_vector queries */}
 
 ### Instant Databases
 
 Creating databases in Nile was already a snap, but we've made them even easier. Now you can create a database with a single click. No need to wait, Nile will create it instantly and you can start using it right away.
 
-<Video src="/blog/monthly_releases/instant_db.webm" />
+<Video
+  src="/blog/2023-11-14-monthly-release-pg-vector/instant_db.webm"
+  poster="/blog/2023-11-14-monthly-release-pg-vector/instant_db.webp"
+/>
 
 ### In-product quickstart
 
 Taking the first steps with Nile is now even easier. After signing up and creating your first database, you can click on “Quick start” and follow an interactive introduction to Nile.
 
-<Video src="/blog/monthly_releases/in_product_qs.webm" />
+<Video
+  src="/blog/2023-11-14-monthly-release-pg-vector/in_product_qs.webm"
+  poster="/blog/2023-11-14-monthly-release-pg-vector/in_product_qs.webp"
+/>
 
 ### Features by Community Request
 
-You asked and we delivered: 
+You asked and we delivered:
 
 **Nile + Drizzle template.** Developers asked us “do you work with Drizzle”? And yes, we do indeed. Now you can get started with Nile + Drizzle with template.
 
@@ -69,7 +82,7 @@ Traditionally, companies took a very long time to upgrade a database. In 2011, I
 
 These days we are seeing that customers are a lot more aggressive about upgrading their databases. In fact, as long as the vendor makes upgrades transparent and does not break compatibility, customers will happily adopt the new features when they become available. We know this from our experience running Kafka in Confluent Cloud.
 
-**Vendors have lower overhead for releasing new versions.** 
+**Vendors have lower overhead for releasing new versions.**
 
 Back in the day, a release was serious business. Companies printed CDs and books with documentation, designed boxes, packed and shrink-wrapped. This was “production” in the most physical sense and it took months of lead time. These days, a “package” isn’t a box and an “image” is not a CD. They are all bytes on the cloud. There is no limit to how fast we can ship new versions. In fact, great SaaS businesses ship to production multiple times a day.
 
