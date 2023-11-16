@@ -11,8 +11,6 @@ import HotTenant from "@/public/icons/hot-tenant.svg";
 import Performance from "@/public/icons/performance.svg";
 import Metrics from "@/public/icons/metrics.svg";
 
-import Backup from "@/public/video/tenant-backup.gif";
-
 export default function Virtualization() {
   return (
     <div className="container mx-auto">
@@ -117,12 +115,7 @@ export default function Virtualization() {
                   Manage different backup strategies per tenant
                 </div>
               </div>
-              <Image
-                src={Backup}
-                alt="gif showing data isolation"
-                width={672}
-                height={258}
-              />
+              <Video src="tenant-backup.mp4" poster="tenant-backup.webp" />
             </div>
             <div className="lg:w-1/2 px-[20px] flex flex-col gap-6">
               <div className="text-[32px] bg-gradient-text bg-clip-text text-transparent leading-normal mb-3 block lg:hidden text-center mt-10">
