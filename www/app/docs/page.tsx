@@ -35,22 +35,24 @@ export default async function Home() {
   return (
     <Container>
       <SideNavigation page={`/docs`} />
-      <div className="flex flex-col">
-        <div className="flex flex-row items-start gap-2 mx-auto mt-20">
-          <Image
-            className="mt-2 hidden lg:block"
-            src={NileBgMark}
-            alt="nile logo"
-            width={55}
-            height={55}
-          />
-          <PageHeader
-            title="Nile Documentation"
-            subtitle="Serverless Postgres for modern SaaS"
-          />
+      <div className="flex flex-col max-w-6xl mx-auto">
+        <div className="container mx-auto">
+          <div className="flex flex-row items-start gap-2 mx-auto mt-20">
+            <Image
+              className="mt-2 hidden lg:block"
+              src={NileBgMark}
+              alt="nile logo"
+              width={55}
+              height={55}
+            />
+            <PageHeader
+              title="Nile Documentation"
+              subtitle="Serverless Postgres for modern SaaS"
+            />
+          </div>
         </div>
         <Divider />
-        <div className="lg:px-14">
+        <div className="container mx-auto">
           <div className="text-3xl mb-10 lg:text-left text-center">
             Get Started
           </div>
@@ -75,19 +77,37 @@ export default async function Home() {
               );
             })}
           </div>
-        </div>
-        <Divider />
-        <div className="lg:px-14">
-          <div className="flex flex-col">
-            <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
-              <div className="text-3xl text-center md:text-left">
-                Start with one of our templates
+          <Divider />
+          <div className="container mx-auto">
+            <div className="flex flex-col">
+              <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
+                <div className="text-3xl text-center md:text-left">
+                  Start with one of our templates
+                </div>
+                <div className="hidden lg:block">
+                  <GradientButton href="/templates" variant="soft">
+                    <Image
+                      alt="book cover"
+                      src={Templates}
+                      width={24}
+                      height={24}
+                    />
+                    <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                      More templates
+                    </span>
+                  </GradientButton>
+                </div>
               </div>
-              <div className="hidden lg:block">
+              <TemplateSearch
+                templates={templates}
+                searchEnabled={false}
+                showButton={false}
+              />
+              <div className="block lg:hidden mx-auto">
                 <GradientButton href="/templates" variant="soft">
                   <Image
-                    alt="book cover"
                     src={Templates}
+                    alt="book cover"
                     width={24}
                     height={24}
                   />
@@ -97,28 +117,10 @@ export default async function Home() {
                 </GradientButton>
               </div>
             </div>
-            <TemplateSearch
-              templates={templates}
-              searchEnabled={false}
-              showButton={false}
-            />
-            <div className="block lg:hidden mx-auto">
-              <GradientButton href="/templates" variant="soft">
-                <Image
-                  src={Templates}
-                  alt="book cover"
-                  width={24}
-                  height={24}
-                />
-                <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
-                  More templates
-                </span>
-              </GradientButton>
-            </div>
           </div>
         </div>
         <Divider />
-        <div className="lg:px-14">
+        <div className="container mx-auto">
           <div className="flex flex-col">
             <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
               <div className="text-3xl">Learn from our tutorials</div>
@@ -155,7 +157,7 @@ export default async function Home() {
           </div>
         </div>
         <Divider />
-        <div className="lg:px-14">
+        <div className="container mx-auto">
           <div className="text-3xl text-center mb-10">
             Join the community to share and get help
           </div>

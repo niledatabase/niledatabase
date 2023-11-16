@@ -10,7 +10,7 @@ type Props = {
 };
 const variants = {
   closed: "block h-[0px] overflow-hidden bottom-0",
-  open: "block h-1/2 overflow-scroll bottom-[66px]",
+  open: "block h-1/2 overflow-scroll bottom-[58px]",
 };
 
 const wrapperVariants = {
@@ -95,17 +95,18 @@ export default function MobileSidenav({ navBar, page }: Props) {
       >
         <div className="h-px w-full bg-divider-bold z-10"></div>
         <div className="flex flex-row justify-between h-full items-center px-3">
-          {menuItem}
-
-          <Image
-            alt="gray arrow"
-            src={Arrow}
-            width={24}
-            height={24}
-            className={`${
-              open ? "rotate-90" : "-rotate-90 opacity-40"
-            } transition-all`}
-          />
+          <div>{menuItem}</div>
+          <div className="shrink-0 w-[24px] h-[24px]">
+            <Image
+              alt="gray arrow"
+              src={Arrow}
+              width={24}
+              height={24}
+              className={`${
+                open ? "rotate-90" : "-rotate-90 opacity-40"
+              } transition-all`}
+            />
+          </div>
         </div>
       </div>
     </div>
