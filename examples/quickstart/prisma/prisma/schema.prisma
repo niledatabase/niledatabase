@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model tenants {
+  id      String    @id @default(dbgenerated("public.uuid_generate_v7()")) @db.Uuid
+  name    String?
+  created DateTime  @default(dbgenerated("LOCALTIMESTAMP")) @db.Timestamp(6)
+  updated DateTime  @default(dbgenerated("LOCALTIMESTAMP")) @db.Timestamp(6)
+  deleted DateTime? @db.Timestamp(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model todos {
+  id        String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id String   @db.Uuid
+  title     String?  @db.VarChar(256)
+  complete  Boolean?
+
+  @@id([id, tenant_id])
+}
