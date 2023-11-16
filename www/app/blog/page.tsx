@@ -98,7 +98,7 @@ export default async function Blog() {
             content={FirstArticle}
           />
           <Divider />
-          <div className="relative">
+          <div className="relative px-4">
             <RefinementList items={refinementItems} />
             <Search />
           </div>

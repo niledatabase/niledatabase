@@ -24,9 +24,9 @@ export default function TemplateCard(props: Template) {
           <div className="flex flex-col gap-3 px-8 py-4 justify-between flex-1">
             <div>
               <div className="text-[17px] text-left">{name}</div>
-              <div className="text-[17px] text-[#8A8F98] h-[48px] text-left">
+              <span className="text-[17px] text-[#8A8F98] h-[48px] text-left overflow-hidden text-ellipsis inline-block w-[calc(99%)] clip-description">
                 {description}
-              </div>
+              </span>
             </div>
             <div className="text-left">
               <span className="text-[17px]">

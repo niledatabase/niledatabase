@@ -128,9 +128,9 @@ function SearchBox() {
 
   return (
     <div
-      className={`transition-[left] duration-[500ms] md:absolute right-0  ${widths[width]}`}
+      className={`transition-[left] duration-[500ms] md:absolute right-0 ${widths[width]} p-1 bg-black rounded-xl`}
     >
-      <div className="hidden md:block absolute w-[100px] h-[52px] bg-horizontal-fade -left-[76px] -top-[1px]"></div>
+      <div className="hidden md:block absolute w-[86px] h-[60px] bg-horizontal-fade -left-[76px] -top-[1px]"></div>
       <div
         className={`py-1 w-full flex flex-row relative z-10 px-2 border border-[#242627] bg-black rounded-[12px] items-center gap-[10px]`}
       >
