@@ -12,9 +12,9 @@ The **`pg_vector`** extension in PostgreSQL is used to efficiently store and que
 
 Vector types work like any other standard types. You can make them the type of a column in a tenant table and Nile will take care of isolating the embeddings per tenant.
 
-```jsx
-// creating a table to store wiki documents for a Notion like SaaS application
-// with vector dimension of 3
+```sql
+-- creating a table to store wiki documents for a Notion like 
+-- SaaS application with vector dimension of 3
 CREATE TABLE wiki_documents(
     tenant_id uuid,
     id integer,
@@ -26,7 +26,7 @@ CREATE TABLE wiki_documents(
 
 Once you have the table defined, you would want to populate the embeddings. Typically, this is done by querying a large language model (eg. OpenAI, HuggingFace), retrieving the embeddings and storing them in the vector store. Once stored, the embeddings follow the standard tenant rules. They can be isolated, sharded and placed based on the tenant they belong to.
 
-```jsx
+```sql
 INSERT INTO wiki_documents (tenant_id,id, embedding)
 VALUES ('018ade1a-7843-7e60-9686-714bab650998',1, '[1,2,3]');
 ```
