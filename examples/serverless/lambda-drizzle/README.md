@@ -1,10 +1,10 @@
-# Multi-tenant todo list backend service with Nile and Drizzle
+# Serverless multi-tenant todo list backend with AWS Lambda, Serverless Framework, NodeJS, Drizzle and Nile
 
-This example shows how to use Nile in NodeJS and React for a multi-tenant todo list application.
+This template shows how to use Nile in an AWS Lambda app. It uses the Serverless Framework for deployment, NodeJS runtime and Drizzle ORM.
 
 - [Video guide - TBD]()
-- [Live demo](https://nile-drizzle-quickstart.vercel.app)
-- [Step by step guide](https://thenile.dev/docs/getting-started/languages/drizzle)
+- [Live demo - TBD]()
+- [Step by step guide - TBD]()
 
 ## Getting Started
 
@@ -49,55 +49,59 @@ Rename `.env.example` to `.env`, and update it with the connection string you ju
 DATABASE_URL=postgres://018b778a-30df-7cdd-b55c-2f9664db39f3:ff3fb983-683c-4616-bbbc-519d8ddbbce5@db.thenile.dev:5432/gwen_db
 ```
 
-Install dependencies with `yarn install` or `npm install`.
+**Optional:** You can select a region for deploying this example by editting `serverless.yml`
 
-### 5. Running the app
+Install dependencies with `npm install`.
 
-Start the web service with `npm start` or `yarn start`.
 
-Now you can use `curl` to explore the APIs. Here are a few examples:
+### 5. Deployment
+
+In order to deploy the example, you need to run the following command:
+
+```bash
+serverless deploy
+```
+
+After running deploy, you should see output similar to:
+
+```bash
+Deploying serverless-node-drizzle to stage dev (us-east-2)
+
+✔ Service deployed to stack serverless-node-drizzle-dev (93s)
+
+endpoint: ANY - https://z2fmc4ux34.execute-api.us-west-2.amazonaws.com
+functions:
+  api: serverless-node-drizzle-dev-api (424 kB)
+```
+
+### 6. Try it out
+
+Now you can take the URL above and use `curl` to explore the APIs. Here are a few examples:
 
 ```bash
 # create a tenant
-curl --location --request POST 'localhost:3001/api/tenants' \
+curl --location --request POST 'https://z2fmc4ux34.execute-api.us-west-2.amazonaws.com/api/tenants' \
+--user 'test-user:' \
 --header 'Content-Type: application/json' \
---data-raw '{"name":"my first customer", "id":"108124a5-2e34-418a-9735-b93082e9fbf2"}'
+--data-raw '{"name":"my first customer"}'
 
 # get tenants
-curl  -X GET 'http://localhost:3001/api/tenants'
+curl  -X GET 'https://z2fmc4ux34.execute-api.us-west-2.amazonaws.com/api/tenants' --user '018bcbc9-ed15-721e-a1c2-772751dcd240:'
 
 # create a todo (don't forget to use a read tenant-id in the URL)
 curl  -X POST \
-  'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' \
+  'https://z2fmc4ux34.execute-api.us-west-2.amazonaws.com/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' \
+  --user 'test-user:' \
   --header 'Content-Type: application/json' \
   --data-raw '{"title": "feed the cat", "complete": false}'
 
 # list todos for tenant (don't forget to use a read tenant-id in the URL)
 curl  -X GET \
-  'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
+  --user 'test-user:' \
+  'https://z2fmc4ux34.execute-api.us-west-2.amazonaws.com/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
 
 # list todos for all tenants
 curl  -X GET \
-  'http://localhost:3001/insecure/all_todos'
+  --user 'test-user:' \
+  'https://z2fmc4ux34.execute-api.us-west-2.amazonaws.com/insecure/all_todos'
 ```
-
-## Running a Docker Image
-
-You can build and run a Docker image of this example by running:
-
-```text
-docker build -t todo-drizzle .
-docker run -p 3001:3001 todo-drizzle
-```
-
-If you have Fly.io account, you can deploy on Fly.io by running:
-
-```text
-fly launch
-fly secrets set DATABASE_URL=... 
-fly deploy
-fly scale memory 1024
-fly scale count 1
-```
-
-You can use `fly.example.toml` as reference.
