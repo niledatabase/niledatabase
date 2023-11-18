@@ -13,7 +13,7 @@ The **`pg_vector`** extension in PostgreSQL is used to efficiently store and que
 Vector types work like any other standard types. You can make them the type of a column in a tenant table and Nile will take care of isolating the embeddings per tenant.
 
 ```sql
--- creating a table to store wiki documents for a Notion like 
+-- creating a table to store wiki documents for a Notion like
 -- SaaS application with vector dimension of 3
 CREATE TABLE wiki_documents(
     tenant_id uuid,
