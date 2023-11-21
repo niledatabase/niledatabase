@@ -129,10 +129,10 @@ You should see all the todos you created, and the tenants they belong to.
 
 ## 7. How does it work?
 
-In this section we'll focus on the serverless aspects. If you want to learn more about how to use Nile with Drizzle, 
+In this section we'll focus on the serverless aspects. If you want to learn more about how to use Nile with Drizzle,
 check out our [Drizzle getting started guide](https://www.thenile.dev/docs/getting-started/languages/drizzle).
 
-In order to deploy the backend to AWS Lambda, we use the [Serverless Framework](https://www.serverless.com/). 
+In order to deploy the backend to AWS Lambda, we use the [Serverless Framework](https://www.serverless.com/).
 The framework handles most of the configuration and deployment for us, and required minimal changes to the code.
 
 The changes we did make:
@@ -161,21 +161,21 @@ export const handler = serverless(app);
 
 ### 7.2. Initializing the database connection
 
-The `serverless-http` wrapping above is almost enough to get the application running on AWS Lambda. 
+The `serverless-http` wrapping above is almost enough to get the application running on AWS Lambda.
 However, we need to make sure the database connection is initialized before the handler is called and remains intact between handler executions.
 
-We are initializing the connection in the `db.js` file, and exporting the connection object. 
+We are initializing the connection in the `db.js` file, and exporting the connection object.
 
 ```javascript
 const client = new Client({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
 });
 
-export const db = drizzle(client.connect(),{ logger: true });
+export const db = drizzle(client.connect(), { logger: true });
 ```
 
-This means that the connection is initialized when the file is imported, during the initial "cold start" of the serverless application, 
-and remains initialized as long as the virtual machine is running. Since in AWS Lambda, the virtual machine is reused between executions, 
+This means that the connection is initialized when the file is imported, during the initial "cold start" of the serverless application,
+and remains initialized as long as the virtual machine is running. Since in AWS Lambda, the virtual machine is reused between executions,
 this minimizes the connection overhead for all practical appluications.
 
 ### 7.3. The `serverless.yml` file
@@ -187,11 +187,11 @@ The first is the general configuration. We set the name of the service, the fram
 
 ```yaml
 service: lambda-drizzle
-frameworkVersion: '3'
+frameworkVersion: "3"
 useDotenv: true
 ```
 
-Next, there's the provider section where we configure AWS itself. 
+Next, there's the provider section where we configure AWS itself.
 We set the runtime to NodeJS 18, the region to `us-west-2` and include the database connection string in the environment.
 
 The region is important - you want to run your serverless application in the same region as your database. In this case - `us-west-2`.
@@ -205,7 +205,7 @@ provider:
     DATABASE_URL: ${env:DATABASE_URL}
 ```
 
-The next section is the functions. Here we connect the API routing to the application handlers. 
+The next section is the functions. Here we connect the API routing to the application handlers.
 In our case, it is pretty simple - all the routes are handled by the Express app, which then routes them to the correct handler.
 
 ```yaml
@@ -213,14 +213,13 @@ functions:
   api:
     handler: app.handler
     events:
-      - httpApi: '*'
+      - httpApi: "*"
 ```
 
-And last, Serverless Framework has a collection of plugins that extend its basic capabilities. In this case, because we are using 
-Typescript with ES modules, we need to use the `serverless-esbuild` plugin. 
+And last, Serverless Framework has a collection of plugins that extend its basic capabilities. In this case, because we are using
+Typescript with ES modules, we need to use the `serverless-esbuild` plugin.
 
 ```yaml
 plugins:
   - serverless-esbuild
 ```
-
