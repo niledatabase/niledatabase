@@ -1,0 +1,57 @@
+config:
+  phases:
+    - duration: 3
+      arrivalRate: 1
+      rampTo: 5
+      maxVusers: 5
+      name: Warm up phase
+    - duration: 30
+      arrivalRate: 2
+      name: sustained load
+      maxVusers: 2
+  plugins:
+    ensure: {}
+    apdex: {}
+    metrics-by-endpoint: {}
+  apdex:
+    threshold: 100
+  ensure:
+      thresholds:
+        - http.response_time.p99: 100
+        - http.response_time.p95: 75
+before:
+  flow:
+      - log: "creating tenant for test"
+      - post:
+          url: "/api/tenants"
+          auth:
+            user: 'username'
+            pass: 'pass'
+          json:
+            name: "Tenant"
+          capture:
+            json: "$[0].id"
+            as: "tenantId"
+
+scenarios:
+  - flow:
+    - get:
+        url: "/api/tenants"
+        auth:
+            user: 'username'
+            pass: 'pass'
+    - post:
+        url: "/api/tenants/{{ tenantId }}/todos"
+        json:
+          title: "Buy milk"
+          completed: false
+        auth:
+            user: 'username'
+            pass: 'pass'
+    - loop:
+      - get:
+          url: "/api/tenants/{{ tenantId }}/todos"
+          auth:
+            user: 'username'
+            pass: 'pass'
+      count: 3
