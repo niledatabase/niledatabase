@@ -71,6 +71,12 @@ export default async function Footer({ className }: { className?: string }) {
                   <Link href="/about-us" className="text-[16px] opacity-70">
                     About
                   </Link>
+                  <Link
+                    href="/about-us#careers"
+                    className="text-[16px] opacity-70"
+                  >
+                    Careers
+                  </Link>
                   <Link href="/pricing" className="text-[16px] opacity-70">
                     Pricing
                   </Link>

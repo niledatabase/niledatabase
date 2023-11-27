@@ -2,17 +2,17 @@
 
 import { useEffect, useRef } from "react";
 
-export default function useGoToHash() {
+// only the last one of these in the dom will do the scroll.
+export default function useGoToHash(config?: { offset?: number }) {
   const ref = useRef<HTMLAnchorElement>(null);
 
+  const offset = config?.offset ?? 0;
   useEffect(() => {
-    if (
-      location.hash === "#faq" &&
-      ref.current &&
-      typeof "window" !== undefined
-    ) {
-      window.scrollTo({ top: ref.current.offsetTop });
+    if (ref.current && typeof "window" !== undefined) {
+      window.scrollTo({
+        top: ref.current.offsetTop + offset,
+      });
     }
-  }, []);
+  }, [offset]);
   return ref;
 }
