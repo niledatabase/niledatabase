@@ -6,6 +6,7 @@ import Image from "next/image";
 import OurStory from "./OurStory";
 import HowWeWork from "./HowWeWork";
 import AboutLogo from "@/public/about-logo.png";
+import CareerList from "./CareerList";
 
 export default function Home() {
   return (
@@ -27,6 +28,8 @@ export default function Home() {
         </div>
       </div>
       <HowWeWork />
+      <Divider />
+      <CareerList />
       <Divider />
       <HeroBottom />
     </Container>

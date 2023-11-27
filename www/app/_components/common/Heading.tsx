@@ -8,6 +8,7 @@ type Props = {
   className?: string;
   text?: string;
   rootMargin?: string;
+  forceVisible?: boolean;
 };
 export default function Heading(props: Props) {
   const {
@@ -16,9 +17,11 @@ export default function Heading(props: Props) {
     className,
     textAlign = "center",
     rootMargin = "-10%",
+    forceVisible,
   } = props;
   const headerRef = useRef<HTMLDivElement>(null);
-  const headerVisible = useIntersection(headerRef, { rootMargin });
+  const headerVisible =
+    forceVisible ?? useIntersection(headerRef, { rootMargin });
   return (
     <div ref={headerRef} className="w-full px-2">
       <div
