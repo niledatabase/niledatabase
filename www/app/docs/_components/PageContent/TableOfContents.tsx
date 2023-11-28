@@ -6,7 +6,6 @@ type Props = {
 };
 export default function TableOfContents(props: Props) {
   const { toc } = props;
-
   if (toc.length <= 1) {
     return null;
   }

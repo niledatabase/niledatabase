@@ -11,7 +11,7 @@ export default function Container({
     <Body background={null}>
       <Navigation className="lg:border-gray lg:border-b-[1px] lg:bg-black" />
       <main className="mx-auto bg-no-repeat bg-top bg-[size:100%] bg-docs">
-        <div className="flex flex-row">{children}</div>
+        <div className="flex flex-row justify-center">{children}</div>
       </main>
       <Footer className="my-40 container mx-auto" />
     </Body>

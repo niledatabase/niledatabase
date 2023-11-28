@@ -38,9 +38,9 @@ function PageContent(props: Props) {
   return (
     <>
       <SideNavigation page={`/docs/${root}${page ? `/${page}` : ""}`} />
-      <div className="flex flex-row h-full items-start justify-center w-full flex-1">
+      <div className="flex flex-row h-full items-start max-w-[76rem] w-[76rem] justify-center flex-1">
         <div className="relative">
-          <article className="prose prose-invert p-4 mt-20 lg:max-w-[45rem] lg:w-[45rem] 2xl:w-[70rem] 2xl:max-w-[70rem] docs">
+          <article className="prose prose-invert p-4 mt-20 docs lg:max-w-[45rem] lg:w-[45rem] 2xl:w-[76rem] 2xl:max-w-[76rem]">
             <Component />
           </article>
           {toc.length > 1 && (

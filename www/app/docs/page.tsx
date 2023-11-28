@@ -35,7 +35,7 @@ export default async function Home() {
   return (
     <Container>
       <SideNavigation page={`/docs`} />
-      <div className="flex flex-col max-w-6xl mx-auto">
+      <div className="flex flex-col px-2 max-w-6xl">
         <div className="container mx-auto">
           <div className="flex flex-row items-start gap-2 mx-auto mt-20">
             <Image
