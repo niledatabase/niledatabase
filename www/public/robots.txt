@@ -1,0 +1,8 @@
+# *
+User-agent: *
+
+# Host
+Host: https://thenile.dev
+
+# Sitemaps
+Sitemap: https://thenile.dev/sitemap.xml
