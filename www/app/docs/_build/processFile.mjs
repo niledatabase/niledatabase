@@ -16,7 +16,7 @@ export async function processFile(file) {
   parts.shift();
   const baseResponse = { file, slug: parts, order: 0 };
 
-  const maybeHeader = /title:\s['"](.+)['"]/.exec(content);
+  const maybeHeader = /sidebarTitle:\s['"](.+)['"]/.exec(content);
   const firstHeader = /#\s(.+)/.exec(content);
   if (maybeHeader) {
     const [, header] = maybeHeader;
@@ -24,6 +24,11 @@ export async function processFile(file) {
   } else if (firstHeader) {
     const [, header] = firstHeader;
     baseResponse.header = header;
+  }
+
+  if (firstHeader) {
+    const [, header] = firstHeader;
+    baseResponse.firstHeader = header;
   }
 
   // math is done on this, so don't use `addMethod`
