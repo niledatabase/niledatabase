@@ -73,7 +73,7 @@ export const NodeJSQuickstart: Template = {
   name: "NodeJS multi-tenant application with Nile",
   // what the template does
   description:
-    "Learn about Nile concepts from a Todo multi-tenant app in NodeJS",
+    "Learn about Nile concepts from a multi-tenant Todo List app in NodeJS",
   // who made it
   author: "Nile",
   // the location of the thumbnail. could be in /public/templates, or a CDN
@@ -95,7 +95,8 @@ export const JavaQuickstart: Template = {
   // A great name, preferably unique, name for the template
   name: "Java multi-tenant application with Nile",
   // what the template does
-  description: "Learn about Nile concepts from a Todo multi-tenant app in Java",
+  description:
+    "Learn about Nile concepts from a multi-tenant Todo List app in Java",
   // who made it
   author: "Nile",
   demoUrl: "https://java-quickstart-demo.vercel.app/",
@@ -118,7 +119,7 @@ export const DrizzleQuickstart: Template = {
   name: "Drizzle multi-tenant application with Nile",
   // what the template does
   description:
-    "Learn about Nile concepts from a Todo multi-tenant app in Drizzle",
+    "Learn about Nile concepts from a multi-tenant Todo List app in Drizzle",
   // who made it
   author: "Nile",
   demoUrl: "https://nile-drizzle-quickstart.vercel.app/",
@@ -131,6 +132,22 @@ export const DrizzleQuickstart: Template = {
   // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
     Framework: "NodeJS, Drizzle ORM, Express",
+    "Use Case": "Building SaaS",
+    Publisher: "Nile",
+  },
+};
+
+export const LambdaQuickstart: Template = {
+  name: "Todo List application backend with Nile and AWS Lambda",
+  description:
+    "Learn about Nile concepts from a multi-tenant Todo List app in AWS Lambda",
+  author: "Nile",
+  demoUrl: "https://todo-lambda.vercel.app/",
+  imageSrc: "/templates/LambdaTodoApp.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/serverless/lambda-drizzle/README.md",
+  metadata: {
+    Framework: "AWS Lambda, Serverless, NodeJS, Drizzle ORM, Express",
     "Use Case": "Building SaaS",
     Publisher: "Nile",
   },
