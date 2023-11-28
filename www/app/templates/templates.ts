@@ -95,7 +95,8 @@ export const JavaQuickstart: Template = {
   // A great name, preferably unique, name for the template
   name: "Java multi-tenant application with Nile",
   // what the template does
-  description: "Learn about Nile concepts from a multi-tenant Todo List app in Java",
+  description:
+    "Learn about Nile concepts from a multi-tenant Todo List app in Java",
   // who made it
   author: "Nile",
   demoUrl: "https://java-quickstart-demo.vercel.app/",
