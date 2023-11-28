@@ -9,7 +9,8 @@
     "examples/user_management/sso_login_okta/NextJS",
     "examples/user_management/social_login_google/NextJS",
     "examples/quickstart/java/fe",
-    "examples/quickstart/drizzle/fe"
+    "examples/quickstart/drizzle/fe",
+    "examples/serverless/lambda-drizzle/fe"
   ],
   "scripts": {
     "dev": "turbo run dev",
