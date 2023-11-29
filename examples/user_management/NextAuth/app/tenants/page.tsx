@@ -1,6 +1,4 @@
-import { cookies } from 'next/headers';
 import styles from '../page.module.css';
-import {getUserName } from "@/lib/AuthUtils";
 import NextLink from 'next/link'
 import MUILink from '@mui/joy/Link';
 import Card from '@mui/joy/Card';
@@ -11,7 +9,7 @@ import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import {AddForm} from '@/app/tenants/add-form';
-import {configureNile} from '@/lib/NileServer'
+import {configureNile, getUserName} from '@/lib/NileServer'
 
 // Forcing to re-evaluate each time. 
 // This guarantees that users will only see their own data and not another user's data via cache
@@ -23,12 +21,11 @@ export const fetchCache = 'force-no-store'
 export default async function Page() {
   // This is the tenant selector, so we use Nile with just the current user and reset tenant_id if already set
   // if Nile is already configured for this user, it will reuse the existing Nile instance
-  const nile = configureNile(cookies().get('authData'), undefined); 
+  const nile = await configureNile(undefined);
   console.log("showing tenants page for user: " + nile.userId);
   let tenants:any = [];
   
   if (nile.userId) {
-    // TODO: Replace with API call to get tenants for user when the SDK supports this
     tenants = await nile.db("tenants")
       .select("tenants.id","tenants.name")
       .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
@@ -55,7 +52,7 @@ export default async function Page() {
             </List>
           </CardContent>
           <CardContent>
-                <Typography level="body-md" textAlign="center"> You are logged in as {getUserName(cookies().get('authData'))} <MUILink href="/logout" component={NextLink}>(Logout)</MUILink></Typography>
+                <Typography level="body-md" textAlign="center"> You are logged in as {await getUserName()} <MUILink href="/logout" component={NextLink}>(Logout)</MUILink></Typography>
           </CardContent>
           </Card>
         </div>

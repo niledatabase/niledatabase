@@ -1,5 +1,7 @@
 import Server from '@niledatabase/server';
 import AuthCookieData from '@/lib/AuthUtils';
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "../app/api/auth/[...nextauth]/route"
 
 
 // Initialize the Nile server object for reuse in all pages
@@ -24,13 +26,25 @@ export default nile;
 
 // This returns a reference to the Nile Server, configured with the user's auth token and tenantID (if any)
 // If Nile already have a connection to the same tenant database for the same user, we'll return an existing connection
-export function configureNile(rawAuthCookie: any, tenantId: string | null | undefined)  {
-    const authData = JSON.parse(rawAuthCookie.value) as AuthCookieData;
+export async function configureNile(tenantId: string | null | undefined)  {
+   const session = await getServerSession(authOptions)
+   console.log(session)
     return nile.getInstance({
       tenantId: tenantId,
-      userId: authData.tokenData?.sub,
+      //@ts-ignore
+      userId: session?.user?.id,
       api: {
-        token: authData.accessToken,
+        token: undefined, // since we authenticated via NextAuth, we don't have a Nile auth token for the user. This means we can't use some of Nile's APIs.
       }
     })
+}
+
+export async function getUserName(): Promise<string | null | undefined> {
+  try {
+    const session = await getServerSession(authOptions)
+    const bestName = session?.user?.name || session?.user?.email;;
+    return bestName;
+  } catch (e) {
+    return undefined;
+  }
 }
