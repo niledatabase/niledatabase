@@ -9,6 +9,8 @@ import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import {AddForm} from '@/app/tenants/add-form';
+import { redirect } from 'next/navigation'
+
 import {configureNile, getUserName} from '@/lib/NileServer'
 
 // Forcing to re-evaluate each time. 
@@ -30,6 +32,9 @@ export default async function Page() {
       .select("tenants.id","tenants.name")
       .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
       .where("tenant_users.user_id", "=", nile.userId);
+  } else {
+  // unauthenticated user, so we show them the way out
+    redirect('/');
   };
 
   return (
@@ -52,7 +57,7 @@ export default async function Page() {
             </List>
           </CardContent>
           <CardContent>
-                <Typography level="body-md" textAlign="center"> You are logged in as {await getUserName()} <MUILink href="/logout" component={NextLink}>(Logout)</MUILink></Typography>
+                <Typography level="body-md" textAlign="center"> You are logged in as {await getUserName()} <MUILink href="/api/auth/signout" component={NextLink}>(Logout)</MUILink></Typography>
           </CardContent>
           </Card>
         </div>
