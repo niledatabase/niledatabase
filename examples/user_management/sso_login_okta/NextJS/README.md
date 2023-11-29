@@ -5,10 +5,10 @@ Okta.
 
 - [Live demo](https://login-okta-demo.vercel.app/)
 - [Video guide - TBD](TBD)
-- [Step by step guide](https://niledatabase-www.vercel.app/docs/user-authentication/enterprise-login/okta)
+- [Step by step guide](https://www.thenile.dev/docs/user-authentication/enterprise-login/okta)
 
 > You need to have Okta configured in your Nile workspace to use this example.
-> Read [the guide](https://niledatabase-www.vercel.app/docs/user-authentication/enterprise-login/okta) to learn how.
+> Read [the guide](https://www.thenile.dev/docs/user-authentication/enterprise-login/okta) to learn how.
 
 ## Setup & Run
 
