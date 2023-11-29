@@ -5,10 +5,10 @@ Google.
 
 - [Live demo](https://niledatabase-google-sso.vercel.app)
 - [Video guide - TBD](TBD)
-- [Step by step guide](https://niledatabase-www.vercel.app/docs/user-authentication/social-login/google)
+- [Step by step guide](https://www.thenile.dev/docs/user-authentication/social-login/google)
 
 > You need to have Google configured in your Nile workspace to use this example.
-> Read [the guide](https://niledatabase-www.vercel.app/docs/user-authentication/social-login/google) to learn how.
+> Read [the guide](https://www.thenile.dev/docs/user-authentication/social-login/google) to learn how.
 
 ## Setup & Run
 

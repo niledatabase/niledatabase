@@ -1,10 +1,10 @@
-# Multi-tenant todo list app with Nile and NextJS 13
+# Multi-tenant todo list app using NextAuth
 
-This template shows how to use Nile with NextJS 13 for a multi-tenant todo list application.
+This template shows how to use Nile with NextAuth for a multi-tenant todo list application.
 
-- [Live demo](https://nextjs-quickstart-omega.vercel.app)
-- [Video guide](https://www.youtube.com/watch?v=Eo0dDROnJGg)
-- [Step by step guide](https://thenile.dev/docs/getting-started/languages/nextjs)
+- [Live demo - TBD]()
+- [Video guide - TBD]()
+- [Step by step guide - TBD]()
 
 ## Getting Started
 
@@ -62,16 +62,18 @@ CREATE TABLE IF NOT EXISTS "verification_token" (
 alter table users.users add column "email_verified" timestamp;
 ```
 
-### 3. Getting credentials
+Those should also show up on the left panel.
+
+### 4. Getting credentials
 
 In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentails and keep them somewhere safe. These give you access to the database.
 
-### 4. Setting the environment
+### 5. Setting the environment
 
 If you haven't cloned this project yet, now will be an excellent time to do so. Since it uses NextJS, we can use `create-next-app` for this:
 
 ```bash
-npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs nile-todo
+npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/user_management/NextAuth todo-nextauth
 cd nile-todo
 ```
 
@@ -79,50 +81,48 @@ Rename `.env.local.example` to `.env.local`, and update it with your workspace a
 _(Your workspace and database name are displayed in the header of the Nile dashboard.)_
 Also fill in the username and password with the credentials you picked up in the previous step.
 
-It should look something like this:
+Since our example includes passwordless email authentication, you'll want to fill in details of your email provider in order to try this part of the example.
+NextAuth uses `nodemailer` for emails, so if you are confused about the configuration look up your provider in `nodemailer` docs.
+
+The resulting env fileshould look something like this:
 
 ```bash
+# Private (backend) environment variables for NextAuth.js
+
+SMTP_USER=postmaster@youremaildomain.com
+SMTP_PASSWORD=supersecret
+SMTP_HOST=smtp.youremailhost.com
+SMTP_PORT=587
+EMAIL_FROM=someone@youremaildomain.com
+
+# Private (backend) env vars for connecting to Nile database
+NILE_DB_HOST = "db.thenile.dev"
+NILE_USER = "018c18c4-db4a-7f88-bf9b-d4b7f2643f6d"
+NILE_PASSWORD = "6669ba87-a333-4fc4-a50b-74b3474f3888"
+NILE_DATABASE = "mydb"
+
 # Client (public) env vars
 
 # the URL of this example + where the api routes are located
 # Use this to instantiate Nile context for client-side components
 NEXT_PUBLIC_BASE_PATH=http://localhost:3000/api
-NEXT_PUBLIC_WORKSPACE=todoapp_demo
-NEXT_PUBLIC_DATABASE=demo_db_nextjs_qs
-
-# Private env vars that should never show up in the browser
-# These are used by the server to connect to Nile database
-NILE_DB_HOST = "db.thenile.dev"
-NILE_USER = "018ad484-0d52-7274-8639-057814be60c3"
-NILE_PASSWORD = "0d11b8e5-fbbc-4639-be44-8ab72947ec5b"
-
-# The URL of the Nile API
-# Use this to instantiate Nile Server context for server-side use of the "api" SDK
-NEXT_PUBLIC_NILE_API=https://api.thenile.dev 
-
-# Uncomment if you want to try Google Auth
-# AUTH_TYPE=google
+NEXT_PUBLIC_WORKSPACE=my_workspace
+NEXT_PUBLIC_DATABASE=mydb
 ```
 
-Install dependencies with `yarn install` or `npm install`.
+Install dependencies with `npm install`.
 
-### 5. Running the app
+### 6. Running the app
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 If all went well, your browser should show you the first page in the app, asking you to login or sign up.
 
-After you sign up as a user of this example app, you'll be able to see this user by going back to Nile Console and running `select * from users` in the query editor.
+After you sign up as a user of this example app, you'll be able to see this user by going back to Nile Console and running `select * from users.users` in the query editor.
 
 Login with the new user, and you can create a new tenant and add tasks for the tenant. You can see the changes in your Nile database by running
 
@@ -134,7 +134,7 @@ tenants join todos on tenants.id=todos.tenant_id
 ## Learn More
 
 To learn more about how this example works and how to use Nile:
-- [In depth explanation of this example](https://niledatabase-www.vercel.app/docs/getting-started/languages/nextjs)
+
 - [More about tenants in Nile](https://niledatabase-www.vercel.app/docs/tenant-management)
 - [More on user authentication with Nile](https://niledatabase-www.vercel.app/docs/user-authentication)
 - [Nile's Javascript SDK reference](https://niledatabase-www.vercel.app/docs/reference/sdk-reference)

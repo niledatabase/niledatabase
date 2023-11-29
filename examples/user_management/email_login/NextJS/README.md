@@ -4,7 +4,7 @@ This example demonstrates how to integrate an application with Nile to authentic
 
 - [Live demo](https://email-authn.vercel.app)
 - [Video guide - TBD](TBD)
-- [Step by step guide](https://niledatabase-www.vercel.app/docs/user-authentication/quick-start/nextjs)
+- [Step by step guide](https://www.thenile.dev/docs/user-authentication/email-login/nextjs)
 
 ## Setup & Run
 
@@ -26,4 +26,4 @@ This example demonstrates how to integrate an application with Nile to authentic
 
 - Open [http://localhost:3000](http://localhost:3000) to try the app.
 
-- You can now signup and login via the example app. Then you can switch back to Nile Console and see the users in your database with `select * from users`
+- You can now signup and login via the example app. Then you can switch back to Nile Console and see the users in your database with `select * from users.users`
