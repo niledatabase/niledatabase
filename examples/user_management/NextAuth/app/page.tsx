@@ -1,10 +1,11 @@
+'use client'
 import Image from 'next/image'
 import styles from './page.module.css'
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
-import GoogleAuthPanel from '@/components/GoogleSSOForm';
-import BasicLoginForm from '@/components/BasicLoginForm';
-import ErrorBox from '@/components/ErrorBox';
+import Input from "@mui/joy/Input";
+import Button from "@mui/joy/Button";
+import { signIn } from "next-auth/react"
 
 export default function Home() {
   // This demo supports both Google and email/password auth. 
@@ -12,18 +13,24 @@ export default function Home() {
   // set AUTH_TYPE="google" to use Google auth
   const authType = process.env.AUTH_TYPE 
   return (
-    <div>
-      <div className={styles.center}>
-        <Stack gap={5} sx={{ maxWidth: '40rem' }} alignItems={'center'}>
-          <ErrorBox />
-           {/* These components are simple wrappers around Nile's React components. 
-           It is needed because Nile's React components are client-side only. */}
-           { (authType === 'google') ?           
-            <GoogleAuthPanel /> :
-            <BasicLoginForm />
-          }
-        </Stack>
-      </div>
+    <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
+          <Stack gap={5} sx={{ maxWidth: '40rem' }} alignItems={'center'}>
+          <form
+              onSubmit={(event) => {
+                console.log("handling submit")
+                event.preventDefault();
+                const data = new FormData(event.currentTarget);
+                console.log(data.entries().next().value[1])
+                const email = data.entries().next().value[1];
+                signIn("email", { email, callbackUrl: "/tenants"})
+              }}>
+            <label>
+              <Typography> Email address </Typography>
+              <Input type="email" id="email" name="email"/>
+            </label>
+            <Button type="submit">Sign in with Email</Button>
+            </form>
+            </Stack>
     </div>
   )
 }
