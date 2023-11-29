@@ -27,6 +27,7 @@ export default nile;
 // This returns a reference to the Nile Server, configured with the user's auth token and tenantID (if any)
 // If Nile already have a connection to the same tenant database for the same user, we'll return an existing connection
 export async function configureNile(tenantId: string | null | undefined)  {
+  console.log("configureNile", tenantId)
    const session = await getServerSession(authOptions)
    console.log(session)
     return nile.getInstance({

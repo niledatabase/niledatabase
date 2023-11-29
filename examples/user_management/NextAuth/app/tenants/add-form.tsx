@@ -40,8 +40,6 @@ export function AddForm() {
             aria-describedby="basic-modal-dialog-description"
             sx={{ maxWidth: 500 }}
           >
-        {/* can't use MUI form here, it interfers with NextJS form magic. Will need to do some styling */}
-
         <form name="newtenant" id="newtenant" action={formAction}> 
         <Stack spacing={3}>
                 <Typography>Name</Typography>

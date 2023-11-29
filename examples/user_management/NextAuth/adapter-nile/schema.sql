@@ -1,7 +1,6 @@
 -- These are the extra tables NextAuth requires in your database to support
 
 CREATE TABLE IF NOT EXISTS "accounts" (
-    "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
     "userId" uuid NOT NULL,
     "type" text NOT NULL,
     "provider" text NOT NULL,
