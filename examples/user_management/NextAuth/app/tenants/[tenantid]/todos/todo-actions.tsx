@@ -8,7 +8,7 @@ import { configureNile} from '@/lib/NileServer';
 
 export async function addTodo(tenantId: string, prevState: any, formData: FormData) {
     // Each  a Nile instance is connected to our current tenant DB with the current user permissions
-    const tenantNile = configureNile(cookies().get('authData'), tenantId);
+    const tenantNile = await configureNile(tenantId);
     const title = formData.get('todo')
     console.log("adding Todo " + title + " for tenant:" +tenantNile.tenantId + " for user:" + tenantNile.userId);
     try {
@@ -23,7 +23,7 @@ export async function addTodo(tenantId: string, prevState: any, formData: FormDa
 
 export async function completeTodo( tenantId: string, id:string, complete: boolean) {
         // Each  a Nile instance is connected to our current tenant DB with the current user permissions
-        const tenantNile = configureNile(cookies().get('authData'), tenantId);
+        const tenantNile = await configureNile(tenantId);
         console.log("updating Todo " + id + " for tenant:" + tenantNile.tenantId + " for user:" + tenantNile.userId);
     try {
         // Tenant ID and user ID are in the context, so we don't need to specify them as query filters

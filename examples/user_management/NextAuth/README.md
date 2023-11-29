@@ -25,7 +25,9 @@ If all went well, you'll see the new table in the panel on the left hand side of
 ### 3. Create tables for NextAuth data model
 
 ```sql
-CREATE TABLE IF NOT EXISTS "account" (
+-- These are the extra tables NextAuth requires in your database to support
+
+CREATE TABLE IF NOT EXISTS "accounts" (
     "userId" uuid NOT NULL,
     "type" text NOT NULL,
     "provider" text NOT NULL,
@@ -41,7 +43,7 @@ CREATE TABLE IF NOT EXISTS "account" (
    -- ,CONSTRAINT "account_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "users.users"("id") ON DELETE cascade ON UPDATE no action;
 );
 
-CREATE TABLE IF NOT EXISTS "session" (
+CREATE TABLE IF NOT EXISTS "sessions" (
     "sessionToken" text PRIMARY KEY NOT NULL,
     "userId" text NOT NULL,
     "expires" timestamp NOT NULL
@@ -54,12 +56,10 @@ CREATE TABLE IF NOT EXISTS "verification_token" (
     "expires" timestamp NOT NULL,
     CONSTRAINT verificationToken_identifier_token_pk PRIMARY KEY("identifier","token")
 );
-```
 
-### 3. Extend Nile's built-in schema with NextAuth fields
+-- users table is built-in to Nile, but we need to extend it for NextAuth
 
-```sql
-alter table users.users add column "email_verified" timestamp
+alter table users.users add column "email_verified" timestamp;
 ```
 
 ### 3. Getting credentials

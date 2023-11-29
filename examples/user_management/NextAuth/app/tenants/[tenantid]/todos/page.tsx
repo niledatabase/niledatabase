@@ -23,16 +23,15 @@ export default async function Page({ params }: { params: { tenantid: string } })
 
     // Here we are getting a connection to a specific tenant database for the current usr
     // if we already got such connection earlier, it will reuse the existing one
-    const tenantNile = configureNile(cookies().get('authData'), params.tenantid);
+    const tenantNile = await configureNile(params.tenantid);
 
     console.log("showing todos for user " + tenantNile.userId + " for tenant " + tenantNile.tenantId);
     const todos = await tenantNile.db("todos").select("*").orderBy("title"); // no need for where clause because we previously set Nile context
-    // Get tenant name doesn't need any input parameters because it uses the tenant ID and user token from the context
-    const resp = await tenantNile.api.tenants.getTenant();
-    const tenant = await resp.json();
+    const resp = await tenantNile.db("tenants").select("name"); // no need for where clause because we previously set Nile context
+    const tenant = resp[0].name;
     return (
             <Stack spacing={2} width={"50%"}>
-              <Typography level="h2" textAlign={"center"} sx={{textTransform: 'uppercase',}}>{tenant.name}&apos;s Todos</Typography>
+              <Typography level="h2" textAlign={"center"} sx={{textTransform: 'uppercase',}}>{tenant}&apos;s Todos</Typography>
                 <MUILink href="/tenants" component={NextLink} justifyContent={"center"}>(Back to tenant selection) </MUILink>
               <List variant="plain" size="lg">
                 <ListItem>
