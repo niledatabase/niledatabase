@@ -55,7 +55,7 @@ export default function RootLayout({
               sx={{
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
-          <Link overlay href="https://niledatabase-www.vercel.app/docs/getting-started/languages/drizzle" target="_blank" rel="noopener" 
+          <Link overlay href="https://www.thenile.dev/docs/getting-started/languages/drizzle" target="_blank" rel="noopener" 
             style={{fontSize:"18px", alignItems:"center", display:"flex", color:"black"}}>
           <Image src="/drizzle.svg" alt="Drizzle Logo" className={styles.logo} width={49.125} height={60}/> Drizzle
             </Link>
@@ -82,7 +82,7 @@ export default function RootLayout({
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
-          <Link overlay href="https://niledatabase-www.vercel.app/templates"  target="_blank" rel="noopener">
+          <Link overlay href="https://www.thenile.dev/templates"  target="_blank" rel="noopener">
             <Image src="/nile_logo.svg" alt="Nile Logo" className={styles.logo} height={24} width={100} />
             </Link>
           <CardContent>

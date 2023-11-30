@@ -142,9 +142,9 @@ tenants join todos on tenants.id=todos.tenant_id
 
 To learn more about how this example works and how to use Nile:
 
-- [More about tenants in Nile](https://niledatabase-www.vercel.app/docs/tenant-management)
-- [More on user authentication with Nile](https://niledatabase-www.vercel.app/docs/user-authentication)
-- [Nile's Javascript SDK reference](https://niledatabase-www.vercel.app/docs/reference/sdk-reference)
+- [More about tenants in Nile](https://www.thenile.dev/docs/tenant-management)
+- [More on user authentication with Nile](https://www.thenile.dev/docs/user-authentication)
+- [Nile's Javascript SDK reference](https://www.thenile.dev/docs/reference/sdk-reference)
 
 ## Deploy on Vercel
 

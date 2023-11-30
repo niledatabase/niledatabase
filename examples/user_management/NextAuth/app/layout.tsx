@@ -59,7 +59,7 @@ export default function RootLayout({
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
-          <Link overlay href="https://niledatabase-www.vercel.app/docs/getting-started/languages/nextjs" target="_blank" rel="noopener">
+          <Link overlay href="https://www.thenile.dev/docs/user-authentication/third-party/nextauth" target="_blank" rel="noopener">
             <Image src="/nextauth.webp" alt="NextAuth Logo" className={styles.logo} height={30} width={30} style={{marginRight:"0.5rem"}}/>
             <Typography level="title-md"> NextAuth</Typography>
             </Link>
@@ -86,7 +86,7 @@ export default function RootLayout({
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
-          <Link overlay href="https://niledatabase-www.vercel.app/templates"  target="_blank" rel="noopener">
+          <Link overlay href="https://www.thenile.dev/templates"  target="_blank" rel="noopener">
             <Image src="/nile_logo.svg" alt="Nile Logo" className={styles.logo} height={24} width={100} />
             </Link>
           <CardContent>
