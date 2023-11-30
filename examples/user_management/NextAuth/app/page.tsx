@@ -5,22 +5,29 @@ import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import Divider from '@mui/joy/Divider';
 import { signIn } from "next-auth/react"
 
 export default function Home() {
-  // This demo supports both Google and email/password auth. 
-  // If this is the first time trying Nile, email/password will be simpler.
-  // set AUTH_TYPE="google" to use Google auth
+  // This demo supports both Github and passwordless email auth.
   const authType = process.env.AUTH_TYPE 
   return (
     <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
           <Stack gap={5} sx={{ maxWidth: '40rem' }} alignItems={'center'}>
+          <Card  variant="outlined">
+          <CardContent > 
+            <div style={{display: 'flex', justifyContent: 'center', padding:'1rem'}}>
+            <Button onClick={() => signIn("github", {callbackUrl: "/tenants"})}>Sign in with Github</Button>
+            </div>
+          </CardContent>
+          <Divider>or</Divider>
+          <CardContent> 
           <form
               onSubmit={(event) => {
-                console.log("handling submit")
                 event.preventDefault();
                 const data = new FormData(event.currentTarget);
-                console.log(data.entries().next().value[1])
                 const email = data.entries().next().value[1];
                 signIn("email", { email, callbackUrl: "/tenants"})
               }}>
@@ -28,8 +35,12 @@ export default function Home() {
               <Typography> Email address </Typography>
               <Input type="email" id="email" name="email"/>
             </label>
+            <div style={{display: 'flex', justifyContent: 'center', padding:'1rem'}}>
             <Button type="submit">Sign in with Email</Button>
+            </div>
             </form>
+          </CardContent>
+          </Card>
             </Stack>
     </div>
   )
