@@ -4,7 +4,7 @@ The expense reporting data set is a sample database for an expense reporting Saa
 
 Here's an overview of the schema we use:
 
-<img src=./expense_report_ERD.svg width="50%" height="auto"/>
+<img src=./expense_report_ERD.svg width="80%" height="auto"/>
 
 Note that in this scenario all tables are [tenant aware](https://www.thenile.dev/docs/tenant-isolation): They all have `tenant_id` column and this column is part of their primary key. This is what allows Nile to provide isolation of the expense reporting data of each tenant.
 
