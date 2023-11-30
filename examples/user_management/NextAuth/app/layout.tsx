@@ -25,8 +25,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <main className={styles.main}>
         <div className={styles.description}>
-        <div>
-          <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
+        <div style={{fontSize:"18px", alignItems:"center", display:"flex"}}>
+          <Image src="/nextauth.webp" alt="NextAuth Logo" className={styles.logo} height={30} width={30} style={{marginRight:"0.5rem"}}/>
+          NextAuth
         </div>
         <div>
           <a
@@ -59,7 +60,8 @@ export default function RootLayout({
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
           <Link overlay href="https://niledatabase-www.vercel.app/docs/getting-started/languages/nextjs" target="_blank" rel="noopener">
-            <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
+            <Image src="/nextauth.webp" alt="NextAuth Logo" className={styles.logo} height={30} width={30} style={{marginRight:"0.5rem"}}/>
+            <Typography level="title-md"> NextAuth</Typography>
             </Link>
           <CardContent>
             <Typography>Getting started guide</Typography>
