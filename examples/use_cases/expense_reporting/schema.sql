@@ -27,20 +27,6 @@ CREATE TABLE IF NOT EXISTS expense_report (
 
 CREATE index IF NOT EXISTS expense_report_by_employee ON expense_report (employee_id, tenant_id);
 
-CREATE TABLE IF NOT EXISTS expense_report_comments (
-    expense_report_id INTEGER NOT NULL,
-    tenant_id UUID NOT NULL,
-    comment_id UUID NOT NULL,
-    user_id UUID NOT NULL,
-    comment TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (tenant_id, expense_report_id, comment_id),
-    FOREIGN KEY (tenant_id, expense_report_id) REFERENCES expense_report(tenant_id, id)
---    ,FOREIGN KEY (tenant_id, user_id) REFERENCES users.tenant_users(tenant_id, user_id)
-);
-
-CREATE index IF NOT EXISTS expense_report_comments_by_expense_report ON expense_report_comments (expense_report_id, tenant_id);
-
 CREATE TABLE EXPENSE_REPORT_ITEMS (
     expense_report_id INTEGER NOT NULL,
     tenant_id UUID NOT NULL,
