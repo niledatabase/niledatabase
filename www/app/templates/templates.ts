@@ -153,6 +153,22 @@ export const LambdaQuickstart: Template = {
   },
 };
 
+export const NextAuthQuickstart: Template = {
+  name: "Todo List with NextAuth-based Authentication",
+  description:
+    "Learn how to use Nile with NextAuth to build a multi-tenant app",
+  author: "Nile",
+  demoUrl: "https://nextauth-demo-delta.vercel.app/",
+  imageSrc: "/templates/NextAuthLogin.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/NextAuth/README.md",
+  metadata: {
+    Framework: "NextAuth, NextJS, OAuth, Passwordless, Session, JWT",
+    "Use Case": "SaaS Authentication",
+    Publisher: "Nile",
+  },
+};
+
 /*
 export const placeholderTemplate: Template = {
   // A great name, preferably unique, name for the template
