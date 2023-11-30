@@ -63,7 +63,7 @@ export default function RootLayout({
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
-          <Link overlay href="https://niledatabase-www.vercel.app/docs/user-authentication/email-login/nextjs" target="_blank" rel="noopener">
+          <Link overlay href="https://www.thenile.dev/docs/user-authentication/email-login/nextjs" target="_blank" rel="noopener">
             <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
             </Link>
           <CardContent>
@@ -89,7 +89,7 @@ export default function RootLayout({
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
-          <Link overlay href="https://niledatabase-www.vercel.app/templates"  target="_blank" rel="noopener">
+          <Link overlay href="https://www.thenile.dev/templates"  target="_blank" rel="noopener">
             <Image src="/nile_logo.svg" alt="Nile Logo" className={styles.logo} height={24} width={100} />
             </Link>
           <CardContent>

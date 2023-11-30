@@ -5,16 +5,16 @@ export const metadata = {
   order: 4,
 };
 
-If you have a favorite authentication framework, you can use it with Nile. 
+If you have a favorite authentication framework, you can use it with Nile.
 Nile will store the user information and session data (assuming you choose to use sessions), while the framework will handle the authentication methods, session and/or JWT.
 
 Using Nile as the database when using 3rd party authentication frameworks has several advantages:
 
 1. You store all the details about your users in your own Postgres database, which you can use as you wish. This data is critical for your business, so you want to own it.
-2. You have the option to manage user access with sessions rather than JWTs. While both options are secure, sessions give you better flexibility when it comes to expiration. 
-Since Nile is serverless *and* supports multiple regions, you can use it for session store with fewer concerns about scalability and latency.
-3. You can use Nile's tenant management and isolation to manage your users and their access to your application. 
-Properly configured, Nile will automatically validate that a user has access to the tenant when executing queries on behalf of a user.
+2. You have the option to manage user access with sessions rather than JWTs. While both options are secure, sessions give you better flexibility when it comes to expiration.
+   Since Nile is serverless _and_ supports multiple regions, you can use it for session store with fewer concerns about scalability and latency.
+3. You can use Nile's tenant management and isolation to manage your users and their access to your application.
+   Properly configured, Nile will automatically validate that a user has access to the tenant when executing queries on behalf of a user.
 
 Here's an example to get you started:
 

@@ -29,7 +29,7 @@ export default function SingleSignOnSettings(props: OktaProps) {
         >
           <div>
             <div>Create an OKTA account to proceed with this demo. 
-          You can find step by step instructions in our <Link target="_blank" rel="noopener" href="https://niledatabase-www.vercel.app/docs/user-authentication/enterprise-login/okta#set-up-okta">Okta with Next.js guide</Link>.
+          You can find step by step instructions in our <Link target="_blank" rel="noopener" href="https://www.thenile.dev/docs/user-authentication/enterprise-login/okta#set-up-okta">Okta with Next.js guide</Link>.
           </div>
           </div>
         </Alert>

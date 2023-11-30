@@ -2,9 +2,9 @@
 
 This template shows how to use Nile with NextAuth for a multi-tenant todo list application.
 
-- [Live demo - TBD]()
+- [Live demo](https://nextauth-demo-delta.vercel.app/)
 - [Video guide - TBD]()
-- [Step by step guide - TBD]()
+- [Step by step guide](https://www.thenile.dev/docs/user-authentication/third-party/nextauth)
 
 ## Getting Started
 
@@ -81,33 +81,40 @@ Rename `.env.local.example` to `.env.local`, and update it with your workspace a
 _(Your workspace and database name are displayed in the header of the Nile dashboard.)_
 Also fill in the username and password with the credentials you picked up in the previous step.
 
-Since our example includes passwordless email authentication, you'll want to fill in details of your email provider in order to try this part of the example.
-NextAuth uses `nodemailer` for emails, so if you are confused about the configuration look up your provider in `nodemailer` docs.
+Our example includes passwordless email and Github OAuth authentication.
+To use either method, you'll want to fill in the appropriate section of the environment file.
+You can refer to NextAuth getting started guides with [email](https://authjs.dev/getting-started/providers/email-tutorial) or [oauth](https://authjs.dev/getting-started/providers/oauth-tutorial) for more details.
 
 The resulting env fileshould look something like this:
 
 ```bash
-# Private (backend) environment variables for NextAuth.js
+# Random string for encryption
+NEXTAUTH_SECRET="random string. You should change this to something very random."
 
+# For passwordless authentication, we need SMTP credentials
 SMTP_USER=postmaster@youremaildomain.com
 SMTP_PASSWORD=supersecret
 SMTP_HOST=smtp.youremailhost.com
 SMTP_PORT=587
 EMAIL_FROM=someone@youremaildomain.com
 
+# For Github OAuth, we need the client ID and secret we got when we registered with Github:
+GITHUB_ID=Iv1.aa6f0f2bfa21b677
+GITHUB_SECRET=b5b35282aa04bee94f31ccfaa44ed8c5e00fd2a9b2
+
 # Private (backend) env vars for connecting to Nile database
 NILE_DB_HOST = "db.thenile.dev"
-NILE_USER = "018c18c4-db4a-7f88-bf9b-d4b7f2643f6d"
-NILE_PASSWORD = "6669ba87-a333-4fc4-a50b-74b3474f3888"
-NILE_DATABASE = "mydb"
+NILE_USER =
+NILE_PASSWORD =
+NILE_DATABASE =
 
 # Client (public) env vars
 
 # the URL of this example + where the api routes are located
 # Use this to instantiate Nile context for client-side components
 NEXT_PUBLIC_BASE_PATH=http://localhost:3000/api
-NEXT_PUBLIC_WORKSPACE=my_workspace
-NEXT_PUBLIC_DATABASE=mydb
+NEXT_PUBLIC_WORKSPACE=
+NEXT_PUBLIC_DATABASE=
 ```
 
 Install dependencies with `npm install`.
@@ -135,9 +142,9 @@ tenants join todos on tenants.id=todos.tenant_id
 
 To learn more about how this example works and how to use Nile:
 
-- [More about tenants in Nile](https://niledatabase-www.vercel.app/docs/tenant-management)
-- [More on user authentication with Nile](https://niledatabase-www.vercel.app/docs/user-authentication)
-- [Nile's Javascript SDK reference](https://niledatabase-www.vercel.app/docs/reference/sdk-reference)
+- [More about tenants in Nile](https://www.thenile.dev/docs/tenant-management)
+- [More on user authentication with Nile](https://www.thenile.dev/docs/user-authentication)
+- [Nile's Javascript SDK reference](https://www.thenile.dev/docs/reference/sdk-reference)
 
 ## Deploy on Vercel
 

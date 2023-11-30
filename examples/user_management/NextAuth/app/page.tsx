@@ -9,6 +9,9 @@ import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Divider from '@mui/joy/Divider';
 import { signIn } from "next-auth/react"
+import GitHubIcon from '@mui/icons-material/GitHub';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import EmailIcon from '@mui/icons-material/Email';
 
 export default function Home() {
   // This demo supports both Github and passwordless email auth.
@@ -17,13 +20,14 @@ export default function Home() {
     <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
           <Stack gap={5} sx={{ maxWidth: '40rem' }} alignItems={'center'}>
           <Card  variant="outlined">
-          <CardContent > 
+          <CardContent >
             <div style={{display: 'flex', justifyContent: 'center', padding:'1rem'}}>
-            <Button onClick={() => signIn("github", {callbackUrl: "/tenants"})}>Sign in with Github</Button>
+            <Button onClick={() => signIn("github", {callbackUrl: "/tenants"})}
+              startDecorator={<GitHubIcon />}>Sign in with Github</Button>
             </div>
           </CardContent>
           <Divider>or</Divider>
-          <CardContent> 
+          <CardContent>
           <form
               onSubmit={(event) => {
                 event.preventDefault();
@@ -36,7 +40,8 @@ export default function Home() {
               <Input type="email" id="email" name="email"/>
             </label>
             <div style={{display: 'flex', justifyContent: 'center', padding:'1rem'}}>
-            <Button type="submit">Sign in with Email</Button>
+            <Button type="submit"
+            startDecorator={<AlternateEmailIcon />}>Sign in with Email</Button>
             </div>
             </form>
           </CardContent>

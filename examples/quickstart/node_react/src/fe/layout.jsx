@@ -52,7 +52,7 @@ export default function Layout({children}) {
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
                 }}>
-          <Link overlay href="https://niledatabase-www.vercel.app/docs/getting-started/languages/node" target="_blank" rel="noopener">
+          <Link overlay href="https://www.thenile.dev/docs/getting-started/languages/node" target="_blank" rel="noopener">
           <NodeLogoBottom width="115.6px" height="70.8px"/>
             </Link>
           <CardContent>
@@ -77,7 +77,7 @@ export default function Layout({children}) {
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
-          <Link overlay href="https://niledatabase-www.vercel.app/templates"  target="_blank" rel="noopener">
+          <Link overlay href="https://www.thenile.dev/templates"  target="_blank" rel="noopener">
           <NileLogo width="120px" height="44.4px" />
           </Link>
           <CardContent>

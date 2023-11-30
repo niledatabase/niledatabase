@@ -25,8 +25,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <main className={styles.main}>
         <div className={styles.description}>
-        <div>
-          <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
+        <div style={{fontSize:"18px", alignItems:"center", display:"flex"}}>
+          <Image src="/nextauth.webp" alt="NextAuth Logo" className={styles.logo} height={30} width={30} style={{marginRight:"0.5rem"}}/>
+          NextAuth
         </div>
         <div>
           <a
@@ -58,8 +59,9 @@ export default function RootLayout({
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
-          <Link overlay href="https://niledatabase-www.vercel.app/docs/getting-started/languages/nextjs" target="_blank" rel="noopener">
-            <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
+          <Link overlay href="https://www.thenile.dev/docs/user-authentication/third-party/nextauth" target="_blank" rel="noopener">
+            <Image src="/nextauth.webp" alt="NextAuth Logo" className={styles.logo} height={30} width={30} style={{marginRight:"0.5rem"}}/>
+            <Typography level="title-md"> NextAuth</Typography>
             </Link>
           <CardContent>
             <Typography>Getting started guide</Typography>
@@ -84,7 +86,7 @@ export default function RootLayout({
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
-          <Link overlay href="https://niledatabase-www.vercel.app/templates"  target="_blank" rel="noopener">
+          <Link overlay href="https://www.thenile.dev/templates"  target="_blank" rel="noopener">
             <Image src="/nile_logo.svg" alt="Nile Logo" className={styles.logo} height={24} width={100} />
             </Link>
           <CardContent>

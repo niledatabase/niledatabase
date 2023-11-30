@@ -1,13 +1,14 @@
 export const metadata = {
   title: "NextAuth",
-  description: "Use NextAuth authentication with Nile's tenant management and isolation",
+  description:
+    "Use NextAuth authentication with Nile's tenant management and isolation",
   order: 2,
 };
 
 # NextAuth authentication with Nile
 
-This example shows how to use [NextAuth](https://next-auth.js.org/) with Nile's tenant management and isolation. NextAuth is a popular and easy to use authentication 
-library for Next.js applications. Using NextAuth with Nile as the database gives you access to passwordless authentication, session-based identity, and most important - tenant isolation. 
+This example shows how to use [NextAuth](https://next-auth.js.org/) with Nile's tenant management and isolation. NextAuth is a popular and easy to use authentication
+library for Next.js applications. Using NextAuth with Nile as the database gives you access to passwordless authentication, session-based identity, and most important - tenant isolation.
 Properly configured, Nile will automatically validate that a user has access to the tenant when executing queries on behalf of a user.
 
 ## Getting Started
@@ -87,7 +88,7 @@ Also fill in the username and password with the credentials you picked up in the
 
 Our example includes passwordless email and Github OAuth authentication.
 To use either method, you'll want to fill in the appropriate section of the environment file.
-You can refer to NextAuth getting started guides with [email](https://authjs.dev/getting-started/providers/email-tutorial) 
+You can refer to NextAuth getting started guides with [email](https://authjs.dev/getting-started/providers/email-tutorial)
 or [oauth](https://authjs.dev/getting-started/providers/oauth-tutorial) for more details.
 
 The resulting env fileshould look something like this:
@@ -187,54 +188,53 @@ Which we then use in our application.
 NextAuth SDK provides `signIn()` method that we call and it handles the login flow for us. We use it in [`app/pages.tsx`](https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/NextAuth/app/page.tsx).
 
 ```javascript
-import { signIn } from "next-auth/react"
+import { signIn } from "next-auth/react";
 
-
-<Button onClick={() => signIn("github", {callbackUrl: "/tenants"})}>Sign in with Github</Button>
+<Button onClick={() => signIn("github", { callbackUrl: "/tenants" })}>
+  Sign in with Github
+</Button>;
 ```
 
-As you can see, this is very easy to use. We just need to provide the provider name and the URL where we want the user to land after authenticating. 
+As you can see, this is very easy to use. We just need to provide the provider name and the URL where we want the user to land after authenticating.
 NextAuth will handle the rest.
 
-Similarly, to provide a logout link in [`app/tenants/page.tsx`](https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/NextAuth/app/tenants/page.tsx) 
+Similarly, to provide a logout link in [`app/tenants/page.tsx`](https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/NextAuth/app/tenants/page.tsx)
 we link to the signout endpoint provided by NextAuth:
 
 ```javascript
-<MUILink href="/api/auth/signout" component={NextLink}>(Logout)</MUILink>
+<MUILink href="/api/auth/signout" component={NextLink}>
+  (Logout)
+</MUILink>
 ```
 
 ### Using NextAuth for identity and access
 
-NextAuth provides a `useSession()` hook that we can use to get the current session. 
+NextAuth provides a `useSession()` hook that we can use to get the current session.
 In order to use it with Nile's tenant isolation, we refer to it when retrieving a conection to Nile's tenant databases in [`/lib/NileServer.ts`](https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/NextAuth/lib/NileServer.ts)
 
 This guarantess that all queries executed on behalf of the user will be executed in the context of the tenant the user is currently logged in to.
 Nile will also respond with errors if the user is not authorized to access the tenant.
 
 ```javascript
-export async function configureNile(tenantId: string | null | undefined)  {
-  console.log("configureNile", tenantId)
-   const session = await getServerSession(authOptions)
-   console.log(session)
-    return nile.getInstance({
-      tenantId: tenantId,
-      //@ts-ignore
-      userId: session?.user?.id,
-    })
+export async function configureNile(tenantId: string | null | undefined) {
+  console.log("configureNile", tenantId);
+  const session = await getServerSession(authOptions);
+  console.log(session);
+  return nile.getInstance({
+    tenantId: tenantId,
+    //@ts-ignore
+    userId: session?.user?.id,
+  });
 }
 ```
 
 ## Adding new authentication providers
 
 NextAuth supports a wide range of authentication providers. You can see the full list [here](https://next-auth.js.org/providers/).
-If you want to modify this example to use a different provider, you can do so by first modifying the NextAuth configuration 
+If you want to modify this example to use a different provider, you can do so by first modifying the NextAuth configuration
 in [`app/api/auth/[...nextauth]/route.js`](https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/NextAuth/app/api/auth/%5B...nextauth%5D/route.ts).
 Import the provider you want to choose and add a section to the `authOptions` object.
 
 Then, you'll need to modify the UI to use the new provider. For example, if you want to use Google OAuth, you'll need to add a button to the UI that calls `signIn("google")`.
 
 Thats it. NextAuth will handle the rest and you will have a new authentication method for your multi-tenant application.
-
-
-
-
