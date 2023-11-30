@@ -30,8 +30,8 @@ export const authOptions: NextAuthOptions = {
       },
     providers: [
       GithubProvider({
-        clientId: process.env.GITHUB_ID,
-        clientSecret: process.env.GITHUB_SECRET,
+        clientId: String(process.env.GITHUB_ID),
+        clientSecret: String(process.env.GITHUB_SECRET),
       }),
       Email({
         server: {

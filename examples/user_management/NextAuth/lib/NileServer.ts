@@ -1,5 +1,4 @@
 import Server from '@niledatabase/server';
-import AuthCookieData from '@/lib/AuthUtils';
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "../app/api/auth/[...nextauth]/route"
 
