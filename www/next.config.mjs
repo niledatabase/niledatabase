@@ -16,8 +16,8 @@ const withMdx = nextMdx({
           ignoreMissing: true,
           languages: { scala, sql },
           aliases: {
-            'javascript': ['nextjs', 'express']
-          }
+            javascript: ["nextjs", "express"],
+          },
         },
       ],
     ],

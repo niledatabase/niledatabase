@@ -18,11 +18,10 @@ npm install @niledatabase/server
 Then you can import the SDK in your code:
 
 ```javascript
-
 import Server from "@niledatabase/server";
 
 export const nile = Server({
-  workspace: String(process.env.NILE_WORKSPACE), 
+  workspace: String(process.env.NILE_WORKSPACE),
   database: String(process.env.NILE_DATABASE),
   db: {
     connection: {
@@ -33,24 +32,24 @@ export const nile = Server({
 });
 ```
 
-This creates an instance of Nile Server, which you can use to interact with Nile APIs and DB. 
+This creates an instance of Nile Server, which you can use to interact with Nile APIs and DB.
 Note that `Server()` returns a singleton instance, so you can import it anywhere in your code and it will be the same instance.
 
 ## Virtual Tenant Databases
 
-In order to connect to Nile's virtual tenant databases and enjoy the full isolation and security, you need to get a reference to tenant-specific instance of Nile Server. 
+In order to connect to Nile's virtual tenant databases and enjoy the full isolation and security, you need to get a reference to tenant-specific instance of Nile Server.
 
 ```javascript
 nile.getInstance({
-    tenantId: tenantId,
-    userId: userId,
-    api: {
-        token: token,
-    }
-})
+  tenantId: tenantId,
+  userId: userId,
+  api: {
+    token: token,
+  },
+});
 ```
 
-`userId` and `token` are usually obtained from a cookie that is set during authentication. `tenantId` is the id of the tenant you want to connect to, 
+`userId` and `token` are usually obtained from a cookie that is set during authentication. `tenantId` is the id of the tenant you want to connect to,
 and can be set and obtained in the path parameters, query parameters, or headers of the request. In our examples, we use path parameters for the tenant id.
 Handling of both cookies and path parameters is framework-specific.
 
@@ -60,8 +59,8 @@ Handling of both cookies and path parameters is framework-specific.
 
     export default async function Page({ params }: { params: { tenantid: string } }) {
 
-      // First, initialize global Nile instance if needed 
-      const nile = Server(...) 
+      // First, initialize global Nile instance if needed
+      const nile = Server(...)
 
       const parsedCookies = JSON.parse(String(cookies().get('authData')?.value));
       const tenantNile = nile.getInstance({
@@ -78,12 +77,12 @@ Handling of both cookies and path parameters is framework-specific.
     import Server from "@niledatabase/server";
     import cookieParser from "cookie-parser";
 
-    // First, initialize global Nile instance if needed 
-    const nile = Server(...) 
+    // First, initialize global Nile instance if needed
+    const nile = Server(...)
 
 
     app.use(cookieParser())
-    
+
     app.use('/api/tenants', (req, res, next) => {
         const parsedCookies = JSON.parse(req.cookies.authData);
         nile.userId = parsedCookies.tokenData.sub,
@@ -93,39 +92,41 @@ Handling of both cookies and path parameters is framework-specific.
 
     // set the tenant ID in the context based on the URL parameter - this runs after the auth middleware
     app.param('tenantId', (req, res, next, tenantId) => {
-        nile.tenantId = tenantId; 
+        nile.tenantId = tenantId;
         next();
     });
     ```
+
 </CodeGroups>
 
-When you work with tenant-specific references, you can use the same APIs as with the global instance, but they will be scoped to the tenant and user you specified. 
+When you work with tenant-specific references, you can use the same APIs as with the global instance, but they will be scoped to the tenant and user you specified.
 Behind the scenes, the Nile SDK manages the connections to the tenant-specific database, and the authentication to the API.
 
-You can leave `tenantId`, `userId` or `token`  as `undefined` - in that case, the SDK will use the default configuration. 
-In our examples, after a user logs in and before they pick a tenant, we set the `userId` and `token`, but leave `tenantId` as `undefined`. 
+You can leave `tenantId`, `userId` or `token` as `undefined` - in that case, the SDK will use the default configuration.
+In our examples, after a user logs in and before they pick a tenant, we set the `userId` and `token`, but leave `tenantId` as `undefined`.
 This lets us call the `createTenant` API as the authicated user.
 
 ```javascript
 nile.getInstance({
-    tenantId: undefined,
-    userId: parsedCookies.tokenData.sub,
-    api: {
-        token: parsedCookies.accessToken,
-    }
-})
+  tenantId: undefined,
+  userId: parsedCookies.tokenData.sub,
+  api: {
+    token: parsedCookies.accessToken,
+  },
+});
 ```
 
 ## APIs
 
 ### Overview
 
-Nile SDK provides a set of APIs that you can use to interact with Nile. The inputs and outputs of these APIs are all generated from the OpenAPI spec. 
+Nile SDK provides a set of APIs that you can use to interact with Nile. The inputs and outputs of these APIs are all generated from the OpenAPI spec.
 You can find the latest spec [here](https://api.thenile.dev/openapi.yaml). The API is documented in the [API Reference](../../../api-reference).
 
 All inputs are extensions of Request type, and all outputs are extensions of Response type. This allows us to pass requests from the browser directly to Nile and return the response to the browser.
 
 This is a valid API handler in NextJS:
+
 ```javascript
 export async function POST(req: Request) {
   return await api.auth.login(req);
@@ -136,7 +137,7 @@ However, you should examine the response and handle errors appropriately.
 
 ### Error handling
 
-When Nile returns an error response (40X or 500), the response body will be text, not JSON and contain the error message. 
+When Nile returns an error response (40X or 500), the response body will be text, not JSON and contain the error message.
 Therefore you need to either check the status code before calling `response.json` or handle the exception that `response.json` will throw when called on an error response.
 
 Most APIs will respond with `401 Unauthorized` if `nile.token` is unset, invalid, not signed by Nile, or expired. The exception are login and signup APIs which don't require a token.
@@ -145,7 +146,7 @@ An example of handling errors can be something like this. We use `create tenant`
 
 ```javascript
 try {
-    const createTenantResponse = await nile.api.tenants.createTenant({ 
+    const createTenantResponse = await nile.api.tenants.createTenant({
       name: name,
     });
     if (tenantResponse.status === 401) {
@@ -169,13 +170,12 @@ You call `createTenant` with the name of the tenant you want to create.
 This will create a tenant, and the current user (based on `nile.token` or `nile.api.token`) will be a member of that tenant.
 
 ```javascript
-const createTenantResponse = await nile.api.tenants.createTenant({ 
-    name: name,
+const createTenantResponse = await nile.api.tenants.createTenant({
+  name: name,
 });
 const tenant = await createTenantResponse.json();
 res.json(tenant);
 ```
-
 
 ### Get Tenant
 
@@ -189,61 +189,61 @@ res.json(tenant);
 
 ### User signup
 
-Signing up a user is a two-step process. First, you call `signUp` with the email and password of the user you want to create, and optionally a user name:  
+Signing up a user is a two-step process. First, you call `signUp` with the email and password of the user you want to create, and optionally a user name:
 
 ```javascript
-app.post('/api/sign-up', async (req, res) => {
-  const resp = await nile.api.auth.signUp(
-    {
-      email: req.body.email,
-      password: req.body.password,
-      preferredName: req.body.preferredName, // optional
-    }
-  );
+app.post("/api/sign-up", async (req, res) => {
+  const resp = await nile.api.auth.signUp({
+    email: req.body.email,
+    password: req.body.password,
+    preferredName: req.body.preferredName, // optional
+  });
 });
 ```
 
 When the request succeeds, the response will include a JWT token that you can then use for this user. Usually, we set this token in a cookie and include it in the response to the browser:
 
 ```javascript
-    const body =  await resp.json();
-    const accessToken = body.token.jwt;
-    const decodedJWT = jwtDecode(accessToken);
-    const cookieData = {
-        accessToken: accessToken,
-        tokenData: decodedJWT,
-    };
-    res.cookie('authData', JSON.stringify(cookieData), {secure: process.env.NODE_ENV !== 'development'});
-    res.status(resp.status).json(JSON.stringify(body));
+const body = await resp.json();
+const accessToken = body.token.jwt;
+const decodedJWT = jwtDecode(accessToken);
+const cookieData = {
+  accessToken: accessToken,
+  tokenData: decodedJWT,
+};
+res.cookie("authData", JSON.stringify(cookieData), {
+  secure: process.env.NODE_ENV !== "development",
+});
+res.status(resp.status).json(JSON.stringify(body));
 ```
 
 ### User login
 
-User login is nearly identical to signup, but you only need to provide the email and password. 
+User login is nearly identical to signup, but you only need to provide the email and password.
 
 ```javascript
-app.post('/api/login', async (req, res) => {
-  const resp = await nile.api.auth.login(
-    {
-      email: req.body.email,
-      password: req.body.password,
-    }
-  );
+app.post("/api/login", async (req, res) => {
+  const resp = await nile.api.auth.login({
+    email: req.body.email,
+    password: req.body.password,
+  });
 });
 ```
 
 Similarly, if the login request succeeds, we should set the token in a cookie and include it in the response to the browser:
 
 ```javascript
-    const body =  await resp.json();
-    const accessToken = body.token.jwt;
-    const decodedJWT = jwtDecode(accessToken);
-    const cookieData = {
-        accessToken: accessToken,
-        tokenData: decodedJWT,
-    };
-    res.cookie('authData', JSON.stringify(cookieData), {secure: process.env.NODE_ENV !== 'development'});
-    res.status(resp.status).json(JSON.stringify(body));
+const body = await resp.json();
+const accessToken = body.token.jwt;
+const decodedJWT = jwtDecode(accessToken);
+const cookieData = {
+  accessToken: accessToken,
+  tokenData: decodedJWT,
+};
+res.cookie("authData", JSON.stringify(cookieData), {
+  secure: process.env.NODE_ENV !== "development",
+});
+res.status(resp.status).json(JSON.stringify(body));
 ```
 
 Note that we are returning a response to the browser and expect it to redirect to the correct post-login page, based on whether login succeeds or fails.
@@ -257,14 +257,14 @@ The query builder is built on top of [Knex](https://knexjs.org/), so most of the
 
 ### Connecting to the database
 
-When you initialize the Nile Server object, you can pass any valid Knex configuration object as the `db.connection` parameter. 
+When you initialize the Nile Server object, you can pass any valid Knex configuration object as the `db.connection` parameter.
 Nile SDK provides the correct defaults for most fields, so you only need to specify the `user` and `password`.
 
 For example:
 
 ```javascript
 export const nile = Server({
-  workspace: String(process.env.NILE_WORKSPACE), 
+  workspace: String(process.env.NILE_WORKSPACE),
   database: String(process.env.NILE_DATABASE),
   db: {
     connection: {
@@ -284,10 +284,11 @@ The query builder is available as `nile.db`. You can use it to query the databas
 For example, to get all tenants that the current user is a member of:
 
 ```javascript
-    tenants = await nile.db("tenants")
-            .select("tenants.id","tenants.name")
-            .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-            .where("tenant_users.user_id", "=", nile.userId);
+tenants = await nile
+  .db("tenants")
+  .select("tenants.id", "tenants.name")
+  .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
+  .where("tenant_users.user_id", "=", nile.userId);
 ```
 
 In order to query a virtual tenant database, you need to use a reference that you obtained from `nile.getInstance` with the current `tenantId`, `userId` and `token`.
@@ -295,6 +296,5 @@ In order to query a virtual tenant database, you need to use a reference that yo
 For example, the following query will all rows in `todos` table for the current tenant:
 
 ```javascript
-    const todos = await tenantNile.db("todos").select("*").orderBy("title");
+const todos = await tenantNile.db("todos").select("*").orderBy("title");
 ```
-
