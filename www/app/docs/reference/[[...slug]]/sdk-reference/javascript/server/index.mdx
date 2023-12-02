@@ -253,7 +253,7 @@ Note that we are returning a response to the browser and expect it to redirect t
 Nile SDK includes a query builder and a connection pool that were designed to work with the Nile's virtual tenant databases with minimal overhead.
 You can use Nile with any ORM or database client that you prefer, but using the query builder will give you the best developer experience.
 
-The query builder is built on top of [Knex](https://knexjs.org/), so the documentation for Knex applies to Nile's query builder as well. 
+The query builder is built on top of [Knex](https://knexjs.org/), so the documentation for Knex applies to Nile's query builder as well.
 With the exception of Knex Migrations and Extensions which are not supported.
 
 ### Connecting to the database
@@ -304,18 +304,19 @@ This also applies to inserts, updates and deletes. For example, to update a todo
 
 ```javascript
 const { id, complete } = req.body;
-await nile.db("todos").update('complete', complete).where("id", id);
+await nile.db("todos").update("complete", complete).where("id", id);
 ```
 
 and to create a new one:
 
 ```javascript
 const { title, complete } = req.body;
-const newTodo = await nile.db("todos")
-    .insert({
+const newTodo = await nile
+  .db("todos")
+  .insert({
     title: title,
     complete: complete || false,
     tenant_id: nile.tenantId,
-    })
-    .returning("*");
+  })
+  .returning("*");
 ```
