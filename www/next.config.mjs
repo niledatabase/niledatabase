@@ -4,6 +4,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
 import scala from "highlight.js/lib/languages/scala";
 import sql from "highlight.js/lib/languages/sql";
+
 const withMdx = nextMdx({
   extension: /.mdx?$/,
   options: {
@@ -12,7 +13,11 @@ const withMdx = nextMdx({
       [
         rehypeHighlight,
         {
+          ignoreMissing: true,
           languages: { scala, sql },
+          aliases: {
+            javascript: ["nextjs", "express"],
+          },
         },
       ],
     ],
