@@ -32,11 +32,27 @@ const languages = [
 ];
 
 const usecases = [
-  { name: "Expense reporting", icon:"expense2.svg", path: "/docs/getting-started/use-cases/expenses" },
-  { name: "Benefits", icon:"benefits.svg", path: "/docs/getting-started/use-cases/benefits" },
-  { name: "CRM", icon:"crm.svg", path: "/docs/getting-started/use-cases/crm" },
-  { name: "Recruiting", icon: "recruiting.svg", path: "/docs/getting-started/use-cases/recruiting" },
-  { name: "Travel Agency", icon: "travel.svg", path: "/docs/getting-started/use-cases/travel" },
+  {
+    name: "Expense reporting",
+    icon: "expense2.svg",
+    path: "/docs/getting-started/use-cases/expenses",
+  },
+  {
+    name: "Benefits",
+    icon: "benefits.svg",
+    path: "/docs/getting-started/use-cases/benefits",
+  },
+  { name: "CRM", icon: "crm.svg", path: "/docs/getting-started/use-cases/crm" },
+  {
+    name: "Recruiting",
+    icon: "recruiting.svg",
+    path: "/docs/getting-started/use-cases/recruiting",
+  },
+  {
+    name: "Travel Agency",
+    icon: "travel.svg",
+    path: "/docs/getting-started/use-cases/travel",
+  },
 ];
 
 export default async function Home() {
