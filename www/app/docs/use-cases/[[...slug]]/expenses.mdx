@@ -1,0 +1,64 @@
+export const metadata = {
+  title: "Expense Reports",
+  description: "Example schema for Expense Report use-case",
+  order: 1,
+};
+
+# Use-case: Expense reporting SaaS
+
+The expense reporting data set is a sample database for an expense reporting SaaS. An Expensify clone, if you will. 
+It can be used to learn how to use Nile in a real-world scenario or as a starting point for your own SaaS.
+
+Here's an overview of the schema we use:
+
+TBD: Add schema diagram
+
+As you can see, the schema is pretty simple. It has a few tables that represent the core entities of the expense reporting domain:
+
+- Employee table, that will support syncing with employee directories and finance systems.
+- Expense reports table, that will hold the expense reports submitted by employees.
+- Expense report items table, that will hold the individual expenses of each report, including vendor, amount and url of uploaded reciept.
+- Expense report approvals table, that will hold the approval status of each expense report.
+
+Note that in this scenario all tables are [tenant aware](https://www.thenile.dev/docs/tenant-isolation): They all have `tenant_id` column and this column is part of their primary key. This is what allows Nile to provide isolation of the expense reporting data of each tenant.
+
+The `employees` table has a few details that are worth paying attention to:
+
+1. We decided to create employees as a separate table rather than add a few columns to `users.tenant_users`.
+Both options are valid, but the separate table gives us the option to represent employees who are not users of our SaaS product.
+1. The `id` column does not have an auto-generating sequence. The idea is that employee IDs usually need to align with their IDs in employee directories, HR and finance systems, and therefore should not be auto-generated.
+2. `department` and `manager` columns are also assumed to match other HR systems and in real scenarios will require a system like SCIM to keep in sync.
+3. `expense_reports` and `expense_report_approvals` tables both have columns that refer to `employee_id` and not to `user_id`. This will let us support future integration with employee directories and accounting systems.
+
+## Using the dataset
+
+First of all, you are going to need a Nile database. If you don't have one, [sign up for free](https://thenile.dev) and create one.
+
+### The easy way
+
+The easiest way to create the schema and data is to use the Nile UI. Go to your database and click the "examples" button.
+
+Select the "Expense Report" dataset. Click on the arrow to populate the SQL editor. Review the SQL and click "Run" to create the schema and data.
+
+You will see the new tables on the left-hand menu. Click on each table to see the data.
+
+### The manual way
+
+If you don't have credentials for your database, you can generate them in the Nile UI:
+
+- In the left-hand menu, click on "Settings" and then select "Connection". 
+- Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
+
+Now you can use the connection string to connect to your database and create the schema and data:
+
+Creating the schema:
+
+```bash
+psql postgres://018b778a-30df-7cdd-b55c-2f9664db39f3:ff3fb983-683c-4616-bbbc-519d8ddbbce5@db.thenile.dev:5432/gwen_db < schema.sql
+```
+
+Loading sample data:
+
+```bash
+psql postgres://018b778a-30df-7cdd-b55c-2f9664db39f3:ff3fb983-683c-4616-bbbc-519d8ddbbce5@db.thenile.dev:5432/gwen_db < seed.sql
+```
