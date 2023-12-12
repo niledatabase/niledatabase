@@ -1,0 +1,65 @@
+export const metadata = {
+  title: "Announcing Nile's Behdet release - user management, invitations, and more",
+  authors: ["gwenshap"],
+  image: "2023-12-12-dec-release-user-mgmt/cover.png",
+  sizzle:
+    "Nile announces its December monthly launch, called Behdet. It includes new user management capabilities, invitations and more.",
+  tags: ["serverless", "postgres", "saas", "user management", "launch"],
+};
+
+We are proud to announce the second monthly launch from the Nile team. This release, code named “Behdet”. This release is a bit unique in that every feature we are announcing today was requested by members of Nile community.
+
+To refresh your memory, we [announced Nile](https://www.thenile.dev/blog/app/blog/introducing-nile), the Serverless Postgres for Modern SaaS, back in October. 
+We announced our [first monthly launch](https://www.thenile.dev/blog/monthly-release-pg-vector), which included pg_vector, in November. It is now time for the last monthly launch of 2023 🥁
+
+## User Management
+
+One of Nile's key values is user and tenant management. While it is always possible to manage your users and tenants with direct queries to the database, we also provide SDK, APIs and UI that encapsulate the logic, handle edge cases and save you time on routine SaaS development.
+
+In this release, we enhanced our user and tenant management features in two ways.
+
+### New user APIs
+
+We've introduced new APIs that you can use to add user management screen to your SaaS. The best way to use them is through the Nile SDK, where they are integrated with Nile’s authentication and tenant isolation features.
+
+You can now update users:
+
+```jsx
+const params = { email: "email", preferredName: "Inigo Montoya" };
+
+const res = await nile.api.updateUser(userId, params);
+```
+
+And also use the API to get a list of users:
+
+```jsx
+nile.api.listUsers();
+```
+
+## User Management UI in Nile Console
+
+Nile Console has Tenant Dashboard screens, including user management. These use the same APIs, and you can use them to view and update users in any tenant in your database, directly from Nile Console:
+
+<Video src="/blog/2023-12-12-dec-release-user-mgmt/user_mgmt_w_update.mp4" />
+
+## Invitations
+
+Sometimes we are indie developers building SaaS our own, but most of the time, we collaborate with other developers. Want to invite your teammates to collaborate on a project that uses Nile? Send them an invitation to your workspace. This will give them full access to the databases in that workspace.
+
+<Video src="/blog/2023-12-12-dec-release-user-mgmt/developer_invitations.mp4" />
+
+## New Examples, Templates and Docs
+
+In addition to adding functionality, we keep adding ways to help you get more value from Nile.
+
+This month we added:
+
+- [Reference for Nile SDK](https://www.thenile.dev/docs/reference/sdk-reference): It lists all available methods and capabilities, with usage examples.
+- [Template](https://www.thenile.dev/templates/Todo%20List%20application%20backend%20with%20Nile%20and%20AWS%20Lambda) and [documentation o](https://www.thenile.dev/docs/serverless/lambda)n how to use Nile from AWS Lambda. The template uses the Serverless framework and Drizzle ORM to make this a true one-liner.
+- [Template](https://www.thenile.dev/templates/Todo%20List%20with%20NextAuth-based%20Authentication) and [documentation](https://www.thenile.dev/docs/user-authentication/third-party/nextauth) on how to use Nile with NextAuth. We show off our integration with both social logins (Google) and Passwordless (via email). The template includes a Nile adapter that we are contributing back to the NextAuth project.
+
+## What's next?
+
+We are eager to hear from the developer community: Which features you love and we should double down on? What could be useful but not quite there yet? What Nile features will make it 100x easier for you to build SaaS?
+
+**[Sign up for our waitlist](https://www.thenile.dev/)** today to start using Nile, and leave your feedback in our **[Discord and/or Github](https://www.thenile.dev/community)**.
