@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 Transactions are a key part to many modern databases, relational and non-relational systems alike.
-At a basic level, transactions allow us to treat a series of operations as a single unit. The reason transactions are so important is because they provide guarantees that developers can then use as assumptions when writing code. This means that there are entire set of concerns that you, the developer, don't need to worry about because the DB guarantees certain behaviors. This greatly simplifies the code and drastically improves its reliability.
+At a basic level, transactions allow us to treat a series of operations as a single unit. The reason transactions are so important is because they provide guarantees that developers can then use as assumptions when writing pre. This means that there are entire set of concerns that you, the developer, don't need to worry about because the DB guarantees certain behaviors. This greatly simplifies the pre and drastically improves its reliability.
 
 What are these guarantees? You may already be familiar with the term [ACID](https://dl.acm.org/doi/10.1145/289.291) - atomicity, consistency, isolation and durability. From these sets of guarantees, “isolation” tends to be the most confusing, which is a shame because it is also the one where a deeper understanding directly translates to making better design decisions, and [more secure SaaS](http://www.bailis.org/papers/acidrain-sigmod2017.pdf).
 
@@ -97,29 +97,31 @@ This is a practical approach and is useful for developers because it lets us say
   <tbody>
     <tr>
       <td>
-        <code>BEGIN;</code>
+        <pre>BEGIN;</pre>
       </td>
       <td>
-        <code>BEGIN;</code>
+        <pre>BEGIN;</pre>
       </td>
     </tr>
     <tr>
       <td>
-        <code>
-          INSERT INTO accounts (acctnum, balance) values (12345, 100);
-        </code>
+        {/* prettier-ignore */}
+        <pre>
+          INSERT INTO accounts (acctnum, balance) 
+          values (12345, 100);
+        </pre>
       </td>
       <td></td>
     </tr>
     <tr>
       <td></td>
       <td>
-        <code>SELECT * from accounts where acctnum = 12345;</code>
+        <pre>SELECT * from accounts where acctnum = 12345;</pre>
       </td>
     </tr>
     <tr>
       <td>
-        <code>ABORT;</code>
+        <pre>ABORT;</pre>
       </td>
       <td></td>
     </tr>
@@ -146,34 +148,36 @@ Non-repeatable reads means that the same query within one transaction can return
   <tbody>
     <tr>
       <td>
-        <code>BEGIN;</code>
+        <pre>BEGIN;</pre>
       </td>
       <td>
-        <code>BEGIN;</code>
+        <pre>BEGIN;</pre>
       </td>
     </tr>
     <tr>
       <td></td>
       <td>
-        <code>SELECT * from accounts where acctnum = 12345;</code>
+        <pre>SELECT * from accounts where acctnum = 12345;</pre>
       </td>
     </tr>
     <tr>
+      {/* prettier-ignore */}
       <td>
-        <code>UPDATE accounts set balance = 500 where acctnum = 12345;</code>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>
-        <code>COMMIT;</code>
+        <pre>UPDATE accounts set balance = 500 
+        where acctnum = 12345;</pre>
       </td>
       <td></td>
     </tr>
     <tr>
+      <td>
+        <pre>COMMIT;</pre>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
       <td></td>
       <td>
-        <code>SELECT * from accounts where acctnum = 12345;</code>
+        <pre>SELECT * from accounts where acctnum = 12345;</pre>
       </td>
     </tr>
   </tbody>
@@ -182,7 +186,7 @@ Non-repeatable reads means that the same query within one transaction can return
 In isolation level “read committed”, the first query in the transaction in session B will return a different result than the second query, because the transaction in session A committed in between. Both results are “correct” in the sense that they reflect a durable state of the database, but they are different.
 You may think “why is this even a problem?”
 
-The main problem with non repeatable reads is a classic anti-pattern known as “write after read”. For example, lets say that we want to give 10% bonus to accounts with balance above 1000, and we use the following code:
+The main problem with non repeatable reads is a classic anti-pattern known as “write after read”. For example, lets say that we want to give 10% bonus to accounts with balance above 1000, and we use the following pre:
 
 <table>
   <thead>
@@ -194,50 +198,57 @@ The main problem with non repeatable reads is a classic anti-pattern known as �
   <tbody>
     <tr>
       <td>
-        <code>BEGIN;</code>
+        <pre>BEGIN;</pre>
       </td>
       <td>
-        <code>BEGIN;</code>
-      </td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>
-        <code>
-          IF ( SELECT balance FROM accounts WHERE acctnum = 12345 > 1000) THEN
-        </code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>UPDATE accounts set balance = 500 where acctnum = 12345;</code>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>
-        <code>COMMIT;</code>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>
-        <code>
-          UPDATE accounts SET balance = balance * 1.1 where acctnum = 12345;
-        </code>
+        <pre>BEGIN;</pre>
       </td>
     </tr>
     <tr>
       <td></td>
       <td>
-        <code>END IF; COMMIT;</code>
+        {/* prettier-ignore */}
+        <pre>
+          IF ( 
+            SELECT balance FROM accounts 
+            WHERE acctnum = 12345 > 1000) THEN
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        {/* prettier-ignore */}
+        <pre>UPDATE accounts set balance = 500 
+        where acctnum = 12345;</pre>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>
+        <pre>COMMIT;</pre>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        {/* prettier-ignore */}
+        <pre>
+          UPDATE accounts SET balance = balance * 1.1 
+          where acctnum = 12345;
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <pre>END IF; COMMIT;</pre>
       </td>
     </tr>
   </tbody>
 </table>
 
-The condition in session B was evaluated to true, and therefore we decided to update the balance in account 12345. But before we had a chance to update the balance, it was updated and committed by session A. The condition is no longer true, but due to the way the code is written, session B will still update the balance. The result will be a state that could not have happened if these sessions ran serially, and account 12345 will have extra 10% bonus in their account that they shouldn't have gotten based on the desired logic.
+The condition in session B was evaluated to true, and therefore we decided to update the balance in account 12345. But before we had a chance to update the balance, it was updated and committed by session A. The condition is no longer true, but due to the way the pre is written, session B will still update the balance. The result will be a state that could not have happened if these sessions ran serially, and account 12345 will have extra 10% bonus in their account that they shouldn't have gotten based on the desired logic.
 
 There are a few ways to get around this problem without changing the isolation level. For example, since the problem occurs when data changes between statements, you may choose to do the entire update in a single statement:
 
@@ -285,7 +296,7 @@ BEGIN;
 COMMIT
 ```
 
-Here, you pick a job from the queue and lock it for the duration of the transaction. When you are done performing the job, you delete it from the queue and commit. Other processes can use the same logic to pick jobs, while skipping ones that are already in progress. If you run this code in a loop, each `SELECT` will see which jobs when the select executes - since `read committed` isolation level allows you to see changes that were committed before the start of the transaction. But the `FOR UPDATE` lock will prevent other processes from picking the same job.
+Here, you pick a job from the queue and lock it for the duration of the transaction. When you are done performing the job, you delete it from the queue and commit. Other processes can use the same logic to pick jobs, while skipping ones that are already in progress. If you run this pre in a loop, each `SELECT` will see which jobs when the select executes - since `read committed` isolation level allows you to see changes that were committed before the start of the transaction. But the `FOR UPDATE` lock will prevent other processes from picking the same job.
 
 Read committed is the default isolation level in postgres and as a result it is the most commonly used one. It is quite acceptable to use it, as long as you understand the “write-after-read” anti-pattern and handle it with well-placed locks.
 
@@ -303,42 +314,46 @@ With the non-repeatable reads anomaly, you can see changes to rows that existed 
   <tbody>
     <tr>
       <td>
-        <code>BEGIN;</code>
+        <pre>BEGIN;</pre>
       </td>
       <td>
-        <code>BEGIN;</code>
+        <pre>BEGIN;</pre>
       </td>
     </tr>
     <tr>
       <td>
-        <code>UPDATE accounts set balance = 500 where acctnum = 789;</code>
+        {/* prettier-ignore */}
+        <pre>UPDATE accounts set balance = 500 
+        where acctnum = 789;</pre>
       </td>
       <td></td>
     </tr>
     <tr>
       <td></td>
       <td>
-        <code>SELECT * from accounts where balance > 0;</code>
+        <pre>SELECT * from accounts where balance > 0;</pre>
       </td>
     </tr>
     <tr>
       <td>
-        <code>
-          INSERT INTO accounts (acctnum, balance) values (12345, 100);
-        </code>
+        {/* prettier-ignore */}
+        <pre>
+          INSERT INTO accounts (acctnum, balance) 
+          values (12345, 100);
+        </pre>
       </td>
       <td></td>
     </tr>
     <tr>
       <td>
-        <code>COMMIT;</code>
+        <pre>COMMIT;</pre>
       </td>
       <td></td>
     </tr>
     <tr>
       <td></td>
       <td>
-        <code>SELECT * from accounts where balance > 0;</code>
+        <pre>SELECT * from accounts where balance > 0;</pre>
       </td>
     </tr>
   </tbody>
@@ -438,42 +453,46 @@ Let's take another look at one of our examples, and consider which transactions 
   <tbody>
     <tr>
       <td>
-        <code>BEGIN;</code>
+        <pre>BEGIN;</pre>
       </td>
       <td>
-        <code>BEGIN;</code>
+        <pre>BEGIN;</pre>
       </td>
     </tr>
     <tr>
       <td>
-        <code>UPDATE accounts set balance = 500 where acctnum = 789;</code>
+        {/* prettier-ignore */}
+        <pre>UPDATE accounts set balance = 500 
+        where acctnum = 789;</pre>
       </td>
       <td></td>
     </tr>
     <tr>
       <td></td>
       <td>
-        <code>SELECT * from accounts where balance > 0;</code>
+        <pre>SELECT * from accounts where balance > 0;</pre>
       </td>
     </tr>
     <tr>
       <td>
-        <code>
-          INSERT INTO accounts (acctnum, balance) values (12345, 100);
-        </code>
+        {/* prettier-ignore */}
+        <pre>
+          INSERT INTO accounts (acctnum, balance) 
+          values (12345, 100);
+        </pre>
       </td>
       <td></td>
     </tr>
     <tr>
       <td>
-        <code>COMMIT;</code>
+        <pre>COMMIT;</pre>
       </td>
       <td></td>
     </tr>
     <tr>
       <td></td>
       <td>
-        <code>SELECT * from accounts where balance > 0;</code>
+        <pre>SELECT * from accounts where balance > 0;</pre>
       </td>
     </tr>
   </tbody>
@@ -561,30 +580,34 @@ What are serialization errors? They look something like this: `ERROR: could not 
   <tbody>
     <tr>
       <td>
-        <code>BEGIN;</code>
+        <pre>BEGIN;</pre>
       </td>
       <td>
-        <code>BEGIN;</code>
+        <pre>BEGIN;</pre>
       </td>
     </tr>
     <tr>
       <td>
-        <code>UPDATE accounts set balance = 500 where acctnum = 789;</code>
+        {/* prettier-ignore */}
+        <pre>UPDATE accounts set balance = 500 
+        where acctnum = 789;</pre>
       </td>
       <td></td>
     </tr>
     <tr>
       <td>
-        <code>COMMIT;</code>
+        <pre>COMMIT;</pre>
       </td>
       <td></td>
     </tr>
     <tr>
       <td></td>
       <td>
-        <code>
-          UPDATE accounts set balance = balance+200 where acctnum = 789;
-        </code>
+        {/* prettier-ignore */}
+        <pre>
+          UPDATE accounts set balance = balance+200 
+          where acctnum = 789;
+        </pre>
       </td>
     </tr>
   </tbody>
@@ -601,7 +624,7 @@ The performance tradeoffs between “read committed”, where in order to mainta
 ### Transaction Isolation Testing in Postgres
 
 As you already noticed, the Postgres developer community takes transaction isolation very seriously and hold themselves to a very high bar. Part of it is their isolation testing suite. It uses a method that IMO should be a lot more common in systems testing.
-You can find the [code for the test suite in github](https://github.com/postgres/postgres/tree/master/src/test/isolation) and the README explains it well.
+You can find the [pre for the test suite in github](https://github.com/postgres/postgres/tree/master/src/test/isolation) and the README explains it well.
 
 The core idea is simple and brilliant, like many things in Postgres:
 The testers define different scenarios, just like the ones we demonstrated above. Session A does `update` and then `commit`, Session B does `select` and then `update`. You also specify the result you'd expect after all sessions and all transactions committed. The test framework then takes all the sessions and runs all possible ways these could interleave. One such run can be “A updates, then B selects, then A commits, then B updates”. Another can be “B selects, then A updates, then B updates, then A commits”. It then checks that the key invariants like “account 1234 has a balance of 500” are preserved in all permutations.
@@ -625,7 +648,7 @@ Last but not least, huge thanks to [Alex DeBrie](https://twitter.com/alexbdebrie
 - [Transaction isolation in Postgres' documentation](https://www.postgresql.org/docs/current/transaction-iso.html)
 - [Internals of Postgres MVCC, in much greater detail](https://www.interdb.jp/pg/pgsql05.html#_5.10.1)
 - [Shorter and clearer blog on isolation in Postgres from Lawrence Jones](https://blog.lawrencejones.dev/isolation-levels/)
-- [Blog post explaining atomicity, isolation and MVCC in Postgres with snippets from Postgres source code](https://brandur.org/postgres-atomicity)
+- [Blog post explaining atomicity, isolation and MVCC in Postgres with snippets from Postgres source pre](https://brandur.org/postgres-atomicity)
 - [Detailed blog showing various anomalies in postgres](https://postgrespro.com/blog/pgsql/5967856)
 - [Blog by Franck Pachot showing unexpected issues with non-repeatable reads in postgres](https://dev.to/aws-heroes/read-committed-anomalies-in-postgresql-1ieg)
 - [Great talk on concurrency and anomalies in Postgres](https://www.postgresql.org/files/developer/concurrency.pdf)
