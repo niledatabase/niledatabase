@@ -11,8 +11,6 @@ export const metadata = {
 Transactions are a key part to many modern databases, relational and non-relational systems alike. 
 At a basic level, transactions allow us to treat a series of operations as a single unit. The reason transactions are so important is because they provide guarantees that developers can then use as assumptions when writing code. This means that there are entire set of concerns that you, the developer, don't need to worry about because the DB guarantees certain behaviors. This greatly simplifies the code and drastically improves its reliability. 
 
-![“What, me worry?”](/blog/2023-12-18-transaction-isolation/whatmeworry.png)
-
 What are these guarantees? You may already be familiar with the term [ACID](https://dl.acm.org/doi/10.1145/289.291) - atomicity, consistency, isolation and durability. From these sets of guarantees, “isolation” tends to be the most confusing, which is a shame because it is also the one where a deeper understanding directly translates to making better design decisions, and [more secure SaaS](http://www.bailis.org/papers/acidrain-sigmod2017.pdf).
 
 I'm going to start by explaining what problem transaction isolation is even trying to solve. Then I'll explain the standard isolation levels as they appear in the SQL92 standard and are still mostly used today. Then we'll talk about the problems with SQL92 levels and how Postgres handles isolation and these problems today.
@@ -41,12 +39,15 @@ The ANSI committee started by defining the logical ideal of isolation. The ideal
 Back in 92, the consensus was that serializability is a great ideal, but not something that can be implemented while still delivering adequate performance (spoiler: they were wrong). Since the ideal was not practical, they settled on suggesting multiple levels of isolation and explaining what can happen in each.
 The committee came up with a list of weird results you may encounter if you don't have serializability and called these “anomalies”. Then they defined the isolation levels in terms of “which anomalies can happen at each level”:
 
-| Isolation Level | Dirty Reads | Non-repeatable Reads | Phantom Reads |
-| --------------- | ----------- | -------------------- | ------------- |
-| Read Uncommitted | Possible    | Possible             | Possible      |
-| Read Committed   | Not Possible| Possible             | Possible      |
-| Repeatable Reads | Not Possible| Not Possible         | Possible      |
-| Serializable     | Not Possible| Not Possible         | Not Possible  |
+<table>
+<thead><tr><th>Isolation Level</th><th>Dirty Reads</th><th>Non-repeatable Reads</th><th>Phantom Reads</th></tr></thead>
+<tbody>
+<tr><td>Read Uncommitted</td><td>Possible</td><td>Possible</td><td>Possible</td></tr>
+<tr><td>Read Committed</td><td>Not Possible</td><td>Possible</td><td>Possible</td></tr>
+<tr><td>Repeatable Reads</td><td>Not Possible</td><td>Not Possible</td><td>Possible</td></tr>
+<tr><td>Serializable</td><td>Not Possible</td><td>Not Possible</td><td>Not Possible</td></tr>
+</tbody>
+</table>
 
 This is a practical approach and is useful for developers because it lets us say “I'm okay with some anomalies and I want more speed. Let me go with read committed”. So, as a responsible engineer writing an application with transactions, you should understand the anomalies and make informed decisions. Let's do that!
 
@@ -56,12 +57,15 @@ This is a practical approach and is useful for developers because it lets us say
 
 "The lowest level of isolation is read uncommitted. Read uncommitted allows a whole slew of anomalies, including the dreaded 'dirty read'. Dirty reads means reading data that has not yet been committed. Remember that if a transaction is not committed yet, it may never get committed. The user may change their mind, there may be an error, the DB can crash. Here's a simple example, lets say that we have two users who connected to the same database and each doing their work around the same time. [In database terminology, the state of each connection is called a session](https://dba.stackexchange.com/questions/13698/what-is-the-difference-between-a-connection-and-a-session), so we are looking at two concurrent sessions:
 
-| Session A | Session B |
-| --------- | --------- |
-| `BEGIN;`    | `BEGIN;`|
-| `INSERT INTO accounts (acctnum, balance) values (12345, 100);` | |
-| | `SELECT * from accounts where acctnum = 12345;` |
-| `ABORT;` | |
+<table>
+<thead><tr><th>Session A</th><th>Session B</th></tr></thead>
+<tbody>
+<tr><td><code>BEGIN;</code></td><td><code>BEGIN;</code></td></tr>
+<tr><td><code>INSERT INTO accounts (acctnum, balance) values (12345, 100);</code></td><td></td></tr>
+<tr><td></td><td><code>SELECT * from accounts where acctnum = 12345;</code></td></tr>
+<tr><td><code>ABORT;</code></td><td></td></tr>
+</tbody>
+</table>
 
 In isolation level “read uncommitted”, if both these sessions execute concurrently, session B will see an account that does not exist with a balance that does not exist. It looked like it existed, but the transaction was rolled back - which means it never officially existed. If this query is part of a report about the total assets under management for the bank, the report will be incorrect and include non-existing assets.
 
@@ -73,30 +77,34 @@ It is mostly useful in write heavy workloads where you want to support very high
 
 Non-repeatable reads means that the same query within one transaction can return different results if a parallel session committed in between.
 
-| Session A | Session B |
-| --------- | --------- |
-| `BEGIN;`    | `BEGIN;`|
-|| `SELECT * from accounts where acctnum = 12345;` |
-| `UPDATE accounts set balance = 500 where acctnum = 12345;` | |
-| `COMMIT;` | |
-|| `SELECT * from accounts where acctnum = 12345;` |
+<table>
+<thead><tr><th>Session A</th><th>Session B</th></tr></thead>
+<tbody>
+<tr><td><code>BEGIN;</code></td><td><code>BEGIN;</code></td></tr>
+<tr><td></td><td><code>SELECT * from accounts where acctnum = 12345;</code></td></tr>
+<tr><td><code>UPDATE accounts set balance = 500 where acctnum = 12345;</code></td><td></td></tr>
+<tr><td><code>COMMIT;</code></td><td></td></tr>
+<tr><td></td><td><code>SELECT * from accounts where acctnum = 12345;</code></td></tr>
+</tbody>
+</table>
 
 
 In isolation level “read committed”, the first query in the transaction in session B will return a different result than the second query, because the transaction in session A committed in between. Both results are “correct” in the sense that they reflect a durable state of the database, but they are different.
 You may think “why is this even a problem?”
 
-The theoretical problem is that the transactions are not isolated and not serializable. Different results based on which transactions ran in parallel are now expected, which means that through testing is now more complex.
+The main problem with non repeatable reads is a classic anti-pattern known as “write after read”. For example, lets say that we want to give 10% bonus to accounts with balance above 1000, and we use the following code:
 
-But the main problem with non repeatable reads is a classic anti-pattern known as “write after read”. For example, lets say that we want to give 10% bonus to accounts with balance above 1000, and we use the following code:
-
-| Session A | Session B |
-| --------- | --------- |
-| `BEGIN;`    | `BEGIN;`|
-|| `IF ( SELECT balance FROM accounts WHERE acctnum = 12345 > 1000) THEN` |
-| `UPDATE accounts set balance = 500 where acctnum = 12345; ` ||
-| `COMMIT;` | |
-|| `UPDATE accounts SET balance = balance * 1.1 where acctnum = 12345;` |
-| | `END IF; COMMIT;` |
+<table>
+<thead><tr><th>Session A</th><th>Session B</th></tr></thead>
+<tbody>
+<tr><td><code>BEGIN;</code></td><td><code>BEGIN;</code></td></tr>
+<tr><td></td><td><code>IF ( SELECT balance FROM accounts WHERE acctnum = 12345 > 1000) THEN</code></td></tr>
+<tr><td><code>UPDATE accounts set balance = 500 where acctnum = 12345;</code></td><td></td></tr>
+<tr><td><code>COMMIT;</code></td><td></td></tr>
+<tr><td></td><td><code>UPDATE accounts SET balance = balance * 1.1 where acctnum = 12345;</code></td></tr>
+<tr><td></td><td><code>END IF; COMMIT;</code></td></tr>
+</tbody>
+</table>
 
 The condition in session B was evaluated to true, and therefore we decided to update the balance in account 12345. But before we had a chance to update the balance, it was updated and committed by session A. The condition is no longer true, but due to the way the code is written, session B will still update the balance. The result will be a state that could not have happened if these sessions ran serially, and account 12345 will have extra 10% bonus in their account that they shouldn't have gotten based on the desired logic. 
 
@@ -108,14 +116,13 @@ SET balance = balance * 1.1
 WHERE acctnum = 12345 AND balance > 1000; 
 ```
 
-This will behave atomically, as one would expect in a transaction.However, this is not always the case! Consider the following statement:
+This will behave atomically, as one would expect in a transaction. However, this is not always the case! Consider the following statement:
 
 ```SQL
 UPDATE accounts 
 SET balance = balance * 1.1 
 WHERE acctnum in (
-    SELECT acctnum from accounts where balance > 1000
-)
+    SELECT acctnum from accounts where balance > 1000)
 ```
 
 Here the `SELECT` will run first and return all rows with balance over 1000. Then the updates run, a row at a time. Suppose that while it is iterating, another session updates account 12345 and commits:
@@ -131,12 +138,11 @@ To prevent changes on rows you just read without going to a higher isolation lev
 UPDATE accounts 
 SET balance = balance * 1.1 
 WHERE acctnum in (
-    SELECT acctnum from accounts 
-    where balance > 1000 FOR UPDATE
-)
+    SELECT acctnum from accounts where balance > 1000 FOR UPDATE)
 ```
 
 `SELECT…. FOR UPDATE` locks the rows that it selects. In this example, other sessions won't be able to update the balance in any account while the update is in progress, preventing the inconsistency.
+
 A classic pattern for implementing job queues with Postgres uses `FOR UPDATE` locks to prevent multiple workers from picking the same job:
 
 ```SQL
@@ -154,19 +160,19 @@ Read committed is the default isolation level in postgres and as a result it is 
 ## Phantom Reads
 With the non-repeatable reads anomaly, you can see changes to rows that existed when your transaction began. In contrast, with the phantom reads anomaly, new rows which did not exist earlier suddenly appear in the middle of a transaction.
 
-| Session A | Session B |
-| --------- | --------- |
-| `BEGIN;`    | `BEGIN;`|
-| `UPDATE accounts set balance = 500 where acctnum = 789;` | |
-| | `SELECT * from accounts where balance > 0;` |
-| `INSERT INTO accounts (acctnum, balance) values (12345, 100);` ||
-| `COMMIT;` | |
-| | `SELECT * from accounts where balance > 0;` |
+<table>
+<thead><tr><th>Session A</th><th>Session B</th></tr></thead>
+<tbody>
+<tr><td><code>BEGIN;</code></td><td><code>BEGIN;</code></td></tr>
+<tr><td><code>UPDATE accounts set balance = 500 where acctnum = 789;</code></td><td></td></tr>
+<tr><td></td><td><code>SELECT * from accounts where balance > 0;</code></td></tr>
+<tr><td><code>INSERT INTO accounts (acctnum, balance) values (12345, 100);</code></td><td></td></tr>
+<tr><td><code>COMMIT;</code></td><td></td></tr>
+<tr><td></td><td><code>SELECT * from accounts where balance > 0;</code></td></tr>
+</tbody>
+</table>
 
-
-In isolation level “repeatable reads” both queries in session B will show the same balance for account 789. Because the `update` that was done in session A will not be visible to session B.  However, the second query will also include account 12345 that was created by session A. A new row suddenly appeared in the middle of a transaction.
-
-This means that session B will produce an inconsistent report - both because it has two queries that returned different results, and because the second query shows the data that session A inserted, but not the data it updated.
+In isolation level “repeatable reads” both queries in session B will show the same balance for account 789. Because the `update` that was done in session A will not be visible to session B.  However, the second query will also include account 12345 that was created by session A. This is a new row suddenly appeared in the middle of a transaction. This means that session B will produce an inconsistent report - both because it has two queries that returned different results, and because the second query shows the data that session A inserted, but not the data it updated.
 
 ## Problems with the SQL92 isolation levels
 
@@ -196,13 +202,15 @@ This paper, coming out after many relational databases implemented SQL92 isolati
 
 Postgres handles the new anomalies without adding additional levels. It documented its behavior using the standard table with few notes:
 
-| Isolation Level | Dirty Reads | Non-repeatable Reads | Phantom Reads | Serialization Anomalies |
-| --------------- | ----------- | -------------------- | ------------- | ----------------------- |
-| Read Uncommitted | Allowed, but not in Postgres    | Possible             | Possible      | Possible                |
-| Read Committed   | Not Possible| Possible             | Possible      | Possible                |
-| Repeatable Reads | Not Possible| Not Possible         | Allowed, but not in Postgres      | Possible                |
-| Serializable     | Not Possible| Not Possible         | Not Possible  | Not Possible            |
-
+<table>
+<thead><tr><th>Isolation Level</th><th>Dirty Reads</th><th>Non-repeatable Reads</th><th>Phantom Reads</th><th>Serialization Anomalies</th></tr></thead>
+<tbody>
+<tr><td>Read Uncommitted</td><td>Allowed, but not in Postgres</td><td>Possible</td><td>Possible</td><td>Possible</td></tr>
+<tr><td>Read Committed</td><td>Not Possible</td><td>Possible</td><td>Possible</td><td>Possible</td></tr>
+<tr><td>Repeatable Reads</td><td>Not Possible</td><td>Not Possible</td><td>Allowed, but not in Postgres</td><td>Possible</td></tr>
+<tr><td>Serializable</td><td>Not Possible</td><td>Not Possible</td><td>Not Possible</td><td>Not Possible</td></tr>
+</tbody>
+</table>
 
 As you can see, Postgres “repeatable reads” is equivalent to the SQL92 “serializable”. In fact, the current “repeatable reads” behavior was the behavior of “serializable” in Postgres 9.1 and earlier. This level is also called Snapshot Isolation (SI) or even “serializable”  in other databases. 
 
@@ -214,32 +222,41 @@ As we mentioned earlier, Postgres, like most modern databases, implements MVCC. 
 
 Let's take another look at one of our examples, and consider which transactions are visible to each session (note: I'm making some assumptions and removing some details for simplicity, see references for more detailed explanations):
 
-| Session A | Session B |
-| --------- | --------- |
-| `BEGIN;`    | `BEGIN;`|
-| `UPDATE accounts set balance = 500 where acctnum = 789;` | |
-| | `SELECT * from accounts where acctnum = 12345;` |
-| `INSERT INTO accounts (acctnum, balance) values (12345, 100);` ||
-| `COMMIT;` | |
-| | `SELECT * from accounts where acctnum = 12345;` |
+<table>
+<thead><tr><th>Session A</th><th>Session B</th></tr></thead>
+<tbody>
+<tr><td><code>BEGIN;</code></td><td><code>BEGIN;</code></td></tr>
+<tr><td><code>UPDATE accounts set balance = 500 where acctnum = 789;</code></td><td></td></tr>
+<tr><td></td><td><code>SELECT * from accounts where balance > 0;</code></td></tr>
+<tr><td><code>INSERT INTO accounts (acctnum, balance) values (12345, 100);</code></td><td></td></tr>
+<tr><td><code>COMMIT;</code></td><td></td></tr>
+<tr><td></td><td><code>SELECT * from accounts where balance > 0;</code></td></tr>
+</tbody>
+</table>
 
 When session A and session B start their transactions, they both “take a snapshot” - record the highest and lowest IDs of currently active transactions (you can try this yourself with `select * from pg_current_snapshot();`). Let's say that they both see 190 as the lowest active XID. This means that transactions with higher XID did not commit yet.
 
 In “repeatable read” and “serializable” isolation levels, both select statements in Session B will only show the data as it was committed when the transaction began - version 190 or lower. If you peeked at the Postgres buffer cache when both transactions started, but before any changes were made, you'd see something like this:
 
-| t_xmin | t_xmax | acctnum | balance |
-| ------ | ------ | ------- | ------- |
-| 125    | 0      | 789     | 3       |
+<table>
+<thead><tr><th>t_xmin</th><th>t_xmax</th><th>acctnum</th><th>balance</th></tr></thead>
+<tbody>
+<tr><td>125</td><td>0</td><td>789</td><td>3</td></tr>
+</tbody>
+</table>
 
 
 `t_xmin` represents the xid of the transaction that created this row. And this row will be visible to both transactions since `t_xmin` is 125 and lower than 190.
 When Session A performs its first update, it will be assigned its own XID - lets say 201. Both the new version of account 789 and the new account 12345 will have 201 as their new version.  So if you peeked in Postgres memory after session A commits, you'd see something like:
 
-| t_xmin | t_xmax | acctnum | balance |
-| ------ | ------ | ------- | ------- |
-| 125    | 201    | 789     | 3       |
-| 201    | 0      | 789     | 500     |
-| 201    | 0      | 12345   | 100     |
+<table>
+<thead><tr><th>t_xmin</th><th>t_xmax</th><th>acctnum</th><th>balance</th></tr></thead>
+<tbody>
+<tr><td>125</td><td>0</td><td>789</td><td>3</td></tr>
+<tr><td>201</td><td>0</td><td>789</td><td>500</td></tr>
+<tr><td>201</td><td>0</td><td>12345</td><td>100</td></tr>
+</tbody>
+</table>
 
 You can see both the new version of account 789, and the newly inserted account 12345. Since they both have t_xmin 201, which is higher than 190, session B is not going to see either of the new versions. Its snapshot only shows the original version of account 789.
 
@@ -256,12 +273,15 @@ Even without locks, serializable (and even repeatable reads) isolation can have 
 
 What are serialization errors? They look something like this: `ERROR: could not serialize access due to concurrent update` and they happen in a scenario like this:
 
-| Session A | Session B |
-| --------- | --------- |
-| `BEGIN;`    | `BEGIN;`|
-| `UPDATE accounts set balance = 500 where acctnum = 789;` | |
-| `COMMIT;` | |
-| | `UPDATE accounts set balance = balance+200 where acctnum = 789;` |
+<table>
+<thead><tr><th>Session A</th><th>Session B</th></tr></thead>
+<tbody>
+<tr><td><code>BEGIN;</code></td><td><code>BEGIN;</code></td></tr>
+<tr><td><code>UPDATE accounts set balance = 500 where acctnum = 789;</code></td><td></td></tr>
+<tr><td><code>COMMIT;</code></td><td></td></tr>
+<tr><td></td><td><code>UPDATE accounts set balance = balance+200 where acctnum = 789;</code></td></tr>
+</tbody>
+</table>
 
 The transaction in session B is attempting to modify a value that session A modified and committed after session B started. Which means that session B is trying to update a value without being able to see its latest version. Which can lead to a state that would never have happened if the transactions ran serially (this anomaly is called a lost write). Therefore Session B will get an error, the transaction will roll back, and Session B can try again. 
 
@@ -274,12 +294,10 @@ The performance tradeoffs between “read committed”, where in order to mainta
 ### Transaction Isolation Testing in Postgres
 
 As you already noticed, the Postgres developer community takes transaction isolation very seriously and hold themselves to a very high bar. Part of it is their isolation testing suite. It uses a method that IMO should be a lot more common in systems testing.
-You can find the code for the test suite here: https://github.com/postgres/postgres/tree/master/src/test/isolation and the README is great.
+You can find the [code for the test suite in github]( https://github.com/postgres/postgres/tree/master/src/test/isolation) and the README explains it well.
 
 The core idea is simple and brilliant, like many things in Postgres:
-The testers define different scenarios, just like the ones we demonstrated above. Session A does `update` and then `commit`, Session B does `select` and then `update`. You also specify the result you'd expect after all sessions and all transactions committed.
-
-The test framework then takes all the sessions and runs all possible ways these could interleave. One such run can be “A updates, then B selects, then A commits, then B updates”. Another can be “B selects, then A updates, then B updates, then A commits”. It then checks that the key invariants like “account 1234 has a balance of 500” are preserved in all permutations.
+The testers define different scenarios, just like the ones we demonstrated above. Session A does `update` and then `commit`, Session B does `select` and then `update`. You also specify the result you'd expect after all sessions and all transactions committed. The test framework then takes all the sessions and runs all possible ways these could interleave. One such run can be “A updates, then B selects, then A commits, then B updates”. Another can be “B selects, then A updates, then B updates, then A commits”. It then checks that the key invariants like “account 1234 has a balance of 500” are preserved in all permutations.
 
 While PG isn't single threaded and there are other background processes that run, it is very close to deterministic simulation testing because the scenarios themselves with all the different combinations are serialized.
 
