@@ -105,7 +105,7 @@ This is a practical approach and is useful for developers because it lets us say
     </tr>
     <tr>
       <td>
-      {/* prettier-ignore */}
+        {/* prettier-ignore */}
         <pre>
           INSERT INTO accounts (acctnum, balance) 
           values (12345, 100);
@@ -161,7 +161,7 @@ Non-repeatable reads means that the same query within one transaction can return
       </td>
     </tr>
     <tr>
-    {/* prettier-ignore */}
+      {/* prettier-ignore */}
       <td>
         <pre>UPDATE accounts set balance = 500 
         where acctnum = 12345;</pre>
@@ -207,7 +207,7 @@ The main problem with non repeatable reads is a classic anti-pattern known as â€
     <tr>
       <td></td>
       <td>
-      {/* prettier-ignore */}
+        {/* prettier-ignore */}
         <pre>
           IF ( 
             SELECT balance FROM accounts 
@@ -217,7 +217,7 @@ The main problem with non repeatable reads is a classic anti-pattern known as â€
     </tr>
     <tr>
       <td>
-      {/* prettier-ignore */}
+        {/* prettier-ignore */}
         <pre>UPDATE accounts set balance = 500 
         where acctnum = 12345;</pre>
       </td>
@@ -232,7 +232,7 @@ The main problem with non repeatable reads is a classic anti-pattern known as â€
     <tr>
       <td></td>
       <td>
-      {/* prettier-ignore */}
+        {/* prettier-ignore */}
         <pre>
           UPDATE accounts SET balance = balance * 1.1 
           where acctnum = 12345;
@@ -322,7 +322,7 @@ With the non-repeatable reads anomaly, you can see changes to rows that existed 
     </tr>
     <tr>
       <td>
-      {/* prettier-ignore */}
+        {/* prettier-ignore */}
         <pre>UPDATE accounts set balance = 500 
         where acctnum = 789;</pre>
       </td>
@@ -336,7 +336,7 @@ With the non-repeatable reads anomaly, you can see changes to rows that existed 
     </tr>
     <tr>
       <td>
-      {/* prettier-ignore */}
+        {/* prettier-ignore */}
         <pre>
           INSERT INTO accounts (acctnum, balance) 
           values (12345, 100);
@@ -461,7 +461,7 @@ Let's take another look at one of our examples, and consider which transactions 
     </tr>
     <tr>
       <td>
-      {/* prettier-ignore */}
+        {/* prettier-ignore */}
         <pre>UPDATE accounts set balance = 500 
         where acctnum = 789;</pre>
       </td>
@@ -475,7 +475,7 @@ Let's take another look at one of our examples, and consider which transactions 
     </tr>
     <tr>
       <td>
-      {/* prettier-ignore */}
+        {/* prettier-ignore */}
         <pre>
           INSERT INTO accounts (acctnum, balance) 
           values (12345, 100);
@@ -588,7 +588,7 @@ What are serialization errors? They look something like this: `ERROR: could not 
     </tr>
     <tr>
       <td>
-      {/* prettier-ignore */}
+        {/* prettier-ignore */}
         <pre>UPDATE accounts set balance = 500 
         where acctnum = 789;</pre>
       </td>
@@ -603,7 +603,7 @@ What are serialization errors? They look something like this: `ERROR: could not 
     <tr>
       <td></td>
       <td>
-      {/* prettier-ignore */}
+        {/* prettier-ignore */}
         <pre>
           UPDATE accounts set balance = balance+200 
           where acctnum = 789;
