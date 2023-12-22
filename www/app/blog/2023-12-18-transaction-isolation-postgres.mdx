@@ -209,9 +209,9 @@ The main problem with non repeatable reads is a classic anti-pattern known as â€
       <td>
         {/* prettier-ignore */}
         <pre>
-          IF ( 
-            SELECT balance FROM accounts 
-            WHERE acctnum = 12345 > 1000) THEN
+          IF (
+               SELECT balance FROM accounts
+               WHERE acctnum = 12345) > 1000 THEN
         </pre>
       </td>
     </tr>
