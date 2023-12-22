@@ -28,7 +28,7 @@ COMMIT;
 
 For reasons that should be obvious to anyone with a bank account, you really really want both updates to happen, or neither. This is what atomicity guarantees - that the entire transaction will either succeed or fail as a single unit.
 
-While Atomicity provides important guarantees for a single transaction, Isolation guarantees some into play when you have multiple transactions running concurrently.
+While Atomicity provides important guarantees for a single transaction, Isolation guarantees come into play when you have multiple transactions running concurrently.
 Suppose we have a scenario where one user ran the transaction above that moves money between accounts, and while that transaction was processing, but before it was committed, someone else ran `select balance from accounts where acctnum=12345` . What will this query return? Does it matter if it executed before or after the first update?
 This is what isolation levels address - how do concurrent transactions and queries affect each other. You can see why isolation can be more complex than atomicity - there are more ways concurrent transactions can interact. So let's look at how the database community approached isolation.
 
