@@ -85,7 +85,7 @@ This is a practical approach and is useful for developers because it lets us say
 
 ### Dirty Reads
 
-"The lowest level of isolation is read uncommitted. Read uncommitted allows a whole slew of anomalies, including the dreaded 'dirty read'. Dirty reads means reading data that has not yet been committed. Remember that if a transaction is not committed yet, it may never get committed. The user may change their mind, there may be an error, the DB can crash. Here's a simple example, lets say that we have two users who connected to the same database and each doing their work around the same time. [In database terminology, the state of each connection is called a session](https://dba.stackexchange.com/questions/13698/what-is-the-difference-between-a-connection-and-a-session), so we are looking at two concurrent sessions:
+The lowest level of isolation is read uncommitted. Read uncommitted allows a whole slew of anomalies, including the dreaded 'dirty read'. Dirty reads means reading data that has not yet been committed. Remember that if a transaction is not committed yet, it may never get committed. The user may change their mind, there may be an error, the DB can crash. Here's a simple example, lets say that we have two users who connected to the same database and each doing their work around the same time. [In database terminology, the state of each connection is called a session](https://dba.stackexchange.com/questions/13698/what-is-the-difference-between-a-connection-and-a-session), so we are looking at two concurrent sessions:
 
 <table>
   <thead>
@@ -132,7 +132,8 @@ In isolation level “read uncommitted”, if both these sessions execute concur
 
 It sounds so obviously terrible that you'd say who in their right minds would ever do dirty reads?
 
-It is mostly useful in write heavy workloads where you want to support very high write throughput and don't care a ton if reports are not 100% accurate. For example for metrics. Because this level breaks the most basic expectations from transactions. many DBs, including Postgres chose not to support this at all.
+It is mostly useful in write heavy workloads where you want to support very high write throughput and don't care a ton if reports are not 100% accurate. For example for metrics. 
+Because this level breaks the most basic expectations from transactions, many DBs, including Postgres chose not to support this at all.
 
 ## Non-repeatable Reads
 
@@ -183,10 +184,11 @@ Non-repeatable reads means that the same query within one transaction can return
   </tbody>
 </table>
 
-In isolation level “read committed”, the first query in the transaction in session B will return a different result than the second query, because the transaction in session A committed in between. Both results are “correct” in the sense that they reflect a durable state of the database, but they are different.
-You may think “why is this even a problem?”
+In isolation level “read committed”, the first query in the transaction in session B will return a different result than the second query, 
+because the transaction in session A committed in between. Both results are “correct” in the sense that they reflect a durable state of the database, but they are different.
+You may think “why is this even a problem”?
 
-The main problem with non repeatable reads is a classic anti-pattern known as “write after read”. For example, lets say that we want to give 10% bonus to accounts with balance above 1000, and we use the following code:
+The main problem with non repeatable reads is a classic anti-pattern known as “write after read”. For example, lets say that we want to give a 10% bonus to accounts with balance above 1000, and we use the following code:
 
 <table>
   <thead>
@@ -248,7 +250,7 @@ The main problem with non repeatable reads is a classic anti-pattern known as �
   </tbody>
 </table>
 
-The condition in session B was evaluated to true, and therefore we decided to update the balance in account 12345. But before we had a chance to update the balance, it was updated and committed by session A. The condition is no longer true, but due to the way the code is written, session B will still update the balance. The result will be a state that could not have happened if these sessions ran serially, and account 12345 will have extra 10% bonus in their account that they shouldn't have gotten based on the desired logic.
+The condition in session B was evaluated to true, and therefore we decided to update the balance in account 12345. But before we had a chance to update the balance, it was updated and committed by session A. The condition is no longer true, but due to the way the code is written, session B will still update the balance. The result will be a state that could not have happened if these sessions ran serially, and account 12345 will have an extra 10% bonus in their account that they shouldn't have gotten based on the desired logic.
 
 There are a few ways to get around this problem without changing the isolation level. For example, since the problem occurs when data changes between statements, you may choose to do the entire update in a single statement:
 
@@ -273,7 +275,7 @@ Here the `SELECT` will run first and return all rows with balance over 1000. The
 UPDATE accounts set balance = 500 where acctnum = 12345;
 ```
 
-When the first UPDATE gets to account 12345, it will see the new value, and again - account 12345 will get 10% bonus on an account with a balance of 500, which is not what we wanted.
+When the first UPDATE gets to account 12345, it will see the new value, and again - account 12345 will get a 10% bonus on an account with a balance of 500, which is not what we wanted.
 
 To prevent changes on rows you just read without going to a higher isolation level, you may need to lock the rows while selecting:
 
@@ -385,7 +387,7 @@ The result of the paper is an extension of the SQL92 isolation levels and anomal
 
 ![Table with isolation levels and anomalies from Microsoft's 1995 paper](/blog/2023-12-18-transaction-isolation/isolation.png)
 
-This paper, coming out after many relational databases implemented SQL92 isolation levels, lead to the rather confusing state of things that we have to this day. Different databases support different isolation levels, and the same isolation level can mean different things in different databases.
+This paper, coming out after many relational databases implemented SQL92 isolation levels, led to the rather confusing state of things that we have to this day. Different databases support different isolation levels, and the same isolation level can mean different things in different databases.
 
 ## Isolation levels in Postgres
 
@@ -560,7 +562,8 @@ You can see both the new version of account 789, and the newly inserted account 
 As you can see, using MVCC snapshots for transaction isolations means that the same mechanism that hides new versions of existing rows also hides new rows. Neither will show up in snapshots that were taken before those changes were made.
 A transaction with “read committed” isolation level will simply take a new snapshot at the start of each query and when conflicts are encountered - which means that each query will be able to see data from transactions that were already committed. Even if they did not commit at the start of the session.
 
-Postgres' infamous vacuum process is responsible for regular maintenance and cleanup of all the different copies of each row: Getting rid of deleted rows that are no longer used and also performing a process known as “freezing”. Freezing process take rows that were last modified by the oldest transactions and indicating that they should always be visible. This process frees up these transaction IDs for reuse - very important since Postgres transaction IDs are limited to 32bit and you can't use more transaction IDs at the same time. This is why long running transactions and very frequent updates/inserts/deletes can cause issues with the vacuum process.
+Postgres's infamous vacuum process is responsible for regular maintenance and cleanup of all the different copies of each row: Getting rid of deleted rows that are no longer used and also performing a process known as “freezing”. 
+The freezing process take rows that were last modified by the oldest transactions and indicating that they should always be visible. This process frees up these transaction IDs for reuse - very important since Postgres transaction IDs are limited to 32bit and you can't use more transaction IDs at the same time. This is why long running transactions and very frequent updates/inserts/deletes can cause issues with the vacuum process.
 
 ### Performance implication of serializable in Postgres
 
@@ -645,7 +648,7 @@ Last but not least, huge thanks to [Alex DeBrie](https://twitter.com/alexbdebrie
 
 ## Additional References:
 
-- [Transaction isolation in Postgres' documentation](https://www.postgresql.org/docs/current/transaction-iso.html)
+- [Transaction isolation in Postgres's documentation](https://www.postgresql.org/docs/current/transaction-iso.html)
 - [Internals of Postgres MVCC, in much greater detail](https://www.interdb.jp/pg/pgsql05.html#_5.10.1)
 - [Shorter and clearer blog on isolation in Postgres from Lawrence Jones](https://blog.lawrencejones.dev/isolation-levels/)
 - [Blog post explaining atomicity, isolation and MVCC in Postgres with snippets from Postgres source code](https://brandur.org/postgres-atomicity)
