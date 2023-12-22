@@ -132,7 +132,7 @@ In isolation level “read uncommitted”, if both these sessions execute concur
 
 It sounds so obviously terrible that you'd say who in their right minds would ever do dirty reads?
 
-It is mostly useful in write heavy workloads where you want to support very high write throughput and don't care a ton if reports are not 100% accurate. For example for metrics. 
+It is mostly useful in write heavy workloads where you want to support very high write throughput and don't care a ton if reports are not 100% accurate. For example for metrics.
 Because this level breaks the most basic expectations from transactions, many DBs, including Postgres chose not to support this at all.
 
 ## Non-repeatable Reads
@@ -184,7 +184,7 @@ Non-repeatable reads means that the same query within one transaction can return
   </tbody>
 </table>
 
-In isolation level “read committed”, the first query in the transaction in session B will return a different result than the second query, 
+In isolation level “read committed”, the first query in the transaction in session B will return a different result than the second query,
 because the transaction in session A committed in between. Both results are “correct” in the sense that they reflect a durable state of the database, but they are different.
 You may think “why is this even a problem”?
 
@@ -578,7 +578,7 @@ You can see both the new version of account 789, and the newly inserted account 
 As you can see, using MVCC snapshots for transaction isolations means that the same mechanism that hides new versions of existing rows also hides new rows. Neither will show up in snapshots that were taken before those changes were made.
 A transaction with “read committed” isolation level will simply take a new snapshot at the start of each query and when conflicts are encountered - which means that each query will be able to see data from transactions that were already committed. Even if they did not commit at the start of the session.
 
-Postgres's infamous vacuum process is responsible for regular maintenance and cleanup of all the different copies of each row: Getting rid of deleted rows that are no longer used and also performing a process known as “freezing”. 
+Postgres's infamous vacuum process is responsible for regular maintenance and cleanup of all the different copies of each row: Getting rid of deleted rows that are no longer used and also performing a process known as “freezing”.
 The freezing process take rows that were last modified by the oldest transactions and indicating that they should always be visible. This process frees up these transaction IDs for reuse - very important since Postgres transaction IDs are limited to 32bit and you can't use more transaction IDs at the same time. This is why long running transactions and very frequent updates/inserts/deletes can cause issues with the vacuum process.
 
 ### Performance implication of serializable in Postgres
@@ -657,7 +657,7 @@ This kind of test framework means that when concurrency bugs are discovered and 
 Hopefully this post didn't leave you more confused than you were at the beginning.
 There is a lot of complexity when it comes to the behavior of concurrent transactions in different isolation levels. Serializable guarantees relatively easy reasoning - just imagine that all queries run serially, one after another. But as you saw, the main drawback is the possibility of rollbacks due to conflicts.
 Other levels require deeper understanding of all the anomalies.
-This understanding allows you to know whether the behavior provided in these isolation levels matches the business logic that you are trying 
+This understanding allows you to know whether the behavior provided in these isolation levels matches the business logic that you are trying
 to implement, and whether additional explicit locking is required. It will also allow you to make good performance tradeoffs.
 Techniques such as deterministic simulation testing can help catch and detect cases where concurrent transactions lead to incorrect results.
 
