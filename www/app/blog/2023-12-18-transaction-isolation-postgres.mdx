@@ -309,7 +309,7 @@ BEGIN;
 COMMIT
 ```
 
-Here, you pick a job from the queue and lock it for the duration of the transaction. When you are done performing the job, you delete it from the queue and commit. Other processes can use the same logic to pick jobs, while skipping ones that are already in progress. If you run this code in a loop, each `SELECT` will see which jobs when the select executes - since `read committed` isolation level allows you to see changes that were committed before the start of the transaction. But the `FOR UPDATE` lock will prevent other processes from picking the same job.
+Here, you pick a job from the queue and lock it for the duration of the transaction. When you are done performing the job, you delete it from the queue and commit. Other processes can use the same logic to pick jobs, while skipping ones that are already in progress. If you run this code in a loop, each `SELECT` will see which jobs are available when the select executes - since `read committed` isolation level allows you to see changes that were committed before the start of the transaction. But the `FOR UPDATE` lock will prevent other processes from picking the same job.
 
 Read committed is the default isolation level in postgres and as a result it is the most commonly used one. If you understand the gotchas and handle them with well-placed locks, you can usually achieve correct application behavior in this isolation level.
 
