@@ -90,4 +90,4 @@ curl  -X GET \
   npx prisma db pull
   ```
 
-  If starting from scratch, ou need to run these *after* you created the tables in Nile.
+  If starting from scratch, you need to run these *after* you created the tables in Nile

@@ -1,0 +1,249 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "Prisma",
+  order: 6,
+};
+
+# Build a todo list app with Nile and Prisma
+
+In this tutorial, you will learn about Nile's tenant virtualization features, while building a todo list application.
+We'll use Prisma as the ORM to interact with the database, Express as the web framework and React for the UI.
+
+## 1. Create a database
+
+1. Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already
+2. You should see a welcome message. Click on "Lets get started"
+   ![Nile welcome.](/docs/nile-welcome.png)
+3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to “Use Token in Browser”.
+
+## 2. Create a table
+
+After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
+
+```sql
+  CREATE TABLE IF NOT EXISTS "todos" (
+    "id" uuid DEFAULT gen_random_uuid(),
+    "tenant_id" uuid,
+    "title" varchar(256),
+    "complete" boolean,
+    CONSTRAINT todos_tenant_id_id PRIMARY KEY("tenant_id","id")
+  );
+```
+
+You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
+
+See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
+![Creating a table in Nile's admin dashboard](/docs/gui-create-table.png)
+
+## 3. Get credentials
+
+In the left-hand menu, click on "Settings" and then select "Connection".
+
+Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
+
+## 4. Set the environment
+
+Enough GUI for now. Let's get to some code.
+
+If you haven't cloned this repository yet, now will be an excellent time to do so.
+
+```bash
+git clone https://github.com/niledatabase/niledatabase
+cd niledatabase/examples/quickstart/prisma
+```
+
+Rename `.env.example` to `.env`, and update it with the connection string you just copied from Nile Console. Make sure you don't include the word "psql". It should look something like this:
+
+```bash
+DATABASE_URL=postgres://018b778a-30df-7cdd-b55c-2f9664db39f3:ff3fb983-683c-4616-bbbc-519d8ddbbce5@db.thenile.dev:5432/gwen_db
+```
+
+Install dependencies with `yarn install` or `npm install`.
+
+```bash
+npm install
+```
+
+## 5. Run the application
+
+Start the web service with `npm start` or `yarn start`.
+
+Now you can use `curl` to explore the APIs. Here are a few examples:
+
+```bash
+# create a tenant
+curl --location --request POST 'localhost:3001/api/tenants' \
+--header 'Content-Type: application/json' \
+--data-raw '{"name":"my first customer", "id":"108124a5-2e34-418a-9735-b93082e9fbf2"}'
+
+# get tenants
+curl  -X GET 'http://localhost:3001/api/tenants'
+
+# create a todo (don't forget to use a read tenant-id in the URL)
+curl  -X POST \
+  'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{"title": "feed the cat", "complete": false}'
+
+# list todos for tenant (don't forget to use a read tenant-id in the URL)
+curl  -X GET \
+  'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
+
+# list todos for all tenants
+curl  -X GET \
+  'http://localhost:3001/insecure/all_todos'
+```
+
+## 6. Check the data in Nile
+
+Go back to the Nile query editor and see the data you created from the app.
+
+```sql
+SELECT tenants.name, title, complete
+FROM todos join tenants on tenants.id = todos.tenant_id;
+```
+
+You should see all the todos you created, and the tenants they belong to.
+
+## 7. How does it work?
+
+Lets walk through key parts of the application, so you'll learn how it works and how to adopt the example to your use-cases.
+
+### 7.1 Working with Prisma data models
+
+This example uses Prisma as the ORM. Prisma, like most ORMs, works by mapping the relational model in the database to an object model in the application.
+When you cloned the example, you got a [Prisma schema file](https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/prisma/prisma/schema.prisma) that contains definitions for key tables (such as tenants and todos) and their relationships.
+
+This file is used to generate the Prisma client, which is used by the application to interact with the database.
+It can also be used to generate the database schema, but in this example we already created it in the Nile Console.
+
+We generated the schema file from the database using the following commands:
+
+```bash
+  npx prisma init
+  npx prisma db pull
+```
+
+This is also known as Prisma's "introspection" feature. We then generated a Prisma client with:
+
+```bash
+    npm install @prisma/client
+    npx prisma generate
+```
+
+### 7.2 Querying tenant databases
+
+Once we have a Prisma client, we can use it to run queries. For example, lets look at how we queried the database for a list of todos for a specific tenant:
+
+```typescript
+    const tenantDB = tenantContext.getStore();
+    // No need for a "where" clause here because we are setting the tenant ID in the context
+    const todos = await tenantDB?.todos.findMany();
+    res.json(todos);
+```
+
+The query looks like a regular Prisma query, but it's actually running against a tenant database, which is why it doesn't need to filter the todos.
+As you can see in the snippet above, we are getting the tenant database from `tenantContext`, lets take a look at what is this context and how it is managed.
+
+### 7.3 Tenant context
+Tenant context uses `AsyncLocalStorage` to store a Prisma Client with additional tenant information. 
+`AsyncLocalStorage` is a Node.js feature that allows you to store data in a context that is local to the current execution flow.
+
+```typescript
+const tenantContext = new AsyncLocalStorage<PrismaClient | undefined>()
+```
+
+We use Express middleware to get the tenant ID from the HTTP request, use it to initialize a Prisma client and set it in the context:
+
+```typescript
+app.use((req, res, next) => {
+  const fn = match("/api/tenants/:tenantId/todos", { decode: decodeURIComponent });
+  const m = fn(req.path);
+
+  const tenantId = m?.params?.tenantId;
+  console.log('setting context to tenant: ' + tenantId)
+
+  tenantContext.run(prisma.$extends(tenantDB(tenantId)) as any as PrismaClient, next);
+})
+```
+
+`tenantContext.run()` stores the Prisma Client in a local storage, accessible from anywhere in the current request execution flow. The second argument is a callback function that will be executed after the context is set. 
+Since this is an Express middleware, the callback is the next middleware or request handler in the chain.
+
+The only last bit to understand is the initialization of the Prisma Client with `tenantDB`.
+
+### 7.4 Initializing the Prisma Client with tenant information
+
+Lets take a look at the tenantDB object: 
+
+```typescript
+function tenantDB(tenantId: string | null | undefined): (client: any) => PrismaClient<any, any, any, Types.Extensions.Args> {
+  return Prisma.defineExtension((prisma) =>
+    // @ts-ignore (Excessive stack depth comparing types...)
+    prisma.$extends({
+      query: {
+        $allModels: {
+          async $allOperations({ args, query }) {
+            // set tenant context, if tenantId is provided
+            // otherwise, reset it
+            const [, result] = tenantId ?
+              await prisma.$transaction([
+                  prisma.$executeRawUnsafe(`SET nile.tenant_id = '${tenantId}';`),
+                  query(args),
+                ])
+              :
+                await prisma.$transaction([
+                prisma.$executeRawUnsafe(`RESET nile.tenant_id;`),
+                query(args),
+              ])
+            return result;
+          },
+        },
+      },
+    })
+  );
+}
+```
+
+While it looks a bit mysterious, it's actually quite simple. This function takes a tenant ID and returns a Prisma extension.
+The extension is a function that takes the Prisma Client as an argument and returns a new Prisma Client with additional functionality.
+
+In this case, the additional functionality is to run every operation, for every model in the database, in a transaction that sets the tenant ID in the database session.
+
+### 7.5 Tying it all together
+
+Lets circle back to what happens when we call:
+
+```bash
+curl  -X GET \
+  'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
+```
+
+First, the Express middleware extracts the tenant ID from the URL and creates a Prisma Client with an extension that will set the tenant ID in the database session before each operation. 
+It then uses `AsyncLocalStorage` to store the Prisma Client in a context that is local to the current request execution flow.
+
+The request handler then uses the Prisma Client from the context to run a query against the database. Since the tenant ID is already set in the database session, the query doesn't need to filter the todos by tenant ID.
+
+```typescript
+    const tenantDB = tenantContext.getStore();
+    // No need for a "where" clause here because we are setting the tenant ID in the context
+    const todos = await tenantDB?.todos.findMany();
+    res.json(todos);
+```
+
+Other request handlers in the application use the same pattern to insert or update new todos for each tenant.
+
+## 8. What's next?
+
+This example is a good starting point for building your own application with Nile.
+
+You have learned basic Nile concepts and how to use them with Drizzle.
+
+You can learn more about Nile's tenant virtualization features in the following tutorials:
+
+- [Tenant management](/docs/tenant-management)
+- [Tenant isolation](/docs/tenant-isolation)
+
+And you can explore Nile's JS SDK in the [SDK reference](/docs/reference/sdk-reference).

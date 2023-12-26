@@ -13,7 +13,7 @@ import NileBgMark from "@/public/icons/nile-bg-mark.svg";
 import Templates from "@/public/icons/templates.svg";
 
 const languages = [
-  { name: "sql", icon: "sql.svg", path: "/docs/getting-started/languages/sql" },
+  { name: "SQL", icon: "sql.svg", path: "/docs/getting-started/languages/sql" },
   {
     name: "NextJS",
     icon: "nextjs.svg",
@@ -29,6 +29,8 @@ const languages = [
     icon: "java.svg",
     path: "/docs/getting-started/languages/java",
   },
+  { name: "Drizzle", icon: "drizzle.svg", path: "/docs/getting-started/languages/drizzle" },
+  { name: "Prisma", icon: "prisma.svg", path: "/docs/getting-started/languages/prisma" },
 ];
 export default async function Home() {
   const templates = await loadTemplates();
