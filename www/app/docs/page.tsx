@@ -29,8 +29,16 @@ const languages = [
     icon: "java.svg",
     path: "/docs/getting-started/languages/java",
   },
-  { name: "Drizzle", icon: "drizzle.svg", path: "/docs/getting-started/languages/drizzle" },
-  { name: "Prisma", icon: "prisma.svg", path: "/docs/getting-started/languages/prisma" },
+  {
+    name: "Drizzle",
+    icon: "drizzle.svg",
+    path: "/docs/getting-started/languages/drizzle",
+  },
+  {
+    name: "Prisma",
+    icon: "prisma.svg",
+    path: "/docs/getting-started/languages/prisma",
+  },
 ];
 export default async function Home() {
   const templates = await loadTemplates();

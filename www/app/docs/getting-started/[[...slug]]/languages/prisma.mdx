@@ -138,48 +138,56 @@ This is also known as Prisma's "introspection" feature. We then generated a Pris
 Once we have a Prisma client, we can use it to run queries. For example, lets look at how we queried the database for a list of todos for a specific tenant:
 
 ```typescript
-    const tenantDB = tenantContext.getStore();
-    // No need for a "where" clause here because we are setting the tenant ID in the context
-    const todos = await tenantDB?.todos.findMany();
-    res.json(todos);
+const tenantDB = tenantContext.getStore();
+// No need for a "where" clause here because we are setting the tenant ID in the context
+const todos = await tenantDB?.todos.findMany();
+res.json(todos);
 ```
 
 The query looks like a regular Prisma query, but it's actually running against a tenant database, which is why it doesn't need to filter the todos.
 As you can see in the snippet above, we are getting the tenant database from `tenantContext`, lets take a look at what is this context and how it is managed.
 
 ### 7.3 Tenant context
-Tenant context uses `AsyncLocalStorage` to store a Prisma Client with additional tenant information. 
+
+Tenant context uses `AsyncLocalStorage` to store a Prisma Client with additional tenant information.
 `AsyncLocalStorage` is a Node.js feature that allows you to store data in a context that is local to the current execution flow.
 
 ```typescript
-const tenantContext = new AsyncLocalStorage<PrismaClient | undefined>()
+const tenantContext = new AsyncLocalStorage<PrismaClient | undefined>();
 ```
 
 We use Express middleware to get the tenant ID from the HTTP request, use it to initialize a Prisma client and set it in the context:
 
 ```typescript
 app.use((req, res, next) => {
-  const fn = match("/api/tenants/:tenantId/todos", { decode: decodeURIComponent });
+  const fn = match("/api/tenants/:tenantId/todos", {
+    decode: decodeURIComponent,
+  });
   const m = fn(req.path);
 
   const tenantId = m?.params?.tenantId;
-  console.log('setting context to tenant: ' + tenantId)
+  console.log("setting context to tenant: " + tenantId);
 
-  tenantContext.run(prisma.$extends(tenantDB(tenantId)) as any as PrismaClient, next);
-})
+  tenantContext.run(
+    prisma.$extends(tenantDB(tenantId)) as any as PrismaClient,
+    next
+  );
+});
 ```
 
-`tenantContext.run()` stores the Prisma Client in a local storage, accessible from anywhere in the current request execution flow. The second argument is a callback function that will be executed after the context is set. 
+`tenantContext.run()` stores the Prisma Client in a local storage, accessible from anywhere in the current request execution flow. The second argument is a callback function that will be executed after the context is set.
 Since this is an Express middleware, the callback is the next middleware or request handler in the chain.
 
 The only last bit to understand is the initialization of the Prisma Client with `tenantDB`.
 
 ### 7.4 Initializing the Prisma Client with tenant information
 
-Lets take a look at the tenantDB object: 
+Lets take a look at the tenantDB object:
 
 ```typescript
-function tenantDB(tenantId: string | null | undefined): (client: any) => PrismaClient<any, any, any, Types.Extensions.Args> {
+function tenantDB(
+  tenantId: string | null | undefined
+): (client: any) => PrismaClient<any, any, any, Types.Extensions.Args> {
   return Prisma.defineExtension((prisma) =>
     // @ts-ignore (Excessive stack depth comparing types...)
     prisma.$extends({
@@ -188,16 +196,17 @@ function tenantDB(tenantId: string | null | undefined): (client: any) => PrismaC
           async $allOperations({ args, query }) {
             // set tenant context, if tenantId is provided
             // otherwise, reset it
-            const [, result] = tenantId ?
-              await prisma.$transaction([
-                  prisma.$executeRawUnsafe(`SET nile.tenant_id = '${tenantId}';`),
+            const [, result] = tenantId
+              ? await prisma.$transaction([
+                  prisma.$executeRawUnsafe(
+                    `SET nile.tenant_id = '${tenantId}';`
+                  ),
                   query(args),
                 ])
-              :
-                await prisma.$transaction([
-                prisma.$executeRawUnsafe(`RESET nile.tenant_id;`),
-                query(args),
-              ])
+              : await prisma.$transaction([
+                  prisma.$executeRawUnsafe(`RESET nile.tenant_id;`),
+                  query(args),
+                ]);
             return result;
           },
         },
@@ -221,16 +230,16 @@ curl  -X GET \
   'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
 ```
 
-First, the Express middleware extracts the tenant ID from the URL and creates a Prisma Client with an extension that will set the tenant ID in the database session before each operation. 
+First, the Express middleware extracts the tenant ID from the URL and creates a Prisma Client with an extension that will set the tenant ID in the database session before each operation.
 It then uses `AsyncLocalStorage` to store the Prisma Client in a context that is local to the current request execution flow.
 
 The request handler then uses the Prisma Client from the context to run a query against the database. Since the tenant ID is already set in the database session, the query doesn't need to filter the todos by tenant ID.
 
 ```typescript
-    const tenantDB = tenantContext.getStore();
-    // No need for a "where" clause here because we are setting the tenant ID in the context
-    const todos = await tenantDB?.todos.findMany();
-    res.json(todos);
+const tenantDB = tenantContext.getStore();
+// No need for a "where" clause here because we are setting the tenant ID in the context
+const todos = await tenantDB?.todos.findMany();
+res.json(todos);
 ```
 
 Other request handlers in the application use the same pattern to insert or update new todos for each tenant.
