@@ -88,6 +88,8 @@ curl  -X GET \
   ```bash
   npx prisma init
   npx prisma db pull
+
+  npm prisma generate
   ```
 
   If starting from scratch, you need to run these *after* you created the tables in Nile

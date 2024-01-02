@@ -1,11 +1,15 @@
 import express from "express";
 import { match } from "path-to-regexp";
-import { AsyncLocalStorage } from 'async_hooks'
 import { Prisma, PrismaClient } from '@prisma/client'
+import expressBasicAuth from "express-basic-auth";
+import {tenantContext} from "./storage";
+import { dbAuthorizer, getUnauthorizedResponse } from "./basicauth";
+import type { tenants } from '@prisma/client'
 
 const PORT = process.env.PORT || 3001;
-const tenantContext = new AsyncLocalStorage<PrismaClient | undefined>()
-const prisma = new PrismaClient()
+const REQUIRE_AUTH = process.env.REQUIRE_AUTH || false;
+
+const prisma = new PrismaClient({log: ['query', 'info', 'warn', 'error']})
 const app = express();
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
@@ -24,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/client-extensions
  */
 //@ts-ignore
-function tenantDB(tenantId: string | null | undefined): (client: any) => PrismaClient<any, any, any, Types.Extensions.Args> {
+function tenantDbExtension(tenantId: string | null | undefined): (client: any) => PrismaClient<any, any, any, Types.Extensions.Args> {
   return Prisma.defineExtension((prisma) =>
     // @ts-ignore (Excessive stack depth comparing types...)
     prisma.$extends({
@@ -60,10 +64,18 @@ app.use((req, res, next) => {
 
   //@ts-ignore
   const tenantId = m?.params?.tenantId;
-  console.log('setting context to tenant: ' + tenantId)
+  console.log('Creating async storage with extended prisma client for: ' + tenantId)
   //@ts-ignore
-  tenantContext.run(prisma.$extends(tenantDB(tenantId)) as any as PrismaClient, next);
+  tenantContext.run(prisma.$extends(tenantDbExtension(tenantId)) as any as PrismaClient, next);
 })
+
+// add basic auth middleware if required
+// we are doing this after setting the tenant context, so we'll have an appropriate connection to the DB
+app.use(
+  expressBasicAuth({authorizer: dbAuthorizer, authorizeAsync: true, unauthorizedResponse: getUnauthorizedResponse})
+);
+
+
 
 // endpoint to create new tenants
 app.post("/api/tenants", async (req, res) => {
@@ -71,7 +83,7 @@ app.post("/api/tenants", async (req, res) => {
     const tenantDB = tenantContext.getStore();
     const name = req.body.name;
     const id = req.body.id;
-    var tenant = {};
+    var tenant:tenants | null = null;
     if (id) {
         tenant = await prisma.tenants.create({
           data: {id: id, name: name,},
@@ -81,6 +93,16 @@ app.post("/api/tenants", async (req, res) => {
         data: {name: name,},
       });
     }
+
+    if (REQUIRE_AUTH) {
+      // need to connect user to tenant
+      const tenant_id = tenant.id;
+      await tenantDB?.tenant_users.create({
+        //@ts-ignore
+        data: {tenant_id: tenant_id, user_id: req.auth.user},
+      });
+    }
+
     res.json(tenant);
   } catch (error: any) {
     console.log("error creating tenant: " + error.message);
@@ -94,11 +116,22 @@ app.post("/api/tenants", async (req, res) => {
 app.get("/api/tenants", async (req, res) => {
   let tenants:any;
   try {
-      //const tenantDB = new PrismaClient();
       const tenantDB = tenantContext.getStore();
-      tenants = await tenantDB?.tenants.findMany(); 
-      console.log("xxx")
-      console.log(tenants);
+      if (REQUIRE_AUTH) {
+        tenants = await tenantDB?.tenants.findMany({
+          where: {
+            tenant_users: {
+              some: {
+                //@ts-ignore
+                user_id: req.auth.user,
+              }
+            }
+          }
+        }); 
+      } else {
+        tenants = await tenantDB?.tenants.findMany();
+      }
+
       res.json(tenants);
   } catch (error: any) {
     console.log("error listing tenants: " + error.message);

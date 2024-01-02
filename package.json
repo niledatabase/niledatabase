@@ -11,6 +11,7 @@
     "examples/user_management/NextAuth",
     "examples/quickstart/java/fe",
     "examples/quickstart/drizzle/fe",
+    "examples/quickstart/prisma/fe",
     "examples/serverless/lambda-drizzle/fe"
   ],
   "scripts": {

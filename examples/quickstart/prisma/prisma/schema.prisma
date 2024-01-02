@@ -1,19 +1,24 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["public", "users"]
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model tenants {
-  id      String    @id @default(dbgenerated("public.uuid_generate_v7()")) @db.Uuid
-  name    String?
-  created DateTime  @default(dbgenerated("LOCALTIMESTAMP")) @db.Timestamp(6)
-  updated DateTime  @default(dbgenerated("LOCALTIMESTAMP")) @db.Timestamp(6)
-  deleted DateTime? @db.Timestamp(6)
+  id           String         @id @default(dbgenerated("public.uuid_generate_v7()")) @db.Uuid
+  name         String?
+  created      DateTime       @default(dbgenerated("LOCALTIMESTAMP")) @db.Timestamp(6)
+  updated      DateTime       @default(dbgenerated("LOCALTIMESTAMP")) @db.Timestamp(6)
+  deleted      DateTime?      @db.Timestamp(6)
+  tenant_users tenant_users[]
+
+  @@schema("public")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -23,5 +28,35 @@ model todos {
   title     String?  @db.VarChar(256)
   complete  Boolean?
 
-  @@id([id, tenant_id])
+  @@id([tenant_id, id], map: "todos_tenant_id_id")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model tenant_users {
+  tenant_id String    @db.Uuid
+  user_id   String    @db.Uuid
+  created   DateTime  @default(dbgenerated("LOCALTIMESTAMP")) @db.Timestamp(6)
+  updated   DateTime  @default(dbgenerated("LOCALTIMESTAMP")) @db.Timestamp(6)
+  deleted   DateTime? @db.Timestamp(6)
+  roles     String[]
+  email     String?
+  tenants   tenants   @relation(fields: [tenant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([tenant_id, user_id])
+  @@schema("users")
+}
+
+model users {
+  id          String    @id @default(dbgenerated("public.uuid_generate_v7()")) @db.Uuid
+  created     DateTime  @default(dbgenerated("LOCALTIMESTAMP")) @db.Timestamp(6)
+  updated     DateTime  @default(dbgenerated("LOCALTIMESTAMP")) @db.Timestamp(6)
+  deleted     DateTime? @db.Timestamp(6)
+  name        String?
+  family_name String?
+  given_name  String?
+  email       String?
+  picture     String?
+
+  @@schema("users")
 }
