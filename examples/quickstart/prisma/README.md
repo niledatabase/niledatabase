@@ -93,3 +93,32 @@ curl  -X GET \
   ```
 
   If starting from scratch, you need to run these *after* you created the tables in Nile
+
+
+### Running with Docker
+
+```bash
+ docker build . -t todo-node-prisma
+ docker run -it -p3001:3001 todo-node-prisma
+```
+
+### Deploying with Fly
+
+This assumes you have Fly account and credentials all set up:
+
+First, create a secret with your DB connection string, right from your `.env` file:
+
+```bash
+fly secrets set DATABASE_URL=postgresql://user:password@db.thenile.dev:5432/mydb
+```
+
+Then copy over the launch example: `cp fly.example fly.toml` and make any edits you may need.
+For example, remove `REQUIRE_AUTH` environment variable if you are not planning to use authentication.
+
+Now we only need to deploy, since this is an example, we don't need high availability:
+
+```bash
+fly deploy --ha=false
+```
+
+Note: if you use `fly launch` make sure not to provision a database, since you already have one in Nile!
