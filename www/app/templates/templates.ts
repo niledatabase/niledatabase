@@ -153,6 +153,22 @@ export const LambdaQuickstart: Template = {
   },
 };
 
+export const PrismaQuickstart: Template = {
+  name: "Todo List application backend with Nile and Prisma ORM",
+  description:
+    "Learn how to use Nile with Prisma ORM to build a multi-tenant app",
+  author: "Nile",
+  demoUrl: "https://todo-prisma-ten.vercel.app/",
+  imageSrc: "/templates/PrismaTodoApp.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/NextAuth/README.md",
+  metadata: {
+    Framework: "NodeJS, Prisma ORM, Express",
+    "Use Case": "Building SaaS",
+    Publisher: "Nile",
+  },
+};
+
 export const NextAuthQuickstart: Template = {
   name: "Todo List with NextAuth-based Authentication",
   description:
