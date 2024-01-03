@@ -161,7 +161,7 @@ export const PrismaQuickstart: Template = {
   demoUrl: "https://todo-prisma-ten.vercel.app/",
   imageSrc: "/templates/PrismaTodoApp.png",
   readmeUrl:
-    "https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/prisma",
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/prisma/README.md",
   metadata: {
     Framework: "NodeJS, Prisma ORM, Express",
     "Use Case": "Building SaaS",
