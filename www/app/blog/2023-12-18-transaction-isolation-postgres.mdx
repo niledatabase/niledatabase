@@ -598,34 +598,37 @@ What are serialization errors? They look something like this: `ERROR: could not 
   </thead>
   <tbody>
     <tr>
+      {/* prettier-ignore */}
       <td>
         ```sql
         BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
         select * from accounts;
         ```
       </td>
+      {/* prettier-ignore */}
       <td>
         ```sql
         BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-        select * from accounts;
+        SELECT * FROM accounts;
         ```
       </td>
     </tr>
     <tr>
       <td></td>
+      {/* prettier-ignore */}
       <td>
         ```sql
-        UPDATE accounts set balance = 500 where acctnum = 789;
+        UPDATE accounts SET balance = 500 WHERE acctnum = 789;
         COMMIT;
         ```
       </td>
     </tr>
     <tr>
+      {/* prettier-ignore */}
       <td>
         ```sql
-        UPDATE accounts set balance = balance+200
-        where acctnum = 789;
-        ```   
+        UPDATE accounts SET balance = balance+200 WHERE acctnum = 789;
+        ```
       </td>
       <td></td>
     </tr>
