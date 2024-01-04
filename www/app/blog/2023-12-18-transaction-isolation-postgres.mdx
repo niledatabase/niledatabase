@@ -600,20 +600,20 @@ What are serialization errors? They look something like this: `ERROR: could not 
     <tr>
       <td>
         {/* prettier-ignore */}
-        <pre>BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE; 
+        <pre>BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
         select * from accounts;</pre>
       </td>
       <td>
         {/* prettier-ignore */}
-        <pre>BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE; 
-        select * from accounts;</pre>      
-        </td>
+        <pre>BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+        select * from accounts;</pre>
+      </td>
     </tr>
     <tr>
       <td></td>
       <td>
-      {/* prettier-ignore */}
-        <pre>UPDATE accounts set balance = 500 
+        {/* prettier-ignore */}
+        <pre>UPDATE accounts set balance = 500
         where acctnum = 789;
         COMMIT;</pre>
       </td>
@@ -621,7 +621,7 @@ What are serialization errors? They look something like this: `ERROR: could not 
     <tr>
       <td>
         {/* prettier-ignore */}
-        <pre>UPDATE accounts set balance = balance+200 
+        <pre>UPDATE accounts set balance = balance+200
         where acctnum = 789;</pre>
       </td>
       <td></td>
