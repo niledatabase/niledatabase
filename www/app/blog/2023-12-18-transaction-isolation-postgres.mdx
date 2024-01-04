@@ -598,41 +598,44 @@ What are serialization errors? They look something like this: `ERROR: could not 
   </thead>
   <tbody>
     <tr>
+      {/* prettier-ignore */}
       <td>
-        <pre>BEGIN;</pre>
+        ```sql
+        BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+        select * from accounts;
+        ```
       </td>
+      {/* prettier-ignore */}
       <td>
-        <pre>BEGIN;</pre>
+        ```sql
+        BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+        SELECT * FROM accounts;
+        ```
       </td>
     </tr>
     <tr>
-      <td>
-        {/* prettier-ignore */}
-        <pre>UPDATE accounts set balance = 500 
-        where acctnum = 789;</pre>
-      </td>
       <td></td>
+      {/* prettier-ignore */}
+      <td>
+        ```sql
+        UPDATE accounts SET balance = 500 WHERE acctnum = 789;
+        COMMIT;
+        ```
+      </td>
     </tr>
     <tr>
+      {/* prettier-ignore */}
       <td>
-        <pre>COMMIT;</pre>
+        ```sql
+        UPDATE accounts SET balance = balance+200 WHERE acctnum = 789;
+        ```
       </td>
       <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>
-        {/* prettier-ignore */}
-        <pre>
-          UPDATE accounts set balance = balance+200 
-          where acctnum = 789;
-        </pre>
-      </td>
     </tr>
   </tbody>
 </table>
 
-The transaction in session B is attempting to modify a value that session A modified and committed after session B started. Which means that session B is trying to update a value without being able to see its latest version. Which can lead to a state that would never have happened if the transactions ran serially (this anomaly is called a lost write). Therefore Session B will get an error, the transaction will roll back, and Session B can try again.
+The transaction in session A is attempting to modify a value that session B modified and committed after session A started and took a snapshot. Which means that session A is trying to update a value without being able to see its latest version. Which can lead to a state that would never have happened if the transactions ran serially (this anomaly is called a lost write). Therefore session A will get an error, the transaction will roll back, and session A can try again.
 
 Worth noting that in this simple scenario, "read committed" will actually work correctly. Session A will lock the row and session B will wait until the lock is released, then see the new value and update it. And as we've seen, "read committed" will require explicit locks for correctness in more complex situations.
 
