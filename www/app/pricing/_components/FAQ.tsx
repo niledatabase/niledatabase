@@ -72,7 +72,7 @@ const ExpandItem = (props: {
 };
 
 export default function FAQ() {
-  const ref = useGoToHash();
+  const ref = useGoToHash({ hash: "#faq" });
   return (
     <div className="mt-24">
       <Heading text="Frequently Asked Questions" />
