@@ -4,18 +4,12 @@ import Heading from "../_components/common/Heading";
 import useGoToHash from "../_components/common/useGoToHash";
 
 export default function CareerHeader() {
-  const [forceVisible, setForceVisible] = useState(false);
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setForceVisible(window.location.hash === "#careers");
-    }
-  }, []);
-  const ref = useGoToHash({ offset: -76 });
+  const ref = useGoToHash({ offset: -76, hash: "#careers" });
   return (
     <>
       <a href="#careers" ref={ref}></a>
       <div className="mt-20">
-        <Heading text="Careers" forceVisible={forceVisible} />
+        <Heading text="Open positions" />
       </div>
     </>
   );

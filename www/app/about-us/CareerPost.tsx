@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { OpenPositionMetadata } from "./OpenPositionMetadata";
 
-import useGoToHash from "@/app/_components/common/useGoToHash";
 export default function CareerPost(props: OpenPositionMetadata) {
   return (
     <Link href={props.slug}>
