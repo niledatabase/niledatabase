@@ -27,6 +27,10 @@ const videos = [
     title: "Built a NextJS application with Nile",
     videoUrl: "https://www.youtube.com/embed/Eo0dDROnJGg?si=qS4Rg8LAyIkK4zfB",
   },
+  {
+    title: "Build multi-tenant todo list application with Nile and Prisma ORM",
+    videoUrl: "https://www.youtube.com/embed/qsQSQoMpluk?si=iBxer1f202pvfZH6",
+  },
 ];
 
 export default function Tutorials() {
