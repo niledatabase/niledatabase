@@ -28,8 +28,12 @@ const videos = [
     videoUrl: "https://www.youtube.com/embed/Eo0dDROnJGg?si=qS4Rg8LAyIkK4zfB",
   },
   {
-    title: "Build multi-tenant todo list application with Nile and Prisma ORM",
+    title: "Build multi-tenant application with Nile and Prisma ORM",
     videoUrl: "https://www.youtube.com/embed/qsQSQoMpluk?si=iBxer1f202pvfZH6",
+  },
+  {
+    title: "Build a multi-tenant application with Nile and Drizzle ORM",
+    videoUrl: "https://www.youtube.com/embed/Qx0_99qebjo?si=np370EsZPJmM-1zA",
   },
 ];
 
