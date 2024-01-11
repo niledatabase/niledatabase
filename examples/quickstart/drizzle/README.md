@@ -2,7 +2,7 @@
 
 This example shows how to use Nile in NodeJS and React for a multi-tenant todo list application.
 
-- [Video guide - TBD]()
+- [Video guide](https://youtu.be/Qx0_99qebjo?feature=shared)
 - [Live demo](https://nile-drizzle-quickstart.vercel.app)
 - [Step by step guide](https://thenile.dev/docs/getting-started/languages/drizzle)
 

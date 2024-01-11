@@ -3,7 +3,7 @@
 This example shows how to use Nile in NodeJS and Prisma for a multi-tenant todo list application.
 
 - [Live demo](https://todo-prisma-ten.vercel.app)
-- [Video guide - TBD]()
+- [Video guide](https://youtu.be/qsQSQoMpluk?feature=shared)
 - [Step by step guide](https://www.thenile.dev/docs/getting-started/languages/prisma)
 
 ## Getting Started
