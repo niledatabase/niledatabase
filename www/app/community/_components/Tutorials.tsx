@@ -46,7 +46,7 @@ export default function Tutorials() {
       </div>
       <TutorialList />
       <div className="flex justify-center mt-10">
-        <Link href="https://www.youtube.com/@niledev">
+        <Link href="https://www.youtube.com/@niledatabase">
           <GradientButton variant="soft">
             <Image
               src={TutorialsIcon}
