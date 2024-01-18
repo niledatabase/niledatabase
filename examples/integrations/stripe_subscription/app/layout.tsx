@@ -26,7 +26,7 @@ export default function RootLayout({
         <main className={styles.main}>
         <div className={styles.description}>
         <div>
-          <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
+          <Image src="/Stripe.svg" alt="Stripe Logo" className={styles.logo} width={100} height={40} />
         </div>
         <div>
           <a
@@ -55,11 +55,11 @@ export default function RootLayout({
           <div className={styles.grid}>
         <Card variant="outlined"
               sx={{
-                '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
               }}>
-          <Link overlay href="https://www.thenile.dev/docs/getting-started/languages/nextjs" target="_blank" rel="noopener">
-            <Image src="/next.svg" alt="Next.js Logo" className={styles.logo} height={24} width={100}/>
+                {/* TODO: fix link to docs */}
+          <Link overlay href="https://www.thenile.dev/docs/getting-started/" target="_blank" rel="noopener">
+          <Image src="/Stripe.svg" alt="Stripe Logo" className={styles.logo} width={100} height={40} />
             </Link>
           <CardContent>
             <Typography>Getting started guide</Typography>

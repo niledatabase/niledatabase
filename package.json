@@ -12,7 +12,8 @@
     "examples/quickstart/java/fe",
     "examples/quickstart/drizzle/fe",
     "examples/quickstart/prisma/fe",
-    "examples/serverless/lambda-drizzle/fe"
+    "examples/serverless/lambda-drizzle/fe",
+    "examples/integrations/stripe_subscription"
   ],
   "scripts": {
     "dev": "turbo run dev",
