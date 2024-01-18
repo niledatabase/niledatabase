@@ -34,7 +34,7 @@ export async function createCheckoutSession(formData: FormData) {
         success_url: process.env.NEXT_PUBLIC_BASE_PATH+`/api/checkout-success?session_id={CHECKOUT_SESSION_ID}&tenant_id=${tenantid}`,
         cancel_url: process.env.NEXT_PUBLIC_BASE_PATH+`/tenants/${tenantid}/billing`,
       });
-    const url:string = session.url || process.env.NEXT_PUBLIC_BASE_PATH || '/';
+    const url:string = session.url || '/';
     redirect(url);
 }
 
@@ -70,7 +70,7 @@ export async function redirectToStripePortal(formData: FormData) {
 
     if (!tenantId) {
         console.log("missing tenant_id from request");
-        redirect(process.env.NEXT_PUBLIC_BASE_PATH || '/'); // TODO: Better error handling
+        return { message: 'tenant_id missing from request'}; // TODO: Better error handling
     }
 
     // Here we are getting a connection to a specific tenant database 
