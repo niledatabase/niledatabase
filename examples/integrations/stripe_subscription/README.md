@@ -1,6 +1,6 @@
-# Multi-tenant todo list app with Nile and NextJS 13
+# Example SaaS with paid subscriptions - using Nile and Stripe
 
-This template shows how to add 3-tier billing to a SaaS product using Nile with Stripe integration
+This template shows how to add 3-tier billing to a SaaS product using Nile, NextJS 13, and Stripe.
 
 - [Live demo - TBD]()
 - [Video guide - TBD]()
