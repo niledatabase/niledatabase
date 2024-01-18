@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
 
     if (!tenantId || !session_id) {
         console.log("missing tenant_id or session_id parameters from request");
-        redirect(process.env.NEXT_PUBLIC_BASE_PATH || '/'); // TODO: Better error handling
+        return '/'; // TODO: Better error handling
     }
 
     const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
 
     if (!customerId) {
         console.log("missing customer_id from checkout session " + JSON.stringify(checkoutSession, null, 2));
-        redirect(process.env.NEXT_PUBLIC_BASE_PATH || '/'); // TODO: Better error handling
+        return '/'; // TODO: Better error handling
     }
 
     // Here we are getting a connection to a specific tenant database 
@@ -35,5 +35,5 @@ export async function GET(req: NextRequest) {
         tenant_tier: "basic"});
     
     revalidatePath('/tenants')
-    redirect('/tenants/'+tenantId+'/billing');
+    return ('/tenants/'+tenantId+'/billing');
 }
