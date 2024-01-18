@@ -1,10 +1,12 @@
 # Multi-tenant todo list app with Nile and NextJS 13
 
-This template shows how to use Nile with NextJS 13 for a multi-tenant todo list application.
+This template shows how to add 3-tier billing to a SaaS product using Nile with Stripe integration
 
-- [Live demo](https://nextjs-quickstart-omega.vercel.app)
-- [Video guide](https://www.youtube.com/watch?v=Eo0dDROnJGg)
-- [Step by step guide](https://thenile.dev/docs/getting-started/languages/nextjs)
+- [Live demo - TBD]()
+- [Video guide - TBD]()
+- [Step by step guide - TBD]()
+
+> You need to have a Stripe account with a secret key if you want to try running this on your local machine
 
 ## Getting Started
 
@@ -12,15 +14,18 @@ This template shows how to use Nile with NextJS 13 for a multi-tenant todo list 
 
 Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already and choose "Yes, let's get started". Follow the prompts to create a new workspace and a database.
 
-### 2. Create todo table
+### 2. Extend tenants table
 
-After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
+After you created a database, you will land in Nile's query editor. Stripe integration requires storing customer and subscription IDs. 
+For that, we'll extend the built-in `tenants` table:
 
 ```sql
-    create table todos (id uuid DEFAULT (gen_random_uuid()), tenant_id uuid, title varchar(256), complete boolean);
+alter table tenants add column stripe_customer_id text;
+alter table tenants add column stripe_subscription_id text;
+alter table tenants add column tenant_tier varchar(16);
 ```
 
-If all went well, you'll see the new table in the panel on the left hand side of the query editor. You can also see Nile's built-in tenant table next to it.
+If all went well, you'll see the new columns in the panel on the left side of the query editor.
 
 ### 3. Getting credentials
 
@@ -31,7 +36,7 @@ In the left-hand menu, click on "Settings" and then select "Credentials". Genera
 If you haven't cloned this project yet, now will be an excellent time to do so. Since it uses NextJS, we can use `create-next-app` for this:
 
 ```bash
-npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs nile-todo
+npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/intergrations/stripe_subscription stripe_subscription 
 cd nile-todo
 ```
 
@@ -48,13 +53,14 @@ It should look something like this:
 # Use this to instantiate Nile context for client-side components
 NEXT_PUBLIC_BASE_PATH=http://localhost:3000
 NEXT_PUBLIC_WORKSPACE=todoapp_demo
-NEXT_PUBLIC_DATABASE=demo_db_nextjs_qs
+NEXT_PUBLIC_DATABASE=stripe_demo_db
 
 # Private env vars that should never show up in the browser
 # These are used by the server to connect to Nile database
 NILE_DB_HOST = "db.thenile.dev"
 NILE_USER = "018ad484-0d52-7274-8639-057814be60c3"
 NILE_PASSWORD = "0d11b8e5-fbbc-4639-be44-8ab72947ec5b"
+STRIPE_SECRET_KEY = "sk_test_51Nn2AgJ5..."
 
 # The URL of the Nile API
 # Use this to instantiate Nile Server context for server-side use of the "api" SDK
@@ -84,7 +90,8 @@ If all went well, your browser should show you the first page in the app, asking
 
 After you sign up as a user of this example app, you'll be able to see this user by going back to Nile Console and running `select * from users` in the query editor.
 
-Login with the new user, and you can create a new tenant and add tasks for the tenant. You can see the changes in your Nile database by running
+Login with the new user, and you can create a new tenant and manage its subscription.
+Use `4242 4242 4242 4242` as the example credit card number.
 
 ```sql
 select name, title, complete from
@@ -95,7 +102,7 @@ tenants join todos on tenants.id=todos.tenant_id
 
 To learn more about how this example works and how to use Nile:
 
-- [In depth explanation of this example](https://www.thenile.dev/docs/getting-started/languages/nextjs)
+- [In depth explanation of this example - TBD]()
 - [More about tenants in Nile](https://www.thenile.dev//docs/tenant-management)
 - [More on user authentication with Nile](https://www.thenile.dev/docs/user-authentication)
 - [Nile's Javascript SDK reference](https://www.thenile.dev/docs/reference/sdk-reference)
