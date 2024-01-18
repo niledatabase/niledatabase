@@ -11,8 +11,8 @@ import Typography from '@mui/joy/Typography';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Example SaaS with paid subscriptions using Nile and Stripe',
-  description: 'Example SaaS with paid subscriptions using Nile and Stripe',
+  title: 'SaaS B2B subscription billing with Stripe',
+  description: 'Example SaaS with paid subscriptions using Nile, NextJS and Stripe',
 }
 
 export default function RootLayout({
@@ -48,7 +48,7 @@ export default function RootLayout({
       </div>
       <div>
         <Stack> 
-        <Typography level="h2">Nile + Stripe Example</Typography>
+        <Typography level="h2">SaaS B2B subscription billing with Stripe</Typography>
         </Stack>
       </div>
           {children}

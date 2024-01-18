@@ -186,7 +186,7 @@ export const NextAuthQuickstart: Template = {
 };
 
 export const StripeSubscriptionsIntegration: Template = {
-  name: "Example SaaS with paid subscriptions using Nile and Stripe",
+  name: "SaaS B2B subscription billing with Stripe",
   description:
     "Learn how to use Nile with Stripe to add paid subscriptions to your multi-tenant app",
   author: "Nile",
@@ -195,8 +195,8 @@ export const StripeSubscriptionsIntegration: Template = {
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/main/examples/integrations/stripe_subscription/README.md",
   metadata: {
-    Framework: "NextAuth, NextJS, OAuth, Passwordless, Session, JWT",
-    "Use Case": "SaaS Authentication",
+    Framework: "NextJS, Stripe, Stripe subscription, Stripe checkout",
+    "Use Case": "SaaS Billing",
     Publisher: "Nile",
   },
 };
