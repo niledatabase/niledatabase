@@ -185,6 +185,22 @@ export const NextAuthQuickstart: Template = {
   },
 };
 
+export const StripeSubscriptionsIntegration: Template = {
+  name: "Example SaaS with paid subscriptions using Nile and Stripe",
+  description:
+    "Learn how to use Nile with Stripe to add paid subscriptions to your multi-tenant app",
+  author: "Nile",
+  demoUrl: "https://niledatabase-stripe-subscription.vercel.app/",
+  imageSrc: "/templates/StripeSubscriptions.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/integrations/stripe_subscription/README.md",
+  metadata: {
+    Framework: "NextAuth, NextJS, OAuth, Passwordless, Session, JWT",
+    "Use Case": "SaaS Authentication",
+    Publisher: "Nile",
+  },
+};
+
 /*
 export const placeholderTemplate: Template = {
   // A great name, preferably unique, name for the template
