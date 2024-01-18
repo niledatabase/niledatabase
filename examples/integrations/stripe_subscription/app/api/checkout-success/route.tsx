@@ -5,16 +5,26 @@ import { redirect } from 'next/navigation';
 import { type NextRequest } from 'next/server'
 import { revalidatePath } from 'next/cache'
 
+
+function respond(location: string) {
+    return new Response(null, {
+        headers: { 'Location': location },
+        status: 302,
+      });
+}
+
+
 export async function GET(req: NextRequest) {
     console.log("checkout-success called");
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
     const searchParams = req.nextUrl.searchParams
     const tenantId = searchParams.get('tenant_id')?.toString()
     const session_id = searchParams.get('session_id')?.toString()
+    let location: string;
 
     if (!tenantId || !session_id) {
         console.log("missing tenant_id or session_id parameters from request");
-        return '/'; // TODO: Better error handling
+        return respond('/'); // TODO: Better error handling
     }
 
     const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
@@ -22,7 +32,7 @@ export async function GET(req: NextRequest) {
 
     if (!customerId) {
         console.log("missing customer_id from checkout session " + JSON.stringify(checkoutSession, null, 2));
-        return '/'; // TODO: Better error handling
+        return respond('/'); // TODO: Better error handling
     }
 
     // Here we are getting a connection to a specific tenant database 
@@ -35,5 +45,7 @@ export async function GET(req: NextRequest) {
         tenant_tier: "basic"});
     
     revalidatePath('/tenants')
-    return ('/tenants/'+tenantId+'/billing');
+    return respond('/tenants/'+tenantId+'/billing');
+
+
 }
