@@ -38,11 +38,11 @@ const languages = [
     name: "Prisma",
     icon: "prisma.svg",
     path: "/docs/getting-started/languages/prisma",
-  }
+  },
 ];
 
 const integrations = [
-    {
+  {
     name: "Stripe",
     icon: "Stripe.svg",
     path: "docs/integrations/stripe",
@@ -56,9 +56,8 @@ const integrations = [
     name: "Lambda",
     icon: "lambda.svg",
     path: "docs/integrations/lambda",
-  }
-
-]
+  },
+];
 export default async function Home() {
   const templates = await loadTemplates();
   return (

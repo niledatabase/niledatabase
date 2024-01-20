@@ -74,7 +74,7 @@ export default function TemplateSearch({
         {!filtered.length ? (
           <Empty />
         ) : (
-          filtered.slice(0,limit).map((template, idx) => {
+          filtered.slice(0, limit).map((template, idx) => {
             return (
               <TemplateCard {...template} key={`${template.name}-${idx}`} />
             );
