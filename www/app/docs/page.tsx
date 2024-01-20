@@ -131,6 +131,7 @@ export default async function Home() {
                 templates={templates}
                 searchEnabled={false}
                 showButton={false}
+                limit={6}
               />
               <div className="block lg:hidden mx-auto">
                 <GradientButton href="/templates" variant="soft">
