@@ -14,7 +14,6 @@ export enum NavigationRoots {
   Migrations = "migrations",
   Platform = "platform",
   Reference = "reference",
-  Serverless = "serverless",
   Support = "support",
   TenantManagement = "tenant-management",
   TenantPlacement = "tenant-placement",

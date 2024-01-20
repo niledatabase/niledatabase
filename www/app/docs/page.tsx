@@ -38,7 +38,7 @@ const languages = [
     name: "Prisma",
     icon: "prisma.svg",
     path: "/docs/getting-started/languages/prisma",
-  },
+  }
 ];
 export default async function Home() {
   const templates = await loadTemplates();
