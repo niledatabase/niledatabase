@@ -15,10 +15,12 @@ export default function TemplateSearch({
   templates,
   searchEnabled = true,
   showButton = false,
+  limit,
 }: {
   templates: Template[];
   searchEnabled?: boolean;
   showButton?: boolean;
+  limit?: number;
 }) {
   const [searchText, setSearchText] = useState("");
 
@@ -72,7 +74,7 @@ export default function TemplateSearch({
         {!filtered.length ? (
           <Empty />
         ) : (
-          filtered.map((template, idx) => {
+          filtered.slice(0, limit).map((template, idx) => {
             return (
               <TemplateCard {...template} key={`${template.name}-${idx}`} />
             );

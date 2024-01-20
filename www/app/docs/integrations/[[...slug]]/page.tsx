@@ -8,7 +8,7 @@ type Props = { params: Param };
 export default async function Page(props: Props) {
   return (
     <Container>
-      <PageContent params={props.params} root={NavigationRoots.Serverless} />
+      <PageContent params={props.params} root={NavigationRoots.Integrations} />
     </Container>
   );
 }
@@ -19,7 +19,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { metadata } = await findDocFile({
     ...props,
-    root: NavigationRoots.Serverless,
+    root: NavigationRoots.Integrations,
   });
 
   const previousImages = (await parent).openGraph?.images || [];
