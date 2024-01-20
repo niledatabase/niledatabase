@@ -40,6 +40,25 @@ const languages = [
     path: "/docs/getting-started/languages/prisma",
   }
 ];
+
+const integrations = [
+    {
+    name: "Stripe",
+    icon: "Stripe.svg",
+    path: "docs/integrations/stripe",
+  },
+  {
+    name: "NextAuth",
+    icon: "nextauth.webp",
+    path: "docs/integrations/nextauth",
+  },
+  {
+    name: "Lambda",
+    icon: "lambda.svg",
+    path: "docs/integrations/lambda",
+  }
+
+]
 export default async function Home() {
   const templates = await loadTemplates();
   return (
@@ -64,7 +83,7 @@ export default async function Home() {
         <Divider />
         <div className="container mx-auto">
           <div className="text-3xl mb-10 lg:text-left text-center">
-            Get Started
+            Languages and frameworks
           </div>
           <div className="flex flex-wrap flex-row gap-6 max-w-[936px] mx-auto justify-center">
             {languages.map(({ name, icon, path }) => {
@@ -127,6 +146,33 @@ export default async function Home() {
                 </GradientButton>
               </div>
             </div>
+          </div>
+        </div>
+        <Divider />
+        <div className="container mx-auto">
+          <div className="text-3xl mb-10 lg:text-left text-center">
+            Integrations
+          </div>
+          <div className="flex flex-wrap flex-row gap-6 max-w-[936px] mx-auto justify-center">
+            {integrations.map(({ name, icon, path }) => {
+              return (
+                <Link
+                  key={path}
+                  href={path}
+                  className="flex flex-col lg:min-w-[216px] items-center"
+                >
+                  <div className="icon rounded-[20px] flex justify-center">
+                    <Image
+                      src={`/icons/${icon}`}
+                      alt="book cover"
+                      width={24}
+                      height={24}
+                    />
+                  </div>
+                  <div className="text=[18px]">{name}</div>
+                </Link>
+              );
+            })}
           </div>
         </div>
         <Divider />
