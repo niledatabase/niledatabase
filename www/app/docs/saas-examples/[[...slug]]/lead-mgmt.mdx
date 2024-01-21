@@ -5,7 +5,6 @@ export const metadata = {
   title: "Lead Management",
   order: 2,
 };
-
 # Intelligent Lead Management System
 
 The Intelligent Lead Management System is designed to streamline and optimize the process of capturing, categorizing, and nurturing leads throughout the sales funnel. The system should enable users to input lead information, including the lead's name, email address, company details, and any additional relevant information. The key feature of this system is the incorporation of an intelligent lead scoring mechanism, allowing users to assign scores based on predefined criteria and engagement metrics. The system should facilitate automated follow-up actions, such as sending personalized emails and setting reminders, triggered by lead behavior or milestones in the sales process. A centralized dashboard should be provided to allow sales teams to visualize lead analytics, track lead interactions, and monitor conversion progress.
@@ -81,5 +80,3 @@ CREATE TABLE LeadScoreHistory (
   CONSTRAINT FK_leads FOREIGN KEY(tenant_id, lead_id) REFERENCES leads(tenant_id,lead_id),
   CONSTRAINT PK_leadscorehistory PRIMARY KEY(tenant_id,score_id));
 ```
-
-
