@@ -8,7 +8,7 @@ type Props = { params: Param };
 export default async function Page(props: Props) {
   return (
     <Container>
-      <PageContent params={props.params} root={NavigationRoots.Tools} />
+      <PageContent params={props.params} root={NavigationRoots.SaaSExamples} />
     </Container>
   );
 }
@@ -18,7 +18,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { metadata } = await findDocFile({
     ...props,
-    root: NavigationRoots.Tools,
+    root: NavigationRoots.SaaSExamples,
   });
 
   const previousImages = (await parent).openGraph?.images || [];
