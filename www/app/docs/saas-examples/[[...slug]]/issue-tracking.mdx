@@ -5,3 +5,97 @@ export const metadata = {
   title: "Issue Tracking",
   order: 1,
 };
+
+# Issue Tracking System
+
+The Issue Tracking System is a comprehensive platform designed to streamline the management and resolution of various issues within an organization. The system should allow users to log and categorize different types of issues, including bugs, feature requests, and general tasks. Each issue should have a unique identifier, a detailed description, priority level, and status (e.g., open, in-progress, closed). Users should be able to assign issues to specific team members or individuals responsible for resolution. The system should support the attachment of relevant files, screenshots, or additional notes to provide detailed context for each issue. Additionally, there should be a robust search and filter mechanism to facilitate quick retrieval of specific issues. Notifications and alerts for status changes and updates are crucial to keep stakeholders informed. Integration with version control systems or development tools may be considered for enhanced collaboration. The system should also include reporting and analytics features to track issue resolution times, identify patterns, and improve overall efficiency.
+
+## Postgres SQL Schemas
+
+These SQL schemas provide a foundation for building an Issue Tracking System. The Issues table stores essential information about each issue, including its title, description, priority, and status. The Attachments table allows for the association of files with specific issues. The Comments table captures user comments on each issue. The Users table manages user information, and the IssueHistory table logs changes in the status of issues over time. Together, these schemas create a robust structure for tracking, managing, and resolving issues within an organization.
+
+1. **Issues Table:**
+    
+    ```sql
+    CREATE TABLE Issues (
+      issue_id uuid,
+      tenant_id uuid,
+      title VARCHAR(255),
+      description TEXT,
+      priority VARCHAR(20),
+      status VARCHAR(20),
+      assignee_id uuid,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      CONSTRAINT FK_Members FOREIGN KEY(tenant_id, assignee_id) REFERENCES Members(tenant_id,user_id),
+      CONSTRAINT PK_Issues PRIMARY KEY(tenant_id,issue_id));
+    
+    ```
+    
+2. **Attachments Table:**
+    
+    ```sql
+    
+    CREATE TABLE Attachments (
+      attachment_id uuid,
+      tenant_id uuid,
+      issue_id uuid,
+      file_name VARCHAR(255),
+      file_type VARCHAR(50),
+      file_data BYTEA,
+      CONSTRAINT FK_Issues FOREIGN KEY(tenant_id, issue_id) REFERENCES Issues(tenant_id,issue_id),
+      CONSTRAINT PK_Attachments PRIMARY KEY(tenant_id,attachment_id)
+    );
+    
+    ```
+    
+3. **Comments Table:**
+    
+    ```sql
+    
+    CREATE TABLE Comments (
+      comment_id uuid,
+      tenant_id uuid,
+      issue_id uuid,
+      user_id uuid,
+      comment_text TEXT,
+      timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      CONSTRAINT FK_Issues FOREIGN KEY(tenant_id, issue_id) REFERENCES Issues(tenant_id,issue_id),
+      CONSTRAINT FK_Members FOREIGN KEY(tenant_id, user_id) REFERENCES Members(tenant_id,user_id),
+      CONSTRAINT PK_Comments PRIMARY KEY(tenant_id,comment_id)
+    );
+    
+    ```
+    
+4. **Users Table:**
+    
+    ```sql
+    
+    CREATE TABLE Members (
+      user_id uuid,
+      tenant_id uuid,
+      username VARCHAR(50),
+      email VARCHAR(255),
+      role VARCHAR(20),
+      CONSTRAINT FK_Tenants FOREIGN KEY(tenant_id) REFERENCES Tenants(id),
+      CONSTRAINT PK_Members PRIMARY KEY(tenant_id,user_id)
+    );
+    
+    ```
+    
+5. **IssueHistory Table:**
+
+```sql
+
+CREATE TABLE IssueHistory (
+  history_id uuid,
+  tenant_id uuid,
+  issue_id uuid,
+  status_before VARCHAR(20),
+  status_after VARCHAR(20),
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT FK_Issues FOREIGN KEY(tenant_id, issue_id) REFERENCES Issues(tenant_id,issue_id),
+  CONSTRAINT PK_IssueHistory PRIMARY KEY(tenant_id,history_id)
+);
+
+```
