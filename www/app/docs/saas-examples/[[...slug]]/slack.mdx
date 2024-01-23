@@ -19,7 +19,7 @@ Reaction table tracks reactions (emoji) added to messages.
 Notification table records notifications sent to users within a workspace/tenant.
 
 1. **Channel Table:**
-    
+
 ```sql
 CREATE TABLE Channels (
   channel_id UUID,
@@ -28,11 +28,11 @@ CREATE TABLE Channels (
   CONSTRAINT FK_Tenants FOREIGN KEY(tenant_id) REFERENCES Tenants(id),
   CONSTRAINT PK_Channels PRIMARY KEY(tenant_id,channel_id)
 );
-```    
+```
 
 2. **Message Table:**
-        
-```sql        
+
+```sql
 CREATE TABLE Messages (
   message_id UUID,
   content TEXT NOT NULL,
@@ -44,9 +44,9 @@ CREATE TABLE Messages (
   CONSTRAINT FK_Senders FOREIGN KEY(tenant_id,user_id) REFERENCES Tenants_User(tenant_id,user_id),
   CONSTRAINT PK_Messages PRIMARY KEY(tenant_id,message_id));
 ```
-        
+
 3. **Attachment Table:**
-        
+
 ```sql
 CREATE TABLE Attachments (
   attachment_id UUID,
@@ -57,10 +57,10 @@ CREATE TABLE Attachments (
   tenant_id UUID NOT NULL,
   CONSTRAINT FK_Messages FOREIGN KEY(tenant_id,message_id) REFERENCES Messages(tenant_id,message_id),
   CONSTRAINT PK_Attachments PRIMARY KEY(tenant_id,attachment_id);
-``` 
-    
+```
+
 4. **Reaction Table:**
-        
+
 ```sql
 CREATE TABLE Reactions (
     reaction_id UUID,
@@ -72,10 +72,10 @@ CREATE TABLE Reactions (
     CONSTRAINT FK_Users FOREIGN KEY(tenant_id,user_id) REFERENCES Tenants_User(tenant_id,user_id),
     CONSTRAINT PK_Reactions PRIMARY KEY(tenant_id,reaction_id)
 );
-```  
-    
+```
+
 5. **Notification Table:**
-   
+
 ```sql
 CREATE TABLE Notifications (
   notification_id UUID,
