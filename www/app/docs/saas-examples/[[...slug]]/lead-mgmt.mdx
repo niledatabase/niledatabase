@@ -30,7 +30,7 @@ CREATE TABLE leads (
   CONSTRAINT PK_leads PRIMARY KEY(tenant_id,lead_id));
 ```
 
-2. **LeadInteractions Table:**
+2. **Lead Interactions Table:**
 
 ```sql
 CREATE TABLE leadinteractions (
@@ -45,7 +45,7 @@ CREATE TABLE leadinteractions (
   CONSTRAINT PK_leadinteractions PRIMARY KEY(tenant_id,interaction_id));
 ```
 
-3. **AutomatedActions Table:**
+3. **Automated Actions Table:**
 
 ```sql
 CREATE TABLE AutomatedActions (
@@ -59,7 +59,7 @@ CREATE TABLE AutomatedActions (
   CONSTRAINT PK_automatedactions PRIMARY KEY(tenant_id,action_id));
 ```
 
-4. **LeadScoringCriteria Table:**
+4. **Lead Scoring Criteria Table:**
 
 ```sql
 CREATE TABLE LeadScoringCriteria (
@@ -68,7 +68,7 @@ CREATE TABLE LeadScoringCriteria (
   weight INT);
 ```
 
-5. **LeadScoreHistory Table:**
+5. **Lead Score History Table:**
 
 ```sql
 CREATE TABLE LeadScoreHistory (
