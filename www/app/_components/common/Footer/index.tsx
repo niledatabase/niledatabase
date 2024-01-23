@@ -22,6 +22,10 @@ export default async function Footer({ className }: { className?: string }) {
                 <div className="text-[#A1A1AA] text-lg">
                   Copyright &copy; {new Date().getFullYear()} Nile
                 </div>
+                <div className="opacity-70 flex flex-row gap-1">
+                  <Link href="/privacy-policy">Privacy policy</Link>|
+                  <Link href="/cookie-policy">Cookie policy</Link>
+                </div>
                 <div className="flex flex-row gap-5 opacity-60">
                   <Link href="https://x.com/niledatabase" target="_blank">
                     <Image src={X} alt="twitter logo" width={15} height={14} />
