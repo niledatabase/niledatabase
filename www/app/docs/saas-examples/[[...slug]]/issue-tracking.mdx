@@ -15,74 +15,74 @@ The Issue Tracking System is a comprehensive platform designed to streamline the
 These SQL schemas provide a foundation for building an Issue Tracking System. The Issues table stores essential information about each issue, including its title, description, priority, and status. The Attachments table allows for the association of files with specific issues. The Comments table captures user comments on each issue. The Users table manages user information, and the IssueHistory table logs changes in the status of issues over time. Together, these schemas create a robust structure for tracking, managing, and resolving issues within an organization.
 
 1. **Issues Table:**
-    
-    ```sql
-    CREATE TABLE Issues (
-      issue_id uuid,
-      tenant_id uuid,
-      title VARCHAR(255),
-      description TEXT,
-      priority VARCHAR(20),
-      status VARCHAR(20),
-      assignee_id uuid,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      CONSTRAINT FK_Members FOREIGN KEY(tenant_id, assignee_id) REFERENCES Members(tenant_id,user_id),
-      CONSTRAINT PK_Issues PRIMARY KEY(tenant_id,issue_id));
-    
-    ```
-    
+
+   ```sql
+   CREATE TABLE Issues (
+     issue_id uuid,
+     tenant_id uuid,
+     title VARCHAR(255),
+     description TEXT,
+     priority VARCHAR(20),
+     status VARCHAR(20),
+     assignee_id uuid,
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     CONSTRAINT FK_Members FOREIGN KEY(tenant_id, assignee_id) REFERENCES Members(tenant_id,user_id),
+     CONSTRAINT PK_Issues PRIMARY KEY(tenant_id,issue_id));
+
+   ```
+
 2. **Attachments Table:**
-    
-    ```sql
-    
-    CREATE TABLE Attachments (
-      attachment_id uuid,
-      tenant_id uuid,
-      issue_id uuid,
-      file_name VARCHAR(255),
-      file_type VARCHAR(50),
-      file_data BYTEA,
-      CONSTRAINT FK_Issues FOREIGN KEY(tenant_id, issue_id) REFERENCES Issues(tenant_id,issue_id),
-      CONSTRAINT PK_Attachments PRIMARY KEY(tenant_id,attachment_id)
-    );
-    
-    ```
-    
+
+   ```sql
+
+   CREATE TABLE Attachments (
+     attachment_id uuid,
+     tenant_id uuid,
+     issue_id uuid,
+     file_name VARCHAR(255),
+     file_type VARCHAR(50),
+     file_data BYTEA,
+     CONSTRAINT FK_Issues FOREIGN KEY(tenant_id, issue_id) REFERENCES Issues(tenant_id,issue_id),
+     CONSTRAINT PK_Attachments PRIMARY KEY(tenant_id,attachment_id)
+   );
+
+   ```
+
 3. **Comments Table:**
-    
-    ```sql
-    
-    CREATE TABLE Comments (
-      comment_id uuid,
-      tenant_id uuid,
-      issue_id uuid,
-      user_id uuid,
-      comment_text TEXT,
-      timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      CONSTRAINT FK_Issues FOREIGN KEY(tenant_id, issue_id) REFERENCES Issues(tenant_id,issue_id),
-      CONSTRAINT FK_Members FOREIGN KEY(tenant_id, user_id) REFERENCES Members(tenant_id,user_id),
-      CONSTRAINT PK_Comments PRIMARY KEY(tenant_id,comment_id)
-    );
-    
-    ```
-    
+
+   ```sql
+
+   CREATE TABLE Comments (
+     comment_id uuid,
+     tenant_id uuid,
+     issue_id uuid,
+     user_id uuid,
+     comment_text TEXT,
+     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     CONSTRAINT FK_Issues FOREIGN KEY(tenant_id, issue_id) REFERENCES Issues(tenant_id,issue_id),
+     CONSTRAINT FK_Members FOREIGN KEY(tenant_id, user_id) REFERENCES Members(tenant_id,user_id),
+     CONSTRAINT PK_Comments PRIMARY KEY(tenant_id,comment_id)
+   );
+
+   ```
+
 4. **Users Table:**
-    
-    ```sql
-    
-    CREATE TABLE Members (
-      user_id uuid,
-      tenant_id uuid,
-      username VARCHAR(50),
-      email VARCHAR(255),
-      role VARCHAR(20),
-      CONSTRAINT FK_Tenants FOREIGN KEY(tenant_id) REFERENCES Tenants(id),
-      CONSTRAINT PK_Members PRIMARY KEY(tenant_id,user_id)
-    );
-    
-    ```
-    
+
+   ```sql
+
+   CREATE TABLE Members (
+     user_id uuid,
+     tenant_id uuid,
+     username VARCHAR(50),
+     email VARCHAR(255),
+     role VARCHAR(20),
+     CONSTRAINT FK_Tenants FOREIGN KEY(tenant_id) REFERENCES Tenants(id),
+     CONSTRAINT PK_Members PRIMARY KEY(tenant_id,user_id)
+   );
+
+   ```
+
 5. **IssueHistory Table:**
 
 ```sql
@@ -123,7 +123,7 @@ INSERT INTO Issues (issue_id, tenant_id, title, description, priority, status, a
 INSERT INTO Attachments (attachment_id, tenant_id, issue_id, file_name, file_type, file_data) VALUES
   ('48b72f15-5423-4e2a-9dcb-9a3b0e598188', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c', '579f0e1a-d5d4-4aeb-b0c6-12d99f7d9c57', 'screenshot.png', 'image/png', E'\\x89504E470D0A1A0A0000000D49484452000000010000000108020000006E30F9C000000017352474200AECE1CE90000000467414D410000B18F0BFC6105000000017352474200AECE1CE90000000467414D410000B18F0BFC6105000000017352474200AECE1CE90000000467414D410000B18F0BFC6105000000017352474200AECE1CE90000000467414D410000B18F0BFC6105000000017352474200AECE1CE90000000467414D410000B18F0BFC6105000000017352474200AECE1CE90000000467414D410000B18F0BFC6105000000017352474200AECE1CE90000000467414D410000B18F0BFC61',
   ('a16e6f2a-2554-42a5-9ca3-9c56a6e1e2f8', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1', '0e10c2a5-7a2a-46c9-b506-53c47128774c', 'requirements.docx', 'application/msword', E'\\x504B03041400080808000000000099AC3C590000000000000000000000100000000000000000000000000000000A48118000000000D00000000000000000000000072656C732F776F7264732F646F63756D656E74732F677261706869635F646F63756D656E742E786D6C504B0506000000000100010039000000230000000000');
-  
+
 -- Sample data for Comments table
 INSERT INTO Comments (comment_id, tenant_id, issue_id, user_id, comment_text, timestamp) VALUES
   ('2a2b3d44-77cd-49f8-9f9e-20a45ec3c453', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c', '579f0e1a-d5d4-4aeb-b0c6-12d99f7d9c57', 'b17a1a72-8e4f-4f93-9f47-9c3d25f106b9', 'I can replicate this issue.', NOW()),
