@@ -7,30 +7,33 @@ export const metadata = {
 };
 
 # TripActions Clone
-This is a clone of the popular SaaS app TripActions. TripActions is a travel management company that offers a travel booking and management platform for businesses. 
+
+This is a clone of the popular SaaS app TripActions. TripActions is a travel management company that offers a travel booking and management platform for businesses.
 It includes shared information that is available to all businesses that use it, such as flight and hotel prices, as well as information specific to each business, such as travel policies and actual bookings.
 
-The schema was designed to guarantee security and privacy of each tenant information, while allowing for shared information to be available to all tenants. 
+The schema was designed to guarantee security and privacy of each tenant information, while allowing for shared information to be available to all tenants.
 It was also designed to support collaboration between employees of the same company - HR administrators set travel policies and managers can approve exceptions.
 
 ## Postgres Schema
 
-The schema for this example has few core tables that represent the core business entities of the application. 
+The schema for this example has few core tables that represent the core business entities of the application.
 
 We have several shared tables that are available to all tenants. This includes `flights`, `hotels`, and `car_rentals`. These tables contain information about flights, hotels and car_rentals that are available to all tenants.
 
 We also have several tenant-aware tables that contain information private to each tenant. These include:
+
 - `travel_policies` table contains travel policies set by the HR administrator of each company.
 - `bookings` table contains travel plans made by employees of each company
 - `payment_information` table contains payment information for each employee
 
 Information about roles of each user is stored in the built-in `users` schema. This includes information about the user, such as name and email, as well as information about the user's role in the company, such as whether they are an HR administrator or a manager.
 
-Several parts of this schema were simplified for the purposes of this example. 
+Several parts of this schema were simplified for the purposes of this example.
 For example, car rental and hotel prices are likely to change over time, so a more realistic schema would include a table for hotel prices by date.
 Real world schema would also allow for more than one hotel or car rental per booking.
 
 1. **Flights** table
+
 ```sql
 CREATE TABLE flights (
     id int PRIMARY KEY,
@@ -46,6 +49,7 @@ CREATE TABLE flights (
 ```
 
 2. **Hotels** table
+
 ```sql
 CREATE TABLE hotels (
     id int PRIMARY KEY,
@@ -58,6 +62,7 @@ CREATE TABLE hotels (
 ```
 
 3. **Car Rentals** table
+
 ```sql
 CREATE TABLE car_rentals (
     id int PRIMARY KEY,
@@ -68,7 +73,8 @@ CREATE TABLE car_rentals (
 );
 ```
 
-4. **Travel Policies** table 
+4. **Travel Policies** table
+
 ```sql
 CREATE TABLE travel_policies (
     tenant_id UUID,
@@ -79,6 +85,7 @@ CREATE TABLE travel_policies (
 ```
 
 5. **Bookings** table
+
 ```sql
 CREATE TABLE bookings (
     id int,
@@ -100,6 +107,7 @@ CREATE TABLE bookings (
 ```
 
 6. **Payment Information** table
+
 ```sql
 CREATE TABLE payment_information (
     id int,
@@ -111,6 +119,7 @@ CREATE TABLE payment_information (
     FOREIGN KEY (tenant_id, user_id) REFERENCES users.tenant_users(tenant_id, user_id)
 );
 ```
+
 ## Sample data
 
 ```sql
