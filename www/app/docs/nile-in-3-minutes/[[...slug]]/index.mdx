@@ -12,14 +12,13 @@ Nile virtualizes tenants/customers/organizations into Postgres to enable native 
 
 ### Benefits for new SaaS applications
 
-1. **[Native tenant data isolation](https://www.thenile.dev/docs/tenant-isolation)** without having to invest in complex application level permissions or hard to use row level security features. Nile provides session level isolation per tenant. We also have plans to provide connection level isolation (separate connection strings per [tenant](http://tenant.us) in the same database which is useful to build separate application for each tenant without the burden of managing multiple databases).
-
+* Native tenant data isolation without having to invest in complex application level permissions or hard to use row level security features. Nile provides session level isolation per tenant. We also have plans to provide connection level isolation (separate connection strings per tenant in the same database which is useful to build separate application for each tenant without the burden of managing multiple databases).
 ```sql
 -- set session context to the tenant you want to access.
 set nile.tenant_id = '018ade1a-7830-7981-b23f-f3a7f7b8f09f';
 ```
 
-2. **[User management](https://www.thenile.dev/docs/user-authentication) which is built for multitenancy and where you own the user data.** We provide user management SDKs that support organization or tenant management. It also stores the user data in your Nile’s Postgres database giving full control. You don’t have to spend time syncing user data to your database and don’t have to struggle with implementing organization/tenant features for authentication.
+- **[User management](https://www.thenile.dev/docs/user-authentication) which is built for multitenancy and where you own the user data.** We provide user management SDKs that support organization or tenant management. It also stores the user data in your Nile’s Postgres database giving full control. You don’t have to spend time syncing user data to your database and don’t have to struggle with implementing organization/tenant features for authentication.
 3. **Backups by tenant or customer (coming soon).** You can instantaneously restore data for a specific customer or a group of customers without any complex scripts whether you place tenants in a shared Postgres compute or on dedicated Postgres compute. The challenges mentioned in this [writeup about restoring backups for SaaS applications](https://aws.amazon.com/blogs/database/managed-database-backup-and-recovery-in-a-multi-tenant-saas-application/) is solved for you on Nile automatically irrespective of where you place your tenants in Nile.
 4. **[AI embeddings (pg_vector)](https://www.thenile.dev/docs/ai-embeddings) is managed per tenant, secure, placed near the customer and scales to millions of embeddings per tenant**. There should not be extra work to store embeddings per tenant and scale them to millions. Nile will take care of adding capacity to support AI workloads.
 5. **Internal customer admin dashboards without having to spend time building custom dashboards and data pipelines for your new SaaS application.** Nile understands tenants and users (if you use our user management or one of our integrations) and we build one for you.
