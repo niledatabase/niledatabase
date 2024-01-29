@@ -14,37 +14,42 @@ Nile virtualizes tenants/customers/organizations into Postgres to enable native 
 
 ### Benefits for new SaaS applications
 
-1. **Native tenant data isolation** without having to invest in complex application level permissions or hard to use row level security features. Nile provides session level isolation per tenant. We also have plans to provide connection level isolation (separate connection strings per [tenant](http://tenant.us) in the same database which is useful to build separate application for each tenant without the burden of managing multiple databases).
+1. **[Native tenant data isolation](https://www.thenile.dev/docs/tenant-isolation)** without having to invest in complex application level permissions or hard to use row level security features. Nile provides session level isolation per tenant. We also have plans to provide connection level isolation (separate connection strings per [tenant](http://tenant.us) in the same database which is useful to build separate application for each tenant without the burden of managing multiple databases).
 
 ```sql
 -- set session context to the tenant you want to access.
 set nile.tenant_id = '018ade1a-7830-7981-b23f-f3a7f7b8f09f';
 ```
 
-2. **Internal customer admin dashboards without having to spend time building custom dashboards and data pipelines for your new SaaS application.** Nile understands tenants and users (if you use our user management or one of our integrations) and we build one for you.
+2. **[User management](https://www.thenile.dev/docs/user-authentication) which is built for multitenancy and where you own the user data.** We provide user management SDKs that support organization or tenant management. It also stores the user data in your Nile’s Postgres database giving full control. You don’t have to spend time syncing user data to your database and don’t have to struggle with implementing organization/tenant features for authentication.
+3. **Backups by tenant or customer (coming soon).** You can instantaneously restore data for a specific customer or a group of customers without any complex scripts whether you place tenants in a shared Postgres compute or on dedicated Postgres compute. The challenges mentioned in this [writeup about restoring backups for SaaS applications](https://aws.amazon.com/blogs/database/managed-database-backup-and-recovery-in-a-multi-tenant-saas-application/) is solved for you on Nile automatically irrespective of where you place your tenants in Nile.
+4. **[AI embeddings (pg_vector)](https://www.thenile.dev/docs/ai-embeddings) is managed per tenant, secure, placed near the customer and scales to millions of embeddings per tenant**. There should not be extra work to store embeddings per tenant and scale them to millions. Nile will take care of adding capacity to support AI workloads.
+5. **Internal customer admin dashboards without having to spend time building custom dashboards and data pipelines for your new SaaS application.** Nile understands tenants and users (if you use our user management or one of our integrations) and we build one for you.
 
 ![dashboard.webp](/docs/dashboard.webp)
 
-3. **Backups by tenant or customer (coming soon).** You can instantaneously restore data for a specific customer or a group of customers without any complex scripts whether you place tenants in a shared Postgres compute or on dedicated Postgres compute. The challenges mentioned in this [writeup about restoring backups for SaaS applications](https://aws.amazon.com/blogs/database/managed-database-backup-and-recovery-in-a-multi-tenant-saas-application/) is solved for you on Nile.
-4. **User management which is built for multitenancy and where you own the user data.** We provide user management SDKs that support organization or tenant management. It also stores the user data your Nile’s Postgres database giving full control.
-5. **Understand cost per tenant without any additional instrumentation.** Nile’s billing will provide cost incurred for each of your tenants which helps to better rationalize the revenue per customer and the cost of the database to serve the customer.
-6. **Pay for just the queries not compute by default.** On shared Postgres compute, you would pay only for the cost of the queries. This is the default. You can choose dedicated Postgres compute for specific tenants for which you would pay for the provisioned capacity.
-7. **No DB shut down or zero cold start time.** We are truly multitenant and provide tenant level isolation. This provides the ability to share resources efficiently and have no cold start time. 
-8. **World class developer experience**
+6. **World class developer experience**
     1. World class console which includes query editor, schema viewer, canned examples and more (continuing to improve)
     2. SDKs on top of Postgres to further simplify building SaaS
     3. Templates, tutorials and numerous examples
-9. **Integrations for third party applications to launch your SaaS**
+7. **Pay for just the queries not compute by default.** On shared Postgres compute, you would pay only for the cost of the queries. This is the default. You can choose dedicated Postgres compute for specific tenants for which you would pay for the provisioned capacity.
+8. **No DB shut down or zero cold start time.** We are truly multitenant and provide tenant level isolation. This provides the ability to share resources efficiently and have no cold start time. 
+9. **[Integrations](https://www.thenile.dev/docs/integrations) for third party applications to launch your SaaS**
     1. Stripe to get billing set up for your application. Our integration provides subscription billing per organization.
     2. NextAuth if you choose to use a popular SDK to do auth. Our integration provides organization/tenant awareness to NextAuth and ensures user data is written into Nile’s Postgres as the source of truth.
     3. Lambda for serverless SaaS applications. 
 10. **Free tier limits will not force you into paid tier. You only pay for extra usage.** We provide very attractive limits on our free tier. When you reach the limits, you can simply pay for usage of additional capacity (storage, compute and bandwidth) without being forced into higher tiers. We want you to opt higher tiers for the value we provide and not for additional usage.
 11. **Query performance and insights by tenant (coming soon)** We provide all the query performance statistics for each customer. You don’t have to spend hours or days figuring out which customer queries are causing performance issues and which customers are impacted. 
-12. You may get benefits listed under “Growing SaaS applications” depending on your use case
+12. **Understand cost per tenant without any additional instrumentation.** Nile’s billing will provide cost incurred for each of your tenants which helps to better rationalize the revenue per customer and the cost of the database to serve the customer.
+13. **[Share data across tenants](https://www.thenile.dev/docs/tenant-sharing).** While Nile provides isolation between tenants, it also lets you share data across tenants where appropriate. While each tenant acts like its own virtual tenant database, shared tables can be accessed across all the tenants. This works even when you have tenants in different regions or different types of computes.
+14. You may get benefits listed under “Growing SaaS applications” depending on your use case
 
-Benefits for growing SaaS application
+### Benefits for growing SaaS application
 
 1. Everything under “Benefits for new SaaS applications”
-2. Place some tenants on dedicated Postgres compute without the burden of managing multiple databases (schema migration, unified observability, routing) for compliance, security or isolation needs.
-3. Place tenants in any region to move data close to the customer for lower latency or compliance needs (eg. GDPR) within one database without the burden of managing multiple databases (schema migration, unified observability, routing).
-4. Move tenants instantaneously from shared Postgres compute to dedicated Postgres compute or to another region
+2. **Performance isolation and instant capacity for tenants**. Our architecture enables Nile to provide tenant isolation between tenants and providing instant capacity as Nile’s Postgres is tenant aware.  challenges with sharding, managing multiple databases or application level throttling
+3. **Massive scale for pg_vector embeddings with lower cost** and true serverless experience. Embeddings can grow to significant scale very quickly. Our cloud native architecture and sharding tenants across computes helps to provide massive scale with lower cost.
+4. **Scale to millions of tenants** while ensuring high availability and low latency. The number of tenants can grow to millions or some tenants can grow really fast. Nile ensures that we can horizontally scale tenants across Postgres computes and vertically scale a single tenant. This helps Nile support significant workloads and scale.
+5. **Place some tenants on dedicated Postgres compute without the burden of managing multiple databases (schema migration, unified observability, routing) for compliance, security or isolation needs.** You have full flexibility in placing tenants on either shared compute or dedicated compute. You can better align your business needs finally to your database. For example, you can place your lower tier customers on shared Postgres compute and higher tier customers on dedicated Postgres compute.
+6. **Place tenants in any region to move data close to the customer for lower latency or compliance needs (eg. GDPR) within one database** without the burden of managing multiple databases (schema migration, unified observability, routing). Nile is one global Postgres database that lets you pick which tenants should be placed in which region. Your application can continue working with no changes for multi region.
+7. **Move tenants instantaneously from shared Postgres compute to dedicated Postgres compute or to another region.** The placement decision can be changed any time and Nile will do the work to instantaneously move the tenants. This is possible due to Nile’s cloud native architecture and tenant awareness in Postgres. This lets SaaS businesses to move tenants from shared to dedicated compute (or other regions) as the tenants go to higher product tiers.
