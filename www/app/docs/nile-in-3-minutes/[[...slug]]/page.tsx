@@ -1,17 +1,16 @@
-import { ResolvingMetadata, Metadata } from "next";
+import PageContent from "@/app/docs/_components/PageContent";
+import { Param } from "@/app/docs/_components/PageContent/types";
+import { NavigationRoots } from "@/app/docs/_components/SideNavigation/types";
 import Container from "../../_components/Container";
-import PageContent from "../../_components/PageContent";
-import { Param } from "../../_components/PageContent/types";
-import { NavigationRoots } from "../../_components/SideNavigation/types";
+import { ResolvingMetadata, Metadata } from "next";
 import findDocFile from "../../_utils/findDocFile";
-
 type Props = { params: Param };
 export default async function Page(props: Props) {
   return (
     <Container>
       <PageContent
         params={props.params}
-        root={NavigationRoots.UserAuthorization}
+        root={NavigationRoots.NileInThreeMinutes}
       />
     </Container>
   );
@@ -23,7 +22,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { metadata } = await findDocFile({
     ...props,
-    root: NavigationRoots.UserAuthorization,
+    root: NavigationRoots.NileInThreeMinutes,
   });
 
   const previousImages = (await parent).openGraph?.images || [];
