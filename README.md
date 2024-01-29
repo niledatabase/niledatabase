@@ -6,10 +6,10 @@
 
 # Nile
 
-**Nile is serverless Postgres built for modern SaaS applications. All B2B SaaS applications and most B2C SaaS are multi-tenant. A tenant is primarily a company, an organization, or a workspace in your product that contains a group of users. A SaaS application provides services to multiple tenants. Tenant is the basic building block of all SaaS applications.
+**Nile is serverless Postgres built for modern SaaS applications.** All B2B SaaS applications and most B2C SaaS are multi-tenant. A tenant is primarily a company, an organization, or a workspace in your product that contains a group of users. A SaaS application provides services to multiple tenants. Tenant is the basic building block of all SaaS applications.
 
-Nile virtualizes tenants/customers/organizations into Postgres to enable native tenant data isolation, performance isolation between tenants, per-tenant backups, and tenant placement on shared or dedicated compute globally for latency or compliance. You can do all this with the experience of a single Postgres! You don’t have to manage multiple databases, build complex permissions for isolation, or write buggy scripts to read specific tenant data from backups. On top of the tenant model, we provide opt-in user management capabilities, customer-specific vector embeddings, and instant tenant admin dashboards. Moreover, Nile's Postgres is built for the cloud, enabling effortless scaling and a true serverless experience.
-**
+**Nile virtualizes tenants/customers/organizations into Postgres to enable native tenant data isolation, performance isolation between tenants, per-tenant backups, and tenant placement on shared or dedicated compute globally for latency or compliance. You can do all this with the experience of a single Postgres! You don’t have to manage multiple databases, build complex permissions for isolation, or write buggy scripts to read specific tenant data from backups. On top of the tenant model, we provide opt-in user management capabilities, customer-specific vector embeddings, and instant tenant admin dashboards. Moreover, Nile's Postgres is built for the cloud, enabling effortless scaling and a true serverless experience.**
+
 We are in private beta currently. You can get an invite by signing up at https://www.thenile.dev/
 
 This is a great resource to read more about Nile in 3 minutes https://www.thenile.dev/docs/nile-in-3-minutes
