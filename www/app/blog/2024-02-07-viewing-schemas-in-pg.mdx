@@ -1,0 +1,24 @@
+export const metadata = {
+  title: "Everyone loves ER diagrams, I guess",
+  authors: ["jrea"],
+  sizzle: "Getting better visibility into how your SaaS data is structured",
+  tags: ["saas", "ui", "data governance"],
+};
+
+There's a certain level of magic in building UI, especially for people who do not do it all the time. I like to think that in a previous life, I was a chef. There are a lot of simularities with making great food, and building software.
+
+[software, putting things together]
+
+If you have not seen the show Chopped on the Food Network, allow me to explain. Chefs are given a basket of random ingredients and they are expected to make gourmet food out of it, and are awarded points based on taste, plating, and creative use of the ingredients. Some of the baskets are horrific. In one particularly apetizing episode, the contestents were required to create a dish made from durian (a large fruit that smells like a literal dead body), lime gelatin (as in the trademarked green stuff hospitals are famous for serving), imitation crab meat (or Krab with a K, as I like to say) and crunchy cheese curls (a la Eric Cartman via South Park). Needless to say, the judges were weeping as they tried to choke the appitizer down, one commenting that the dish had a "rotten garbage taste to it".
+
+But I am not a chef. I only really have to get cheffy when I've been too lazy to the grocery store. I bounce between the fridge and the cabinets, opening and closing them, staring into the nothingness, trying to divine the secrets of what hidden delights I could create from the unuseable refuse within. Tonight for dinner is Thai pineapple-Spam fried rice, while talk in hushed tones about the hot dog lazanga I made a few weeks ago.
+
+But this is a tech blog, get to the good part. Sure. Just as chefs things greater than the sum of their parts, so too do software engineers.
+
+As we think about any database product, reasoning about the state of the world becomes important, especially the world within the database grows. So naturally, we need to take information about that system and visulize it. That's what I did for Nile, and here's how I did it:
+
+## There's postgres in my postgres
+
+[xibit meme]
+
+Client-ly speaking, Nile works with any postgres client. After all... it's postgres. But there are some things those clients are not going to do very well; namely handle metadata. While developers have total access over that data, it's not all that reasonable to expect them to make any features out of it. After all, it's Nile's metadata. We have some

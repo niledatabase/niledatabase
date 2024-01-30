@@ -86,60 +86,62 @@ const investors = [
 ];
 export default function Backers() {
   const firstHalf = investors.slice(0, investors.length / 2);
-  const secondHalf = investors.slice(firstHalf.length + 1, investors.length);
+  const secondHalf = investors.slice(firstHalf.length, investors.length);
   return (
-    <div className="flex flex-col gap-24 items-center">
-      <Heading text="Backed by amazing people" />
-      <Image
-        width={296}
-        height={296}
-        src="benchmark.svg"
-        alt="benchmark logo"
-      />
-      <div className="w-screen lg:w-auto overflow-y-scroll relative z-10 px-4">
-        <div className="flex flex-row lg:flex-wrap">
-          {firstHalf.map(({ name, title, imgSrc }) => {
-            return (
-              <div
-                key={name}
-                className="flex flex-row gap-2 lg:w-1/4 w-1/2 mb-12 shrink-0"
-              >
-                <Image
-                  className="rounded-full flex-shrink-0 w-[56px] h-[56px]"
-                  width={56}
-                  height={56}
-                  alt={name}
-                  src={`/profiles/${imgSrc}`}
-                />
-                <div className="flex flex-col">
-                  <div>{name}</div>
-                  <div className="opacity-60 max-w-[160px]">{title}</div>
+    <div className="container mx-auto">
+      <div className="flex flex-col gap-14 items-center">
+        <Heading text="Backed by amazing people" />
+        <Image
+          width={296}
+          height={296}
+          src="benchmark.svg"
+          alt="benchmark logo"
+        />
+        <div className="overflow-y-scroll relative z-10 mx-auto">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mx-auto">
+            {firstHalf.map(({ name, title, imgSrc }) => {
+              return (
+                <div
+                  key={name}
+                  className="flex flex-row gap-2 mb-12 items-center justify-center"
+                >
+                  <Image
+                    className="rounded-full flex-shrink-0 w-[56px] h-[56px]"
+                    width={56}
+                    height={56}
+                    alt={name}
+                    src={`/profiles/${imgSrc}`}
+                  />
+                  <div className="flex flex-col">
+                    <div>{name}</div>
+                    <div className="opacity-60 w-[160px]">{title}</div>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-        <div className="flex flex-row lg:flex-wrap">
-          {secondHalf.map(({ name, title, imgSrc }) => {
-            return (
-              <div
-                key={name}
-                className="flex flex-row gap-2 lg:w-1/4 w-1/2 mb-12 shrink-0"
-              >
-                <Image
-                  className="rounded-full flex-shrink-0 w-[56px] h-[56px]"
-                  width={56}
-                  height={56}
-                  alt={name}
-                  src={`/profiles/${imgSrc}`}
-                />
-                <div className="flex flex-col">
-                  <div>{name}</div>
-                  <div className="opacity-60 max-w-[160px]">{title}</div>
+              );
+            })}
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mx-auto">
+            {secondHalf.map(({ name, title, imgSrc }) => {
+              return (
+                <div
+                  key={name}
+                  className="flex flex-row gap-2 mb-12 items-center justify-center"
+                >
+                  <Image
+                    className="rounded-full flex-shrink-0 w-[56px] h-[56px]"
+                    width={56}
+                    height={56}
+                    alt={name}
+                    src={`/profiles/${imgSrc}`}
+                  />
+                  <div className="flex flex-col">
+                    <div>{name}</div>
+                    <div className="opacity-60 w-[160px]">{title}</div>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
