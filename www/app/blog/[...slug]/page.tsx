@@ -10,6 +10,8 @@ import Footer from "../_components/Footer";
 import Divider from "@/app/_components/common/Divider";
 import { Metadata, ResolvingMetadata } from "next";
 import Coffee from "@/public/blog/coffee.webp";
+import BlogImageZoom from "./ImageZoom";
+
 type Props = { params: { slug: string[] } };
 
 async function getBlog(props: Props) {
@@ -34,12 +36,14 @@ export default async function BlogPage(props: Props) {
   const { metadata, publishDate, readLength, Article } = await getBlog(props);
   return (
     <Container background={null}>
+      <BlogImageZoom />
       <div className="container mx-auto prose prose-invert">
         <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
           <div className="bg-[#2D2D2D] rounded-xl aspect-video w-[390px] xl:w-[800px] overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex relative">
             {metadata?.image ? (
               <Image
                 className="object-cover object-center h-full w-full absolute"
+                data-image-zoom-disabled
                 alt={metadata.image}
                 width={800}
                 height={505}

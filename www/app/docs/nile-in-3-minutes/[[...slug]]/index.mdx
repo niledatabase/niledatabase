@@ -13,6 +13,7 @@ Nile virtualizes tenants/customers/organizations into Postgres to enable native 
 ### Benefits for new SaaS applications
 
 - Native tenant data isolation without having to invest in complex application level permissions or hard to use row level security features. Nile provides session level isolation per tenant. We also have plans to provide connection level isolation (separate connection strings per tenant in the same database which is useful to build separate application for each tenant without the burden of managing multiple databases).
+
 ```sql
 -- set session context to the tenant you want to access.
 set nile.tenant_id = '018ade1a-7830-7981-b23f-f3a7f7b8f09f';
@@ -26,15 +27,15 @@ set nile.tenant_id = '018ade1a-7830-7981-b23f-f3a7f7b8f09f';
 ![dashboard.webp](/docs/dashboard.webp)
 
 - **World class developer experience**
-   1. World class console which includes query editor, schema viewer, canned examples and more (continuing to improve)
-   2. SDKs on top of Postgres to further simplify building SaaS
-   3. Templates, tutorials and numerous examples
+  1.  World class console which includes query editor, schema viewer, canned examples and more (continuing to improve)
+  2.  SDKs on top of Postgres to further simplify building SaaS
+  3.  Templates, tutorials and numerous examples
 - **Pay for just the queries not compute by default.** On shared Postgres compute, you would pay only for the cost of the queries. This is the default. You can choose dedicated Postgres compute for specific tenants for which you would pay for the provisioned capacity.
 - **No DB shut down or zero cold start time.** We are truly multitenant and provide tenant level isolation. This provides the ability to share resources efficiently and have no cold start time.
 - **[Integrations](https://www.thenile.dev/docs/integrations) for third party applications to launch your SaaS**
-   1. Stripe to get billing set up for your application. Our integration provides subscription billing per organization.
-   2. NextAuth if you choose to use a popular SDK to do auth. Our integration provides organization/tenant awareness to NextAuth and ensures user data is written into Nile’s Postgres as the source of truth.
-   3. Lambda for serverless SaaS applications.
+  1.  Stripe to get billing set up for your application. Our integration provides subscription billing per organization.
+  2.  NextAuth if you choose to use a popular SDK to do auth. Our integration provides organization/tenant awareness to NextAuth and ensures user data is written into Nile’s Postgres as the source of truth.
+  3.  Lambda for serverless SaaS applications.
 - **Free tier limits will not force you into paid tier. You only pay for extra usage.** We provide very attractive limits on our free tier. When you reach the limits, you can simply pay for usage of additional capacity (storage, compute and bandwidth) without being forced into higher tiers. We want you to opt higher tiers for the value we provide and not for additional usage.
 - **Query performance and insights by tenant (coming soon)** We provide all the query performance statistics for each customer. You don’t have to spend hours or days figuring out which customer queries are causing performance issues and which customers are impacted.
 - **Understand cost per tenant without any additional instrumentation.** Nile’s billing will provide cost incurred for each of your tenants which helps to better rationalize the revenue per customer and the cost of the database to serve the customer.

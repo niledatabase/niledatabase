@@ -1,0 +1,64 @@
+export const metadata = {
+  title: "We raised 11.6M to build Serverless Postgres for Modern SaaS",
+  authors: ["ram"],
+  image: "funding-logo.png",
+  sizzle:
+    "Excited to announce that we have raised 11.6M in seed funding led by Benchmark and prominent angel investors to build serverless Postgres for modern SaaS",
+  tags: ["funding", "serverless", "postgres", "saas", "multitenant"],
+};
+
+We are excited to announce that we have raised 11.6M in seed funding led by Benchmark and prominent angel investors to build serverless Postgres for modern SaaS. Eric Vishria led the round from Benchmark, who has long been helping numerous SaaS companies from early stages to successful public companies. While Benchmark led the round, we raised from other notable investors, including SV Angel, the founders of Confluent, Jay Kreps and Neha Narkhede, CEO of Figma, Dylan Field, Elad Gil, Co-Founder of Notion, Akshay Kothari, and other top investors and operators.
+
+[Nile](https://www.thenile.dev/docs/nile-in-3-minutes) is serverless Postgres built for modern SaaS applications. All B2B SaaS applications and most B2C SaaS are multi-tenant. A tenant is primarily a company, an organization, or a workspace in your product that contains a group of users. A SaaS application provides services to multiple tenants. Tenant is the basic building block of all SaaS applications.
+
+[Nile](https://www.thenile.dev/docs/nile-in-3-minutes) virtualizes tenants/customers/organizations into Postgres to enable native tenant data isolation, performance isolation between tenants, per-tenant backups, and tenant placement on shared or dedicated compute globally for latency or compliance. You can do all this with the experience of a single Postgres! You don’t have to manage multiple databases, build complex permissions for isolation, or write buggy scripts to read specific tenant data from backups. On top of the tenant model, we provide opt-in user management capabilities, customer-specific vector embeddings, and instant tenant admin dashboards. Moreover, Nile's Postgres is built for the cloud, enabling effortless scaling, cost efficiency, and a true serverless experience.
+
+## Our Story
+
+Gwen Shapira, my co-founder, and I helped transform Confluent from primarily an on-premise to a globally successful SaaS company. Through this journey, we learned the challenges of building a SaaS product and what it takes to launch and scale to thousands of customers and tens of thousands of users. Most of our problems in building SaaS were around data, yet the database had little to offer. We spent significant time managing tenants, building organization and user management, supporting different tenant deployment models (shared vs. dedicated), storing and moving data to different parts of the organization, tracking usage and billing individual customers, and handling many other SaaS problems. We became fixated on making the process of building and scaling SaaS products easier. This obsession drove us to create Nile, to build something truly incredible that could help thousands of developers create world-class SaaS products. We started with the database and wanted to rethink it from first principles, a database centered around tenants, which is the core building block for SaaS.
+
+## Built to be tenant-aware and for the cloud
+
+Nile is taking a radical approach to building databases. Our core insight is that it is possible to push tenant awareness all the way to the page level in Postgres and design it for the cloud from first principles. This helps us to provide a comprehensive and flexible solution to all the tenant management problems for building and scaling SaaS.
+
+![“Nile Architecture”](/blog/architecture.png)
+
+We will have a more detailed write-up about our blueprint architecture, but here are the key highlights
+
+- **Global routing gateway** that can enforce tenant data isolation at the session and connection level, route to the correct tenant, and provide a single database experience across all virtual tenant DBs
+- **Database clustering technology** that helps place tenants on shared or dedicated Postgres compute anywhere globally and manage schemas migrations across tenants
+- **Tenant-aware Postgres pages** that ensure pages are always isolated to a single tenant, which helps to move tenants instantaneously, generate backups per tenant/customer, fork the database with data of a specific customer for testing, and provide performance insights by tenants.
+- **Storage and compute decoupling** to move tenant pages instantaneously across computes to provide instant capacity and manage performance guarantees for any tenants
+- **Cloud-native architecture** by leveraging S3 for permanent storage and replication cross-region
+
+## Benefits of Postgres platform built for SaaS
+
+This architecture helps us to provide a fantastic Postgres experience for building SaaS. I am highlighting a few key ones here, but recommend reading our writeup about the [benefits](https://www.thenile.dev/docs/nile-in-3-minutes) in more detail.
+
+**Tenant data isolation is enforced per session or connection** by the global gateway, avoiding the need to invest in complex application-level permissions or hard-to-use row-level security features.
+
+**Performance isolation between tenants** can be enforced by moving tenants instantaneously to other Postgres computes since we enforce page-level tenant awareness and storage/compute decoupling.
+
+**Flexible tenant placement** is possible on shared or dedicated Postgres compute anywhere on the planet within the same database. The global gateway can route to the correct destination, the clustering layer manages schema migration, and tenants can be moved between different deployment modes and regions if needed.
+
+**Manage AI embeddings per tenant that scale to millions of embeddings**. Tenants can scale across multiple Postgres computes, and each tenant can vertically scale to provide a massive scale for embeddings.
+
+**Backups and branching are supported for each tenant** by implementing copy-on-write at the page level isolated to a tenant. You can even fork a new database with the data of one customer to run some tests.
+
+**Performance, usage, and cost/billing insights for each tenant** help to understand which customer has high latencies, how is the customer usage growing and what is the cost of serving a customer.
+
+**Tenant or organization-specific user management with full data ownership.** The user management SDK understands tenants and stores user data in the Postgres database to ensure complete control and avoid the need to synchronize.
+
+**Provides a serverless experience** by enabling database scaling to zero, paying only for compute used by queries, and supporting auto-scaling due to shared compute model and decoupling storage from compute.
+
+## Community adoption and next steps
+
+Nile [launched](https://www.thenile.dev/blog/app/blog/introducing-nile) publicly at the end of October and already has 300 registered databases and over 3000 on the waitlist. Nile is in private beta, and we hope to move to public beta soon. The funding will be used to get the product ready for production and to start monetization. Our mission is to build the best platform to enable developers to accelerate building and scaling SaaS. We would love to continue building the community and learn more about your challenges and feedback about Nile on our [Discord](https://discord.com/invite/8UuBB84tTy) channel or [Github discussion forum](https://github.com/orgs/niledatabase/discussions).
+
+## Work with us
+
+We are looking to hire strong database internal developers. We are a small group of folks passionate about transforming the database landscape for SaaS. You can read more about the role on [our career page](https://www.thenile.dev/careers/founding-engineer-database-internals).
+
+## Get Started
+
+You can [sign up for our waitlist](https://www.thenile.dev/) today to try it out. You can star us on [Github](https://github.com/niledatabase/niledatabase). Also, follow us on [Twitter](https://twitter.com/niledatabase) and [LinkedIn](https://www.linkedin.com/company/niledatabase)
