@@ -143,7 +143,7 @@ export default function Hero() {
             alt="benchmark logo"
             width={114}
             height={21}
-            className="opacity-0"
+            className="opacity-50"
           />
         </div>
       </div>

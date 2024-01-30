@@ -7,6 +7,7 @@ import OurStory from "./OurStory";
 import HowWeWork from "./HowWeWork";
 import AboutLogo from "@/public/about-logo.png";
 import CareerList from "./CareerList";
+import Backers from "./Backers";
 
 export default function Home() {
   return (
@@ -30,6 +31,8 @@ export default function Home() {
       <HowWeWork />
       <Divider />
       <CareerList />
+      <Divider />
+      <Backers />
       <Divider />
       <HeroBottom />
     </Container>
