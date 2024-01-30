@@ -135,7 +135,7 @@ export default function Hero() {
           </div>
         </div>
         <div className="flex justify-center flex-row gap-1.5 py-10">
-          <span className="opacity-0 bg-gradient-white bg-clip-text">
+          <span className="opacity-50 bg-gradient-white bg-clip-text">
             Backed by
           </span>
           <Image
