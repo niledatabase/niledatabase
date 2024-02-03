@@ -16,7 +16,7 @@ Sign up for an invite to [Nile](https://thenile.dev) if you don't have one alrea
 
 ### 2. Extend tenants table
 
-After you created a database, you will land in Nile's query editor. Stripe integration requires storing customer and subscription IDs. 
+After you created a database, you will land in Nile's query editor. Stripe integration requires storing customer and subscription IDs.
 For that, we'll extend the built-in `tenants` table:
 
 ```sql
@@ -29,14 +29,14 @@ If all went well, you'll see the new columns in the panel on the left side of th
 
 ### 3. Getting credentials
 
-In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentails and keep them somewhere safe. These give you access to the database.
+In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
 
 ### 4. Setting the environment
 
 If you haven't cloned this project yet, now will be an excellent time to do so. Since it uses NextJS, we can use `create-next-app` for this:
 
 ```bash
-npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/intergrations/stripe_subscription stripe_subscription 
+npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/intergrations/stripe_subscription stripe_subscription
 cd nile-todo
 ```
 
@@ -64,7 +64,7 @@ STRIPE_SECRET_KEY = "sk_test_51Nn2AgJ5..."
 
 # The URL of the Nile API
 # Use this to instantiate Nile Server context for server-side use of the "api" SDK
-NEXT_PUBLIC_NILE_API=https://api.thenile.dev 
+NEXT_PUBLIC_NILE_API=https://api.thenile.dev
 
 # Uncomment if you want to try Google Auth
 # AUTH_TYPE=google
