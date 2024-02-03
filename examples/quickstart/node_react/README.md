@@ -24,7 +24,7 @@ If all went well, you'll see the new table in the panel on the left hand side of
 
 ### 3. Getting credentials
 
-In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentails and keep them somewhere safe. These give you access to the database.
+In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
 
 ### 4. Setting the environment
 
