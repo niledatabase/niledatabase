@@ -24,7 +24,7 @@ If all went well, you'll see the new table in the panel on the left hand side of
 
 ### 3. Getting credentials
 
-In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
+In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentails and keep them somewhere safe. These give you access to the database.
 
 ### 4. Setting the environment
 
@@ -58,7 +58,7 @@ NILE_PASSWORD = "0d11b8e5-fbbc-4639-be44-8ab72947ec5b"
 
 # The URL of the Nile API
 # Use this to instantiate Nile Server context for server-side use of the "api" SDK
-NEXT_PUBLIC_NILE_API=https://api.thenile.dev
+NEXT_PUBLIC_NILE_API=https://api.thenile.dev 
 
 # Uncomment if you want to try Google Auth
 # AUTH_TYPE=google
