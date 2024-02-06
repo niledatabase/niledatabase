@@ -3,7 +3,7 @@
 This template shows how to use Nile with NextAuth for a multi-tenant todo list application.
 
 - [Live demo](https://nextauth-demo-delta.vercel.app/)
-- [Video guide - TBD]()
+- [Video guide](https://youtu.be/EcZAsp4R0ig)
 - [Step by step guide](https://www.thenile.dev/docs/user-authentication/third-party/nextauth)
 
 ## Getting Started

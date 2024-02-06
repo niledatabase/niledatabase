@@ -2,7 +2,7 @@
 
 This template shows how to use Nile in an AWS Lambda app. It uses the Serverless Framework for deployment, NodeJS runtime and Drizzle ORM.
 
-- [Video guide - TBD]()
+- [Video guide](https://youtu.be/tikEF_zCw8g)
 - [Live demo](https://todo-lambda.vercel.app/)
 - [Step by step guide](https://www.thenile.dev/docs/serverless/lambda)
 
