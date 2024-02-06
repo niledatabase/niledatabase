@@ -43,7 +43,12 @@ create table candidates (
 ```
 
 ```sql
-insert into tenants (name) values ('customer1'),('customer2'),('customer3'),('customer4'),('customer5')
+insert into tenants (id, name) values
+('018ade1a-7830-7981-b23f-f3a7f7b8f09f','customer1'),
+('018ade1a-7843-7e60-9686-714bab650998','customer2'),
+(default, 'customer3'),
+(default, 'customer4'),
+(default, 'customer5');
 ```
 
 Let us populate the candidate table for couple of tenants. Typically, these candidates will be inserted by the application as candidates apply for the job. We will manually populate them in this case.
@@ -53,8 +58,8 @@ Let us populate the candidate table for couple of tenants. Typically, these cand
 insert into candidates
   (tenant_id,id,name,status, resume_url, job_applied, applied_date)
 values
-  (018ade1a-7830-7981-b23f-f3a7f7b8f09f,1324,'Candidate1','New Application','http://myresume.com/index.html','software engineer','2023-08-22 19:10:25-07'),
-  (018ade1a-7830-7981-b23f-f3a7f7b8f09f,2356,'Candidate2','Phone Interview','http://myprofile.com/index.html','senior software engineer','2023-07-12 18:09:15-07');
+  ('018ade1a-7830-7981-b23f-f3a7f7b8f09f',1324,'Candidate1','New Application','http://myresume.com/index.html','software engineer','2023-08-22 19:10:25-07'),
+  ('018ade1a-7830-7981-b23f-f3a7f7b8f09f',2356,'Candidate2','Phone Interview','http://myprofile.com/index.html','senior software engineer','2023-07-12 18:09:15-07');
 -- inserting candidates for tenant 018ade1a-7843-7e60-9686-714bab650998
 insert into candidates
   (tenant_id,id,name,status, resume_url, job_applied, applied_date)
@@ -144,9 +149,9 @@ select * from candidates;
 ```
 
 ```typescript
-import ApiClient from "@example/protocol-api";
-const client = new ApiClient(token);
-await client.conversations.list();
+// get a connection to the virtual tenant DB you want to access.
+const tenantNile = configureNile(cookies().get("authData"), params.tenantid);
+const candidates = await tenantNile.db("candidates").select("*");
 ```
 
 </CodeGroups>
@@ -210,7 +215,7 @@ select count(*) as no_of_customers from tenants;
   </thead>
   <tbody>
     <tr>
-      <td>6</td>
+      <td>5</td>
     </tr>
   </tbody>
 </table>
@@ -237,17 +242,17 @@ right join tenants t1 on c1.tenant_id=t1.id group by t1.id,t1.name;
     <tr>
       <td>018ad859-3977-7c0d-8de1-7c6add417cdb</td>
       <td>customer 1</td>
-      <td>0</td>
+      <td>2</td>
     </tr>
     <tr>
       <td>018ade1a-7830-7981-b23f-f3a7f7b8f09f</td>
       <td>customer 2</td>
-      <td>2</td>
+      <td>3</td>
     </tr>
     <tr>
       <td>018ade1a-7843-7e60-9686-714bab650998</td>
       <td>customer 3</td>
-      <td>3</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>018ade1a-7854-7612-9126-7496dcbc7b62</td>
@@ -262,11 +267,11 @@ right join tenants t1 on c1.tenant_id=t1.id group by t1.id,t1.name;
   </tbody>
 </table>
 
-3. Finding the number of customers that have atleast one candidate added in the last one week
+3. Finding the number of customers that have atleast one candidate added in June:
 
 ```sql
 select tenant_id from candidates
-where (CURRENT_DATE - applied_date::date) < 30;
+where extract(month from applied_date)=6;
 ```
 
 <table>
