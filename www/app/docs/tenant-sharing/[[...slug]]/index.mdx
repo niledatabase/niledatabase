@@ -15,6 +15,16 @@ For example
 2. A CRM product like Salesforce or Hubspot lists companies by categories that Sales reps can choose from for outreach. The list of companies and their categories is a global list that can be made available to all customers using shared tables.
 3. Your application is an Infrastructure SaaS product (e.g., Snowflake or Databricks) and wants to provide a list of cloud providers and regions for users to select where they want to deploy their infrastructure. The data about all the cloud providers and the available regions can be in a shared table, and all the tenants can access it.
 
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/Prdv6RbyWTc?si=tqYtQ9F2ZIAQvaad"
+  title="Sharing is caring - how isolated tenants can access shared data in Nile"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen
+></iframe>
+
 ## Creating and inserting data into shared tables
 
 To create a shared table, you must create a standard table without a tenant_id column. Nile ensures that the data in the shared table is available across all tenants.
