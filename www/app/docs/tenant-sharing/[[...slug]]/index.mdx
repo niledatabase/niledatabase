@@ -49,8 +49,8 @@ insert into flights
 values
   (643, 'United','SFO','NY','2023-12-22 19:10:25-07','2016-12-23 05:10:25-07'),
   (123, 'Indian Airways','Mumbai','Delhi','2024-11-23 19:10:25-07','2024-11-23 01:10:25-07'),
-  (384, 'Singapore Airlines','Singapore','London','2024-10-23 04:10:25-07','2024-11-23 10:10:25-07'),
-  (724, 'British Airways','London','Paris','2024-07-04 11:10:25-07','2024-07-04 17:10:25-07');
+  (384, 'Singapore Airlines','SGR','LDN','2024-10-23 04:10:25-07','2024-11-23 10:10:25-07'),
+  (724, 'British Airways','LDN','Paris','2024-07-04 11:10:25-07','2024-07-04 17:10:25-07');
 ```
 
 Most use cases for shared tables will involve loading data from some external source instead of manual inserts into the table. For example, to populate the flights table, you will typically load the data from an airline data company (eg. [Sabre](https://www.sabre.com/products/suites/developer-experience/sabre-apis/)) and also keep it upto date by subscribing to real time changes.
@@ -110,7 +110,7 @@ values
 -- from which the flight is starting
 select flights.id, flights.name, flights.from_location, airports.address
 from flights, airports
-where flights.from_destination=airports.code;
+where flights.from_location=airports.code;
 ```
 
 <table>
@@ -164,7 +164,7 @@ select bookings.booking_id, bookings.employee_id, flights.name,
        flights.from_location, flights.to_location, flights.departure_time,
        flights.arrival_time, bookings.total_price
 from bookings,flights
-where bookings.booking_id=flights.id;
+where bookings.flight_id=flights.id;
 ```
 
 <table>
