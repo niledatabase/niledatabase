@@ -8,6 +8,16 @@ export const metadata = {
 
 All SaaS applications provide service to multiple customers or tenants. Isolating each tenant's data from another tenant is so basic yet hard to do. Nile enables tenant data isolation without any complex, buggy code or dealing with messy row-level security policies. With Postgres being tenant-aware in Nile, this becomes straightforward.
 
+<iframe
+  width="480"
+  height="270"
+  src="https://www.youtube.com/embed/ERvz2nT3sd4?si=CBYP0ssMEP-qANH9"
+  title="Native tenant isolation in Postgres with Nile"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen
+></iframe>
+
 ## What is tenant data isolation?
 
 A SaaS application serves many tenants. The data for each tenant belongs to the tenant and should not be accessible to other tenants. The users who belong to a specific tenant can access the data they have access to for that tenant. This seems so obvious but yet so hard to achieve in practice.
