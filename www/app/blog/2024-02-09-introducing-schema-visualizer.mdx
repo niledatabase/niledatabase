@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "Introducing: Nile Schema Visualizer",
+  authors: ["gwenshap"],
+  image: "2024-02-09-introducing-schema-visualizer/cover.png",
+  sizzle:
+    "We are excited to share with you Nile's schema visualizer. It lets you navigate the schema, tables, columns, keys and relations in your Nile databases.",
+  tags: ["serverless", "postgres", "data model", "visualization", "launch"],
+};
+
+When building SaaS, agility and efficiency is the name of the game. Iterating fast is more important than being perfectly right every time.
+This means that understanding and managing database structures can be a challenge. Especially as multiple developers continuously modify them.
+
+This is why we are excited to share with you Nile's schema visualizer. It lets you navigate the schema, tables, columns, keys and relations in
+your Nile databases. And it looks cool AF, if we may say so ourselves. Lets take a look at a few scenarios where we found the schema visualizer useful:
+
+### 1. What's the current schema?
+
+This is the most basic question when you want to add a new feature to an existing app. But it can be surprisingly challenging to answer.
+
+Back when I did consulting, I always asked for a map of the current data model. It was important for me to get up to speed quickly - but very few teams had
+good answers. Some gave me 50+ migration scripts that I had to put together. Some gave me dumps of their database catalog to review. At times I think the
+most valuable deliverable of my consulting gigs was one clear diagram. For some developers, getting this diagram of their data model was a real “aha” moment.
+The problem was that the developer was left with the task of maintaining that diagram, and I'm afraid to ask if anyone did.
+
+We built our schema visualizer, so you always have the most up to date view of how your data fits together. Which lets you quickly know how to get the
+information you need in your code.
+
+![view of a schema](/blog/2024-02-09-introducing-schema-visualizer/schema_view.png)
+
+### 2. Easy to catch mistakes
+
+Migration scripts go through code reviews (hopefully), but with multiple iterations, each in its own script, it can be difficult to detect missing keys.
+Once you take a look at the visualization in a pre-production database, these things become very obvious.
+
+![detect a missing foreign key](/blog/2024-02-09-introducing-schema-visualizer/missing_foreign_key.png)
+
+### 3. Part of the database
+
+At Nile, we believe that schema visualization and exploration is an important part of the developer experience. Not an add-on or something to leave to
+3rd party tools. So we made it part of our database console, free forever to everyone who uses Nile. This experience also lets you quickly switch back and
+forth between the SQL editor where you create tables and query them, to the schema visualizer where you ponder how the tables and data work together.
+
+### 4. Keep the team on the same page
+
+Building software is a collaborative effort, and a visual can help with communication. Instead of discussing abstract ideas, all developers can connect to a
+development database, try ideas and discuss the results. It can also help communicate ideas to product managers, customer success teams and even partners who
+are building integrations. This kind of easy-to-grasp shared understanding saves a lot of time and prevents misunderstandings.
+
+### What's next?
+
+First, [join the waitlist](https://www.thenile.dev) and sign up to Nile, then start building your SaaS! It is that simple.
+
+The schema visualizer has a few nice navigation features. If you need help discovering them - take a look at our [documentation](https://www.thenile.dev/docs/platform/schema_viz).
+
+Finally, if you are curious about how we built the schema visualizer, take a look at our engineering blog - [I built a schema visualizer](https://blog.thenile.dev/2024-02-09-schema-visualizer).
