@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "I built a schema visualizer for Postgres",
+  title: "Visualizing Multitenant Data Flows in Serverless Postgres",
   authors: ["joseph"],
   image: "2024-02-09-building-schema-visualizer/2024-schema-viewer.webp",
   sizzle:
@@ -205,7 +205,7 @@ Initially on page load, I was waiting for the response to come back because ther
 
 In addition to the `<Suspense/>` , I added a function to force timeout for the requests on the page taking longer than expected. The error state will then force the client to query instead of the server, which allows me to show a loading indicator and possibly a stale graph if available.
 
-![NextJS page structure](/blog/2024-02-09-building-schema-visualizer/structure.png)
+![NextJS page structure](/blog/2024-02-09-building-schema-visualizer/page-container.png)
 
 To button up all of the latency, schema graphs are saved to the browser’s database. Since I don’t really expect schemas to change all that much, it allows for instant rendering, provided the schema has been loaded by the client once, and allows me to re-use the client side request/render pattern again. The worst case is that the schema updates after loading completes. Best case is that nothing happens because the browser side and server side schemas are the same.
 
@@ -257,9 +257,9 @@ With our web server able to handle the happy path, as well as the one that's not
 
 Don't be fooled, directional graphs are a nightmare. Even in the most simple case, there's a lot of stitching that needs done in order for it to appear. It’s the durian of our nightmare Chopped basket.
 
-In addition, how bad (or good) it can be all of that depends on the library you choose to use. If we take some basic search params for github [https://github.com/search?q=directed+graph&type=repositories&s=stars&o=desc] we find a lot of "that's a really long readme" repos, and latest commits from "7 years ago", "Is this project actively maintained" issues and "⛔ [DEPRECATED] - Graphs in JavaScript", which does not bode well for someone trying to make a directional graph.
+In addition, how bad (or good) it can be all of that depends on the library you choose to use. If we take some basic search params for [github](https://github.com/search?q=directed+graph&type=repositories&s=stars&o=desc) we find a lot of <em>"that's a really long readme"</em> repos, and latest commits from "7 years ago", <em>"Is this project actively maintained"</em> issues and <strong>"⛔ [DEPRECATED] - Graphs in JavaScript"</strong>, which does not bode well for someone trying to make a directional graph.
 
-But to be fair, in all honesty, it's probably rare to make these things, and even rarer to do it in React. So for what I've done in the past, there's only really library that I trust: https://github.com/kieler/elkjs. Yes, the bundled size is depressingly large. Yes it comes from Java land. Yes, it is made with GWT[https://www.gwtproject.org/], but for what ELK provides, it's pretty darn reasonable.
+But to be fair, in all honesty, it's probably rare to make these things, and even rarer to do it in React. So for what I've done in the past, there's only really library that I trust: [elkjs](https://github.com/kieler/elkjs). Yes, the bundled size is depressingly large. Yes it comes from Java land. Yes, it is made with GWT[https://www.gwtproject.org/], but for what ELK provides, it's pretty darn reasonable.
 
 As to the implementation, the first thing we want to be sure to handle is the `elkjs` file. It’s huge. Like 2.1mb unminified huge, so always load it dynamically.
 
@@ -303,11 +303,11 @@ const items = await layout({
 }).catch(console.error);
 ```
 
-With this done, `layout` contains positional data (x, y coordinates) that will look good once rendered. Neat! But now we’ve come to our final problem we need to solve. How to render that stuff. For that, lets look at https://reactflow.dev/
+With this done, `layout` contains positional data (x, y coordinates) that will look good once rendered. Neat! But now we’ve come to our final problem we need to solve. How to render that stuff. For that, we can use [reactflow](https://reactflow.dev/)
 
-Now I will preface this by mentioning that I have run into issues in the past with enormous graphs where 200+ complicated SVG nodes being rendered and the browser dies from performance problems. I would not imagine this would happen in all but the most extreme cases. In those cases, you have to switch to a canvas based renderer, which we're not going to cover here. SVGs are really easy to debug and have CSS, so the decision to use the canvas should really be thought through.
+Now I will preface this by mentioning that I have run into issues in the past with enormous graphs where 200+ complicated SVG nodes being rendered and the browser dies from performance problems. I would not imagine this would happen in all but the most extreme cases. In those cases, you have to switch to a canvas based renderer, which we're not going to cover here. It is important to note, there is extra data from `elkjs` that helps with that (specifically the bend points in the ediges), but SVGs are really easy to debug and have CSS, so the decision to use the canvas should really be thought through.
 
-Setting up and running reactflow is easy enough, but we already have all the information we need from `elkjs`, so it's simply a matter mixing all the
+Setting up and running reactflow is easy enough, and we already have all the information we need from `elkjs`, so it's simply a matter mixing all the
 ingredients together. For the sake of simplicity, you can see a very basic version of this:
 
 <iframe
