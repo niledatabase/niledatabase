@@ -205,7 +205,7 @@ Initially on page load, I was waiting for the response to come back because ther
 
 In addition to the `<Suspense/>` , I added a function to force timeout for the requests on the page taking longer than expected. The error state will then force the client to query instead of the server, which allows me to show a loading indicator and possibly a stale graph if available.
 
-![NextJS page structure](/blog/2024-02-09-building-schema-visualizer/page-container.png)
+![NextJS page structure](/blog/2024-02-09-building-schema-visualizer/page-container.webp)
 
 To button up all of the latency, schema graphs are saved to the browser’s database. Since I don’t really expect schemas to change all that much, it allows for instant rendering, provided the schema has been loaded by the client once, and allows me to re-use the client side request/render pattern again. The worst case is that the schema updates after loading completes. Best case is that nothing happens because the browser side and server side schemas are the same.
 
