@@ -15,11 +15,8 @@ class TenantAwareMiddleware:
         self.app = app
         
     async def __call__(self, scope, receive, send):
-        logger.debug(f"TenantAwareMiddleware: {scope}")
         try:
             headers = Headers(scope=scope)
-            logger.debug(f"TenantAwareMiddleware: {headers}")
-            logger.debug(f"TenantAwareMiddleware: {await Request(scope, receive).json()}")
             maybe_tenant_id = headers.get("X-Tenant-Id")
             tenant_id.set(UUID("hex", maybe_tenant_id))
         except ValueError:

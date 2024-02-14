@@ -17,8 +17,7 @@ def home():
 
 # TODO: Add optional ID parameter
 @app.post("/api/tenants")
-async def create_tenant(name: str, session = Depends(get_global_session)):
-    tenant = Tenant(name=name)
+async def create_tenant(tenant:Tenant, session = Depends(get_global_session)):
     session.add(tenant)
     session.commit()
     return {"tenant added": tenant.name}
