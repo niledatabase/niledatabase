@@ -36,44 +36,25 @@ git clone https://github.com/niledatabase/niledatabase
 cd niledatabase/examples/quickstart/python
 ```
 <!-- TODO FIX -->
-Copy `src/main/resources/application.example` to `src/main/resources/application.properties` and fill in the details of 
-your Nile DB.
+Copy `.env.example` to `.env` and fill in the details of your Nile DB.
 
 It should look something like this:
+<!-- TODO FIX -->
+
+Optional(but recommended) step is to set up a virtual Python environment:
+
+```
+python -m venv venv
+source venv/bin/activate
+```
+
+Then, whether you have a virtual environment or not, install dependencies with `pip install -r requirements.txt`
+
+## 5. Running the app
+
 ```bash
-spring.datasource.jdbc-url=jdbc:postgresql://db.thenile.dev:5432/funky_giraffe
-spring.datasource.username=018a6b69-b1e9-7574-b8f3-efd5fe63d9bb
-spring.datasource.password=d757518e-6d52-4bdb-b85f-f008c9f80097
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=false
+uvicorn main:app --reload
 ```
-
-## Build:
-```bash
-mvn clean package
-```
-
-You should see the Maven build complete with the following output:
-```text
-[INFO] --- spring-boot:3.1.0:repackage (repackage) @ todo-nile ---
-[INFO] Replacing main artifact /niledatabase/examples/quickstart/java/target/todo-nile-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
-[INFO] The original artifact has been renamed to /niledatabase/examples/quickstart/java/target/todo-nile-0.0.1-SNAPSHOT.jar.original
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-```
-
-## Run
-```bash
-java -jar target/todo-nile-0.0.1-SNAPSHOT.jar
-```
-
-You should see the application starting with the last line of output saying:
-```text
-2023-09-16T16:56:38.685-07:00  INFO 16200 --- [           main] com.example.todowebapp.TodoWebapp        : 
-Started TodoWebapp in 2.648 seconds (process running for 2.886)
-```
-
 
 ## Try it out
 
@@ -81,6 +62,11 @@ This is a backend service that exposes REST APIs with the todo list functionalit
 You can experiment with these APIs with `curl`:
 
 ```bash
+
+curl -X POST 'http://localhost:8000/api/sign-up' \
+--header 'Content-Type: application/json' \
+--data-raw '{"email":"test2@pytest.org","password":"foobar"}'
+
 curl --location --request POST 'localhost:8000/api/tenants' \
 --header 'Content-Type: application/json' \
 --data-raw '{"name":"my first customer"}'
@@ -96,11 +82,12 @@ curl  -X GET 'http://localhost:8000/api/tenants'
 
 # replace the tenant ID in the URL: 
 curl  -X GET \
-  'http://localhost:8080/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' 
+  --header 'X-Tenant-Id: 3fa66701-bd9e-4eac-916c-2a92de2d5647' \
+  'http://localhost:8000/api/todos' 
 
 # you'll need to create another todo with another tenant to see anything different here
 curl  -X GET \
-  'http://localhost:8080/insecure/all_todos'
+  'http://localhost:8000/api/insecure'
 ```
 
 ## Running a Docker Image
