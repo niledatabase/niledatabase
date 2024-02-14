@@ -18,7 +18,8 @@ class TenantAwareMiddleware:
         try:
             headers = Headers(scope=scope)
             maybe_tenant_id = headers.get("X-Tenant-Id")
-            tenant_id.set(UUID("hex", maybe_tenant_id))
+            logger.debug(f"Tenant ID: {maybe_tenant_id}")
+            tenant_id.set(UUID(str(maybe_tenant_id)))
         except ValueError:
             tenant_id.set(None)
         await self.app(scope, receive, send)

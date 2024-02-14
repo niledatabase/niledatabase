@@ -81,17 +81,18 @@ This is a backend service that exposes REST APIs with the todo list functionalit
 You can experiment with these APIs with `curl`:
 
 ```bash
-curl --location --request POST 'localhost:8080/tenants' \
+curl --location --request POST 'localhost:8000/api/tenants' \
 --header 'Content-Type: application/json' \
 --data-raw '{"name":"my first customer"}'
 
 # replace the tenant ID in the URL: 
 curl  -X POST \
-  'http://localhost:8080/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' \
+  'http://localhost:8000/api/todos' \
   --header 'Content-Type: application/json' \
+  --header 'X-Tenant-Id: 3fa66701-bd9e-4eac-916c-2a92de2d5647' \
   --data-raw '{"title": "feed the cat", "complete": false}'
 
-curl  -X GET 'http://localhost:8080/tenants'
+curl  -X GET 'http://localhost:8000/api/tenants'
 
 # replace the tenant ID in the URL: 
 curl  -X GET \

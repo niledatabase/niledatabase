@@ -1,6 +1,6 @@
 from typing import Optional
-from sqlmodel import Field, Session, SQLModel, create_engine
-import uuid
+from sqlmodel import Field, Session, SQLModel, create_engine, text
+from uuid import UUID, uuid4
 from tenant_middleware import get_tenant_id
 
 # TODO: Move to use environment variables
@@ -14,29 +14,28 @@ def get_global_session():
     yield session
 
 # This is a session for a specific tenant DB. 
-# If there is no valid tenant_id in the context, it will throw a ValueError and the request handler will not execute the query.
+# If there is no valid tenant_id in the context, it will throw an exception (InvalidTextRepresentation) and the request will fail.
 def get_tenant_session():
     session = Session(bind=engine, expire_on_commit=False)
     try: 
-        tenant_id = UUID(get_tenant_id())
-        query = f"SET nile.tenant_id={tenant_id};"
-        session.execute(query)
+        tenant_id = get_tenant_id()
+        session.execute(text(f"SET nile.tenant_id='{tenant_id}';"))
         yield session  # Important to use yield here, so the request handler will call the cleanup code after the request is done.
     except:
         session.rollback()
         raise
     finally: # This will run after the request handler is finished with the session
-        session.execute("RESET nile.tenant_id;")
+        session.execute(text("RESET nile.tenant_id;"))
         session.commit()
         pass
 
 class Todo(SQLModel, table=True):
     __tablename__ = "todos"
-    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
-    tenant_id: uuid.UUID = Field(default_factory=uuid.uuid4)
+    id: UUID = Field(primary_key=True, default_factory=uuid4)
+    tenant_id: UUID
     title: str
     complete: bool = False    
 class Tenant(SQLModel, table=True):
     __tablename__ = "tenants"
-    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
+    id: UUID = Field(primary_key=True, default_factory=uuid4)
     name: str
