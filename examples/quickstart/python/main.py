@@ -1,12 +1,14 @@
 import logging
-from fastapi import Depends, FastAPI, HTTPException, Body
+from fastapi import Depends, FastAPI, HTTPException, Body, status, Response
 from typing import Annotated
 from uuid import UUID
 from sqlmodel import text
 from passlib.hash import bcrypt
-import json
-from db import Tenant, Todo, User, Credentials, get_tenant_session, get_global_session
+
+from db import get_tenant_session, get_global_session
+from models import Tenant, Todo, User, Credentials, Token
 from tenant_middleware import TenantAwareMiddleware, get_tenant_id
+from auth import authenticated_user, create_access_token
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -66,7 +68,7 @@ async def get_todos_insecure(session = Depends(get_global_session)):
 
 
 @app.post("/api/sign-up")
-async def sign_up(email: Annotated[str, Body()], password: Annotated[str, Body()], session = Depends(get_global_session)):
+async def sign_up(email: Annotated[str, Body()], password: Annotated[str, Body()], response: Response, session = Depends(get_global_session)):
     user = User(email=email)
     session.add(user) 
     session.commit()
@@ -79,27 +81,26 @@ async def sign_up(email: Annotated[str, Body()], password: Annotated[str, Body()
     '''.format(user.id, password)
     credentials = session.execute(text(query))
     session.commit()
-    # TODO: Right now, we are just returning the user object, but we should return a JWT token, put it in a cookie, and set the headers
+    
+    access_token = create_access_token(data={"sub": [str(user.id), user.email]})
+    response.set_cookie(key="access_token", value=access_token)
+    return Token(access_token=access_token, token_type="bearer")
     return user
 
-# TODO: Clean up the error handling
+# We are returning both token and cookie, so the JWT can be used in both the frontend and backend
 @app.post("/api/login")
-async def login(email: Annotated[str, Body()], password: Annotated[str, Body()], session = Depends(get_global_session)):
-    # Using raw SQL here due to combination of jsonb and crypt functions
-    try:
-        user: User = session.query(User).where(User.email == email).first()
-        credentials: Credentials = session.query(Credentials).where(Credentials.user_id == user.id).where(Credentials.method == 'PASSWORD').first()
-        payload = json.loads(json.dumps(credentials.payload))
-        if bcrypt.verify(password, payload['hash']):
-            logger.info(f"User {user.id} logged in")
-            return user; # TODO: Return JWT token, put it in a cookie, and set the headers
-        else:
-            logger.warn(f"User {user.id} failed to log in")
-            raise HTTPException(status_code=400, detail="Incorrect username or password")
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        logger.error(f"Error logging in: {e}")
-        raise HTTPException(status_code=500, detail="Login failed")
+async def login(email: Annotated[str, Body()], password: Annotated[str, Body()], response: Response, session = Depends(get_global_session)):
+    user: User = authenticated_user(email, password, session)
+    if not user:
+        logger.warn(f"Login failed for user: {email}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    access_token = create_access_token(data={"sub": [str(user.id), user.email]})
+    response.set_cookie(key="access_token", value=access_token)
+    return Token(access_token=access_token, token_type="bearer")
             
 # TODO: Social login handler          

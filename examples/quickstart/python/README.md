@@ -66,13 +66,13 @@ You can experiment with these APIs with `curl`:
 # create user
 curl -X POST 'http://localhost:8000/api/sign-up' \
 --header 'Content-Type: application/json' \
---data-raw '{"email":"test6@pytest.org","password":"foobar"}'
+--data-raw '{"email":"test8@pytest.org","password":"foobar"}'
 
 # login
 
 curl -X POST 'http://localhost:8000/api/login' \
 --header 'Content-Type: application/json' \
---data-raw '{"email":"test6@pytest.org","password":"foobar"}'
+--data-raw '{"email":"test8@pytest.org","password":"foobar"}'
 
 # create tenant
 curl --location --request POST 'localhost:8000/api/tenants' \
