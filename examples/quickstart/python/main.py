@@ -75,109 +75,31 @@ async def sign_up(email: Annotated[str, Body()], password: Annotated[str, Body()
     query = '''
     INSERT INTO auth.credentials(user_id, method, payload) VALUES 
                                        ('{}', 'PASSWORD',
-                                       jsonb_build_object('crypt', 'crypt-bf/8', 'hash', public.crypt('{}', gen_salt('bf', 8))));
+                                       jsonb_build_object('crypt', 'crypt-bf/8', 'hash', public.crypt('{}', public.gen_salt('bf', 8))));
     '''.format(user.id, password)
     credentials = session.execute(text(query))
     session.commit()
     # TODO: Right now, we are just returning the user object, but we should return a JWT token, put it in a cookie, and set the headers
     return user
 
+# TODO: Clean up the error handling
 @app.post("/api/login")
-async def login(email:str, password:str, session = Depends(get_global_session)):
-    input_hash = bcrypt.hash(password)
+async def login(email: Annotated[str, Body()], password: Annotated[str, Body()], session = Depends(get_global_session)):
     # Using raw SQL here due to combination of jsonb and crypt functions
     try:
-        user = session.execute(text(f"SELECT * FROM users.users WHERE email = '{email}'")).first()
-        credentials = session.execute(text(f"SELECT * FROM auth.credentials WHERE user_id = '{user.id}' AND method = 'PASSWORD'")).first()
-        payload = json.loads(credentials.payload)
+        user: User = session.query(User).where(User.email == email).first()
+        credentials: Credentials = session.query(Credentials).where(Credentials.user_id == user.id).where(Credentials.method == 'PASSWORD').first()
+        payload = json.loads(json.dumps(credentials.payload))
         if bcrypt.verify(password, payload['hash']):
+            logger.info(f"User {user.id} logged in")
             return user; # TODO: Return JWT token, put it in a cookie, and set the headers
         else:
+            logger.warn(f"User {user.id} failed to log in")
             raise HTTPException(status_code=400, detail="Incorrect username or password")
-    except:
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error logging in: {e}")
         raise HTTPException(status_code=500, detail="Login failed")
             
-            
-
-
-# // handle email signups
-# app.post('/api/sign-up', async (req, res) => {
-#   const resp = await nile.api.auth.signUp(
-#     {
-#       email: req.body.email,
-#       password: req.body.password,
-#     }
-#   );
-
-#   // if signup was successful, we want to set the cookies and headers, so it will log the user in too
-#   // Note that this is optional, check the authentication quickstart for a simpler example of using the Nile SDK for authentication
-#   if (resp && resp.status >= 200 && resp.status < 300) {
-#       const body =  await resp.json();
-#       const accessToken = body.token.jwt;
-#       const decodedJWT = jwtDecode<NileJWTPayload>(accessToken);
-#       const cookieData = {
-#           accessToken: accessToken,
-#           tokenData: decodedJWT,
-#         };
-#       res.cookie('authData', JSON.stringify(cookieData), {secure: process.env.NODE_ENV !== 'development'});
-#       res.status(resp.status).json(JSON.stringify(body));
-#     } else  {
-#       // The API sends errors in plain text, so we need to handle them before trying to parse the JSON
-#       const body = await resp.text();
-#       const err = "got error response: " + body + " " + resp.status;
-#       console.log(err);
-#       res.status(resp.status).json(JSON.stringify(body));
-#   }
-# });
-
-# // handle email logins
-# app.post('/api/login', async (req, res) => {
-#   const resp = await nile.api.auth.login({
-#     email: req.body.email,
-#     password: req.body.password,
-#   });
-
-#   // if signup was successful, we want to set the cookies
-#   if (resp && resp.status >= 200 && resp.status < 300) {
-#       const body =  await resp.json();
-#       const accessToken = body.token.jwt;
-#       const decodedJWT = jwtDecode<NileJWTPayload>(accessToken);
-#       const cookieData = {
-#           accessToken: accessToken,
-#           tokenData: decodedJWT,
-#           };
-#       res.cookie('authData', JSON.stringify(cookieData), {secure: process.env.NODE_ENV !== 'development'});
-#       res.status(resp.status).json(JSON.stringify(body));
-#   } else  {
-#       // The API sends errors in plain text, so we need to handle them before trying to parse the JSON
-#       const body = await resp.text();
-#       const err = "got error response: " + body + " " + resp.status;
-#       console.log(err);
-#       res.status(resp.status).json(JSON.stringify(body));
-#   }
-
-# });
-
-
-# // Handle logins via Nile's OIDC / OAuth2 flow
-# app.post('/auth/handler', async (req, res) => {
-#   const formData = req.body;
-#   const event = formData.event;
-
-#   // note that we are responding with 303 redirects in order to trigger a GET request for client-side redirect
-#   try {
-#     // detect error response early. The exception handler can handle all errors.
-#     if (event === 'AUTH_ERROR') {
-#       throw new Error(formData.error);
-#     }
-#     const accessToken = String(formData.access_token);
-#     const decodedJWT = jwtDecode<NileJWTPayload>(accessToken);
-#     const cookieData = toCookieData(formData, decodedJWT);
-#     res.cookie('authData', JSON.stringify(cookieData), {secure: process.env.NODE_ENV !== 'development'});
-#     res.redirect(303, fe_url+"/tenants"); // once user is authenticated, redirect to tenants page
-#   } catch (e: any) {
-#     console.log("error while handling auth response: " + e.message);
-#     res.cookie('errorData', JSON.stringify(e.message), {secure: process.env.NODE_ENV !== 'development'});
-#     res.redirect(303,fe_url+"/"); // if there is an error, redirect to home page
-#   }
-# });
+# TODO: Social login handler          

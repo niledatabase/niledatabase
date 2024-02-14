@@ -52,13 +52,15 @@ class User(SQLModel, table=True):
     email: str
     
 class TenantUsers(SQLModel, table=True):
-    __tablename__ = "users.tenant_users"
+    __tablename__ = "tenant_users"
+    metadata = users_schema
     user_id: UUID = Field(primary_key=True)
     tenant_id: UUID = Field(primary_key=True)
     role: str
 
 class Credentials(SQLModel, table=True):
-    __tablename__ = "auth.credentials"
+    __tablename__ = "credentials"
+    metadata = auth_schema
     id: UUID = Field(primary_key=True, default_factory=uuid4)
     user_id: UUID
     method: str
