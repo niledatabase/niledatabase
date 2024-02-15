@@ -1,4 +1,8 @@
 import logging
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import Depends, FastAPI, HTTPException, Body, status, Response, Request
 from typing import Annotated
 from uuid import UUID
@@ -10,7 +14,7 @@ from models import Tenant, Todo, User, Token, TenantUsers
 from tenant_middleware import TenantAwareMiddleware, get_tenant_id, get_user_id
 from auth import authenticated_user, create_access_token
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
 
 app = FastAPI()

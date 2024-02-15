@@ -11,6 +11,7 @@ psycopg2-binary==2.9.9
 pyasn1==0.5.1
 pydantic==2.6.1
 pydantic_core==2.16.2
+python-dotenv==1.0.1
 python-jose==3.3.0
 python-multipart==0.0.9
 rsa==4.9

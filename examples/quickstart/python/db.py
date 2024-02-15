@@ -1,12 +1,15 @@
 from typing import Optional
 from sqlmodel import  Session, create_engine, text
-from sqlalchemy import MetaData
+import os
+from dotenv import load_dotenv
+load_dotenv()
 from tenant_middleware import get_tenant_id, get_user_id
 
-# TODO: Move to use environment variables
+
+log_sql = my_env = os.getenv("LOG_SQL", 'False').lower() in ('true', '1', 't')
 engine = create_engine(
-    "postgresql://018b4937-2bbf-70fd-9075-37154198fa0f:358844ef-cb09-4758-ae77-bec13b8011eb@db.thenile.dev:5432/charming_flower",
-    echo=True)
+    os.getenv("DATABASE_URL"),
+    echo=log_sql)
 
 # use this for cases where you don't want a specific tenant database, when creating a new tenant or signing up new users
 def get_global_session():

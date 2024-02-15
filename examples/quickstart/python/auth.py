@@ -4,14 +4,14 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta, timezone
 from fastapi import HTTPException, status
 import logging
+import os
+from dotenv import load_dotenv
+load_dotenv()
 from models import User, Credentials
 
-# TODO: move to environment variable
-# to get a string like this run:
-# openssl rand -hex 32
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SECRET_KEY = os.environ.get("SECRET_KEY")
+ALGORITHM = os.environ.get("ALGORITHM" , "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES" , 30)
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ def authenticated_user(email: str, password: str, session):
                 return user
     return False
     
-def create_access_token(user: User, expires_delta: timedelta = ACCESS_TOKEN_EXPIRE_MINUTES):
+def create_access_token(user: User, expires_delta: timedelta = int(ACCESS_TOKEN_EXPIRE_MINUTES)):
     data = { "sub": str(user.id), "email": user.email}
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(minutes=expires_delta)
@@ -34,7 +34,7 @@ def create_access_token(user: User, expires_delta: timedelta = ACCESS_TOKEN_EXPI
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-# If the token is missing or invalid, it will return None
+# If the token is missing or invalid, it will return None. Caller will decide what to do with it.
 def get_user_id_from_valid_token(token: str):
     logger.debug(f"Token: {token}")
     try:
