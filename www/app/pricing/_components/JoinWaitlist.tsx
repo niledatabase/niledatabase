@@ -41,6 +41,7 @@ export default function JoinWaitlist() {
           <div>Join the waitlist</div>
           <Image
             className="invert"
+            data-image-zoom-disabled
             src={Arrow}
             alt="get started arrow"
             width={25}

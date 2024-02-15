@@ -43,7 +43,12 @@ export default function Subscribe() {
             }}
           >
             <div className="whitespace-nowrap">Join the waitlist</div>
-            <Image className="invert" src={Arrow} alt="get started arrow" />
+            <Image
+              className="invert"
+              src={Arrow}
+              alt="get started arrow"
+              data-image-zoom-disabled
+            />
           </div>
           <div
             className={`absolute lg:whitespace-nowrap pointer-events-none trasition-opacity delay-500 duration-500 leading-[18px]`}
