@@ -17,19 +17,17 @@ class Tenant(SQLModel, table=True):
     id: UUID = Field(primary_key=True, default_factory=uuid4)
     name: str
     
+class TenantUsers(SQLModel, table=True):
+    __tablename__ = "tenant_users"
+    user_id: UUID = Field(primary_key=True)
+    tenant_id: UUID = Field(primary_key=True)
+        
 # Nile has additional optional fields for username, given name, etc.
 class User(SQLModel, table=True):
     __tablename__ = "users"
     metadata = users_schema
     id: UUID = Field(primary_key=True, default_factory=uuid4)
     email: str
-    
-class TenantUsers(SQLModel, table=True):
-    __tablename__ = "tenant_users"
-    metadata = users_schema
-    user_id: UUID = Field(primary_key=True)
-    tenant_id: UUID = Field(primary_key=True)
-    role: str
 
 class Credentials(SQLModel, table=True):
     __tablename__ = "credentials"

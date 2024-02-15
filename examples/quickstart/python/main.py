@@ -1,13 +1,13 @@
 import logging
-from fastapi import Depends, FastAPI, HTTPException, Body, status, Response
+from fastapi import Depends, FastAPI, HTTPException, Body, status, Response, Request
 from typing import Annotated
 from uuid import UUID
 from sqlmodel import text
 from passlib.hash import bcrypt
 
 from db import get_tenant_session, get_global_session
-from models import Tenant, Todo, User, Credentials, Token
-from tenant_middleware import TenantAwareMiddleware, get_tenant_id
+from models import Tenant, Todo, User, Token, TenantUsers
+from tenant_middleware import TenantAwareMiddleware, get_tenant_id, get_user_id
 from auth import authenticated_user, create_access_token
 
 logging.basicConfig(level=logging.DEBUG)
@@ -16,21 +16,34 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 app.add_middleware(TenantAwareMiddleware)
 
-@app.get("/")
-def home():
-# TODO: Something Nile-y
-    return {"message": "First FastAPI app"}
+# Tenant APIs operate in the global DB, not a tenant DB. So we use the global session and need to check for user_id validity ourselves
 
-# TODO: Add optional ID parameter
 @app.post("/api/tenants")
-async def create_tenant(tenant:Tenant, session = Depends(get_global_session)):
+async def create_tenant(tenant:Tenant, request: Request, session = Depends(get_global_session)):
+    user_id: UUID = get_user_id()
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You need to be logged in to create a tenant"
+        )
     session.add(tenant)
+    session.commit()
+
+    # we also need to connect the current user to the tenant
+    user_tenant: TenantUsers = TenantUsers(user_id=user_id, tenant_id=tenant.id)
+    session.add(user_tenant)
     session.commit()
     return tenant
 
 @app.get("/api/tenants")
-async def get_tenants(session = Depends(get_global_session)):
-    tenants = session.query(Tenant).all()
+async def get_tenants(request: Request, session = Depends(get_global_session)):
+    user_id: UUID = get_user_id()
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You need to be logged in to create a tenant"
+        )
+    tenants = session.query(Tenant).select_from(TenantUsers).join(Tenant, Tenant.id == TenantUsers.tenant_id).filter(TenantUsers.user_id == user_id).all()
     return tenants
 
 @app.post("/api/todos")
@@ -59,8 +72,6 @@ async def get_todos_insecure(session = Depends(get_global_session)):
     todos = session.query(Todo).all()
     return todos
 
-
-
 ### Authentication
 ### Note that this is slightly different from the example in the FastAPI docs
 ### We use cookies with JWT instead of passing the token in the header - this is more secure and simpler with the React frontend
@@ -82,7 +93,7 @@ async def sign_up(email: Annotated[str, Body()], password: Annotated[str, Body()
     credentials = session.execute(text(query))
     session.commit()
     
-    access_token = create_access_token(data={"sub": [str(user.id), user.email]})
+    access_token = create_access_token(user)
     response.set_cookie(key="access_token", value=access_token)
     return Token(access_token=access_token, token_type="bearer")
     return user
@@ -95,11 +106,10 @@ async def login(email: Annotated[str, Body()], password: Annotated[str, Body()],
         logger.warn(f"Login failed for user: {email}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
+            detail="Incorrect username or password"
         )
     
-    access_token = create_access_token(data={"sub": [str(user.id), user.email]})
+    access_token = create_access_token(user)
     response.set_cookie(key="access_token", value=access_token)
     return Token(access_token=access_token, token_type="bearer")
             

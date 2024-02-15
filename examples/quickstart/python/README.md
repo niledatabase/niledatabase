@@ -64,37 +64,38 @@ You can experiment with these APIs with `curl`:
 ```bash
 
 # create user
-curl -X POST 'http://localhost:8000/api/sign-up' \
+curl -c cookies -X POST 'http://localhost:8000/api/sign-up' \
 --header 'Content-Type: application/json' \
---data-raw '{"email":"test8@pytest.org","password":"foobar"}'
+--data-raw '{"email":"test9@pytest.org","password":"foobar"}'
 
 # login
 
-curl -X POST 'http://localhost:8000/api/login' \
+curl -c cookies -X POST 'http://localhost:8000/api/login' \
 --header 'Content-Type: application/json' \
---data-raw '{"email":"test8@pytest.org","password":"foobar"}'
+--data-raw '{"email":"test9@pytest.org","password":"foobar"}'
 
 # create tenant
-curl --location --request POST 'localhost:8000/api/tenants' \
+curl -b cookies -X POST 'localhost:8000/api/tenants' \
 --header 'Content-Type: application/json' \
 --data-raw '{"name":"my first customer"}'
 
+# list tenants
+curl -b cookies -X GET 'http://localhost:8000/api/tenants'
+
 # replace the tenant ID in the URL: 
-curl  -X POST \
+curl -b cookies -X POST \
   'http://localhost:8000/api/todos' \
   --header 'Content-Type: application/json' \
-  --header 'X-Tenant-Id: 3fa66701-bd9e-4eac-916c-2a92de2d5647' \
+  --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
   --data-raw '{"title": "feed the cat", "complete": false}'
 
-curl  -X GET 'http://localhost:8000/api/tenants'
-
 # replace the tenant ID in the URL: 
-curl  -X GET \
-  --header 'X-Tenant-Id: 3fa66701-bd9e-4eac-916c-2a92de2d5647' \
+curl  -b cookies -X GET \
+  --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
   'http://localhost:8000/api/todos' 
 
 # you'll need to create another todo with another tenant to see anything different here
-curl  -X GET \
+curl -X GET \
   'http://localhost:8000/api/insecure'
 ```
 
