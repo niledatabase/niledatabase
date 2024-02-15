@@ -464,3 +464,17 @@ iframe {
 .image-zoom-wrapper.image-zoom-wrapper-zoomed::after {
   opacity: 0.96 !important;
 }
+
+.live-preview {
+  height: 500px;
+  background: white;
+}
+.live-preview > div {
+  height: 100%;
+}
+pre[class*="console"] {
+  color: #ff7b72 !important;
+}
+span.token.tag.class-name {
+  color: #7ee787 !important;
+}

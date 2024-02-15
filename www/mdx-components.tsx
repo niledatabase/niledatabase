@@ -6,6 +6,7 @@ import CopyToClipboard from "./app/docs/_components/CopyToClipboard";
 import { Col, Row } from "./app/docs/_components/Layout";
 import Head from "next/head";
 import Image from "next/image";
+import DataFlows from "./app/blog/_components/data-flows";
 
 // This file allows you to provide custom React components
 // to be used in MDX files. You can import and use any
@@ -29,5 +30,6 @@ export const useMDXComponents = (components: MDXComponents): MDXComponents => {
       <CopyToClipboard>{children as JSX.Element}</CopyToClipboard>
     ),
     Video: (props) => <Video {...props} baseSrc="" />,
+    DataFlows: (props) => <DataFlows {...props} />,
   };
 };

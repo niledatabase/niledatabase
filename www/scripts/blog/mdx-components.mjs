@@ -22,5 +22,8 @@ export var useMDXComponents = function () {
     Video: function () {
       return null;
     },
+    DataFlows: function () {
+      return null;
+    },
   };
 };

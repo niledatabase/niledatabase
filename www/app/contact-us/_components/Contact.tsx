@@ -150,6 +150,7 @@ export function ContactForm({
               )}
             </span>
             <Image
+              data-image-zoom-disabled
               className="invert"
               src={Arrow}
               alt="arrow"
@@ -184,6 +185,7 @@ export default function Contact(props: Props) {
             <span>Message</span>
             <Image
               className="invert"
+              data-image-zoom-disabled
               src={Arrow}
               alt="arrow"
               width={25}

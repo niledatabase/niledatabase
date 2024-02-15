@@ -56,6 +56,7 @@ export default async function BlogPage(props: Props) {
             ) : (
               <Image
                 className="object-cover object-center h-full w-full absolute"
+                data-image-zoom-disabled
                 alt="coffee"
                 width={800}
                 height={505}

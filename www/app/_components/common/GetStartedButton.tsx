@@ -9,6 +9,7 @@ export default function GetStartedButton() {
           src={Arrow}
           alt="get started arrow"
           width={15}
+          data-image-zoom-disabled
           height={20}
           priority
         />
