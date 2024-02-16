@@ -1,5 +1,6 @@
 import logging
 import os
+import orjson
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -45,10 +46,26 @@ async def get_tenants(request: Request, session = Depends(get_global_session)):
     if not user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="You need to be logged in to create a tenant"
+            detail="You need to be logged in to list tenants"
         )
     tenants = session.query(Tenant).select_from(TenantUsers).join(Tenant, Tenant.id == TenantUsers.tenant_id).filter(TenantUsers.user_id == user_id).all()
     return tenants
+
+@app.get("/api/tenants/{tenant_id}")
+async def get_tenant(tenant_id: UUID, request: Request, session = Depends(get_global_session)):
+    user_id: UUID = get_user_id()
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You need to be logged in to get tenant details"
+        )
+    tenant = session.query(Tenant).select_from(TenantUsers).join(Tenant, Tenant.id == TenantUsers.tenant_id).filter(TenantUsers.user_id == user_id).filter(Tenant.id == tenant_id).first()
+    if not tenant:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Tenant not found"
+        )
+    return tenant
 
 @app.post("/api/todos")
 async def create_todo(todo:Todo, session = Depends(get_tenant_session)):
@@ -99,6 +116,7 @@ async def sign_up(email: Annotated[str, Body()], password: Annotated[str, Body()
     
     access_token = create_access_token(user)
     response.set_cookie(key="access_token", value=access_token)
+    response.set_cookie(key="user_data", value=str(user))
     return Token(access_token=access_token, token_type="bearer")
     return user
 
@@ -115,6 +133,7 @@ async def login(email: Annotated[str, Body()], password: Annotated[str, Body()],
     
     access_token = create_access_token(user)
     response.set_cookie(key="access_token", value=access_token)
+    response.set_cookie(key="user_data", value=orjson.dumps(user))
     return Token(access_token=access_token, token_type="bearer")
             
 # TODO: Social login handler          
