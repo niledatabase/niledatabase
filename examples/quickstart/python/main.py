@@ -1,5 +1,6 @@
 import logging
 import os
+import orjson
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -115,6 +116,7 @@ async def sign_up(email: Annotated[str, Body()], password: Annotated[str, Body()
     
     access_token = create_access_token(user)
     response.set_cookie(key="access_token", value=access_token)
+    response.set_cookie(key="user_data", value=str(user))
     return Token(access_token=access_token, token_type="bearer")
     return user
 
@@ -131,6 +133,7 @@ async def login(email: Annotated[str, Body()], password: Annotated[str, Body()],
     
     access_token = create_access_token(user)
     response.set_cookie(key="access_token", value=access_token)
+    response.set_cookie(key="user_data", value=orjson.dumps(user))
     return Token(access_token=access_token, token_type="bearer")
             
 # TODO: Social login handler          

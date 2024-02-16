@@ -19,10 +19,15 @@ import styles from '../assets/page.module.css';
 import Layout from "../layout";
 
 function getUserName() {
-  const raw = Cookies.get('authData');
-  const authData = raw ? JSON.parse(decodeURIComponent(raw)) : null;
+  const raw = Cookies.get('user_data') || "";
+  let decoded = decodeURIComponent(raw);
+  decoded = decoded.replace(/\\054/g, ',');
+  decoded = decoded.replace(/'/g, '"');
+  decoded = decoded.replace(/None/g, 'null');
+  console.log(decoded)
+  const authData = raw ? JSON.parse(decoded) : null;
   if (authData) {
-    const bestName = authData.tokenData?.name || authData.tokenData?.email || authData.tokenData?.given_name || authData.tokenData?.family_name;
+    const bestName = authData.name || authData.email || authData.given_name || authData.family_name;
     return bestName;
   } else {
     return null;
@@ -45,7 +50,6 @@ function Tenants() {
   React.useEffect(() => {
     fetch("/api/tenants")
       .then((res) => {
-        console.log(res)
         if (!res.ok) {
           setError("Error fetching tenants " + res.status + " " + res.statusText);
           return res.json()
@@ -55,7 +59,6 @@ function Tenants() {
       }})
       .then(
         (data: Tenant[]) => {
-          console.log(data)
           setData(data)
         })
   }, []);

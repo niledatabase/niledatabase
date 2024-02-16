@@ -28,6 +28,9 @@ class User(SQLModel, table=True):
     metadata = users_schema
     id: UUID = Field(primary_key=True, default_factory=uuid4)
     email: str
+    name: str = None
+    given_name: str = None
+    family_name: str = None
 
 class Credentials(SQLModel, table=True):
     __tablename__ = "credentials"
