@@ -21,7 +21,7 @@ interface Props {
 export default function Layout({ children }: Props) {
   console.log(window.location.pathname)
   return (
-      <main className={styles.main} data-fontFamily="Inter">
+      <main className={styles.main} fontFamily="Inter">
         <div style={{display: 'flex', flexDirection:'column', width:'100%'}}>
           <div className={styles.description}>
             <div><NodeLogoRight width="133.5px" height="82px" /></div>

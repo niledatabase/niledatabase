@@ -25,6 +25,7 @@ export default function Todos() {
 
   const [todos, setTodos] = React.useState<Todo[]>([]);
   const [tenantName, setTenantName] = React.useState(null); 
+  const [error, setError] = React.useState<string>("");
 
   const headers: HeadersInit = new Headers();
   headers.set('X-Tenant-Id', tenantId || '');
@@ -35,7 +36,15 @@ export default function Todos() {
       method: 'GET',
       headers: headers
     })
-      .then((res) => res.json())
+      .then((res) => {
+        console.log(res)
+        if (!res.ok) {
+          setError("Error fetching todos " + res.status + " " + res.statusText);
+          return res.json()
+        } else {
+          setError("");
+          return res.json()
+      }})
       .then((data) => setTodos(data));
   }, [tenantId]);
 
@@ -67,6 +76,8 @@ export default function Todos() {
         { (() => {
             if (!todos) {
               return <Typography level="h2" textAlign={"center"}> Loading...</Typography>
+            } else if (error != "") {
+              return <Typography level="h2" textAlign={"center"}> {error}</Typography>
             } else {
             return todos.map((todo) => (
               <div key={todo.id} style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>

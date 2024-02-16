@@ -38,13 +38,26 @@ function Tenants() {
   const [data, setData] = React.useState<Tenant[]>([]);
   const [open, setOpen] = React.useState(false);
   const [userName, setUserName] = React.useState(null);
+  const [error, setError] = React.useState<string>("");
 
   const navigate = useNavigate();
 
   React.useEffect(() => {
     fetch("/api/tenants")
-      .then((res) => res.json())
-      .then((data: Tenant[]) => setData(data));
+      .then((res) => {
+        console.log(res)
+        if (!res.ok) {
+          setError("Error fetching tenants " + res.status + " " + res.statusText);
+          return res.json()
+        } else {
+          setError("");
+          return res.json()
+      }})
+      .then(
+        (data: Tenant[]) => {
+          console.log(data)
+          setData(data)
+        })
   }, []);
 
   React.useEffect(() => {
@@ -78,6 +91,8 @@ function Tenants() {
         { (() => { 
             if (!data) {
               return <Typography level="h2" textAlign={"center"}> Loading...</Typography>
+            } else if (error != "") {
+              return <Typography level="h2" textAlign={"center"}> {error}</Typography>
             } else {
               return data.map((tenant) => (
                 <ListItem key={tenant.id}>
