@@ -9,8 +9,7 @@ import styles from './assets/page.module.css'
 import { ReactNode } from "react";
 /// <reference types="vite-plugin-svgr/client" />
 import NileLogo from './assets/nile_logo.svg?react';
-import NodeLogoRight from './assets/node_logo_r.svg?react';
-import NodeLogoBottom from './assets/node_logo_b.svg?react';
+import PythonLogo from './assets/python_logo.svg?react';
 
 
 interface Props {
@@ -24,7 +23,7 @@ export default function Layout({ children }: Props) {
       <main className={styles.main} fontFamily="Inter">
         <div style={{display: 'flex', flexDirection:'column', width:'100%'}}>
           <div className={styles.description}>
-            <div><NodeLogoRight width="133.5px" height="82px" /></div>
+            <div><PythonLogo width="50px" height="50px" /></div>
             <div>
               <a
                 href="https://thenile.dev"
@@ -55,8 +54,8 @@ export default function Layout({ children }: Props) {
                 '--card-padding': '1rem',
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
                 }}>
-          <Link overlay href="https://www.thenile.dev/docs/getting-started/languages/node" target="_blank" rel="noopener">
-          <NodeLogoBottom width="115.6px" height="70.8px"/>
+          <Link overlay href="https://www.thenile.dev/docs/getting-started/languages/python" target="_blank" rel="noopener">
+          <PythonLogo width="50px" height="50px"/>
             </Link>
           <CardContent>
             <Typography>Getting started guide</Typography>
