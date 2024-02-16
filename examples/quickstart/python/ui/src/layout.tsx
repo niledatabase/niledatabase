@@ -36,6 +36,12 @@ export default function Layout({ children }: Props) {
               </a>
             </div>
           </div>
+          {
+      window.location.pathname === "/" ? null : 
+            <div className={styles.logout}>
+              <Link href="/?logout" style={{color:"black"}}>[ Logout ]</Link>
+            </div>
+      }
         </div>
         <div>
           <Stack> 
