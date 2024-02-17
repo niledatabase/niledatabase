@@ -1,10 +1,11 @@
 import logging
 import os
-import orjson
+from fastapi.encoders import jsonable_encoder
 from dotenv import load_dotenv
 load_dotenv()
 
 from fastapi import Depends, FastAPI, HTTPException, Body, status, Response, Request
+from fastapi.staticfiles import StaticFiles
 from typing import Annotated
 from uuid import UUID
 from sqlmodel import text
@@ -116,7 +117,7 @@ async def sign_up(email: Annotated[str, Body()], password: Annotated[str, Body()
     
     access_token = create_access_token(user)
     response.set_cookie(key="access_token", value=access_token)
-    response.set_cookie(key="user_data", value=str(user))
+    response.set_cookie(key="user_data", value=jsonable_encoder(user))
     return Token(access_token=access_token, token_type="bearer")
     return user
 
@@ -133,7 +134,11 @@ async def login(email: Annotated[str, Body()], password: Annotated[str, Body()],
     
     access_token = create_access_token(user)
     response.set_cookie(key="access_token", value=access_token)
-    response.set_cookie(key="user_data", value=orjson.dumps(user))
+    response.set_cookie(key="user_data", value=jsonable_encoder(user))
     return Token(access_token=access_token, token_type="bearer")
             
 # TODO: Social login handler          
+
+
+# Mount the UI. This has to go last, because it will catch all requests that don't match the API routes
+app.mount('/', StaticFiles(directory='./ui/dist', html=True))

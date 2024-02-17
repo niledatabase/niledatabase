@@ -52,6 +52,16 @@ Then, whether you have a virtual environment or not, install dependencies with `
 
 ## 5. Running the app
 
+If you'd like to use the app with the UI, you'll want to build the UI assets first:
+
+```bash
+cd ui
+npm install
+npm run build
+```
+
+Then, whether or not you have UI, start the Python webapp:
+
 ```bash
 uvicorn main:app --reload
 ```
@@ -99,18 +109,24 @@ curl -X GET \
   'http://localhost:8000/api/insecure'
 ```
 
-## Running a Docker Image
+If you've opted to build the UI, you can go to: `http://localhost:8000/` , sign up a user, create a tenant and create some todo lists.
+The frontend uses the backend APIs that we described above.
 
-You can build and run a Docker image of this example by running:
-```text
-docker build -t todo-java .
-docker run -p 8080:8080 todo-java
+If you want to see all the data you created, you can go back to Nile Console and run a few queries:
+
+```sql
+select * from todos;
+select * from tenants;
+select * from users;
 ```
 
-If you have Fly.io account, you can deploy on Fly.io by running:
-```test
+## Deploying on Fly
+
+This repository includes example `fly.toml.example` file and `Procfile`. Assuming you have a fly login and CLI configured, you can deploy the app with:
+
+```bash
 fly launch
-fly deploy --ha=false
+fly deploy
 ```
 
-Make sure you use the `.dockerignore` file from this repo. Fly's generated .dockerignore ignores the main jar for this application.
+You can refer to the example `fly.toml.example` for a working configuration.
