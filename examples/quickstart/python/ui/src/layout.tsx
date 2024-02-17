@@ -1,3 +1,4 @@
+/// <reference types="vite-plugin-svgr/client" />
 import "@fontsource/inter";
 import Stack from '@mui/joy/Stack';
 import Link from '@mui/joy/Link';
@@ -7,7 +8,7 @@ import Typography from '@mui/joy/Typography';
 import './assets/globals.css'
 import styles from './assets/page.module.css'
 import { ReactNode } from "react";
-/// <reference types="vite-plugin-svgr/client" />
+
 import NileLogo from './assets/nile_logo.svg?react';
 import PythonLogo from './assets/python_logo.svg?react';
 
@@ -20,7 +21,7 @@ interface Props {
 export default function Layout({ children }: Props) {
   console.log(window.location.pathname)
   return (
-      <main className={styles.main} fontFamily="Inter">
+      <main className={styles.main}>
         <div style={{display: 'flex', flexDirection:'column', width:'100%'}}>
           <div className={styles.description}>
             <div><PythonLogo width="50px" height="50px" /></div>
