@@ -20,7 +20,7 @@ In this tutorial, you will learn about Nile's tenant virtualization features, wh
 ### 2. Create a table
 
 After you created a database, you will land in Nile's query editor.
-For our todo list application, we'll need tables to store tenants, users and todos. 
+For our todo list application, we'll need tables to store tenants, users and todos.
 Tenants and users already exists in Nile, they are built-in tables and you can see them in the list on the left side of the screen.
 We'll just need to create a table for todos.
 
@@ -56,7 +56,7 @@ Copy `.env.example` to `.env` and fill in the details of your Nile DB. The ones 
 
 It should look something like this:
 
-```bash 
+```bash
 DATABASE_URL=postgresql://user:password@db.thenile.dev:5432/mydb
 LOG_LEVEL=DEBUG
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -73,7 +73,7 @@ source venv/bin/activate
 
 Then, install dependencies:
 
-```bash 
+```bash
 pip install -r requirements.txt
 ```
 
@@ -117,17 +117,17 @@ curl -b cookies -X POST 'localhost:8000/api/tenants' \
 # list tenants
 curl -b cookies -X GET 'http://localhost:8000/api/tenants'
 
-# create todo for a tenant (make sure you replace the tenant ID with the one you got from the previous step) 
+# create todo for a tenant (make sure you replace the tenant ID with the one you got from the previous step)
 curl -b cookies -X POST \
   'http://localhost:8000/api/todos' \
   --header 'Content-Type: application/json' \
   --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
   --data-raw '{"title": "feed the cat", "complete": false}'
 
-# list todos for a tenant (make sure you replace the tenant ID with the one you got from the previous step) 
+# list todos for a tenant (make sure you replace the tenant ID with the one you got from the previous step)
 curl  -b cookies -X GET \
   --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
-  'http://localhost:8000/api/todos' 
+  'http://localhost:8000/api/todos'
 ```
 
 ### 6. Check the data in Nile
@@ -147,15 +147,15 @@ The app uses FastAPI, a modern Python web framework, and SQLAlchemy, a popular O
 
 `main.py` is the entry point of the app. It sets up the FastAPI app, registers the middleware and has all the routes.
 
-The first thing we do in the app is set up the tenant middleware. The `TenantAwareMiddleware` is defined in `middleware.py`, 
-it is a simple middleware that reads the `X-Tenant-Id` header and sets the tenant context for the request. This is how we know which tenant the request is for. 
+The first thing we do in the app is set up the tenant middleware. The `TenantAwareMiddleware` is defined in `middleware.py`,
+it is a simple middleware that reads the `X-Tenant-Id` header and sets the tenant context for the request. This is how we know which tenant the request is for.
 
 ```python
 app = FastAPI()
 app.add_middleware(TenantAwareMiddleware)
 ```
 
-The middleware runs before any request is processed. But not every request has a tenant context. For example, `login` or `create_tenant` routes doesn't need a tenant context. 
+The middleware runs before any request is processed. But not every request has a tenant context. For example, `login` or `create_tenant` routes doesn't need a tenant context.
 Requests that don't have a tenant context are considered to be `global` since they are performed on the database as a whole, not in the virtual database for a specifc tenant.
 
 To handle a request in the global context, we use a global session. This is a session that doesn't have a tenant context. For example to create a new tenant:
@@ -177,7 +177,7 @@ async def get_todos(session = Depends(get_tenant_session)):
     return todos
 ```
 
-This looks like it could return all todos from all tenants, but it doesn't. The `get_tenant_session` 
+This looks like it could return all todos from all tenants, but it doesn't. The `get_tenant_session`
 function sets the tenant context for the session, and the query is executed in the virtual database of the tenant.
 
 The last piece of the puzzle is the `get_tenant_session` function. It is defined in `db.py` and is responsible for creating the session with the correct context.
@@ -185,11 +185,11 @@ The last piece of the puzzle is the `get_tenant_session` function. It is defined
 ```python
 def get_tenant_session():
     session = Session(bind=engine, expire_on_commit=False)
-    try: 
+    try:
         tenant_id = get_tenant_id()
         user_id = get_user_id()
         session.execute(text(f"SET nile.tenant_id='{tenant_id}';"))
-        session.execute(text(f"SET nile.user_id='{user_id}';")) 
+        session.execute(text(f"SET nile.user_id='{user_id}';"))
         yield session
     except:
         session.rollback()
@@ -201,14 +201,13 @@ def get_tenant_session():
         pass
 ```
 
-We are setting both the user and tenant context in the session. This is important for security and isolation. 
+We are setting both the user and tenant context in the session. This is important for security and isolation.
 The user context is used to check if the user has access to the tenant, and the tenant context is used to isolate the data.
 
 Note that we are using FastAPI dependency injection to get the session in the route handlers. This is a powerful feature of FastAPI that makes it easy to manage resources like sessions.
 The `yield` keyword is used to return the session to the caller, and the `finally` block is used to clean up the session after the request is processed.
 
 And this is it. Thats all we need to do to build a multi-tenant app with Nile, FastAPI and SQLAlchemy.
-
 
 ## 8. Looking good!
 
