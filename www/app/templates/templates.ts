@@ -201,6 +201,22 @@ export const StripeSubscriptionsIntegration: Template = {
   },
 };
 
+export const PythonQuickstart: Template = {
+  name: "Multi-tenant Todo List application with Python and Nile",
+  description:
+    "Learn how to use Nile with Python, FastAPI, SQLAlchemy, React, Vite and Nile's Serverless Postgres to build a multi-tenant app",
+  author: "Nile",
+  demoUrl: "https://nile-python-quickstart.fly.dev/",
+  imageSrc: "/templates/PythonQuickstart.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/python/README.md",
+  metadata: {
+    Framework: "Python, FastAPI, SQLAlchemy, React, Vite",
+    "Use Case": "Building SaaS",
+    Publisher: "Nile",
+  },
+};
+
 /*
 export const placeholderTemplate: Template = {
   // A great name, preferably unique, name for the template
