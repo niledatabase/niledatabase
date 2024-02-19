@@ -39,6 +39,11 @@ const languages = [
     icon: "prisma.svg",
     path: "/docs/getting-started/languages/prisma",
   },
+  {
+    name: "Python",
+    icon: "python.svg",
+    path: "/docs/getting-started/languages/python",
+  },
 ];
 
 const integrations = [
