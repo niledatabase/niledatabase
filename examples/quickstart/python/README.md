@@ -6,7 +6,6 @@ This template shows how to build a SaaS app, using Nile, Serverless Postgres for
 - [Video guide - tbd]()
 - [Step by step guide - tbd]()
 
-
 ## Getting Started
 
 ### 1. Create a new database
@@ -35,15 +34,22 @@ If you haven't cloned this repository yet, now will be an excellent time to do s
 git clone https://github.com/niledatabase/niledatabase
 cd niledatabase/examples/quickstart/python
 ```
-<!-- TODO FIX -->
+
 Copy `.env.example` to `.env` and fill in the details of your Nile DB.
 
 It should look something like this:
-<!-- TODO FIX -->
 
-Optional(but recommended) step is to set up a virtual Python environment:
-
+```bash 
+DATABASE_URL=postgresql://user:password@db.thenile.dev:5432/mydb
+LOG_LEVEL=DEBUG
+SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 ```
+
+Optional, but recommended, step is to set up a virtual Python environment:
+
+```bash
 python -m venv venv
 source venv/bin/activate
 ```

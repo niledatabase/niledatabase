@@ -28,7 +28,8 @@ In this tutorial, you will learn about Nile's tenant virtualization features, wh
 
 ### 2. Create a table
 
-After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
+After you created a database, you will land in Nile's query editor.
+For our todo list application, we'll need tables to store tenants, users and todos. Tenants and users already exists in Nile, they are built-in tables. We'll just need to create a table for todos.
 
 ```sql
 create table todos (
