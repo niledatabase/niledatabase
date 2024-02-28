@@ -5,8 +5,11 @@ useDotenv: true
 provider:
   name: aws
   runtime: nodejs18.x
+  region: us-west-2
   environment:
     DATABASE_URL: ${env:DATABASE_URL}
+    CONNECTION_TIMEOUT_MILLIS: ${env:CONNECTION_TIMEOUT_MILLIS}
+    QUERY_TIMEOUT_MILLIS: ${env:QUERY_TIMEOUT_MILLIS}
 
 
 functions:
