@@ -4,7 +4,12 @@ const { sendDistributionMetric } = require('datadog-lambda-js');
 
 
 function reportMetrics(name, value, tag) {
-    sendDistributionMetric(name, value, 'env:prod', 'region:us-west-2', 'service:lambda_db_pinger', tag);
+    sendDistributionMetric(name, value, 'env:prod', `region:${process.env.AWS_REGION}`, 'service:lambda_db_pinger', tag);
+}
+
+// the first value is seconds portion of time delta, and the second value is the nanoseconds
+function delayToMs(hrtime) {
+  return hrtime[0] * 1000 + hrtime[1] / 1000000;
 }
 
 
@@ -23,16 +28,20 @@ module.exports.run = async (event, context) => {
     await client.connect()
   } catch (err) {
     console.error('Error connecting to database', err)
-    reportMetrics('db.pinger.error', 1, 'error:connect');
+    if (err.message.search('timeout') >= 0) {
+      reportMetrics('db.pinger.error', 1, 'error:timeout');
+    } else {
+      reportMetrics('db.pinger.error', 1, 'error:connect');
+    }
     reportMetrics('db.pinger.success', 0);
-    return
-  } finally {
-    // you get a diff by passing the start time to process.hrtime, the result is [1, diff in nanoseconds]
-    var delay = process.hrtime(start);
-    reportMetrics('db.pinger.latency', delay[1] / 1000000, 'step:connect');
     if (client) {
       await client.end()
     }
+    return
+  } finally {
+    // you get time delta by passing the start time to process.hrtime
+    var delay = process.hrtime(start);
+    reportMetrics('db.pinger.latency', delayToMs(delay), 'step:connect');
   }
   
   try {
@@ -42,15 +51,19 @@ module.exports.run = async (event, context) => {
 
   } catch (err) {
     console.error('Error running query', err)
-    reportMetrics('db.pinger.error', 1, 'error:query');
+    if (err.message.search('timeout') >= 0) {
+      reportMetrics('db.pinger.error', 1, 'error:timeout');
+    } else {
+      reportMetrics('db.pinger.error', 1, 'error:query');
+    }
     reportMetrics('db.pinger.success', 0);
-    return
-  } finally {
-    var delay = process.hrtime(start);
-    reportMetrics('db.pinger.latency', delay[1] / 1000000, 'step:query');
     if (client) {
       await client.end()
     }
+    return
+  } finally {
+    var delay = process.hrtime(start);
+    reportMetrics('db.pinger.latency', delayToMs(delay), 'step:query');
   }
   
   try {
