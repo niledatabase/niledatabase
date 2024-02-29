@@ -48,5 +48,6 @@ Note, if you are deploying in a new region, you need to add the DD monitoring la
 
 ```bash
 npm install -g @datadog/datadog-ci
-datadog-ci lambda instrument -i
+source ./.env
+datadog-ci lambda instrument -f lambda-db-pinger-dev-rateHandler -r us-west-2 --env prod --service lambda_db_monitor -v 106 -e 55
 ```
