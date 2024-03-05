@@ -51,3 +51,17 @@ set nile.tenant_id = '018ade1a-7830-7981-b23f-f3a7f7b8f09f';
 - **Place some tenants on dedicated Postgres compute without the burden of managing multiple databases (schema migration, unified observability, routing) for compliance, security or isolation needs.** You have full flexibility in placing tenants on either shared compute or dedicated compute. You can better align your business needs finally to your database. For example, you can place your lower tier customers on shared Postgres compute and higher tier customers on dedicated Postgres compute.
 - **Place tenants in any region to move data close to the customer for lower latency or compliance needs (eg. GDPR) within one database** without the burden of managing multiple databases (schema migration, unified observability, routing). Nile is one global Postgres database that lets you pick which tenants should be placed in which region. Your application can continue working with no changes for multi region.
 - **Move tenants instantaneously from shared Postgres compute to dedicated Postgres compute or to another region.** The placement decision can be changed any time and Nile will do the work to instantaneously move the tenants. This is possible due to Nile’s cloud native architecture and tenant awareness in Postgres. This lets SaaS businesses to move tenants from shared to dedicated compute (or other regions) as the tenants go to higher product tiers.
+
+## Architecture - Built to be tenant-aware and for the cloud
+
+Nile is taking a radical approach to building databases. Our core insight is that it is possible to push tenant awareness all the way to the page level in Postgres and design it for the cloud from first principles. This helps us to provide a comprehensive and flexible solution to all the tenant management problems for building and scaling SaaS.
+
+![“Nile Architecture”](/blog/architecture.png)
+
+We will have a more detailed write-up about our blueprint architecture, but here are the key highlights
+
+- **Global routing gateway** that can enforce tenant data isolation at the session and connection level, route to the correct tenant, and provide a single database experience across all virtual tenant DBs
+- **Database clustering technology** that helps place tenants on shared or dedicated Postgres compute anywhere globally and manage schemas migrations across tenants
+- **Tenant-aware Postgres pages** that ensure pages are always isolated to a single tenant, which helps to move tenants instantaneously, generate backups per tenant/customer, fork the database with data of a specific customer for testing, and provide performance insights by tenants.
+- **Storage and compute decoupling** to move tenant pages instantaneously across computes to provide instant capacity and manage performance guarantees for any tenants
+- **Cloud-native architecture** by leveraging S3 for permanent storage and replication cross-region
