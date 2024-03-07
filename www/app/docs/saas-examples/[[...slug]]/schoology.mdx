@@ -11,20 +11,10 @@ export const metadata = {
 The Schoology clone aims to replicate the functionality of an online learning management system, facilitating educators, students, and administrators to efficiently manage courses, assignments, grades, and communication. The system must support the creation and management of courses, users, assignments, grades, and discussions. Each entity in the system is uniquely identified by a UUID, ensuring scalability and uniqueness. A tenant table is introduced to segregate data for different educational institutions or organizations. Courses hold key information such as the course name, description, start date, end date, and the associated tenant. Users are managed with essential details like user ID, username, email, role, and the tenant they belong to. Assignments are associated with courses, allowing instructors to create, distribute, and evaluate tasks. Grades store student grades for each assignment, enabling instructors to track academic progress. Discussions provide a platform for students and instructors to engage in collaborative learning and communication. Foreign key relationships are established to maintain data integrity, ensuring that relationships between entities are consistent. The requirements emphasize scalability, security, and seamless collaboration within an educational environment.
 
 **Postgres Schemas:**
-
-1. **Tenant Table Schema:**
+    
+1. **Course Table Schema:**
     
     ```sql
-    CREATE TABLE Tenants (
-      tenant_id UUID PRIMARY KEY,
-      institution_name VARCHAR(255) NOT NULL
-    );
-    ```
-    
-2. **Course Table Schema:**
-    
-    ```sql
-    
     CREATE TABLE Courses (
       course_id UUID PRIMARY KEY,
       course_name VARCHAR(100) NOT NULL,
@@ -34,14 +24,12 @@ The Schoology clone aims to replicate the functionality of an online learning ma
       tenant_id UUID NOT NULL,
       CONSTRAINT FK_Courses_Tenants FOREIGN KEY (tenant_id) REFERENCES Tenants(tenant_id) ON DELETE CASCADE
     );
-    
     ```
     
-3. **User Table Schema :**
-    1. This is done automatically if you use Nile’s user management
+2. **User Table Schema :**
+    a. This is done automatically if you use Nile’s user management
     
     ```sql
-    
     CREATE TABLE Users (
       user_id UUID PRIMARY KEY,
       username VARCHAR(50) NOT NULL,
@@ -50,13 +38,11 @@ The Schoology clone aims to replicate the functionality of an online learning ma
       tenant_id UUID NOT NULL,
       CONSTRAINT FK_Users_Tenants FOREIGN KEY (tenant_id) REFERENCES Tenants(tenant_id) ON DELETE CASCADE
     );
-    
     ```
-    
-4. **Assignment Table Schema:**
+
+3. **Assignment Table Schema:**
     
     ```sql
-    
     CREATE TABLE Assignments (
       assignment_id UUID PRIMARY KEY,
       assignment_name VARCHAR(100) NOT NULL,
@@ -66,13 +52,11 @@ The Schoology clone aims to replicate the functionality of an online learning ma
       CONSTRAINT FK_Assignments_Courses FOREIGN KEY (course_id) REFERENCES Courses(course_id) ON DELETE CASCADE,
       CONSTRAINT FK_Assignments_Tenants FOREIGN KEY (tenant_id) REFERENCES Tenants(tenant_id) ON DELETE CASCADE
     );
-    
     ```
     
-5. **Grade Table Schema:**
+4. **Grade Table Schema:**
     
     ```sql
-    sqlCopy code
     CREATE TABLE Grades (
       grade_id UUID PRIMARY KEY,
       assignment_id UUID NOT NULL,
@@ -83,9 +67,7 @@ The Schoology clone aims to replicate the functionality of an online learning ma
       CONSTRAINT FK_Grades_Users FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
       CONSTRAINT FK_Grades_Tenants FOREIGN KEY (tenant_id) REFERENCES Tenants(tenant_id) ON DELETE CASCADE
     );
-    
     ```
-    
 
 These schemas and data samples provide a foundation for implementing a scalable and efficient Schoology clone, ensuring data integrity and collaboration within an educational environment.
 
