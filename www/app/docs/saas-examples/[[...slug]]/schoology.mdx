@@ -1,0 +1,101 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "Schoology Clone",
+  order: 6,
+};
+
+# Schoology Clone
+
+The Schoology clone aims to replicate the functionality of an online learning management system, facilitating educators, students, and administrators to efficiently manage courses, assignments, grades, and communication. The system must support the creation and management of courses, users, assignments, grades, and discussions. Each entity in the system is uniquely identified by a UUID, ensuring scalability and uniqueness. A tenant table is introduced to segregate data for different educational institutions or organizations. Courses hold key information such as the course name, description, start date, end date, and the associated tenant. Users are managed with essential details like user ID, username, email, role, and the tenant they belong to. Assignments are associated with courses, allowing instructors to create, distribute, and evaluate tasks. Grades store student grades for each assignment, enabling instructors to track academic progress. Discussions provide a platform for students and instructors to engage in collaborative learning and communication. Foreign key relationships are established to maintain data integrity, ensuring that relationships between entities are consistent. The requirements emphasize scalability, security, and seamless collaboration within an educational environment.
+
+**Postgres Schemas:**
+    
+1. **Course Table Schema:**
+    
+    ```sql
+    CREATE TABLE Courses (
+      course_id UUID PRIMARY KEY,
+      course_name VARCHAR(100) NOT NULL,
+      description TEXT,
+      start_date DATE,
+      end_date DATE,
+      tenant_id UUID NOT NULL,
+      CONSTRAINT FK_Courses_Tenants FOREIGN KEY (tenant_id) REFERENCES Tenants(tenant_id) ON DELETE CASCADE
+    );
+    ```
+    
+2. **User Table Schema :**
+    a. This is done automatically if you use Nile’s user management
+    
+    ```sql
+    CREATE TABLE Users (
+      user_id UUID PRIMARY KEY,
+      username VARCHAR(50) NOT NULL,
+      email VARCHAR(255) NOT NULL,
+      role VARCHAR(20) NOT NULL,
+      tenant_id UUID NOT NULL,
+      CONSTRAINT FK_Users_Tenants FOREIGN KEY (tenant_id) REFERENCES Tenants(tenant_id) ON DELETE CASCADE
+    );
+    ```
+
+3. **Assignment Table Schema:**
+    
+    ```sql
+    CREATE TABLE Assignments (
+      assignment_id UUID PRIMARY KEY,
+      assignment_name VARCHAR(100) NOT NULL,
+      course_id UUID NOT NULL,
+      due_date DATE,
+      tenant_id UUID NOT NULL,
+      CONSTRAINT FK_Assignments_Courses FOREIGN KEY (course_id) REFERENCES Courses(course_id) ON DELETE CASCADE,
+      CONSTRAINT FK_Assignments_Tenants FOREIGN KEY (tenant_id) REFERENCES Tenants(tenant_id) ON DELETE CASCADE
+    );
+    ```
+    
+4. **Grade Table Schema:**
+    
+    ```sql
+    CREATE TABLE Grades (
+      grade_id UUID PRIMARY KEY,
+      assignment_id UUID NOT NULL,
+      user_id UUID NOT NULL,
+      score FLOAT,
+      tenant_id UUID NOT NULL,
+      CONSTRAINT FK_Grades_Assignments FOREIGN KEY (assignment_id) REFERENCES Assignments(assignment_id) ON DELETE CASCADE,
+      CONSTRAINT FK_Grades_Users FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+      CONSTRAINT FK_Grades_Tenants FOREIGN KEY (tenant_id) REFERENCES Tenants(tenant_id) ON DELETE CASCADE
+    );
+    ```
+
+These schemas and data samples provide a foundation for implementing a scalable and efficient Schoology clone, ensuring data integrity and collaboration within an educational environment.
+
+## Sample data
+
+```sql
+INSERT INTO Tenants (tenant_id, name) VALUES
+  ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', 'University A'),
+  ('e5a2cbb4-9b3a-4f53-8812-53799fe758a1', 'College B'),
+  ('8d3a18fc-6100-4e6a-a8e7-61d13f43e15c', 'School C'),
+  ('2f95d48b-5e4d-42a5-aa0f-c6d5b10eaf6f', 'Institute D');
+
+INSERT INTO Users (user_id, username, email, role, tenant_id) VALUES
+  ('a8c57b1d-8a25-4f1c-9dcd-7a3a670acff5', 'teacher1', 'teacher1@example.com', 'instructor', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
+  ('db32d3f9-7b1c-4be5-88df-c4ef1b2a6a77', 'student1', 'student1@example.com', 'learner', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1'),
+  ('f7c9169b-44f0-47d3-bf25-cd7a827c3b82', 'teacher2', 'teacher2@example.com', 'instructor', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
+  ('db32d3f9-7b1c-4be5-88df-c4ef1b2a6a77', 'student2', 'student2@example.com', 'learner', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1');
+
+INSERT INTO Courses (course_id, course_name, description, start_date, end_date, tenant_id) VALUES
+  ('7a67bce3-2e6d-45f1-b05d-87c48c0b6d68', 'Introduction to Biology', 'Basic concepts of biology', '2024-01-10', '2024-05-30', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
+  ('bf6ebff1-3e2d-4a77-bdcb-3d16be2aa0bf', 'English Literature', 'Exploring classic literature', '2024-02-15', '2024-06-15', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1'),
+  ('c3a1f2d0-c845-4293-bdcd-210e16b8bafd', 'Computer Science Fundamentals', 'Introduction to programming', '2024-01-20', '2024-05-20', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c');
+
+INSERT INTO Assignments (assignment_id, assignment_name, course_id, due_date, tenant_id) VALUES
+  ('f73b10c0-513a-4d98-b9d3-94dce93fb4f2', 'Essay on Ecology', '7a67bce3-2e6d-45f1-b05d-87c48c0b6d68', '2024-04-30', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
+  ('a6e9501a-65d4-4f72-8f82-3b684f0189e1', 'Programming Assignment 1', 'c3a1f2d0-c845-4293-bdcd-210e16b8bafd', '2024-04-15', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1');
+
+INSERT INTO Grades (grade_id, assignment_id, user_id, score, tenant_id) VALUES
+  ('f73b10c0-513a-4d98-b9d3-94dce93fb4f2', 'f73b10c0-513a-4d98-b9d3-94dce93fb4f2', 'db32d3f9-7b1c-4be5-88df-c4ef1b2a6a77', 85.5, 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1'),
+  ('a6e9501a-65d4-4f72-8f82-3b684f0189e1', 'a6e9501a-65d4-4f72-8f82-3b684f0189e1', 'db32d3f9-7b1c-4be5-88df-c4ef1b2a6a77', 92.0, 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1')
+```
