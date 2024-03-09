@@ -1,9 +1,8 @@
 # Multi-tenant AI PDF Chat - built with Nile, OpenAI, UploadThing and NextJS 13
 
-This template shows how to use Nile as a multi-tenant vector embeddings store, to build an application that allow tenants to upload documents and discuss them with a language model.
+This template shows how to use Nile as a multi-tenant vector embeddings store, to build an application that allow tenants to upload documents and discuss them with a language model. The files are stored on UploadThing, with URIs, embeddings and chat history stored in Nile.
 
 This example was contributed by Shreyas Chaliha aka Trace. The original version can be found in his [github account](https://github.com/trace2798/nile_ai_pdf).
-
 
 - [Live demo - TBD]()
 - [Video guide - TBD]()
@@ -91,58 +90,31 @@ In the left-hand menu, click on "Settings" and then select "Credentials". Genera
 
 ### 4. Setting up Google Authentication
 
-This demo uses Google authentication for signup. You will need to configure this in both Google and Nile. 
-
-TBD: More details and link to instructions.
+This demo uses Google authentication for signup. You will need to configure this in both Google and Nile, following the instructions in [Nile documentation](https://www.thenile.dev/docs/user-authentication/social-login/google).
 
 ### 4. Setting up 3rd Party SaaS
 
-This example requires a few more 3rd party SaaS accounts. You'll need to set them up and grab API keys:
-TBD: Links
+This example requires a few more 3rd party SaaS accounts. You'll need to set them up and grab API keys to configure this example:
 
-- Upload Thing (for storing PDFs)
-- OpenAI (for the magic)
-- Stripe - optional
+- [UploadThing](https://uploadthing.com): Used for storing PDFs
+- [OpenAI](https://openai.com/): Used to generate embeddings of the uploaded documents and for the chat itself
+- [Stripe](https://stripe.com/): This is optional: The application has a limited free tier and a more powerful paid tier. If you experiment with this app locally, you can enable Stripe subscriptions for the paid tier or you can just play with the free tier.
 
 ### 4. Setting the environment
 
-If you haven't cloned this project yet, now will be an excellent time to do so. Since it uses NextJS, we can use `create-next-app` for this:
+- If you haven't cloned this project yet, now will be an excellent time to do so. Since it uses NextJS, we can use `create-next-app` for this:
 
-```bash
-npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs nile-todo
-cd nile-todo
-```
+    ```bash
+    npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs nile-todo
+    cd nile-todo
+    ```
 
-Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name.
+- Rename `.env.example` to `.env.local`, and update it with your workspace and database name.
 _(Your workspace and database name are displayed in the header of the Nile dashboard.)_
-Also fill in the username and password with the credentials you picked up in the previous step.
+Fill in the username and password with the credentials you picked up in the previous step.
+And fill in the access keys for UploadThing and OpenAI.
 
-It should look something like this:
-
-```bash
-# Client (public) env vars
-
-# the URL of this example + where the api routes are located
-# Use this to instantiate Nile context for client-side components
-NEXT_PUBLIC_BASE_PATH=http://localhost:3000/api
-NEXT_PUBLIC_WORKSPACE=todoapp_demo
-NEXT_PUBLIC_DATABASE=demo_db_nextjs_qs
-
-# Private env vars that should never show up in the browser
-# These are used by the server to connect to Nile database
-NILE_DB_HOST = "db.thenile.dev"
-NILE_USER = "018ad484-0d52-7274-8639-057814be60c3"
-NILE_PASSWORD = "0d11b8e5-fbbc-4639-be44-8ab72947ec5b"
-
-# The URL of the Nile API
-# Use this to instantiate Nile Server context for server-side use of the "api" SDK
-NEXT_PUBLIC_NILE_API=https://api.thenile.dev
-
-# Uncomment if you want to try Google Auth
-# AUTH_TYPE=google
-```
-
-Install dependencies with `yarn install` or `npm install`.
+- Install dependencies with `yarn install` or `npm install`.
 
 ### 5. Running the app
 
@@ -160,14 +132,11 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 If all went well, your browser should show you the first page in the app, asking you to login or sign up.
 
-After you sign up as a user of this example app, you'll be able to see this user by going back to Nile Console and running `select * from users` in the query editor.
+After you sign up as a user of this example app, you'll be able to see this user by going back to Nile Console and running `select * from users` in the query editor. The app will also create a new tenant for you automatically, called "workspace". You can see it by running `select * from tenants`.
 
-Login with the new user, and you can create a new tenant and add tasks for the tenant. You can see the changes in your Nile database by running
+Once you choose a tenant, you can upload files by dropping them into the dropzone. They will upload and start indexing. After they are indexes successfully, you will be able to start a conversation with your files.
 
-```sql
-select name, title, complete from
-tenants join todos on tenants.id=todos.tenant_id
-```
+You can see the files, the embeddings and the conversation by querying `file`, `file_embedding` and `message` tables in Nile Console.
 
 ## Learn More
 
