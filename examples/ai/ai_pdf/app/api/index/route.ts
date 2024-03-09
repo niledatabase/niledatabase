@@ -38,8 +38,12 @@ export async function POST(req: NextRequest) {
           const chunks = await textSplitter.createDocuments([text]);
           console.log(`Total chunks: ${chunks.length}`);
           console.log("EMBED CALL HERE");
-          const modelName = "thenlper/gte-large";
-          const embeddingsArrays = await new OpenAIEmbeddings().embedDocuments(
+          const modelName = process.env.OPENAI_EMBEDDING_MODEL_NAME || "text-embedding-3-small";
+          const embeddingsArrays = await new OpenAIEmbeddings({
+            openAIApiKey: process.env.OPENAI_API_KEY,
+            modelName: modelName,
+            dimensions: +(process.env.OPENAI_EMBEDDING_DIMENSIONS || 1024),
+          }).embedDocuments(
             chunks.map((chunk) => chunk.pageContent.replace(/\n/g, " "))
           );
           console.log(embeddingsArrays);

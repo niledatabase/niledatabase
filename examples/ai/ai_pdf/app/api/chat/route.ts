@@ -7,7 +7,7 @@ import OpenAI from "openai";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    console.log(body, "BODY");
+    console.log("Chat request body:", body);
 
     await nile.db("message").insert({
       text: body.messages[body.messages.length - 1].content,
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     });
 
     const question = body.messages[body.messages.length - 1].content;
-    console.log(question);
+    console.log("Chat question:", question);
 
     const openAI = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY!,
@@ -30,7 +30,6 @@ export async function POST(req: Request) {
       modelName: modelName,
       dimensions: +(process.env.OPENAI_EMBEDDING_DIMENSIONS || 1024),
     }).embedQuery(question);
-    console.log(queryEmbedding, "queryEmbedding");
     
     console.log("Query Nile index and return top 10 matches");
 
@@ -40,13 +39,12 @@ export async function POST(req: Request) {
       .orderByRaw(`embedding <=> '[${queryEmbedding}]'`)
       .where({ file_id: body.fileId, tenant_id: body.tenant_id })
       .limit(10);
-    console.log(queryResponse, "queryResponse");
 
     if (queryResponse) {
       const concatenatedPageContent = queryResponse
         .map((match: any) => match.pageContent)
         .join(" ");
-      console.log(concatenatedPageContent, "concatenatedPageContent");
+      console.log("Got matches from vector index on Nile");
 
       const prevMessages = await nile
         .db("message")
@@ -62,6 +60,8 @@ export async function POST(req: Request) {
         role: msg.isUserMessage ? ("user" as const) : ("assistant" as const),
         content: msg.text,
       }));
+
+      console.log(`Got ${prevMessages.length} previous messages from chat history in Nile.`)
 
       let result;
       if (prevMessages.length < 6) {
@@ -82,10 +82,9 @@ export async function POST(req: Request) {
             },
           ],
         });
-        console.log(result, "result");
       } else {
         result = await openAI.chat.completions.create({
-          model: process.env.OPENAI_CHAT_MODEL_NAME!,
+          model: process.env.OPENAI_CHAT_MODEL_NAME || "gpt-3.5-turbo",
           temperature: 0.1,
           stream: true,
           messages: [
@@ -106,7 +105,7 @@ export async function POST(req: Request) {
           ],
         });
       }
-      console.log(result, "RESULT");
+      console.log("Chat result: ", result);
 
       const stream = OpenAIStream(result, {
         async onCompletion(completion: any) {
