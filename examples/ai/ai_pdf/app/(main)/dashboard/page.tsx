@@ -9,7 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import AddOrgButton from "./_components/add-org-button";
 import Link from "next/link";
-import { getAvailableTenantCount } from "@/lib/tenant-limit";
 import { Navbar } from "@/app/(marketing)/_components/navbar";
 
 interface pageProps {}
@@ -34,33 +33,7 @@ const page: FC<pageProps> = async ({}) => {
       .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
       .where("tenant_users.user_id", "=", nile.userId);
   }
-  console.log(nile.userId);
-  const countResult = (await getAvailableTenantCount()) as { count: string }[];
-  const count = Number(countResult[0].count);
-  console.log(count);
-  if (count === 0) {
-    console.log("Logic to create tenant should come here");
-    const createTenantResponse = await nile.api.tenants.createTenant({
-      name: "workspace",
-    });
-    const tenant = await createTenantResponse.json();
-    const tenantID = tenant.id;
-    console.log("created tenant with tenantID: ", tenantID);
-    const userInfo = await nile.db("users.users").where({
-      id: nile.userId,
-    });
-    console.log(userInfo);
-    await nile
-      .db("users.tenant_users")
-      .where({
-        tenant_id: tenantID,
-        user_id: nile.userId,
-      })
-      .update({
-        email: userInfo[0].email,
-        roles: ["owner"],
-      });
-  }
+  console.log("user in dashboard: ", nile.userId, " has ", tenants.length, " tenants");
 
   return (
     <>
@@ -68,13 +41,13 @@ const page: FC<pageProps> = async ({}) => {
       {/* <div className="mt-24">Select Org or Create org logic will come here</div> */}
       <div className="ml-[5vw] flex flex-col justify-center items-center mt-24">
         <Card className="max-w-sm p-3 flex flex-col items-center justify-center">
-          <AddOrgButton count={count} />
+          <AddOrgButton count={tenants.length} />
         </Card>
         <Separator className="max-w-xl my-5" />
         <Label className="text-lg">Your Workspaces</Label>
         {tenants.length === 0 && (
           <>
-            <h1 className="mt-3">You are not part of any workspace.</h1>
+            <h1 className="mt-3">You are not part of any workspace. This should not have happened. </h1>
           </>
         )}
         {tenants.map((tenant: { id: string; name: string }) => (
