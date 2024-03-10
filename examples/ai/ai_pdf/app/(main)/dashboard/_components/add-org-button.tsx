@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { MAX_FREE_TENANTS } from "@/constants/tenants";
+import { MAX_FREE_TENANTS } from "@/constants/limits";
 import { useOrgs } from "@/hooks/use-orgs";
 import { FC } from "react";
 

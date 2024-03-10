@@ -10,7 +10,8 @@ import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { cookies } from "next/headers";
 import { checkSubscription } from "@/lib/subscription";
-// import { usePathname } from "next/navigation";
+import { MAX_PRO_PAGES, MAX_FREE_PAGES } from "@/constants/limits";
+
 const f = createUploadthing();
 
 const middleware = async () => {
@@ -25,7 +26,7 @@ const middleware = async () => {
   console.log("tenant in middleware:", number);
   const orgId = number;
   const isPro = await checkSubscription();
-  console.log(isPro);
+  console.log("isPro: ", isPro);
   return { userInfo: user, orgId, isPro };
 };
 
@@ -56,18 +57,12 @@ const onUploadComplete = async ({
 
     const pageLevelDocs = await loader.load();
 
-    const pagesAmt = pageLevelDocs.length;
-
-    console.log("CHECKING PAGES");
-    console.log(pagesAmt);
     // Check if the pages amount exceeds the limit for the subscription plan
-    const isPro = metadata.isPro;
-
-    // const isPageLimitExceeded = pagesAmt > 50;
-    const maxPageLimit = isPro ? 50 : 15;
-
+    const maxPageLimit = metadata.isPro ? MAX_PRO_PAGES : MAX_FREE_PAGES;
+    const pagesAmt = pageLevelDocs.length;
     const isPageLimitExceeded = pagesAmt > maxPageLimit;
-    console.log("PAGE CHECK Failed:", isPageLimitExceeded);
+
+    console.log("PAGE CHECK result: ", isPageLimitExceeded, " number of pages: ", pagesAmt, " page limit: ", maxPageLimit);
 
     if (!isPageLimitExceeded) {
       const createdFile = await nile.db("file").insert({

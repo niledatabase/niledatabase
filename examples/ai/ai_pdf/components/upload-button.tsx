@@ -3,7 +3,7 @@ import { Cloud, File, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 import { SubscriptionButton } from "@/app/(main)/dashboard/organization/[organizationId]/settings/_components/subscription_button";
-import { MAX_UPLOAD_LIMIT } from "@/constants/uploads";
+import { MAX_FREE_FILES, MAX_FREE_PAGES, MAX_PRO_PAGES, MAX_PRO_MB, MAX_FREE_MB } from "@/constants/limits";
 import { useUploadThing } from "@/lib/uploadthing";
 import Dropzone from "react-dropzone";
 import { toast } from "sonner";
@@ -114,8 +114,8 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
                   and drop
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  PDF (up to {isSubscribed ? "16" : "4"}MB) and{" "}
-                  {isSubscribed ? "50" : "5"} pages
+                  PDF (up to {isSubscribed ? MAX_PRO_MB : MAX_FREE_MB}MB) and{" "}
+                  {isSubscribed ? MAX_PRO_PAGES : MAX_FREE_PAGES} pages
                 </p>
               </div>
 
@@ -175,8 +175,8 @@ const UploadButton: FC<UploadButtonProps> = ({ count, isPro }) => {
           <CardDescription>
             {isPro
               ? "To manage subscription go to settings"
-              : `You can upload ${MAX_UPLOAD_LIMIT} files. ${
-                  MAX_UPLOAD_LIMIT - count
+              : `You can upload ${MAX_FREE_FILES} files. ${
+                  MAX_FREE_FILES - count
                 } Remaining`}
           </CardDescription>
         </CardHeader>
@@ -184,7 +184,7 @@ const UploadButton: FC<UploadButtonProps> = ({ count, isPro }) => {
           <SubscriptionButton isPro={isPro} />
         </CardFooter>
       </Card>
-      {(isPro || count < MAX_UPLOAD_LIMIT) && (
+      {(isPro || count < MAX_FREE_FILES) && (
         <UploadDropzone isSubscribed={isPro} />
       )}
     </>
