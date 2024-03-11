@@ -8,17 +8,12 @@ import { checkSubscription } from "@/lib/subscription";
 
 interface pageProps {}
 
-const page: FC<pageProps> = async ({}) => {
-  // configureNile(cookies().get("authData"), null);
-  // console.log("showing tenants page for user: " + nile.userId);
-  // if (!nile.userId) {
-  //   redirect("/login");
-  // }
-  // const userInfo = await nile.db("users.users").where({
-  //   id: nile.userId,
-  // });
-  // console.log(userInfo);
-  const isPro = await checkSubscription();
+const page = async ({
+  params,
+}: {
+  params: { organizationId: string };
+}) => {
+  const isPro = await checkSubscription(params.organizationId);
   return (
     <>
       <div className="mt-10">

@@ -1,13 +1,7 @@
 import Link from "next/link";
-// import { auth } from "@clerk/nextjs";
 import { File } from "lucide-react";
-
-// import { db } from "@/lib/db";
 import { Skeleton } from "@/components/ui/skeleton";
-// import { FormPopover } from "@/components/form/form-popover";
 import nile from "@/lib/NileServer";
-// import { getAvailableCount } from "@/lib/org-limit";
-// import { checkSubscription } from "@/lib/subscription";
 import {
   Card,
   CardContent,
@@ -19,39 +13,26 @@ import { Label } from "@/components/ui/label";
 import IndexButton from "./index-button";
 import { TrashBox } from "./trash-box";
 
+// Forcing to re-evaluate each time. 
+// This guarantees that users will only see their own data and not another user's data via cache
+export const dynamic = 'force-dynamic'
+export const dynamicParams = true
+export const revalidate = 0
+export const fetchCache = 'force-no-store'
+
 export const BoardList = async ({
-  organizationId,
+  organizationId
 }: {
   organizationId: string;
 }) => {
-  //   const { orgId } = auth();
 
-  //   if (!orgId) {
-  //     return redirect("/select-org");
-  //   }
 
-  //   const boards = await db.board.findMany({
-  //     where: {
-  //       orgId,
-  //     },
-  //     orderBy: {
-  //       createdAt: "desc"
-  //     }
-  //   });
-
-  //   const availableCount = await getAvailableCount();
-  //   const isPro = await checkSubscription();
-  // configureNile(cookies().get("authData"), organizationId);
   const files = await nile
     .db("file")
     .select("*")
     .where({ tenant_id: organizationId });
-  // .orderBy("created_at", "desc"); // no need for where clause because we previously set Nile context
-  console.log(files.length);
+  console.log("Number of files reported by board component:" + files.length);
 
-  // if(!boards.length === 0) {
-  //   return <div>No boards</div>
-  // }
   return (
     <div className="space-y-4">
       <div className="flex items-center font-semibold text-primary text-neutral-700">
@@ -77,7 +58,6 @@ export const BoardList = async ({
               </div>
             </CardContent>
             <CardFooter className="flex justify-between">
-              {/* {file.uploadStatus === "SUCCESS" && ( */}
               <>
                 {file.isIndex ? (
                   <Link href={`${file.tenant_id}/chat/${file.id}`}>Chat</Link>
@@ -85,8 +65,9 @@ export const BoardList = async ({
                   <IndexButton file={file} />
                 )}
               </>
-              {/* )} */}
+              {/* Not implemented yet...
               <TrashBox file={file} />
+               */}
             </CardFooter>
           </Card>
         ))}

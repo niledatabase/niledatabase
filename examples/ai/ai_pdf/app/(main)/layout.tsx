@@ -9,15 +9,10 @@ import { Toaster } from "sonner";
 import 'simplebar-react/dist/simplebar.min.css'
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
-  // configureNile(cookies().get("authData"), nile.userId);
-  // console.log("showing tenants page for user: " + nile.userId);
-  // if (!nile.userId) {
-  //   redirect("/login");
-  // }
   return (
     <QueryProvider>
       <main>
-        <Toaster />
+        <Toaster richColors toastOptions={{duration: 10000}}/>
         <ModalProvider />
         {children}
       </main>

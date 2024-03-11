@@ -10,7 +10,8 @@ import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { cookies } from "next/headers";
 import { checkSubscription } from "@/lib/subscription";
-import { MAX_PRO_PAGES, MAX_FREE_PAGES } from "@/constants/limits";
+import { MAX_PRO_PAGES, MAX_FREE_PAGES, MAX_FREE_MB, MAX_PRO_MB } from "@/constants/limits";
+import { revalidatePath } from 'next/cache'
 
 const f = createUploadthing();
 
@@ -25,7 +26,7 @@ const middleware = async () => {
   const number = await currentTenantId();
   console.log("tenant in middleware:", number);
   const orgId = number;
-  const isPro = await checkSubscription();
+  const isPro = await checkSubscription(orgId);
   console.log("isPro: ", isPro);
   return { userInfo: user, orgId, isPro };
 };
@@ -83,7 +84,9 @@ const onUploadComplete = async ({
         key: file.key,
         tenant_id: metadata.orgId,
       });
-      console.log(fileId);
+      console.log("stored file metadata in Nile with ID: " +fileId);
+      // since the DB updated, we need to re-render the file list
+
       try {
         for (const doc of pageLevelDocs) {
           console.log(doc);
@@ -155,25 +158,31 @@ const onUploadComplete = async ({
         }
       } catch (err) {
         console.log("error: Error in upserting to database ", err);
-        return "Embedding FAILED";
+        return "EMBEDDING FAILED";
       }
+      // trigger re-render of file list
+      revalidatePath(`/dashboard/organization/${metadata.orgId}`);
       return "SUCCESS";
     } else {
       return "LIMIT EXCEEDED";
     }
   } catch (err) {
     return "UPLOAD FAILED";
+  } finally {
+    console.log("Asking for re-render of file list");
+    // trigger re-render of file list
+    revalidatePath(`/dashboard/organization/${metadata.orgId}`);
   }
 };
 
 export const ourFileRouter = {
   freePlanUploader: f({
-    pdf: { maxFileSize: "4MB" },
+    pdf: { maxFileSize: MAX_FREE_MB },
   })
     .middleware(middleware)
     .onUploadComplete(onUploadComplete),
   proPlanUploader: f({
-    pdf: { maxFileSize: "16MB" },
+    pdf: { maxFileSize: MAX_PRO_MB },
   })
     .middleware(middleware)
     .onUploadComplete(onUploadComplete),

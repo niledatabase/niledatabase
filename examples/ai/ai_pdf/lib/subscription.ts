@@ -5,25 +5,17 @@ import { redirect } from "next/navigation";
 
 const DAY_IN_MS = 86_400_000;
 
-export const checkSubscription = async () => {
+export const checkSubscription = async (tenant_id: string) => {
   configureNile(cookies().get("authData"), null);
-  console.log("showing tenants page for user: " + nile.userId);
+  console.log("checking subscription info for: " + nile.userId);
   if (!nile.userId) {
     redirect("/login");
   }
-  const orgId = await nile.db("users.tenant_users").where({
-    user_id: nile.userId,
-    roles: ["owner"],
-  });
-  console.log(orgId);
-
-  if (!orgId) {
-    return false;
-  }
+  
   const orgSubscription = await nile
     .db("user_subscription")
     .where({
-      tenant_id: orgId[0].tenant_id,
+      tenant_id: tenant_id,
       user_id: nile.userId,
     })
     .select(

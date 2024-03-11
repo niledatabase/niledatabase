@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Separator } from "@/components/ui/separator";
 import { configureNile } from "@/lib/AuthUtils";
 import nile from "@/lib/NileServer";
@@ -34,7 +35,7 @@ const OrganizationIdPage = async ({
     .count()) as { count: string }[];
 
   console.log("Current file count:", currentFileCount);
-  const isPro = await checkSubscription();
+  const isPro = await checkSubscription(params.organizationId);
 
   return (
     <div className="w-full mb-20">

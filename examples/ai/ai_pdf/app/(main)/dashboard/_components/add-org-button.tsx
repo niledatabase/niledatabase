@@ -8,6 +8,8 @@ interface AddOrgButtonProps {
   count: number;
 }
 
+// Note that right now everyone is limited to 1 tenant, so this button is always disabled
+// TODO: Implement pro plan to allow more tenants for one user
 const AddOrgButton: FC<AddOrgButtonProps> = ({ count }) => {
   const orgs = useOrgs();
   return (

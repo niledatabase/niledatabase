@@ -21,20 +21,14 @@ interface UploadButtonProps {
   isPro: boolean;
 }
 
-const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
+const UploadDropzone = ({ isSubscribed}: { isSubscribed: boolean }) => {
   const router = useRouter();
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const [isUploadSuccess, setIsUploadSuccess] = useState<boolean>(false);
 
   const { startUpload } = useUploadThing(
     isSubscribed ? "proPlanUploader" : "freePlanUploader"
   );
-
-  if (isUploadSuccess) {
-    window.location.reload();
-    router.refresh();
-  }
 
   const startSimulatedProgress = () => {
     setUploadProgress(0);
@@ -62,39 +56,31 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
 
         // handle file uploading
         const res = await startUpload(acceptedFile);
+        console.log("Result of startUpload:" + JSON.stringify(res));
 
-        if (!res) {
-          return toast.error("Something went wrong");
-        }
-
-
-        const [fileResponse] = res;
-
-        const key = fileResponse?.key;
-
-        if (!key) {
-          return toast.error("Something went wrong. Key Missing");
-        }
-
-        clearInterval(progressInterval);
-        setUploadProgress(100);
-       
-        if (res && res[0].serverData === "LIMIT EXCEEDED") {
-          toast.info(
-            "You have exceeded the upload limit."
+        if (!res || !Array.isArray(res) || res.length === 0) {
+          toast.error("Something went wrong: " + JSON.stringify(res));
+        } else if (res[0].serverData !== "SUCCESS") {
+          if (res[0].serverData === "LIMIT EXCEEDED") {
+            toast.error(
+              "You have exceeded the allowed page limit for your subscription plan. The maximum number of pages allowed is " + (isSubscribed ? MAX_PRO_PAGES : MAX_FREE_PAGES)
+            );
+          }
+          toast.error(
+            "File upload failed due to an error: " + res[0].serverData
           );
-        }
-        if (res[0].serverData === "LIMIT EXCEEDED") {
-          toast.info(
-            "You have exceeded the upload limit for your subscription plan. Please upgrade to a pro plan to continue uploading."
-          );
+        } else if (!res[0].key) {
+          toast.error("Something went wrong. File identifier missing. Please try again");
         } else {
+          // if we got all the way here, the upload was successful:
+          setUploadProgress(100);
           toast.success("Upload successful!");
-          setIsUploadSuccess(true);
+          console.log("File uploaded successfully, refreshing page to see files");
+          router.refresh();
         }
-        console.log("Result of startUpload:" + res);
-
-        setIsUploadSuccess(true);
+        // regardless, we should clear the upload state
+        clearInterval(progressInterval);
+        setIsUploading(false);
       }}
     >
       {({ getRootProps, getInputProps, acceptedFiles }) => (
@@ -119,7 +105,7 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
                 </p>
               </div>
 
-              {acceptedFiles && acceptedFiles[0] ? (
+              {acceptedFiles && acceptedFiles[0] && isUploading ? (
                 <div className="max-w-xs bg-muted flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200">
                   <div className="px-3 py-2 h-full grid place-items-center">
                     <File className="h-4 w-4 text-blue-500" />
