@@ -49,7 +49,7 @@ const OrganizationIdPage = async ({
       <div className="px-2 md:px-4">
         <Suspense>
           <UploadButton org_id={params.organizationId} count={Number(currentFileCount[0].count)} isPro={isPro} />
-          <Card style={{paddingBottom: 24}}>
+          <Card style={{marginBottom: 24}}>
             <CardHeader>
               <CardTitle>Need ideas for good papers to upload? Here are some suggestions:</CardTitle>
             </CardHeader>
