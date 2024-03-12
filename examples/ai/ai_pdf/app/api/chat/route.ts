@@ -17,6 +17,7 @@ export async function POST(req: Request) {
       fileId: body.fileId,
       user_id: body.user_id,
       isUserMessage: true,
+      tenant_id: body.tenant_id
     });
 
     const question = body.messages[body.messages.length - 1].content;
