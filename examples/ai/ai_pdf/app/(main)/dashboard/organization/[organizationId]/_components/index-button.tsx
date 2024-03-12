@@ -17,26 +17,22 @@ const IndexButton = ({ file }: { file: any }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const onSubmit = async () => {
     try {
-      //   const url = file.url;
       setLoading(true);
       const response = await axios.post("/api/index", { file });
-      // console.log(response);
+      console.log("indexing api responded with: " + response.status);
       router.refresh();
-      toast.success("Successfully Index");
-      //   toast({
-      //     title: "Successfully Index",
-      //     description: "File successfully indexed",
-      //   });
+      if (response.status === 200) {
+        toast.success("Successfully generated embedding and indexed file");
+        router.refresh();
+      } else {
+        const error = response.data
+        toast.error("Failed to generate embedding and index file: " + error);
+      }
+      setLoading(false);
     } catch (error) {
       console.log(error);
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 403) {
-          return toast.error("Out of credits");
-        }
-      } else {
-        console.error(error);
-        toast.error("Something went wrong");
-      }
+      toast.error("Something went wrong " + error);
+      setLoading(false);
     }
   };
   return (

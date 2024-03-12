@@ -65,10 +65,17 @@ const UploadDropzone = ({ isSubscribed}: { isSubscribed: boolean }) => {
             toast.error(
               "You have exceeded the allowed page limit for your subscription plan. The maximum number of pages allowed is " + (isSubscribed ? MAX_PRO_PAGES : MAX_FREE_PAGES)
             );
+          } else if (res[0].serverData === "PARSE FAILED") {
+            toast.error("File can't be parsed and text can't be extracted. Please try another.");
+          } else if (res[0].serverData === "EMBEDDING FAILED") {
+            toast.error("Failed to create embeddings while uploading file. You can try manually with the Embed File button.");
+            // in this case, we do have a new file, so we should refresh the page to see it
+            router.refresh();
+          } else {
+            toast.error(
+              "File upload failed due to an error: " + res[0].serverData
+            );
           }
-          toast.error(
-            "File upload failed due to an error: " + res[0].serverData
-          );
         } else if (!res[0].key) {
           toast.error("Something went wrong. File identifier missing. Please try again");
         } else {

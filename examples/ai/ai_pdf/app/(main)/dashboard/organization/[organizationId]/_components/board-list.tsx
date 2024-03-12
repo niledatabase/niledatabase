@@ -26,7 +26,7 @@ export const BoardList = async ({
   organizationId: string;
 }) => {
 
-
+  
   const files = await nile
     .db("file")
     .select("*")

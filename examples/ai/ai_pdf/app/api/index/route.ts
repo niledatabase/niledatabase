@@ -2,42 +2,39 @@
 // import { getPineconeClient } from "@/lib/pinecone";
 import nile from "@/lib/NileServer";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
+import { TextLoader } from "langchain/document_loaders/fs/text";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from 'next/cache'
 
 // export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    console.log(data, "DATA");
-    console.log("1: Index api");
+    console.log("Index route uploading and embedding:" + data);
     try {
       const response = await fetch(`${data.file.url}`);
-      console.log("2: Index api");
-      console.log(response);
+      console.log("Index api getting file: " + response.status);
       const blob = await response.blob();
-      console.log(blob, "BLOB");
-      const loader = new PDFLoader(blob);
-      console.log(loader, "LOADER");
+      const loader =  new PDFLoader(blob) || new TextLoader(blob)
       const pageLevelDocs = await loader.load();
-      console.log(pageLevelDocs);
       const pagesAmt = pageLevelDocs.length;
-      console.log(pagesAmt);
+      console.log("Index API Found " + pagesAmt + " pages in the document");
+      if (pagesAmt === 0) {
+        return new NextResponse("Failed to parse document or no text found. Try something else.", { status: 400 });
+      } 
       try {
         for (const doc of pageLevelDocs) {
-          console.log(doc);
           const txtPath = doc.metadata.loc.pageNumber;
           const text = doc.pageContent;
-          console.log(text);
           const textSplitter = new RecursiveCharacterTextSplitter({
             chunkSize: 1000,
           });
-          //Split text into chunks (documents)
           const chunks = await textSplitter.createDocuments([text]);
           console.log(`Total chunks: ${chunks.length}`);
-          console.log("EMBED CALL HERE");
+          console.log("Index API starting embeddings generation");
           const modelName = process.env.OPENAI_EMBEDDING_MODEL_NAME || "text-embedding-3-small";
           const embeddingsArrays = await new OpenAIEmbeddings({
             openAIApiKey: process.env.OPENAI_API_KEY,
@@ -46,12 +43,10 @@ export async function POST(req: NextRequest) {
           }).embedDocuments(
             chunks.map((chunk) => chunk.pageContent.replace(/\n/g, " "))
           );
-          console.log(embeddingsArrays);
           const batchSize = 100;
           let batch: any = [];
           for (let idx = 0; idx < chunks.length; idx++) {
             const chunk = chunks[idx];
-            console.log(chunk);
             const vector = {
               id: `${data.file.id}_${idx}`,
               values: embeddingsArrays[idx],
@@ -63,12 +58,9 @@ export async function POST(req: NextRequest) {
                 filter: `${data.file.id}`,
               },
             };
-            console.log(vector);
 
             batch = [...batch, vector];
             if (batch.length === batchSize || idx === chunks.length - 1) {
-              console.log(batch);
-              console.log(batch[0].values);
 
               for (const vector of batch) {
                 const uuid = vector.id.split("_")[0];
@@ -84,32 +76,31 @@ export async function POST(req: NextRequest) {
               batch = [];
             }
           }
-          //   Log the number of vectors updated just for verification purpose
-          console.log(`Database index updated with ${chunks.length} vectors`);
-          await nile
-            .db("file")
-            .where({
-              id: data.file.id,
-              tenant_id: data.file.tenant_id,
-            })
-            .update({ isIndex: true });
         }
+        console.log(`Database index updated with vectors`);
+        await nile
+          .db("file")
+          .where({
+            id: data.file.id,
+            tenant_id: data.file.tenant_id,
+          })
+          .update({ isIndex: true });
       } catch (err) {
-        console.log("error: Error in upserting to database ", err);
-        return new NextResponse("Error in upserting to database", {
+        console.log("error: Error in generating embeddings and updating database ", err);
+        return new NextResponse("Error in generating embeddings and/or updating database " + err, {
           status: 400,
         });
       }
-    } catch (error) {
-      console.log(error);
-      return new NextResponse("Could not fetch", {
+    } catch (err) {
+      console.log(err);
+      return new NextResponse("Failed to get file from storage for embedding - try later. " + err, {
         status: 400,
       });
     }
-
-    return new NextResponse("FROM INDEX API", { status: 200 });
-  } catch (error) {
-    console.log(error);
-    return new NextResponse("No Matches", { status: 400 });
+    revalidatePath(`/dashboard/organization/${data.file.tenant_id}`);
+    return new NextResponse("Embedding succeeded", { status: 200 });
+  } catch (err) {
+    console.log(err);
+    return new NextResponse("Failed to parse request. This is a bug " + err, { status: 500 });
   }
 }

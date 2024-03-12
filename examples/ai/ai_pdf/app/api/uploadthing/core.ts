@@ -31,6 +31,14 @@ const middleware = async () => {
   return { userInfo: user, orgId, isPro };
 };
 
+function checkTime(startTime: [number, number]) {
+  const [ms, nanos] = process.hrtime(startTime);
+  const elapsedSec = ms * 1000 + nanos / 1000000;
+  if (elapsedSec > 12000) {
+    throw new Error("Timeout");
+  }
+}
+
 const onUploadComplete = async ({
   metadata,
   file,
@@ -44,13 +52,15 @@ const onUploadComplete = async ({
 }) => {
   console.log("1: On upload complete. Trying to get file: ", file.key);
   console.log("file url", file.url);
+
+  const startTime = process.hrtime();
   try {
     const response = await fetch(
       `${file.url}`
     );
     console.log("on upload complete: ", response.status);
     if (!response.ok) {
-      throw new Error("Failed to fetch file");
+      return ("FAILED TO GET FILE");
     }
     const blob = await response.blob();
 
@@ -61,9 +71,14 @@ const onUploadComplete = async ({
     // Check if the pages amount exceeds the limit for the subscription plan
     const maxPageLimit = metadata.isPro ? MAX_PRO_PAGES : MAX_FREE_PAGES;
     const pagesAmt = pageLevelDocs.length;
+
+    if (pagesAmt === 0) {
+      return "PARSE FAILED";
+    }
+
     const isPageLimitExceeded = pagesAmt > maxPageLimit;
 
-    console.log("PAGE CHECK result: ", isPageLimitExceeded, " number of pages: ", pagesAmt, " page limit: ", maxPageLimit);
+    console.log("PAGE CHECK result: ", !isPageLimitExceeded, " number of pages: ", pagesAmt, " page limit: ", maxPageLimit);
 
     if (!isPageLimitExceeded) {
       const createdFile = await nile.db("file").insert({
@@ -76,23 +91,16 @@ const onUploadComplete = async ({
         isIndex: false,
         name: file.name,
         pageAmt: pagesAmt,
-      });
+      }).returning("id");
 
-      console.log("2: File created");
-      console.log(createdFile);
-      const fileId = await nile.db("file").where({
-        key: file.key,
-        tenant_id: metadata.orgId,
-      });
-      console.log("stored file metadata in Nile with ID: " +fileId);
-      // since the DB updated, we need to re-render the file list
+      const fileId = createdFile[0].id;
 
+      console.log("File stored in Nile with ID:" + fileId);
       try {
         for (const doc of pageLevelDocs) {
-          console.log(doc);
+          checkTime(startTime);
           const txtPath = doc.metadata.loc.pageNumber;
           const text = doc.pageContent;
-          console.log(text);
           const textSplitter = new RecursiveCharacterTextSplitter({
             chunkSize: 1000,
           });
@@ -108,34 +116,28 @@ const onUploadComplete = async ({
           }).embedDocuments(
             chunks.map((chunk) => chunk.pageContent.replace(/\n/g, " "))
           );
-          console.log(embeddingsArrays);
           const batchSize = 100;
           let batch: any = [];
           for (let idx = 0; idx < chunks.length; idx++) {
             const chunk = chunks[idx];
-            console.log(chunk);
             const vector = {
-              id: `${fileId[0].id}_${idx}`,
+              id: `${fileId}_${idx}`,
               values: embeddingsArrays[idx],
               metadata: {
                 ...chunk.metadata,
                 loc: JSON.stringify(chunk.metadata.loc),
                 pageContent: chunk.pageContent,
                 txtPath: txtPath,
-                filter: `${fileId[0].id}`,
+                filter: `${fileId}`,
               },
             };
-            console.log(vector);
 
             batch = [...batch, vector];
             if (batch.length === batchSize || idx === chunks.length - 1) {
-              console.log(batch);
-              console.log(batch[0].values);
-
               for (const vector of batch) {
                 const uuid = vector.id.split("_")[0];
                 await nile.db("file_embedding").insert({
-                  file_id: fileId[0].id,
+                  file_id: fileId,
                   tenant_id: metadata.orgId,
                   embedding_api_id: uuid,
                   embedding: JSON.stringify(vector.values),
@@ -146,21 +148,21 @@ const onUploadComplete = async ({
               batch = [];
             }
           }
-          //   Log the number of vectors updated just for verification purpose
-          console.log(`Database index updated with ${chunks.length} vectors`);
-          await nile
-            .db("file")
-            .where({
-              id: fileId[0].id,
-              tenant_id: metadata.orgId,
-            })
-            .update({ isIndex: true });
         }
+        
+        console.log(`Database index updated with  vectors`);
+        await nile
+          .db("file")
+          .where({
+            id: fileId,
+            tenant_id: metadata.orgId,
+          })
+          .update({ isIndex: true });
       } catch (err) {
-        console.log("error: Error in upserting to database ", err);
+        console.log("error: Error in updating file status in Nile", err);
         return "EMBEDDING FAILED";
       }
-      // trigger re-render of file list
+      // trigger re-render of file list, since the new file exists
       revalidatePath(`/dashboard/organization/${metadata.orgId}`);
       return "SUCCESS";
     } else {
