@@ -1,22 +1,20 @@
 import { cookies } from "next/headers";
-import { configureNile } from "./AuthUtils";
-import nile from "@/lib/NileServer";
+import { configureNile } from '@/lib/NileServer';
 import { redirect } from "next/navigation";
 
 const DAY_IN_MS = 86_400_000;
 
 export const checkSubscription = async (tenant_id: string) => {
-  configureNile(cookies().get("authData"), null);
-  console.log("checking subscription info for: " + nile.userId);
-  if (!nile.userId) {
+  const tenantNile = configureNile(cookies().get("authData"), tenant_id);
+  console.log("checking subscription info for: " + tenantNile.userId + " for tenant " + tenantNile.tenantId);
+  if (!tenantNile.userId) {
     redirect("/login");
   }
   
-  const orgSubscription = await nile
+  const orgSubscription = await tenantNile
     .db("user_subscription")
     .where({
-      tenant_id: tenant_id,
-      user_id: nile.userId,
+      user_id: tenantNile.userId,
     })
     .select(
       "stripe_subscription_id",
@@ -24,7 +22,6 @@ export const checkSubscription = async (tenant_id: string) => {
       "stripe_customer_id",
       "stripe_price_id"
     );
-  console.log(orgSubscription);
 
   if (!orgSubscription[0]) {
     return false;

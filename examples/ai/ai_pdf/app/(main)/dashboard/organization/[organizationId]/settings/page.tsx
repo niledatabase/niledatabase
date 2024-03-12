@@ -1,8 +1,3 @@
-import { configureNile } from "@/lib/AuthUtils";
-import nile from "@/lib/NileServer";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { FC } from "react";
 import { SubscriptionButton } from "./_components/subscription_button";
 import { checkSubscription } from "@/lib/subscription";
 
@@ -17,7 +12,7 @@ const page = async ({
   return (
     <>
       <div className="mt-10">
-        <SubscriptionButton isPro={isPro} />
+        <SubscriptionButton isPro={isPro} orgId={params.organizationId}/>
       </div>
     </>
   );

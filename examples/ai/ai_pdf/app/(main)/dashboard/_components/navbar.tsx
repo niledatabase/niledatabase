@@ -1,8 +1,7 @@
 import { Logo } from "@/components/logo";
 import { ModeToggle } from "@/components/mode-toggle";
 import UserAccountNav from "@/components/user-account-nav";
-import { configureNile } from "@/lib/AuthUtils";
-import nile from "@/lib/NileServer";
+import { configureNile } from '@/lib/NileServer';
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { MobileSidebar } from "./mobile-sidebar";
@@ -13,7 +12,7 @@ export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 export const Navbar = async () => {
-  configureNile(cookies().get("authData"), null);
+  const nile = configureNile(cookies().get('authData'), null);
   if (!nile.userId) {
     redirect("/");
   }

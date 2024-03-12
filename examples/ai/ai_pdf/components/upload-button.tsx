@@ -17,11 +17,12 @@ import {
 import { Progress } from "./ui/progress";
 
 interface UploadButtonProps {
+  org_id: string;
   count: number;
   isPro: boolean;
 }
 
-const UploadDropzone = ({ isSubscribed}: { isSubscribed: boolean }) => {
+const UploadDropzone = ({ isSubscribed}: {isSubscribed: boolean }) => {
   const router = useRouter();
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
@@ -157,7 +158,7 @@ const UploadDropzone = ({ isSubscribed}: { isSubscribed: boolean }) => {
   );
 };
 
-const UploadButton: FC<UploadButtonProps> = ({ count, isPro }) => {
+const UploadButton: FC<UploadButtonProps> = ({ org_id, count, isPro }) => {
   return (
     <>
       <Card className="mb-5">
@@ -174,7 +175,7 @@ const UploadButton: FC<UploadButtonProps> = ({ count, isPro }) => {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <SubscriptionButton isPro={isPro} />
+          <SubscriptionButton isPro={isPro} orgId={org_id}/>
         </CardFooter>
       </Card>
       {(isPro || count < MAX_FREE_FILES) && (

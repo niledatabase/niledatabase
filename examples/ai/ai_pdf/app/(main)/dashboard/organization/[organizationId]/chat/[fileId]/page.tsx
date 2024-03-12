@@ -1,39 +1,34 @@
-import { configureNile } from "@/lib/AuthUtils";
-import nile from "@/lib/NileServer";
-import { currentTenantId } from "@/lib/tenent-id";
+import { configureNile } from '@/lib/NileServer';
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Chat } from "./_components/chat";
 
 interface FileIdPageProps {
   params: {
+    organizationId: string;
     fileId: string;
   };
 }
 
 const FileIdPage = async ({ params }: FileIdPageProps) => {
-  configureNile(cookies().get("authData"), null);
-  console.log(nile.userId);
-  if (!nile.userId) {
+  const tenantNile = configureNile(cookies().get("authData"), params.organizationId);
+  console.log(tenantNile.userId);
+  if (!tenantNile.userId) {
     redirect("/");
   }
-  const number = await currentTenantId();
+  const number = await params.organizationId;
   console.log(number);
-  const messages = await nile
+  const messages = await tenantNile
     .db("message")
     .where({
       fileId: params.fileId,
-      user_id: nile.userId,
-      tenant_id: number,
     })
     .select();
 
-  const fileInfo = await nile
+  const fileInfo = await tenantNile
     .db("file")
     .where({
       id: params.fileId,
-      // user_id: nile.userId,
-      tenant_id: number,
     })
     .returning("*");
   console.log(fileInfo);
@@ -43,7 +38,7 @@ const FileIdPage = async ({ params }: FileIdPageProps) => {
         <Chat
           fileId={params.fileId}
           pastMessages={messages}
-          userId={nile.userId}
+          userId={tenantNile.userId}
           tenant_id={number}
           url={fileInfo[0].url}
         />

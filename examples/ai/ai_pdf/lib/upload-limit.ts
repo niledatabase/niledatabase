@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
-import { configureNile } from "./AuthUtils";
-import nile from "./NileServer";
+import { configureNile } from '@/lib/NileServer';
 import { NextResponse } from "next/server";
 
 export const getAvailableFileCount = async ({
@@ -8,16 +7,15 @@ export const getAvailableFileCount = async ({
 }: {
   tenant_id: string;
 }) => {
-  configureNile(cookies().get("authData"), null);
-  if (!nile.userId) {
+  const tenantNile = configureNile(cookies().get("authData"), tenant_id);
+  if (!tenantNile.userId) {
     return new NextResponse("Unauthorized");
   }
 
-  const currentFileCount = await nile
+  const currentFileCount = await tenantNile
     .db("file")
     .where({
-      user_id: nile.userId,
-      tenant_id: tenant_id,
+      user_id: tenantNile.userId
     })
     .count();
 

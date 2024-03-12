@@ -1,19 +1,19 @@
-// import { db } from "@/lib/db";
-// import { getPineconeClient } from "@/lib/pinecone";
-import nile from "@/lib/NileServer";
+import { configureNile } from '@/lib/NileServer';
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers';
 
 // export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    console.log("Index route uploading and embedding:" + data);
+    console.log("Index route uploading and embedding:" + JSON.stringify(data));
+    const tenantNile = configureNile(cookies().get('authData'), data.file.tenant_id);
     try {
       const response = await fetch(`${data.file.url}`);
       console.log("Index api getting file: " + response.status);
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
 
               for (const vector of batch) {
                 const uuid = vector.id.split("_")[0];
-                await nile.db("file_embedding").insert({
+                await tenantNile.db("file_embedding").insert({
                   file_id: data.file.id,
                   tenant_id: data.file.tenant_id,
                   embedding_api_id: uuid,
@@ -78,11 +78,10 @@ export async function POST(req: NextRequest) {
           }
         }
         console.log(`Database index updated with vectors`);
-        await nile
+        await tenantNile
           .db("file")
           .where({
             id: data.file.id,
-            tenant_id: data.file.tenant_id,
           })
           .update({ isIndex: true });
       } catch (err) {

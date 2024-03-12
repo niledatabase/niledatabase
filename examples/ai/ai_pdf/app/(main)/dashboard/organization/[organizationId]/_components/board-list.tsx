@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { File } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import nile from "@/lib/NileServer";
+import { configureNile } from '@/lib/NileServer';
+import { cookies } from 'next/headers';
 import {
   Card,
   CardContent,
@@ -26,11 +27,10 @@ export const BoardList = async ({
   organizationId: string;
 }) => {
 
-  
-  const files = await nile
+  const tenantNile = configureNile(cookies().get('authData'), organizationId);
+  const files = await tenantNile
     .db("file")
-    .select("*")
-    .where({ tenant_id: organizationId });
+    .select("*"); // no need for "where" clause since we are connecting to tenant db
   console.log("Number of files reported by board component:" + files.length);
 
   return (

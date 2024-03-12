@@ -9,35 +9,29 @@ import { InputType, ReturnType } from "./types";
 
 import { absoluteUrl } from "@/lib/utils";
 import { stripe } from "@/lib/stripe";
-import { currentUser } from "@/lib/current-user";
-import { headers } from "next/headers";
+import { getUserId } from "@/lib/AuthUtils";
+import { headers, cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import nile from "@/lib/NileServer";
-import { currentTenantId } from "@/lib/tenent-id";
+import { configureNile } from '@/lib/NileServer';
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const user = await currentUser();
-  console.log("user: ", user);
-  const userId = user.id;
-  console.log(userId);
-
-  const number = await currentTenantId();
-  console.log(number);
-  const orgId = number;
-  //   const { orgId } = user;
-  if (!userId || !orgId || !user) {
+  const orgId = data.orgId;
+  const user = cookies().get('authData')
+  const userId = getUserId(user);
+  if (!orgId || !user || !userId) {
     return {
       error: "Unauthorized",
     };
   }
+
+  const tenantNile = configureNile(user, orgId);
 
   const settingsUrl = absoluteUrl(`/dashboard/organization/${orgId}`);
 
   let url = "";
 
   try {
-    const orgSubscription = await nile.db("user_subscription").where({
-      tenant_id: orgId,
+    const orgSubscription = await tenantNile.db("user_subscription").where({
       user_id: userId,
     });
 
@@ -57,7 +51,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         payment_method_types: ["card"],
         mode: "subscription",
         billing_address_collection: "auto",
-        customer_email: user.email,
+        // customer_email: user.email, // TBD: Get email from user auth cookie
         line_items: [
           {
             price_data: {
@@ -82,9 +76,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       console.log("New:", stripeSession);
       url = stripeSession.url || "";
     }
-  } catch {
+  } catch(err) {
     return {
-      error: "Something went wrong!",
+      error: "Something went wrong! " + err,
     };
   }
 

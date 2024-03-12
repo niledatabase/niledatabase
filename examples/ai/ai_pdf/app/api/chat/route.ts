@@ -1,7 +1,8 @@
-import nile from "@/lib/NileServer";
+import { configureNile } from '@/lib/NileServer';
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { NextResponse } from "next/server";
+import { cookies } from 'next/headers';
 import OpenAI from "openai";
 
 export async function POST(req: Request) {
@@ -9,12 +10,13 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log("Chat request body:", body);
 
-    await nile.db("message").insert({
+    const tenantNile = configureNile(cookies().get('authData'), body.tenant_id);
+
+    await tenantNile.db("message").insert({
       text: body.messages[body.messages.length - 1].content,
       fileId: body.fileId,
       user_id: body.user_id,
       isUserMessage: true,
-      tenant_id: body.tenant_id,
     });
 
     const question = body.messages[body.messages.length - 1].content;
@@ -33,11 +35,11 @@ export async function POST(req: Request) {
     
     console.log("Query Nile index and return top 10 matches");
 
-    const queryResponse = await nile
+    const queryResponse = await tenantNile
       .db("file_embedding")
       .select("pageContent", "location")
       .orderByRaw(`embedding <=> '[${queryEmbedding}]'`)
-      .where({ file_id: body.fileId, tenant_id: body.tenant_id })
+      .where({ file_id: body.fileId })
       .limit(10);
 
     if (queryResponse) {
@@ -46,12 +48,11 @@ export async function POST(req: Request) {
         .join(" ");
       console.log("Got matches from vector index on Nile");
 
-      const prevMessages = await nile
+      const prevMessages = await tenantNile
         .db("message")
         .where({
           fileId: body.fileId,
-          tenant_id: body.tenant_id,
-          user_id: body.user_id,
+          user_id: body.user_id, // Nile doesn't provide user level isolation, so we need to filter by user_id
         })
         .limit(6)
         .select("*");
@@ -110,7 +111,7 @@ export async function POST(req: Request) {
       const stream = OpenAIStream(result, {
         async onCompletion(completion: any) {
           console.log(completion, "completion");
-          await nile.db("message").insert({
+          await tenantNile.db("message").insert({
             text: completion,
             fileId: body.fileId,
             user_id: body.user_id,

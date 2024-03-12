@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { configureNile } from "@/lib/AuthUtils";
-import nile from "@/lib/NileServer";
+import { configureNile } from '@/lib/NileServer';
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { FC } from "react";
@@ -19,7 +18,7 @@ export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 const page: FC<pageProps> = async ({}) => {
-  configureNile(cookies().get("authData"), null);
+  const nile = configureNile(cookies().get('authData'),null);
   console.log("showing tenants page for user: " + nile.userId);
   if (!nile.userId) {
     redirect("/login");

@@ -1,6 +1,4 @@
-import { cookies, headers } from "next/headers";
-import { configureNile } from "./AuthUtils";
-import nile from "@/lib/NileServer";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const currentTenantId = async () => {

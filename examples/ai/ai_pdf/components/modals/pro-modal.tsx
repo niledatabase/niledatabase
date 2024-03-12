@@ -9,7 +9,8 @@ import { useAction } from "@/hooks/use-action";
 import { toast } from "sonner";
 import { stripeRedirect } from "@/app/(main)/dashboard/organization/[organizationId]/settings/actions/stripe-redirect";
 
-export const ProModal = () => {
+//@ts-ignore
+export const ProModal = (orgId) => {
   const proModal = useProModal();
 
   const { execute, isLoading } = useAction(stripeRedirect, {
@@ -22,7 +23,7 @@ export const ProModal = () => {
   });
 
   const onClick = () => {
-    execute({});
+    execute({orgId});
   };
 
   return (

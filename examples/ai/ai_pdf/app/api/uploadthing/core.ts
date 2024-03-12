@@ -3,31 +3,28 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 
-import { configureNile } from "@/lib/AuthUtils";
-import nile from "@/lib/NileServer";
-import { currentTenantId } from "@/lib/tenent-id";
+import { configureNile } from '@/lib/NileServer';
+import { getUserToken, getUserId, getUserName } from "@/lib/AuthUtils";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { cookies } from "next/headers";
 import { checkSubscription } from "@/lib/subscription";
 import { MAX_PRO_PAGES, MAX_FREE_PAGES, MAX_FREE_MB, MAX_PRO_MB } from "@/constants/limits";
 import { revalidatePath } from 'next/cache'
+import { currentTenantId} from "@/lib/tenent-id";
 
 const f = createUploadthing();
 
-const middleware = async () => {
-  configureNile(cookies().get("authData"), null);
-  console.log(nile.userId);
-  const user = await nile.db("users.users").where({
-    id: nile.userId,
-  });
-  console.log("user in middleware:", user);
-  if (!user) throw new Error("Unauthorized");
-  const number = await currentTenantId();
-  console.log("tenant in middleware:", number);
-  const orgId = number;
+//@ts-ignore
+const middleware = async ({ req, files }) => {
+  const user = cookies().get("authData")
+  console.log("user in middleware:", JSON.stringify(user));
+  console.log("req in middleware:", JSON.stringify(req));
+  console.log("req.nextUrl in middleware:", JSON.stringify(req.nextUrl));
+  if (!getUserToken(user)) throw new Error("Unauthorized");
+  const orgId = await currentTenantId(); // extracting tenant id from the "referer" header. the alternative is to introduce tenant-id cookie
   const isPro = await checkSubscription(orgId);
-  console.log("isPro: ", isPro);
+  console.log("isPro: ", isPro, " orgId: ", orgId);
   return { userInfo: user, orgId, isPro };
 };
 
@@ -50,6 +47,8 @@ const onUploadComplete = async ({
     url: string;
   };
 }) => {
+  console.log("metadata in onUploadComplete:", JSON.stringify(metadata));
+  const tenantNile = configureNile(metadata.userInfo, metadata.orgId);
   console.log("1: On upload complete. Trying to get file: ", file.key);
   console.log("file url", file.url);
 
@@ -81,13 +80,12 @@ const onUploadComplete = async ({
     console.log("PAGE CHECK result: ", !isPageLimitExceeded, " number of pages: ", pagesAmt, " page limit: ", maxPageLimit);
 
     if (!isPageLimitExceeded) {
-      const createdFile = await nile.db("file").insert({
+      const createdFile = await tenantNile.db("file").insert({
         tenant_id: metadata.orgId,
         url: `${file.url}`,
         key: file.key,
-        user_id: metadata.userInfo[0].id,
-        user_name: metadata.userInfo[0].name,
-        user_picture: metadata.userInfo[0].picture,
+        user_id: getUserId(metadata.userInfo),
+        user_name: getUserName(metadata.userInfo),
         isIndex: false,
         name: file.name,
         pageAmt: pagesAmt,
@@ -136,7 +134,7 @@ const onUploadComplete = async ({
             if (batch.length === batchSize || idx === chunks.length - 1) {
               for (const vector of batch) {
                 const uuid = vector.id.split("_")[0];
-                await nile.db("file_embedding").insert({
+                await tenantNile.db("file_embedding").insert({
                   file_id: fileId,
                   tenant_id: metadata.orgId,
                   embedding_api_id: uuid,
@@ -149,14 +147,11 @@ const onUploadComplete = async ({
             }
           }
         }
-        
+
         console.log(`Database index updated with  vectors`);
-        await nile
+        await tenantNile
           .db("file")
-          .where({
-            id: fileId,
-            tenant_id: metadata.orgId,
-          })
+          .where({id: fileId}) // no need to filter by tenant, we are connected to the tenant db
           .update({ isIndex: true });
       } catch (err) {
         console.log("error: Error in updating file status in Nile", err);
@@ -169,6 +164,7 @@ const onUploadComplete = async ({
       return "LIMIT EXCEEDED";
     }
   } catch (err) {
+    console.log("error: Error in uploading file", err);
     return "UPLOAD FAILED";
   } finally {
     console.log("Asking for re-render of file list");

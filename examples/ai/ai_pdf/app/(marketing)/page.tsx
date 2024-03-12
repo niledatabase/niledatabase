@@ -1,12 +1,6 @@
-import { Medal } from "lucide-react";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
-import { configureNile } from "@/lib/AuthUtils";
-import nile from "@/lib/NileServer";
 import { cn } from "@/lib/utils";
-import { cookies } from "next/headers";
-// import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 export const dynamicParams = true;
@@ -14,9 +8,6 @@ export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 const MarketingPage = () => {
-  configureNile(cookies().get("authData"), null);
-  console.log("showing tenants page for user: " + nile.userId);
-  console.log(nile.userId);
   return (
     <div className="flex items-center justify-between flex-col">
       <div className={cn("flex items-center justify-center flex-col")}>

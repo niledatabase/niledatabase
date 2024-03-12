@@ -3,24 +3,15 @@ import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { stripe } from "@/lib/stripe";
-import nile from "@/lib/NileServer";
-import { currentUser } from "@/lib/current-user";
-import { configureNile } from "@/lib/AuthUtils";
+import { configureNile } from '@/lib/NileServer';
 
 export async function POST(req: Request) {
-  // configureNile(cookies().get("authData"), nile.token);
   console.log("Webhook");
-  // const user_identify_number = nile.userId;
-  // console.log("user id: ", user_identify_number);
-  // if (!user_identify_number) {
-  //   console.log("Fail From Webhook");
-  //   return new NextResponse(null, { status: 200 });
-  // }
-  // const user = await currentUser();
   const body = await req.text();
   const signature = headers().get("Stripe-Signature") as string;
-  // console.log(user);
   let event: Stripe.Event;
+
+ 
 
   try {
     event = stripe.webhooks.constructEvent(
@@ -33,16 +24,17 @@ export async function POST(req: Request) {
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
-  console.log(session);
+  console.log("stripe session: " + session);
+  if (!session?.metadata?.orgId) {
+    return new NextResponse("Org ID is required", { status: 400 });
+  }
+  const nile = configureNile(cookies().get('authData'), session.metadata.orgId);
+
   if (event.type === "checkout.session.completed") {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     );
 
-    if (!session?.metadata?.orgId) {
-      return new NextResponse("Org ID is required", { status: 400 });
-    }
-    console.log(session, "session");
     await nile.db("user_subscription").insert({
       user_id: session.metadata.userId,
       tenant_id: session.metadata.orgId,

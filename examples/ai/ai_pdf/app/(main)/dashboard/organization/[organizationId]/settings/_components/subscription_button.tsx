@@ -7,10 +7,11 @@ import { useAction } from "@/hooks/use-action";
 import { stripeRedirect } from "../actions/stripe-redirect";
 
 interface SubscriptionButtonProps {
-  isPro: boolean;
+  orgId: string,
+  isPro: boolean,
 }
 
-export const SubscriptionButton = ({ isPro }: SubscriptionButtonProps) => {
+export const SubscriptionButton = ({ orgId, isPro }: SubscriptionButtonProps) => {
   const proModal = useProModal();
 
   const { execute, isLoading } = useAction(stripeRedirect, {
@@ -23,11 +24,13 @@ export const SubscriptionButton = ({ isPro }: SubscriptionButtonProps) => {
   });
 
   const onClick = () => {
-    if (isPro) {
-      execute({});
+    // Disable for now
+    toast.warning("Subscription management is not currently available. Coming soon! Contact support for assistance.");
+    /*if (isPro) {
+      execute({orgId});
     } else {
       proModal.onOpen();
-    }
+    }*/
   };
 
   return (
