@@ -218,7 +218,7 @@ export const PythonQuickstart: Template = {
 };
 
 export const AIChatWithPDF: Template = {
-  name: "Multi-tenant chat with PDF application with Nile, pg_vector and OpenAI",
+  name: "Multi-tenant chat with PDF application using Nile, pg_vector and OpenAI",
   description:
     "Learn how to use Nile as a multi-tenant vector database with OpenAI to build a chat with PDF application",
   author: "Nile",
