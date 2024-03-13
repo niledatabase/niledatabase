@@ -4,7 +4,7 @@ This template shows how to use Nile as a multi-tenant vector embeddings store, t
 
 This example was contributed by Shreyas Chaliha aka Trace. The original version can be found in his [github account](https://github.com/trace2798/nile_ai_pdf).
 
-- [Live demo - TBD]()
+- [Live demo](https://ai-pdf-tau.vercel.app/)
 - [Video guide - TBD]()
 - [Step by step guide - TBD]()
 

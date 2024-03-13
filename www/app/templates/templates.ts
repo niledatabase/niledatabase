@@ -217,6 +217,22 @@ export const PythonQuickstart: Template = {
   },
 };
 
+export const AIChatWithPDF: Template = {
+  name: "Multi-tenant chat with PDF application using Nile, pg_vector and OpenAI",
+  description:
+    "Learn how to use Nile as a multi-tenant vector database with OpenAI to build a chat with PDF application",
+  author: "Nile",
+  demoUrl: "https://https://ai-pdf-tau.vercel.app/",
+  imageSrc: "/templates/ChatWithPDF.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/ai/ai_pdf/README.md",
+  metadata: {
+    Framework: "OpenAI, pg_vector, UploadThing, NextJS",
+    "Use Case": "AI SaaS",
+    Publisher: "Shreyas Chaliha aka Trace",
+  },
+};
+
 /*
 export const placeholderTemplate: Template = {
   // A great name, preferably unique, name for the template
