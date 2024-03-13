@@ -5,6 +5,8 @@ import { NextResponse } from "next/server";
 import { cookies } from 'next/headers';
 import OpenAI from "openai";
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();

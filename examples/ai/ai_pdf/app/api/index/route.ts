@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers';
 
-// export const maxDuration = 30;
+export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   try {

@@ -13,6 +13,8 @@ import { MAX_PRO_PAGES, MAX_FREE_PAGES, MAX_FREE_MB, MAX_PRO_MB } from "@/consta
 import { revalidatePath } from 'next/cache'
 import { currentTenantId} from "@/lib/tenent-id";
 
+export const maxDuration = 60;
+
 const f = createUploadthing();
 
 //@ts-ignore
@@ -31,7 +33,7 @@ const middleware = async ({ req, files }) => {
 function checkTime(startTime: [number, number]) {
   const [ms, nanos] = process.hrtime(startTime);
   const elapsedSec = ms * 1000 + nanos / 1000000;
-  if (elapsedSec > 12000) {
+  if (elapsedSec > (maxDuration * 1000)-500) {
     throw new Error("Timeout");
   }
 }
