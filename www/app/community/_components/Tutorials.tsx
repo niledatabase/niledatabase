@@ -28,12 +28,31 @@ const videos = [
     videoUrl: "https://www.youtube.com/embed/Eo0dDROnJGg?si=qS4Rg8LAyIkK4zfB",
   },
   {
+    title:
+      "Build multi-tenant SaaS application with Python and Nile's Postgres",
+    videoUrl: "https://www.youtube.com/embed/Axl63TUf2bc?si=72ad_nUkaiYWP8jz",
+  },
+  {
     title: "Build multi-tenant application with Nile and Prisma ORM",
     videoUrl: "https://www.youtube.com/embed/qsQSQoMpluk?si=iBxer1f202pvfZH6",
   },
   {
     title: "Build a multi-tenant application with Nile and Drizzle ORM",
     videoUrl: "https://www.youtube.com/embed/Qx0_99qebjo?si=np370EsZPJmM-1zA",
+  },
+  {
+    title: "Serverless Backend for SaaS with Nile and AWS Lambda",
+    videoUrl: "https://www.youtube.com/embed/tikEF_zCw8g?si=AAhUcVw0IY6zDvkw",
+  },
+  {
+    title:
+      "Authentication for multi-tenant applications with NextAuth and Nile's Postgres",
+    videoUrl: "https://www.youtube.com/embed/EcZAsp4R0ig?si=YV6Z962bbO4Z51Kv",
+  },
+  {
+    title:
+      "Add Payments and Subscriptions to your SaaS - with Stripe and Nile's Postgres",
+    videoUrl: "https://www.youtube.com/embed/DBmG6vcjH5M?si=up7822tnQK1k01Ka",
   },
 ];
 
