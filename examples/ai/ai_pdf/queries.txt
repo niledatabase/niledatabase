@@ -1,0 +1,61 @@
+
+CREATE TABLE "file" (
+  "id" UUID DEFAULT (gen_random_uuid()),
+  "tenant_id" UUID NOT NULL,
+  "url"      TEXT,
+  "key"      TEXT,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "user_id" UUID NOT NULL,
+  "user_picture" TEXT,
+  "user_name" TEXT,
+  "isIndex" Boolean,
+  "name" TEXT,
+  "pageAmt" INTEGER,
+  CONSTRAINT "file_pkey" PRIMARY KEY ("id", "tenant_id"),
+  CONSTRAINT "unique_key_per_tenant" UNIQUE ("tenant_id", "key")
+);
+
+
+CREATE TABLE "file_embedding" (
+  "id" UUID DEFAULT (gen_random_uuid()),
+  "tenant_id" UUID NOT NULL,
+  "file_id" UUID NOT NULL,
+  "embedding_api_id"  UUID NOT NULL,
+  "embedding" vector(1024),
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "pageContent" TEXT,
+  "location" TEXT,
+  CONSTRAINT "file_embedding_pkey" PRIMARY KEY ("id", "tenant_id"),
+  CONSTRAINT "file_embedding_file_id_fkey" FOREIGN KEY ("file_id", "tenant_id") REFERENCES "file" ("id", "tenant_id")
+);
+
+CREATE TABLE "message" (
+  "id" UUID DEFAULT (gen_random_uuid()),
+  "tenant_id" UUID NOT NULL,
+  "text" TEXT,
+  "isUserMessage" BOOLEAN,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "user_id" UUID NOT NULL,
+  "user_picture" TEXT,
+  "user_name" TEXT,
+  "fileId" UUID,
+  CONSTRAINT "message_pkey" PRIMARY KEY ("id", "tenant_id"),
+  CONSTRAINT "message_fileId_fkey" FOREIGN KEY ("fileId", "tenant_id") REFERENCES "file" ("id", "tenant_id")
+);
+
+CREATE TABLE "user_subscription" (
+  "id" UUID DEFAULT (gen_random_uuid()),
+  "user_id" UUID NOT NULL,
+  "tenant_id" UUID NOT NULL,
+  "stripe_customer_id" TEXT,
+  "stripe_subscription_id" TEXT,
+  "stripe_price_id" TEXT,
+  "stripe_current_period_end" TIMESTAMP,
+  CONSTRAINT "subscription_pkey" PRIMARY KEY ("id", "tenant_id"),
+  CONSTRAINT "user_subscription_user_id_fkey" FOREIGN KEY ("user_id", "tenant_id") REFERENCES users.tenant_users ("user_id", "tenant_id"),
+  CONSTRAINT "unique_stripe_customer_id" UNIQUE ("stripe_customer_id", "tenant_id"),
+  CONSTRAINT "unique_stripe_subscription_id" UNIQUE ("stripe_subscription_id", "tenant_id")
+);
