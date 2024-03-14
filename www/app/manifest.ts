@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Nile Database — Serverless Postgres for modern SaaS",
     short_name: "Nile database",
     description:
-      "Serverless Postgres build with multi-tenacy at it's core. Fault tolerant, globally distrubted, with user and tenant management built in.",
+      "Serverless Postgres build with multi-tenacy at it's core. Fault tolerant, globally distributed, with user and tenant management built in.",
     start_url: "/",
     display: "standalone",
     background_color: "#000",

@@ -102,11 +102,11 @@ create table airports (
 -- entry of a few airports in the world with detailed information for each
 insert into airports (id, name, code, address, number_of_terminals)
 values
-  (3459,'San Franciso','SFO','San Francisco, CA 94128','10'),
+  (3459,'San Francisco','SFO','San Francisco, CA 94128','10'),
   (2933,'Singapore','SGR','PO Box 168 Changi Airport Singapore 918146','15'),
   (2234,'London','LDN','Hounslow TW6 1QG, UK','12');
 
--- displaying all the flight informations along with the address of the airport
+-- displaying all the flight information along with the address of the airport
 -- from which the flight is starting
 select flights.id, flights.name, flights.from_location, airports.address
 from flights, airports

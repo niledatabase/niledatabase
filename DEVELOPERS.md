@@ -33,7 +33,7 @@ It is important to us that contributing to Nile will be a pleasant experience, i
 
 ### Directory Structure
 
-To get started, it helps to be familiar with how this repository is layed out. Here's an overview of the key directories:
+To get started, it helps to be familiar with how this repository is laid out. Here's an overview of the key directories:
 
 ```bash
 /

@@ -166,7 +166,7 @@ app.add_middleware(TenantAwareMiddleware)
 ```
 
 The middleware runs before any request is processed. But not every request has a tenant context. For example, `login` or `create_tenant` routes doesn't need a tenant context.
-Requests that don't have a tenant context are considered to be `global` since they are performed on the database as a whole, not in the virtual database for a specifc tenant.
+Requests that don't have a tenant context are considered to be `global` since they are performed on the database as a whole, not in the virtual database for a specific tenant.
 
 To handle a request in the global context, we use a global session. This is a session that doesn't have a tenant context. For example to create a new tenant:
 

@@ -29,7 +29,7 @@ async function upload(output) {
 
 async function run() {
   const files = await glob("app/blog/**.mdx");
-  // remove the 1st for the search, since it will be handled seperately
+  // remove the 1st for the search, since it will be handled separately
   files.shift();
   const out = [];
   for (const fileName of files) {

@@ -12,13 +12,13 @@ import { useState } from "react";
 export const TrashBox = ({ file }: { file: any }) => {
   const router = useRouter();
   const params = useParams();
-  const [loading, setLoding] = useState(false);
+  const [loading, setLoading] = useState(false);
   const onRemove = async (file: File) => {
-    setLoding(true);
+    setLoading(true);
     console.log("DELETE");
     await axios.post("/api/deleteindex", { data: { file } });
     await axios.post("/api/deletefile", { data: { file } });
-    setLoding(false);
+    setLoading(false);
     router.refresh();
   };
 

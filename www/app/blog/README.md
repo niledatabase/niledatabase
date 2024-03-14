@@ -7,7 +7,7 @@ Add an image in `/public/authors/[key].png`
 
 ## Create a blog post
 
-Aded a new file to this directory with a `YYYY-MM-DD-[name-of-slug].mdx` convention.
+Add a new file to this directory with a `YYYY-MM-DD-[name-of-slug].mdx` convention.
 
 In that file, add your text and images, using markdown in the expected way.
 

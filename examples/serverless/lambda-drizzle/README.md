@@ -30,7 +30,7 @@ If all went well, you'll see the new table in the panel on the left hand side of
 
 ### 3. Getting credentials
 
-In the left-hand menu, click on "Settings" and then select "Connection". 
+In the left-hand menu, click on "Settings" and then select "Connection".
 
 Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
 
@@ -49,7 +49,7 @@ Rename `.env.example` to `.env`, and update it with the connection string you ju
 DATABASE_URL=postgres://018b778a-30df-7cdd-b55c-2f9664db39f3:ff3fb983-683c-4616-bbbc-519d8ddbbce5@db.thenile.dev:5432/gwen_db
 ```
 
-**Optional:** You can select a region for deploying this example by editting `serverless.yml`
+**Optional:** You can select a region for deploying this example by editing `serverless.yml`
 
 Install dependencies with `npm install`.
 

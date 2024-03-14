@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Nile Database — Serverless Postgres for modern SaaS",
   description:
-    "Serverless Postgres build with multi-tenacy at it's core. Fault tolerant, globally distrubted, with user and tenant management built in.",
+    "Serverless Postgres build with multi-tenacy at it's core. Fault tolerant, globally distributed, with user and tenant management built in.",
   applicationName: "Nile database",
   metadataBase: new URL("https://www.thenile.dev/"),
   manifest: new URL("https://www.thenile.dev/manifest.json"),
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     title: "Nile Database — Serverless Postgres for modern SaaS",
     siteName: "Nile Database — Serverless Postgres for modern SaaS",
     description:
-      "Serverless Postgres build with multi-tenacy at it's core. Fault tolerant, globally distrubted, with user and tenant management built in.",
+      "Serverless Postgres build with multi-tenacy at it's core. Fault tolerant, globally distributed, with user and tenant management built in.",
   },
   twitter: {
     card: "summary_large_image",

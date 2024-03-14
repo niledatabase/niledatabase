@@ -79,7 +79,7 @@ export const NodeJSQuickstart: Template = {
   // the location of the thumbnail. could be in /public/templates, or a CDN
   imageSrc: "/templates/NodeTodoApp.png",
   demoUrl: "https://demo-todo-node.fly.dev",
-  // the readmeURL should be publically accessible.
+  // the readmeURL should be publicly accessible.
   // It should also be the real github url, not the raw readme
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/node_react/README.md",
@@ -102,7 +102,7 @@ export const JavaQuickstart: Template = {
   demoUrl: "https://java-quickstart-demo.vercel.app/",
   // the location of the thumbnail. could be in /public/templates, or a CDN
   imageSrc: "/templates/JavaTodoApp.png",
-  // the readmeURL should be publically accessible.
+  // the readmeURL should be publicly accessible.
   // It should also be the real github url, not the raw readme
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/java/README.md",
@@ -125,7 +125,7 @@ export const DrizzleQuickstart: Template = {
   demoUrl: "https://nile-drizzle-quickstart.vercel.app/",
   // the location of the thumbnail. could be in /public/templates, or a CDN
   imageSrc: "/templates/DrizzleTodoApp.png",
-  // the readmeURL should be publically accessible.
+  // the readmeURL should be publicly accessible.
   // It should also be the real github url, not the raw readme
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/drizzle/README.md",
@@ -245,7 +245,7 @@ export const placeholderTemplate: Template = {
   imageSrc: "/templates/nad.jpg",
   // the FQDN for where the demo is running
   demoUrl: "https://demo.demo"
-  // the readmeURL should be publically accessible.
+  // the readmeURL should be publicly accessible.
   // It should also be the real github url, not the raw readme
   readmeUrl: "https://github.com/niledatabase/nile-js/blob/main/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
