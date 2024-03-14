@@ -17,11 +17,11 @@ export default function BasicLoginForm() {
     <NileProvider basePath={process.env.NEXT_PUBLIC_BASE_PATH}>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
         <Stack gap={2} justifyContent="center" alignItems="center">
-         {/* Nile's Login component calls the auth API route, which will set the right cookies. So we just need to redirect to the right page. */} 
+         {/* Nile's Login component calls the auth API route, which will set the right cookies. So we just need to redirect to the right page. */}
          {error && <Alert>{error}</Alert>}
-        <UserLoginForm 
+        <UserLoginForm
           onSuccess={(resp) => push('/tenants')}
-          onError={(resp) => {setError('An error has occured. ' + resp.message);}}/>
+          onError={(resp) => {setError('An error has occurred. ' + resp.message);}}/>
         <Typography>
           Not a user yet? <Link href="/signup">Sign up here</Link>
         </Typography>

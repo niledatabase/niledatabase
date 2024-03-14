@@ -140,7 +140,7 @@ export const Chat: FC<ChatProps> = ({
                 </Button>
               </div>
             ))}
-            {/* <div className="bg-white">Soem</div> */}
+            {/* <div className="bg-white">Some</div> */}
             <form onSubmit={handleSubmit}>
               {isLoading && (
                 <div className="p-4 rounded-lg w-1/2 flex items-center justify-center bg-muted mt-10">

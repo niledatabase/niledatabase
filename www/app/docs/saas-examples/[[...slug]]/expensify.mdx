@@ -19,7 +19,7 @@ The schema for this example has a few tables that represent the core entities of
 
 1.  `employees` table allows syncing with employee directories and finance systems.
 2.  `expense_reports` table stores the expense reports submitted by employees.
-3.  `expense_report_items` table stores the individual expenses of each report, including vendor, amount and url of uploaded reciept.
+3.  `expense_report_items` table stores the individual expenses of each report, including vendor, amount and url of uploaded receipt.
 4.  `expense_report_approvals` table stores the approval status of each expense report.
 
 Note that in this scenario all tables are [tenant aware](https://www.thenile.dev/docs/tenant-isolation).
@@ -69,7 +69,7 @@ CREATE index IF NOT EXISTS expense_report_by_employee ON expense_report (employe
 
 3. **expense_report_items** table
 
-The expense_report_items table stores the individual expenses of each report, including vendor, amount and url of uploaded reciept.
+The expense_report_items table stores the individual expenses of each report, including vendor, amount and url of uploaded receipt.
 
 ```sql
 CREATE TABLE IF NOT EXISTS EXPENSE_REPORT_ITEMS (

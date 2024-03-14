@@ -19,8 +19,8 @@ export default function SignUp() {
         <Typography level="h1">Sign up</Typography>
         {error && <Alert>{error}</Alert>}
         <UserSignupForm
-          onSuccess={() => navigate('/tenants')} 
-          onError={() => {setError('an error has occured.');}}/>
+          onSuccess={() => navigate('/tenants')}
+          onError={() => {setError('an error has occurred.');}}/>
         <p>
           Already a user? <Link href="/">Log in here</Link>
         </p>

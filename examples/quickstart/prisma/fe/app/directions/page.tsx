@@ -1,5 +1,5 @@
 'use client';
-// ^^^ required by the syntax highighter. Note that this also means that I can't use NextJS cookies here (they are for the server side only)
+// ^^^ required by the syntax highlighter. Note that this also means that I can't use NextJS cookies here (they are for the server side only)
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useState } from 'react';
 
 export default function Page() {
-    
+
     const [isClient, setIsClient] = useState(false)
     useEffect(() => {
         setIsClient(true)
@@ -39,7 +39,7 @@ export default function Page() {
   --header 'Content-Type: application/json' \\
   --user '${userID}:' \\
   --data-raw '{"id":"${tenantID}", "name":"my first customer"}'
-  
+
   # Create a todo item:
   curl -X POST '${backendServer}/api/tenants/${tenantID}/todos' \\
   --header 'Content-Type: application/json' \\
@@ -56,7 +56,7 @@ export default function Page() {
   --header 'Content-Type: application/json' \\
   --user '${userID}:' \\
   --data-raw '{"title": "take out the trash", "complete": false}'
-  
+
   # List all todos for the first tenant:
   # This endpoint uses Nile's tenant isolation feature to only show todos to the tenant in the URL path.
   curl -X GET '${backendServer}/api/tenants/${tenantID}/todos' \\
@@ -64,21 +64,21 @@ export default function Page() {
 
   # List your tenants:
   curl -X GET '${backendServer}/api/tenants' --user '${userID}:'
-  
+
   # This endpoint will show you all todos for all tenants
   # For demo purposes, we excluded it from the tenant isolation.
   curl -X GET '${backendServer}/insecure/all_todos' \\
-  --user '${userID}:'` 
+  --user '${userID}:'`
 
   return (
     <Stack direction="column" spacing={2}>
             <Typography level="body-md" style={{whiteSpace: 'pre-line', padding: '0 0 2rem 0'}}> {introText} </Typography>
-            {isClient ? 
-                <SyntaxHighlighter language="bash" 
+            {isClient ?
+                <SyntaxHighlighter language="bash"
                     useInlineStyles={false}
                     wrapLongLines={true}>
                 {codeString}
-                </SyntaxHighlighter> 
+                </SyntaxHighlighter>
             : null}
     </Stack>
   );

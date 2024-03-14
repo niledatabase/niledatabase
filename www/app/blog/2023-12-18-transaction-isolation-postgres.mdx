@@ -107,7 +107,7 @@ The lowest level of isolation is read uncommitted. Read uncommitted allows a who
       <td>
         {/* prettier-ignore */}
         <pre>
-          INSERT INTO accounts (acctnum, balance) 
+          INSERT INTO accounts (acctnum, balance)
           values (12345, 100);
         </pre>
       </td>
@@ -164,7 +164,7 @@ Non-repeatable reads means that the same query within one transaction can return
     <tr>
       {/* prettier-ignore */}
       <td>
-        <pre>UPDATE accounts set balance = 500 
+        <pre>UPDATE accounts set balance = 500
         where acctnum = 12345;</pre>
       </td>
       <td></td>
@@ -220,7 +220,7 @@ The main problem with non repeatable reads is a classic anti-pattern known as â€
     <tr>
       <td>
         {/* prettier-ignore */}
-        <pre>UPDATE accounts set balance = 500 
+        <pre>UPDATE accounts set balance = 500
         where acctnum = 12345;</pre>
       </td>
       <td></td>
@@ -236,7 +236,7 @@ The main problem with non repeatable reads is a classic anti-pattern known as â€
       <td>
         {/* prettier-ignore */}
         <pre>
-          UPDATE accounts SET balance = balance * 1.1 
+          UPDATE accounts SET balance = balance * 1.1
           where acctnum = 12345;
         </pre>
       </td>
@@ -336,7 +336,7 @@ With the non-repeatable reads anomaly, you can see changes to rows that existed 
     <tr>
       <td>
         {/* prettier-ignore */}
-        <pre>UPDATE accounts set balance = 500 
+        <pre>UPDATE accounts set balance = 500
         where acctnum = 789;</pre>
       </td>
       <td></td>
@@ -351,7 +351,7 @@ With the non-repeatable reads anomaly, you can see changes to rows that existed 
       <td>
         {/* prettier-ignore */}
         <pre>
-          INSERT INTO accounts (acctnum, balance) 
+          INSERT INTO accounts (acctnum, balance)
           values (12345, 100);
         </pre>
       </td>
@@ -480,7 +480,7 @@ Let's take another look at one of our examples, and consider which transactions 
     <tr>
       <td>
         {/* prettier-ignore */}
-        <pre>UPDATE accounts set balance = 500 
+        <pre>UPDATE accounts set balance = 500
         where acctnum = 789;</pre>
       </td>
       <td></td>
@@ -495,7 +495,7 @@ Let's take another look at one of our examples, and consider which transactions 
       <td>
         {/* prettier-ignore */}
         <pre>
-          INSERT INTO accounts (acctnum, balance) 
+          INSERT INTO accounts (acctnum, balance)
           values (12345, 100);
         </pre>
       </td>
@@ -665,7 +665,7 @@ to implement, and whether additional explicit locking is required. It will also 
 Techniques such as deterministic simulation testing can help catch and detect cases where concurrent transactions lead to incorrect results.
 
 Last but not least, huge thanks to [Alex DeBrie](https://twitter.com/alexbdebrie), [Franck Pachot](https://twitter.com/FranckPachot), [Lawrence Jones](https://twitter.com/lawrjones) and [Gunnar Morling](https://twitter.com/gunnarmorling) who reviewed early drafts of this blog, caught mistakes and improved the explanations. The remaining mistakes and confusing explanations are all mine.
-I also recieved substantial feedback that lead to an improved revision after the blog was published - thanks to [Joseph M. Hellerstein](https://twitter.com/joe_hellerstein), [Justin Gage](https://www.linkedin.com/in/gagejustin/) and [Philipp Salvisberg](https://twitter.com/phsalvisberg).
+I also received substantial feedback that lead to an improved revision after the blog was published - thanks to [Joseph M. Hellerstein](https://twitter.com/joe_hellerstein), [Justin Gage](https://www.linkedin.com/in/gagejustin/) and [Philipp Salvisberg](https://twitter.com/phsalvisberg).
 
 ## Additional References:
 

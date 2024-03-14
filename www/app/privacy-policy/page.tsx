@@ -316,7 +316,7 @@ export default function PrivacyPolicy() {
 
         <ul>
           <li>
-            <strong>Demographic Informatio</strong>n, such as your city, state,
+            <strong>Demographic Information</strong>, such as your city, state,
             country of residence, postal code, and age. Communications that we
             exchange with you, including when you contact us through the
             Service, social media, or otherwise.

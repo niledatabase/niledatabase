@@ -218,9 +218,9 @@ we link to the signout endpoint provided by NextAuth:
 ### Using NextAuth for identity and access
 
 NextAuth provides a `useSession()` hook that we can use to get the current session.
-In order to use it with Nile's tenant isolation, we refer to it when retrieving a conection to Nile's tenant databases in [`/lib/NileServer.ts`](https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/NextAuth/lib/NileServer.ts)
+In order to use it with Nile's tenant isolation, we refer to it when retrieving a connection to Nile's tenant databases in [`/lib/NileServer.ts`](https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/NextAuth/lib/NileServer.ts)
 
-This guarantess that all queries executed on behalf of the user will be executed in the context of the tenant the user is currently logged in to.
+This guarantees that all queries executed on behalf of the user will be executed in the context of the tenant the user is currently logged in to.
 Nile will also respond with errors if the user is not authorized to access the tenant.
 
 ```javascript

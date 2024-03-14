@@ -19,7 +19,7 @@ export default function CopyToClipboard({
           // iframes may cause this to fail, so be quiet.
         });
       if (typeof window !== "undefined") {
-        // *, because this is just going to be publically accessible docs
+        // *, because this is just going to be publicly accessible docs
         window.parent.postMessage({ copy: textInput.current.textContent }, "*");
       }
     }

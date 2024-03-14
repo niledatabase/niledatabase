@@ -186,7 +186,7 @@ The `TenantAwareDataSource` will use it to set the `nile.tenant_id` context on e
 
 ### 7.2 The `TenantAwareDataSource`
 
-This is a decorator for the standard Hikari data source. It is reponsible for providing our web application with a connection to the correct tenant database.
+This is a decorator for the standard Hikari data source. It is responsible for providing our web application with a connection to the correct tenant database.
 It does this by wrapping `getConnection` and setting `nile.tenant_id` context on the connection before returning it.
 This means that every connection is associated with a specific tenant, and any queries executed on it will be scoped to that tenant.
 
@@ -210,7 +210,7 @@ This is Nile's "virtual tenant databases" feature in action.
   }
 ```
 
-### 7.3 Tieing it all together - handling a request for all todos for a tenant
+### 7.3 Tying it all together - handling a request for all todos for a tenant
 
 The `TodoController` is the Spring MVC controller that handles the requests for the todo list.
 Its method `getAllTodos` is the handler for `GET /tenants/{tenant_id}/todos`.

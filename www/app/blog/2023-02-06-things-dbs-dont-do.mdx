@@ -19,7 +19,7 @@ It also sounds a bit useless. Knowing about things you can do is obviously usefu
 
 In this blog, I'll point out functionality that is very often needed in data platforms and more likely than not, you will need to build yourself since your DB won’t handle it for you. Even though it really should. I know you will need to build all of this yourself, because I've seen it in almost every project I was part of over 20+ years.
 
-You can take this list of things DBs don't do, and use it as a checklist for your application or data platform design - make sure you don't forget about them, because with high likelyhood - you will need them.
+You can take this list of things DBs don't do, and use it as a checklist for your application or data platform design - make sure you don't forget about them, because with high likelihood - you will need them.
 
 In some cases there are some DBs that do these things. You can use this list to guide your choice of a DB. These things are not key criteria for choosing a DB, but if you have several close options, it may tip the scale.
 
@@ -76,7 +76,7 @@ Since multi-tenant applications are so common, there are design patterns on how 
 
 ![“Pooled vs Isolated tenant models”](/blog/things_dbs_dont_do/slide14.png)
 
-When you start with the pooled model, after a while you outgrow the capacity of a single DB or perhaps some of your customers require better isolation, better performance or better availability. So [you end up sharding your database and placing different tenants on different shards](https://www.notion.so/blog/sharding-postgres-at-notion). Depending on the extent to which your database supports sharding, you may or may not need to manually build a layer that determines the right shard for new tenants, directs each request to the rigth shard, adds new shards when needed and balances load between shards.
+When you start with the pooled model, after a while you outgrow the capacity of a single DB or perhaps some of your customers require better isolation, better performance or better availability. So [you end up sharding your database and placing different tenants on different shards](https://www.notion.so/blog/sharding-postgres-at-notion). Depending on the extent to which your database supports sharding, you may or may not need to manually build a layer that determines the right shard for new tenants, directs each request to the right shard, adds new shards when needed and balances load between shards.
 
 ![“Sharded DB”](/blog/things_dbs_dont_do/slide15.png)
 
@@ -167,14 +167,14 @@ On the other hand, we have the browser. The browser needs to get data, so it can
 
 The mismatch seems pretty obvious - a system that only speaks HTTP needs to get data from a system with a native binary protocol. The solution is so obvious that we've been implementing is over and over for decades now - you write a backend.
 
-The backend typically has a lot of important business functionality, but it also serves as a translator. It accepts HTTP connections from browsers on one side, and has a connection pool to a database on the other side. A lot of what a backend does is recieve REST requests over HTTP, translate them into SQL and send them to the DB for processing, then get the result, translate it again and send it back. We all wrote a lot of code that basically does that.
+The backend typically has a lot of important business functionality, but it also serves as a translator. It accepts HTTP connections from browsers on one side, and has a connection pool to a database on the other side. A lot of what a backend does is receive REST requests over HTTP, translate them into SQL and send them to the DB for processing, then get the result, translate it again and send it back. We all wrote a lot of code that basically does that.
 
 ![“Backend serving as a translator between browser and DB”](/blog/things_dbs_dont_do/slide25.png)
 
 In the best cases, this adds value. Maybe we abstract a bunch of internal DB details nicely. But in too many cases, there isn't much to abstract and the API pretty much exposes the table as-is.
 One use of GraphQL is to auto-generate APIs from a DB schema. I suspect that GraphQL so popular because developers tend to feel a bit silly writing another bit of translation code whenever a product manager wants another button in the UI. I'd argue that in some cases, it even introduces risk.
 
-One way the backend can add risk is authentication. Users authenticates to your website, persumably with a standard secure protocol like SAML. But the DB doesn’t know about this user, the DB typically has service-account type of users that identify entire applications. So any kind of access controls need to be enforced by the application or with custom code in the database.
+One way the backend can add risk is authentication. Users authenticates to your website, presumably with a standard secure protocol like SAML. But the DB doesn’t know about this user, the DB typically has service-account type of users that identify entire applications. So any kind of access controls need to be enforced by the application or with custom code in the database.
 
 To make things a bit worse, it is a controversial but common practice to have more than one backend working with the same database. In these scenarios enforcing security in each backend introduces redundancy and even more surface area for problems.
 
@@ -204,7 +204,7 @@ Tuning a database isn’t easy. Figuring out which indexes would improve perform
 
 We are starting to see proof-of-concept for databases that use machine learning to adapt to the access patterns and the data stored in them, and create indexes specifically to make the most common access patterns smarter. For example, a paper from Google that was published in SIGMOD 2018 titled ["The Case for Learned Index Structures"](https://ai.google/research/pubs/pub46518). Later research introduced [additional index operations](https://dl.acm.org/doi/abs/10.14778/3389133.3389135), [join optimizations](https://arxiv.org/abs/1809.00677) and [query plan optimizations](https://arxiv.org/abs/1904.03711). It will be exciting to see a generation of data engineers focus more on building data products and data platforms that serve their users, and less time tuning indexes.
 
-An area where I didn't find a lot of research, but seems to have a lot of potential for inteligence is capacity predictions. Can the DB predicts its own growth with high accuracy? If it can, perhaps it can also provision its own future capacity directly from the cloud provider and either migrate itself to a larger server or balance its load to new nodes in the growing cluster. These capabilities will give us a "serverless" experience because the DB would handle all those pesky servers itself.
+An area where I didn't find a lot of research, but seems to have a lot of potential for intelligence is capacity predictions. Can the DB predicts its own growth with high accuracy? If it can, perhaps it can also provision its own future capacity directly from the cloud provider and either migrate itself to a larger server or balance its load to new nodes in the growing cluster. These capabilities will give us a "serverless" experience because the DB would handle all those pesky servers itself.
 
 ## Summary
 
