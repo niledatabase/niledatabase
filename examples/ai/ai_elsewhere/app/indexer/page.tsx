@@ -56,13 +56,13 @@ export default async function Page() {
 
   const tenantDB = configureNile(cookies().get('authData'), tenants[0].id);
 
-  const fileSummary = await tenantDB.db("files").select("*")
+  const fileSummary = await tenantDB.db("files").select("*").orderBy("createdAt", "desc");
 
   return (
     <div className={styles.center}>
          {/* TODO: Do we want a title with user or tenant name?*/}
-     <Stack spacing={3} >
-      <Card  variant="outlined" sx={{ maxWidth: '50%' }}> 
+     <Stack spacing={3} sx={{ maxWidth: '50%' }}>
+      <Card  variant="outlined" > 
       <CardContent > 
         <div style={{display: 'flex', justifyContent: 'center', padding:'1rem'}}>
             <form name="newtenant" id="newtenant" action={indexPDFAction}> 
@@ -82,28 +82,30 @@ export default async function Page() {
         </div>
       </CardContent>
       </Card>
+      <Card>
       <Table>
       <thead>
         <tr>
             <th>File URL</th>
-            <th>Created At</th>
             <th># Pages</th>
             <th>Time to index (ms)</th>
-            <th>First paragraph</th>
+            <th>Start of document</th>
         </tr>
         </thead>
         <tbody>
-            {fileSummary.map((file: any) => (
+            {fileSummary
+            .filter(v => v.first_paragraph !== null)
+            .map((file: any) => (
                 <tr key={file.id}>
-                    <td>{file.url}</td>
-                    <td>{file.createdAt.toString()}</td>
+                    <td>{file.url.substring(0,30)}</td>
                     <td>{file.pages}</td>
                     <td>{file.time_to_index}</td>
-                    <td>{file.first_paragraph}</td>
+                    <td>{file.first_paragraph.substring(0,160)}</td>
                 </tr>
             ))}
         </tbody>
       </Table>
+      </Card>
       </Stack>
       </div>
       )
