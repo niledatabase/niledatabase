@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import styles from '../page.module.css';
 import Typography from '@mui/joy/Typography';
 import Button from '@mui/joy/Button';
+import Stack from '@mui/joy/Stack';
+import Link from 'next/link';
 
 
 export default function Error({
@@ -20,15 +22,10 @@ export default function Error({
  
   return (
     <div className={styles.center}>
-      <Typography level='title-lg'>Something went wrong!</Typography>
-      <Button
-        onClick={
-          // Attempt to recover by trying to re-render the route
-          () => reset()
-        }
-      >
-        Try again
-      </Button>
+        <Stack gap={2} justifyContent="center" alignItems="center">
+            <Typography level='title-lg'>Something went wrong!</Typography>
+            <Button href="/" component={Link}>Login again to retry</Button>
+        </Stack>
     </div>
   );
 }

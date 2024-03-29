@@ -67,12 +67,12 @@ export default async function Page() {
         <div style={{display: 'flex', justifyContent: 'center', padding:'1rem'}}>
             <form name="newtenant" id="newtenant" action={indexPDFAction}> 
             <Stack spacing={3} >
-                    <Typography level="title-lg">We'll need the URL of a PDF that you want to try and index</Typography>
+                    <Typography level="title-lg">Please provide a URL of a PDF</Typography>
                     <Typography level="body-md" >We are going to chunk the document, generate embeddings and store them. 
-                    Then we will tell you how many chunks the doc had, and how long it took to generate and store embeddings.
-                    For efficiency and cost reasons, we are going to only index the first 10,000 characters of the document
+                    You will see, in the table below how long it took to generate and store embeddings.
+                    For efficiency and cost reasons, we are going to only index the first 10,000 characters of the document </Typography>
 
-                    For example, you can try this short article about Phil Jackson: https://uhra.herts.ac.uk/bitstream/handle/2299/1346/900740.pdf
+                    <Typography level="body-md" >For example, you can try this short article about Phil Jackson: https://uhra.herts.ac.uk/bitstream/handle/2299/1346/900740.pdf
                     </Typography>
                     <Input id="pdfURL" name="pdfURL" autoFocus required />
                     <input type="hidden" id="tenantId" name="tenantId" value={tenants[0].id} />
