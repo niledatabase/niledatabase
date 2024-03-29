@@ -1,23 +1,27 @@
-# Multi-tenant todo list app with Nile and NextJS 13
+# Small demo to show effects of database region on latency
 
-This template shows how to use Nile with NextJS 13 for a multi-tenant todo list application.
+We know in theory that deploying the app and the database in different regions will have impact on latency. But many developers, myself included,
+are surprised by how much of a difference this can make.
 
-- [Live demo](https://nextjs-quickstart-omega.vercel.app)
-- [Video guide](https://www.youtube.com/watch?v=Eo0dDROnJGg)
-- [Step by step guide](https://thenile.dev/docs/getting-started/languages/nextjs)
+This small example lets you generate embeddings for any PDF, and then it tells you how long this took.
+You can play with this by deploying the application and the database in different regions - you'll be surprised by the differences you see!
+
+- [Video guide - TBD]()
+
+Note that you'll also need an OpenAI API key in order to run this demo.
 
 ## Getting Started
 
 ### 1. Create a new database
 
-Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already and choose "Yes, let's get started". Follow the prompts to create a new workspace and a database.
+Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already and choose "Yes, let's get started". Follow the prompts to create a new workspace and a database. To see the latency effect, you'll want to create another database in another region and test both options.
 
 ### 2. Create file and embedding tables
 
-After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
+After you created a database, you will land in Nile's query editor. This is a good time to create the tables we need:
 
 ```sql
-    CREATE TABLE "file" (
+    CREATE TABLE files (
   "id" UUID, -- intentionally not auto generating
   "tenant_id" UUID NOT NULL,
   "url"      TEXT,
@@ -27,7 +31,7 @@ After you created a database, you will land in Nile's query editor. Since our ap
   chunks INTEGER,
   first_paragraph TEXT,
   time_to_index BIGINT,
-  CONSTRAINT "file_pkey" PRIMARY KEY ("id", "tenant_id"),
+  CONSTRAINT "file_pkey" PRIMARY KEY ("id", "tenant_id")
 );
 
 
@@ -44,7 +48,7 @@ CREATE TABLE "file_embedding" (
 );
 ```
 
-If all went well, you'll see the new table in the panel on the left hand side of the query editor. You can also see Nile's built-in tenant table next to it.
+If all went well, you'll see the new tables in the panel on the left hand side of the query editor. You can also see Nile's built-in tenant table next to it.
 
 ### 3. Getting credentials
 
@@ -55,8 +59,8 @@ In the left-hand menu, click on "Settings" and then select "Credentials". Genera
 If you haven't cloned this project yet, now will be an excellent time to do so. Since it uses NextJS, we can use `create-next-app` for this:
 
 ```bash
-npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs nile-todo
-cd nile-todo
+npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/ai/ai_elsewhere ai_elsewhere
+cd ai_elsewhere
 ```
 
 Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name.
@@ -86,6 +90,17 @@ NEXT_PUBLIC_NILE_API=https://api.thenile.dev
 
 # Uncomment if you want to try Google Auth
 # AUTH_TYPE=google
+
+### AI ENV VARS ###
+
+OPENAI_API_KEY=sk-MVYAN...
+
+# For more options: https://platform.openai.com/docs/models
+OPENAI_CHAT_MODEL_NAME="gpt-3.5-turbo"
+# For more options: https://platform.openai.com/docs/guides/embeddings/embedding-models
+OPENAI_EMBEDDING_MODEL_NAME="text-embedding-3-small"
+# The dimension you specify here must match the dimensions of the embeddings column in the database
+OPENAI_EMBEDDING_DIMENSIONS=1024
 ```
 
 Install dependencies with `yarn install` or `npm install`.
