@@ -37,11 +37,14 @@ export const Navbar = async () => {
       </>
     );
   } else {
-    const userInfo = await nile.db("users.users").where("id", "=", nile.userId);
+    const userInfo = await nile.db.query(
+      "select * from users.users where id=$1",
+      [nile.userId]
+    );
     console.log(userInfo);
-    const email = userInfo[0].email;
-    const picture = userInfo[0].picture;
-    const name = userInfo[0].name;
+    const email = userInfo.rows[0].email;
+    const picture = userInfo.rows[0].picture;
+    const name = userInfo.rows[0].name;
     return (
       <div className="fixed top-0 w-full h-14 px-4 border-b shadow-sm flex items-center">
         <div className="md:max-w-screen-2xl mx-auto flex items-center w-full justify-between">

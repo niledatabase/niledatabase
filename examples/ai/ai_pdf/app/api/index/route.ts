@@ -70,26 +70,27 @@ export async function POST(req: NextRequest) {
             if (batch.length === batchSize || idx === chunks.length - 1) {
               for (const vector of batch) {
                 const uuid = vector.id.split("_")[0];
-                await tenantNile.db("file_embedding").insert({
-                  file_id: data.file.id,
-                  tenant_id: data.file.tenant_id,
-                  embedding_api_id: uuid,
-                  embedding: JSON.stringify(vector.values),
-                  pageContent: JSON.stringify(vector.metadata.pageContent),
-                  location: JSON.stringify(vector.metadata.loc),
-                });
+                await tenantNile.db.query(
+                  `INSERT INTO file_embedding (file_id, tenant_id, embedding_api_id, embedding, "pageContent", location) VALUES ($1, $2, $3, $4, $5, $6)`,
+                  [
+                    data.file.id,
+                    data.file.tenant_id,
+                    uuid,
+                    JSON.stringify(vector.values),
+                    JSON.stringify(vector.metadata.pageContent),
+                    JSON.stringify(vector.metadata.loc),
+                  ]
+                );
               }
               batch = [];
             }
           }
         }
         console.log(`Database index updated with vectors`);
-        await tenantNile
-          .db("file")
-          .where({
-            id: data.file.id,
-          })
-          .update({ isIndex: true });
+        await tenantNile.db.query(
+          `UPDATE file SET "isIndex" = $1 WHERE id = $2`,
+          [true, data.file.id]
+        );
       } catch (err) {
         console.log(
           "error: Error in generating embeddings and updating database ",

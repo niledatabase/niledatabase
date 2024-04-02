@@ -91,22 +91,32 @@ const onUploadComplete = async ({
       maxPageLimit
     );
 
+    console.log([
+      metadata.orgId,
+      `${file.url}`,
+      file.key,
+      getUserId(metadata.userInfo),
+      getUserName(metadata.userInfo),
+      false,
+      file.name,
+      pagesAmt,
+    ]);
     if (!isPageLimitExceeded) {
-      const createdFile = await tenantNile
-        .db("file")
-        .insert({
-          tenant_id: metadata.orgId,
-          url: `${file.url}`,
-          key: file.key,
-          user_id: getUserId(metadata.userInfo),
-          user_name: getUserName(metadata.userInfo),
-          isIndex: false,
-          name: file.name,
-          pageAmt: pagesAmt,
-        })
-        .returning("id");
+      const createdFile = await tenantNile.db.query(
+        `INSERT INTO file (tenant_id, url, key, user_id, user_name, "isIndex", name, "pageAmt") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
+        [
+          metadata.orgId,
+          `${file.url}`,
+          file.key,
+          getUserId(metadata.userInfo),
+          getUserName(metadata.userInfo),
+          false,
+          file.name,
+          pagesAmt,
+        ]
+      );
 
-      const fileId = createdFile[0].id;
+      const fileId = createdFile.rows[0].id;
 
       console.log("File stored in Nile with ID:" + fileId);
       try {
@@ -150,14 +160,17 @@ const onUploadComplete = async ({
             if (batch.length === batchSize || idx === chunks.length - 1) {
               for (const vector of batch) {
                 const uuid = vector.id.split("_")[0];
-                await tenantNile.db("file_embedding").insert({
-                  file_id: fileId,
-                  tenant_id: metadata.orgId,
-                  embedding_api_id: uuid,
-                  embedding: JSON.stringify(vector.values),
-                  pageContent: JSON.stringify(vector.metadata.pageContent),
-                  location: JSON.stringify(vector.metadata.loc),
-                });
+                await tenantNile.db.query(
+                  `INSERT INTO file_embedding (file_id, tenant_id, embedding_api_id, embedding, "pageContent", location) VALUES ($1, $2, $3, $4, $5, $6)`,
+                  [
+                    fileId,
+                    metadata.orgId,
+                    uuid,
+                    JSON.stringify(vector.values),
+                    JSON.stringify(vector.metadata.pageContent),
+                    JSON.stringify(vector.metadata.loc),
+                  ]
+                );
               }
               batch = [];
             }
@@ -165,10 +178,10 @@ const onUploadComplete = async ({
         }
 
         console.log(`Database index updated with  vectors`);
-        await tenantNile
-          .db("file")
-          .where({ id: fileId }) // no need to filter by tenant, we are connected to the tenant db
-          .update({ isIndex: true });
+        await tenantNile.db.query(
+          `UPDATE file SET "isIndex" = $1 WHERE id = $2`,
+          [true, fileId]
+        );
       } catch (err) {
         console.log("error: Error in updating file status in Nile", err);
         return "EMBEDDING FAILED";

@@ -152,12 +152,3 @@ To learn more about how this example works and how to use Nile:
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-## Known Issues
-
-### NodeJS 16.x
-
-This example only wortks with Node 18 and above, because Nile SDK uses Node Fetch API, which was stabilized in Node 18.
-
-Running on Node 16 will result in errors like:
-`400 unable to parse json` or `400 email must not be empty` even on valid non-empty requests.

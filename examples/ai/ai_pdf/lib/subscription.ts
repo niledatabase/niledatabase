@@ -16,25 +16,17 @@ export const checkSubscription = async (tenant_id: string) => {
     redirect("/login");
   }
 
-  const orgSubscription = await tenantNile
-    .db("user_subscription")
-    .where({
-      user_id: tenantNile.userId,
-    })
-    .select(
-      "stripe_subscription_id",
-      "stripe_current_period_end",
-      "stripe_customer_id",
-      "stripe_price_id"
-    );
-
-  if (!orgSubscription[0]) {
+  const orgSubscription = await tenantNile.db.query(
+    "SELECT stripe_subscription_id, stripe_current_period_end, stripe_customer_id, stripe_price_id FROM user_subscription WHERE user_id = $1",
+    [tenantNile.userId]
+  );
+  if (!orgSubscription.rows[0]) {
     return false;
   }
 
   const isValid =
-    orgSubscription[0].stripe_price_id &&
-    orgSubscription[0].stripe_current_period_end?.getTime()! + DAY_IN_MS >
+    orgSubscription.rows[0].stripe_price_id &&
+    orgSubscription.rows[0].stripe_current_period_end?.getTime()! + DAY_IN_MS >
       Date.now();
 
   return !!isValid;

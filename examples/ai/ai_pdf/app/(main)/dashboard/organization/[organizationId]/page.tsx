@@ -40,9 +40,9 @@ const OrganizationIdPage = async ({
   );
   const resp = await tenantNile.api.tenants.getTenant();
   const tenant = await resp.json();
-  const currentFileCount = (await tenantNile.db("file").count()) as {
-    count: string;
-  }[]; // no need for "where" clause since we are connecting to tenant db
+  const currentFileCount = await tenantNile.db.query(
+    "select count(*) from file"
+  );
 
   console.log("Current file count:", currentFileCount);
   const isPro = await checkSubscription(params.organizationId);
@@ -55,7 +55,7 @@ const OrganizationIdPage = async ({
         <Suspense>
           <UploadButton
             org_id={params.organizationId}
-            count={Number(currentFileCount[0].count)}
+            count={Number(currentFileCount.rows[0].count)}
             isPro={isPro}
           />
           <Card style={{ marginBottom: 24 }}>
