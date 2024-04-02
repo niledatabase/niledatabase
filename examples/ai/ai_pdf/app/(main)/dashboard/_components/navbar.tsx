@@ -19,17 +19,21 @@ export const Navbar = async () => {
   let tenants: any = [];
   if (nile.userId) {
     // TODO: Replace with API call to get tenants for user when the SDK supports this
-    tenants = await nile
-      .db("tenants")
-      .select("tenants.id", "tenants.name")
-      .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-      .where("tenant_users.user_id", "=", nile.userId);
+    const res = await nile.db.query(
+      `select id, name from tenants join users.tenant_users on tenants.id = tenant_users.tenant_id
+      where tenant_users.user_id = $1`,
+      [nile.userId]
+    );
+    tenants = res.rows;
   }
-  const userInfo = await nile.db("users.users").where("id", "=", nile.userId);
+  const userInfo = await nile.db.query(
+    "select * from users.users where id=$1",
+    [nile.userId]
+  );
   console.log(userInfo);
-  const email = userInfo[0].email;
-  const picture = userInfo[0].picture;
-  const name = userInfo[0].name;
+  const email = userInfo.rows[0].email;
+  const picture = userInfo.rows[0].picture;
+  const name = userInfo.rows[0].name;
   return (
     <nav className="fixed z-50 top-0 px-4 w-full h-14 border-b shadow-sm flex items-center backdrop-blur-lg">
       <MobileSidebar />

@@ -12,12 +12,10 @@ export const getAvailableFileCount = async ({
     return new NextResponse("Unauthorized");
   }
 
-  const currentFileCount = await tenantNile
-    .db("file")
-    .where({
-      user_id: tenantNile.userId,
-    })
-    .count();
+  const currentFileCount = await tenantNile.db.query(
+    "SELECT COUNT(*) FROM file WHERE user_id = $1",
+    [tenantNile.userId]
+  );
 
   return currentFileCount;
 };

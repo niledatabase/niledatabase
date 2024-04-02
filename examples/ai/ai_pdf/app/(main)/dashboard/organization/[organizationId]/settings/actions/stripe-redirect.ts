@@ -31,15 +31,16 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   let url = "";
 
   try {
-    const orgSubscription = await tenantNile.db("user_subscription").where({
-      user_id: userId,
-    });
+    const orgSubscription = await tenantNile.db.query(
+      "select * from user_subscription where user_id = $1",
+      [userId]
+    );
 
     console.log(orgSubscription);
 
-    if (orgSubscription[0] && orgSubscription[0].stripe_customer_id) {
+    if (orgSubscription.rows[0] && orgSubscription.rows[0].stripe_customer_id) {
       const stripeSession = await stripe.billingPortal.sessions.create({
-        customer: orgSubscription[0].stripe_customer_id,
+        customer: orgSubscription.rows[0].stripe_customer_id,
         return_url: settingsUrl,
       });
       console.log("Exist:", stripeSession);

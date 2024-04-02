@@ -8,9 +8,13 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.3.3",
-    "@niledatabase/server": "^1.0.0",
+    "@niledatabase/server": "^2.3.0",
+    "@niledatabase/react": "^2.3.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -26,7 +30,6 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@stripe/stripe-js": "^2.2.2",
-    "@theniledev/react": "latest",
     "@uploadthing/react": "^6.0.2",
     "ai": "^2.2.30",
     "axios": "^1.6.3",

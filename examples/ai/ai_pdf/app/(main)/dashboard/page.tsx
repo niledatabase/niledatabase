@@ -26,11 +26,12 @@ const page: FC<pageProps> = async ({}) => {
   let tenants: any = [];
   if (nile.userId) {
     // TODO: Replace with API call to get tenants for user when the SDK supports this
-    tenants = await nile
-      .db("tenants")
-      .select("tenants.id", "tenants.name")
-      .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-      .where("tenant_users.user_id", "=", nile.userId);
+    const res = await nile.db.query(
+      `select id, name from tenants join users.tenant_users on tenants.id = tenant_users.tenant_id
+      where tenant_users.user_id = $1`,
+      [nile.userId]
+    );
+    tenants = res.rows;
   }
   console.log(
     "user in dashboard: ",

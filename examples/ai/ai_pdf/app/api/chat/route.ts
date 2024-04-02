@@ -14,16 +14,16 @@ export async function POST(req: Request) {
 
     const tenantNile = configureNile(cookies().get("authData"), body.tenant_id);
 
-    await tenantNile.db("message").insert({
-      text: body.messages[body.messages.length - 1].content,
-      fileId: body.fileId,
-      user_id: body.user_id,
-      isUserMessage: true,
-      tenant_id: body.tenant_id,
-    });
-
     const question = body.messages[body.messages.length - 1].content;
+
     console.log("Chat question:", question);
+    await tenantNile.db.query(
+      `INSERT INTO message 
+      (text, "fileId", user_id, "isUserMessage", tenant_id) 
+      VALUES 
+      ($1, $2, $3, $4, $5)`,
+      [question, body.fileId, body.user_id, true, body.tenant_id]
+    );
 
     const openAI = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY!,
@@ -38,39 +38,37 @@ export async function POST(req: Request) {
 
     console.log("Query Nile index and return top 10 matches");
 
-    const queryResponse = await tenantNile
-      .db("file_embedding")
-      .select("pageContent", "location")
-      .orderByRaw(`embedding <=> '[${queryEmbedding}]'`)
-      .where({ file_id: body.fileId })
-      .limit(10);
+    const queryResponse = await tenantNile.db.query(
+      `SELECT "pageContent", location 
+       FROM file_embedding 
+       WHERE file_id = $1 
+       ORDER BY embedding <=> '[${queryEmbedding}]'
+       LIMIT 10`,
+      [body.fileId]
+    );
 
     if (queryResponse) {
-      const concatenatedPageContent = queryResponse
+      const concatenatedPageContent = queryResponse.rows
         .map((match: any) => match.pageContent)
         .join(" ");
       console.log("Got matches from vector index on Nile");
 
-      const prevMessages = await tenantNile
-        .db("message")
-        .where({
-          fileId: body.fileId,
-          user_id: body.user_id, // Nile doesn't provide user level isolation, so we need to filter by user_id
-        })
-        .limit(6)
-        .select("*");
+      const prevMessages = await tenantNile.db.query(
+        `select * from message where "fileId" = $1 AND user_id = $2 limit 6`,
+        [body.fileId, body.user_id]
+      );
 
-      const formattedPrevMessages = prevMessages.map((msg) => ({
+      const formattedPrevMessages = prevMessages.rows.map((msg: any) => ({
         role: msg.isUserMessage ? ("user" as const) : ("assistant" as const),
         content: msg.text,
       }));
 
       console.log(
-        `Got ${prevMessages.length} previous messages from chat history in Nile.`
+        `Got ${prevMessages.rowCount} previous messages from chat history in Nile.`
       );
 
       let result;
-      if (prevMessages.length < 6) {
+      if (prevMessages.rowCount ?? 0 < 6) {
         result = await openAI.chat.completions.create({
           model: process.env.OPENAI_CHAT_MODEL_NAME || "gpt-3.5-turbo",
           temperature: 0.1,
@@ -116,13 +114,13 @@ export async function POST(req: Request) {
       const stream = OpenAIStream(result, {
         async onCompletion(completion: any) {
           console.log(completion, "completion");
-          await tenantNile.db("message").insert({
-            text: completion,
-            fileId: body.fileId,
-            user_id: body.user_id,
-            isUserMessage: false,
-            tenant_id: body.tenant_id,
-          });
+          await tenantNile.db.query(
+            `INSERT INTO message 
+            (text, "fileId", user_id, "isUserMessage", tenant_id) 
+            VALUES 
+            ($1, $2, $3, $4, $5)`,
+            [completion, body.fileId, body.user_id, false, body.tenant_id]
+          );
         },
       });
       return new StreamingTextResponse(stream);

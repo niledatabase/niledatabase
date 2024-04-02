@@ -33,33 +33,31 @@ export async function POST(req: Request) {
       session.subscription as string
     );
 
-    await nile.db("user_subscription").insert({
-      user_id: session.metadata.userId,
-      tenant_id: session.metadata.orgId,
-      stripe_subscription_id: subscription.id,
-      stripe_customer_id: subscription.customer as string,
-      stripe_price_id: subscription.items.data[0].price.id,
-      stripe_current_period_end: new Date(
-        subscription.current_period_end * 1000
-      ),
-    });
+    await nile.db.query(
+      "INSERT INTO user_subscription (user_id, tenant_id, stripe_subscription_id, stripe_customer_id, stripe_price_id, stripe_current_period_end) VALUES ($1, $2, $3, $4, $5, $6)",
+      [
+        session.metadata.userId,
+        session.metadata.orgId,
+        subscription.id,
+        subscription.customer,
+        subscription.items.data[0].price.id,
+        new Date(subscription.current_period_end * 1000),
+      ]
+    );
   }
 
   if (event.type === "invoice.payment_succeeded") {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     );
-    await nile
-      .db("user_subscription")
-      .where({
-        stripe_subscription_id: subscription.id,
-      })
-      .update({
-        stripe_price_id: subscription.items.data[0].price.id,
-        stripe_current_period_end: new Date(
-          subscription.current_period_end * 1000
-        ),
-      });
+    await nile.db.query(
+      "UPDATE user_subscription SET stripe_price_id = $1, stripe_current_period_end = $2 WHERE stripe_subscription_id = $3",
+      [
+        subscription.items.data[0].price.id,
+        new Date(subscription.current_period_end * 1000),
+        subscription.id,
+      ]
+    );
   }
 
   return new NextResponse(null, { status: 200 });
