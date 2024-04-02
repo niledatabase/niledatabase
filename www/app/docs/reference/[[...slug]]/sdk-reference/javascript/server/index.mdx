@@ -15,29 +15,45 @@ Install the SDK using npm:
 npm install @niledatabase/server
 ```
 
-Then you can import the SDK in your code:
+Set an .env file with database credentials
 
-```javascript
-import Server from "@niledatabase/server";
-
-export const nile = Server({
-  workspace: String(process.env.NILE_WORKSPACE),
-  database: String(process.env.NILE_DATABASE),
-  db: {
-    connection: {
-      user: process.env.NILE_DB_USER,
-      password: process.env.NILE_DB_PASSWORD,
-    },
-  },
-});
+```bash
+NILEDB_USER=
+NILEDB_PASSWORD=
 ```
 
-This creates an instance of Nile Server, which you can use to interact with Nile APIs and DB.
-Note that `Server()` returns a singleton instance, so you can import it anywhere in your code and it will be the same instance.
+Then import the SDK:
+
+```javascript
+import Nile from "@niledatabase/server";
+
+const nile = await Nile();
+```
+
+This creates an instance of Nile Server, which allows you to interact with Nile APIs and DB.
+
+## Configuration
+
+If you would like to pass a configuration manually, that can be done by passing the config to `Nile`. Configs passed in this way take precedence over `.env` vars.
+
+| Property      | Type         | .env var        | Description                                                              |
+| ------------- | ------------ | --------------- | ------------------------------------------------------------------------ |
+| user          | `string`     | NILEDB_USER     | Required. Username for database authentication.                          |
+| password      | `string`     | NILEDB_PASSWORD | Required. Password for database authentication.                          |
+| databaseId    | `string`     | NILEDB_ID       | ID of the database.                                                      |
+| databaseName  | `string`     | NILEDB_NAME     | Name of the database.                                                    |
+| tenantId      | `string`     | NILEDB_TENANT   | ID of the tenant associated.                                             |
+| userId        | `string`     |                 | ID of the user associated.                                               |
+| db            | `PoolConfig` |                 | Configuration object for [pg.Pool](https://node-postgres.com/apis/pool). |
+| api           | `object`     |                 | Configuration object for API settings.                                   |
+| api.basePath  | `string`     | NILEDB_API      | Base host for API for a specific region. Default is `api.thenile.dev`.   |
+| api.cookieKey | `string`     |                 | Key for API cookie. Default is `token`.                                  |
+| api.token     | `string`     | NILEDB_TOKEN    | Token for API authentication. Mostly for debugging.                      |
+| debug         | `boolean`    |                 | Flag for enabling debug logging.                                         |
 
 ## Virtual Tenant Databases
 
-In order to connect to Nile's virtual tenant databases and enjoy the full isolation and security, you need to get a reference to tenant-specific instance of Nile Server.
+In order to connect to Nile's virtual tenant databases and enjoy the full isolation and security, you need to get a reference to tenant-specific instance of Nile Server. This function will either create a new client connection based on the config, or return the existing instance if it has already been registered.
 
 ```javascript
 nile.getInstance({
@@ -60,7 +76,7 @@ Handling of both cookies and path parameters is framework-specific.
     export default async function Page({ params }: { params: { tenantid: string } }) {
 
       // First, initialize global Nile instance if needed
-      const nile = Server(...)
+      const nile = await Nile(...)
 
       const parsedCookies = JSON.parse(String(cookies().get('authData')?.value));
       const tenantNile = nile.getInstance({
@@ -74,11 +90,11 @@ Handling of both cookies and path parameters is framework-specific.
     ```
 
      ```express
-    import Server from "@niledatabase/server";
+    import Nile from "@niledatabase/server";
     import cookieParser from "cookie-parser";
 
     // First, initialize global Nile instance if needed
-    const nile = Server(...)
+    const nile = await Nile(...)
 
 
     app.use(cookieParser())
@@ -253,26 +269,20 @@ Note that we are returning a response to the browser and expect it to redirect t
 Nile SDK includes a query builder and a connection pool that were designed to work with the Nile's virtual tenant databases with minimal overhead.
 You can use Nile with any ORM or database client that you prefer, but using the query builder will give you the best developer experience.
 
-The query builder is built on top of [Knex](https://knexjs.org/), so the documentation for Knex applies to Nile's query builder as well.
-With the exception of Knex Migrations and Extensions which are not supported.
+The query builder is built on top of [pg-node](https://node-postgres.com/), so the documentation for pg-node applies to Nile's query builder as well.
 
 ### Connecting to the database
 
-When you initialize the Nile Server object, you can pass any valid Knex configuration object as the `db.connection` parameter.
-Nile SDK provides the correct defaults for most fields, so you only need to specify the `user` and `password`.
+When you initialize the Nile Server object, you can pass any valid pg-node pool configuration object as the `db` parameter.
+One special case is the `afterCreate` method, which will configure the context of the pool connections for a specific `tenantId` and `userId` if they are provided.
 
 For example:
 
 ```javascript
-export const nile = Server({
-  workspace: String(process.env.NILE_WORKSPACE),
-  database: String(process.env.NILE_DATABASE),
-  db: {
-    connection: {
-      user: process.env.NILE_DB_USER,
-      password: process.env.NILE_DB_PASSWORD,
-    },
-  },
+import Nile from "@niledatabase/server";
+export const nile = await Nile({
+  user: process.env.NILE_DB_USER,
+  password: process.env.NILE_DB_PASSWORD,
 });
 ```
 
@@ -280,16 +290,19 @@ Because Nile manages the connection pool, we recommend not overriding the `pool`
 
 ### Querying the database
 
-The query builder is available as `nile.db`. You can use it to query the database directly, or to build a model layer on top of it. It works exactly like Knex.
+The query builder is available as `nile.db`. You can use it to query the database directly, or to build a model layer on top of it. It works exactly like pg-node.
 
 For example, to get all tenants that the current user is a member of:
 
 ```javascript
-tenants = await nile
-  .db("tenants")
-  .select("tenants.id", "tenants.name")
-  .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-  .where("tenant_users.user_id", "=", nile.userId);
+const tenants = await nile.db.query(
+  `SELECT 
+  id, name 
+  FROM 
+  tenants JOIN users.tenant_users ON tenants.id = tenant_users.id 
+  WHERE tenant_users.id = $1`,
+  [nile.userId]
+);
 ```
 
 In order to query a virtual tenant database, you need to use a reference that you obtained from `nile.getInstance` with the current `tenantId`, `userId` and `token`.
@@ -297,26 +310,27 @@ In order to query a virtual tenant database, you need to use a reference that yo
 For example, the following query will all rows in `todos` table for the current tenant:
 
 ```javascript
-const todos = await tenantNile.db("todos").select("*").orderBy("title");
+const todos = await nile.db.query("SELECT * from todos ORDER BY title");
 ```
 
 This also applies to inserts, updates and deletes. For example, to update a todo:
 
 ```javascript
 const { id, complete } = req.body;
-await nile.db("todos").update("complete", complete).where("id", id);
+await nile.db.query("UPDATE todos SET complete = $1 WHERE id = $2", [
+  complete,
+  id,
+]);
 ```
 
 and to create a new one:
 
 ```javascript
 const { title, complete } = req.body;
-const newTodo = await nile
-  .db("todos")
-  .insert({
-    title: title,
-    complete: complete || false,
-    tenant_id: nile.tenantId,
-  })
-  .returning("*");
+const newTodo = await nile.query(
+  `INSERT INTO todos (title, complete, tenant_id) 
+  VALUES ($1, $2, $3) 
+  RETURNING *`,
+  [title, Boolean(complete), nile.tenantId]
+);
 ```
