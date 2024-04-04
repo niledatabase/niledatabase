@@ -3,7 +3,13 @@ import { Cloud, File, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 import { SubscriptionButton } from "@/app/(main)/dashboard/organization/[organizationId]/settings/_components/subscription_button";
-import { MAX_FREE_FILES, MAX_FREE_PAGES, MAX_PRO_PAGES, MAX_PRO_MB, MAX_FREE_MB } from "@/constants/limits";
+import {
+  MAX_FREE_FILES,
+  MAX_FREE_PAGES,
+  MAX_PRO_PAGES,
+  MAX_PRO_MB,
+  MAX_FREE_MB,
+} from "@/constants/limits";
 import { useUploadThing } from "@/lib/uploadthing";
 import Dropzone from "react-dropzone";
 import { toast } from "sonner";
@@ -22,7 +28,7 @@ interface UploadButtonProps {
   isPro: boolean;
 }
 
-const UploadDropzone = ({ isSubscribed}: {isSubscribed: boolean }) => {
+const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
   const router = useRouter();
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
@@ -64,12 +70,17 @@ const UploadDropzone = ({ isSubscribed}: {isSubscribed: boolean }) => {
         } else if (res[0].serverData !== "SUCCESS") {
           if (res[0].serverData === "LIMIT EXCEEDED") {
             toast.error(
-              "You have exceeded the allowed page limit for your subscription plan. The maximum number of pages allowed is " + (isSubscribed ? MAX_PRO_PAGES : MAX_FREE_PAGES)
+              "You have exceeded the allowed page limit for your subscription plan. The maximum number of pages allowed is " +
+                (isSubscribed ? MAX_PRO_PAGES : MAX_FREE_PAGES)
             );
           } else if (res[0].serverData === "PARSE FAILED") {
-            toast.error("File can't be parsed and text can't be extracted. Please try another.");
+            toast.error(
+              "File can't be parsed and text can't be extracted. Please try another."
+            );
           } else if (res[0].serverData === "EMBEDDING FAILED") {
-            toast.error("Failed to create embeddings while uploading file. You can try manually with the Embed File button.");
+            toast.error(
+              "Failed to create embeddings while uploading file. You can try manually with the Embed File button."
+            );
             // in this case, we do have a new file, so we should refresh the page to see it
             router.refresh();
           } else {
@@ -78,12 +89,16 @@ const UploadDropzone = ({ isSubscribed}: {isSubscribed: boolean }) => {
             );
           }
         } else if (!res[0].key) {
-          toast.error("Something went wrong. File identifier missing. Please try again");
+          toast.error(
+            "Something went wrong. File identifier missing. Please try again"
+          );
         } else {
           // if we got all the way here, the upload was successful:
           setUploadProgress(100);
           toast.success("Upload successful!");
-          console.log("File uploaded successfully, refreshing page to see files");
+          console.log(
+            "File uploaded successfully, refreshing page to see files"
+          );
           router.refresh();
         }
         // regardless, we should clear the upload state
@@ -175,7 +190,7 @@ const UploadButton: FC<UploadButtonProps> = ({ org_id, count, isPro }) => {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <SubscriptionButton isPro={isPro} orgId={org_id}/>
+          <SubscriptionButton isPro={isPro} orgId={org_id} />
         </CardFooter>
       </Card>
       {(isPro || count < MAX_FREE_FILES) && (

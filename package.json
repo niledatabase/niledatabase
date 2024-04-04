@@ -19,7 +19,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "dev:www": "turbo run dev --filter=www",
-    "format": "prettier --write \"www/**/*.{js,jsx,ts,tsx,css,md,mdx,json,mjs}\"",
+    "format": "prettier --write \"(www|examples)/**/*.{js,jsx,ts,tsx,css,md,mdx,json,mjs}\"",
     "build:www": "turbo run build --filter=www"
   },
   "description": "tenant aware, serverless, globally distributed postgres",

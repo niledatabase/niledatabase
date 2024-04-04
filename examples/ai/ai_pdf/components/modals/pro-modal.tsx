@@ -23,7 +23,7 @@ export const ProModal = (orgId) => {
   });
 
   const onClick = () => {
-    execute({orgId});
+    execute({ orgId });
   };
 
   return (

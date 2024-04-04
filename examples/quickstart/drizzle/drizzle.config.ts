@@ -6,8 +6,10 @@ dotenv.config();
 export default {
   schema: "./src/db/schema.ts",
   out: "./db/out",
-  driver: 'pg',
+  driver: "pg",
   dbCredentials: {
-    connectionString: process.env.DATABASE_URL || "postgresql://username:password@db.thenile.dev:5432/db",
-  }
+    connectionString:
+      process.env.DATABASE_URL ||
+      "postgresql://username:password@db.thenile.dev:5432/db",
+  },
 } satisfies Config;

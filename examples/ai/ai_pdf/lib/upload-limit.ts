@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { configureNile } from '@/lib/NileServer';
+import { configureNile } from "@/lib/NileServer";
 import { NextResponse } from "next/server";
 
 export const getAvailableFileCount = async ({
@@ -15,7 +15,7 @@ export const getAvailableFileCount = async ({
   const currentFileCount = await tenantNile
     .db("file")
     .where({
-      user_id: tenantNile.userId
+      user_id: tenantNile.userId,
     })
     .count();
 

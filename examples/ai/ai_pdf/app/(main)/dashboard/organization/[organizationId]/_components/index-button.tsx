@@ -25,7 +25,7 @@ const IndexButton = ({ file }: { file: any }) => {
         toast.success("Successfully generated embedding and indexed file");
         router.refresh();
       } else {
-        const error = response.data
+        const error = response.data;
         toast.error("Failed to generate embedding and index file: " + error);
       }
       setLoading(false);

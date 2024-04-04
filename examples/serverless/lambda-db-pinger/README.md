@@ -18,7 +18,7 @@ This example requires a `todo` table:
 
 ### Getting credentials
 
-In the left-hand menu, click on "Settings" and then select "Connection". 
+In the left-hand menu, click on "Settings" and then select "Connection".
 
 Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
 

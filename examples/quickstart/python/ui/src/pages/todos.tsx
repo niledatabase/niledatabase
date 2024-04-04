@@ -9,8 +9,8 @@ import Input from "@mui/joy/Input";
 import ListDivider from "@mui/joy/ListDivider";
 import Checkbox from "@mui/joy/Checkbox";
 import { useParams } from "react-router";
-import {Link as ReactLink} from 'react-router-dom'
-import MUILink from '@mui/joy/Link';
+import { Link as ReactLink } from "react-router-dom";
+import MUILink from "@mui/joy/Link";
 import Layout from "../layout";
 
 interface Todo {
@@ -24,27 +24,28 @@ export default function Todos() {
   const tenantId = params.tenantId;
 
   const [todos, setTodos] = React.useState<Todo[]>([]);
-  const [tenantName, setTenantName] = React.useState(null); 
+  const [tenantName, setTenantName] = React.useState(null);
   const [error, setError] = React.useState<string>("");
 
   const headers: HeadersInit = new Headers();
-  headers.set('X-Tenant-Id', tenantId || '');
-  headers.set('Content-Type', 'application/json');
-  
+  headers.set("X-Tenant-Id", tenantId || "");
+  headers.set("Content-Type", "application/json");
+
   React.useEffect(() => {
     fetch(`/api/todos`, {
-      method: 'GET',
-      headers: headers
+      method: "GET",
+      headers: headers,
     })
       .then((res) => {
-        console.log(res)
+        console.log(res);
         if (!res.ok) {
           setError("Error fetching todos " + res.status + " " + res.statusText);
-          return res.json()
+          return res.json();
         } else {
           setError("");
-          return res.json()
-      }})
+          return res.json();
+        }
+      })
       .then((data) => setTodos(data));
   }, [tenantId]);
 
@@ -57,45 +58,95 @@ export default function Todos() {
   return (
     <Layout>
       <Stack>
-      <Typography level="h2" textAlign={"center"} sx={{textTransform: 'uppercase', margin: "10px"}}>{tenantName}'s Todos</Typography>
-      <div style={{justifyContent: "center", display:"flex", margin:"10px"}}>
-      <MUILink component={ReactLink} to="/tenants" justifyContent={"center"}>(Back to tenant selection) </MUILink>
-      </div>
-      <List variant="plain" size="lg">
-      <ListItem>
-          <form name="newtodo" id="newtodo" onSubmit={(event) => {
-            event.preventDefault();
-            const title = (event.currentTarget.elements[1] as HTMLInputElement).value; // first element is the button
-            handleAdd(title);
-          }} style={{display:'flex', flexWrap:'nowrap', width:'100%'}}>
-            <IconButton type="submit"> <Add /> </IconButton>
-            <Input placeholder="Add task" variant="outlined" id="todo" name="todo" sx={{width:'80%'}}></Input>
-          </form>
-        </ListItem>
-        <ListDivider />
-        { (() => {
+        <Typography
+          level="h2"
+          textAlign={"center"}
+          sx={{ textTransform: "uppercase", margin: "10px" }}
+        >
+          {tenantName}'s Todos
+        </Typography>
+        <div
+          style={{ justifyContent: "center", display: "flex", margin: "10px" }}
+        >
+          <MUILink
+            component={ReactLink}
+            to="/tenants"
+            justifyContent={"center"}
+          >
+            (Back to tenant selection){" "}
+          </MUILink>
+        </div>
+        <List variant="plain" size="lg">
+          <ListItem>
+            <form
+              name="newtodo"
+              id="newtodo"
+              onSubmit={(event) => {
+                event.preventDefault();
+                const title = (
+                  event.currentTarget.elements[1] as HTMLInputElement
+                ).value; // first element is the button
+                handleAdd(title);
+              }}
+              style={{ display: "flex", flexWrap: "nowrap", width: "100%" }}
+            >
+              <IconButton type="submit">
+                {" "}
+                <Add />{" "}
+              </IconButton>
+              <Input
+                placeholder="Add task"
+                variant="outlined"
+                id="todo"
+                name="todo"
+                sx={{ width: "80%" }}
+              ></Input>
+            </form>
+          </ListItem>
+          <ListDivider />
+          {(() => {
             if (!todos) {
-              return <Typography level="h2" textAlign={"center"}> Loading...</Typography>
+              return (
+                <Typography level="h2" textAlign={"center"}>
+                  {" "}
+                  Loading...
+                </Typography>
+              );
             } else if (error != "") {
-              return <Typography level="h2" textAlign={"center"}> {error}</Typography>
+              return (
+                <Typography level="h2" textAlign={"center"}>
+                  {" "}
+                  {error}
+                </Typography>
+              );
             } else {
-            return todos.map((todo) => (
-              <div key={todo.id} style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>
-              <ListItem key={todo.id}>
-              <Checkbox 
-                  label={<Typography>{todo.title}</Typography>}
-                  checked={todo.complete} 
-                  onChange={() => completeTodo(tenantId, todo)}/>
-              </ListItem>
-              <ListDivider />
-            </div>
-          ))}})()}
+              return todos.map((todo) => (
+                <div
+                  key={todo.id}
+                  style={{
+                    display: "flex",
+                    flexWrap: "nowrap",
+                    padding: "0.5rem",
+                  }}
+                >
+                  <ListItem key={todo.id}>
+                    <Checkbox
+                      label={<Typography>{todo.title}</Typography>}
+                      checked={todo.complete}
+                      onChange={() => completeTodo(tenantId, todo)}
+                    />
+                  </ListItem>
+                  <ListDivider />
+                </div>
+              ));
+            }
+          })()}
         </List>
       </Stack>
-      </Layout>
+    </Layout>
   );
 
-  function handleAdd (title: string) {
+  function handleAdd(title: string) {
     fetch(`/api/todos`, {
       method: "POST",
       headers: headers,
@@ -118,7 +169,7 @@ export default function Todos() {
       .catch((error) => {
         console.error(error);
       });
-  };
+  }
 
   function completeTodo(tenantId: string | undefined, todo: Todo) {
     const newComplete = !todo.complete;
@@ -143,7 +194,7 @@ export default function Todos() {
         }
         var curr_state = todos.slice(); // need to copy so React will notice state change
         if (curr_state) {
-          let curr_todo = curr_state.find((t) => t.id === todo.id)
+          let curr_todo = curr_state.find((t) => t.id === todo.id);
           if (curr_todo) {
             curr_todo.complete = newComplete;
           }

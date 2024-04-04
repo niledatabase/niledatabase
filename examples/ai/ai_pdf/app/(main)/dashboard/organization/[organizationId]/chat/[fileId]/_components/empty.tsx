@@ -15,10 +15,10 @@ const exampleMessages = [
     heading: "Key concepts",
     message: "Can you tell me about the key concepts from this document?",
   },
-//   {
-//     heading: "Outerbase implementation",
-//     message: "How is outerbase being used in this application?",
-//   },
+  //   {
+  //     heading: "Outerbase implementation",
+  //     message: "How is outerbase being used in this application?",
+  //   },
 ];
 
 export function EmptyStateAI({ setInput }: Pick<UseChatHelpers, "setInput">) {
@@ -47,9 +47,7 @@ export function EmptyStateAI({ setInput }: Pick<UseChatHelpers, "setInput">) {
       {isTypingDone && (
         <Card className="p-5 bg-muted font-ranadeLight">
           <div className="flex flex-col items-center w-full justify-center">
-            <p className="w-full mt-3">
-             converse.ai
-            </p>
+            <p className="w-full mt-3">converse.ai</p>
           </div>
           <div className="mt-4 flex flex-col items-start space-y-2">
             {exampleMessages.map((message, index) => (

@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { configureNile } from '@/lib/NileServer';
+import { configureNile } from "@/lib/NileServer";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { FC } from "react";
@@ -18,7 +18,7 @@ export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 const page: FC<pageProps> = async ({}) => {
-  const nile = configureNile(cookies().get('authData'),null);
+  const nile = configureNile(cookies().get("authData"), null);
   console.log("showing tenants page for user: " + nile.userId);
   if (!nile.userId) {
     redirect("/login");
@@ -32,7 +32,13 @@ const page: FC<pageProps> = async ({}) => {
       .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
       .where("tenant_users.user_id", "=", nile.userId);
   }
-  console.log("user in dashboard: ", nile.userId, " has ", tenants.length, " tenants");
+  console.log(
+    "user in dashboard: ",
+    nile.userId,
+    " has ",
+    tenants.length,
+    " tenants"
+  );
 
   return (
     <>
@@ -46,7 +52,9 @@ const page: FC<pageProps> = async ({}) => {
         <Label className="text-lg">Your Workspaces</Label>
         {tenants.length === 0 && (
           <>
-            <h1 className="mt-3">You are not part of any workspace. This should not have happened. </h1>
+            <h1 className="mt-3">
+              You are not part of any workspace. This should not have happened.{" "}
+            </h1>
           </>
         )}
         {tenants.map((tenant: { id: string; name: string }) => (

@@ -95,7 +95,7 @@ export const Chat: FC<ChatProps> = ({
         <ResizableHandle className="mx-5" withHandle />
         <ResizablePanel className="overflow-x-hidden last:mb-12">
           <ScrollArea className="h-[77vh] overflow-x-hidden overflow-auto w-full">
-            <ScrollBar orientation="vertical" forceMount/>
+            <ScrollBar orientation="vertical" forceMount />
             {pastMessages.length > 0 ? (
               <>
                 {pastMessages.map((message, index) => (

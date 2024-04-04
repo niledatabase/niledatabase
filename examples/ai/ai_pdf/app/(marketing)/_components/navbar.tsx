@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-import { configureNile } from '@/lib/NileServer';
+import { configureNile } from "@/lib/NileServer";
 import { cookies } from "next/headers";
 import nile from "@/lib/NileServer";
 import UserAccountNav from "@/components/user-account-nav";

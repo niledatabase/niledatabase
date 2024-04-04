@@ -1,16 +1,18 @@
-'use client';
+"use client";
 // ^^^ this is the reason we need this wrapper component around GoogleLoginButton
 
-import React from 'react';
-import Stack from '@mui/joy/Stack';
-import { GoogleLoginButton, NileProvider } from '@niledatabase/react';
+import React from "react";
+import Stack from "@mui/joy/Stack";
+import { GoogleLoginButton, NileProvider } from "@niledatabase/react";
 
 export default function GoogleAuthPanel() {
-    {/* Note that in this case we tell the client-side component to talk to Nile directly, not the local API. 
-        This is specific for Google SSO */}
+  {
+    /* Note that in this case we tell the client-side component to talk to Nile directly, not the local API. 
+        This is specific for Google SSO */
+  }
   return (
     <NileProvider basePath={process.env.NEXT_PUBLIC_NILE_API}>
-      <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
+      <div style={{ maxWidth: "20rem", margin: "0 auto" }}>
         <Stack gap={2} justifyContent="center" alignItems="center">
           <GoogleLoginButton
             workspace={process.env.NEXT_PUBLIC_WORKSPACE}
@@ -19,5 +21,5 @@ export default function GoogleAuthPanel() {
         </Stack>
       </div>
     </NileProvider>
-  )
+  );
 }

@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Stack from '@mui/joy/Stack';
-import Input from '@mui/joy/Input';
-import FormHelperText from '@mui/joy/FormHelperText';
+import React from "react";
+import Stack from "@mui/joy/Stack";
+import Input from "@mui/joy/Input";
+import FormHelperText from "@mui/joy/FormHelperText";
 
-import { GoogleLoginButton, NileProvider } from '@theniledev/react';
+import { GoogleLoginButton, NileProvider } from "@theniledev/react";
 
 export default function GoogleAuthPanel() {
   const [newTenant, setNewTenant] = React.useState<string | undefined>();
 
   return (
     <NileProvider basePath={process.env.NEXT_PUBLIC_NILE_API}>
-      <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
+      <div style={{ maxWidth: "20rem", margin: "0 auto" }}>
         <Stack gap={2}>
           <Stack>
             <Input
@@ -29,5 +29,5 @@ export default function GoogleAuthPanel() {
         </Stack>
       </div>
     </NileProvider>
-  )
+  );
 }

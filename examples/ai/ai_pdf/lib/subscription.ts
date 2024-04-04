@@ -1,16 +1,21 @@
 import { cookies } from "next/headers";
-import { configureNile } from '@/lib/NileServer';
+import { configureNile } from "@/lib/NileServer";
 import { redirect } from "next/navigation";
 
 const DAY_IN_MS = 86_400_000;
 
 export const checkSubscription = async (tenant_id: string) => {
   const tenantNile = configureNile(cookies().get("authData"), tenant_id);
-  console.log("checking subscription info for: " + tenantNile.userId + " for tenant " + tenantNile.tenantId);
+  console.log(
+    "checking subscription info for: " +
+      tenantNile.userId +
+      " for tenant " +
+      tenantNile.tenantId
+  );
   if (!tenantNile.userId) {
     redirect("/login");
   }
-  
+
   const orgSubscription = await tenantNile
     .db("user_subscription")
     .where({

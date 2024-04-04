@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./error-page";
 import Todos from "./todos";
 import Auth from "./auth";
-import Layout from './layout';
+import Layout from "./layout";
 import SignUp from "./SignUpForm.tsx";
 
 const router = createBrowserRouter([
@@ -25,12 +25,12 @@ const router = createBrowserRouter([
   {
     path: "/tenants",
     element: <Tenants />,
-  }
+  },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Layout>
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
   </Layout>
 );

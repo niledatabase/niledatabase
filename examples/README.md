@@ -31,4 +31,3 @@ Since different examples use different languages and frameworks, please check th
 If you are stuck, need help, or wondering if a certain contribution will be welcome, please ask! Either in [our Discord](https://discord.com/invite/8UuBB84tTy) or [Github discussions](https://github.com/orgs/niledatabase/discussions)
 
 Looking forward to reviewing your contributions.
-

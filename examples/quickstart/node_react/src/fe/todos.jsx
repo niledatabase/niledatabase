@@ -9,16 +9,15 @@ import Input from "@mui/joy/Input";
 import ListDivider from "@mui/joy/ListDivider";
 import Checkbox from "@mui/joy/Checkbox";
 import { useParams } from "react-router";
-import {Link as ReactLink} from 'react-router-dom'
-import MUILink from '@mui/joy/Link';
-
+import { Link as ReactLink } from "react-router-dom";
+import MUILink from "@mui/joy/Link";
 
 export default function Todos() {
   const params = useParams();
   const tenantId = params.tenantId;
 
   const [todos, setTodos] = React.useState(null);
-  const [tenantName, setTenantName] = React.useState(null); 
+  const [tenantName, setTenantName] = React.useState(null);
 
   React.useEffect(() => {
     fetch(`/api/tenants/${tenantId}/todos`)
@@ -33,46 +32,94 @@ export default function Todos() {
   }, [tenantId]);
 
   return (
-      <Stack spacing={2} mt={2} sx={{minWidth:"50%",backgroundColor:'white'}}>
-      <Typography level="h2" textAlign={"center"} sx={{textTransform: 'uppercase', margin: "10px"}}>{tenantName}'s Todos</Typography>
-      <div style={{justifyContent: "center", display:"flex", margin:"10px"}}>
-      <MUILink component={ReactLink} to="/tenants" justifyContent={"center"}>(Back to tenant selection) </MUILink>
+    <Stack
+      spacing={2}
+      mt={2}
+      sx={{ minWidth: "50%", backgroundColor: "white" }}
+    >
+      <Typography
+        level="h2"
+        textAlign={"center"}
+        sx={{ textTransform: "uppercase", margin: "10px" }}
+      >
+        {tenantName}'s Todos
+      </Typography>
+      <div
+        style={{ justifyContent: "center", display: "flex", margin: "10px" }}
+      >
+        <MUILink component={ReactLink} to="/tenants" justifyContent={"center"}>
+          (Back to tenant selection){" "}
+        </MUILink>
       </div>
       <List variant="plain" size="lg">
-      <ListItem>
-          <form name="newtodo" id="newtodo" onSubmit={(event) => {
-            event.preventDefault();
-            const title = event.currentTarget.elements[1].value; // first element is the button
-            handleAdd(title);
-          }} style={{display:'flex', flexWrap:'nowrap', width:'100%'}}>
-            <IconButton type="submit"> <Add /> </IconButton>
-            <Input placeholder="Add task" variant="outlined" id="todo" name="todo" sx={{width:'80%'}}></Input>
+        <ListItem>
+          <form
+            name="newtodo"
+            id="newtodo"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const title = event.currentTarget.elements[1].value; // first element is the button
+              handleAdd(title);
+            }}
+            style={{ display: "flex", flexWrap: "nowrap", width: "100%" }}
+          >
+            <IconButton type="submit">
+              {" "}
+              <Add />{" "}
+            </IconButton>
+            <Input
+              placeholder="Add task"
+              variant="outlined"
+              id="todo"
+              name="todo"
+              sx={{ width: "80%" }}
+            ></Input>
           </form>
         </ListItem>
         <ListDivider />
-        { (() => {
-            if (!todos) {
-              return <Typography level="h2" textAlign={"center"}> Loading...</Typography>
-            } else if (!Array.isArray(todos)) {
-              return <Typography level="h2" textAlign={"center"}> Error: {todos.message}</Typography>
-            } else {
+        {(() => {
+          if (!todos) {
+            return (
+              <Typography level="h2" textAlign={"center"}>
+                {" "}
+                Loading...
+              </Typography>
+            );
+          } else if (!Array.isArray(todos)) {
+            return (
+              <Typography level="h2" textAlign={"center"}>
+                {" "}
+                Error: {todos.message}
+              </Typography>
+            );
+          } else {
             return todos.map((todo) => (
-              <div key={todo.id} style={{display: 'flex', flexWrap:'nowrap', padding: '0.5rem'}}>
-              {/* TODO: todos need IDs */}
-              <ListItem key={todo.id}>
-              <Checkbox 
-                  label={<Typography>{todo.title}</Typography>}
-                  checked={todo.complete} 
-                  onChange={() => completeTodo(tenantId, todo)}/>
-              </ListItem>
-              <ListDivider />
-            </div>
-          ))}})()}
-        </List>
-      </Stack>
+              <div
+                key={todo.id}
+                style={{
+                  display: "flex",
+                  flexWrap: "nowrap",
+                  padding: "0.5rem",
+                }}
+              >
+                {/* TODO: todos need IDs */}
+                <ListItem key={todo.id}>
+                  <Checkbox
+                    label={<Typography>{todo.title}</Typography>}
+                    checked={todo.complete}
+                    onChange={() => completeTodo(tenantId, todo)}
+                  />
+                </ListItem>
+                <ListDivider />
+              </div>
+            ));
+          }
+        })()}
+      </List>
+    </Stack>
   );
 
-  function handleAdd (title) {
+  function handleAdd(title) {
     fetch(`/api/tenants/${tenantId}/todos`, {
       method: "POST",
       headers: {
@@ -97,7 +144,7 @@ export default function Todos() {
       .catch((error) => {
         console.error(error);
       });
-  };
+  }
 
   function completeTodo(tenantId, todo) {
     const newComplete = !todo.complete;

@@ -92,7 +92,7 @@ export const Sidebar = ({ storageKey = "t-sidebar-state" }: SidebarProps) => {
         defaultValue={defaultAccordionValue}
         className="space-y-2"
       > */}
-        {/* {userMemberships.data.map(({ organization }) => (
+      {/* {userMemberships.data.map(({ organization }) => (
           <NavItem
             key={organization.id}
             isActive={activeOrganization?.id === organization.id}
@@ -101,7 +101,7 @@ export const Sidebar = ({ storageKey = "t-sidebar-state" }: SidebarProps) => {
             onExpand={onExpand}
           />
         ))} */}
-        {/* <NavItem key={id} organizationId={id} /> */}
+      {/* <NavItem key={id} organizationId={id} /> */}
       {/* </Accordion> */}
       {/* <Link href={`/dashboard/organization/${params.organizationId}/settings`}>
         // settings 
