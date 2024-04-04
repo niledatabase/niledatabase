@@ -56,10 +56,6 @@ export function UserAuthLoginForm({
     } catch (error) {
       console.error(error);
       toast.error("Error logging in");
-
-
-
-
     }
   };
   const isLoading = form.formState.isSubmitting;

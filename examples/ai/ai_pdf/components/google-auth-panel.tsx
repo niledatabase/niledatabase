@@ -4,7 +4,6 @@ import React from "react";
 import { GoogleLoginButton, NileProvider } from "@theniledev/react";
 
 export default function GoogleAuthPanel() {
-
   return (
     <NileProvider basePath={process.env.NEXT_PUBLIC_NILE_API}>
       <GoogleLoginButton

@@ -1,4 +1,4 @@
-import styles from './page.module.css';
+import styles from "./page.module.css";
 
 import ErrorBox from "@/app/components/ErrorBox";
 import GoogleAuthPanel from "@/app/components/GoogleAuthPanel";
@@ -8,6 +8,6 @@ export default function Home() {
     <div>
       <ErrorBox />
       <GoogleAuthPanel />
-      </div>
+    </div>
   );
 }

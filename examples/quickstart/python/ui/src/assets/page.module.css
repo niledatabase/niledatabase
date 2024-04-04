@@ -4,7 +4,7 @@
   justify-content: space-between;
   align-items: center;
   min-height: 100vh;
-  font-family: 'Inter';
+  font-family: "Inter";
 }
 .description {
   display: inherit;
@@ -16,7 +16,7 @@
   height: 100%;
   padding: 2rem;
   font-family: var(--font-mono);
-  background: #E7E7E7;
+  background: #e7e7e7;
 }
 
 .logout {

@@ -12,11 +12,11 @@ import { stripe } from "@/lib/stripe";
 import { getUserId } from "@/lib/AuthUtils";
 import { headers, cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { configureNile } from '@/lib/NileServer';
+import { configureNile } from "@/lib/NileServer";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const orgId = data.orgId;
-  const user = cookies().get('authData')
+  const user = cookies().get("authData");
   const userId = getUserId(user);
   if (!orgId || !user || !userId) {
     return {
@@ -76,7 +76,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       console.log("New:", stripeSession);
       url = stripeSession.url || "";
     }
-  } catch(err) {
+  } catch (err) {
     return {
       error: "Something went wrong! " + err,
     };

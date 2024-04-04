@@ -1,8 +1,8 @@
-import { configureNile } from '@/lib/NileServer';
+import { configureNile } from "@/lib/NileServer";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { NextResponse } from "next/server";
-import { cookies } from 'next/headers';
+import { cookies } from "next/headers";
 import OpenAI from "openai";
 
 export const maxDuration = 60;
@@ -12,14 +12,14 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log("Chat request body:", body);
 
-    const tenantNile = configureNile(cookies().get('authData'), body.tenant_id);
+    const tenantNile = configureNile(cookies().get("authData"), body.tenant_id);
 
     await tenantNile.db("message").insert({
       text: body.messages[body.messages.length - 1].content,
       fileId: body.fileId,
       user_id: body.user_id,
       isUserMessage: true,
-      tenant_id: body.tenant_id
+      tenant_id: body.tenant_id,
     });
 
     const question = body.messages[body.messages.length - 1].content;
@@ -29,13 +29,13 @@ export async function POST(req: Request) {
       apiKey: process.env.OPENAI_API_KEY!,
     });
 
-
-    const modelName = process.env.OPENAI_EMBEDDING_MODEL_NAME || "text-embedding-3-small";
+    const modelName =
+      process.env.OPENAI_EMBEDDING_MODEL_NAME || "text-embedding-3-small";
     const queryEmbedding = await new OpenAIEmbeddings({
       modelName: modelName,
       dimensions: +(process.env.OPENAI_EMBEDDING_DIMENSIONS || 1024),
     }).embedQuery(question);
-    
+
     console.log("Query Nile index and return top 10 matches");
 
     const queryResponse = await tenantNile
@@ -65,7 +65,9 @@ export async function POST(req: Request) {
         content: msg.text,
       }));
 
-      console.log(`Got ${prevMessages.length} previous messages from chat history in Nile.`)
+      console.log(
+        `Got ${prevMessages.length} previous messages from chat history in Nile.`
+      );
 
       let result;
       if (prevMessages.length < 6) {

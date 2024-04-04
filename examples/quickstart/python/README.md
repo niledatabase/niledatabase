@@ -39,7 +39,7 @@ Copy `.env.example` to `.env` and fill in the details of your Nile DB.
 
 It should look something like this:
 
-```bash 
+```bash
 DATABASE_URL=postgresql://user:password@db.thenile.dev:5432/mydb
 LOG_LEVEL=DEBUG
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -74,7 +74,7 @@ uvicorn main:app --reload
 
 ## Try it out
 
-This is a backend service that exposes REST APIs with the todo list functionality. 
+This is a backend service that exposes REST APIs with the todo list functionality.
 You can experiment with these APIs with `curl`:
 
 ```bash
@@ -98,17 +98,17 @@ curl -b cookies -X POST 'localhost:8000/api/tenants' \
 # list tenants
 curl -b cookies -X GET 'http://localhost:8000/api/tenants'
 
-# replace the tenant ID in the URL: 
+# replace the tenant ID in the URL:
 curl -b cookies -X POST \
   'http://localhost:8000/api/todos' \
   --header 'Content-Type: application/json' \
   --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
   --data-raw '{"title": "feed the cat", "complete": false}'
 
-# replace the tenant ID in the URL: 
+# replace the tenant ID in the URL:
 curl  -b cookies -X GET \
   --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
-  'http://localhost:8000/api/todos' 
+  'http://localhost:8000/api/todos'
 
 # you'll need to create another todo with another tenant to see anything different here
 curl -X GET \

@@ -1,4 +1,4 @@
-import { configureNile } from '@/lib/NileServer';
+import { configureNile } from "@/lib/NileServer";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Chat } from "./_components/chat";
@@ -11,7 +11,10 @@ interface FileIdPageProps {
 }
 
 const FileIdPage = async ({ params }: FileIdPageProps) => {
-  const tenantNile = configureNile(cookies().get("authData"), params.organizationId);
+  const tenantNile = configureNile(
+    cookies().get("authData"),
+    params.organizationId
+  );
   console.log(tenantNile.userId);
   if (!tenantNile.userId) {
     redirect("/");

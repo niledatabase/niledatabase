@@ -6,7 +6,7 @@ export default interface AuthCookieData {
   event: string | null;
   error: string | null;
   tenantId: string | null;
-  tokenData: JwtPayload & NileJWTPayload | null;
+  tokenData: (JwtPayload & NileJWTPayload) | null;
 }
 
 export interface NileJWTPayload extends JwtPayload {

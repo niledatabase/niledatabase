@@ -104,15 +104,15 @@ This example requires a few more 3rd party SaaS accounts. You'll need to set the
 
 - If you haven't cloned this project yet, now will be an excellent time to do so. Since it uses NextJS, we can use `create-next-app` for this:
 
-    ```bash
-    npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs nile-todo
-    cd nile-todo
-    ```
+  ```bash
+  npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs nile-todo
+  cd nile-todo
+  ```
 
 - Rename `.env.example` to `.env.local`, and update it with your workspace and database name.
-_(Your workspace and database name are displayed in the header of the Nile dashboard.)_
-Fill in the username and password with the credentials you picked up in the previous step.
-And fill in the access keys for UploadThing and OpenAI.
+  _(Your workspace and database name are displayed in the header of the Nile dashboard.)_
+  Fill in the username and password with the credentials you picked up in the previous step.
+  And fill in the access keys for UploadThing and OpenAI.
 
 - Install dependencies with `yarn install` or `npm install`.
 

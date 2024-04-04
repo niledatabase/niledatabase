@@ -1,7 +1,5 @@
-import SignUpForm from './SignUpForm';
+import SignUpForm from "./SignUpForm";
 
 export default async function SignUpPage() {
-  return (
-      <SignUpForm />
-  );
+  return <SignUpForm />;
 }

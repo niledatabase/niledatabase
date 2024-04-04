@@ -6,7 +6,7 @@ type ProModalStore = {
   onClose: () => void;
 };
 
-export  const useProModal = create<ProModalStore>((set) => ({
+export const useProModal = create<ProModalStore>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),

@@ -11,10 +11,10 @@ Note that in this scenario all tables are [tenant aware](https://www.thenile.dev
 The `employees` table has a few details that are worth paying attention to:
 
 1. We decided to create employees as a separate table rather than add a few columns to `users.tenant_users`.
-Both options are valid, but the separate table gives us the option to represent employees who are not users of our SaaS product.
+   Both options are valid, but the separate table gives us the option to represent employees who are not users of our SaaS product.
 1. The `id` column does not have an auto-generating sequence. The idea is that employee IDs usually need to align with their IDs in employee directories, HR and finance systems, and therefore should not be auto-generated.
-2. `department` and `manager` columns are also assumed to match other HR systems and in real scenarios will require a system like SCIM to keep in sync.
-3. `expense_reports` and `expense_report_approvals` tables both have columns that refer to `employee_id` and not to `user_id`. This will let us support future integration with employee directories and accounting systems.
+1. `department` and `manager` columns are also assumed to match other HR systems and in real scenarios will require a system like SCIM to keep in sync.
+1. `expense_reports` and `expense_report_approvals` tables both have columns that refer to `employee_id` and not to `user_id`. This will let us support future integration with employee directories and accounting systems.
 
 ## Using the dataset
 
@@ -24,7 +24,7 @@ Sign up for an invite to [Nile](https://thenile.dev) if you don't have one alrea
 
 ### 2. Getting credentials
 
-In the left-hand menu, click on "Settings" and then select "Connection". 
+In the left-hand menu, click on "Settings" and then select "Connection".
 
 Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
 

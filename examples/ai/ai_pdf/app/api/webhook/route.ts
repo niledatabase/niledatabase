@@ -3,15 +3,13 @@ import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { stripe } from "@/lib/stripe";
-import { configureNile } from '@/lib/NileServer';
+import { configureNile } from "@/lib/NileServer";
 
 export async function POST(req: Request) {
   console.log("Webhook");
   const body = await req.text();
   const signature = headers().get("Stripe-Signature") as string;
   let event: Stripe.Event;
-
- 
 
   try {
     event = stripe.webhooks.constructEvent(
@@ -28,7 +26,7 @@ export async function POST(req: Request) {
   if (!session?.metadata?.orgId) {
     return new NextResponse("Org ID is required", { status: 400 });
   }
-  const nile = configureNile(cookies().get('authData'), session.metadata.orgId);
+  const nile = configureNile(cookies().get("authData"), session.metadata.orgId);
 
   if (event.type === "checkout.session.completed") {
     const subscription = await stripe.subscriptions.retrieve(

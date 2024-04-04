@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { File } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { configureNile } from '@/lib/NileServer';
-import { cookies } from 'next/headers';
+import { configureNile } from "@/lib/NileServer";
+import { cookies } from "next/headers";
 import {
   Card,
   CardContent,
@@ -14,23 +14,20 @@ import { Label } from "@/components/ui/label";
 import IndexButton from "./index-button";
 import { TrashBox } from "./trash-box";
 
-// Forcing to re-evaluate each time. 
+// Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
-export const dynamic = 'force-dynamic'
-export const dynamicParams = true
-export const revalidate = 0
-export const fetchCache = 'force-no-store'
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
 
 export const BoardList = async ({
-  organizationId
+  organizationId,
 }: {
   organizationId: string;
 }) => {
-
-  const tenantNile = configureNile(cookies().get('authData'), organizationId);
-  const files = await tenantNile
-    .db("file")
-    .select("*"); // no need for "where" clause since we are connecting to tenant db
+  const tenantNile = configureNile(cookies().get("authData"), organizationId);
+  const files = await tenantNile.db("file").select("*"); // no need for "where" clause since we are connecting to tenant db
   console.log("Number of files reported by board component:" + files.length);
 
   return (

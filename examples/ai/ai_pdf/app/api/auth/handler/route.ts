@@ -52,7 +52,7 @@ function redirectOnSuccess(formData: FormData): string {
       JSON.stringify(cookieData),
       buildCookieOptions(3600)
     );
-    
+
     return "/dashboard";
   } catch (e) {
     return redirectOnError((e as Error).message);

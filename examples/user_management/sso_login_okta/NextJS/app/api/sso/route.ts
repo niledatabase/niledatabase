@@ -1,3 +1,3 @@
-import { api } from '@/nile/Server';
+import { api } from "@/nile/Server";
 
-export const POST = api.auth.loginSSO('/settings');
+export const POST = api.auth.loginSSO("/settings");

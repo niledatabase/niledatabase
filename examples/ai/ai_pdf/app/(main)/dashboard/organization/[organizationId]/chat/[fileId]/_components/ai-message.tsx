@@ -50,12 +50,12 @@ const AIMessage: FC<AIMessageProps> = ({ text }) => {
         >
           {text}
         </ReactMarkdown> */}
-           <ReactMarkdown
-            remarkPlugins={[remarkGfm, remarkMath]}
-            className="text-base prose dark:prose-invert prose-ul:m-0 prose-li:m-0 prose-p:my-0 prose-h3:my-0"
-          >
-            {text}
-          </ReactMarkdown>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm, remarkMath]}
+          className="text-base prose dark:prose-invert prose-ul:m-0 prose-li:m-0 prose-p:my-0 prose-h3:my-0"
+        >
+          {text}
+        </ReactMarkdown>
         <Button
           onClick={onCopy}
           className="opacity-0 group-hover:opacity-100 transition"

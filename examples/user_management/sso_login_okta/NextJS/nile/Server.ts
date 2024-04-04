@@ -1,4 +1,4 @@
-import Server from '@theniledev/server';
+import Server from "@theniledev/server";
 
 const nile = Server({
   workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),

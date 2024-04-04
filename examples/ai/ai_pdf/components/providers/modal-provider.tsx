@@ -18,7 +18,7 @@ export const ModalProvider = () => {
   return (
     <>
       <OrganizationModal />
-      <ProModal orgId={"no tenant"}/>
+      <ProModal orgId={"no tenant"} />
     </>
   );
 };

@@ -53,7 +53,6 @@ DATABASE_URL=postgres://018b778a-30df-7cdd-b55c-2f9664db39f3:ff3fb983-683c-4616-
 
 Install dependencies with `npm install`.
 
-
 ### 5. Deployment
 
 In order to deploy the example, you need to run the following command:

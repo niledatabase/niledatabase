@@ -30,7 +30,7 @@ If all went well, you'll see the new table in the panel on the left hand side of
 
 ### 3. Getting credentials
 
-In the left-hand menu, click on "Settings" and then select "Connection". 
+In the left-hand menu, click on "Settings" and then select "Connection".
 
 Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
 
@@ -94,7 +94,7 @@ If you have Fly.io account, you can deploy on Fly.io by running:
 
 ```text
 fly launch
-fly secrets set DATABASE_URL=... 
+fly secrets set DATABASE_URL=...
 fly deploy
 fly scale memory 1024
 fly scale count 1
