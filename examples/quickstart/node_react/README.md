@@ -45,14 +45,9 @@ It should look something like this:
 # This is the env vars for Node.js app. The DB credentials are very secret, so make sure you keep this file safe
 NILE_DB_USER = "018b4937-2bbf-70fd-9075-37154198fa1e"
 NILE_DB_PASSWORD = "358844ef-cb09-4758-ae77-bec13b801101"
-NILE_WORKSPACE = "my_workspace"
-NILE_DATABASE = "my_database"
-FE_URL = "http://localhost:3006" # replace with the URL of your frontend, this is for the post-authentication redirect
-
 
 # These end up in the user's browser, so nothing secret should ever start with REACT_APP_...
-REACT_APP_NILE_DATABASE = "my_workspace"
-REACT_APP_NILE_WORKSPACE = "my_database"
+REACT_PUBLIC_NILEDB_ID = "my_workspace"
 ```
 
 Install dependencies with `npm install`.
