@@ -11,16 +11,9 @@ import {
 import Server from "@niledatabase/server";
 import cookieParser from "cookie-parser";
 
-export const nile = Server({
-  workspace: String(process.env.NILE_WORKSPACE),
-  database: String(process.env.NILE_DATABASE),
-  db: {
-    connection: {
-      user: process.env.NILE_DB_USER,
-      password: process.env.NILE_DB_PASSWORD,
-    },
-  },
-});
+export const nile = new Server();
+
+await nile.init();
 
 const fe_url = process.env.FE_URL || "http://localhost:3006";
 
@@ -88,12 +81,14 @@ app.get("/api/tenants", async (req, res) => {
     // TODO: Replace with API call to get tenants for user when the SDK supports this
     if (nile.userId) {
       // since we check for login in the middleware, we know that the user ID is set
-      tenants = await nile
-        .db("tenants")
-        .select("tenants.id", "tenants.name")
-        .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-        .where("tenant_users.user_id", "=", nile.userId);
-      res.json(tenants);
+      tenants = await nile.db.query(
+        `SELECT tenants.id, tenants.name
+         FROM tenants
+         JOIN users.tenant_users ON tenants.id = tenant_users.tenant_id
+         WHERE tenant_users.user_id = $1`,
+        [nile.userId]
+      );
+      res.json(tenants.rows);
     }
   } catch (error: any) {
     console.log("error listing tenants: " + error.message);
@@ -130,16 +125,18 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
     const { title, complete } = req.body;
 
-    const newTodo = await nile
-      .db("todos")
-      .insert({
-        title: title,
-        complete: complete || false,
-        tenant_id: nile.tenantId, // setting from context
-      })
-      .returning("*");
+    const newTodo = await nile.db.query(
+      `INSERT INTO todos (title, complete, tenant_id)
+      VALUES ($1, $2, $3)
+      RETURNING *;`,
+      [
+        title,
+        complete || false,
+        nile.tenantId, // setting from context
+      ]
+    );
 
-    res.json(newTodo);
+    res.json(newTodo.rows);
   } catch (error: any) {
     console.log("error adding task: " + error.message);
     res.status(500).json({
@@ -153,7 +150,12 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
 app.put("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
     const { id, complete } = req.body;
-    await nile.db("todos").update("complete", complete).where("id", id);
+    await nile.db.query(
+      `UPDATE todos 
+       SET complete = $1
+       WHERE id = $2`,
+      [complete, id]
+    );
     res.sendStatus(200);
   } catch (error: any) {
     console.log("error updating tasks: " + error.message);
@@ -167,8 +169,11 @@ app.put("/api/tenants/:tenantId/todos", async (req, res) => {
 app.get("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
     // No need for a "where" clause here because we are setting the tenant ID in the context
-    const todos = await nile.db("todos").select("*").orderBy("title");
-    res.json(todos);
+    const todos = await nile.db.query(
+      `SELECT * FROM todos 
+       ORDER BY title`
+    );
+    res.json(todos.rows);
   } catch (error: any) {
     console.log("error listing tasks: " + error.message);
     res.status(500).json({
@@ -180,8 +185,8 @@ app.get("/api/tenants/:tenantId/todos", async (req, res) => {
 // insecure endpoint to get all todos - don't try this in production 😅
 app.get("/insecure/all_todos", async (req, res) => {
   try {
-    const todos = await nile.db("todos").select("*");
-    res.json(todos);
+    const todos = await nile.db.query(`SELECT * FROM todos`);
+    res.json(todos.rows);
   } catch (error: any) {
     console.log("error in insecure endpoint: " + error.message);
     res.status(500).json({
