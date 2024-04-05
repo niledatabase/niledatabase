@@ -1,10 +1,10 @@
-import Server from "@niledatabase/server";
+import Nile from "@niledatabase/server";
 import AuthCookieData from "@/lib/AuthUtils";
 
 // Initialize the Nile server object for reuse in all pages
 // Note that the Nile server configuration points to Nile APIs as the base path
 
-const nile = new Server();
+const nile = await Nile();
 
 export default nile;
 
