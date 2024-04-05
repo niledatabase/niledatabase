@@ -48,15 +48,14 @@ export default async function Page() {
   
   if (nile.userId) {
     // TODO: Replace with API call to get tenants for user when the SDK supports this
-    tenants = await nile.db("tenants")
-      .select("tenants.id","tenants.name")
-      .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-      .where("tenant_users.user_id", "=", nile.userId);
+    tenants = await nile.db.query(`select tenants.id, tenants.name 
+      from tenants join users.tenant_users on tenants.id = tenant_users.tenant_id
+       where tenant_users.user_id = $1`, [nile.userId]);
   };
 
   const tenantDB = configureNile(cookies().get('authData'), tenants[0].id);
 
-  const fileSummary = await tenantDB.db("files").select("*").orderBy("createdAt", "desc");
+  const fileSummary = await tenantDB.db.query("select * from files order by created_at desc");
 
   return (
     <div className={styles.center}>
@@ -94,6 +93,7 @@ export default async function Page() {
         </thead>
         <tbody>
             {fileSummary
+            .rows
             .filter(v => v.first_paragraph !== null)
             .map((file: any) => (
                 <tr key={file.id}>

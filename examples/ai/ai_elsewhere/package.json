@@ -1,5 +1,5 @@
 {
-  "name": "todo-nextjs",
+  "name": "ai_elsewhere",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@mui/joy": "^5.0.0-beta.11",
-    "@niledatabase/react": "latest",
-    "@niledatabase/server": "latest",
+    "@niledatabase/react": "^2.2.0",
+    "@niledatabase/server": "^2.2.0",
     "@types/node": "^20.6.3",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",

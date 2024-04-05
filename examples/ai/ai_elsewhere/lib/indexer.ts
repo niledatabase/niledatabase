@@ -54,13 +54,8 @@ export async function indexPDF(tenant_id: string, url: string) {
         // storing embeddings in Nile
         try {
             embeddingsArrays.forEach(async (vector, index) => {
-                await tenantNile.db("file_embedding").insert({
-                file_id: file_id,
-                tenant_id: tenant_id,
-                embedding_id: index,
-                embedding: JSON.stringify(vector.values),
-                pageContent: JSON.stringify(chunks[index]),
-                });
+                await tenantNile.db.query(`insert into file_embedding (file_id, tenant_id, embedding_id, embedding, pageContent) 
+                values ($1, $2, $3, $4, $5)`, [file_id, tenant_id, index, JSON.stringify(vector.values), JSON.stringify(chunks[index])]);
             });
         } catch (error) {
             console.error(`Failed to store embeddings: ${error}`);
@@ -71,15 +66,8 @@ export async function indexPDF(tenant_id: string, url: string) {
 
         // store file metadata in Nile
         try {
-            await tenantNile.db("files").insert({
-                id: file_id,
-                tenant_id: tenant_id,
-                url: url,
-                pages: pagesAmt,
-                chunks: chunks.length,
-                first_paragraph: chunks[0],
-                time_to_index: Math.round(end_time - start_time)
-            });
+            await tenantNile.db.query(`insert into files (id, tenant_id, url, pages, chunks, first_paragraph, time_to_index) 
+            values ($1, $2, $3, $4, $5, $6)`, [file_id, tenant_id, url, pagesAmt, chunks.length, chunks[0], Math.round(end_time - start_time)]);
         } catch (error) {
             console.error(`Failed to store file metadata: ${error}`);
             throw error;
