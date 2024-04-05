@@ -5,13 +5,13 @@ import Stack from "@mui/joy/Stack";
 import Input from "@mui/joy/Input";
 import FormHelperText from "@mui/joy/FormHelperText";
 
-import { GoogleLoginButton, NileProvider } from "@theniledev/react";
+import { GoogleLoginButton, NileProvider } from "@niledatabase/react";
 
 export default function GoogleAuthPanel() {
   const [newTenant, setNewTenant] = React.useState<string | undefined>();
 
   return (
-    <NileProvider basePath={process.env.NEXT_PUBLIC_NILE_API}>
+    <NileProvider basePath={process.env.NEXT_PUBLIC_NILEDB_API}>
       <div style={{ maxWidth: "20rem", margin: "0 auto" }}>
         <Stack gap={2}>
           <Stack>
@@ -22,8 +22,7 @@ export default function GoogleAuthPanel() {
             />
           </Stack>
           <GoogleLoginButton
-            workspace={process.env.NEXT_PUBLIC_WORKSPACE}
-            database={process.env.NEXT_PUBLIC_DATABASE}
+            databaseId={process.env.NEXT_PUBLIC_NILEDB_ID}
             newTenantName={newTenant}
           />
         </Stack>

@@ -14,9 +14,9 @@ Google.
 
 Install dependencies with `yarn install` or `npm install`.
 
-Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name.
+Rename `.env.local.example` to `.env.local`, and update it with your database credentials, along with the database id.
 
-_(Your workspace and database name are displayed in the header of the Nile dashboard.)_
+_(Your database id is displayed in the database settings of the Nile dashboard.)_
 
 Run the server with:
 
