@@ -7,7 +7,7 @@ import { Grid } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import NextLink from "next/link";
 import MUILink from "@mui/joy/Link";
-import Server from "@niledatabase/server";
+import Nile from "@niledatabase/server";
 
 const UNKNOWN = "none";
 
@@ -15,8 +15,7 @@ export type AuthDataPanelProps = {
   authData: AuthCookieData;
 };
 
-const nile = new Server({ debug: true });
-await nile.init();
+const nile = await Nile();
 
 async function getTenantName(userToken: string, tenantId: string) {
   nile.token = userToken;
