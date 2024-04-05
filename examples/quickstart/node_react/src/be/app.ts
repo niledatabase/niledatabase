@@ -8,12 +8,10 @@ import {
   getUserId,
   isLoggedin,
 } from "./authUtils";
-import Server from "@niledatabase/server";
+import Nile from "@niledatabase/server";
 import cookieParser from "cookie-parser";
 
-export const nile = new Server();
-
-await nile.init();
+const nile = await Nile();
 
 const fe_url = process.env.FE_URL || "http://localhost:3006";
 
