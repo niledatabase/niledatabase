@@ -45,8 +45,11 @@ export async function cancelSubscription(formData: FormData) {
   const tenantNile = configureNile(cookies().get("authData"), tenantid);
 
   // We are looking up the subscription ID from the tenant database
-  const resp = await tenantNile.db("tenants").select("stripe_subscription_id");
-  const subscriptionId = resp[0].stripe_subscription_id;
+  const resp = await tenantNile.db.query(
+    `SELECT stripe_subscription_id FROM tenants`
+  );
+
+  const subscriptionId = resp.rows[0].stripe_subscription_id;
   console.log(
     "cancelling subscription " + subscriptionId + " for tenant " + tenantid
   );
@@ -55,9 +58,12 @@ export async function cancelSubscription(formData: FormData) {
   try {
     await stripe.subscriptions.cancel(subscriptionId);
     // if we got here, subscription was cancelled successfully, lets downgrade the tenant tier too
-    await tenantNile
-      .db("tenants")
-      .update({ tenant_tier: "free", stripe_subscription_id: null });
+    await tenantNile.db.query(
+      `UPDATE tenants 
+       SET tenant_tier = $1,
+           stripe_subscription_id = NULL`,
+      ["free"]
+    );
   } catch (e) {
     console.error(e);
     return { message: "Failed to cancel subscription" };
@@ -80,8 +86,11 @@ export async function redirectToStripePortal(formData: FormData) {
   const tenantNile = configureNile(cookies().get("authData"), tenantId);
 
   // Get the Stripe customer ID from the database
-  const resp = await tenantNile.db("tenants").select("stripe_customer_id");
-  const customerId = resp[0].stripe_customer_id;
+  const resp = await tenantNile.db.query(
+    `SELECT stripe_customer_id FROM tenants`
+  );
+
+  const customerId = resp.rows[0].stripe_customer_id;
 
   // This is the url to which the customer will be redirected when they are done
   // managing their billing with the portal.

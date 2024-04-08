@@ -29,11 +29,13 @@ export default async function Page() {
 
   if (nile.userId) {
     // TODO: Replace with API call to get tenants for user when the SDK supports this
-    tenants = await nile
-      .db("tenants")
-      .select("tenants.id", "tenants.name")
-      .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-      .where("tenant_users.user_id", "=", nile.userId);
+    tenants = await nile.db.query(
+      `SELECT tenants.id, tenants.name
+       FROM tenants
+       JOIN users.tenant_users ON tenants.id = tenant_users.tenant_id
+       WHERE tenant_users.user_id = $1`,
+      [nile.userId]
+    );
   }
 
   return (
@@ -59,7 +61,7 @@ export default async function Page() {
             Use Existing Tenant
           </Typography>
           <List variant="outlined">
-            {tenants.map((tenant: any) => (
+            {tenants.rows.map((tenant: any) => (
               <ListItem key={tenant.id}>
                 <ListItemButton
                   component={NextLink}
