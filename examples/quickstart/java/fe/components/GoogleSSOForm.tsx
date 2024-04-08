@@ -23,10 +23,7 @@ export default function GoogleAuthPanel() {
     <NileProvider basePath={process.env.NEXT_PUBLIC_NILE_API}>
       <div style={{ maxWidth: "20rem", margin: "0 auto" }}>
         <Stack gap={2} justifyContent="center" alignItems="center">
-          <GoogleLoginButton
-            workspace={process.env.NEXT_PUBLIC_WORKSPACE}
-            database={process.env.NEXT_PUBLIC_DATABASE}
-          />
+          <GoogleLoginButton databaseId={process.env.NEXT_PUBLIC_DATABASE} />
         </Stack>
       </div>
     </NileProvider>

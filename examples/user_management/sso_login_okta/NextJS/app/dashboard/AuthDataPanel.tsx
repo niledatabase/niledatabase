@@ -7,7 +7,7 @@ import { Grid } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import NextLink from "next/link";
 import MUILink from "@mui/joy/Link";
-import Server from "@theniledev/server";
+import Server from "@niledatabase/server";
 
 const UNKNOWN = "none";
 
@@ -15,13 +15,7 @@ export type AuthDataPanelProps = {
   authData: AuthCookieData;
 };
 
-const nile = Server({
-  workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
-  database: String(process.env.NEXT_PUBLIC_DATABASE),
-  api: {
-    basePath: String(process.env.NEXT_PUBLIC_NILE_API), // note that this page talks to Nile API directly
-  },
-});
+const nile = await Server();
 
 async function getTenantName(userToken: string, tenantId: string) {
   nile.token = userToken;

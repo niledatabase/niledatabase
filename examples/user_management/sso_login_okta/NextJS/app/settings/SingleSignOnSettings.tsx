@@ -1,6 +1,6 @@
 "use client";
 
-import { NileProvider, Okta, OktaProps } from "@theniledev/react";
+import { NileProvider, Okta, OktaProps } from "@niledatabase/react";
 import Typography from "@mui/joy/Typography";
 import Link from "@mui/joy/Link";
 import Stack from "@mui/joy/Stack";
