@@ -14,7 +14,7 @@ export default function BasicLoginForm() {
   const { push } = useRouter();
   const [error, setError] = useState<string | null>(null);
   return (
-    <NileProvider basePath={process.env.NEXT_PUBLIC_BASE_PATH}>
+    <NileProvider basePath={process.env.NEXT_PUBLIC_APP_URL}>
       <div style={{ maxWidth: '20rem', margin: '0 auto' }}>
         <Stack gap={2} justifyContent="center" alignItems="center">
          {/* Nile's Login component calls the auth API route, which will set the right cookies. So we just need to redirect to the right page. */} 

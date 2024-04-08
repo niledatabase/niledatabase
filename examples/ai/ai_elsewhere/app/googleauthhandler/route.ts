@@ -1,4 +1,4 @@
-import jwtDecode from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 import { cookies } from 'next/headers';
 import { NileJWTPayload, cookieOptions, toCookieData} from '@/lib/AuthUtils';
 
@@ -37,7 +37,7 @@ function redirectOnError(message: string): string {
 function redirectOnSuccess(formData: FormData): string {
   try {
     const accessToken = String(formData.get('access_token'));
-    const decodedJWT = jwtDecode<NileJWTPayload>(accessToken);
+    const decodedJWT = jwt_decode<NileJWTPayload>(accessToken);
     const cookieData = toCookieData(formData, decodedJWT);
     cookies().set('authData', JSON.stringify(cookieData), cookieOptions(3600));
 

@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { jwtDecode } from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 import { cookieOptions, NileJWTPayload, toCookieData } from '@/lib/AuthUtils';
 import { revalidatePath } from 'next/cache';
 import nile from '@/lib/NileServer';
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     if (res && res.status >= 200 && res.status < 300) {
         const body =  await res.json();
         const accessToken = body.token.jwt;
-        const decodedJWT = jwtDecode<NileJWTPayload>(accessToken);
+        const decodedJWT = jwt_decode<NileJWTPayload>(accessToken);
         const cookieData = {
             accessToken: accessToken,
             tokenData: decodedJWT,

@@ -11,8 +11,6 @@ import Table from '@mui/joy/Table';
 import { indexPDF } from '@/lib/indexer';
 import { revalidatePath } from 'next/cache'
 
-
-
 // Forcing to re-evaluate each time. 
 // This guarantees that users will only see their own data and not another user's data via cache
 export const dynamic = 'force-dynamic'
@@ -45,17 +43,21 @@ export default async function Page() {
   const nile = configureNile(cookies().get('authData'), undefined); 
   console.log("showing tenants page for user: " + nile.userId);
   let tenants:any = [];
+  let tenantID: string | undefined = undefined;
   
   if (nile.userId) {
     // TODO: Replace with API call to get tenants for user when the SDK supports this
     tenants = await nile.db.query(`select tenants.id, tenants.name 
       from tenants join users.tenant_users on tenants.id = tenant_users.tenant_id
        where tenant_users.user_id = $1`, [nile.userId]);
+    if (tenants.rows.length > 0) {
+      tenantID = tenants.rows[0].id;
+    }
   };
 
-  const tenantDB = configureNile(cookies().get('authData'), tenants[0].id);
+  const tenantDB = configureNile(cookies().get('authData'), tenantID);
 
-  const fileSummary = await tenantDB.db.query("select * from files order by created_at desc");
+  const fileSummary = await tenantDB.db.query(`select * from files order by "createdAt" desc`);
 
   return (
     <div className={styles.center}>
@@ -74,7 +76,7 @@ export default async function Page() {
                     <Typography level="body-md" >For example, you can try this short article about Phil Jackson: https://uhra.herts.ac.uk/bitstream/handle/2299/1346/900740.pdf
                     </Typography>
                     <Input id="pdfURL" name="pdfURL" autoFocus required />
-                    <input type="hidden" id="tenantId" name="tenantId" value={tenants[0].id} />
+                    <input type="hidden" id="tenantId" name="tenantId" value={tenantID} />
                     <Button type="submit" variant="solid">Submit</Button>
             </Stack>
         </form>
@@ -94,6 +96,8 @@ export default async function Page() {
         <tbody>
             {fileSummary
             .rows
+            /* 
+            // @ts-ignore */
             .filter(v => v.first_paragraph !== null)
             .map((file: any) => (
                 <tr key={file.id}>
