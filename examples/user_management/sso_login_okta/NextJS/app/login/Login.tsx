@@ -1,5 +1,5 @@
 "use client";
-import { NileProvider, SingleSignOnForm } from "@theniledev/react";
+import { NileProvider, SingleSignOnForm } from "@niledatabase/react";
 import { useRouter } from "next/navigation";
 import Typography from "@mui/joy/Typography";
 import Link from "@mui/joy/Link";

@@ -1,12 +1,6 @@
-import Server from "@theniledev/server";
+import Server from "@niledatabase/server";
 
-const nile = Server({
-  workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
-  database: String(process.env.NEXT_PUBLIC_DATABASE),
-  api: {
-    basePath: String(process.env.NEXT_PUBLIC_NILE_API),
-  },
-});
+const nile = await Server();
 
 export const { api, db } = nile;
 export default nile;
