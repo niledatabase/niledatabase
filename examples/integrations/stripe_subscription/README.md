@@ -47,27 +47,17 @@ Also fill in the username and password with the credentials you picked up in the
 It should look something like this:
 
 ```bash
-# Client (public) env vars
-
-# the URL of this example + where the api routes are located
-# Use this to instantiate Nile context for client-side components
-NEXT_PUBLIC_BASE_PATH=http://localhost:3000
-NEXT_PUBLIC_WORKSPACE=todoapp_demo
-NEXT_PUBLIC_DATABASE=stripe_demo_db
-
 # Private env vars that should never show up in the browser
 # These are used by the server to connect to Nile database
-NILE_DB_HOST = "db.thenile.dev"
-NILE_USER = "018ad484-0d52-7274-8639-057814be60c3"
-NILE_PASSWORD = "0d11b8e5-fbbc-4639-be44-8ab72947ec5b"
-STRIPE_SECRET_KEY = "sk_test_51Nn2AgJ5..."
-
-# The URL of the Nile API
-# Use this to instantiate Nile Server context for server-side use of the "api" SDK
-NEXT_PUBLIC_NILE_API=https://api.thenile.dev
+NILE_USER=
+NILE_PASSWORD=
+STRIPE_SECRET_KEY=
 
 # Uncomment if you want to try Google Auth
 # AUTH_TYPE=google
+# NEXT_PUBLIC_NILEDB_ID=
+
+NEXT_PUBLIC_APP_URL=http://localhost:3000/api
 ```
 
 Install dependencies with `yarn install` or `npm install`.

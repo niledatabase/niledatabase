@@ -31,8 +31,9 @@ export default async function Page({
   // Here we are getting a connection to a specific tenant database for the current usr
   // if we already got such connection earlier, it will reuse the existing one
   const tenantNile = configureNile(cookies().get("authData"), params.tenantid);
-
-  const tenantTier = await tenantNile.db("tenants").select("tenant_tier");
+  const tenantTier = await tenantNile.db.query(
+    `SELECT tenant_tier FROM tenants`
+  );
 
   console.log(
     "showing org dashboard for user " +
@@ -76,7 +77,7 @@ export default async function Page({
               </CardContent>
 
               <CardActions buttonFlex="0 1 120px">
-                {tenantTier[0].tenant_tier === "free" ? (
+                {tenantTier.rows[0].tenant_tier === "free" ? (
                   <Button disabled variant="outlined">
                     Current Plan
                   </Button>
@@ -106,7 +107,7 @@ export default async function Page({
                 </Typography>
               </CardContent>
               <CardActions buttonFlex="0 1 120px">
-                {tenantTier[0].tenant_tier === "basic" ? (
+                {tenantTier.rows[0].tenant_tier === "basic" ? (
                   <form action={redirectToStripePortal}>
                     <input
                       type="hidden"

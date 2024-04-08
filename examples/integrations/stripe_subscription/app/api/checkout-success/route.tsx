@@ -40,11 +40,13 @@ export async function GET(req: NextRequest) {
   const tenantNile = configureNile(cookies().get("authData"), tenantId);
 
   // Store the Stripe customer ID  and subscription in the database
-  const resp = await tenantNile.db("tenants").update({
-    stripe_customer_id: checkoutSession.customer,
-    stripe_subscription_id: checkoutSession.subscription,
-    tenant_tier: "basic",
-  });
+  await tenantNile.db.query(
+    `UPDATE tenants 
+     SET stripe_customer_id = $1,
+         stripe_subscription_id = $2,
+         tenant_tier = $3`,
+    [checkoutSession.customer, checkoutSession.subscription, "basic"]
+  );
 
   revalidatePath("/tenants");
   return respond("/tenants/" + tenantId + "/billing");
