@@ -21,7 +21,7 @@ Sign up for an invite to [Nile](https://thenile.dev) if you don't have one alrea
 After you created a database, you will land in Nile's query editor. This is a good time to create the tables we need:
 
 ```sql
-    CREATE TABLE files (
+CREATE TABLE files (
   "id" UUID, -- intentionally not auto generating
   "tenant_id" UUID NOT NULL,
   "url"      TEXT,
@@ -34,7 +34,6 @@ After you created a database, you will land in Nile's query editor. This is a go
   CONSTRAINT "file_pkey" PRIMARY KEY ("id", "tenant_id")
 );
 
-
 CREATE TABLE "file_embedding" (
   "tenant_id" UUID NOT NULL,
   "file_id" UUID NOT NULL,
@@ -44,7 +43,7 @@ CREATE TABLE "file_embedding" (
   "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "pageContent" TEXT,
   CONSTRAINT "file_embedding_pkey" PRIMARY KEY ("tenant_id", "file_id","embedding_id"),
-  CONSTRAINT "file_embedding_file_id_fkey" FOREIGN KEY ("file_id", "tenant_id") REFERENCES "file" ("id", "tenant_id")
+  CONSTRAINT "file_embedding_file_id_fkey" FOREIGN KEY ("file_id", "tenant_id") REFERENCES "files" ("id", "tenant_id")
 );
 ```
 
@@ -70,23 +69,20 @@ Also fill in the username and password with the credentials you picked up in the
 It should look something like this:
 
 ```bash
-# Client (public) env vars
+# Server (secret) env vars
+# get these values from console.thenile.dev credentials
+NILEDB_USER=018ebf83-d4ad-...
+NILEDB_PASSWORD=0d161753-...
 
-# the URL of this example + where the api routes are located
-# Use this to instantiate Nile context for client-side components
-NEXT_PUBLIC_BASE_PATH=http://localhost:3000/api
-NEXT_PUBLIC_WORKSPACE=todoapp_demo
-NEXT_PUBLIC_DATABASE=demo_db_nextjs_qs
+# This is optional, but can help validate that you are connecting to the right DB
+# Get this value from console.thenile.dev database settings 
+NILEDB_NAME=mydb
 
-# Private env vars that should never show up in the browser
-# These are used by the server to connect to Nile database
-NILE_DB_HOST = "db.thenile.dev"
-NILE_USER = "018ad484-0d52-7274-8639-057814be60c3"
-NILE_PASSWORD = "0d11b8e5-fbbc-4639-be44-8ab72947ec5b"
+# For google sso React component
+# NEXT_PUBLIC_NILEDB_API=https://us-west-2.api.thenile.dev/databases/018cdc01-bd61-7b04-a7fc-e3ac52ab210f
 
-# The URL of the Nile API
-# Use this to instantiate Nile Server context for server-side use of the "api" SDK
-NEXT_PUBLIC_NILE_API=https://api.thenile.dev
+# If you are using Nile's email signup/login components, point to the API route
+NEXT_PUBLIC_APP_URL=http://localhost:3000/api
 
 # Uncomment if you want to try Google Auth
 # AUTH_TYPE=google
