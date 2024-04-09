@@ -1,19 +1,12 @@
 import { glob } from "glob";
 import { MetadataRoute } from "next";
 
-const files = glob([
-  "app/blog/**.mdx",
-  "app/docs/**.mdx",
-  "app/careers/**.mdx",
-  // do something about templates
-]);
-console.log(files);
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const files = await glob(
     [
-      "./blog/**.mdx",
-      "./docs/**/*.mdx",
-      "./careers/**.mdx",
+      "app/blog/**/*.mdx",
+      "app/docs/**/*.mdx",
+      "app/careers/**/*.mdx",
       // do something about templates
     ],
     { stat: true, withFileTypes: true }
@@ -25,7 +18,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .relative()
       .replace(".mdx", "")
       .replace("/[[...slug]]", "")
-      .replace("/index", "");
+      .replace("/index", "")
+      .replace(/^app\//, "");
+
+    console.log(path);
     const metadataRoute = {
       url: `https://thenile.dev/${path}`,
       lastModified: file.mtime ? new Date(file.mtime) : new Date(),
