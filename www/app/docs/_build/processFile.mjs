@@ -17,9 +17,13 @@ export async function processFile(file) {
   const baseResponse = { file, slug: parts, order: 0 };
 
   const maybeHeader = /title:\s['"](.+)['"]/.exec(content);
+  const maybeArrHeader = /title:\s\["(.+?)",/.exec(content);
   const firstHeader = /#\s(.+)/.exec(content);
   if (maybeHeader) {
     const [, header] = maybeHeader;
+    baseResponse.header = header;
+  } else if (maybeArrHeader) {
+    const [, header] = maybeArrHeader;
     baseResponse.header = header;
   } else if (firstHeader) {
     const [, header] = firstHeader;

@@ -2,15 +2,17 @@ import { Param } from "../_components/PageContent/types";
 import { MDXProps } from "mdx/types";
 
 type Props = { params?: Param; page?: string; root: string };
-type Metadata = {
+export type FileMetadata = {
   title: string;
   description: string;
+  tags?: string[];
+  image?: string;
 };
 
 type ValidComponent = (props: MDXProps) => JSX.Element;
 
 export default async function findDocFile(props: Props): Promise<{
-  metadata: Metadata;
+  metadata: FileMetadata;
   Component: void | ValidComponent;
 }> {
   const { params, page, root } = props;
@@ -64,6 +66,6 @@ export default async function findDocFile(props: Props): Promise<{
     // do nothing
   }
 
-  const _meta = {} as Metadata;
+  const _meta = {} as FileMetadata;
   return { metadata: _meta, Component: undefined };
 }

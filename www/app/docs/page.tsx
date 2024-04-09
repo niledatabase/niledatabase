@@ -230,9 +230,12 @@ export default async function Home() {
 }
 
 export const metadata = {
-  title: "Documentation | Nile Database",
+  title: "Documentation Database",
   description: "Serverless Postgres for modern SaaS",
   openGraph: {
     images: "opengraph/docs.jpg",
+  },
+  alternates: {
+    canonical: `/docs`,
   },
 };
