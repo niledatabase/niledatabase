@@ -5,7 +5,9 @@ import AuthCookieData from '@/lib/AuthUtils';
 // Initialize the Nile server object for reuse in all pages
 // Note that the Nile server configuration points to Nile APIs as the base path
 
-const nile = await Nile();
+const nile = await Nile({
+  debug: true,
+});
 
 export default nile;
 

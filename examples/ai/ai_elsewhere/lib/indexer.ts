@@ -5,7 +5,6 @@ import { TextLoader } from "langchain/document_loaders/fs/text";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import {v4 as uuidv4} from 'uuid';
-import { chunk } from 'lodash';
 
 export async function indexPDF(tenant_id: string, url: string) {
     const message = `Indexing ${url} for tenant ${tenant_id}`;
@@ -43,7 +42,17 @@ export async function indexPDF(tenant_id: string, url: string) {
         if (chunks.length > 10) {
             chunks.length = 10;
         }
-        
+
+        // store file metadata in Nile
+        // We need to do this first, since file_id is a foreign key in file_embedding
+        try {
+            await tenantNile.db.query(`insert into files (id, tenant_id, url, pages, chunks, first_paragraph) 
+            values ($1, $2, $3, $4, $5, $6)`, [file_id, tenant_id, url, pagesAmt, chunks.length, chunks[0]]);
+        } catch (error) {
+            console.error(`Failed to store file metadata: ${error}`);
+            throw error;
+        }
+
         // generating embeddings
         const embeddingsArrays = await new OpenAIEmbeddings({
             openAIApiKey: process.env.OPENAI_API_KEY,
@@ -54,7 +63,7 @@ export async function indexPDF(tenant_id: string, url: string) {
         // storing embeddings in Nile
         try {
             embeddingsArrays.forEach(async (vector, index) => {
-                await tenantNile.db.query(`insert into file_embedding (file_id, tenant_id, embedding_id, embedding, pageContent) 
+                await tenantNile.db.query(`insert into file_embedding (file_id, tenant_id, embedding_id, embedding, "pageContent") 
                 values ($1, $2, $3, $4, $5)`, [file_id, tenant_id, index, JSON.stringify(vector.values), JSON.stringify(chunks[index])]);
             });
         } catch (error) {
@@ -64,12 +73,11 @@ export async function indexPDF(tenant_id: string, url: string) {
         const end_time = performance.now();
         console.log(`Indexing took ${end_time - start_time} milliseconds`);
 
-        // store file metadata in Nile
+        // update time to index in Nile
         try {
-            await tenantNile.db.query(`insert into files (id, tenant_id, url, pages, chunks, first_paragraph, time_to_index) 
-            values ($1, $2, $3, $4, $5, $6)`, [file_id, tenant_id, url, pagesAmt, chunks.length, chunks[0], Math.round(end_time - start_time)]);
+            await tenantNile.db.query(`update files set time_to_index = $1 where id = $2`, [Math.round(end_time - start_time), file_id]);
         } catch (error) {
-            console.error(`Failed to store file metadata: ${error}`);
+            console.error(`Failed to update time to index: ${error}`);
             throw error;
         }
 
@@ -77,6 +85,4 @@ export async function indexPDF(tenant_id: string, url: string) {
         console.error(`Failed to index ${url}: ${error}`);
         throw error;
     }
-
-
 }
