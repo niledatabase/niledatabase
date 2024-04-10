@@ -1,9 +1,8 @@
-import { ResolvingMetadata, Metadata } from "next";
 import Container from "../../_components/Container";
 import PageContent from "../../_components/PageContent";
 import { Param } from "../../_components/PageContent/types";
 import { NavigationRoots } from "../../_components/SideNavigation/types";
-import findDocFile from "../../_utils/findDocFile";
+import { makeMetadata } from "../../_utils/metadata";
 type Props = { params: Param };
 export default async function Page(props: Props) {
   return (
@@ -13,21 +12,4 @@ export default async function Page(props: Props) {
   );
 }
 
-export async function generateMetadata(
-  props: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const { metadata } = await findDocFile({
-    ...props,
-    root: NavigationRoots.Integrations,
-  });
-
-  const previousImages = (await parent).openGraph?.images || [];
-  return {
-    title: metadata?.title,
-    description: metadata?.description,
-    openGraph: {
-      images: [...previousImages],
-    },
-  };
-}
+export const generateMetadata = makeMetadata(NavigationRoots.Integrations);
