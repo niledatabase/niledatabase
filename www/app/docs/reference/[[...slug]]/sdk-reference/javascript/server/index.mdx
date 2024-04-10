@@ -1,19 +1,27 @@
 import rehypeHighlight from "rehype-highlight";
 export const metadata = {
-  title: "Server SDK",
+  title: ["Server SDK", "Javascript"],
   description: "Javascript Server SDK reference",
   order: 1,
+  tags: ["javascript", "tenant aware", "@niledatabase/server"],
 };
 
-# Javascript Server SDK
+# @niledatabase/server
 
 ## Installation and configuration
 
-Install the SDK using npm:
+Install the SDK:
 
-```bash
+  <CodeGroups>
+```node
 npm install @niledatabase/server
 ```
+
+```yarn
+yarn install @niledatabase/server
+```
+
+</CodeGroups>
 
 Set an .env file with database credentials
 
@@ -26,7 +34,6 @@ Then import the SDK:
 
 ```javascript
 import Nile from "@niledatabase/server";
-
 const nile = await Nile();
 ```
 
@@ -36,20 +43,121 @@ This creates an instance of Nile Server, which allows you to interact with Nile 
 
 If you would like to pass a configuration manually, that can be done by passing the config to `Nile`. Configs passed in this way take precedence over `.env` vars.
 
-| Property      | Type         | .env var        | Description                                                              |
-| ------------- | ------------ | --------------- | ------------------------------------------------------------------------ |
-| user          | `string`     | NILEDB_USER     | Required. Username for database authentication.                          |
-| password      | `string`     | NILEDB_PASSWORD | Required. Password for database authentication.                          |
-| databaseId    | `string`     | NILEDB_ID       | ID of the database.                                                      |
-| databaseName  | `string`     | NILEDB_NAME     | Name of the database.                                                    |
-| tenantId      | `string`     | NILEDB_TENANT   | ID of the tenant associated.                                             |
-| userId        | `string`     |                 | ID of the user associated.                                               |
-| db            | `PoolConfig` |                 | Configuration object for [pg.Pool](https://node-postgres.com/apis/pool). |
-| api           | `object`     |                 | Configuration object for API settings.                                   |
-| api.basePath  | `string`     | NILEDB_API      | Base host for API for a specific region. Default is `api.thenile.dev`.   |
-| api.cookieKey | `string`     |                 | Key for API cookie. Default is `token`.                                  |
-| api.token     | `string`     | NILEDB_TOKEN    | Token for API authentication. Mostly for debugging.                      |
-| debug         | `boolean`    |                 | Flag for enabling debug logging.                                         |
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>.env var</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>user</td>
+      <td>
+        <pre>string</pre>
+      </td>
+      <td>NILEDB_USER</td>
+      <td>Required. Username for database authentication.</td>
+    </tr>
+    <tr>
+      <td>password</td>
+      <td>
+        <pre>string</pre>
+      </td>
+      <td>NILEDB_PASSWORD</td>
+      <td>Required. Password for database authentication.</td>
+    </tr>
+    <tr>
+      <td>databaseId</td>
+      <td>
+        <pre>string</pre>
+      </td>
+      <td>NILEDB_ID</td>
+      <td>ID of the database.</td>
+    </tr>
+    <tr>
+      <td>databaseName</td>
+      <td>
+        <pre>string</pre>
+      </td>
+      <td>NILEDB_NAME</td>
+      <td>Name of the database.</td>
+    </tr>
+    <tr>
+      <td>tenantId</td>
+      <td>
+        <pre>string</pre>
+      </td>
+      <td>NILEDB_TENANT</td>
+      <td>ID of the tenant associated.</td>
+    </tr>
+    <tr>
+      <td>userId</td>
+      <td>
+        <pre>string</pre>
+      </td>
+      <td></td>
+      <td>ID of the user associated.</td>
+    </tr>
+    <tr>
+      <td>db</td>
+      <td>
+        <pre>PoolConfig</pre>
+      </td>
+      <td></td>
+      <td>
+        Configuration object for [pg.Pool](https://node-postgres.com/apis/pool).
+      </td>
+    </tr>
+    <tr>
+      <td>api</td>
+      <td>
+        <pre>object</pre>
+      </td>
+      <td></td>
+      <td>Configuration object for API settings.</td>
+    </tr>
+    <tr>
+      <td>api.basePath</td>
+      <td>
+        <pre>string</pre>
+      </td>
+      <td>NILEDB_API</td>
+      <td>
+        Base host for API for a specific region. Default is{" "}
+        <code>api.thenile.dev</code>.
+      </td>
+    </tr>
+    <tr>
+      <td>api.cookieKey</td>
+      <td>
+        <pre>string</pre>
+      </td>
+      <td></td>
+      <td>
+        Key for API cookie. Default is <code>token</code>.
+      </td>
+    </tr>
+    <tr>
+      <td>api.token</td>
+      <td>
+        <pre>string</pre>
+      </td>
+      <td>NILEDB_TOKEN</td>
+      <td>Token for API authentication. Mostly for debugging.</td>
+    </tr>
+    <tr>
+      <td>debug</td>
+      <td>
+        <pre>boolean</pre>
+      </td>
+      <td></td>
+      <td>Flag for enabling debug logging.</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Virtual Tenant Databases
 
@@ -76,7 +184,7 @@ Handling of both cookies and path parameters is framework-specific.
     export default async function Page({ params }: { params: { tenantid: string } }) {
 
       // First, initialize global Nile instance if needed
-      const nile = await Nile(...)
+      const nile = await Nile()
 
       const parsedCookies = JSON.parse(String(cookies().get('authData')?.value));
       const tenantNile = nile.getInstance({
@@ -94,10 +202,9 @@ Handling of both cookies and path parameters is framework-specific.
     import cookieParser from "cookie-parser";
 
     // First, initialize global Nile instance if needed
-    const nile = await Nile(...)
+    const nile = await Nile();
 
-
-    app.use(cookieParser())
+    app.use(cookieParser());
 
     app.use('/api/tenants', (req, res, next) => {
         const parsedCookies = JSON.parse(req.cookies.authData);
@@ -281,8 +388,8 @@ For example:
 ```javascript
 import Nile from "@niledatabase/server";
 export const nile = await Nile({
-  user: process.env.NILE_DB_USER,
-  password: process.env.NILE_DB_PASSWORD,
+  user: process.env.NILEDB_USER,
+  password: process.env.NILEDB_PASSWORD,
 });
 ```
 

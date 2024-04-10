@@ -134,7 +134,7 @@ const theme: PrismTheme = {
     {
       types: ["keyword", "variable", "console"],
       style: {
-        color: "#ff7b72",
+        color: "#dbba9c",
       },
     },
     {

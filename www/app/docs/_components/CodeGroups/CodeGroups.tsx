@@ -11,7 +11,7 @@ type Props = {
 };
 const variants = {
   base: "hidden",
-  active: "show max-w-[500px] overflow-scroll",
+  active: "show md:w-[460px] lg:w-full overflow-scroll",
 };
 const tabsVariants = {
   base: "cursor-pointer py-2 px-3 opacity-60 hover:opacity-100",
@@ -70,7 +70,7 @@ export default function CodeGroups(props: Props) {
         </div>
       )}
 
-      <div className="relative text-[16px]">
+      <div className="relative code-group text-[16px!important]">
         {items.map((child, idx) => {
           if (isObject(child) && "props" in child) {
             const { className } = child?.props.children.props;
