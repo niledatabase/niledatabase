@@ -23,7 +23,7 @@ export const buildMetadata = (metadata: FileMetadata & Metadata): Metadata => {
     title: metadataText(metadata?.title),
     description: metadata?.description,
     alternates: {
-      canonical: `/docs/${title.toLowerCase().replace(/\s/, "-")}`,
+      canonical: `/docs/${title?.toLowerCase().replace(/\s/, "-")}`,
     },
   };
 };

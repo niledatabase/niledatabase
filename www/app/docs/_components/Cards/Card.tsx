@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { NavigationRoots } from "../SideNavigation";
+import { FileMetadata } from "../../_utils/findDocFile";
 
 type Props = {
   file: string;
@@ -9,10 +10,16 @@ type Props = {
 };
 export default async function Card(props: Props) {
   const { file, root, icon } = props;
-  const { metadata } = await import(
-    `../../${root}/\[\[...slug\]\]${file.slice(1, file.length)}`
-  );
-  if (!metadata) {
+  let metadata: null | FileMetadata = null;
+  try {
+    const imported = await import(
+      `../../${root}/\[\[...slug\]\]${file.slice(1, file.length)}`
+    );
+    metadata = imported.metadata;
+  } catch (e) {
+    console.error(e);
+  }
+  if (metadata == null) {
     return null;
   }
   const href = file
