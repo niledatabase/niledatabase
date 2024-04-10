@@ -58,33 +58,17 @@ git clone https://github.com/niledatabase/niledatabase
 cd niledatabase/examples/quickstart/nextjs
 ```
 
-Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name.
-_(Your workspace and database name are displayed in the header of the Nile dashboard.)_
-Also fill in the username and password with the credentials you picked up in the previous step.
+Rename `.env.local.example` to `.env.local`, and update it with your database credentials.
 
 It should look something like this:
 
 ```bash
-# Client (public) env vars
-
-# the URL of this example + where the api routes are located
-# Use this to instantiate Nile context for client-side components
-NEXT_PUBLIC_BASE_PATH=http://localhost:3000/api
-NEXT_PUBLIC_WORKSPACE=todoapp_demo
-NEXT_PUBLIC_DATABASE=demo_db_nextjs_qs
-
 # Private env vars that should never show up in the browser
 # These are used by the server to connect to Nile database
-NILE_DB_HOST = "db.thenile.dev"
-NILE_USER = "018ad484-0d52-7274-8639-057814be60c3"
-NILE_PASSWORD = "0d11b8e5-fbbc-4639-be44-8ab72947ec5b"
+NILEDB_USER=018ad484-0d52-7274-8639-057814be60c3
+NILEDB_PASSWORD=0d11b8e5-fbbc-4639-be44-8ab72947ec5b
 
-# The URL of the Nile API
-# Use this to instantiate Nile Server context for server-side use of the api SDK
-NEXT_PUBLIC_NILE_API=https://api.thenile.dev
-
-# Uncomment if you want to try Google Auth
-# AUTH_TYPE=google
+NEXT_PUBLIC_NILE_API_URL=https://eu-central-1.api.dev.thenile.dev/databases/018ec979-2412-7062-9cda-35ae6fea7837
 ```
 
 Install dependencies
@@ -93,7 +77,7 @@ Install dependencies
 npm install
 ```
 
-### 5. Run the application
+## 5. Run the application
 
 ```bash
 npm run dev
@@ -118,7 +102,7 @@ select tenants.name, title, complete from
 tenants join todos on tenants.id=todos.tenant_id;
 ```
 
-## 7. How does it work?
+## 6. How does it work?
 
 There are a few moving pieces here, so let's break it down.
 
@@ -128,7 +112,7 @@ If you are interested in learning how to use Nile for authentication, check out 
 
 This explanation will focus on creating tenants, selecting tenants and adding tasks.
 
-### 7.1. Configuring Nile SDK
+### 6.1. Configuring Nile SDK
 
 All the signup and login methods eventually route users to `/tenants`. You'll find the code in `app/tenants/page.tsx`.
 
@@ -139,28 +123,19 @@ configureNile(cookies().get("authData"), null);
 ```
 
 This method configures a shared instance of `nile` that is used throughout the application.
-This instance is a singleton, which you get by calling Nile SDK's `Server` method, which we are doing in '@/lib/NileServer'
-This is also where all the environment variables we've set earlier are being used, so lets take a look at this file:
+This instance is a singleton, which you get by calling Nile SDK's `getInstance` method. This is also where all the environment variables we've set earlier are being used, so lets take a look at this file:
 
 ```typescript
-const nile =  Server(
-        ...
-        api: {
-          basePath: String(process.env.NEXT_PUBLIC_NILE_API),
-        },
-        ...);
+const nile = await Nile();
 ```
 
-The `basePath` configuration is the URL that `nile.api` methods will call. This component calls Nile APIs directly, and therefore we set `basePath` to `NEXT_PUBLIC_NILE_API`.
-Note that there are other components, for example basic login and signup that for web security reasons cannot call Nile APIs directly. Instead, they should call the application server, which in turn calls Nile APIs. In this case, the `basePath` should be set to `NEXT_PUBLIC_BASE_PATH`.
-
-So every page, route and function in our app can use the same `nile` instance to access Nile APIs and DB.
+The SDK uses your credentials to call the Nile API. Every page, route and function in our app can use the same `nile` instance to access Nile APIs and DB.
 
 But, we need to make sure we are using the right user and tenant context.
 So we call `configureNile` and pass in the cookies and the tenant ID.
 After this point, we can use `nile` to access the database and APIs, and it will use the right user and tenant context.
 
-### 7.2 Listing tenants
+### 6.2 Listing tenants
 
 Next thing we do in `app/tenants/page.tsx` is to list all the tenants for the current user.
 We use Nile SDK to query the database for all the tenants that the current user is a member of:
@@ -188,7 +163,7 @@ and then we render the list of tenants as a list of links:
 
 It looks a bit like magic, but [NextJS server fetching](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#fetching-data-on-the-server-with-third-party-libraries) and Nile SDK are integrated together to make this happen.
 
-### 7.3 Creating a tenant
+### 6.3 Creating a tenant
 
 When you click on the "Create Tenant" button, we pop out a modal form. The form is defined in `app/tenants/add-form.tsx` and uses [NextJS server actions](https://nextjs.org/docs/app/building-your-application/data-fetching/forms-and-mutations).
 Create tenant logic is in `app/tenants/tenant-actions.tsx`.
@@ -211,7 +186,7 @@ You can see the new tenant in the Nile console by running `select * from tenants
 
 By setting `nile.token = userToken` we are telling Nile SDK to use the user's token to make the API call. This is important, since Nile uses this token to both validate the user's identity and to link the tenant with this user.
 
-### 7.4 Listing tasks
+### 6.4 Listing tasks
 
 When you create a tenant or select an existing tenant, you are taken to the tenant's todo list.
 The code for this page is in `app/tenants/[tenantid]/todos/page.tsx`.
@@ -235,7 +210,7 @@ Behind the scenes, Nile does two things:
 
 This also means that you don't need to implement the 3-way join between `todo`, `tenants` and `tenant_users`, so the code is simpler and more performant.
 
-### 7.5 Adding a task
+### 6.5 Adding a task
 
 When you click on the "+" to add a new task or on the checkbox to mark it as done, we again rely on NextJS server actions to make things simple.
 You can find the logic for adding a task in `app/tenants/[tenantid]/todos/todo-actions.tsx`.
@@ -261,7 +236,7 @@ and will make sure we only update tasks for the current tenant.
 
 We don't want just anyone handing us tasks and telling us to do them, right?
 
-## 8. What's next?
+## 7. What's next?
 
 This example is a good starting point for building your own application with Nile.
 

@@ -47,7 +47,7 @@ NILE_DB_USER = "018b4937-2bbf-70fd-9075-37154198fa1e"
 NILE_DB_PASSWORD = "358844ef-cb09-4758-ae77-bec13b801101"
 
 # These end up in the user's browser, so nothing secret should ever start with REACT_APP_...
-REACT_PUBLIC_NILEDB_ID = "my_workspace"
+REACT_PUBLIC_NILEDB_API_URL =
 ```
 
 Install dependencies with `npm install`.

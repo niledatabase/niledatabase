@@ -21,6 +21,8 @@ Every one of your Nile tenants will have to provide their Okta configuration det
 
 # Set Up the Demo Application
 
+## 1. Clone the example application.
+
 You can test your Okta configuration with our demo application. This application allows a user to sign up for a new account and then enable Okta for their tenant.
 
 Install it from the command line:
@@ -33,9 +35,20 @@ cd nile-okta-nextjs
 
 and install dependencies with `yarn install` or `npm install`.
 
-Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name.
+## 2. Configure your application.
 
-_(In the Nile dashboard, select your database and click the settings icon. Your workspace slug and database name are displayed under **General**, and can be copied to the clipboard.)_
+- Rename `.env.local.example` to `.env.local` in the project's root directory and open it.
+- Enter your database credentials (`NILEDB_USER` and `NILEDB_PASSWORD`). Use existing credentials, or generate new ones through the Nile Console:
+
+1. Visit the [Nile Console](https://console.thenile.dev), select your database, and navigate to **Settings** > **Credentials**.
+2. Click **Generate credentials**, then **Generate** and **Copy credentials to clipboard**.
+3. The copied credentials include two UUIDs: the first is the username and the second is the password, separated by a colon (":"). Paste the username into the `NILEDB_USER` value in `.env.local`, and the password into the `NILEDB_PASSWORD` value.
+
+These credentials authenticate your app with the Nile API.
+
+- In the same `.env.local` file, enter the `NEXT_PUBLIC_NILEDB_API_URL`. You can find this in the [Nile Console](https://console.thenile.dev) under **Settings** > **General**.
+
+## 3. Run the application and create a new user and tenant.
 
 Run the app with `yarn dev` or `npm run dev` to start the app, and open [the sign-up page (http://localhost:3000/sign-up)](http://localhost:3000/sign-up) in your browser.
 
@@ -102,7 +115,7 @@ SELECT * FROM users.users;
 
 ## The SingleSignOnForm Component
 
-In `/app/login/Login.tsx`, you'll find a `<NileProvider>` configured with your environment variables. This wraps a `<SingleSignOnForm>` component from the Nile UI Kit. This component checks the user's email domain against the list of registered domains, and if it matches, sends an authentication request to your Nile database. This results in a redirect to Okta.
+In `/app/login/Login.tsx`, you'll find a `<NileProvider>` that wraps a `<SingleSignOnForm>` component from the Nile UI Kit. This component checks the user's email domain against the list of registered domains, and if it matches, sends an authentication request to your Nile database. This results in a redirect to Okta.
 
 ```tsx
 export default function SSOForm() {
@@ -152,7 +165,7 @@ The UI Kit keeps track of which tenant the settings are for, and will automatica
 
 ## The Auth Redirect Handler
 
-When the user successfully authenticates with Okta, they are redirected to the URL you provided in your Nile configuration. In this example, that's `/api/auth/handler/route.ts`. It detects the type of authentication event that occurred, then reroutes to the dashboard on success.
+When the user successfully authenticates with Okta, they are redirected to the URL you provided in your Nile configuration. In this example, that's `/api/auth/handler/route.ts`, which checks for errors and redirects to the `/dashboard` page on success. The dashboard displays the values that Nile sends you when an authentication attempt is resolved.
 
 ```ts
 export async function POST(req: Request) {

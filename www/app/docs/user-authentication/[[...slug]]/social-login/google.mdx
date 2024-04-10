@@ -4,7 +4,7 @@ export const metadata = {
   order: 2,
 };
 
-# Support Google Authentication with Next.js
+# Google Authentication with Next.js
 
 Supporting social login is a great way to reduce the friction of signup, and Nile makes it easy to add social providers to your application. This guide walks you through setting up Google as an identity provider.
 
@@ -14,7 +14,7 @@ Sign up for an invite to [Nile](https://thenile.dev) if you don't have one alrea
 
 To ensure a secure exchange, your Google project and Nile database need to know a little bit about each other.
 
-## Enable Google in Nile
+## 1. Enable Google in Nile.
 
 1. Open the Nile Console, and select the database for your application.
 2. Click on the **Identity Providers** icon in the side navigation.
@@ -23,7 +23,7 @@ To ensure a secure exchange, your Google project and Nile database need to know 
 5. The **Redirect URI** is the page in your application that Nile redirects to after a user authenticates, or when an error occurs. For this example, enter `http://localhost:3000/api/auth/handler`.
 6. Under **Callback URI**, click the **Copy** button to copy your database's callback URI to your clipboard. You'll need this when you configure Google. (The **Component URL** isn't necessary for this example; it's used for configuring the Nile UI component.)
 
-## Configure Google
+## 2. Configure Google.
 
 1. Login to your [Google Cloud console](https://console.cloud.google.com/) and open the [credentials panel](https://console.cloud.google.com/apis/credentials) for your Google Cloud project.
 2. Click **Create Credentials > OAuth client ID**.
@@ -31,7 +31,7 @@ To ensure a secure exchange, your Google project and Nile database need to know 
 4. Under **Authorized redirect URIs**, past the **Callback URI** that you copied above.
 5. Click **Create**. Google displays the **client id** and **client secret**. (The client id is the longer of the two, and will look something like `012345678901-e234mkac1qefclfum27kktf4c0jbnfuc.apps.googleusercontent.com`. The client secret is the shorter string and will look something like `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`.) Copy the generated values—you'll provide them to Nile.
 
-## Provide Client Credentials to Nile
+## 3. Provide client credentials to Nile.
 
 1. Back in the Nile dashboard, enter the client id and secret that you obtained from Google.
 2. Click **Save**.
@@ -40,10 +40,7 @@ With your Google and Nile accounts connected, your application can now authentic
 
 # Test Authentication
 
-## Set Up the Demo Application
-
-You can test your Google configuration with our authentication demo. Install it from the command
-line:
+## 1. Clone the example application.
 
 ```bash
 git clone https://github.com/niledatabase/niledatabase.git
@@ -53,9 +50,22 @@ cd nile-google-nextjs
 
 and install dependencies with `yarn install` or `npm install`.
 
-Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name.
+## 2. Configure your application.
 
-## Run and Verify
+For database access, configure the Nile SDK with the necessary credentials:
+
+- Rename `.env.local.example` to `.env.local` in the project's root directory and open it.
+- Enter your database credentials (`NILEDB_USER` and `NILEDB_PASSWORD`). Use existing credentials, or generate new ones through the Nile Console:
+
+1. Visit the [Nile Console](https://console.thenile.dev), select your database, and navigate to **Settings** > **Credentials**.
+2. Click **Generate credentials**, then **Generate** and **Copy credentials to clipboard**.
+3. The copied credentials include two UUIDs: the first is the username and the second is the password, separated by a colon (":"). Paste the username into the `NILEDB_USER` value in `.env.local`, and the password into the `NILEDB_PASSWORD` value.
+
+These credentials authenticate your app with the Nile API.
+
+- In the same `.env.local` file, enter the `NEXT_PUBLIC_NILEDB_ID`. You can find this in the [Nile Console](https://console.thenile.dev) under **Settings** > **General**.
+
+## 3. Run, sign up and query users.
 
 Run the app with `yarn dev` or `npm dev` to start the app, and open [http://localhost:3000/](http://localhost:3000/) in your browser. When you click "Continue with Google", you'll be redirected to Google's authentication screen. After successfully logging in, you'll be redirected back to the demo application's route handler.
 
@@ -69,59 +79,43 @@ SELECT * FROM users.users;
 
 # Dig Deeper
 
-## The GoogleSSOButton
+## The GoogleLoginButton
 
-In `/app/page.tsx`, you'll find a `<NileProvider>` configured with those environment variables. This wraps a `<GoogleSSOButton>` component from the Nile UI Kit. This component initiates an authentication request to your Nile database, which redirects to the Google authentication screen.
+In `/app/page.tsx`, you'll find a `<GoogleAuthPanel>` which wraps a `<GoogleLoginButton>` component from the Nile UI Kit. This component initiates an authentication request to your Nile database, which redirects to the Google authentication screen.
 
 ```tsx
-export default function Home() {
+export default function GoogleAuthPanel() {
+  ...
   return (
-    <main className={styles.main}>
-      <NileProvider apiUrl={String(process.env.NILEDB_API_URL)}>
-        <GoogleSSOButton />
-      </NileProvider>
-    </main>
+    <NileProvider apiUrl={String(process.env.NILEDB_API_URL)}>
+      <GoogleSSOButton />
+    </NileProvider>
   );
 }
 ```
 
 ## The Auth Redirect Handler
 
-When the user successfully authenticates with Google, they are redirected to the URL you provided in your Nile configuration. In this example, that's `/api/auth/handler/route.ts`, which simply echoes back the values that Nile sends you when an authentication attempt is resolved:
+When the user successfully authenticates with Google, they are redirected to the URL you provided in your Nile configuration. In this example, that's `/api/auth/handler/route.ts`, which checks for errors and redirects to the `/dashboard` page on success. The dashboard displays the values that Nile sends you when an authentication attempt is resolved.
 
 ```ts
-import jwtDecode, { JwtPayload } from "jwt-decode";
-
 export async function POST(req: Request) {
   const formData = await req.formData();
   const event = formData.get("event");
 
+  let location: string;
+
   if (event === "AUTH_ERROR") {
-    return new Response(JSON.stringify({ error: formData.get("error") }), {
-      status: 500,
-    });
+    const message = formData.get("error");
+    location = redirectOnError(message ? message.toString() : "Unknown error");
+  } else {
+    location = redirectOnSuccess(formData);
   }
 
-  try {
-    const accessToken = formData.get("access_token") as string;
-    const decodedJWT = jwtDecode<JwtPayload>(accessToken);
-
-    return new Response(
-      JSON.stringify(
-        {
-          token: accessToken,
-          subject: decodedJWT.sub,
-          audience: decodedJWT.aud,
-          state: formData.get("state"),
-          event,
-        },
-        null,
-        2
-      )
-    );
-  } catch (e) {
-    return new Response(JSON.stringify(e as Error), { status: 500 });
-  }
+  return new Response(null, {
+    headers: { Location: location },
+    status: 302,
+  });
 }
 ```
 
