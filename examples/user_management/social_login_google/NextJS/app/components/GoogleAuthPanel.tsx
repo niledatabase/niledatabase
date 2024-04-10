@@ -11,7 +11,7 @@ export default function GoogleAuthPanel() {
   const [newTenant, setNewTenant] = React.useState<string | undefined>();
 
   return (
-    <NileProvider basePath={process.env.NEXT_PUBLIC_NILEDB_API}>
+    <NileProvider>
       <div style={{ maxWidth: "20rem", margin: "0 auto" }}>
         <Stack gap={2}>
           <Stack>

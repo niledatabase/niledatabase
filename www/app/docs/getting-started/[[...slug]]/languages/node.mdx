@@ -63,15 +63,13 @@ Rename `.env.example` to `.env`
 Update NILE_USER and NILE_PASSWORD with the credentials you picked up in the previous step. It should look something like this:
 
 ```bash
-# This is the env vars for Node.js app.
-NILE_DB_USER = "018b4937-2bbf-70fd-9075-37154198fa1e"
-NILE_DB_PASSWORD = "358844ef-cb09-4758-ae77-bec13b801101"
-NILE_WORKSPACE = "my_workspace"
-NILE_DATABASE = "my_database"
+# Private env vars that should never show up in the browser
+# These are used by the server to connect to Nile database
+NILEDB_USER=018ad484-0d52-7274-8639-057814be60c3
+NILEDB_PASSWORD=0d11b8e5-fbbc-4639-be44-8ab72947ec5b
 
 # URL of the frontend, for the post-signup redirect
 FE_URL = "http://localhost:3006"
-
 
 # These end up in the user's browser, so don't put any secrets here.
 REACT_APP_NILE_DATABASE = "my_workspace"
@@ -117,19 +115,10 @@ The interesting part of this example is the NodeJS server. Lets take a look at [
 
 The NodeJS server uses the [Nile JS client](https://github.com/niledatabase/nile-js) to connect to Nile.
 
-The client is initialized with the credentials you provided in the `.env` file:
+When the Nile client is initialized, it uses the credentials you provided in the `.env` file to connect with the API:
 
 ```js
-export const nile = Server({
-  workspace: String(process.env.NILE_WORKSPACE),
-  database: String(process.env.NILE_DATABASE),
-  db: {
-    connection: {
-      user: process.env.NILE_DB_USER,
-      password: process.env.NILE_DB_PASSWORD,
-    },
-  },
-});
+const nile = await Nile();
 ```
 
 The application uses Express middleware to capture the tenant identity for the current request and set Nile context:
@@ -147,22 +136,45 @@ We use Nile SDK to both execute SQL and make API calls to Nile. For example, to 
 app.post("/api/tenants", async (req, res) => {
   const { name } = req.body;
 
-  const createTenantResponse = await nile.api.tenants.createTenant({
-    name: name,
-  });
-  const tenant = await createTenantResponse.json();
-  res.json(tenant);
+  if (!name) {
+    res.status(400).json({
+      message: "No tenant name provided",
+    });
+  }
+
+  try {
+    const createTenantResponse = await nile.api.tenants.createTenant({
+      name: name,
+    });
+    const tenant = await createTenantResponse.json();
+    res.json(tenant);
+  } catch (error: any) {
+    console.log("error creating tenant: " + error.message);
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
 });
 ```
 
 The example uses Nile's tenant isolation to guarantee that each tenant can only see their own data:
 
 ```js
-app.get("/api/tenants/:tenantId/todos", async (req, res) => {
-  // No need for a "where" clause here
-  // we are setting the tenant context in the middleware
-  const todos = await nile.db("todos").select("*").orderBy("title");
-  res.json(todos);
+app.post("/api/tenants/:tenantId/todos", async (req, res) => {
+  const { title, complete } = req.body;
+
+  const newTodo = await nile.db.query(
+    `INSERT INTO todos (title, complete, tenant_id)
+    VALUES ($1, $2, $3)
+    RETURNING *;`,
+    [
+      title,
+      complete || false,
+      nile.tenantId, // setting from context
+    ]
+  );
+
+  res.json(newTodo.rows);
 });
 ```
 

@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 export default function SingleSignOnSettings(props: OktaProps) {
   const { push } = useRouter();
   return (
-    <NileProvider basePath={process.env.NEXT_PUBLIC_BASE_PATH}>
+    <NileProvider>
       <Stack gap={2} direction="column" useFlexGap>
         <Box sx={{ marginTop: "1rem" }}>
           <Link href="/">

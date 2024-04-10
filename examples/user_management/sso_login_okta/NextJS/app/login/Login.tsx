@@ -8,7 +8,7 @@ import Stack from "@mui/joy/Stack";
 export default function SSOForm() {
   const { push } = useRouter();
   return (
-    <NileProvider basePath={process.env.NEXT_PUBLIC_BASE_PATH}>
+    <NileProvider>
       <Stack gap={2}>
         <Typography level="h1">Log in </Typography>
         <SingleSignOnForm
