@@ -2,43 +2,46 @@ export const metadata = {
   title: "Introducing: SaaS Anywhere on Postgres - for Speed and Compliance",
   authors: ["gwenshap"],
   image: "2024-04-10-saas-anywhere/cover.webp",
-  sizzle:"We are excited to launch Nile's Serverless Postgres for SaaS in new regions around the world. This allows you to choose the right locations for your database - resulting in faster and compliant SaaS.",
+  sizzle:
+    "We are excited to launch Nile's Serverless Postgres for SaaS in new regions around the world. This allows you to choose the right locations for your database - resulting in faster and compliant SaaS.",
   tags: ["serverless", "postgres", "saas", "multi-region", "launch"],
 };
 
-From the very early days of Nile, when we were still drawing ideas on a whiteboard and talking to SaaS companies to understand their 
-journey, we knew that geographical distribution was an important requirement for SaaS businesses at almost every stage and that 
-managing data across geographies is a recurring pain point. 
+From the very early days of Nile, when we were still drawing ideas on a whiteboard and talking to SaaS companies to understand their
+journey, we knew that geographical distribution was an important requirement for SaaS businesses at almost every stage and that
+managing data across geographies is a recurring pain point.
 So we weren't surprised when one of the top requests from our customers was to make Nile available in additional regions.
 
-Which is why we are excited to announce that today we are making Nile available in additional regions. 
-We started with us-west-2 (Oregon) and you now have the option to also provision a database 
+Which is why we are excited to announce that today we are making Nile available in additional regions.
+We started with us-west-2 (Oregon) and you now have the option to also provision a database
 in eu-central-1 (Frankfurt). We are planning to add new regions in Singapore, Sydney and US East Coast in short order.
-Need Nile anywhere else? Let us know. We've built an easy-to-expand control plane architecture, so we can spin up a new region 
-in minutes. Just say the word. 
+Need Nile anywhere else? Let us know. We've built an easy-to-expand control plane architecture, so we can spin up a new region
+in minutes. Just say the word.
 
 ![Nile in new regions](2024-04-10-saas-anywhere/regions.png)
 
-
 There are a few reasons SaaS companies need their databases in different regions, long before they reach global scale:
 
-### Latency 
-This is probably a bit too obvious, but if your SaaS is serving mostly customers in the EU, they will experience much better 
-performance if your application and your database is in the EU as well. For SaaS businesses that start out as regional, this is a 
-“no brainer”. While the idea that bringing the data close to customers reduces latency is obvious, I discovered that developers 
-often underestimate the impact of 100ms latency in each roundtrip on their application. Often applications make multiple database 
-calls while loading a single page, and these add up. 
+### Latency
+
+This is probably a bit too obvious, but if your SaaS is serving mostly customers in the EU, they will experience much better
+performance if your application and your database is in the EU as well. For SaaS businesses that start out as regional, this is a
+“no brainer”. While the idea that bringing the data close to customers reduces latency is obvious, I discovered that developers
+often underestimate the impact of 100ms latency in each roundtrip on their application. Often applications make multiple database
+calls while loading a single page, and these add up.
 
 ### Developer productivity
-Even if your customers happen to be near Oregon, your developers may be in Europe, or all over the world. 
-Customers aren't the only people who enjoy faster performance with a near-by database, so do developers. 
-And developer happiness is important to the success of your SaaS business. 
-With Serverless Postgres, you only pay for used capacity, so there is no reason why you shouldn't have a near by database 
+
+Even if your customers happen to be near Oregon, your developers may be in Europe, or all over the world.
+Customers aren't the only people who enjoy faster performance with a near-by database, so do developers.
+And developer happiness is important to the success of your SaaS business.
+With Serverless Postgres, you only pay for used capacity, so there is no reason why you shouldn't have a near by database
 for every developer on your team.
 
 ### Compliance
-This one can catch startups by surprise. With self-serve signup, EU citizens can sign up to any SaaS. 
-EU regulations make it a bit tricky to store private information about its citizen outside the EU. 
+
+This one can catch startups by surprise. With self-serve signup, EU citizens can sign up to any SaaS.
+EU regulations make it a bit tricky to store private information about its citizen outside the EU.
 The customers need to consent to this, and there is a lot of confusion around what this consent entails.
 A database in the EU makes compliance much easier.
 
@@ -50,8 +53,8 @@ The database connection string in the existing "settings" page will have everyth
 
 ![Nile DB connection](2024-04-10-saas-anywhere/settings.png)
 
-When using Nile SDK in your application, you'll want to use the latest SDK version - 2.4.0 or later. 
-We have significantly simplified the configuration you need to use to connect to Nile. 
+When using Nile SDK in your application, you'll want to use the latest SDK version - 2.4.0 or later.
+We have significantly simplified the configuration you need to use to connect to Nile.
 In fact, all you need is your database credentials, and the SDK will automatically find your database - anywhere in the world.
 
 Define your environment variables:
@@ -72,7 +75,7 @@ You can find additional explanations and examples in our documentation.
 
 ## Soon: Global databases
 
-Provisioning databases in any region you need is great, but Nile's tenant virtualization allows us to deliver truly global 
+Provisioning databases in any region you need is great, but Nile's tenant virtualization allows us to deliver truly global
 databases - with virtual tenant databases in every location. Soon, supporting customers in multiple countries will be as simple as:
 
 ```SQL
@@ -85,5 +88,3 @@ values ('customer 2', 'aws-eu-west1');
 
 [Sign up for our waitlist](https://thenile.dev) today to start using Nile, and leave your feedback in our Discord and/or Github.
 Let us know, [where you need Nile next](https://github.com/orgs/niledatabase/discussions/158).
-
-
