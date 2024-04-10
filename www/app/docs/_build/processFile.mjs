@@ -49,5 +49,11 @@ export async function processFile(file) {
   const maybeFullTime = /fullTime:\s['"](.\w+)['"]/.exec(content);
   addMethod(baseResponse, maybeFullTime, "fullTime");
 
+  const maybeTags = /tags:\s(\[.+])/.exec(content);
+  if (maybeTags?.[1]) {
+    const values = JSON.parse(maybeTags?.[1]);
+    baseResponse.tags = values;
+  }
+
   return { metadata: baseResponse, content };
 }

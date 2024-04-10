@@ -43,6 +43,7 @@ async function generate() {
     const { default: Component } = await import(file);
     const output = renderToStaticMarkup(React.createElement(Component));
     const startPos = metadata.slug.findIndex((item) => item === "docs");
+
     const cleaned = output
       .replace(/<(pre)(.|\n)*?(pre)>/gm, "")
       .split("\n")
@@ -63,7 +64,10 @@ async function generate() {
         .replace("[[...slug]]", "")
         .replace(".mdx", "")}`;
 
-      obj.categories = obj.objectID.replace("docs/", "").split("/");
+      obj.categories = [].concat(
+        metadata?.tags ?? [],
+        obj.objectID.replace("docs/", "").split("/")
+      );
       obj.objectID = `${idx}-${obj.objectID}`;
       obj.header = lastHeader;
       obj.hash = lastHeader
@@ -73,12 +77,12 @@ async function generate() {
 
       idx++;
       obj.content = santitized;
+      console.log(obj);
       if (santitized) {
         out.push(obj);
       }
     }
   }
-
   // upload to search service
   await upload(out);
 }
