@@ -75,7 +75,7 @@ NILEDB_USER=018ebf83-d4ad-...
 NILEDB_PASSWORD=0d161753-...
 
 # This is optional, but can help validate that you are connecting to the right DB
-# Get this value from console.thenile.dev database settings 
+# Get this value from console.thenile.dev database settings
 NILEDB_NAME=mydb
 
 # For google sso React component
