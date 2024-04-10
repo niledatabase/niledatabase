@@ -16,7 +16,7 @@ Which is why we are excited to announce that today we are making Nile available 
 We started with us-west-2 (Oregon) and you now have the option to also provision a database
 in eu-central-1 (Frankfurt). We are planning to add new regions in Singapore, Sydney and US East Coast in short order.
 Need Nile anywhere else? Let us know. We've built an easy-to-expand control plane architecture, so we can spin up a new region
-in minutes. Just say the word.
+in minutes. [Just say the word](https://github.com/orgs/niledatabase/discussions/158).
 
 ![Nile in new regions](2024-04-10-saas-anywhere/regions.png)
 
@@ -26,7 +26,7 @@ There are a few reasons SaaS companies need their databases in different regions
 
 This is probably a bit too obvious, but if your SaaS is serving mostly customers in the EU, they will experience much better
 performance if your application and your database is in the EU as well. For SaaS businesses that start out as regional, this is a
-“no brainer”. While the idea that bringing the data close to customers reduces latency is obvious, I discovered that developers
+“no brainer”. While the idea that bringing the data close to customers reduces latency is obvious, developers
 often underestimate the impact of 100ms latency in each roundtrip on their application. Often applications make multiple database
 calls while loading a single page, and these add up.
 
@@ -40,10 +40,14 @@ for every developer on your team.
 
 ### Compliance
 
-This one can catch startups by surprise. With self-serve signup, EU citizens can sign up to any SaaS.
-EU regulations make it a bit tricky to store private information about its citizen outside the EU.
-The customers need to consent to this, and there is a lot of confusion around what this consent entails.
-A database in the EU makes compliance much easier.
+There are many regions with strict data residency regulations: EU, UK, parts of Canada, Japan, Australia... and many more.
+These regulations make it difficult to store data about citizens of a region outside of that region. There are specific rules about
+where the data can be stored, how it can be accessed, and how users can consent to exceptions.
+To make things more complicated, these regulations keep changing and evolving.
+
+These data residency requirements often catch SaaS startups by surprise. With self-serve signup, anyone can sign up to any SaaS product,
+which means that you don't always know in advance when these laws start applying to your business.
+Having databases in the relevant regions make this a lot simpler and safer.
 
 ## Using the new regions
 
@@ -71,20 +75,18 @@ And Nile will automatically configure itself to connect to the right database an
 const nile = await Nile();
 ```
 
-You can find additional explanations and examples in our documentation.
+You can find additional explanations and examples in our documentation, or you can watch our video tutorial on how to use Nile SDK with any region:
 
-## Soon: Global databases
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/hs9J17R6llA?si=Z6DLNwupsgcQbBuy"
+  title="YouTube video player - showing how to use Nile SDK with any region"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowFullScreen
+></iframe>
 
-Provisioning databases in any region you need is great, but Nile's tenant virtualization allows us to deliver truly global
-databases - with virtual tenant databases in every location. Soon, supporting customers in multiple countries will be as simple as:
+## What's next?
 
-```SQL
-insert into tenants (name, region)
-values ('customer 1', 'aws-us-east1');
-
-insert into tenants (name, region)
-values ('customer 2', 'aws-eu-west1');
-```
-
-[Sign up for our waitlist](https://thenile.dev) today to start using Nile, and leave your feedback in our Discord and/or Github.
-Let us know, [where you need Nile next](https://github.com/orgs/niledatabase/discussions/158).
+[Sign up for our waitlist](https://thenile.dev) today to start using Nile - anywhere in the world.
+And let us know, [where you need Nile next](https://github.com/orgs/niledatabase/discussions/158).
