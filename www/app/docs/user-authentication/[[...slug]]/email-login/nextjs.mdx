@@ -20,19 +20,16 @@ cd nile-email-login
 
 ## 2. Configure your application.
 
-The app uses Nile's SDK and UI Kit which need to be configured with your workspace and database name.
+For database access, configure the Nile SDK with the necessary credentials:
 
-In the project root, rename `.env.local.example` to `.env.local`, and open it for editing. You'll provide the `NEXT_PUBLIC_WORKSPACE` and `NEXT_PUBLIC_DATABASE` values. You can get these from the Nile Console
+- Rename `.env.local.example` to `.env.local` in the project's root directory and open it.
+- Enter your database credentials (`NILEDB_USER` and `NILEDB_PASSWORD`). Use existing credentials, or generate new ones through the Nile Console:
 
-1. Open your database in the dashboard.
-2. The breadcrumbs in the header display your **workspace slug** and **database name**.
-3. Enter the workspace slug as the `NEXT_PUBLIC_WORKSPACE` in `.env.local`.
-4. Enter the database name as the `NEXT_PUBLIC_DATABASE` in `.env.local`.
+1. Visit the [Nile Console](https://console.thenile.dev), select your database, and navigate to **Settings** > **Credentials**.
+2. Click **Generate credentials**, then **Generate** and **Copy credentials to clipboard**.
+3. The copied credentials include two UUIDs: the first is the username and the second is the password, separated by a colon (":"). Paste the username into the `NILEDB_USER` value in `.env.local`, and the password into the `NILEDB_PASSWORD` value.
 
-You'll see these values used in two places:
-
-- `/nile/Server.ts` - this configures the connection to Nile's API server
-- `/nile/ui/NileContext/index.tsx` - this configures the NileProvider that wraps all Nile UI components
+These credentials authenticate your app with the Nile API.
 
 ## 3. Run, Sign Up and Query Users
 
@@ -44,7 +41,7 @@ Let's run the application to see things working, and then we'll look under the h
 
 If you're configuration is correct, you'll see the success response from the Nile API.
 
-Login to the Nile Console, select your database, and open the SQL editor. Query your users table:
+Login to the [Nile Console](https://console.thenile.dev), select your database, and open the SQL editor. Query your users table:
 
 ```sql
 SELECT * FROM users.users;
@@ -58,17 +55,13 @@ Let's walk through the sign-up flow, from front-end to back-end:
 
 ### The `SignUpForm`
 
-Open `/app/sign-up/page.tsx` to find a simple landing page that wraps a `SignUpForm` component:
+Open `/app/sign-up/page.tsx` to find a simple landing page that wraps a `SignUp` component:
 
 ```tsx title="/app/sign-up/page.tsx"
 import SignUp from "@/nile/ui/SignUpForm";
 
 export default function SignUpPage() {
-  return (
-    <main className={styles.main}>
-      <SignUp />
-    </main>
-  );
+  return <SignUp />;
 }
 ```
 
@@ -85,11 +78,14 @@ export default function SignUp() {
   const [res, setRes] = useState({});
   return (
     <NileContext>
-      <Stack gap={2} sx={{ maxWidth: '40ch' }}>
+      <Stack gap={2}>
         ...
         <UserSignupForm
+          attributes={[
+            ...
+          ]}
           onSuccess={(response) => {
-            setRes(response);
+            push("/");
           }}
         />
         ...
@@ -97,7 +93,6 @@ export default function SignUp() {
     </NileContext>
   );
 }
-
 ```
 
 The `<UserSignupForm>` calls an endpoint on your API with a payload containing signup details. That means your API server needs to handle the request. We'll look at that next.
@@ -113,13 +108,21 @@ Open `/app/api/sign-up/route.ts`:
 import { api } from "@/nile/Server";
 
 export async function POST(req: Request) {
-  return await api.auth.signUp(req);
+  const res = await api.auth.signUp(req);
+
+  if (res && res.status >= 200 && res.status < 300) {
+    const body = await res.json();
+    return new Response(JSON.stringify(body), { status: 201 });
+  } else {
+    const body = await res.text();
+    return new Response(body, { status: res.status });
+  }
 }
 ```
 
 This API route delegates the request and response to the Nile SDK. If you ever need custom handling for requests or responses, you'd add that here.
 
-The Nile SDK picks up your workspace and database name from the configuration you provided and issues a request to the Nile API. Our API creates a user in your database and generates a JWT for the user, returning it in the response.
+The Nile SDK makes a request to our API, creating a user in your database and generating a JWT for the user that it returns in the response.
 
 ## 5. Login
 
