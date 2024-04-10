@@ -14,16 +14,17 @@ export default function metadataText(items: string | string[]) {
 
 type Props = { params: Param };
 
-export const buildMetadata = (metadata: FileMetadata & Metadata): Metadata => {
-  const title = Array.isArray(metadata.title)
-    ? metadata.title[0]
-    : metadata.title;
+export const buildMetadata = (
+  metadata: FileMetadata & Metadata,
+  root: NavigationRoots,
+  props: Props
+): Metadata => {
   return {
     ...metadata,
     title: metadataText(metadata?.title),
     description: metadata?.description,
     alternates: {
-      canonical: `/docs/${title?.toLowerCase().replace(/\s/, "-")}`,
+      canonical: `/docs/${root}/${props.params.slug?.join("/")}`,
     },
   };
 };
@@ -39,7 +40,7 @@ export const makeMetadata = (root: NavigationRoots) =>
     });
 
     const previousImages = (await parent).openGraph?.images || [];
-    const baseMetadata = buildMetadata(metadata);
+    const baseMetadata = buildMetadata(metadata, root, props);
     const [img] = previousImages;
     if (img && typeof img === "object" && "url" in img && metadata.image) {
       const url = new URL(img.url);
