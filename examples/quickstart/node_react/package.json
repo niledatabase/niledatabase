@@ -2,10 +2,9 @@
   "name": "node_react",
   "version": "1.0.0",
   "description": "Multi-tenant todo list app, built with Nile, NodeJS and React",
-  "main": "index.js",
-  "homepage": ".",
+  "type": "module",
   "scripts": {
-    "start": "bash bin/dev.sh",
+    "dev": "bash bin/dev.sh",
     "build": "react-scripts build"
   },
   "private": true,
@@ -16,8 +15,8 @@
     "@fontsource/inter": "^5.0.13",
     "@mui/icons-material": "^5.14.8",
     "@mui/joy": "^5.0.0-beta.5",
-    "@niledatabase/react": "^2.4.0",
-    "@niledatabase/server": "^2.4.0",
+    "@niledatabase/react": "2.4.1",
+    "@niledatabase/server": "2.4.1",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",

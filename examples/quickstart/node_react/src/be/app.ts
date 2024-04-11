@@ -7,8 +7,8 @@ import {
   getUserToken,
   getUserId,
   isLoggedin,
-} from "./authUtils";
-import Nile from "@niledatabase/server";
+} from "./authUtils.ts";
+import { Nile } from "@niledatabase/server";
 import cookieParser from "cookie-parser";
 
 const nile = await Nile();

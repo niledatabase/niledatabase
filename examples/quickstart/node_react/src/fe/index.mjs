@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Tenants from "./tenants";
+import Tenants from "./tenants.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ErrorPage from "./error-page";
-import Todos from "./todos";
-import Auth from "./auth";
-import Layout from "./layout";
+import ErrorPage from "./error-page.jsx";
+import Todos from "./todos.jsx";
+import Auth from "./auth.jsx";
+import Layout from "./layout.jsx";
 import SignUp from "./SignUpForm.tsx";
 
 const router = createBrowserRouter([
@@ -27,6 +27,7 @@ const router = createBrowserRouter([
     element: <Tenants />,
   },
 ]);
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Layout>
     <React.StrictMode>
