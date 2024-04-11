@@ -12,7 +12,7 @@ export default function SignUp() {
   const [error, setError] = useState<string | null>(null);
   const { push } = useRouter();
   return (
-    <NileProvider basePath={process.env.NEXT_PUBLIC_BASE_PATH + "/api"}>
+    <NileProvider appUrl={process.env.NEXT_PUBLIC_BASE_PATH + "/api"}>
       <Stack gap={2} sx={{ maxWidth: "40ch" }}>
         <Typography level="h1">Sign up</Typography>
         {error && <Alert>{error}</Alert>}

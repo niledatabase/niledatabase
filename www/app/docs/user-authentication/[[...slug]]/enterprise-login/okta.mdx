@@ -108,7 +108,7 @@ In `/app/login/Login.tsx`, you'll find a `<NileProvider>` configured with your e
 export default function SSOForm() {
   ...
   return (
-    <NileProvider basePath={process.env.NEXT_PUBLIC_BASE_PATH}>
+    <NileProvider appUrl={process.env.NEXT_PUBLIC_APP_URL}>
       <Stack gap={2}>
         <Typography level="h1">Log in </Typography>
         <SingleSignOnForm
@@ -132,7 +132,7 @@ In `/app/settings/SingleSignOnSettings.tsx`, you'll find a similarly wrapped `<O
 ```tsx
 export default function SingleSignOnSettings(props: OktaProps) {
   return (
-    <NileProvider basePath={process.env.NEXT_PUBLIC_BASE_PATH}>
+    <NileProvider appUrl={process.env.NEXT_PUBLIC_APP_URL}>
       <Stack gap={2}>
         ...
         <Typography level="h1">Configure Okta</Typography>

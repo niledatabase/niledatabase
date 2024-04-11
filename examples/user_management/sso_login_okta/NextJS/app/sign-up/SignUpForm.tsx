@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 export default function SignUp() {
   const { push } = useRouter();
   return (
-    <NileProvider basePath={process.env.NEXT_PUBLIC_BASE_PATH}>
+    <NileProvider appUrl={process.env.NEXT_PUBLIC_APP_URL}>
       <Stack gap={2} sx={{ maxWidth: "40ch" }}>
         <Typography level="h1">Sign up</Typography>
         <UserSignupForm

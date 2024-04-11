@@ -8,10 +8,10 @@ export default function GoogleAuthPanel() {
         This is specific for Google SSO */
   }
   return (
-    <NileProvider>
+    <NileProvider apiUrl={process.env.NILEDB_API_URL}>
       <div style={{ maxWidth: "20rem", margin: "0 auto" }}>
         <Stack gap={2} justifyContent="center" alignItems="center">
-          <GoogleLoginButton databaseId={process.env.REACT_PUBLIC_NILEDB_ID} />
+          <GoogleLoginButton />
         </Stack>
       </div>
     </NileProvider>
