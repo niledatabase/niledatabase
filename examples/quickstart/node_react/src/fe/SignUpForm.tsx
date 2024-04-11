@@ -13,7 +13,7 @@ export default function SignUp() {
 
   console.log(window.location.origin);
   return (
-    <NileProvider basePath={window.location.origin + "/api"}>
+    <NileProvider appUrl={window.location.origin + "/api"}>
       <Stack gap={2} sx={{ maxWidth: "40ch" }}>
         <Typography level="h1">Sign up</Typography>
         {error && <Alert>{error}</Alert>}

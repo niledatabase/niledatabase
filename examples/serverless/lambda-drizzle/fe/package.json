@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@mui/joy": "^5.0.0-beta.11",
-    "@niledatabase/react": "^2.3.0",
+    "@niledatabase/react": "^2.4.0",
     "highlight.js": "^11.9.0",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",

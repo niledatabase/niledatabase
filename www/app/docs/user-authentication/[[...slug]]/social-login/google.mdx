@@ -77,11 +77,7 @@ In `/app/page.tsx`, you'll find a `<NileProvider>` configured with those environ
 export default function Home() {
   return (
     <main className={styles.main}>
-      <NileProvider
-        workspace={String(process.env.WORKSPACE)}
-        database={String(process.env.DATABASE)}
-        basePath={String(process.env.NILE_BASE_PATH)}
-      >
+      <NileProvider apiUrl={String(process.env.NILEDB_API_URL)}>
         <GoogleSSOButton />
       </NileProvider>
     </main>

@@ -20,10 +20,10 @@ export default function GoogleAuthPanel() {
         This is specific for Google SSO */
   }
   return (
-    <NileProvider basePath={process.env.NEXT_PUBLIC_NILE_API}>
+    <NileProvider apiUrl={process.env.NEXT_PUBLIC_NILEDB_API_URL}>
       <div style={{ maxWidth: "20rem", margin: "0 auto" }}>
         <Stack gap={2} justifyContent="center" alignItems="center">
-          <GoogleLoginButton databaseId={process.env.NEXT_PUBLIC_DATABASE} />
+          <GoogleLoginButton />
         </Stack>
       </div>
     </NileProvider>

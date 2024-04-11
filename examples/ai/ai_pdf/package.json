@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.3",
-    "@niledatabase/server": "^2.3.0",
-    "@niledatabase/react": "^2.3.0",
+    "@niledatabase/server": "^2.4.0",
+    "@niledatabase/react": "^2.4.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
