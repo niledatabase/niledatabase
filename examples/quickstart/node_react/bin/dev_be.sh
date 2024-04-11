@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 cd src/be
 cp ../../.env .
-node --loader ts-node/esm app.ts
+NODE_OPTIONS="--import=../be/register.mjs" node app.ts
+
