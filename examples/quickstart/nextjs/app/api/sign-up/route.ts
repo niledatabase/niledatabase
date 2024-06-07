@@ -7,7 +7,8 @@ import nile from "@/lib/NileServer";
 // Note that this route must exist in this exact location for user/password signup to work
 // Nile's SignUp component posts to this route, we call Nile's signup API via the SDK
 export async function POST(req: Request) {
-  const res = await nile.api.auth.signUp(req);
+  const server = await nile;
+  const res = await server.api.auth.signUp(req);
 
   // if signup was successful, we want to set the cookies and headers, so it will log the user in too
   // Note that this is optional, check the authentication quickstart for a simpler example of using the Nile SDK for authentication
