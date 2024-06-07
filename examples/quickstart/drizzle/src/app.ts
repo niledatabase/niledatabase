@@ -92,6 +92,7 @@ app.post("/api/tenants", async (req, res) => {
         // @ts-ignore
         return await tx
           .insert(tenant_users)
+          // @ts-ignore
           .values({ tenant_id: tenants[0].id, user_id: req.auth.user });
       });
     }
