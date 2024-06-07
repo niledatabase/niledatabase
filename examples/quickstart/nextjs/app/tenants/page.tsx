@@ -23,7 +23,7 @@ export const fetchCache = "force-no-store";
 export default async function Page() {
   // This is the tenant selector, so we use Nile with just the current user and reset tenant_id if already set
   // if Nile is already configured for this user, it will reuse the existing Nile instance
-  const nile = configureNile(cookies().get("authData"), undefined);
+  const nile = await configureNile(cookies().get("authData"), undefined);
   console.log("showing tenants page for user: " + nile.userId);
   let tenants: any = [];
 
