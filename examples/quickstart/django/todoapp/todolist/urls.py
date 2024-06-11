@@ -13,9 +13,14 @@ urlpatterns = [
         name="item-add",
     ),
     path(
-        "tenants/<uuid:tenant_id>/todos/<uuid:pk>/",
+        "tenants/<uuid:tenant_id>/todos/<uuid:pk>/", # this is the item id, we have to call this "pk" because that is what Django expects
         views.ItemUpdate.as_view(),
         name="item-update",
+    ),
+    path(
+        "tenants/<uuid:tenant_id>/item/<uuid:pk>/delete/",
+        views.ItemDelete.as_view(),
+        name="item-delete",
     ),
 ]
 

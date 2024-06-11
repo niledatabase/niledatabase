@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     ListView,     
     CreateView,
-    UpdateView,)
+    UpdateView,
+    DeleteView)
 from .models import Tenants, ToDoItem
 
 # Create your views here.
@@ -89,3 +90,16 @@ class ItemUpdate(UpdateView):
 
     def get_success_url(self):
         return reverse("todos", args=[self.object.tenant_id])
+    
+class ItemDelete(DeleteView):
+    model = ToDoItem
+
+    def get_success_url(self):
+        # You have to use reverse_lazy() instead of reverse(),
+        # as the urls are not loaded when the file is imported.
+        return reverse_lazy("todos", args=[self.kwargs["tenant_id"]])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tenant"] = self.object.tenant
+        return context
