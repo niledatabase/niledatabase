@@ -1,0 +1,23 @@
+<!-- todo_list/todo_app/templates/todo_app/index.html -->
+
+{% extends "base.html" %}
+{% block content %}
+<!--index.html-->
+{% if object_list %}
+<h3>All my lists</h3>
+{% endif %}
+<ul>
+    {% for tenant in object_list %}
+    <li>
+        <div
+            role="button"
+            onclick="location.href='{% url "todos" tenant.id %}'">
+            {{ tenant.name }}
+        </div>
+    </li>
+    {% empty %}
+    <h4>You have no tenants (yet)</h4>
+    {% endfor %}
+</ul>
+
+{% endblock %}
