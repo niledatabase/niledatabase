@@ -20,4 +20,10 @@
     {% endfor %}
 </ul>
 
+<p>
+    <input
+        value="Add a new tenant"
+        type="button"
+        onclick="location.href='{% url "tenant-add" %}'"/>
+</p>
 {% endblock %}

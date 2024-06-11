@@ -13,7 +13,8 @@
                 <div>
                     <div
                         role="button"
-                        onclick="location.href='#'">
+                        onclick="location.href='
+                        '{% url "item-update" tenant.id todo.id %}'">
                         {{ todo.title }}
                         (Due {{ todo.due_date | date:"l, F j" }})
                     </div>
@@ -27,7 +28,7 @@
             <input
                 value="Add a new item"
                 type="button"
-                onclick="location.href='#'" />
+                onclick="location.href='{% url "item-add" todo_list.id %}'" />
         </p>
     </div>
 </div>

@@ -3,6 +3,7 @@
 from django.utils import timezone
 from django.db import models
 from django.urls import reverse
+import uuid
 
 
 # This is an auto-generated Django model module for Nile's built-in tables
@@ -22,11 +23,16 @@ class TenantUsers(models.Model):
 
 
 class Tenants(models.Model):
-    id = models.UUIDField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
-    created = models.DateTimeField()
-    updated = models.DateTimeField()
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4())
+    name = models.CharField(max_length=100, blank=True, null=True) # actually text, but using Char for nicer display
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
     deleted = models.DateTimeField(blank=True, null=True)
+    
+    def get_absolute_url(self):
+        return reverse(
+            "todos", args=[str(self.id)]
+        )
 
     class Meta:
         managed = False
@@ -55,6 +61,7 @@ def one_week_hence():
 # because Nile doesn't work great with Django migrations
 
 # create table todos (
+#    id uuid default gen_random_uuid(),
 #    title varchar(100),
 #    description text,
 #    created_date timestamp default now(),
@@ -63,6 +70,7 @@ def one_week_hence():
     
 
 class ToDoItem(models.Model):
+    id = models.UUIDField(primary_key=True)
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
