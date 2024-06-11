@@ -13,7 +13,7 @@ urlpatterns = [
         name="item-add",
     ),
     path(
-        "tenants/<uuid:tenant_id>/todos/<uuid:id>/",
+        "tenants/<uuid:tenant_id>/todos/<uuid:pk>/",
         views.ItemUpdate.as_view(),
         name="item-update",
     ),

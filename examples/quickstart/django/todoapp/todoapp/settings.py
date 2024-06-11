@@ -87,6 +87,7 @@ DATABASES = {
         'PASSWORD': '3dd712e8-4b54-409e-856f-fb790341df46',
         'HOST': 'eu-central-1.db.dev.thenile.dev',
         'PORT': '5432',
+        'DISABLE_SERVER_SIDE_CURSORS': True
     }
 }
 

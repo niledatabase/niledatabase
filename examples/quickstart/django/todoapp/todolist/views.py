@@ -31,14 +31,14 @@ class ItemListView(ListView):
 
     def get_context_data(self):
         context = super().get_context_data()
-        context["todos"] = Tenants.objects.all()
-        print(context)
+        tenants = Tenants.objects.all() # because we are in a tenant context, we know this is just one tenant
+        context["tenant"] = tenants[0]
         return context
     
 class ItemCreate(CreateView):
     model = ToDoItem
     fields = [
-        "tentant",
+        "tenant", # this is a hidden field, we will set it in get_initial
         "title",
         "description",
         "due_date",
@@ -46,19 +46,25 @@ class ItemCreate(CreateView):
 
     def get_initial(self):
         initial_data = super(ItemCreate, self).get_initial()
-        tenant = Tenants.objects.get(id=self.kwargs["tenant_id"])
-        initial_data["tenant"] = tenant
+        tenants = Tenants.objects.all() # because we are in a tenant context, we know this is just one tenant
+        initial_data["tenant"] = tenants[0]
         return initial_data
 
     def get_context_data(self):
         context = super(ItemCreate, self).get_context_data()
-        tenant = Tenants.objects.get(id=self.kwargs["tenant_id"])
-        context["tenant"] = tenant
+        tenants = Tenants.objects.all() # because we are in a tenant context, we know this is just one tenant
+        context["tenant"] = tenants[0]
         context["title"] = "Create a new todo task"
         return context
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        field = form.fields['tenant']
+        field.widget = field.hidden_widget()
+        return form
 
     def get_success_url(self):
-        return reverse("list", args=[self.object.tenant_id])
+        return reverse("todos", args=[self.object.tenant_id])
     
 class ItemUpdate(UpdateView):
     model = ToDoItem
@@ -71,9 +77,15 @@ class ItemUpdate(UpdateView):
 
     def get_context_data(self):
         context = super(ItemUpdate, self).get_context_data()
-        context["todo_list"] = self.object.todo_list
+        context["tenant"] = self.object.tenant
         context["title"] = "Edit item"
         return context
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        field = form.fields['tenant']
+        field.widget = field.hidden_widget()
+        return form
 
     def get_success_url(self):
-        return reverse("list", args=[self.object.todo_list_id])
+        return reverse("todos", args=[self.object.tenant_id])
