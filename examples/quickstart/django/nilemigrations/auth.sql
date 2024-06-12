@@ -1,3 +1,5 @@
+--- NOT USED. We use Nile's built-in models and Nile's REST APIs for auth
+
 BEGIN;
 --
 -- Create model Permission
