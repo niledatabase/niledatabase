@@ -5,7 +5,7 @@ from django.views.generic import (
     CreateView,
     UpdateView,
     DeleteView)
-from ..models import ToDoItem
+from ..models import ToDoItem, Tenants
 
 class ItemListView(ListView):
     model = ToDoItem

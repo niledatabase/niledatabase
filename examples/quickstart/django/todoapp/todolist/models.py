@@ -4,39 +4,8 @@ from django.urls import reverse
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import uuid
 
-
 # This is an auto-generated Django model module for Nile's built-in tables
 # With some updates to make it work with both Nile and Django
-class TenantUsers(models.Model):
-    tenant_id = models.UUIDField(primary_key=True)  # The composite primary key (tenant_id, user_id) found, that is not supported. The first column is selected.
-    user_id = models.UUIDField()
-    created = models.DateTimeField()
-    updated = models.DateTimeField()
-    deleted = models.DateTimeField(blank=True, null=True)
-    roles = models.TextField(blank=True, null=True)  # This field type is a guess.
-    email = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'tenant_users'
-        unique_together = (('tenant_id', 'user_id'),)
-
-
-class Tenants(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4())
-    name = models.CharField(max_length=100, blank=True, null=True) # actually text, but using Char for nicer display
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
-    deleted = models.DateTimeField(blank=True, null=True)
-    
-    def get_absolute_url(self):
-        return reverse(
-            "todos", args=[str(self.id)]
-        )
-
-    class Meta:
-        managed = False
-        db_table = 'tenants'
 
 ### Since we have our own User model, we need to create a custom user manager model too    
 ### Note that we don't need to save the user in the database, because we are using Nile's REST API for this 
@@ -78,6 +47,39 @@ class Users(AbstractBaseUser):
     class Meta:
         managed = False
         db_table = 'users'
+        
+class Tenants(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4())
+    name = models.CharField(max_length=100, blank=True, null=True) # actually text, but using Char for nicer display
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
+    deleted = models.DateTimeField(blank=True, null=True)
+    users = models.ManyToManyField(Users, through='TenantUsers')
+    
+    def get_absolute_url(self):
+        return reverse(
+            "todos", args=[str(self.id)]
+        )
+
+    class Meta:
+        managed = False
+        db_table = 'tenants'
+        
+# Django really wants everything to have an ID, so even though this doesn't make sense for this kind of table, we'll add one
+# alter table tenant_users add column id uuid default gen_random_uuid();
+class TenantUsers(models.Model):
+    tenant = models.ForeignKey(Tenants, on_delete=models.DO_NOTHING) 
+    user = models.ForeignKey(Users, on_delete=models.DO_NOTHING)
+    created = models.DateTimeField()
+    updated = models.DateTimeField()
+    deleted = models.DateTimeField(blank=True, null=True)
+    roles = models.TextField(blank=True, null=True)  # This field type is a guess.
+    email = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'tenant_users'
+        unique_together = (('tenant_id', 'user_id'),)
 
 def one_week_hence():
     return timezone.now() + timezone.timedelta(days=7)
