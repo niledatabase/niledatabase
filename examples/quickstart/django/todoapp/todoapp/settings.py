@@ -21,6 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 NILEDB_API_URL = env('NILEDB_API_URL')
+NILEDB_HOST = env('NILEDB_HOST')
+NILEDB_USER = env('NILEDB_USER')
+NILEDB_PASSWORD = env('NILEDB_PASSWORD')
+NILEDB_NAME = env('NILEDB_NAME')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -94,10 +98,10 @@ WSGI_APPLICATION = 'todoapp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django',                      
-        'USER': '018ffae2-9522-7a7a-88c0-fe14b3f53c95',
-        'PASSWORD': '3dd712e8-4b54-409e-856f-fb790341df46',
-        'HOST': 'eu-central-1.db.dev.thenile.dev',
+        'NAME': NILEDB_NAME,                      
+        'USER': NILEDB_USER,
+        'PASSWORD': NILEDB_PASSWORD,
+        'HOST': NILEDB_HOST,
         'PORT': '5432',
         'DISABLE_SERVER_SIDE_CURSORS': True
     }
