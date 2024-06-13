@@ -1,28 +1,57 @@
 <!-- todo_list/todo_app/templates/base.html -->
 <!-- Base template -->
 <!doctype html>
-<html lang="en">
+{% load static %}
+<html lang="en" class="h-full bg-white">
 
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--Simple.css-->
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
     <title>Django To-do Lists</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/output.css' %}" type="text/css"> 
+    <link rel="stylesheet" href="{% static 'todolist/globals.css' %}" type="text/css"> 
+    <link rel="stylesheet" href="{% static 'todolist/page.module.css' %}" type="text/css"> 
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 </head>
+<div class="main">
+    <div style="display:flex; flex-direction:column; width:100%">
+        <div class="description">
+         <!--  TODO: Add a logo here 
+          <div>
+            <PythonLogo width="50px" height="50px" />
+          </div> -->
+          <div>
+            <a
+              href="https://thenile.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Created by
+            <!--  TODO: Add a logo here 
+              <NileLogo
+                width="100px"
+                height="37px"
+                style="marginLeft:15px" />
+          -->
+            </a>
+          </div>
+        </div>
+    </div>
+    <div class="flex min-h-screen flex-col py-6">
+        <div class="container mx-auto items-center justify-center px-4"> <!-- container that takes the entire page height-->
+            <div class="space-y-2 text-center">
+                <h1 class="text-5xl font-bold" onclick="location.href='{% url "index" %}">Awesome Todo List</h1>
+                <p class="text-gray-500 dark:text-gray-400">Organize your tasks with ease.</p>
+            </div>
+            {% block content %}
+            This content will be replaced by different html code for each page.
+            {% endblock %}
+        </div>
+    </div>
+</div>
 
-<body>
-    <div>
-        <h1 onclick="location.href='{% url "index" %}'">
-            Django To-do Lists
-        </h1>
-    </div>
-    <div>
-        {% block content %}
-        This content will be replaced by different html code for each page.
-        {% endblock %}
-    </div>
-</body>
+
 
 </html>
