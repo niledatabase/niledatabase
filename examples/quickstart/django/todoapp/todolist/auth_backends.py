@@ -20,8 +20,6 @@ class NileAuthBackend:
         return None
     
     def get_user(self, id):
-        print("!!!!getting user")
-        print(id)
         try:
             return Users.objects.get(pk=id)
         except Users.DoesNotExist:

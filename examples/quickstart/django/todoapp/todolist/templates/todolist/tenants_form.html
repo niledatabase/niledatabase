@@ -1,22 +1,18 @@
-{% extends "base.html" %}
 
 {% block content %}
 
-<h3>{{ title }}</h3>
-<div>
-    <div>
-        <form method="post">
+<div class="mb-4">
             {% csrf_token %}
-            {{ form.as_p }}
-            <input
-                value="Save"
-                type="submit">
-            <input
-                value="Cancel"
-                type="button"
-                onclick="location.href='{% url "index" %}';">
-        </form>
-    </div>
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+                <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    value="{{ tenant.name }}"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+            </div>
 </div>
 
 {% endblock %}

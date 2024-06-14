@@ -27,7 +27,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class Users(AbstractBaseUser):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4())
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     created = models.DateTimeField()
     updated = models.DateTimeField()
     deleted = models.DateTimeField(blank=True, null=True)
@@ -49,7 +49,7 @@ class Users(AbstractBaseUser):
         db_table = 'users'
         
 class Tenants(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4())
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(max_length=100, blank=True, null=True) # actually text, but using Char for nicer display
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -97,7 +97,7 @@ def one_week_hence():
     
 
 class ToDoItem(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4())
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
