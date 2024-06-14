@@ -3,33 +3,68 @@
 {% block content %}
 <div>
     <div>
-        <div>
-            <h3>Edit list:</h3>
-            <h5>{{ tenant.name | upper }}</h5>
+        <div class="mt-10 mb-5 px-5">
+            <h2 class="text-3xl text-center">{{ tenant.name | upper }}'S TODOS</h5>
         </div>
-        <ul>
-            {% for todo in object_list %}
-            <li>
-                <div>
-                    <div
-                        role="button"
-                        onclick="location.href=
-                        '{% url "item-update" tenant.id todo.id %}'">
-                        {{ todo.title }}
-                        (Due {{ todo.due_date | date:"l, F j" }})
-                    </div>
+        <div>
+            <div class="flex flex-col mt-2 mb-5 divide-y divide-gray-400 ">
+                <div class="mb-5">
+                    <form id="todoForm" method="post" action="{% url 'item-add' tenant.id %}" novalidate>
+                        {% csrf_token %}
+                        <button type="submit" class="ml-2 bg-white text-gray-900 px-4 py-2 rounded">+</button>
+                    <input type="text" name="price" id="price" class="w-5/6 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                    placeholder="Add task">
+                    </form>
                 </div>
-            </li>
-            {% empty %}
-            <p>There are no to-do items in this list.</p>
-            {% endfor %}
-        </ul>
-        <p>
-            <input
-                value="Add a new item"
-                type="button"
-                onclick="location.href='{% url "item-add" tenant.id %}'" />
-        </p>
+                <div >
+                    <ul class="mt-5">
+                        {% for todo in object_list %}
+                        <li>
+                            <div>
+                                <div
+                                    role="button"
+                                    onclick="location.href=
+                                    '{% url "item-update" tenant.id todo.id %}'">
+                                    {{ todo.title }}
+                                    (Due {{ todo.due_date | date:"l, F j" }})
+                                </div>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <p>There are no to-do items in this list.</p>
+                        {% endfor %}
+                    </ul>
+                    </div>
+            </div>
+          </div>
+
     </div>
 </div>
+
+<!-- Script for submitting forms -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('todoForm');
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const csrfToken = formData.get('csrfmiddlewaretoken');
+
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                location.reload();
+            } else {
+                // Handle errors
+            }
+        });
+    });
+</script>
 {% endblock %}
