@@ -1,7 +1,7 @@
 import requests
 from django.conf import settings
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from ..models import Users
 from ..forms import SignupForm
@@ -18,7 +18,9 @@ def nile_login(request): # name is to separate from the built-in login function,
             messages.error(request, 'Invalid credentials')
     return render(request, 'todolist/login.html')
 
-
+def nile_logout(request):
+    logout(request);
+    return redirect('index')
 
 def signup(request):
     if request.method == 'POST':

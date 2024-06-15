@@ -20,16 +20,19 @@
         <h2 class="mt-5 mb-5 text-center text-md font-semibold text-gray-900">Use Existing Tenant</h2>
         <ul role="list" class="divide-y divide-gray-100 border border-slate-500">
             {% for tenant in object_list %}
-            <li class="flex justify-between gap-x-6 py-3 px-5 items-center">
+            <li class="flex justify-between gap-x-6 py-3 px-5 items-center hover:cursor-pointer" onclick="location.href='{% url "todos" tenant.id %}'">
                 <div class="flex min-w-0 gap-x-4">
                     <div class="min-w-0 flex-auto ">
-                        <div class="text-md text-gray-900" onclick="location.href='{% url "todos" tenant.id %}'">
+                        <div class="text-md text-gray-900" >
                             {{ tenant.name }}</div>
                     </div>
                 </div
             </li>
             {% endfor %}
         </ul>
+    </div>
+    <div class="mt-5 text-center text-gray-900">
+        You are logged in as '{{ user.email }}' (<a href="{% url 'logout' %}"> Logout</a>)
     </div>
   </div>
 

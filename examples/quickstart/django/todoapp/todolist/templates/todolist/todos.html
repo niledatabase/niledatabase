@@ -4,7 +4,10 @@
 <div>
     <div>
         <div class="mt-10 mb-5 px-5">
-            <h2 class="text-3xl text-center">{{ tenant.name | upper }}'S TODOS</h5>
+            <h2 class="text-3xl text-center">{{ tenant.name | upper }}'S TODOS</h2>
+            <div class="flex justify-center">
+                <a href="{% url 'index' %}" class="text-indigo-400 hover:text-indigo-300 text-center">(Back to tenant selection)</a>
+            </div>
         </div>
         <div>
             <div class="flex flex-col mt-2 mb-5 divide-y divide-gray-400 ">
