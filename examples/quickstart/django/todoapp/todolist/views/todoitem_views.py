@@ -8,7 +8,7 @@ class ItemView(View):
     
     def get(self, request, tenant_id):
         tenant = get_object_or_404(Tenants, id=tenant_id)
-        todoitems = ToDoItem.objects.all()
+        todoitems = ToDoItem.objects.all() # no need to filter by tenant, since we used the middleware to connect directly to the tenant virtual database
         form = TodoItemForm()
         return render(request, 'todolist/todos.html', {'tenant': tenant, 'todoitems': todoitems, 'form': form})
     

@@ -92,7 +92,8 @@ def one_week_hence():
 #    title varchar(100),
 #    created_date timestamp default now(),
 #    completed boolean default false,
-#    tenant_id uuid references tenants(id));
+#    tenant_id uuid references tenants(id),
+#    primary key (tenant_id,id));
     
 
 class ToDoItem(models.Model):

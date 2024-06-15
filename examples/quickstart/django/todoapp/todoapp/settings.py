@@ -91,10 +91,6 @@ WSGI_APPLICATION = 'todoapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# TODO: figure out how to move the database settings to the environment variables
-
-# psql postgres://018ffae2-9522-7a7a-88c0-fe14b3f53c95:3dd712e8-4b54-409e-856f-fb790341df46@eu-central-1.db.dev.thenile.dev:5432/django
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
