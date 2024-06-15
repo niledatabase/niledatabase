@@ -1,91 +1,45 @@
-from django.shortcuts import render
-from django.urls import reverse, reverse_lazy
-from django.views.generic import (
-    ListView,     
-    CreateView,
-    UpdateView,
-    DeleteView)
-from ..models import ToDoItem, Tenants
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from ..models import Tenants, ToDoItem
+from ..forms import TodoItemForm
+from django.http import JsonResponse
 
-class ItemListView(ListView):
-    model = ToDoItem
-    template_name = "todolist/todos.html"
+class ItemView(View):
     
-    def get_queryset(self):
-        qs = ToDoItem.objects.all()
-        print(qs.query)
-        return qs
-
-    def get_context_data(self):
-        context = super().get_context_data()
-        tenants = Tenants.objects.all() # because we are in a tenant context, we know this is just one tenant
-        context["tenant"] = tenants[0]
-        return context
+    def get(self, request, tenant_id):
+        tenant = get_object_or_404(Tenants, id=tenant_id)
+        todoitems = ToDoItem.objects.all()
+        form = TodoItemForm()
+        return render(request, 'todolist/todos.html', {'tenant': tenant, 'todoitems': todoitems, 'form': form})
     
-class ItemCreate(CreateView):
-    model = ToDoItem
-    fields = [
-        "tenant", # this is a hidden field, we will set it in get_initial
-        "title",
-        "description",
-        "due_date",
-    ]
-
-    def get_initial(self):
-        initial_data = super(ItemCreate, self).get_initial()
-        tenants = Tenants.objects.all() # because we are in a tenant context, we know this is just one tenant
-        initial_data["tenant"] = tenants[0]
-        return initial_data
-
-    def get_context_data(self):
-        context = super(ItemCreate, self).get_context_data()
-        tenants = Tenants.objects.all() # because we are in a tenant context, we know this is just one tenant
-        context["tenant"] = tenants[0]
-        context["title"] = "Create a new todo task"
-        return context
     
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        field = form.fields['tenant']
-        field.widget = field.hidden_widget()
-        return form
+    def post(self, request, tenant_id):
+        if 'title' in request.POST:
+            return self.create_todo_item(request, tenant_id)
+        elif 'todo_id' in request.POST:
+            return self.update_todo_item(request, tenant_id)
 
-    def get_success_url(self):
-        return reverse("todos", args=[self.object.tenant_id])
-    
-class ItemUpdate(UpdateView):
-    model = ToDoItem
-    fields = [
-        "tenant",
-        "title",
-        "description",
-        "due_date",
-    ]
+    def create_todo_item(self, request, tenant_id):
+        tenant = get_object_or_404(Tenants, id=tenant_id)
+        form = TodoItemForm(request.POST)
+        if form.is_valid():
+            todoitem = form.save(commit=False)
+            todoitem.tenant = tenant
+            todoitem.save()
+            if request.accepts('application/json'):
+                return JsonResponse({"message": "Success"}, status=200)
+            else:
+                return self.get(request, tenant_id)
+        else:
+            if request.accepts('application/json'):
+                return JsonResponse(form.errors, status=500)
+            else:
+                return self.get(request, tenant_id)
 
-    def get_context_data(self):
-        context = super(ItemUpdate, self).get_context_data()
-        context["tenant"] = self.object.tenant
-        context["title"] = "Edit item"
-        return context
-    
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        field = form.fields['tenant']
-        field.widget = field.hidden_widget()
-        return form
-
-    def get_success_url(self):
-        return reverse("todos", args=[self.object.tenant_id])
-    
-class ItemDelete(DeleteView):
-    model = ToDoItem
-
-    def get_success_url(self):
-        # You have to use reverse_lazy() instead of reverse(),
-        # as the urls are not loaded when the file is imported.
-        return reverse_lazy("todos", args=[self.kwargs["tenant_id"]])
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["tenant"] = self.object.tenant
-        return context
+    def update_todo_item(self, request, tenant_id):
+        todo_id = request.POST.get('todo_id')
+        completed = request.POST.get('completed') == 'true'
+        todoitem = get_object_or_404(ToDoItem, id=todo_id, tenant_id=tenant_id)
+        todoitem.completed = completed
+        todoitem.save()
+        return JsonResponse({"message": "Success"}, status=200)

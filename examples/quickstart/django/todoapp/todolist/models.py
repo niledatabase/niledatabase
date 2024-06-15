@@ -90,18 +90,16 @@ def one_week_hence():
 # create table todos (
 #    id uuid default gen_random_uuid(),
 #    title varchar(100),
-#    description text,
 #    created_date timestamp default now(),
-#    due_date timestamp,
+#    completed boolean default false,
 #    tenant_id uuid references tenants(id));
     
 
 class ToDoItem(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     title = models.CharField(max_length=100)
-    description = models.TextField(null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
-    due_date = models.DateTimeField(default=one_week_hence)
+    completed = models.BooleanField(default=False)
     tenant = models.ForeignKey(Tenants, on_delete=models.DO_NOTHING)
 
     def get_absolute_url(self):
@@ -115,7 +113,7 @@ class ToDoItem(models.Model):
     class Meta:
         managed = False
         db_table = 'todos'
-        ordering = ["due_date"]
+        ordering = ["title"]
         
 
 
