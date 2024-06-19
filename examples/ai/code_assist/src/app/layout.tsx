@@ -20,8 +20,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  
   return (
     <html lang="en">
+      <head>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css"></link>
+      </head>
       <body className={inter.className}>
         <main className={styles.main}>
           <div className={styles.description}>
@@ -53,7 +57,7 @@ export default function RootLayout({
             </div>
           </div>
           <div>
-            <Stack>
+            <Stack paddingTop={2}>
               <Typography level="h2">AI Code Assistant</Typography>
             </Stack>
           </div>
