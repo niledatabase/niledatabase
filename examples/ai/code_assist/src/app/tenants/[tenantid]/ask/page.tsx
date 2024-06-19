@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Grid from '@mui/joy/Grid';
@@ -15,12 +15,12 @@ export default function Page({
   }: {
     params: { tenantid: string };
   }) {
-    const [question, setQuestion] = useState('');
     const [data, setData] = useState<any>();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
+        //@ts-expect-error
+        const question = e.currentTarget[0].value;
         const response = fetch('/api/embed-query', {
             method: 'POST',
             headers: {
@@ -55,6 +55,7 @@ export default function Page({
                             overflow: 'auto',
                             
                         }}
+                        key={Date.now()} // This is a hack to force re-rendering of the Highlight component
                     >
                         {data === undefined ?  
                             <Typography level="body-lg">
@@ -63,13 +64,9 @@ export default function Page({
                             :
                             <Highlight>
                                 {data.files.map((fileName: string, index: number) => (
-                                    <pre>
-                                        //{fileName}
-
-                                        {data.content[index]}
-                                    </pre>
+                                    "//" + fileName + "\n" + data.content[index] + "\n"
                                 ))}
-                                </Highlight>
+                            </Highlight>
                         }
                     </Box>
                 </Grid>
@@ -111,8 +108,6 @@ export default function Page({
                                     >
                                       Ask
                                     </Button>}
-                            value={question}
-                            onChange={(e) => setQuestion(e.target.value)}
                         />
                     </Box>
         </Box>
