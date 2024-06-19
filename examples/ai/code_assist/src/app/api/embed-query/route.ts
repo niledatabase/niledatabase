@@ -1,8 +1,11 @@
-// pages/api/generateEmbedding.ts
-
-import { NextApiRequest, NextApiResponse } from 'next';
+import * as fs from 'fs';
+import { OpenAI } from "@langchain/openai";
+import { ChatOpenAI } from "@langchain/openai";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { Nile } from '@niledatabase/server';
 import { createVectorEmbedding, EMBEDDING_TABLE } from '@/lib/EmbeddingUtils';
+
+const MODEL = "gpt-3.5-turbo-instruct" // until we find a better model, this is a low cost start...
 
 export async function POST(req: Request) {
     const body  = await req.json();
@@ -25,9 +28,39 @@ export async function POST(req: Request) {
             LIMIT 5
         `;
         
-        const result = await nile.db.query(query, [formattedEmbedding]); // no need to specify tenant_id, as we set the context above
+        const retrievedFileNames = await nile.db.query(query, [formattedEmbedding]); // no need to specify tenant_id, as we set the context above
+        const files = retrievedFileNames.rows.map(row => row.file_name);
+        let allContent: string[] = [];
+        let response = {"files": files, "content": allContent, "answer": ""};
 
-        return new Response(JSON.stringify(result.rows.map(row => row.file_name)), { status: 200 });
+        // now we need to read the actual files into a string and send it to the model
+        
+        for (const file of files) {
+            const content = fs.readFileSync(file, 'utf-8');
+            console.log(`file ${file} has ${content.length} characters`);
+            response.content.push(content);
+        }
+
+        // TOOD: figure out how to use streaming with NextJS...
+        // prompt template is hardcoded here, until maybe we get users to play with the prompts
+        const model = new ChatOpenAI({
+            temperature: 0.9,
+            // In Node.js defaults to process.env.OPENAI_API_KEY
+          });
+
+
+       const answer = await model.invoke(
+            [
+                new SystemMessage(`You are a principal software engineer, answering questions about code projects to other software engineers. 
+                    Use the following snippets of retrieved code to answer the question. 
+                  They represent code snippets from the files most similar to the question.
+                  Keep the answer concise, no yapping. Include code snippets from the provided context in your answer when relevant.
+                  Context: ${allContent.join('\n')}`),
+                new HumanMessage(`Please answer this question: ${body.question}. Helpful Answer:`)]);
+
+        response.answer = answer.content.toString();
+                    console.log('Answer:', response.answer)
+        return new Response(JSON.stringify(response), { status: 200 });
     } catch (error) {
         console.error('Error querying the database:', error);
         return new Response('Internal Server Error', { status: 500 });

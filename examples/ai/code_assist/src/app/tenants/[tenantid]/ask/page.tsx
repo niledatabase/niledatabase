@@ -8,7 +8,7 @@ export default function Page({
     params: { tenantid: string };
   }) {
     const [question, setQuestion] = useState('');
-    const [fileNames, setFileNames] = useState<string[]>([]);
+    const [data, setData] = useState<any>();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -24,8 +24,9 @@ export default function Page({
             }),
         }).then((response) => {
             if (response.ok) {
-                const data = response.json().then((data) => {;
-                    setFileNames(data);
+                const data = response.json().then((data) => {
+                    console.log(data);
+                    setData(data);
                 });
             } else {
                 console.error('Failed to fetch data');
@@ -49,14 +50,25 @@ export default function Page({
                 </div>
                 <button type="submit">Submit</button>
             </form>
+            {data === undefined ? null : 
             <div>
-                <h2>Closest Files:</h2>
+                <h2>Files used:</h2>
                 <ul>
-                    {fileNames.map((fileName, index) => (
-                        <li key={index}>{fileName}</li>
+                    {console.log(data)}
+                    {data.files.map((fileName: string) => (
+                        <li>{fileName}</li>
                     ))}
                 </ul>
+                <h2>Content:</h2>
+                <ul>
+                    {data.content.map((content: string) => (
+                        <li>{content}</li>
+                    ))}
+                </ul>
+                <h2>Answer:</h2>
+                <p>{data.answer}</p>
             </div>
+                            }
         </div>
     );
 }
