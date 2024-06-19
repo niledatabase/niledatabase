@@ -9,21 +9,24 @@ import { Nile, Server } from '@niledatabase/server';
 import {EMBEDDING_TABLE, createVectorEmbedding} from './EmbeddingUtils'
 
 
-const LanguageMappings: Map<string, string> = new Map([
-    ["python", "py"],
-    ["javascript", "js"],
-    ["typescript", "ts"],
-    ["java", "java"],
+const LanguageMappings: Map<string, string[]> = new Map([
+    ["python", ["py"]],
+    ["javascript", ["js","jsx"]],
+    ["typescript", ["ts","tsx"]],
+    ["java", ["java"]],
   ]);
 
 // Function to read files and create embeddings
 async function processFiles(directory: string, language: string, nile: Server, tenant_id: string) {
     const expDirectory = expandTilde(directory)
-    const fileExtension = LanguageMappings.get(language);
+    const fileExtensions = LanguageMappings.get(language);
+    if (!fileExtensions) {
+        throw new Error(`Language ${language} not supported`);
+    }
+    const fileGlobs = fileExtensions.map(ext => `${expDirectory}/**/*.${ext}`);
 
     const files = glob.sync([
-        `${expDirectory}/**/*.${fileExtension}`,
-        `${expDirectory}/**/README.md`],{ // always include the README
+        `${expDirectory}/**/README.md`].concat(fileGlobs),{ // always include the README
         ignore: [
             `${expDirectory}/venv/**/*.*`,
             `${expDirectory}/**/node_modules/**/*.*`,
@@ -32,7 +35,7 @@ async function processFiles(directory: string, language: string, nile: Server, t
             `${expDirectory}/**/target/**/*.*`,
         ]
     });
-    console.log(`Found ${files.length} files with extension ${fileExtension}`);
+    console.log(`Found ${files.length} files with extension ${fileExtensions}`);
     const client = await nile.db.connect(); // need to grab a client, so we can insert embeddings in one transaction
     client.query('BEGIN');
     try {
@@ -84,10 +87,10 @@ async function embedDirectory(directory: string, language: string) {
 }
 
 // Run the main function
+await embedDirectory('~/workspaces/niledatabase/examples/quickstart/nextjs', 'typescript')
 await embedDirectory('~/workspaces/niledatabase/examples/quickstart/python', 'python')
 await embedDirectory('~/workspaces/niledatabase/examples/quickstart/django', 'python')
 await embedDirectory('~/workspaces/niledatabase/examples/quickstart/drizzle', 'typescript')
-await embedDirectory('~/workspaces/niledatabase/examples/quickstart/nextjs', 'typescript')
 await embedDirectory('~/workspaces/niledatabase/examples/quickstart/node_react', 'javascript')
 await embedDirectory('~/workspaces/niledatabase/examples/quickstart/node_react', 'typescript')
 await embedDirectory('~/workspaces/niledatabase/examples/quickstart/java', 'java')
