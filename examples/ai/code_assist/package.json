@@ -19,6 +19,7 @@
     "expand-tilde": "^2.0.2",
     "glob": "^10.4.1",
     "highlight.js": "^11.9.0",
+    "jwt-decode": "^4.0.0",
     "next": "14.2.4",
     "pg": "^8.12.0",
     "react": "^18",
