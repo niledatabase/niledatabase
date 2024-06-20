@@ -1,4 +1,3 @@
-import { OpenAI } from "@langchain/openai";
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { Nile } from '@niledatabase/server';
@@ -28,7 +27,7 @@ export async function POST(req: Request) {
         `;
 
         const retrievedFileNames = await nile.db.query(query, [formattedEmbedding]); // no need to specify tenant_id, as we set the context above
-        const files = retrievedFileNames.rows.map(row => row.file_id);
+        const files = retrievedFileNames.rows.map((row: any) => row.file_id);
         let allContent: string[] = [];
         let fileNames: string[] = [];
         let response = {"files": fileNames, "content": allContent, "answer": ""};
