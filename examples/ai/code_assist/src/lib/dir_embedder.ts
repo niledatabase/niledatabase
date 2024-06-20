@@ -42,13 +42,15 @@ async function processFiles(directory: string, language: string, nile: Server, t
         for (const file of files) {
             const content = fs.readFileSync(file, 'utf-8');
             console.log(`file ${file} has ${content.length} characters`);
+            const result = await nile.db.query('INSERT INTO file_content(tenant_id, file_name, contents) VALUES($1, $2, $3) RETURNING id', [tenant_id, file, content]);
+            const file_id = result.rows[0].id;
             // TODO: Chunk large files?
             // TODO: Batch embeddings?
             const embedding = await createVectorEmbedding(content);
             const formattedEmbedding = JSON.stringify(embedding);
             console.log(`embedding for ${file} has ${embedding.length} dimensions`)
             
-            await client.query(`INSERT INTO ${EMBEDDING_TABLE}(tenant_id, file_name, embedding) VALUES($1, $2, $3)`, [tenant_id, file, formattedEmbedding]);
+            await client.query(`INSERT INTO ${EMBEDDING_TABLE}(tenant_id, file_id, embedding) VALUES($1, $2, $3)`, [tenant_id, file_id, formattedEmbedding]);
         }
     } catch (error) {
         client.query('ROLLBACK');
