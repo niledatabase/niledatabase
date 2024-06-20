@@ -1,4 +1,4 @@
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { NileJWTPayload, cookieOptions, toCookieData } from "@/lib/AuthUtils";
 import {Nile} from "@niledatabase/server";

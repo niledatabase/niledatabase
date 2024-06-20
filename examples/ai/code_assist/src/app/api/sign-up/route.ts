@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { cookieOptions, NileJWTPayload, toCookieData } from "@/lib/AuthUtils";
 import { revalidatePath } from "next/cache";
 import nile from "@/lib/NileServer";
