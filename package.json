@@ -14,7 +14,8 @@
     "examples/quickstart/prisma/fe",
     "examples/serverless/lambda-drizzle/fe",
     "examples/integrations/stripe_subscription",
-    "examples/ai/ai_pdf"
+    "examples/ai/ai_pdf",
+    "examples/ai/code_assist"
   ],
   "scripts": {
     "dev": "turbo run dev",
