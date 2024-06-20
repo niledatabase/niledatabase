@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import { OpenAI } from "@langchain/openai";
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
@@ -22,23 +21,27 @@ export async function POST(req: Request) {
 
     try {
         const query = `
-            SELECT file_name
+            SELECT file_id
             FROM ${EMBEDDING_TABLE}
             ORDER BY embedding <-> $1
             LIMIT 5
         `;
-        
+
         const retrievedFileNames = await nile.db.query(query, [formattedEmbedding]); // no need to specify tenant_id, as we set the context above
-        const files = retrievedFileNames.rows.map(row => row.file_name);
+        const files = retrievedFileNames.rows.map(row => row.file_id);
         let allContent: string[] = [];
-        let response = {"files": files, "content": allContent, "answer": ""};
+        let fileNames: string[] = [];
+        let response = {"files": fileNames, "content": allContent, "answer": ""};
 
         // now we need to read the actual files into a string and send it to the model
         
         for (const file of files) {
-            const content = fs.readFileSync(file, 'utf-8');
-            console.log(`file ${file} has ${content.length} characters`);
+            const raw = await nile.db.query(`SELECT file_name,contents FROM file_content WHERE id = $1`, [file]);
+            const content = raw.rows[0].contents;
+            const file_name = raw.rows[0].file_name;
+            console.log(`file ${file_name} has ${content.length} characters`);
             response.content.push(content);
+            response.files.push(file_name);
         }
 
         // TOOD: figure out how to use streaming with NextJS...
