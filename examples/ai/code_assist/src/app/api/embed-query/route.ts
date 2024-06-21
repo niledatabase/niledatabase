@@ -5,6 +5,8 @@ import { createVectorEmbedding, EMBEDDING_TABLE } from '@/lib/EmbeddingUtils';
 
 const MODEL = "gpt-3.5-turbo-instruct" // until we find a better model, this is a low cost start...
 
+
+// TODO: Need to set nile user ID from cookie for security
 export async function POST(req: Request) {
     const body  = await req.json();
     console.log('Received body:', body); 
