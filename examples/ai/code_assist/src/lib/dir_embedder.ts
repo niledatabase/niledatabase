@@ -17,7 +17,7 @@ const LanguageMappings: Map<string, string[]> = new Map([
   ]);
 
 // Function to read files and create embeddings
-async function processFiles(directory: string, language: string, nile: Server, tenant_id: string) {
+async function processFiles(directory: string, language: string, project_id: string, nile: Server, tenant_id: string) {
     const expDirectory = expandTilde(directory)
     const fileExtensions = LanguageMappings.get(language);
     if (!fileExtensions) {
@@ -42,7 +42,7 @@ async function processFiles(directory: string, language: string, nile: Server, t
         for (const file of files) {
             const content = fs.readFileSync(file, 'utf-8');
             console.log(`file ${file} has ${content.length} characters`);
-            const result = await nile.db.query('INSERT INTO file_content(tenant_id, file_name, contents) VALUES($1, $2, $3) RETURNING id', [tenant_id, file, content]);
+            const result = await nile.db.query('INSERT INTO file_content(tenant_id, project_id, file_name, contents) VALUES($1, $2, $3, $4) RETURNING id', [tenant_id, project_id, file, content]);
             const file_id = result.rows[0].id;
             // TODO: Chunk large files?
             // TODO: Batch embeddings?
@@ -72,28 +72,51 @@ async function getOrCreateTenantId(nile: Server, tenant_name: string): Promise<s
     }
 }
 
-// Main function
-async function embedDirectory(directory: string, language: string) {
+async function getOrCreateProject(nile: Server, project_name: string, project_url: string, tenant_id: string): Promise<string> {
+    const projects = await nile.db.query('select id from projects where name = $1', [project_name]);
+    if (projects.rows.length > 0) {
+        console.log(`Using existing project: ${projects.rows[0]}`);
+        return projects.rows[0].id;
+    } else {
+        const project_id = uuidv4();
+        console.log(`Creating new project with ${project_name} and ${project_id}`);
+        await nile.db.query('INSERT INTO projects(id, name, url, tenant_id) VALUES($1, $2, $3, $4)', [project_id, project_name, project_url, tenant_id]);
+        return project_id;
+    }
+}
+
+async function embedDirectory(directory: string, language: string, tenant_name: string, project_name: string, project_url: string) {
 
     try {
         const nile = await Nile();
-        const tenant_name = directory.split('/').pop();
         const tenant_id = await getOrCreateTenantId(nile, tenant_name!);
         nile.tenantId = tenant_id;
 
-        await processFiles(directory, language, nile, tenant_id);
+        const project_id = await getOrCreateProject(nile, project_name, project_url, tenant_id);
+
+        await processFiles(directory, language, project_id, nile, tenant_id);
         console.log('File embeddings stored successfully for directory:', directory);
     } catch (error) {
         console.error('Error processing files:', error);
     }
 }
 
-// Run the main function
-await embedDirectory('~/workspaces/niledatabase/examples/quickstart/nextjs', 'typescript')
-await embedDirectory('~/workspaces/niledatabase/examples/quickstart/python', 'python')
-await embedDirectory('~/workspaces/niledatabase/examples/quickstart/django', 'python')
-await embedDirectory('~/workspaces/niledatabase/examples/quickstart/drizzle', 'typescript')
-await embedDirectory('~/workspaces/niledatabase/examples/quickstart/node_react', 'javascript')
-await embedDirectory('~/workspaces/niledatabase/examples/quickstart/node_react', 'typescript')
-await embedDirectory('~/workspaces/niledatabase/examples/quickstart/java', 'java')
-await embedDirectory('~/workspaces/niledatabase/examples/quickstart/prisma', 'typescript')
+// Embed niledatabase projects
+await embedDirectory('~/workspaces/niledatabase/examples/quickstart/nextjs', 'typescript', 'niledatabase', 'NextJS quickstart', 'https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs')
+await embedDirectory('~/workspaces/niledatabase/examples/quickstart/python', 'python','niledatabase', 'Python quickstart','https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/python')
+await embedDirectory('~/workspaces/niledatabase/examples/quickstart/django', 'python','niledatabase', 'Django quickstart','https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/django')
+await embedDirectory('~/workspaces/niledatabase/examples/quickstart/drizzle', 'typescript','niledatabase', 'Drizzle quickstart','https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/drizzle')
+await embedDirectory('~/workspaces/niledatabase/examples/quickstart/node_react', 'javascript','niledatabase', 'Node-React quickstart','https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/node_react')
+await embedDirectory('~/workspaces/niledatabase/examples/quickstart/node_react', 'typescript','niledatabase', 'Node-React quickstart','https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/node_react')
+await embedDirectory('~/workspaces/niledatabase/examples/quickstart/java', 'java','niledatabase', 'Java quickstart','https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/java')
+await embedDirectory('~/workspaces/niledatabase/examples/quickstart/prisma', 'typescript','niledatabase', 'Prisma quickstart','https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/prisma')
+
+// Embed Vercel projects
+
+// Embed PGVector projects
+
+// Embed Replit Kaboom
+
+// Embed Langchain projects
+
+// Embed LlamaIndex projects

@@ -10,7 +10,7 @@ const MODEL = "gpt-3.5-turbo-instruct" // until we find a better model, this is 
 export async function POST(req: Request) {
     const body  = await req.json();
     console.log('Received body:', body); 
-    if (!body.question && !body.tenant_id) {
+    if (!body.question && !body.tenant_id && !body.project_id) {
         return new Response('Bad Request', { status: 400 });
     }
 
@@ -19,16 +19,20 @@ export async function POST(req: Request) {
 
     const nile = await Nile();
     nile.tenantId = body.tenant_id;
+    const project_id = body.project_id;
 
+    // TODO: Do we need to add project_id to the embedding table to avoid the join?
     try {
         const query = `
             SELECT file_id
             FROM ${EMBEDDING_TABLE}
-            ORDER BY embedding <-> $1
+            JOIN file_content fc ON fc.id = file_id
+            WHERE fc.project_id = $1
+            ORDER BY embedding <-> $2
             LIMIT 5
         `;
 
-        const retrievedFileNames = await nile.db.query(query, [formattedEmbedding]); // no need to specify tenant_id, as we set the context above
+        const retrievedFileNames = await nile.db.query(query, [project_id, formattedEmbedding]); // no need to specify tenant_id, as we set the context above
         const files = retrievedFileNames.rows.map((row: any) => row.file_id);
         let allContent: string[] = [];
         let fileNames: string[] = [];

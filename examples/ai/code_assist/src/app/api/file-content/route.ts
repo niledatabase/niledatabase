@@ -13,7 +13,8 @@ export async function POST(req: Request) {
 
     try {
         nile.tenantId = body.tenant_id;
-        const result = await nile.db.query('SELECT contents FROM file_content WHERE file_name like $1', ['%'+fileName]); // guaranteed to belong to current tenant
+        const project_id = body.project_id;
+        const result = await nile.db.query('SELECT contents FROM file_content WHERE project_id=$1 and file_name like $2', [project_id, '%'+fileName]); // guaranteed to belong to current tenant
         console.log('file name:', fileName)
         console.log('File content:', result);
         const content = result.rows[0]?.contents || null;

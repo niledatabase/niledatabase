@@ -10,7 +10,8 @@ export async function POST(req: Request) {
     const nile = await Nile();
     const body  = await req.json();
     nile.tenantId = body.tenant_id;
-    const result = await nile.db.query('SELECT file_name FROM file_content'); // no need to specify tenant_id, as we set the context above
+    const project_id = body.project_id;
+    const result = await nile.db.query('SELECT file_name FROM file_content where project_id=$1',[project_id]); // no need to specify tenant_id, as we set the context above
     const files = result.rows.map((row: { file_name: string }) => row.file_name);
     return new Response(JSON.stringify({files: files}), { status: 200 });
   } catch (error) {
