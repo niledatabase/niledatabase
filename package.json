@@ -44,6 +44,6 @@
   "homepage": "https://github.com/TheNileDev/niledatabase#readme",
   "devDependencies": {
     "prettier": "^2.8.8",
-    "turbo": "1.10.16"
+    "turbo": "^1.10.13"
   }
 }
