@@ -39,8 +39,11 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName }) => {
             <Box
               sx={{
                 maxWidth: '75%',
-                padding: 1,
-                borderRadius: 2,
+                pt: 1,
+                pb: 1,
+                pl: 2,
+                pr: 2,
+                borderRadius: 20,
                 backgroundColor: msg.type === 'question' ? 'primary.500' : 'neutral.200',
                 color: msg.type === 'question' ? 'white' : 'black',
               }}
