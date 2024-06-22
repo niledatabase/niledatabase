@@ -11,6 +11,7 @@ import FormLabel from '@mui/joy/FormLabel';
 import Sidebar from '@/components/Sidebar';
 import LlmResponseData from '@/lib/llmResponse';
 import ProjectDropdown from '@/components/ProjectDropdown';
+import Chatbox from '@/components/Chatbox';
 
 export default function Page({
     params,
@@ -166,46 +167,11 @@ export default function Page({
             <Grid  xs={12} md={5}>
                 <FileViewer data={data} content={content} />
             </Grid>
-                <Grid xs={12} md={4}>
-                    <Box
-                        sx={{
-                            height: '65vh',
-                            border: '1px solid #ccc',
-                            borderRadius: 1,
-                            padding: 2,
-                            overflow: 'auto',
-                        }}
-                    >
-                        {data === undefined ?
-                        <Typography level="body-lg">
-                            Answer to your question will show up here when you ask a question.
-                        </Typography>
-                        :
-                        <Typography level="body-lg">
-                            {data.answer}
-                        </Typography>}
-                    </Box>
-                </Grid>
+            <Grid xs={12} md={4}>
+                <Chatbox projectName={projects.find((proj) => proj.id === selectedProject )?.name || ''} />
+            </Grid>
                 
             </Grid>
-            <Box
-                        component="form"
-                        onSubmit={handleSubmit}
-                        sx={{ marginTop: 2 }}
-                    >
-                        <Input
-                            placeholder='Ask a question. For example: "Which frameworks this project uses?"'
-                            sx={{ '--Input-decoratorChildHeight': '45px' }}
-                                  endDecorator={
-                                    <Button
-                                      variant="solid"
-                                      color="primary"
-                                      type="submit"
-                                    >
-                                      Ask
-                                    </Button>}
-                        />
-                    </Box>
         </Box>
     );
 }
