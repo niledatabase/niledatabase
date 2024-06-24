@@ -11,20 +11,23 @@ import FormLabel from '@mui/joy/FormLabel';
 import Sidebar from '@/components/Sidebar';
 import LlmResponseData from '@/lib/llmResponse';
 import ProjectDropdown from '@/components/ProjectDropdown';
-import Chatbox from '@/components/Chatbox';
+import Chatbox, { MessageType } from '@/components/Chatbox';
+import { Message } from '@xenova/transformers';
 
 export default function Page({
     params,
   }: {
     params: { tenantid: string };
   }) {
-    const [data, setData] = useState<LlmResponseData>(); // Todo: break this down into multiple states
     const [content, setFileContent] = useState<string[]>([]);
     const [selectedFile, setSelectedFile] = useState<string[]>([]);
     const [files, setFiles] = useState<string[]>([]);
     const [projects, setProjects] = useState<{ id: string; name: string }[]>([]);
     const [selectedProject, setSelectedProject] = useState<string | null>(null);
+    const [messages, setMessages] = useState<MessageType[]>([]);
+    const [llmResponse, setLlmResponse] = useState<LlmResponseData | undefined>(undefined);
 
+    // Loading projects for project dropdown, only happens on page load
     // Note that for useEffect, the order matters. We need to fetch projects first to get the selected project.
     useEffect(() => {
         const fetchProjects = async () => {
@@ -51,6 +54,8 @@ export default function Page({
         fetchProjects();
       }, []);
 
+
+    // Loading README.md content for selected project, only happens when selected
     useEffect(() => {
         const fetchReadme = async () => {
             console.log("getting readme")
@@ -74,6 +79,7 @@ export default function Page({
         fetchReadme();
     }, [selectedProject]);
 
+    // Loading files for selected project, only happens when selected
     useEffect(() => {
         const fetchFiles = async () => {
             if (!selectedProject) return;
@@ -97,14 +103,16 @@ export default function Page({
         fetchFiles();
       }, [selectedProject]); // note that we need to add selectedProject as a dependency so that the files will reload when project changes
 
+      // when a project is selected, we need to fetch the README.md content and the files for that project
       const handleProjectChange = (projectId: string) => {
         setSelectedProject(projectId);
         setSelectedFile([]);
         setFileContent(['']);
       };
     
+      // when a file is clicked, we need to fetch the content of that file and show that it is selected
+      // This overrides any question response that is being displayed
     const handleFileClick = async (file: string) => {
-        setSelectedFile([file]);
     
         try {
           const response = await fetch(`/api/file-content`,{
@@ -115,7 +123,9 @@ export default function Page({
             body: JSON.stringify({ tenant_id: params.tenantid, file_name: file , project_id: selectedProject}),
           });
           const resp = await response.json();
+          setLlmResponse(undefined); // we need to clear the response when a file is clicked so we can show the file content instead
           setFileContent([resp.content]);
+          setSelectedFile([file]);
         } catch (error) {
           console.error('Error fetching file content:', error);
           setFileContent([]);
@@ -134,13 +144,19 @@ export default function Page({
                 />
             </Grid>
             <Grid md={3} sx={{overflow: 'auto', height:'65vh'}}>
-                <Sidebar files={files} onFileClick={handleFileClick} selectedFiles={selectedFile}/>
+                <Sidebar files={files} onFileClick={handleFileClick} selectedFiles={selectedFile} llmResponse={llmResponse}/>
             </Grid>
             <Grid  xs={12} md={5}>
-                <FileViewer data={data} content={content} />
+                <FileViewer llmResponse={llmResponse} content={content} />
             </Grid>
             <Grid xs={12} md={4}>
-                <Chatbox projectName={projects.find((proj) => proj.id === selectedProject )?.name || ''} projectId={selectedProject || ''} tenantid={params.tenantid}/>
+                <Chatbox 
+                    projectName={projects.find((proj) => proj.id === selectedProject )?.name || ''} 
+                    projectId={selectedProject || ''} 
+                    tenantid={params.tenantid}
+                    messages={messages} 
+                    setMessages={setMessages} 
+                    setLlmResponse={setLlmResponse} />
             </Grid>
                 
             </Grid>

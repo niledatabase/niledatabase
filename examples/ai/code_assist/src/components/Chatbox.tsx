@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Input, Button, Typography, List, ListItem, Card, CardActions } from '@mui/joy';
 
-type MessageType = {
+export type MessageType = {
   type: 'question' | 'answer';
   text: string;
 };
@@ -10,10 +10,12 @@ type ChatboxProps = {
     projectName: string;
     projectId: string;
     tenantid: string;
+    messages: MessageType[];
+    setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
+    setLlmResponse: React.Dispatch<React.SetStateAction<any>>;
   };
 
-const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid }) => {
-  const [messages, setMessages] = useState<MessageType[]>([]);
+const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, messages, setMessages, setLlmResponse }) => {
   const [input, setInput] = useState('');
 
   const handleSend = async () => {
@@ -38,12 +40,13 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid }) =
           ...prevMessages,
           { type: 'answer', text: data.answer },
         ]);
+        setLlmResponse(data);
     }
   };
 
   return (
     <Box>
-    <Card sx={{padding: 2, minHeight:'60vh'}}>
+    <Card sx={{padding: 2, minHeight:'60vh',maxHeight:'60vh', overflow:'auto'}}>
       <Typography level="h4" component="h1" mb={2}>Ask me about {projectName}</Typography>
       <List>
         {messages.map((msg, index) => (

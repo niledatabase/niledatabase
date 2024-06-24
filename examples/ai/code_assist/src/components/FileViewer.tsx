@@ -7,11 +7,15 @@ import LlmResponseData from '../lib/llmResponse'
 
 
 interface FileViewerProps {
-  data: LlmResponseData | undefined;
-  content: string[];
+llmResponse: LlmResponseData | undefined;
+  content: string[] | undefined;
 }
 
-const FileViewer: React.FC<FileViewerProps> = ({data, content}) => {
+const FileViewer: React.FC<FileViewerProps> = ({llmResponse, content}) => {
+    debugger;
+   // if content is undefined, we show a message to ask a question
+   // if llmResponse is undefined, we show the content of the file selected by the user
+   // if we have an llm response, we show the content of the files used in the response 
   return (
                     <Box
                         sx={{
@@ -24,18 +28,19 @@ const FileViewer: React.FC<FileViewerProps> = ({data, content}) => {
                         }}
                         key={Date.now()} // This is a hack to force re-rendering of the Highlight component
                     >
-                        {data === undefined && content == undefined?  
+                        {content === undefined?  // this basically shouldn't happen as we load the README.md by default
                             <Typography level="body-lg">
                                 Code used to answer question will show up here when you ask a question.
                             </Typography>
                             :
                             <Highlight >
                                 <Box height='60vh'>
-                                { data === undefined ? content.map((line: string) => line + "\n") :
-                                data.files.map((fileName: string, index: number) => (
-                                    content[index] === undefined ? "" :
-                                    "//" + fileName + "\n" + content[index] + "\n"
-                                ))}
+                                { llmResponse  ? 
+                                llmResponse.files.map((fileName: string, index: number) => ( // this happens when we load files as result of a question, llmResponse gets reset when a file is clicked
+                                        llmResponse.content[index] === undefined ? "" :
+                                        "//" + fileName + "\n" + llmResponse.content[index] + "\n"
+                                    )) : content.join('\n') // this happens when we load a file by clicking on sidebar
+                                }
                                  </Box>
                             </Highlight>
                         }

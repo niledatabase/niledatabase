@@ -3,11 +3,13 @@ import { basename } from 'path';
 import { List, ListItem, ListItemButton, ListItemContent, ListItemDecorator, Tooltip } from '@mui/joy';
 import Typography from '@mui/joy/Typography';
 import Description from '@mui/icons-material/Description';
+import LlmResponseData from '@/lib/llmResponse';
 
 interface SidebarProps {
     files: string[];
     onFileClick: (file: string) => void;
     selectedFiles: string[];
+    llmResponse: LlmResponseData | undefined;
 }
 
 
@@ -35,8 +37,11 @@ export const truncateCommonPath = (paths: string[]): string[] => {
   };
   
 
-const Sidebar: React.FC<SidebarProps> = ({ files, onFileClick, selectedFiles }) => {
+const Sidebar: React.FC<SidebarProps> = ({ files, onFileClick, selectedFiles, llmResponse }) => {
 const truncatedFiles = truncateCommonPath(files);
+    if (llmResponse) { // show files used in the response when a question is asked
+        selectedFiles = llmResponse.files;
+    }
   return (
     <List>
       {truncatedFiles.map((file, index) => (
