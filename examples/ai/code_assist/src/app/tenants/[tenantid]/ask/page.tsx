@@ -102,34 +102,6 @@ export default function Page({
         setSelectedFile([]);
         setFileContent(['']);
       };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        //@ts-expect-error
-        const question = e.currentTarget[0].value;
-        const response = fetch('/api/embed-query', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-                question: question,
-                tenant_id: params.tenantid, 
-                project_id: selectedProject,
-            }),
-        }).then((response) => {
-            if (response.ok) {
-                const data = response.json().then((data) => {
-                    console.log(data);
-                    setData(data);
-                    setFileContent(data.content);
-                    setSelectedFile(data.files);
-                });
-            } else {
-                console.error('Failed to fetch data');
-            }
-        });
-    };
     
     const handleFileClick = async (file: string) => {
         setSelectedFile([file]);
@@ -168,7 +140,7 @@ export default function Page({
                 <FileViewer data={data} content={content} />
             </Grid>
             <Grid xs={12} md={4}>
-                <Chatbox projectName={projects.find((proj) => proj.id === selectedProject )?.name || ''} />
+                <Chatbox projectName={projects.find((proj) => proj.id === selectedProject )?.name || ''} projectId={selectedProject || ''} tenantid={params.tenantid}/>
             </Grid>
                 
             </Grid>

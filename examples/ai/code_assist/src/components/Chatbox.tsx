@@ -8,24 +8,36 @@ type MessageType = {
 
 type ChatboxProps = {
     projectName: string;
+    projectId: string;
+    tenantid: string;
   };
 
-const Chatbox: React.FC<ChatboxProps> = ({ projectName }) => {
+const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid }) => {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [input, setInput] = useState('');
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim()) {
       setMessages([...messages, { type: 'question', text: input }]);
       setInput('');
 
-      // Simulate an answer (in a real application, you would call an API here)
-      setTimeout(() => {
-        setMessages((prevMessages) => [
+      const resp = await fetch('/api/embed-query', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+            question: input,
+            tenant_id: tenantid, 
+            project_id: projectId,
+        }) });
+
+        const data = await resp.json();
+
+      setMessages((prevMessages) => [
           ...prevMessages,
-          { type: 'answer', text: 'This is a simulated answer.' }
+          { type: 'answer', text: data.answer },
         ]);
-      }, 1000);
     }
   };
 
@@ -33,7 +45,7 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName }) => {
     <Box>
     <Card sx={{padding: 2, minHeight:'60vh'}}>
       <Typography level="h4" component="h1" mb={2}>Ask me about {projectName}</Typography>
-      <List sx={{ maxHeight: 300, overflow: 'auto' }}>
+      <List>
         {messages.map((msg, index) => (
           <ListItem key={index} sx={{ display: 'flex', justifyContent: msg.type === 'question' ? 'flex-end' : 'flex-start' }}>
             <Box
