@@ -111,10 +111,10 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, set
                     if (dataParts.length > 1) {
                         const jsonPart = JSON.parse(dataParts[0]);
                         setLlmResponse(jsonPart);
+                        dispatch({ type: 'updateAnswer', text: dataParts[1]});
                         recievedFiles = true;
                         partialData = ""
                     }
-                    dispatch({ type: 'updateAnswer', text: dataParts[1]});
                 } else { // We may have part of the answer in dataparts array still?
                     dispatch({ type: 'updateAnswer', text: chunkValue});
                     if (done) {
@@ -147,10 +147,15 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, set
                 color: msg.type === 'question' ? 'white' : 'black',
               }}
             >
-                <Markdown components={{ol(props) {
+                <Markdown components={{
+                    ol(props) {
                      const {node, ...rest} = props
                      return <ol style={{paddingLeft: "1rem"}} {...rest} />
-                }}}>
+                }, code(props) {
+                    const {node, ...rest} = props
+                    return <code style={{whiteSpace: "pre-wrap"}} {...rest} />
+                },
+                }}>
               {msg.text}
               </Markdown>
             </Box>
