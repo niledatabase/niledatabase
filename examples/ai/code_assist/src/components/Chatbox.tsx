@@ -1,6 +1,17 @@
 import React, { useState, useReducer } from 'react';
-import { Box, Input, Button, Typography, List, ListItem, Card, CardActions } from '@mui/joy';
+import { Box, Input, Button, Typography, List, ListItem, Card, Autocomplete } from '@mui/joy';
 import Markdown from 'react-markdown'
+
+const cannedQuestions = [
+    'Which frameworks does this example use?', 
+    'Does this example use a database?', 
+    'how does this project handle user inputs?',
+    'What is the main function of this project?',
+    'How does this project handle errors?',
+    'How does this project handle authentication?',
+    'How does this project maintain privacy?',
+    'Can you find where in the code we are updating the database?',
+    'Does this project use hashmaps?'];
 
 export type MessageType = {
   type: 'question' | 'answer';
@@ -58,14 +69,18 @@ interface AppState {
   }
 
 const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, setLlmResponse }) => {
-  const [input, setInput] = useState('');
+  const [userInput, setUserInput] = useState('');
+  const [selectedInput, setSelectedInput] = useState('');
   const [state, dispatch] = useReducer(reducer, {messages: []});
 
   const handleSend = async () => {
+    console.log('Got user input:' + userInput + ' selected input:' + selectedInput) 
+    const input = selectedInput || userInput;
+    console.log('Sending question:', input)
     if (input.trim()) {
-     //@ts-ignore - dispatch accepts an action, even if TypeScript doesn't realize it
       dispatch({ type: 'addQuestion', text: input});
-      setInput('');
+      setUserInput('');
+      setSelectedInput('');
 
       const resp = await fetch('/api/embed-query', {
         method: 'POST',
@@ -101,29 +116,15 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, set
                     }
                     dispatch({ type: 'updateAnswer', text: dataParts[1]});
                 } else { // We may have part of the answer in dataparts array still?
-                    //@ts-ignore - dispatch accepts an action, even if TypeScript doesn't realize it
                     dispatch({ type: 'updateAnswer', text: chunkValue});
                     if (done) {
-                        //@ts-ignore - dispatch accepts an action, even if TypeScript doesn't realize it
-                        dispatch({ type: "done" });
+                        dispatch({ type: "done", text: ""});
                     }
                 }
             }
-                
-           /* reader.read().then(function processStream({ done, value }) {
-                if (done) {
-                  console.log('Stream complete');
-                  return;
-                }
-            partialData += decoder.decode(value);*/
         } else {
             console.log('No response body');
         }
-
-     //const data = await resp.json();
-
-
-       //setLlmResponse(data);
     }
   };
 
@@ -158,13 +159,18 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, set
       </List>
     </Card>
     <Box sx={{ display: 'flex', mt: 2, alignItems: 'flex-end' }}>
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Type your question..."
-            fullWidth
-            sx={{ mr: 1 }}
+          <Autocomplete
+            freeSolo
+            options={cannedQuestions}
+            value={selectedInput}
+            onChange={(event, newValue) => {
+                  setSelectedInput(newValue || '');
+              }}
+            onInputChange={(event, newInputValue) => {
+                setUserInput(newInputValue);
+            }}
+            placeholder="Type your question or select one..."
+            sx={{ mr: 1, width: '100%'}}
           />
           <Button onClick={handleSend} variant="solid">Send</Button>
     </Box></Box>

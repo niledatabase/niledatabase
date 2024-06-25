@@ -1,18 +1,14 @@
 "use client";
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect} from 'react';
 import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
 import Grid from '@mui/joy/Grid';
-import Input from '@mui/joy/Input';
-import Typography from '@mui/joy/Typography';
 import FileViewer from '@/components/FileViewer';
 import FormLabel from '@mui/joy/FormLabel';
 import Sidebar from '@/components/Sidebar';
 import LlmResponseData from '@/lib/llmResponse';
 import ProjectDropdown from '@/components/ProjectDropdown';
-import Chatbox, { MessageType } from '@/components/Chatbox';
-import { Message } from '@xenova/transformers';
+import Chatbox from '@/components/Chatbox';
 
 export default function Page({
     params,
