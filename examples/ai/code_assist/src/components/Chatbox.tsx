@@ -1,26 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import { Box, Input, Button, Typography, List, ListItem, Card, CardActions } from '@mui/joy';
 
 export type MessageType = {
   type: 'question' | 'answer';
   text: string;
+  count?: number;
 };
 
 type ChatboxProps = {
     projectName: string;
     projectId: string;
     tenantid: string;
-    messages: MessageType[];
-    setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
     setLlmResponse: React.Dispatch<React.SetStateAction<any>>;
   };
 
-const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, messages, setMessages, setLlmResponse }) => {
+type AppActions = {
+    type: string;
+    text: string;
+}
+  
+// TODO: Add "thinking" and "abort" capabilities
+interface AppState {
+    messages: MessageType[] | [];
+  }
+
+
+  function reducer(state: AppState, action: AppActions): AppState {
+    switch (action.type) {
+      case "addQuestion":
+        return {
+            ...state,
+            messages:
+            [
+                ...state.messages,
+                { type: "question", text: action.text },
+                { type: "answer", text: "" },
+            ]};
+      case "updateAnswer":
+        const conversationListCopy = [...state.messages];
+        const lastIndex = conversationListCopy.length - 1;
+        conversationListCopy[lastIndex] = {
+          ...conversationListCopy[lastIndex],
+          text: conversationListCopy[lastIndex].text + action.text,
+        };
+        return {
+            ...state,
+            messages:conversationListCopy
+        };
+      case "done":
+        return {
+          ...state
+        };
+      default:
+        return state;
+    }
+  }
+
+const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, setLlmResponse }) => {
   const [input, setInput] = useState('');
+  const [state, dispatch] = useReducer(reducer, {messages: []});
 
   const handleSend = async () => {
     if (input.trim()) {
-      setMessages([...messages, { type: 'question', text: input }]);
+     //@ts-ignore - dispatch accepts an action, even if TypeScript doesn't realize it
+      dispatch({ type: 'addQuestion', text: input});
       setInput('');
 
       const resp = await fetch('/api/embed-query', {
@@ -34,13 +77,38 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, mes
             project_id: projectId,
         }) });
 
-        const data = await resp.json();
+        // Reader to process the streamed response
+        if (resp.body) {
+            const reader = resp.body.getReader();
+            const decoder = new TextDecoder();
+            let done = false; // we need to read the stream until it's done
 
-      setMessages((prevMessages) => [
-          ...prevMessages,
-          { type: 'answer', text: data.answer },
-        ]);
-        setLlmResponse(data);
+            while (!done) {
+                const { value, done: doneReading } = await reader.read();
+                done = doneReading;
+                const chunkValue = decoder.decode(value);
+                //@ts-ignore - dispatch accepts an action, even if TypeScript doesn't realize it
+                dispatch({ type: 'updateAnswer', text: chunkValue});
+                if (done) {
+                    //@ts-ignore - dispatch accepts an action, even if TypeScript doesn't realize it
+                    dispatch({ type: "done" });
+                }
+            }
+                
+           /* reader.read().then(function processStream({ done, value }) {
+                if (done) {
+                  console.log('Stream complete');
+                  return;
+                }
+            partialData += decoder.decode(value);*/
+        } else {
+            console.log('No response body');
+        }
+
+     //const data = await resp.json();
+
+
+       //setLlmResponse(data);
     }
   };
 
@@ -49,7 +117,7 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, mes
     <Card sx={{padding: 2, minHeight:'60vh',maxHeight:'60vh', overflow:'auto'}}>
       <Typography level="h4" component="h1" mb={2}>Ask me about {projectName}</Typography>
       <List>
-        {messages.map((msg, index) => (
+        {state.messages.map((msg, index) => (
           <ListItem key={index} sx={{ display: 'flex', justifyContent: msg.type === 'question' ? 'flex-end' : 'flex-start' }}>
             <Box
               sx={{

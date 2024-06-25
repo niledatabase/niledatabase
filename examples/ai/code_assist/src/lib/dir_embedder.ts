@@ -42,15 +42,17 @@ async function processFiles(directory: string, language: string, project_id: str
         for (const file of files) {
             const content = fs.readFileSync(file, 'utf-8');
             console.log(`file ${file} has ${content.length} characters`);
-            const result = await nile.db.query('INSERT INTO file_content(tenant_id, project_id, file_name, contents) VALUES($1, $2, $3, $4) RETURNING id', [tenant_id, project_id, file, content]);
-            const file_id = result.rows[0].id;
-            // TODO: Chunk large files?
-            // TODO: Batch embeddings?
-            const embedding = await createVectorEmbedding(content);
-            const formattedEmbedding = JSON.stringify(embedding);
-            console.log(`embedding for ${file} has ${embedding.length} dimensions`)
+            if (content.length > 0) {
+                const result = await nile.db.query('INSERT INTO file_content(tenant_id, project_id, file_name, contents) VALUES($1, $2, $3, $4) RETURNING id', [tenant_id, project_id, file, content]);
+                const file_id = result.rows[0].id;
+                // TODO: Chunk large files?
+                // TODO: Batch embeddings?
+                const embedding = await createVectorEmbedding(content);
+                const formattedEmbedding = JSON.stringify(embedding);
+                console.log(`embedding for ${file} has ${embedding.length} dimensions`)
             
-            await client.query(`INSERT INTO ${EMBEDDING_TABLE}(tenant_id, file_id, embedding) VALUES($1, $2, $3)`, [tenant_id, file_id, formattedEmbedding]);
+                await client.query(`INSERT INTO ${EMBEDDING_TABLE}(tenant_id, file_id, embedding) VALUES($1, $2, $3)`, [tenant_id, file_id, formattedEmbedding]);
+            }
         }
     } catch (error) {
         client.query('ROLLBACK');

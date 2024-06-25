@@ -12,7 +12,6 @@ llmResponse: LlmResponseData | undefined;
 }
 
 const FileViewer: React.FC<FileViewerProps> = ({llmResponse, content}) => {
-    debugger;
    // if content is undefined, we show a message to ask a question
    // if llmResponse is undefined, we show the content of the file selected by the user
    // if we have an llm response, we show the content of the files used in the response 

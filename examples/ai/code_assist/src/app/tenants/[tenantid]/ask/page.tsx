@@ -24,7 +24,6 @@ export default function Page({
     const [files, setFiles] = useState<string[]>([]);
     const [projects, setProjects] = useState<{ id: string; name: string }[]>([]);
     const [selectedProject, setSelectedProject] = useState<string | null>(null);
-    const [messages, setMessages] = useState<MessageType[]>([]);
     const [llmResponse, setLlmResponse] = useState<LlmResponseData | undefined>(undefined);
 
     // Loading projects for project dropdown, only happens on page load
@@ -143,19 +142,17 @@ export default function Page({
                 onProjectChange={handleProjectChange}
                 />
             </Grid>
-            <Grid md={3} sx={{overflow: 'auto', height:'65vh'}}>
+            <Grid md={2} sx={{overflow: 'auto', height:'65vh'}}>
                 <Sidebar files={files} onFileClick={handleFileClick} selectedFiles={selectedFile} llmResponse={llmResponse}/>
             </Grid>
             <Grid  xs={12} md={5}>
                 <FileViewer llmResponse={llmResponse} content={content} />
             </Grid>
-            <Grid xs={12} md={4}>
+            <Grid xs={12} md={5}>
                 <Chatbox 
                     projectName={projects.find((proj) => proj.id === selectedProject )?.name || ''} 
                     projectId={selectedProject || ''} 
                     tenantid={params.tenantid}
-                    messages={messages} 
-                    setMessages={setMessages} 
                     setLlmResponse={setLlmResponse} />
             </Grid>
                 
