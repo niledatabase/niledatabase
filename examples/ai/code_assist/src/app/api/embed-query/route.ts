@@ -1,6 +1,5 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import AIMessageChunk from "@langchain/core/messages/AIMessageChunk";
 import { Nile } from '@niledatabase/server';
 import { createVectorEmbedding, EMBEDDING_TABLE } from '@/lib/EmbeddingUtils';
 
