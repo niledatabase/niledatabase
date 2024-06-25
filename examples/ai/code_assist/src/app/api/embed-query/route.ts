@@ -6,9 +6,13 @@ import { createVectorEmbedding, EMBEDDING_TABLE } from '@/lib/EmbeddingUtils';
 
 const MODEL = "gpt-3.5-turbo-instruct" // until we find a better model, this is a low cost start...
 
-function iteratorToStream(iterator: any) {
+function iteratorToStream(iterator: any, response: string) {
     return new ReadableStream({
-      async pull(controller) {
+     start(controller) {
+        controller.enqueue(response)
+        controller.enqueue("EOJSON") // this is our separator. Streaming LLM answer comes next
+     },
+    async pull(controller) {
         const { value, done } = await iterator.next()
    
         if (done) {
@@ -88,8 +92,6 @@ export async function POST(req: Request) {
                   Context: ${allContent.join('\n')}`),
                 new HumanMessage(`Please answer this question: ${body.question}. Helpful Answer:`)]);
 
-        const chunks: AIMessageChunk[] = [];
-
         /*
         // NOT A GOOD WAY TO STREAM, but lets start
         for await (const chunk of stream) {
@@ -107,7 +109,7 @@ export async function POST(req: Request) {
                     console.log('Answer:', response.answer)
         return new Response(JSON.stringify(response), { status: 200 });*/
 
-        const stream = iteratorToStream(respStream)
+        const stream = iteratorToStream(respStream, JSON.stringify(response))
  
         return new Response(stream)
     } catch (error) {

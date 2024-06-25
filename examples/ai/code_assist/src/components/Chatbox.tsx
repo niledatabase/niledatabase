@@ -1,5 +1,6 @@
 import React, { useState, useReducer } from 'react';
 import { Box, Input, Button, Typography, List, ListItem, Card, CardActions } from '@mui/joy';
+import Markdown from 'react-markdown'
 
 export type MessageType = {
   type: 'question' | 'answer';
@@ -82,16 +83,30 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, set
             const reader = resp.body.getReader();
             const decoder = new TextDecoder();
             let done = false; // we need to read the stream until it's done
+            let partialData = ""; // we need to accumulate the data as it comes in in order to update the file selection
+            let recievedFiles = false;
 
             while (!done) {
                 const { value, done: doneReading } = await reader.read();
                 done = doneReading;
                 const chunkValue = decoder.decode(value);
-                //@ts-ignore - dispatch accepts an action, even if TypeScript doesn't realize it
-                dispatch({ type: 'updateAnswer', text: chunkValue});
-                if (done) {
+                if (!recievedFiles) {
+                    partialData += chunkValue;
+                    const dataParts = partialData.split("EOJSON"); // first part of the response is json, second part is the answer
+                    if (dataParts.length > 1) {
+                        const jsonPart = JSON.parse(dataParts[0]);
+                        setLlmResponse(jsonPart);
+                        recievedFiles = true;
+                        partialData = ""
+                    }
+                    dispatch({ type: 'updateAnswer', text: dataParts[1]});
+                } else { // We may have part of the answer in dataparts array still?
                     //@ts-ignore - dispatch accepts an action, even if TypeScript doesn't realize it
-                    dispatch({ type: "done" });
+                    dispatch({ type: 'updateAnswer', text: chunkValue});
+                    if (done) {
+                        //@ts-ignore - dispatch accepts an action, even if TypeScript doesn't realize it
+                        dispatch({ type: "done" });
+                    }
                 }
             }
                 
@@ -131,7 +146,12 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, set
                 color: msg.type === 'question' ? 'white' : 'black',
               }}
             >
+                <Markdown components={{ol(props) {
+                     const {node, ...rest} = props
+                     return <ol style={{paddingLeft: "1rem"}} {...rest} />
+                }}}>
               {msg.text}
+              </Markdown>
             </Box>
           </ListItem>
         ))}
