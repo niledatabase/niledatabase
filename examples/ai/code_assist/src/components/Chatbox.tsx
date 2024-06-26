@@ -131,7 +131,7 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, set
   return (
     <Box>
     <Card sx={{padding: 2, minHeight:'60vh',maxHeight:'60vh', overflow:'auto'}}>
-      <Typography level="h4" component="h1" mb={2}>Ask me about {projectName}</Typography>
+      <Typography level="h4" component="h1" mb={2}>Ask me about "{projectName}" project</Typography>
       <List>
         {state.messages.map((msg, index) => (
           <ListItem key={index} sx={{ display: 'flex', justifyContent: msg.type === 'question' ? 'flex-end' : 'flex-start' }}>
