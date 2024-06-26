@@ -1,6 +1,7 @@
 import React, { useState, useReducer } from 'react';
 import { Box, Input, Button, Typography, List, ListItem, Card, Autocomplete } from '@mui/joy';
 import Markdown from 'react-markdown'
+import Highlight from 'react-highlight';
 
 const cannedQuestions = [
     'Which frameworks does this example use?', 
@@ -152,8 +153,8 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, set
                      const {node, ...rest} = props
                      return <ol style={{paddingLeft: "1rem"}} {...rest} />
                 }, code(props) {
-                    const {node, ...rest} = props
-                    return <code style={{whiteSpace: "pre-wrap"}} {...rest} />
+                    const {node, children, ...rest} = props
+                    return <Highlight>{children}</Highlight> 
                 },
                 }}>
               {msg.text}
