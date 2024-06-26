@@ -47,7 +47,7 @@ export default async function Page() {
 { /* This example is questions-only for now, so you can browse existing tenants, but not create them */ }
         <CardContent>
           <Typography level="title-md" textAlign="center" padding={2}>
-            Use Existing Tenant
+          Pick an organization/tenant below
           </Typography>
           <List variant="outlined">
             {tenants.map((tenant: any) => (
