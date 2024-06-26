@@ -9,6 +9,9 @@ import Sidebar from '@/components/Sidebar';
 import LlmResponseData from '@/lib/llmResponse';
 import ProjectDropdown from '@/components/ProjectDropdown';
 import Chatbox from '@/components/Chatbox';
+import NextLink from "next/link";
+import MUILink from "@mui/joy/Link";
+import { Typography } from '@mui/joy';
 
 export default function Page({
     params,
@@ -18,7 +21,7 @@ export default function Page({
     const [content, setFileContent] = useState<string[]>([]);
     const [selectedFile, setSelectedFile] = useState<string[]>([]);
     const [files, setFiles] = useState<string[]>([]);
-    const [projects, setProjects] = useState<{ id: string; name: string }[]>([]);
+    const [projects, setProjects] = useState<{ id: string; name: string, tenant_name: string }[]>([]);
     const [selectedProject, setSelectedProject] = useState<string | null>(null);
     const [llmResponse, setLlmResponse] = useState<LlmResponseData | undefined>(undefined);
 
@@ -136,7 +139,16 @@ export default function Page({
                 projects={projects}
                 selectedProject={selectedProject || ''}
                 onProjectChange={handleProjectChange}
-                />
+                />     
+            </Grid>
+            <Grid xs={2}>
+            <Typography level="body-md"> Current tenant: {projects.find((proj) => proj.id === selectedProject)?.tenant_name || '' }
+              </Typography> 
+            </Grid>
+            <Grid xs={10}>
+              <MUILink href="/tenants" component={NextLink}>
+                (Back to tenant selection){" "}
+              </MUILink>
             </Grid>
             <Grid md={2} sx={{overflow: 'auto', height:'65vh'}}>
                 <Sidebar files={files} onFileClick={handleFileClick} selectedFiles={selectedFile} llmResponse={llmResponse}/>
