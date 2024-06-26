@@ -46,7 +46,6 @@ async function redirectOnSuccess(formData: FormData): Promise<string> {
     const decodedJWT = jwtDecode<NileJWTPayload>(accessToken);
     const cookieData = toCookieData(formData, decodedJWT);
     const event = formData.get("event");
-    console.log("google auth event: " + event);
     const user_id = decodedJWT.sub;
     const nile = await Nile();
     const tenants = await nile.db.query("select id from tenants where id not in (select tenant_id from users.tenant_users where user_id = $1)", [user_id]);

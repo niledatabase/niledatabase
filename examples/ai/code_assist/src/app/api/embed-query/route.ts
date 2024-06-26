@@ -17,7 +17,6 @@ function iteratorToStream(iterator: any, response: string) {
         if (done) {
           controller.close()
         } else {
-            console.log('Value:', value.content)
           controller.enqueue(value.content)
         }
       },
@@ -90,23 +89,6 @@ export async function POST(req: Request) {
                   Include code snippets from the provided context in your answer when relevant.
                   Context: ${allContent.join('\n')}`),
                 new HumanMessage(`Please answer this question: ${body.question}. Helpful Answer:`)]);
-
-        /*
-        // NOT A GOOD WAY TO STREAM, but lets start
-        for await (const chunk of stream) {
-            console.log(`${chunk.content}|`);
-            chunks.push(chunk);
-        }
-
-        let answer = "";
-        for (const chunk of chunks) {
-            answer += chunk.content;
-        }
-
-
-        response.answer = answer;
-                    console.log('Answer:', response.answer)
-        return new Response(JSON.stringify(response), { status: 200 });*/
 
         const stream = iteratorToStream(respStream, JSON.stringify(response))
  
