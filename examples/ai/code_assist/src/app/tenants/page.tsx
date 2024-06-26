@@ -32,7 +32,8 @@ export default async function Page() {
       `SELECT tenants.id, tenants.name
        FROM tenants
        JOIN users.tenant_users ON tenants.id = tenant_users.tenant_id
-       WHERE tenant_users.user_id = $1`,
+       WHERE tenant_users.user_id = $1
+       AND tenants.deleted IS NULL`,
       [nile.userId]
     );
     if (res) {

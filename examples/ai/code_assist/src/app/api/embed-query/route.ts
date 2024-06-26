@@ -5,10 +5,38 @@ import { createVectorEmbedding, EMBEDDING_TABLE } from '@/lib/EmbeddingUtils';
 
 const MODEL = "gpt-3.5-turbo-instruct" // until we find a better model, this is a low cost start...
 
+function iteratorToStream(iterator: any, response: string) {
+    return new ReadableStream({
+     start(controller) {
+        controller.enqueue(response)
+        controller.enqueue("EOJSON") // this is our separator. Streaming LLM answer comes next
+     },
+    async pull(controller) {
+        const { value, done } = await iterator.next()
+   
+        if (done) {
+          controller.close()
+        } else {
+            console.log('Value:', value.content)
+          controller.enqueue(value.content)
+        }
+      },
+    })
+  }
+
+// TODO: Need to set nile user ID from cookie for security
 export async function POST(req: Request) {
+
+    // These will be used to send the response in chunks
+    const encoder = new TextEncoder();
+    const stream = new TransformStream();
+    const writer = stream.writable.getWriter();
+    let counter = 0;
+    let string = "";
+
     const body  = await req.json();
     console.log('Received body:', body); 
-    if (!body.question && !body.tenant_id) {
+    if (!body.question && !body.tenant_id && !body.project_id) {
         return new Response('Bad Request', { status: 400 });
     }
 
@@ -17,16 +45,20 @@ export async function POST(req: Request) {
 
     const nile = await Nile();
     nile.tenantId = body.tenant_id;
+    const project_id = body.project_id;
 
+    // TODO: Do we need to add project_id to the embedding table to avoid the join?
     try {
         const query = `
             SELECT file_id
             FROM ${EMBEDDING_TABLE}
-            ORDER BY embedding <-> $1
+            JOIN file_content fc ON fc.id = file_id
+            WHERE fc.project_id = $1
+            ORDER BY embedding <-> $2
             LIMIT 5
         `;
 
-        const retrievedFileNames = await nile.db.query(query, [formattedEmbedding]); // no need to specify tenant_id, as we set the context above
+        const retrievedFileNames = await nile.db.query(query, [project_id, formattedEmbedding]); // no need to specify tenant_id, as we set the context above
         const files = retrievedFileNames.rows.map((row: any) => row.file_id);
         let allContent: string[] = [];
         let fileNames: string[] = [];
@@ -43,7 +75,6 @@ export async function POST(req: Request) {
             response.files.push(file_name);
         }
 
-        // TOOD: figure out how to use streaming with NextJS...
         // prompt template is hardcoded here, until maybe we get users to play with the prompts
         const model = new ChatOpenAI({
             temperature: 0.9,
@@ -51,18 +82,35 @@ export async function POST(req: Request) {
           });
 
 
-       const answer = await model.invoke(
+       const respStream = await model.stream(
             [
                 new SystemMessage(`You are a principal software engineer, answering questions about code projects to other software engineers. 
                     Use the following snippets of retrieved code to answer the question. 
                   They represent code snippets from the files most similar to the question.
-                  Keep the answer concise, no yapping. Include code snippets from the provided context in your answer when relevant.
+                  Include code snippets from the provided context in your answer when relevant.
                   Context: ${allContent.join('\n')}`),
                 new HumanMessage(`Please answer this question: ${body.question}. Helpful Answer:`)]);
 
-        response.answer = answer.content.toString();
+        /*
+        // NOT A GOOD WAY TO STREAM, but lets start
+        for await (const chunk of stream) {
+            console.log(`${chunk.content}|`);
+            chunks.push(chunk);
+        }
+
+        let answer = "";
+        for (const chunk of chunks) {
+            answer += chunk.content;
+        }
+
+
+        response.answer = answer;
                     console.log('Answer:', response.answer)
-        return new Response(JSON.stringify(response), { status: 200 });
+        return new Response(JSON.stringify(response), { status: 200 });*/
+
+        const stream = iteratorToStream(respStream, JSON.stringify(response))
+ 
+        return new Response(stream)
     } catch (error) {
         console.error('Error querying the database:', error);
         return new Response('Internal Server Error', { status: 500 });
