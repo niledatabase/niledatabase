@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { tenantContext } from "./storage";
 
-const REQUIRE_AUTH = process.env.REQUIRE_AUTH || false;
+export const REQUIRE_AUTH = process.env.REQUIRE_AUTH || false;
 export async function dbAuthorizer(
   username: string,
   password: string,
