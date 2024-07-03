@@ -1,7 +1,11 @@
 import React, { useState, useReducer } from 'react';
 import { Box, Input, Button, Typography, List, ListItem, Card, Autocomplete } from '@mui/joy';
 import Markdown from 'react-markdown'
-import Highlight from 'react-highlight';
+import rehypeHighlight from 'rehype-highlight'
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vs as Theme } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 const cannedQuestions = [
     'Which frameworks does this example use?', 
@@ -148,13 +152,27 @@ const Chatbox: React.FC<ChatboxProps> = ({ projectName, projectId, tenantid, set
                 color: msg.type === 'question' ? 'white' : 'black',
               }}
             >
-                <Markdown components={{
+                <Markdown 
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeRaw]}
+                  components={{
                     ol(props) {
                      const {node, ...rest} = props
                      return <ol style={{paddingLeft: "1rem"}} {...rest} />
-                }, code(props) {
-                    const {node, children, ...rest} = props
-                    return <Highlight>{children}</Highlight> 
+                },
+                code({ node, inline, className, children, ...props }: any) {
+                  console.log('Code block:', children, className, props)
+                  const match = /language-(\w+)/.exec(className || '');
+                  console.log('Match:', match)
+                  return !inline && match ? (
+                    <SyntaxHighlighter style={Theme} PreTag="div" language={match[1]} {...props}>
+                      {String(children).replace(/\n$/, '')}
+                    </SyntaxHighlighter>
+                  ) : (
+                    <code className={className} {...props}>
+                      {children}
+                    </code>
+                  );
                 },
                 }}>
               {msg.text}

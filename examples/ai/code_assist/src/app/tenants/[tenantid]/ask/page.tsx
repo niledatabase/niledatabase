@@ -153,10 +153,10 @@ export default function Page({
             <Grid md={2} sx={{overflow: 'auto', height:'65vh'}}>
                 <Sidebar files={files} onFileClick={handleFileClick} selectedFiles={selectedFile} llmResponse={llmResponse}/>
             </Grid>
-            <Grid  xs={12} md={5}>
+            <Grid  xs={12} md={4}>
                 <FileViewer llmResponse={llmResponse} content={content} />
             </Grid>
-            <Grid xs={12} md={5}>
+            <Grid xs={12} md={6}>
                 <Chatbox 
                     projectName={projects.find((proj) => proj.id === selectedProject )?.name || ''} 
                     projectId={selectedProject || ''} 

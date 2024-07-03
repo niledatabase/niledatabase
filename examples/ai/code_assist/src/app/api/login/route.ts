@@ -2,6 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import { NileJWTPayload, cookieOptions } from "@/lib/AuthUtils";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { registerTenants } from "@/lib/TenantRegistration";
 import nile from "@/lib/NileServer";
 
 // Note that this route must exist in this exact location for user/password login to work
@@ -21,6 +22,11 @@ export async function POST(req: Request) {
       accessToken: accessToken,
       tokenData: decodedJWT,
     };
+    if (!decodedJWT.sub) {
+      console.log("No user ID in JWT");
+      return new Response("No user ID in JWT", { status: 500 });
+    }
+    await registerTenants(decodedJWT.sub);
     cookies().set("authData", JSON.stringify(cookieData), cookieOptions(3600));
     revalidatePath("/");
     return new Response(JSON.stringify(body), { status: 200 });
