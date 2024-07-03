@@ -46,30 +46,40 @@ export async function POST(req: Request) {
     nile.tenantId = body.tenant_id;
     const project_id = body.project_id;
 
-    // TODO: Do we need to add project_id to the embedding table to avoid the join?
+    /* Using inner product to find the most similar files. Based on suggestions from the OpenAI FAQ:
+    We recommend cosine similarity. The choice of distance function typically doesn’t matter much.
+    OpenAI embeddings are normalized to length 1, which means that:
+    Cosine similarity can be computed slightly faster using just a dot product
+    Cosine similarity and Euclidean distance will result in the identical rankings
+
+    Note that even though we find the 5 nearest embeddings based on inner product, we print all 3 distances for each file for verification purpose.
+    Cosine distance - values between 0 and 2, where 0 is the most similar. 
+    Negative inner product - values between -1 and 1, where -1 is the most similar.
+    Euclidean distance - values between 0 and infinity, where 0 is the most similar.
+    */
     try {
         const query = `
-            SELECT file_id
+            SELECT file_id, file_name, contents, 
+            embedding <=> $2 as cosine_distance, embedding <-> $2 as euclidean_distance, (embedding <#> $2)* -1 as inner_product
             FROM ${EMBEDDING_TABLE}
             JOIN file_content fc ON fc.id = file_id
             WHERE fc.project_id = $1
-            ORDER BY embedding <-> $2
+            ORDER BY (embedding <#> $2)
             LIMIT 5
         `;
 
-        const retrievedFileNames = await nile.db.query(query, [project_id, formattedEmbedding]); // no need to specify tenant_id, as we set the context above
-        const files = retrievedFileNames.rows.map((row: any) => row.file_id);
+        const retrievedFiles = await nile.db.query(query, [project_id, formattedEmbedding]); // no need to specify tenant_id, as we set the context above
         let allContent: string[] = [];
         let fileNames: string[] = [];
         let response = {"files": fileNames, "content": allContent, "answer": ""};
 
         // now we need to read the actual files into a string and send it to the model
         
-        for (const file of files) {
-            const raw = await nile.db.query(`SELECT file_name,contents FROM file_content WHERE id = $1`, [file]);
-            const content = raw.rows[0].contents;
-            const file_name = raw.rows[0].file_name;
-            console.log(`file ${file_name} has ${content.length} characters`);
+        for (const file of retrievedFiles.rows) {
+            const content = file.contents;
+            const file_name = file.file_name;
+            console.log(`file ${file_name} has ${content.length} characters.`);
+            console.log('cosine distance:', file.cosine_distance, 'euclidean distance:', file.euclidean_distance, 'inner product:', file.inner_product);
             response.content.push(content);
             response.files.push(file_name);
         }
