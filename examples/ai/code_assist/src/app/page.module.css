@@ -47,7 +47,7 @@
   max-width: 100%;
   width: var(--max-width);
   justify-content: space-between;
-  padding: 2rem;
+  padding: 6rem;
 }
 
 .card {
