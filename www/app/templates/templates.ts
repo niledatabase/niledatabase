@@ -233,6 +233,22 @@ export const AIChatWithPDF: Template = {
   },
 };
 
+export const CodeAssist: Template = {
+  name: "Multi-tenant Code Assistant built using Nile, pg_vector and OpenAI",
+  description:
+    "Learn how to use Nile as a multi-tenant vector database, for an application that lets you investigate new code-bases via chat.",
+  author: "Nile",
+  demoUrl: "https://code-assist-nile.vercel.app/",
+  imageSrc: "/templates/CodeAssist.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/ai/code_assist/README.md",
+  metadata: {
+    Framework: "OpenAI, pg_vector, LangChain, NextJS",
+    "Use Case": "AI SaaS",
+    Publisher: "Nile",
+  },
+};
+
 /*
 export const placeholderTemplate: Template = {
   // A great name, preferably unique, name for the template
