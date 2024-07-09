@@ -10,12 +10,12 @@ export default async function Page(props: Props) {
     <Container>
       <PageContent
         params={props.params}
-        root={NavigationRoots.UserAuthentication}
+        root={NavigationRoots.UserManagement}
       />
     </Container>
   );
 }
 
 export const generateMetadata = makeMetadata(
-  NavigationRoots.UserAuthentication
+  NavigationRoots.UserManagement
 );

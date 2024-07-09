@@ -2,7 +2,7 @@
 // update buildNavParams as well as this
 export enum NavigationRoots {
   GettingStarted = "getting-started",
-  UserAuthentication = "user-authentication",
+  UserManagement = "user-management",
   UserAuthorization = "user-authorization",
   AI = "ai-embeddings",
   Backups = "backups",
