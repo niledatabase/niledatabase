@@ -7,8 +7,8 @@ type Props = { params: Param };
 export default async function Page(props: Props) {
   return (
     <Container>
-      <PageContent params={props.params} root={NavigationRoots.Tools} />
+      <PageContent params={props.params} root={NavigationRoots.Postgres} />
     </Container>
   );
 }
-export const generateMetadata = makeMetadata(NavigationRoots.Tools);
+export const generateMetadata = makeMetadata(NavigationRoots.Postgres);
