@@ -7,14 +7,8 @@ type Props = { params: Param };
 export default async function Page(props: Props) {
   return (
     <Container>
-      <PageContent
-        params={props.params}
-        root={NavigationRoots.NileInThreeMinutes}
-      />
+      <PageContent params={props.params} root={NavigationRoots.Usecases} />
     </Container>
   );
 }
-
-export const generateMetadata = makeMetadata(
-  NavigationRoots.NileInThreeMinutes
-);
+export const generateMetadata = makeMetadata(NavigationRoots.Usecases);
