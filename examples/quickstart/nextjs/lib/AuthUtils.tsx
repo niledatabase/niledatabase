@@ -1,5 +1,4 @@
 import { JwtPayload } from "jwt-decode";
-import nile from "@/lib/NileServer";
 
 export default interface AuthCookieData {
   accessToken: string | undefined;

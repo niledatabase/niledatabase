@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { configureNile } from "@/lib/NileServer";
 
 export async function createTenant(prevState: any, formData: FormData) {
-  const nile = configureNile(cookies().get("authData"), null);
+  const nile = await configureNile(cookies().get("authData"), null);
   const tenantName = formData.get("tenantname")?.toString();
   if (!tenantName) {
     return { message: "No tenant name provided" };
