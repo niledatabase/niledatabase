@@ -2,10 +2,8 @@
 // update buildNavParams as well as this
 export enum NavigationRoots {
   GettingStarted = "getting-started",
-  NileInThreeMinutes = "nile-in-3-minutes",
   UserAuthentication = "user-authentication",
   UserAuthorization = "user-authorization",
-  TenantIsolation = "tenant-isolation",
   AI = "ai-embeddings",
   Backups = "backups",
   Dashboard = "customer-dashboard",
@@ -16,9 +14,7 @@ export enum NavigationRoots {
   Platform = "platform",
   Reference = "reference",
   Support = "support",
-  TenantManagement = "tenant-management",
-  TenantPlacement = "tenant-placement",
-  TenantSharing = "tenant-sharing",
+  TenantVirtualization = "tenant-virtualization",
   Usecases = "usecases",
   Tools = "tools",
 }

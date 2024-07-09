@@ -10,10 +10,10 @@ export default async function Page(props: Props) {
     <Container>
       <PageContent
         params={props.params}
-        root={NavigationRoots.TenantManagement}
+        root={NavigationRoots.TenantVirtualization}
       />
     </Container>
   );
 }
 
-export const generateMetadata = makeMetadata(NavigationRoots.TenantManagement);
+export const generateMetadata = makeMetadata(NavigationRoots.TenantVirtualization);
