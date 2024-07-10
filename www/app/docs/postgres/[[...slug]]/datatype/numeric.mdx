@@ -15,13 +15,11 @@ Integer types are used to store whole numbers (integers) without any decimal poi
     - **Example**:
         
         ```sql
-        sqlCopy code
         CREATE TABLE example_smallint (
             id SERIAL PRIMARY KEY,
             small_value SMALLINT
         );
         INSERT INTO example_smallint (small_value) VALUES (32767), (-32768);
-        
         ```
         
 - **`INTEGER` (or `INT`)**: A 4-byte integer.
@@ -29,48 +27,38 @@ Integer types are used to store whole numbers (integers) without any decimal poi
     - **Example**:
         
         ```sql
-        sqlCopy code
         CREATE TABLE example_int (
             id SERIAL PRIMARY KEY,
             age INTEGER
         );
         INSERT INTO example_int (age) VALUES (25), (2147483647), (-2147483648);
-        
         ```
         
 - **`BIGINT`**: An 8-byte integer.
     - **Range**: -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
     - **Example**:
-        
         ```sql
-        sqlCopy code
         CREATE TABLE example_bigint (
             id BIGSERIAL PRIMARY KEY,
             large_value BIGINT
         );
         INSERT INTO example_bigint (large_value) VALUES (9223372036854775807), (-9223372036854775808);
-        
         ```
         
 - **`SERIAL`, `BIGSERIAL`, `SMALLSERIAL`**: Auto-incrementing integer types.
     - **`SERIAL`**: 4-byte integer with auto-increment.
-        
         ```sql
-        sqlCopy code
         CREATE TABLE example_serial (
             id SERIAL PRIMARY KEY
         );
-        
         ```
         
     - **`BIGSERIAL`**: 8-byte integer with auto-increment.
         
         ```sql
-        sqlCopy code
         CREATE TABLE example_bigserial (
             id BIGSERIAL PRIMARY KEY
         );
-        
         ```
         
 
@@ -79,19 +67,15 @@ Integer types are used to store whole numbers (integers) without any decimal poi
 - **Arithmetic Operations**:
     
     ```sql
-    sqlCopy code
     SELECT age + 5 FROM example_int;
     SELECT large_value * 2 FROM example_bigint;
-    
     ```
     
 - **Comparison Operations**:
     
     ```sql
-    sqlCopy code
     SELECT * FROM example_int WHERE age > 30;
     SELECT * FROM example_smallint WHERE small_value = 100;
-    
     ```
     
 
@@ -120,13 +104,11 @@ Floating-point types are used to store real numbers, which include fractions (de
     - **Example**:
         
         ```sql
-        sqlCopy code
         CREATE TABLE example_real (
             id SERIAL PRIMARY KEY,
             height REAL
         );
         INSERT INTO example_real (height) VALUES (1.75), (3.14);
-        
         ```
         
 - **`DOUBLE PRECISION`**: An 8-byte double-precision floating-point number.
@@ -134,13 +116,11 @@ Floating-point types are used to store real numbers, which include fractions (de
     - **Example**:
         
         ```sql
-        sqlCopy code
         CREATE TABLE example_double (
             id SERIAL PRIMARY KEY,
             weight DOUBLE PRECISION
         );
         INSERT INTO example_double (weight) VALUES (70.5), (150.75);
-        
         ```
         
 
@@ -149,19 +129,15 @@ Floating-point types are used to store real numbers, which include fractions (de
 - **Arithmetic Operations**:
     
     ```sql
-    sqlCopy code
     SELECT height * 2 FROM example_real;
     SELECT weight / 2 FROM example_double;
-    
     ```
     
 - **Comparison Operations**:
     
     ```sql
-    sqlCopy code
     SELECT * FROM example_double WHERE weight > 70.5;
     SELECT * FROM example_real WHERE height = 1.75;
-    
     ```
     
 
@@ -187,13 +163,11 @@ Exact numeric types are used to store numbers with a fixed number of decimal pla
     - **Example**:
         
         ```sql
-        sqlCopy code
         CREATE TABLE example_numeric (
             id SERIAL PRIMARY KEY,
             price NUMERIC(10, 2)
         );
         INSERT INTO example_numeric (price) VALUES (12345.67), (99999.99);
-        
         ```
         
 
@@ -202,19 +176,15 @@ Exact numeric types are used to store numbers with a fixed number of decimal pla
 - **Arithmetic Operations**:
     
     ```sql
-    sqlCopy code
     SELECT price * 1.1 FROM example_numeric;
     SELECT price + 100 FROM example_numeric;
-    
     ```
     
 - **Comparison Operations**:
     
     ```sql
-    sqlCopy code
     SELECT * FROM example_numeric WHERE price < 100.00;
     SELECT * FROM example_numeric WHERE price = 12345.67;
-    
     ```
     
 
