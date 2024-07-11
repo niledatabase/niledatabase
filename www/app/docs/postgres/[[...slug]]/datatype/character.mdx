@@ -1,0 +1,121 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "Numeric",
+  order: 1,
+};
+When working with strings in PostgreSQL, understanding the available character types is crucial. As a new user, let’s explore these types in more detail.
+
+### 1. `character varying(n)` (or `varchar(n)`)
+
+- **Description:**
+    - Variable-length character type.
+    - Can store strings up to `n` characters (not bytes) in length.
+    - Excess characters beyond the specified length result in an error unless they are spaces (in which case the string is truncated).
+- **Example:**
+    - Suppose we want to create a `users` table to store usernames. First, let’s create the table:
+        
+        ```sql
+        CREATE TABLE users (
+          user_id SERIAL PRIMARY KEY,
+          username VARCHAR(50) -- Define the maximum length (e.g., 50 characters)
+        );
+        
+        ```
+        
+    - Now we can insert a username:
+        
+        ```sql
+        INSERT INTO users (username) VALUES ('alice');
+        
+        ```
+        
+- **Use Case:**
+    - Use `varchar` when you need flexibility in string length, such as for user-generated content.
+
+### 2. `character(n)` (or `char(n)`)
+
+- **Description:**
+    - Fixed-length, blank-padded character type.
+    - Similar to `character varying(n)` but always pads with spaces.
+- **Example:**
+    - Let’s create an `employees` table to store employee IDs:
+        
+        ```sql
+        CREATE TABLE employees (
+          employee_id CHAR(5) -- Define the fixed length (e.g., 5 characters)
+        );
+        
+        ```
+        
+    - Insert an employee ID:
+        
+        ```sql
+        INSERT INTO employees (employee_id) VALUES ('E001');
+        
+        ```
+        
+- **Use Case:**
+    - Use `char` when you require fixed-length strings (e.g., employee IDs).
+
+### 3. `bpchar` (unlimited length, blank-trimmed)
+
+- **Description:**
+    - Similar to `char`, but without a specified length.
+    - Accepts strings of any length, and trailing spaces are insignificant.
+- **Example:**
+    - Create a `products` table for storing product codes:
+        
+        ```sql
+        CREATE TABLE products (
+          product_code BPCHAR -- No specific length defined
+        );
+        
+        ```
+        
+    - Insert a product code:
+        
+        ```sql
+        INSERT INTO products (product_code) VALUES ('P12345');
+        
+        ```
+        
+- **Use Case:**
+    - Use `bpchar` when you want to trim trailing spaces.
+
+### 4. `text` (variable unlimited length)
+
+- **Description:**
+    - PostgreSQL’s native string data type.
+    - Stores strings of any length.
+- **Example:**
+    - Let’s create an `articles` table for storing article content:
+        
+        ```sql
+        CREATE TABLE articles (
+          article_id SERIAL PRIMARY KEY,
+          content TEXT -- No length restriction
+        );
+        
+        ```
+        
+    - Insert article content:
+        
+        ```sql
+        INSERT INTO articles (content) VALUES ('Lorem ipsum dolor sit amet...');
+        
+        ```
+        
+- **Use Case:**
+    - Use `text` for general-purpose text storage.
+
+### Operations and Considerations:
+
+- All character types support standard string functions (e.g., `LENGTH`, `SUBSTRING`, `CONCAT`).
+- Performance considerations:
+    - `text` is the most flexible but may have slightly slower indexing.
+    - Fixed-length types (`char`, `bpchar`) are faster for exact-length lookups.
+- As a new user, start with `text` or `character varying` unless you have specific requirements. Feel free to experiment with different types based on your application needs!
+
+For more detailed information, consult the official [PostgreSQL documentation](https://www.postgresql.org/docs/current/datatype-character.html). If you have further questions, feel free to ask us on our [Discord](https://discord.gg/8UuBB84tTy)!
