@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 const DAY_IN_MS = 86_400_000;
 
 export const checkSubscription = async (tenant_id: string) => {
-  const tenantNile = configureNile(cookies().get("authData"), tenant_id);
+  const tenantNile = await configureNile(cookies().get("authData"), tenant_id);
   console.log(
     "checking subscription info for: " +
       tenantNile.userId +

@@ -11,7 +11,7 @@ interface FileIdPageProps {
 }
 
 const FileIdPage = async ({ params }: FileIdPageProps) => {
-  const tenantNile = configureNile(
+  const tenantNile = await configureNile(
     cookies().get("authData"),
     params.organizationId
   );

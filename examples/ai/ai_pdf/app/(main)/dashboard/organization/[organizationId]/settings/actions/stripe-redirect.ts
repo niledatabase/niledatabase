@@ -24,7 +24,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     };
   }
 
-  const tenantNile = configureNile(user, orgId);
+  const tenantNile = await configureNile(user, orgId);
 
   const settingsUrl = absoluteUrl(`/dashboard/organization/${orgId}`);
 

@@ -55,7 +55,7 @@ const onUploadComplete = async ({
   };
 }) => {
   console.log("metadata in onUploadComplete:", JSON.stringify(metadata));
-  const tenantNile = configureNile(metadata.userInfo, metadata.orgId);
+  const tenantNile = await configureNile(metadata.userInfo, metadata.orgId);
   console.log("1: On upload complete. Trying to get file: ", file.key);
   console.log("file url", file.url);
 

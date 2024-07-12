@@ -18,7 +18,7 @@ export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 const page: FC<pageProps> = async ({}) => {
-  const nile = configureNile(cookies().get("authData"), null);
+  const nile = await configureNile(cookies().get("authData"), null);
   console.log("showing tenants page for user: " + nile.userId);
   if (!nile.userId) {
     redirect("/login");
