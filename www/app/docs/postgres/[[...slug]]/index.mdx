@@ -1,9 +1,62 @@
-# Postgres
+# Indexes
 
 export const metadata = {
-  order: 4,
-  title: "Postgres",
-  description: "Postgres Basics",
+  order: 3,
+  title: "Indexes",
+  description: "Postgres Indexes",
 };
 
+Indexes in PostgreSQL enhance database performance by allowing faster retrieval of specific rows. They work like an index in a book, providing quick references to relevant data. Here are the main index types:
 
+## B-Tree
+
+B-Tree indexes play a crucial role in enhancing database performance by allowing faster retrieval of specific rows. Imagine them as the index pages in a book, providing quick references to relevant data.
+
+![index1](/docs/btree.png)
+
+**1. Structure of B-Tree Indexes:**
+
+- B-tree indexes are organized as balanced tree structures.
+- Each level of the tree acts like a doubly-linked list of pages.
+- The index starts with a metapage at the beginning of the first segment file.
+- All other pages are either leaf pages (the lowest level) or internal pages.
+
+**2. Behavior and Use Cases:**
+
+- B-trees are versatile and widely applicable:
+    - **Equality and Range Queries**: They excel in handling equality and range queries. Common operators include `=`, `<`, `>`, `BETWEEN`, and `IN`.
+    - **NULL Conditions**: B-trees can handle `IS NULL` or `IS NOT NULL` conditions.
+    - **Pattern Matching**: When anchored to the beginning of a string, they efficiently support pattern matching using `LIKE` or `~`.
+
+**3. Practical Examples:**
+Let’s create an example `employees` table and demonstrate B-tree index usage:
+
+```sql
+CREATE TABLE employees (
+    emp_id SERIAL PRIMARY KEY,
+    emp_name VARCHAR(255) NOT NULL,
+    emp_salary NUMERIC(10, 2) NOT NULL
+);
+
+-- Insert some data
+INSERT INTO employees (emp_name, emp_salary) VALUES
+    ('Alice', 60000.00),
+    ('Bob', 75000.00),
+    ('Charlie', 90000.00);
+
+-- Create an index on emp_name
+CREATE INDEX employees_name ON employees(emp_name);
+
+-- Query using the index
+SELECT * FROM employees WHERE emp_name = 'Bob';
+
+```
+
+The output will be:
+
+```
+ emp_id | emp_name | emp_salary
+--------+----------+------------
+      2 | Bob      |   75000.00
+
+```
