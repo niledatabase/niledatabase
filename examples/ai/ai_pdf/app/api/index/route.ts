@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     console.log("Index route uploading and embedding:" + JSON.stringify(data));
-    const tenantNile = configureNile(
+    const tenantNile = await configureNile(
       cookies().get("authData"),
       data.file.tenant_id
     );

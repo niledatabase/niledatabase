@@ -27,7 +27,7 @@ const OrganizationIdPage = async ({
 }: {
   params: { organizationId: string };
 }) => {
-  const tenantNile = configureNile(
+  const tenantNile = await configureNile(
     cookies().get("authData"),
     params.organizationId
   );
