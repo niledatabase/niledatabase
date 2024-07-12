@@ -358,3 +358,77 @@ A GIN index is designed for efficiently handling composite data values, such as 
     - GIN indexes are efficient for array-based queries but may have overhead during updates.
     - Consider the trade-off between query performance and update cost.
     - Regularly vacuum the GIN index to maintain performance.
+
+## BRIN Index
+
+- **BRIN** stands for **Block Range Index**.
+- Designed for handling very large tables with columns that have natural correlation to their physical location within the table.
+- Works in terms of **block ranges** (or “page ranges”).
+- Each block range groups physically adjacent pages in the table.
+- Summary information is stored by the index for each block range.
+- **Lossy**: BRIN indexes can satisfy queries via regular bitmap index scans but are lossy, meaning the query executor rechecks tuples and discards those not matching query conditions.
+- Size of block range determined at index creation time by `pages_per_range` storage parameter.
+
+## Use Cases for BRIN Indexes
+
+1. **Time-Series Data**: Ideal for tables with a timestamp column (e.g., sales orders, logs).
+2. **Geospatial Data**: Useful for tables with spatial data (e.g., ZIP codes, geographical coordinates).
+
+## Example: Employee Table
+
+Let’s create an employee table and demonstrate BRIN index usage.
+
+### 1. Create Employee Table
+
+```sql
+CREATE TABLE employees (
+    emp_id SERIAL PRIMARY KEY,
+    emp_name VARCHAR(100),
+    hire_date DATE
+);
+
+```
+
+### 2. Insert Sample Data
+
+```sql
+INSERT INTO employees (emp_name, hire_date)
+VALUES
+    ('Alice', '2022-01-15'),
+    ('Bob', '2021-03-10'),
+    ('Charlie', '2020-11-20');
+
+```
+
+### 3. Create BRIN Index on `hire_date`
+
+```sql
+CREATE INDEX idx_employees_hire_date_brin
+ON employees USING brin (hire_date);
+
+```
+
+### 4. Query Using BRIN Index
+
+```sql
+-- Find employees hired after 2021-01-01
+SELECT emp_name
+FROM employees
+WHERE hire_date >= '2021-01-01';
+
+```
+
+### Output
+
+```
+ emp_name
+----------
+ Alice
+ Bob
+(2 rows)
+
+```
+
+Remember that BRIN indexes are most effective when dealing with large tables and specific column types.
+
+[For more details, refer to the official PostgreSQL documentation.](https://www.postgresql.org/docs/current/indexes.html)
