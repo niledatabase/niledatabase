@@ -41,7 +41,7 @@ export async function completeTodo(
   complete: boolean
 ) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
-  const tenantNile = configureNile(cookies().get("authData"), tenantId);
+  const tenantNile = await configureNile(cookies().get("authData"), tenantId);
   console.log(
     "updating Todo " +
       id +
