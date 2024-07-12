@@ -35,33 +35,28 @@ npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/ex
 cd nile-todo
 ```
 
-Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name.
-_(Your workspace and database name are displayed in the header of the Nile dashboard.)_
-Also fill in the username and password with the credentials you picked up in the previous step.
+Rename `.env.local.example` to `.env.local`, and fill in the username and password with the 
+credentials you picked up in the previous step.
 
 It should look something like this:
 
 ```bash
+
+# Private env vars that should never show up in the browser
+# These are used by the server to connect to Nile database
+NILE_USER = "0190995c-44ab-7ce3-9aef-31ef87dcd5f0"
+NILE_PASSWORD = "73d32231-1d21-4990-a4f4-g6447507c271"
+
 # Client (public) env vars
 
 # the URL of this example + where the api routes are located
 # Use this to instantiate Nile context for client-side components
-NEXT_PUBLIC_BASE_PATH=http://localhost:3000/api
-NEXT_PUBLIC_WORKSPACE=todoapp_demo
-NEXT_PUBLIC_DATABASE=demo_db_nextjs_qs
-
-# Private env vars that should never show up in the browser
-# These are used by the server to connect to Nile database
-NILE_DB_HOST = "db.thenile.dev"
-NILE_USER = "018ad484-0d52-7274-8639-057814be60c3"
-NILE_PASSWORD = "0d11b8e5-fbbc-4639-be44-8ab72947ec5b"
-
-# The URL of the Nile API
-# Use this to instantiate Nile Server context for server-side use of the "api" SDK
-NEXT_PUBLIC_NILE_API=https://api.thenile.dev
+NEXT_PUBLIC_APP_URL=http://localhost:3000/api
 
 # Uncomment if you want to try Google Auth
+# NEXT_PUBLIC_NILEDB_API_URL=
 # AUTH_TYPE=google
+
 ```
 
 Install dependencies with `yarn install` or `npm install`.
