@@ -6,7 +6,7 @@ chardet==5.2.0
 charset-normalizer==3.3.2
 click==8.1.7
 cookiecutter==2.6.0
-Django==5.0.6
+Django==5.0.7
 django-browser-reload==1.12.1
 django-environ==0.11.2
 idna==3.7
