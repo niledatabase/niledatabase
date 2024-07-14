@@ -20,43 +20,36 @@ The next blog will cover the design and implementation of the AI code assistant.
 
 ## Generative AI
 
-Since everyone is familiar with ChatGPT, it is always a good place to start. ChatGPT is based on GPT, a “Generative pre-trained transformer.”  
-Every word in this short description matters:
+Since everyone is familiar with ChatGPT, it is always a good place to start. ChatGPT is based on GPT, a “Generative pre-trained transformer.” Every word in this short description matters:
 * **Generative:** It creates new content (as opposed to a search engine or a recommendation engine) based on its training.
 * **Pre-trained:** The AI model is already trained on massive amounts of information (most of the internet). This makes ChatGPT (and other GPT models) useful out of 
 the box. But not always the best fit when you want the answers to be based on a specific context, like a single GitHub repository.
 * **Transformer:** This means the model is based on “transformer architecture,” as described in the groundbreaking paper 
-[“Attention is All You Need.”](https://arxiv.org/abs/1706.03762) The architecture is a specialized neural network. I'm not going to even attempt to explain it 
-- but the important idea is that transformers look at the input sentence as a whole and at the relations between the words in the sentence. 
+[“Attention is All You Need.”](https://arxiv.org/abs/1706.03762) The architecture is a specialized neural network. I'm not going to even attempt to explain it - but the important idea is that transformers look at the input sentence as a whole and at the relations between the words in the sentence. 
 And they do it for both the input and the output. This architecture allows ChatGPT to output grammatically correct sentences and 
 to give the impression it “understands” your input. Unlike older generation models, which often took specific words out of context.
 
 The use of models to answer questions or perform other tasks is called **inference**. The question is sometimes called a **prompt** and the response of the model 
 is often called **prediction**. While a ChatGPT response doesn't really predict anything, the term is used because the model is trained to predict the next word
-in a sentence.
-
-Because of the way these models are trained to evaluate the prompt and predict a sentence in response, the way the prompt is phrased can have a big 
-impact on the response. The various techniques of framing questions to models in ways that improve the results are called **prompt engineering**. 
+in a sentence. The way the prompt is phrased can have a big impact on the response. The techniques of framing questions to models are called **prompt engineering**. 
 And this is something that almost everyone that interacts with these models learns rather quickly. The same technique also applies when you develop applications. 
 
-For example, when developing the AI Code Assistant, one of the questions I asked was "How are tenants used in this project?"
-When prompted with "You are a helpful assistant, please answer the question based on the following documents", the model responded with: 
-"Tenants are used in the project to associate todos with specific users or groups. Users can create a new tenant and add tasks specific to that tenant. "
-But when I prompted with: "you are a principal engineer answering questions from other engineers about code projects", the model responded with:
+For example, when developing the AI Code Assistant, one of the questions I asked was "How are tenants used in this project?" When prompted with "You are a helpful assistant, please answer the question based on the following documents", the model responded with: 
 
-"Tenants are used in the project to organize and isolate data for different users or groups. Each tenant has its own set of data stored in the database, 
-such as todos. The relationship between tenants and todos can be seen in the SQL query:
-`select name, title, complete from tenants join todos on tenants.id=todos.tenant_id`
-This query retrieves the todos along with the associated tenant information, demonstrating how data is segmented based on tenants in the application."
+> Tenants are used in the project to associate todos with specific users or groups. Users can create a new tenant and add tasks specific to that tenant.
+
+But when I prompted with: "you are a principal engineer answering questions from other engineers about code projects", the model responded with:
+> Tenants are used in the project to organize and isolate data for different users or groups. Each tenant has its own set of data stored in the database, such as todos. The relationship between tenants and todos can be seen in the SQL query: `select name, title, complete from tenants join todos on tenants.id=todos.tenant_id` This query retrieves the todos along with the associated tenant information, demonstrating how data is segmented based on tenants in the application."
 
 Prompting the model with terms related to software engineering, like "principal engineer" and "code projects", led to a more detailed and accurate response.
 
 The success of GPT gave rise to a large number of similar text-generation models, all based on the transformer architecture. Mistral7B, Llama, Claude, Gemini and many more.
 Since all these models are generative, pre-trained, and based on transformers, they share many of the same strengths and weaknesses, and can be easily interchanged in an AI application. 
-They are often refered to as “GPT models”, "generative models" or "transformer models".
+They are often refered to as “**GPT models**”, "**generative models**" or "**transformer models**".
 
 Worth noting that while the popular text-generation models are based on transformers, there are other types of generative AI models.
-For example, image generation models like Dall-E, StableDiffusion and MidJourney are based on combinations of GANs (Generative Adversarial Networks), diffusion models and transformers. 
+For example, image generation models like Dall-E, StableDiffusion and MidJourney are based on combinations of GANs (Generative Adversarial Networks), 
+diffusion models and transformers. 
 
 The pre-training of GPT-type models is both their strength and their weakness: they know everything, but struggle when you need them to answer only based on specific things. Specific documentation, specific legal information, or a specific code base.
 Their tendency to hallucinate and generate incorrect information is a well-known problem. but it can be mitigated to a large extent.
