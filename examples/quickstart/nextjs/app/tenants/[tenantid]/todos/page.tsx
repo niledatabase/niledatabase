@@ -26,7 +26,10 @@ export default async function Page({
 }) {
   // Here we are getting a connection to a specific tenant database for the current usr
   // if we already got such connection earlier, it will reuse the existing one
-  const tenantNile = await configureNile(cookies().get("authData"), params.tenantid);
+  const tenantNile = await configureNile(
+    cookies().get("authData"),
+    params.tenantid
+  );
 
   console.log(
     "showing todos for user " +

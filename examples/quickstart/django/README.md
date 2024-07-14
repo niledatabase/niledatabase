@@ -34,7 +34,7 @@ In the example, we use Django's contenttype, session and auth applications. Beca
 
 ```sql
 CREATE TABLE "django_content_type" (
-    "id" integer PRIMARY KEY, 
+    "id" integer PRIMARY KEY,
     "app_label" varchar(100) NOT NULL, "model" varchar(100) NOT NULL,
     CONSTRAINT "django_content_type_app_label_model_76bd3d3b_uniq" UNIQUE ("app_label", "model")
 );
@@ -140,7 +140,7 @@ In `todoapp/settings.py` we set up the connection to Nile as a normal Postgres c
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': NILEDB_NAME,                      
+        'NAME': NILEDB_NAME,
         'USER': NILEDB_USER,
         'PASSWORD': NILEDB_PASSWORD,
         'HOST': NILEDB_HOST,
@@ -167,7 +167,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'todoapp.middleware.NileTenantMiddleware', 
+    'todoapp.middleware.NileTenantMiddleware',
 ]
 ```
 
@@ -179,6 +179,6 @@ The authentication backend is defined in `todolist/auth_backends.py` and uses Ni
 By authenticating the user, and then setting the tenant ID and user ID in the connection to Nile, the Middleware achieves two goals:
 
 - Validate that the user has access to the tenant data, at the database level, in every request
-- Every subsequent query will run in the virtual tenant database of the tenant we set. 
-  You can look at `todolist/views/todoitem_views.py` and see that we don't need to filter the todo list by the tenant_id. 
+- Every subsequent query will run in the virtual tenant database of the tenant we set.
+  You can look at `todolist/views/todoitem_views.py` and see that we don't need to filter the todo list by the tenant_id.
   Because we are in this tenant's virtual database, Nile will only return todos for this tenant.

@@ -3,8 +3,6 @@ import { cookies } from "next/headers";
 import { NileJWTPayload, cookieOptions, toCookieData } from "@/lib/AuthUtils";
 import { registerTenants } from "@/lib/TenantRegistration";
 
-
-
 // Google SSO redirect posts Nile's response to this route
 // This route then redirects the user to the appropriate page
 // On failed login, we redirect to the home page with an error message
@@ -54,7 +52,7 @@ async function redirectOnSuccess(formData: FormData): Promise<string> {
       return redirectOnError("No user ID in JWT");
     }
     await registerTenants(user_id);
-    
+
     cookies().set("authData", JSON.stringify(cookieData), cookieOptions(3600));
 
     return "/tenants";

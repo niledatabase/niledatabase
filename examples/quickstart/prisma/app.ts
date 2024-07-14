@@ -3,7 +3,11 @@ import { match } from "path-to-regexp";
 import { Prisma, PrismaClient } from "@prisma/client";
 import expressBasicAuth from "express-basic-auth";
 import { tenantContext } from "./storage";
-import { REQUIRE_AUTH, dbAuthorizer, getUnauthorizedResponse } from "./basicauth";
+import {
+  REQUIRE_AUTH,
+  dbAuthorizer,
+  getUnauthorizedResponse,
+} from "./basicauth";
 import type { tenants } from "@prisma/client";
 
 const PORT = process.env.PORT || 3001;
@@ -80,7 +84,7 @@ app.use((req, res, next) => {
 
 // add basic auth middleware if required
 // we are doing this after setting the tenant context, so we'll have an appropriate connection to the DB
-if(REQUIRE_AUTH) {
+if (REQUIRE_AUTH) {
   app.use(
     expressBasicAuth({
       authorizer: dbAuthorizer,
