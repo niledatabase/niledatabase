@@ -22,20 +22,21 @@ The next blog will cover the design and implementation of the AI code assistant.
 
 Since everyone is familiar with ChatGPT, it is always a good place to start. ChatGPT is based on GPT, a “Generative pre-trained transformer.”  
 Every word in this short description matters:
-* *Generative:* It creates new content (as opposed to a search engine or a recommendation engine) based on its training.
-* *Pre-trained:* The AI model is already trained on massive amounts of information (most of the internet). This makes ChatGPT (and other GPT models) useful out of 
+* **Generative:** It creates new content (as opposed to a search engine or a recommendation engine) based on its training.
+* **Pre-trained:** The AI model is already trained on massive amounts of information (most of the internet). This makes ChatGPT (and other GPT models) useful out of 
 the box. But not always the best fit when you want the answers to be based on a specific context, like a single GitHub repository.
-* *Transformer:* This means the model is based on “transformer architecture,” as described in the groundbreaking paper 
+* **Transformer:** This means the model is based on “transformer architecture,” as described in the groundbreaking paper 
 [“Attention is All You Need.”](https://arxiv.org/abs/1706.03762) The architecture is a specialized neural network. I'm not going to even attempt to explain it 
 - but the important idea is that transformers look at the input sentence as a whole and at the relations between the words in the sentence. 
 And they do it for both the input and the output. This architecture allows ChatGPT to output grammatically correct sentences and 
 to give the impression it “understands” your input. Unlike older generation models, which often took specific words out of context.
 
-The use of models to answer questions or perform other tasks is called *inference*. The question is sometimes called a *prompt* and the response of the model 
-is often called *prediction*. While a ChatGPT response doesn't really predict anything, the term is used because the model is trained to predict the next word in a sentence.
+The use of models to answer questions or perform other tasks is called **inference**. The question is sometimes called a **prompt** and the response of the model 
+is often called **prediction**. While a ChatGPT response doesn't really predict anything, the term is used because the model is trained to predict the next word
+in a sentence.
 
 Because of the way these models are trained to evaluate the prompt and predict a sentence in response, the way the prompt is phrased can have a big 
-impact on the response. The various techniques of framing questions to models in ways that improve the results are called *prompt engineering*. 
+impact on the response. The various techniques of framing questions to models in ways that improve the results are called **prompt engineering**. 
 And this is something that almost everyone that interacts with these models learns rather quickly. The same technique also applies when you develop applications. 
 
 For example, when developing the AI Code Assistant, one of the questions I asked was "How are tenants used in this project?"
@@ -60,9 +61,9 @@ For example, image generation models like Dall-E, StableDiffusion and MidJourney
 The pre-training of GPT-type models is both their strength and their weakness: they know everything, but struggle when you need them to answer only based on specific things. Specific documentation, specific legal information, or a specific code base.
 Their tendency to hallucinate and generate incorrect information is a well-known problem. but it can be mitigated to a large extent.
 
-The two main mechanisms to overcome this weakness are *fine-tuning* and *retrieval-augmented generation (RAG)*:
+The two main mechanisms to overcome this weakness are **fine-tuning** and **retrieval-augmented generation (RAG)**:
 
-* *Fine-tuning:* Fine-tuning is a name for all the methods of training the pre-trained models. This training uses very large data sets of questions and answers 
+* **Fine-tuning:** Fine-tuning is a name for all the methods of training the pre-trained models. This training uses very large data sets of questions and answers 
 (for example, fine-tuning a model to answer questions about coding by training it on StackOverflow and LeetCode data). 
 [HuggingFace maintains a large repository of data sets](https://huggingface.co/datasets), many of which can be used for fine-tuning.
 When you hear about the race to acquire GPUs, it is typically for pre-training or for fine-tuning. Inference and prediction are much less computationally intensive than training. 
@@ -71,7 +72,7 @@ It is recommended to start fine-tuning with low-resources methods and only move 
 One thing to keep in mind if you fine-tune is that you need to track your experiments (iterations, versions, parameters, models) and evaluate the results. This is a non-trivial task, and there are many tools and services that can help you with it.
 
 
-* *RAG*: RAG is a much simpler approach since it can completely avoid additional training. The idea behind RAG is that you can present relevant information 
+* **RAG**: RAG is a much simpler approach since it can completely avoid additional training. The idea behind RAG is that you can present relevant information 
 to the model when prompting it, and ask it to answer questions based on this information. [It has been shown that the use of RAG leads to more accurate responses 
 than the GPT models alone](https://arxiv.org/abs/2005.11401v4). Not surprisingly, the performance of the RAG technique depends on the quality of information 
 you provide to the model. This means that getting highly relevant information to the model is the key problem for RAG. 
@@ -90,9 +91,9 @@ Storing and retrieving methods are highly intertwined since the storage has to b
 
 Before searching texts, we need to prepare the data. The quality of an RAG-based application heavily depends on the ability to retrieve relevant data, 
 so proper preparation is a key part of any RAG application. These preparation steps depend on the data and use case. At a minimum, they involve splitting 
-large documents into smaller ones in a process called *chunking*. 
+large documents into smaller ones in a process called **chunking**. 
 
-*Chunking* is important because you may encounter limits on the input text size and because providing the text generation model with smaller but more relevant 
+**Chunking** is important because you may encounter limits on the input text size and because providing the text generation model with smaller but more relevant 
 chunks works better than providing the model with larger, somewhat relevant chunks. Imagine that I ask you about today's weather. If I handed you a large stack 
 of newspapers, you'd probably have a harder time responding than if I handed you a single page with the weather forecast.  This isn't just common sense; 
 research shows that [AI results degrade with large context windows](https://arxiv.org/abs/2307.03172).
@@ -114,12 +115,12 @@ movie on Netflix, a product on Amazon, or a document on Google Drive.
 
 Today, there are two main types of text search, plus a hybrid approach:
 
-*Full-text search*
+**Full-text search**
 Full-text search is the more traditional approach. Text search algorithms rely on word frequency (how often the word appears in each text vs in general) and 
 lexical similarity (The word “ice cream” is similar to “ice” and “cream” but not to “scoop” and “vanilla”). These algorithms can handle typos, synonyms, 
 partial words, and fuzzy matching. These days, the state-of-the-art text search algorithm is [BM25](https://www.elastic.co/blog/practical-bm25-part-2-the-bm25-algorithm-and-its-variables). 
 
-*Vector search (also called semantic search)*
+**Vector search (also called semantic search)**
 This method uses AI models, based on the transformer architecture, to find documents that are similar in meaning.
 These specially trained transformers (called embedding models or embedders) convert text to a vector. The vector doesn't represent exactly the words in the text
 but rather the semantic meaning of the text. The embedding model is trained on a giant corpus of texts (such as the entire internet), so it has “knowledge” of 
@@ -132,7 +133,7 @@ And at this time we are starting to see specialized embedding models, pre-traine
 legalese or medical jargon. Words like "function", "class" and "variable" will be close to each other in the vector space of a code embedding model, 
 but not in a general english-language model.
 
-*Hybrid*
+**Hybrid**
 In the hybrid approach, you use each method separately to find the closest matching text. Then, you combine the distance score from each method 
 (the combination is typically weighted, and the scores have to be normalized first). Then, you re-rank the results based on the combined score 
 and finally choose the highest-ranking documents based on the combined score. 
@@ -142,14 +143,14 @@ use relevancy scores from each model to re-rank the results themselves.
 Regardless of the method you choose, you will need a data store that can efficiently store and retrieve the vectors or the text based on these methods. Some data 
 stores that specialize in one of the two algorithms, and a few offer both. Postgres happens to have extensions for both vector and text search. 
 
-*Vector databases* (and Postgres with `pg_vector` extension) have an efficient implementation of vector *distance metrics*, so you can order results by distance 
+**Vector databases** (and Postgres with `pg_vector` extension) have an efficient implementation of vector *distance metrics*, so you can order results by distance 
 (also called ranking) or efficiently find vectors within a certain distance of another vector. There are many distance metrics, and different databases support different 
-ones, the most common ones are: *Cosine distance*, the most popular distance metric for text search, and dot product which is more efficient but only works for normalized vectors.
+ones, the most common ones are: **Cosine distance**, the most popular distance metric for text search, and **dot product** which is more efficient but only works for normalized vectors.
 
 In addition, vector databases have indexes that can make searching large collections of vectors even more efficient. These indexes are different from 
 those you are familiar with because they are based on machine learning algorithms.  These algorithms find close vectors very efficiently, even with millions 
-of vectors. But they have accuracy and memory use tradeoffs. Because of the accuracy tradeoffs (also known as *recall tradeoffs*, since it looks like the database 
-“forgot” some of the data), the algorithms used in the indexes are called *ANN - approximate nearest neighbors* (as opposed to *KNN* - the accurate results 
+of vectors. But they have accuracy and memory use tradeoffs. Because of the accuracy tradeoffs (also known as **recall tradeoffs**, since it looks like the database 
+“forgot” some of the data), the algorithms used in the indexes are called **ANN - approximate nearest neighbors** (as opposed to **KNN** - the accurate results 
 you get by fully scanning the vector collection).  Because these indexes use machine learning techniques, creating them is often called training. 
 Just don't get confused: this type of training fundamentally differs from the pre-training or fine-tuning of large language models.
 
@@ -204,7 +205,8 @@ for (const [i, vec] of vectors.entries()) {
 let question_vec = await model.embedDocuments(["Tell me about React"]);
 
 // search for the nearest document by cosine distance of embedding
-let answer_vec = answer_vec = await nile.db.query("select id from embeddings order by embedding<=>$1 limit 1", [JSON.stringify(question_vec[0])]);
+let answer_vec = answer_vec = await nile.db.query("select id from embeddings order by embedding<=>$1 limit 1", 
+[JSON.stringify(question_vec[0])]);
 
 // return the answer:
 console.log("based on your question, this document is relevant: " + documents[answer_vec.rows[0].id] )
@@ -219,14 +221,14 @@ The concepts above will come up again and again as you build AI applications and
 are building AI SaaS - where AI is part of a service that you are offering other companies, you have more problems to worry about. Since Code Assistant 
 was designed as SaaS - we'll discuss our approach to these problems in the implementation blog.
 
-* *Scale and elasticity*: SaaS companies can have anything from 3 customers to 500,000, and there is significant variance between the amounts of storage and compute used by 
+* **Scale and elasticity:** SaaS companies can have anything from 3 customers to 500,000, and there is significant variance between the amounts of storage and compute used by 
 any customer. This makes it quite difficult to scale out the database, and even more so when combining traditional OLTP storage with vector store - each with 
 its own memory and compute demands. Embeddings can grow large really fast, since each customer brings their own data set - of unknown side and quality. We have 
 to figure out how to scale the database as the number of customers and the dataset of individual customers grow.
-* *Latency*: In many SaaS applications, latency is critical. Good examples of this are Github Co-Pilot and Grammarly. These apps need to keep up with human 
+* **Latency:** In many SaaS applications, latency is critical. Good examples of this are Github Co-Pilot and Grammarly. These apps need to keep up with human 
 typing speed, otherwise their suggestions are useless. There are many places to reduce latency - efficient indexing, smart provisioning of memory and compute, 
 and the most underrated of all - placing the data close to the customer, to minimize network latency. 
-* *Fine-tuning:* Not every SaaS requires fine-tuning of models, but those who do must be very careful around use of their customer's data for such this. 
+* **Fine-tuning:** Not every SaaS requires fine-tuning of models, but those who do must be very careful around use of their customer's data for such this. 
 The risk of a single model accidentally revealing data of one customer to another because data from both customers was used in training is high - and SaaS 
 customers are quite savvy about these risks. Fine tuning is already one of the most challenging aspects of AI applications, adding the challenges of protecting 
 customer's data - and you have potential for either great trouble or great competitive advantage - depending on how you approach this.
