@@ -1,7 +1,7 @@
 export const metadata = {
   title: "Everything a developer needs to know about Generative AI for SaaS",
   authors: ["gwenshap"],
-  image: "TBD",
+  image: "2024-07-13-all-about-ai/cover.webp",
   sizzle:
     "Everyone talks about generative AI - but do you actually understand every word? I got a bit tired of digging through papers just to understand common terminology and decided to write a blog post that explains everything you need to know about generative AI for SaaS.",
   tags: ["ai", "generative", "rag", "embedding", "vector"],
@@ -49,9 +49,8 @@ The success of GPT gave rise to a large number of similar text-generation models
 Since all these models are generative, pre-trained, and based on transformers, they share many of the same strengths and weaknesses, and can be easily interchanged in an AI application.
 They are often refered to as “**GPT models**”, "**generative models**" or "**transformer models**".
 
-Worth noting that while the popular text-generation models are based on transformers, there are other types of generative AI models.
-For example, image generation models like Dall-E, StableDiffusion and MidJourney are based on combinations of GANs (Generative Adversarial Networks),
-diffusion models and transformers.
+In addition to the text-generation models, that are based on transformers, there are other types of generative AI models. For example, image generation models like Dall-E, StableDiffusion and MidJourney are based on different combinations of GANs (Generative Adversarial Networks),
+diffusion models and transformers. This blog and the next in the series will focus on transformer-based generative models
 
 The pre-training of GPT-type models is both their strength and their weakness: they know everything, but struggle when you need them to answer only based on specific things. Specific documentation, specific legal information, or a specific code base.
 Their tendency to hallucinate and generate incorrect information is a well-known problem. but it can be mitigated to a large extent.
@@ -152,10 +151,14 @@ Since every SaaS, including AI Code Assistant, needs much information besides em
 the vector embedding extension for Postgres, especially attractive. Pg_vector is trivial to use, but when performance, scalability, and tenant isolation matter,
 there are some nuances that you should consider. We'll cover these in the next blog when we discuss implementation details of our Code Assistant example.
 
+Putting together the data preparation, storage, and retrieval methods with the generative model in order to have an informed conversation with a generative model
+ is **retrieval-augmented generation (RAG)**. The general architecture of RAG-based application is illustrated in the figure below: 
+
+![RAG Architecture](2024-07-13-all-about-ai/rag-architecture.webp)
+
 ## RAG in Action
 
-I promise to show you a full example of how all these concepts work when we dive into the Code Assistant in the next blog post.
-But lets peek now at a small example of how RAG works, so you are not left with just theory:
+In the next blog post, I'll show you how I put all these concepts together to build the AI Code Assistant, but meanwhile, lets peek now at a small example of how RAG works, so you are not left with just theory:
 
 ```javascript
 const { OpenAIEmbeddings } = await import("@langchain/openai");
