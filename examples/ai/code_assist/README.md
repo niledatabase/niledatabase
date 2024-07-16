@@ -1,10 +1,10 @@
 # CodeAssist - Use OpenAI and Nile to answer questions about popular code projects
 
 This template shows how to use Nile as a multi-tenant vector database, for an application that lets you investigate new code-bases via chat.
-We generate and store embeddings for interesting projects in advance, and then when a user asks a question, we retrieve relevant code snippets and provide them to the LLM as context. 
-We then use streaming APIs to show the LLM response to the user. 
+We generate and store embeddings for interesting projects in advance, and then when a user asks a question, we retrieve relevant code snippets and provide them to the LLM as context.
+We then use streaming APIs to show the LLM response to the user.
 
-Because of Nile's virtual tenant databases, the retrieved code snippets will only be from the tenant the user selected, 
+Because of Nile's virtual tenant databases, the retrieved code snippets will only be from the tenant the user selected,
 and Nile validates that the user has permissions to view this tenant's data. No risk of accidentally retrieving code that belongs to the wrong tenant.
 
 - [Live demo](https://code-assist-nile.vercel.app/)
@@ -26,7 +26,7 @@ After you created a database, you will land in Nile's query editor. Create the f
                 tenant_id UUID ,
                 id UUID DEFAULT gen_random_uuid (),
                 file_id UUID,
-                embedding  vector(1024) NOT NULL, 
+                embedding  vector(1024) NOT NULL,
                 primary key (tenant_id, id)
             );
 ```
@@ -36,10 +36,10 @@ We also need somewhere to store the code itself. It doesn't have to be Postgres 
 ```sql
             CREATE TABLE IF NOT EXISTS file_content (
                 tenant_id UUID ,
-                project_id UUID, 
+                project_id UUID,
                 id UUID DEFAULT gen_random_uuid (),
-                file_name VARCHAR(255) NOT NULL, 
-                contents  TEXT NOT NULL, 
+                file_name VARCHAR(255) NOT NULL,
+                contents  TEXT NOT NULL,
                 primary key (tenant_id, project_id, id)
             );
 ```
@@ -63,7 +63,7 @@ You can also explore the schema in the "Schema Visualizer"
 ### 3. Getting Nile Credentials
 
 In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
-In addition, you'll need the API URL. You'll find it under "Settings" in the "General" page. 
+In addition, you'll need the API URL. You'll find it under "Settings" in the "General" page.
 
 ### 4. Third party dependencies
 
@@ -106,7 +106,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 If all went well, your browser should show you the first page in the app, asking you to login or sign up.
 
-After you sign up as a user of this example app, you'll be able to see this user by going back to Nile Console and running `select * from users` in the query editor. 
+After you sign up as a user of this example app, you'll be able to see this user by going back to Nile Console and running `select * from users` in the query editor.
 
 Once you choose a tenant, you can select a project, browse files, and most important - ask our CodeAssist any question about the projects you embedded.
 
@@ -124,6 +124,3 @@ To learn more about how this example works and how to use Nile:
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-
-

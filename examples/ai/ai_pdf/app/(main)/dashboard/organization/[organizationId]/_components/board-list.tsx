@@ -26,7 +26,10 @@ export const BoardList = async ({
 }: {
   organizationId: string;
 }) => {
-  const tenantNile = await configureNile(cookies().get("authData"), organizationId);
+  const tenantNile = await configureNile(
+    cookies().get("authData"),
+    organizationId
+  );
   const files = await tenantNile.db.query("select * from file"); // no need for "where" clause since we are connecting to tenant db
   console.log("Number of files reported by board component:" + files.rowCount);
 

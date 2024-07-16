@@ -35,7 +35,7 @@ npx create-next-app -e https://github.com/niledatabase/niledatabase/tree/main/ex
 cd nile-todo
 ```
 
-Rename `.env.local.example` to `.env.local`, and fill in the username and password with the 
+Rename `.env.local.example` to `.env.local`, and fill in the username and password with the
 credentials you picked up in the previous step.
 
 It should look something like this:
