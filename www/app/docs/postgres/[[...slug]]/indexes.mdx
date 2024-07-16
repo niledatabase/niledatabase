@@ -301,6 +301,7 @@ A GIN index is designed for efficiently handling composite data values, such as 
 3. **Example 1: Basic Query Using GIN Index**
 
 - Suppose we have an `employees` table with a column `skills` (an array of skills). Let’s create an `employees` table:
+
   ```sql
   CREATE TABLE employees (
       id SERIAL PRIMARY KEY,
@@ -309,7 +310,9 @@ A GIN index is designed for efficiently handling composite data values, such as 
   );
 
   ```
+
 - Insert some data:
+
   ```sql
   INSERT INTO employees (name, skills)
   VALUES
@@ -317,31 +320,42 @@ A GIN index is designed for efficiently handling composite data values, such as 
       ('Bob', ARRAY['Python', 'JavaScript']);
 
   ```
+
 - To create a GIN index on the `skills` column:
   ```sql
   CREATE INDEX idx_gin_skills ON employees USING gin(skills);
   ```
 - Query using the GIN index:
+
   ```sql
   SELECT name FROM employees WHERE skills @> ARRAY['Java'];
 
   ```
+
 - Output: `Alice`
 
 1. **Example 2: Searching for Multiple Skills**
+
    - Query to find employees with both Java and SQL skills:
+
      ```sql
      SELECT name FROM employees WHERE skills @> ARRAY['Java', 'SQL'];
 
      ```
+
    - Output: `Alice`
+
 2. **Example 3: Partial Match**
+
    - Query to find employees with any of the specified skills:
+
      ```sql
      SELECT name FROM employees WHERE skills && ARRAY['Python', 'JavaScript'];
 
      ```
+
    - Output: `Bob`
+
 3. **Performance Considerations:**
    - GIN indexes are efficient for array-based queries but may have overhead during updates.
    - Consider the trade-off between query performance and update cost.

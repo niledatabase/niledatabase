@@ -17,7 +17,9 @@ When working with strings in PostgreSQL, understanding the available character t
   - Can store strings up to `n` characters (not bytes) in length.
   - Excess characters beyond the specified length result in an error unless they are spaces (in which case the string is truncated).
 - **Example:**
+
   - Suppose we want to create a `users` table to store usernames. First, let’s create the table:
+
     ```sql
     CREATE TABLE users (
       user_id SERIAL PRIMARY KEY,
@@ -25,11 +27,14 @@ When working with strings in PostgreSQL, understanding the available character t
     );
 
     ```
+
   - Now we can insert a username:
+
     ```sql
     INSERT INTO users (username) VALUES ('alice');
 
     ```
+
 - **Use Case:**
   - Use `varchar` when you need flexibility in string length, such as for user-generated content.
 
@@ -39,18 +44,23 @@ When working with strings in PostgreSQL, understanding the available character t
   - Fixed-length, blank-padded character type.
   - Similar to `character varying(n)` but always pads with spaces.
 - **Example:**
+
   - Let’s create an `employees` table to store employee IDs:
+
     ```sql
     CREATE TABLE employees (
       employee_id CHAR(5) -- Define the fixed length (e.g., 5 characters)
     );
 
     ```
+
   - Insert an employee ID:
+
     ```sql
     INSERT INTO employees (employee_id) VALUES ('E001');
 
     ```
+
 - **Use Case:**
   - Use `char` when you require fixed-length strings (e.g., employee IDs).
 
@@ -60,18 +70,23 @@ When working with strings in PostgreSQL, understanding the available character t
   - Similar to `char`, but without a specified length.
   - Accepts strings of any length, and trailing spaces are insignificant.
 - **Example:**
+
   - Create a `products` table for storing product codes:
+
     ```sql
     CREATE TABLE products (
       product_code BPCHAR -- No specific length defined
     );
 
     ```
+
   - Insert a product code:
+
     ```sql
     INSERT INTO products (product_code) VALUES ('P12345');
 
     ```
+
 - **Use Case:**
   - Use `bpchar` when you want to trim trailing spaces.
 
@@ -81,7 +96,9 @@ When working with strings in PostgreSQL, understanding the available character t
   - PostgreSQL’s native string data type.
   - Stores strings of any length.
 - **Example:**
+
   - Let’s create an `articles` table for storing article content:
+
     ```sql
     CREATE TABLE articles (
       article_id SERIAL PRIMARY KEY,
@@ -89,11 +106,14 @@ When working with strings in PostgreSQL, understanding the available character t
     );
 
     ```
+
   - Insert article content:
+
     ```sql
     INSERT INTO articles (content) VALUES ('Lorem ipsum dolor sit amet...');
 
     ```
+
 - **Use Case:**
   - Use `text` for general-purpose text storage.
 
