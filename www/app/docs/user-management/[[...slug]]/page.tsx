@@ -16,6 +16,4 @@ export default async function Page(props: Props) {
   );
 }
 
-export const generateMetadata = makeMetadata(
-  NavigationRoots.UserManagement
-);
+export const generateMetadata = makeMetadata(NavigationRoots.UserManagement);
