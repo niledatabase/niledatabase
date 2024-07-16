@@ -24,9 +24,9 @@ B-Tree indexes play a crucial role in enhancing database performance by allowing
 **2. Behavior and Use Cases:**
 
 - B-trees are versatile and widely applicable:
-    - **Equality and Range Queries**: They excel in handling equality and range queries. Common operators include `=`, `<`, `>`, `BETWEEN`, and `IN`.
-    - **NULL Conditions**: B-trees can handle `IS NULL` or `IS NOT NULL` conditions.
-    - **Pattern Matching**: When anchored to the beginning of a string, they efficiently support pattern matching using `LIKE` or `~`.
+  - **Equality and Range Queries**: They excel in handling equality and range queries. Common operators include `=`, `<`, `>`, `BETWEEN`, and `IN`.
+  - **NULL Conditions**: B-trees can handle `IS NULL` or `IS NOT NULL` conditions.
+  - **Pattern Matching**: When anchored to the beginning of a string, they efficiently support pattern matching using `LIKE` or `~`.
 
 **3. Practical Examples:**
 Let’s create an example `employees` table and demonstrate B-tree index usage:
@@ -63,23 +63,22 @@ The output will be:
 
 ## Hash Index
 
-
 Hash indexes use a hash function to map indexed column values to 32-bit hash codes. These indexes are optimized for simple equality comparisons (using the `=` operator). Here’s how they work:
 
 ![index2](/docs/hash.png)
 
 1. **Structure**:
-    - Hash indexes store only the hash value of the data being indexed.
-    - No restrictions on the size of the indexed column.
-    - Support only single-column indexes.
-    - Do not allow uniqueness checking.
+   - Hash indexes store only the hash value of the data being indexed.
+   - No restrictions on the size of the indexed column.
+   - Support only single-column indexes.
+   - Do not allow uniqueness checking.
 2. **Use Cases**:
-    - Ideal for scenarios where exact matches are common.
-    - Not suitable for range queries or pattern matching.
+   - Ideal for scenarios where exact matches are common.
+   - Not suitable for range queries or pattern matching.
 3. **Performance Considerations**:
-    - Fast for equality lookups.
-    - Minimal overhead during data insertion.
-    - Not automatically maintained (unlike B-tree indexes).
+   - Fast for equality lookups.
+   - Minimal overhead during data insertion.
+   - Not automatically maintained (unlike B-tree indexes).
 
 ## Example: Employees Table
 
@@ -132,46 +131,45 @@ Let’s explore some examples using tables related to employees. We’ll create 
 Suppose we have an `employees` table with a `location` column representing the employees’ office locations (stored as geometric points). We want to efficiently query employees based on their proximity to a specific location.
 
 1. **Table Creation**:
-    
-    ```sql
-    CREATE TABLE employees (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(100),
-        location POINT
-    );
-    
-    ```
-    
+
+   ```sql
+   CREATE TABLE employees (
+       id SERIAL PRIMARY KEY,
+       name VARCHAR(100),
+       location POINT
+   );
+
+   ```
+
 2. **Insert Data**:
-    
-    ```sql
-    INSERT INTO employees (name, location)
-    VALUES
-        ('Alice', POINT(1, 2)),
-        ('Bob', POINT(3, 4)),
-        -- ... (more data)
-    ;
-    
-    ```
-    
+
+   ```sql
+   INSERT INTO employees (name, location)
+   VALUES
+       ('Alice', POINT(1, 2)),
+       ('Bob', POINT(3, 4)),
+       -- ... (more data)
+   ;
+
+   ```
+
 3. **Create GiST Index**:
-    
-    ```sql
-    CREATE INDEX idx_location ON employees USING GIST (location);
-    
-    ```
-    
+
+   ```sql
+   CREATE INDEX idx_location ON employees USING GIST (location);
+
+   ```
+
 4. **Query Using Index**:
-    
-    ```sql
-    SELECT name
-    FROM employees
-    WHERE location <-> POINT(2, 3) < 1;
-    
-    ```
-    
-    This query retrieves employees within 1 unit of distance from the point (2, 3).
-    
+
+   ```sql
+   SELECT name
+   FROM employees
+   WHERE location <-> POINT(2, 3) < 1;
+
+   ```
+
+   This query retrieves employees within 1 unit of distance from the point (2, 3).
 
 ## Performance Considerations
 
@@ -184,12 +182,12 @@ SP-GiST (Spatial Generalized Search Tree) indexes are a versatile index type off
 
 1. **Infrastructure**: SP-GiST indexes support various kinds of searches, similar to GiST indexes. [They permit the implementation of a wide range of different non-balanced disk-based data structures, such as quadtrees, k-d trees, and radix trees (tries) 1](https://www.postgresql.org/docs/current/spgist.html).
 2. **Use Cases**:
-    - **Geometric Searches**: SP-GiST is ideal for spatial data, such as points, lines, and polygons.
-    - **IP Network Searches**: When dealing with IP addresses or network ranges.
-    - [**Text Search with Complex Pattern Matching**: For scenarios where you need to search for patterns within text data](https://www.postgresql.org/docs/current/spgist.html) [2](https://roadmap.sh/postgresql-dba/sql-optimization-techniques/indexes-usecases/sp-gist).
+   - **Geometric Searches**: SP-GiST is ideal for spatial data, such as points, lines, and polygons.
+   - **IP Network Searches**: When dealing with IP addresses or network ranges.
+   - [**Text Search with Complex Pattern Matching**: For scenarios where you need to search for patterns within text data](https://www.postgresql.org/docs/current/spgist.html) [2](https://roadmap.sh/postgresql-dba/sql-optimization-techniques/indexes-usecases/sp-gist).
 3. **Performance Considerations**:
-    - SP-GiST indexes are most useful for data that has a natural clustering element and is not an equally balanced tree.
-    - [They work well with data types that don’t fit neatly into rectangular shapes, like GIS (geospatial), multimedia, phone routing, and IP routing data 3](https://www.postgresqltutorial.com/postgresql-indexes/postgresql-index-types/).
+   - SP-GiST indexes are most useful for data that has a natural clustering element and is not an equally balanced tree.
+   - [They work well with data types that don’t fit neatly into rectangular shapes, like GIS (geospatial), multimedia, phone routing, and IP routing data 3](https://www.postgresqltutorial.com/postgresql-indexes/postgresql-index-types/).
 
 ## Example: Employee Table
 
@@ -267,7 +265,7 @@ VALUES
     ('Router A', '192.168.1.0/24'),
     ('Switch B', '10.0.0.0/16'),
     ('Firewall C', '172.16.0.0/20');
-    
+
 CREATE INDEX idx_ip_range ON network_devices USING spgist (ip_range);
 ```
 
@@ -293,71 +291,61 @@ Router A
 A GIN index is designed for efficiently handling composite data values, such as arrays or JSON objects. Here are the key points:
 
 1. **What is a GIN Index?**
-    - A GIN index stores a set of `(key, posting list)` pairs.
-    - The posting list contains row IDs where the key occurs.
-    - Multiple posting lists can share the same row ID since an item can have multiple keys.
-    - [Each key value is stored only once, making GIN indexes compact when the same key appears multiple times](https://www.postgresql.org/docs/current/gin-intro.html).
+   - A GIN index stores a set of `(key, posting list)` pairs.
+   - The posting list contains row IDs where the key occurs.
+   - Multiple posting lists can share the same row ID since an item can have multiple keys.
+   - [Each key value is stored only once, making GIN indexes compact when the same key appears multiple times](https://www.postgresql.org/docs/current/gin-intro.html).
 2. **Use Cases for GIN Indexes:**
-    - GIN indexes are ideal for data values with multiple components, like arrays.
-    - [They efficiently handle queries that search for specific component values within composite items](https://www.postgresql.org/docs/current/gin-intro.html).
+   - GIN indexes are ideal for data values with multiple components, like arrays.
+   - [They efficiently handle queries that search for specific component values within composite items](https://www.postgresql.org/docs/current/gin-intro.html).
 3. **Example 1: Basic Query Using GIN Index**
+
 - Suppose we have an `employees` table with a column `skills` (an array of skills). Let’s create an `employees` table:
-    
-    ```sql
-    CREATE TABLE employees (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(100),
-        skills TEXT[] -- Array of skills
-    );
-    
-    ```
-    
+  ```sql
+  CREATE TABLE employees (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(100),
+      skills TEXT[] -- Array of skills
+  );
+
+  ```
 - Insert some data:
-    
-    ```sql
-    INSERT INTO employees (name, skills)
-    VALUES
-        ('Alice', ARRAY['Java', 'SQL']),
-        ('Bob', ARRAY['Python', 'JavaScript']);
-    
-    ```
-    
+  ```sql
+  INSERT INTO employees (name, skills)
+  VALUES
+      ('Alice', ARRAY['Java', 'SQL']),
+      ('Bob', ARRAY['Python', 'JavaScript']);
+
+  ```
 - To create a GIN index on the `skills` column:
-    
-    ```sql
-    CREATE INDEX idx_gin_skills ON employees USING gin(skills);
-    ```
-    
+  ```sql
+  CREATE INDEX idx_gin_skills ON employees USING gin(skills);
+  ```
 - Query using the GIN index:
-    
-    ```sql
-    SELECT name FROM employees WHERE skills @> ARRAY['Java'];
-    
-    ```
-    
+  ```sql
+  SELECT name FROM employees WHERE skills @> ARRAY['Java'];
+
+  ```
 - Output: `Alice`
+
 1. **Example 2: Searching for Multiple Skills**
-    - Query to find employees with both Java and SQL skills:
-        
-        ```sql
-        SELECT name FROM employees WHERE skills @> ARRAY['Java', 'SQL'];
-        
-        ```
-        
-    - Output: `Alice`
+   - Query to find employees with both Java and SQL skills:
+     ```sql
+     SELECT name FROM employees WHERE skills @> ARRAY['Java', 'SQL'];
+
+     ```
+   - Output: `Alice`
 2. **Example 3: Partial Match**
-    - Query to find employees with any of the specified skills:
-        
-        ```sql
-        SELECT name FROM employees WHERE skills && ARRAY['Python', 'JavaScript'];
-        
-        ```
-        
-    - Output: `Bob`
+   - Query to find employees with any of the specified skills:
+     ```sql
+     SELECT name FROM employees WHERE skills && ARRAY['Python', 'JavaScript'];
+
+     ```
+   - Output: `Bob`
 3. **Performance Considerations:**
-    - GIN indexes are efficient for array-based queries but may have overhead during updates.
-    - Consider the trade-off between query performance and update cost.
-    - Regularly vacuum the GIN index to maintain performance.
+   - GIN indexes are efficient for array-based queries but may have overhead during updates.
+   - Consider the trade-off between query performance and update cost.
+   - Regularly vacuum the GIN index to maintain performance.
 
 ## BRIN Index
 

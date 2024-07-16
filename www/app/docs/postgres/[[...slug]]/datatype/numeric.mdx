@@ -15,73 +15,61 @@ Integer types are used to store whole numbers (integers) without any decimal poi
 ### Subtypes and Examples:
 
 - **`SMALLINT`**: A 2-byte integer.
-    - **Range**: -32,768 to 32,767
-    - **Example**:
-        
-        ```sql
-        CREATE TABLE example_smallint (
-            id SERIAL PRIMARY KEY,
-            small_value SMALLINT
-        );
-        INSERT INTO example_smallint (small_value) VALUES (32767), (-32768);
-        ```
-        
+  - **Range**: -32,768 to 32,767
+  - **Example**:
+    ```sql
+    CREATE TABLE example_smallint (
+        id SERIAL PRIMARY KEY,
+        small_value SMALLINT
+    );
+    INSERT INTO example_smallint (small_value) VALUES (32767), (-32768);
+    ```
 - **`INTEGER` (or `INT`)**: A 4-byte integer.
-    - **Range**: -2,147,483,648 to 2,147,483,647
-    - **Example**:
-        
-        ```sql
-        CREATE TABLE example_int (
-            id SERIAL PRIMARY KEY,
-            age INTEGER
-        );
-        INSERT INTO example_int (age) VALUES (25), (2147483647), (-2147483648);
-        ```
-        
+  - **Range**: -2,147,483,648 to 2,147,483,647
+  - **Example**:
+    ```sql
+    CREATE TABLE example_int (
+        id SERIAL PRIMARY KEY,
+        age INTEGER
+    );
+    INSERT INTO example_int (age) VALUES (25), (2147483647), (-2147483648);
+    ```
 - **`BIGINT`**: An 8-byte integer.
-    - **Range**: -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
-    - **Example**:
-        ```sql
-        CREATE TABLE example_bigint (
-            id BIGSERIAL PRIMARY KEY,
-            large_value BIGINT
-        );
-        INSERT INTO example_bigint (large_value) VALUES (9223372036854775807), (-9223372036854775808);
-        ```
-        
+  - **Range**: -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
+  - **Example**:
+    ```sql
+    CREATE TABLE example_bigint (
+        id BIGSERIAL PRIMARY KEY,
+        large_value BIGINT
+    );
+    INSERT INTO example_bigint (large_value) VALUES (9223372036854775807), (-9223372036854775808);
+    ```
 - **`SERIAL`, `BIGSERIAL`, `SMALLSERIAL`**: Auto-incrementing integer types.
-    - **`SERIAL`**: 4-byte integer with auto-increment.
-        ```sql
-        CREATE TABLE example_serial (
-            id SERIAL PRIMARY KEY
-        );
-        ```
-        
-    - **`BIGSERIAL`**: 8-byte integer with auto-increment.
-        
-        ```sql
-        CREATE TABLE example_bigserial (
-            id BIGSERIAL PRIMARY KEY
-        );
-        ```
-        
+  - **`SERIAL`**: 4-byte integer with auto-increment.
+    ```sql
+    CREATE TABLE example_serial (
+        id SERIAL PRIMARY KEY
+    );
+    ```
+  - **`BIGSERIAL`**: 8-byte integer with auto-increment.
+    ```sql
+    CREATE TABLE example_bigserial (
+        id BIGSERIAL PRIMARY KEY
+    );
+    ```
 
 ### Operations:
 
 - **Arithmetic Operations**:
-    
-    ```sql
-    SELECT age + 5 FROM example_int;
-    SELECT large_value * 2 FROM example_bigint;
-    ```
-    
+  ```sql
+  SELECT age + 5 FROM example_int;
+  SELECT large_value * 2 FROM example_bigint;
+  ```
 - **Comparison Operations**:
-    
-    ```sql
-    SELECT * FROM example_int WHERE age > 30;
-    SELECT * FROM example_smallint WHERE small_value = 100;
-    ```
-    
+  ```sql
+  SELECT * FROM example_int WHERE age > 30;
+  SELECT * FROM example_smallint WHERE small_value = 100;
+  ```
 
 ### Performance Considerations:
 
@@ -104,46 +92,38 @@ Floating-point types are used to store real numbers, which include fractions (de
 ### Subtypes and Examples:
 
 - **`REAL`**: A 4-byte single-precision floating-point number.
-    - **Range**: Approximately ±3.40282347E+38 (7 decimal digits precision)
-    - **Example**:
-        
-        ```sql
-        CREATE TABLE example_real (
-            id SERIAL PRIMARY KEY,
-            height REAL
-        );
-        INSERT INTO example_real (height) VALUES (1.75), (3.14);
-        ```
-        
+  - **Range**: Approximately ±3.40282347E+38 (7 decimal digits precision)
+  - **Example**:
+    ```sql
+    CREATE TABLE example_real (
+        id SERIAL PRIMARY KEY,
+        height REAL
+    );
+    INSERT INTO example_real (height) VALUES (1.75), (3.14);
+    ```
 - **`DOUBLE PRECISION`**: An 8-byte double-precision floating-point number.
-    - **Range**: Approximately ±1.7976931348623157E+308 (15 decimal digits precision)
-    - **Example**:
-        
-        ```sql
-        CREATE TABLE example_double (
-            id SERIAL PRIMARY KEY,
-            weight DOUBLE PRECISION
-        );
-        INSERT INTO example_double (weight) VALUES (70.5), (150.75);
-        ```
-        
+  - **Range**: Approximately ±1.7976931348623157E+308 (15 decimal digits precision)
+  - **Example**:
+    ```sql
+    CREATE TABLE example_double (
+        id SERIAL PRIMARY KEY,
+        weight DOUBLE PRECISION
+    );
+    INSERT INTO example_double (weight) VALUES (70.5), (150.75);
+    ```
 
 ### Operations:
 
 - **Arithmetic Operations**:
-    
-    ```sql
-    SELECT height * 2 FROM example_real;
-    SELECT weight / 2 FROM example_double;
-    ```
-    
+  ```sql
+  SELECT height * 2 FROM example_real;
+  SELECT weight / 2 FROM example_double;
+  ```
 - **Comparison Operations**:
-    
-    ```sql
-    SELECT * FROM example_double WHERE weight > 70.5;
-    SELECT * FROM example_real WHERE height = 1.75;
-    ```
-    
+  ```sql
+  SELECT * FROM example_double WHERE weight > 70.5;
+  SELECT * FROM example_real WHERE height = 1.75;
+  ```
 
 ### Performance Considerations:
 
@@ -163,34 +143,28 @@ Exact numeric types are used to store numbers with a fixed number of decimal pla
 ### Subtypes and Examples:
 
 - **`NUMERIC` (or `DECIMAL`)**: Stores exact numbers with an arbitrary precision.
-    - **Range**: Specified by `NUMERIC(p, s)` where `p` is the total number of digits and `s` is the number of digits to the right of the decimal point.
-    - **Example**:
-        
-        ```sql
-        CREATE TABLE example_numeric (
-            id SERIAL PRIMARY KEY,
-            price NUMERIC(10, 2)
-        );
-        INSERT INTO example_numeric (price) VALUES (12345.67), (99999.99);
-        ```
-        
+  - **Range**: Specified by `NUMERIC(p, s)` where `p` is the total number of digits and `s` is the number of digits to the right of the decimal point.
+  - **Example**:
+    ```sql
+    CREATE TABLE example_numeric (
+        id SERIAL PRIMARY KEY,
+        price NUMERIC(10, 2)
+    );
+    INSERT INTO example_numeric (price) VALUES (12345.67), (99999.99);
+    ```
 
 ### Operations:
 
 - **Arithmetic Operations**:
-    
-    ```sql
-    SELECT price * 1.1 FROM example_numeric;
-    SELECT price + 100 FROM example_numeric;
-    ```
-    
+  ```sql
+  SELECT price * 1.1 FROM example_numeric;
+  SELECT price + 100 FROM example_numeric;
+  ```
 - **Comparison Operations**:
-    
-    ```sql
-    SELECT * FROM example_numeric WHERE price < 100.00;
-    SELECT * FROM example_numeric WHERE price = 12345.67;
-    ```
-    
+  ```sql
+  SELECT * FROM example_numeric WHERE price < 100.00;
+  SELECT * FROM example_numeric WHERE price = 12345.67;
+  ```
 
 ### Performance Considerations:
 
@@ -208,15 +182,15 @@ Exact numeric types are used to store numbers with a fixed number of decimal pla
 Here’s a quick summary of the PostgreSQL numeric types covered:
 
 - **Integer Types**:
-    - **`SMALLINT`**: Small-range integers, 2 bytes.
-    - **`INTEGER`**: General-purpose integers, 4 bytes.
-    - **`BIGINT`**: Large-range integers, 8 bytes.
-    - **`SERIAL`**: Auto-incrementing integers, 4 bytes.
-    - **`BIGSERIAL`**: Auto-incrementing large integers, 8 bytes.
+  - **`SMALLINT`**: Small-range integers, 2 bytes.
+  - **`INTEGER`**: General-purpose integers, 4 bytes.
+  - **`BIGINT`**: Large-range integers, 8 bytes.
+  - **`SERIAL`**: Auto-incrementing integers, 4 bytes.
+  - **`BIGSERIAL`**: Auto-incrementing large integers, 8 bytes.
 - **Floating-Point Types**:
-    - **`REAL`**: Single-precision floating-point, 4 bytes.
-    - **`DOUBLE PRECISION`**: Double-precision floating-point, 8 bytes.
+  - **`REAL`**: Single-precision floating-point, 4 bytes.
+  - **`DOUBLE PRECISION`**: Double-precision floating-point, 8 bytes.
 - **Exact Numeric Types**:
-    - **`NUMERIC` (or `DECIMAL`)**: Exact numbers with arbitrary precision.
+  - **`NUMERIC` (or `DECIMAL`)**: Exact numbers with arbitrary precision.
 
 By understanding and using these numeric types appropriately, you can effectively manage and store numeric data in your PostgreSQL database. This ensures that your database is both efficient and reliable.
