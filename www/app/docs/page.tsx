@@ -70,7 +70,7 @@ export default async function Home() {
       <SideNavigation page={`/docs`} />
       <div className="flex flex-col px-2 max-w-6xl">
         <div className="container mx-auto">
-          <div className="flex flex-row items-start gap-2 mx-auto mt-20">
+          <div className="flex flex-row items-start gap-2 mx-auto mt-20 justify-center">
             <Image
               className="mt-2 hidden lg:block"
               src={NileBgMark}
