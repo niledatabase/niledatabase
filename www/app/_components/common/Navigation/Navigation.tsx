@@ -28,6 +28,7 @@ export default function Navigation({ className }: { className?: string }) {
                   height={30}
                   priority
                   className="m-auto scale-[1.3] translate-x-[10px] lg:m-0 lg:scale-100 lg:translate-y-0"
+                  data-image-zoom-disabled
                 />
               </Link>
             </div>
