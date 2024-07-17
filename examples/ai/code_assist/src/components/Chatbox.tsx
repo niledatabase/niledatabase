@@ -138,7 +138,6 @@ const Chatbox: React.FC<ChatboxProps> = ({
               partialData = "";
             }
           } else {
-            // We may have part of the answer in dataparts array still?
             dispatch({ type: "updateAnswer", text: chunkValue });
             if (done) {
               dispatch({ type: "done", text: "" });
