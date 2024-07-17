@@ -80,6 +80,11 @@ How do we find relevant code snippets for each question? This is the main proble
 Preparing the data, storing the documents efficiently for retrieval and retrieving the documents.
 Storing and retrieving methods are highly intertwined since the storage has to be optimized for the retrieval method.
 
+Putting together the data preparation, storage, and retrieval methods with the generative model in order to have an informed conversation with a generative model
+is **retrieval-augmented generation (RAG)**. The general architecture of RAG-based application is illustrated in the figure below:
+
+![RAG Architecture](/blog/2024-07-13-all-about-ai/rag-architecture.webp)
+
 ### Data preparation
 
 Before searching texts, we need to prepare the data. The quality of an RAG-based application heavily depends on the ability to retrieve relevant data,
@@ -150,11 +155,6 @@ Just don't get confused: this type of training fundamentally differs from the pr
 Since every SaaS, including AI Code Assistant, needs much information besides embeddings, you also need a “normal database.” This makes `pg_vector`,
 the vector embedding extension for Postgres, especially attractive. Pg_vector is trivial to use, but when performance, scalability, and tenant isolation matter,
 there are some nuances that you should consider. We'll cover these in the next blog when we discuss implementation details of our Code Assistant example.
-
-Putting together the data preparation, storage, and retrieval methods with the generative model in order to have an informed conversation with a generative model
-is **retrieval-augmented generation (RAG)**. The general architecture of RAG-based application is illustrated in the figure below:
-
-![RAG Architecture](/blog/2024-07-13-all-about-ai/rag-architecture.webp)
 
 ## RAG in Action
 
