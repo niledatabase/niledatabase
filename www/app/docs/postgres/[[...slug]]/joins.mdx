@@ -36,113 +36,110 @@ VALUES (101, 'HR'), (102, 'Engineering'), (103, 'Finance');
 ### Common Types of Joins:
 
 1. **Inner Join**:
-    
-    ![InnerJoin](/docs/innerjoin.png)
 
-    
-    - Returns records with matching values in both tables.
-    - Example: Combining `employees` and `departments` tables based on matching department IDs.
-    - SQL:
-        
-        ```sql
-        SELECT e.employee_id, e.employee_name, d.department_name
-        FROM employees e
-        INNER JOIN departments d ON e.department_id = d.department_id;
-        
-        ```
-        
-    - Output:
-        
-        ```
-        employee_id | employee_name | department_name
-        ------------+---------------+-----------------
-        1           | Alice         | HR
-        2           | Bob           | Engineering
-        
-        ```
-        
+   ![InnerJoin](/docs/innerjoin.png)
+
+   - Returns records with matching values in both tables.
+   - Example: Combining `employees` and `departments` tables based on matching department IDs.
+   - SQL:
+
+     ```sql
+     SELECT e.employee_id, e.employee_name, d.department_name
+     FROM employees e
+     INNER JOIN departments d ON e.department_id = d.department_id;
+
+     ```
+
+   - Output:
+
+     ```
+     employee_id | employee_name | department_name
+     ------------+---------------+-----------------
+     1           | Alice         | HR
+     2           | Bob           | Engineering
+
+     ```
+
 2. **Left Join (Left Outer Join)**:
-    
-    ![LeftOuterJoin](/docs/leftjoin.png)
 
-    
-    - Includes all records from the left table and matched records from the right table.
-    - If no match exists, NULL values are returned for right table columns.
-    - Example: Retrieving all employees along with their department names (even if they don’t belong to any department).
-    - SQL:
-        
-        ```sql
-        SELECT e.employee_id, e.employee_name, d.department_name
-        FROM employees e
-        LEFT JOIN departments d ON e.department_id = d.department_id;
-        
-        ```
-        
-    - Output:
-        
-        ```
-        employee_id | employee_name | department_name
-        ------------+---------------+-----------------
-        1           | Alice         | HR
-        2           | Bob           | Engineering
-        3           | Carol         | NULL
-        
-        ```
-        
+   ![LeftOuterJoin](/docs/leftjoin.png)
+
+   - Includes all records from the left table and matched records from the right table.
+   - If no match exists, NULL values are returned for right table columns.
+   - Example: Retrieving all employees along with their department names (even if they don’t belong to any department).
+   - SQL:
+
+     ```sql
+     SELECT e.employee_id, e.employee_name, d.department_name
+     FROM employees e
+     LEFT JOIN departments d ON e.department_id = d.department_id;
+
+     ```
+
+   - Output:
+
+     ```
+     employee_id | employee_name | department_name
+     ------------+---------------+-----------------
+     1           | Alice         | HR
+     2           | Bob           | Engineering
+     3           | Carol         | NULL
+
+     ```
+
 3. **Right Join (Right Outer Join)**:
-    
-    ![RightJoin](/docs/rightjoin.png)
-    
-    - Similar to left join but prioritizes the right table.
-    - Example: Retrieving all departments along with their employees (even if there are no employees in a department).
-    - SQL:
-        
-        ```sql
-        SELECT e.employee_id, e.employee_name, d.department_name
-        FROM employees e
-        RIGHT JOIN departments d ON e.department_id = d.department_id;
-        
-        ```
-        
-    - Output:
-        
-        ```
-        employee_id | employee_name | department_name
-        ------------+---------------+-----------------
-        1           | Alice         | HR
-        2           | Bob           | Engineering
-        NULL        | NULL          | Finance
-        
-        ```
-        
+
+   ![RightJoin](/docs/rightjoin.png)
+
+   - Similar to left join but prioritizes the right table.
+   - Example: Retrieving all departments along with their employees (even if there are no employees in a department).
+   - SQL:
+
+     ```sql
+     SELECT e.employee_id, e.employee_name, d.department_name
+     FROM employees e
+     RIGHT JOIN departments d ON e.department_id = d.department_id;
+
+     ```
+
+   - Output:
+
+     ```
+     employee_id | employee_name | department_name
+     ------------+---------------+-----------------
+     1           | Alice         | HR
+     2           | Bob           | Engineering
+     NULL        | NULL          | Finance
+
+     ```
+
 4. **Full Outer Join**:
 
-    ![OuterJoin](/docs/outerjoin.png)
-    
-    - Combines results from both left and right outer joins.
-    - Includes unmatched records from both tables.
-    - Example: Getting all employees and their department names.
-    - SQL:
-        
-        ```sql
-        SELECT e.employee_id, e.employee_name, d.department_name
-        FROM employees e
-        FULL OUTER JOIN departments d ON e.department_id = d.department_id;
-        
-        ```
-        
-    - Output:
-        
-        ```
-        employee_id | employee_name | department_name
-        ------------+---------------+-----------------
-        1           | Alice         | HR
-        2           | Bob           | Engineering
-        3           | Carol         | NULL
-        NULL        | NULL          | Finance
-        
-        ```
-        
+   ![OuterJoin](/docs/outerjoin.png)
+
+   - Combines results from both left and right outer joins.
+   - Includes unmatched records from both tables.
+   - Example: Getting all employees and their department names.
+   - SQL:
+
+     ```sql
+     SELECT e.employee_id, e.employee_name, d.department_name
+     FROM employees e
+     FULL OUTER JOIN departments d ON e.department_id = d.department_id;
+
+     ```
+
+   - Output:
+
+     ```
+     employee_id | employee_name | department_name
+     ------------+---------------+-----------------
+     1           | Alice         | HR
+     2           | Bob           | Engineering
+     3           | Carol         | NULL
+     NULL        | NULL          | Finance
+
+     ```
 
 ### Performance Considerations:
 
