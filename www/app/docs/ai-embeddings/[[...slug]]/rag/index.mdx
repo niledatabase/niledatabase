@@ -7,22 +7,22 @@ export const metadata = {
 
 # Retrieval Augmented Generation (RAG)
 
-RAG, or retrieval augumented generation is one of the most popular methods of building applications on top of general large language model. It allows using the knowledge and language skills of a world-class pre-trained model, while delivering results specific to a vertical or a company. 
+RAG, or retrieval augumented generation is one of the most popular methods of building applications on top of general large language model. It allows using the knowledge and language skills of a world-class pre-trained model, while delivering results specific to a vertical or a company.
 
 ## Why RAG?
 
-Generative AI models like GPT-3 are powerful, but they are not perfect. They can generate text that is incorrect, biased, or not relevant to the context. 
-After all, they are trained on information from the internet, and people often post wrong, misleading or fake information. 
-But the main limitation is that they do not have access to specific knowledge or data. ChatGPT can write an employee handbook for a company, 
+Generative AI models like GPT-3 are powerful, but they are not perfect. They can generate text that is incorrect, biased, or not relevant to the context.
+After all, they are trained on information from the internet, and people often post wrong, misleading or fake information.
+But the main limitation is that they do not have access to specific knowledge or data. ChatGPT can write an employee handbook for a company,
 but it cannot answer questions about the company's specific policies or procedures.
 
-There are two popular ways to address this core limitations, and they can be used separately or together. One is to **fine-tune** a model on a specific dataset or task. 
-And the other is **RAG**. For every question asked, retrieve the most relevant information from the preferred sources, and provide it to the generative model as context to use when responding to the question. 
-RAG is generally cheaper, faster and lower-effort than fine-tuning, and it can be used to improve results from any generative model, so it is a popular choice for many applications. 
+There are two popular ways to address this core limitations, and they can be used separately or together. One is to **fine-tune** a model on a specific dataset or task.
+And the other is **RAG**. For every question asked, retrieve the most relevant information from the preferred sources, and provide it to the generative model as context to use when responding to the question.
+RAG is generally cheaper, faster and lower-effort than fine-tuning, and it can be used to improve results from any generative model, so it is a popular choice for many applications.
 
 ## RAG Architecture
 
-From the short description above, you can see that the key to successful RAG is the ability to provide the generative model with the most relevant information. 
+From the short description above, you can see that the key to successful RAG is the ability to provide the generative model with the most relevant information.
 And this requires preparing and storing data in a way that makes it efficient (and even plain possible) to retrieve the most relevant information.
 
 Putting together the data preparation, storage, and retrieval methods with the generative model in order to have an informed conversation with a generative model is the essence of
@@ -30,11 +30,12 @@ retrieval-augmented generation (RAG). The general architecture of RAG-based appl
 
 ![RAG Architecture](/blog/2024-07-13-all-about-ai/rag-architecture.webp)
 
-As you can see, RAG based applications typically have two independent phases: 
-* **Ingestion phase:** In which they load the source documents, split them into chunks, generate vector embeddings, store them in a database, and optionally generate an index on the stored vectors. 
-* **Conversation phase:** In which they take the user question, generate a vector embedding, search the stored vectors for related chunks, and then send the question together with the related text and perhaps older questions and responses in the conversation and a creative prompt to ChatGPT’s conversation API. When ChatGPT responds, the question and answer are stored and displayed to the user.
+As you can see, RAG based applications typically have two independent phases:
 
-Lets discuss each of these tasks in more detail. We'll start with the last task, the retrieval of relevant information, since our choice of retrieval method will influence 
+- **Ingestion phase:** In which they load the source documents, split them into chunks, generate vector embeddings, store them in a database, and optionally generate an index on the stored vectors.
+- **Conversation phase:** In which they take the user question, generate a vector embedding, search the stored vectors for related chunks, and then send the question together with the related text and perhaps older questions and responses in the conversation and a creative prompt to ChatGPT’s conversation API. When ChatGPT responds, the question and answer are stored and displayed to the user.
+
+Lets discuss each of these tasks in more detail. We'll start with the last task, the retrieval of relevant information, since our choice of retrieval method will influence
 the data preparation and storage methods.
 
 ### Retrieval Methods
@@ -44,11 +45,11 @@ For text retrieval, there are two popular methods, and a hybrid of the two:
 **Full-text search**
 Full-text search is the more traditional approach. Text search algorithms rely on word frequency (how often the word appears in each text vs in general) and
 lexical similarity (The word “ice cream” is similar to “ice” and “cream” but not to “scoop” and “vanilla”). These algorithms can handle typos, synonyms,
-partial words, and fuzzy matching. 
+partial words, and fuzzy matching.
 
 **Vector search (also called semantic search)**
 This method uses AI models, based on the transformer architecture, to find documents that are similar in meaning.
-These specially trained transformers (called **embedding models** or embedders) convert text to a vector (also called **embedding**). The vector doesn't represent exactly the 
+These specially trained transformers (called **embedding models** or embedders) convert text to a vector (also called **embedding**). The vector doesn't represent exactly the
 words in the text but rather the semantic meaning of the text. The embedding model is trained on a giant corpus of texts (such as the entire internet), so it has “knowledge” of
 which terms are related. Once texts have been converted to vectors, you can check if any two texts are related by checking how close the two vectors are. When
 checking the similarity of texts using embeddings, it is expected that “ice cream” will be fairly close to “scoop” and “vanilla” since these words often show up
@@ -61,7 +62,7 @@ legalese or medical jargon. Words like "function", "class" and "variable" will b
 In the hybrid approach, you use each method separately to find the closest matching text. Then, you combine the distance score from each method
 (the combination is typically weighted, and the scores have to be normalized first). Then, you re-rank the results based on the combined score
 and finally choose the highest-ranking documents based on the combined score.
-There are also a few embedding models (notably, [BGE-M3](https://arxiv.org/pdf/2402.03216)) that combine the two methods in the same model, and 
+There are also a few embedding models (notably, [BGE-M3](https://arxiv.org/pdf/2402.03216)) that combine the two methods in the same model, and
 use relevancy scores from each model to re-rank the results themselves.
 
 ### Storing Documents and Embeddings
@@ -99,7 +100,7 @@ Check the model documentation for the specific requirements.
 
 ## Simple RAG Example with OpenAI and Nile
 
-In this example, we will use OpenAI's GPT-3.5 model and Nile's pg_vector extension to demonstrate how RAG works. 
+In this example, we will use OpenAI's GPT-3.5 model and Nile's pg_vector extension to demonstrate how RAG works.
 We will embed a few documents, and then search for the most relevant document to a user's question:
 
 ```javascript
@@ -159,11 +160,10 @@ console.log(
 );
 ```
 
-As you can see in the example, each step in RAG is simple and can be implemented in a single line of code - embedding, storing, and searching. 
+As you can see in the example, each step in RAG is simple and can be implemented in a single line of code - embedding, storing, and searching.
 But the result is powerful and allows you to build AI-native SaaS applications that can answer questions about specific topics with greater accuracy, like a human expert would.
 
 ## RAG best practices
-
 
 ## Use cases for RAG
 
@@ -171,16 +171,16 @@ RAG performs best when:
 
 - You have more source material than can fit in the generative model's context window.
 - You have a large number of questions that can be answered by the source material. So you can embed and index the source material once and then use it to answer many questions.
-- The source material is structured or can be chunked into smaller parts that are relevant to the questions. 
+- The source material is structured or can be chunked into smaller parts that are relevant to the questions.
 
 Here are a few examples of use cases where RAG can be very useful:
 
-- **Customer Support Automation:** RAG can be used to automate customer support by providing answers to common questions. 
-The source material can be product documentation and previous support tickets.
-- **Sales Enablement:** RAG can be used to generate custom responses based on a vast repository of sales documents, case studies, and product specifications. 
-This allows sales representatives to quickly address potential customer questions and objections
-- **Knowledge Management:** RAG enhance the company's internal knowledge base with a bot that can generate answers by pulling information from internal documents, wikis, and databases. 
-This helps employees find the information they need quickly.
+- **Customer Support Automation:** RAG can be used to automate customer support by providing answers to common questions.
+  The source material can be product documentation and previous support tickets.
+- **Sales Enablement:** RAG can be used to generate custom responses based on a vast repository of sales documents, case studies, and product specifications.
+  This allows sales representatives to quickly address potential customer questions and objections
+- **Knowledge Management:** RAG enhance the company's internal knowledge base with a bot that can generate answers by pulling information from internal documents, wikis, and databases.
+  This helps employees find the information they need quickly.
 - **Legal Research:** RAG can be used to quickly find relevant legal documents, case law, and statutes to answer legal questions.
 - **Medical Diagnosis:** RAG can be used to provide doctors with relevant medical information, research papers, and case studies to help diagnose patients.
 - **Code Generation:** RAG can be used to generate code snippets based on a repository of code examples and documentation.
@@ -191,8 +191,8 @@ This helps employees find the information they need quickly.
 
 RAG is a powerful tool, but it is not always the best choice. There are two main cases where RAG is not the best choice:
 
-**When the source material is small and will be used once:**  For example, if you need the model to format few paragraphs of text in a table or diagram. 
+**When the source material is small and will be used once:** For example, if you need the model to format few paragraphs of text in a table or diagram.
 Or you want to turn a short blog into a series of tweets. It will be faster and just as accurate to simply provide the text to the model.
 
-**Summarization:** If you need to summarize a large document, RAG is not the best choice. The retrieval methods will not be able to find relevant chunks with a question 
+**Summarization:** If you need to summarize a large document, RAG is not the best choice. The retrieval methods will not be able to find relevant chunks with a question
 like "summarize this document". And the summary generated by the model will be based on a few random paragraphs from the text. There are summarization models that were specifically trained for this task.
