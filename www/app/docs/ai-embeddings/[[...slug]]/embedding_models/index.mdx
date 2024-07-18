@@ -1,0 +1,78 @@
+# Embedding Models for RAG
+
+export const metadata = {
+  title: "Embedding models",
+  order: 3,
+};
+
+Embedding models are used to convert text into vector embeddings.
+These embeddings can be used to perform various tasks like similarity search, clustering, and classification.
+In the context of RAG, embedding models are used to convert the input text into embeddings that are used to retrieve relevant (similar)
+documents from the document store.
+
+<table>
+  <tr>
+    <th>Vendor(s)</th>
+    <th>Model</th>
+    <th>dimensions</th>
+    <th>max tokens</th>
+    <th>cost</th>
+    <th>MTEB avg score</th>
+    <th>similarity metric</th>
+  </tr>
+  <tr>
+    <td rowspan="2">
+      <a href="./embedding_models/open_ai">OpenAI</a>
+    </td>
+    <td>text-embedding-3-small</td>
+    <td>1536 (scales down)</td>
+    <td>8191</td>
+    <td>$0.02 / 1M tokens</td>
+    <td>62.3</td>
+    <td>cosine, dot product, L2</td>
+  </tr>
+  <tr>
+    <td>text-embedding-3-large</td>
+    <td>3072 (scales down)</td>
+    <td>8191</td>
+    <td>$0.13 / 1M tokens</td>
+    <td>64.6</td>
+    <td>cosine, dot product, L2</td>
+  </tr>
+  <tr>
+    <td>Alibaba</td>
+    <td>gte-Qwen2-7B-instruct</td>
+    <td>3584</td>
+    <td>131072</td>
+    <td></td>
+    <td>70.24</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Cohere</td>
+    <td>embed-english-v3.0</td>
+    <td>1024</td>
+    <td>512</td>
+    <td>$0.10 / 1M Tokens</td>
+    <td>64.5</td>
+    <td>cosine</td>
+  </tr>
+  <tr>
+    <td>Voyage</td>
+    <td>voyage-large-2-instruct</td>
+    <td>1024</td>
+    <td>16000</td>
+    <td>$0.12 / 1M tokens</td>
+    <td>68.28</td>
+    <td>cosine, L2</td>
+  </tr>
+  <tr>
+    <td>Mistral, AWS Sagemaker</td>
+    <td>e5-mistral-7b-instruct</td>
+    <td>4096</td>
+    <td>32768</td>
+    <td></td>
+    <td>66.63</td>
+    <td></td>
+  </tr>
+</table>
