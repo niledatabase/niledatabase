@@ -5,13 +5,12 @@ export const metadata = {
   order: 1,
 };
 
-Embedding models are used to convert text into vector embeddings. 
-These embeddings can be used to perform various tasks like similarity search, clustering, and classification. 
-In the context of RAG, embedding models are used to convert the input text into embeddings that are used to retrieve relevant (similar) 
+Embedding models are used to convert text into vector embeddings.
+These embeddings can be used to perform various tasks like similarity search, clustering, and classification.
+In the context of RAG, embedding models are used to convert the input text into embeddings that are used to retrieve relevant (similar)
 documents from the document store.
 
-
-<table> 
+<table>
   <tr>
     <th>Vendor(s)</th>
     <th>Model</th>
@@ -22,7 +21,9 @@ documents from the document store.
     <th>similarity metric</th>
   </tr>
   <tr>
-    <td rowspan="2" ><a href="./embedding_models/open_ai">OpenAI</a></td>
+    <td rowspan="2">
+      <a href="./embedding_models/open_ai">OpenAI</a>
+    </td>
     <td>text-embedding-3-small</td>
     <td>1536 (scales down)</td>
     <td>8191</td>
