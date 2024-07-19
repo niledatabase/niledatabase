@@ -25,11 +25,6 @@ const languages = [
     path: "/docs/getting-started/languages/node",
   },
   {
-    name: "Java",
-    icon: "java.svg",
-    path: "/docs/getting-started/languages/java",
-  },
-  {
     name: "Drizzle",
     icon: "drizzle.svg",
     path: "/docs/getting-started/languages/drizzle",
