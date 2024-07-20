@@ -50,7 +50,7 @@ documents from the document store.
   </tr>
   <tr>
     <td rowspan="2">
-        <a href="./embedding_models/fireworks">Fireworks</a>
+      <a href="./embedding_models/fireworks">Fireworks</a>
     </td>
     <td>thenlper/gte-large</td>
     <td>1024</td>
@@ -59,17 +59,17 @@ documents from the document store.
     <td>63.23</td>
     <td>cosine</td>
   </tr>
-    <tr>
+  <tr>
     <td>nomic-ai/nomic-embed-text-v1.5</td>
     <td>768 (scales down)</td>
     <td>8192</td>
     <td>$0.008 / 1M tokens</td>
     <td>62.28</td>
     <td>cosine</td>
-  </tr>  
+  </tr>
   <tr>
     <td>
-        <a href="./embedding_models/deepinfra">DeepInfra</a>
+      <a href="./embedding_models/deepinfra">DeepInfra</a>
     </td>
     <td>gte-large</td>
     <td>1024</td>
@@ -80,7 +80,7 @@ documents from the document store.
   </tr>
   <tr>
     <td>
-        <a href="embedding_models/cohere">Cohere</a>
+      <a href="embedding_models/cohere">Cohere</a>
     </td>
     <td>embed-english-v3.0</td>
     <td>1024</td>
@@ -91,7 +91,7 @@ documents from the document store.
   </tr>
   <tr>
     <td rowspan="4">
-        <a href="embedding_models/voyage">Voyage</a>
+      <a href="embedding_models/voyage">Voyage</a>
     </td>
     <td>voyage-large-2-instruct</td>
     <td>1024</td>
@@ -128,10 +128,10 @@ documents from the document store.
 
 ## Explanation of columns
 
-- **Vendor(s)**: The vendor(s) that provide the model as a service. 
+- **Vendor(s)**: The vendor(s) that provide the model as a service.
 - **Model**: The name of the model.
 - **dimensions**: The number of dimensions in the vector embeddings that the model generates
 - **max tokens**: The maximum number of tokens that can be passed to the model in a single request
 - **cost**: The cost of using the model (based on vendor pricing page, where available)
-- **MTEB avg score**: The [Massive Text Embedding Benchmark (MTEB)](https://github.com/embeddings-benchmark/mteb) average score. MTEB is a benchmark for evaluating the quality of embeddings across a range of tasks. The higher the score, the better the embeddings. 
+- **MTEB avg score**: The [Massive Text Embedding Benchmark (MTEB)](https://github.com/embeddings-benchmark/mteb) average score. MTEB is a benchmark for evaluating the quality of embeddings across a range of tasks. The higher the score, the better the embeddings.
 - **similarity metric**: The similarity metric recommended by the model authors to use with the embeddings. We only included the metrics supported by `pg_vector`, some of the models may support additional metrics.

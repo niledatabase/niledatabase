@@ -7,8 +7,9 @@ export const metadata = {
 
 ## Availble models
 
-Cohere has multiple models with various sizes and languages, here's the one we use in our example. 
+Cohere has multiple models with various sizes and languages, here's the one we use in our example.
 You can replace it with any embedding model supported by Cohere:
+
 <table suppressHydrationWarning>
   <tr>
     <th>Model</th>
@@ -30,9 +31,9 @@ You can replace it with any embedding model supported by Cohere:
 
 ## Usage
 
-Cohere's API includes an `inputType` that allows you to specify the type of input you are embedding. 
-For example, is it a document that you will later retrieve? a question that you use for searching documents? 
-Texts for classification or clustering? 
+Cohere's API includes an `inputType` that allows you to specify the type of input you are embedding.
+For example, is it a document that you will later retrieve? a question that you use for searching documents?
+Texts for classification or clustering?
 
 ### Installing dependencies
 
@@ -43,7 +44,7 @@ npm install @niledatabase/server cohere-ai
 ### Generating embeddings with Cohere
 
 ```javascript
-const { CohereClient } = require('cohere-ai');
+const { CohereClient } = require("cohere-ai");
 const COHERE_API_KEY = "your cohere api key";
 
 const cohere = new CohereClient({
@@ -56,17 +57,17 @@ const input_text = `The future belongs to those who believe in the beauty of the
                     dreams.`;
 
 const doc_vec_resp = await cohere.embed({
-    texts: [input_text], // you can pass multiple texts to embed in one batch call
-    model: model,
-    inputType: 'search_document', // for embedding of documents stored in pg_vector
+  texts: [input_text], // you can pass multiple texts to embed in one batch call
+  model: model,
+  inputType: "search_document", // for embedding of documents stored in pg_vector
 });
 
 const question = "Who does the future belong to?";
 
 const question_vec_resp = await cohere.embed({
-    texts: [question],
-    model: model,
-    inputType: 'search_query', // for embedding of questions used to search documents
+  texts: [question],
+  model: model,
+  inputType: "search_query", // for embedding of questions used to search documents
 });
 
 // Cohere's response is an object with an array of vector embeddings
@@ -101,10 +102,10 @@ let db_resp = await nile.db.query(
 // Postgres returns an object, with array of rows each column is a
 // property of the row the vector is represented as a string
 let similar_str = db_resp.rows[0].embedding;
-let similar = similar_str.
-    substring(1, similar_str.length - 1).
-    split(",").
-    map((v) => parseFloat(v));
+let similar = similar_str
+  .substring(1, similar_str.length - 1)
+  .split(",")
+  .map((v) => parseFloat(v));
 
 // check that we got the same vector back
 let same = true;

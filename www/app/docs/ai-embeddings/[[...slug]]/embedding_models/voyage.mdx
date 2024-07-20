@@ -7,9 +7,9 @@ export const metadata = {
 
 ## Availble models
 
-Voyage has a collection of specialized models for embedding text from different domains: financial, legal 
+Voyage has a collection of specialized models for embedding text from different domains: financial, legal
 (and large documents), code and medical.
-It also has highly ranked general embedding model that can be used for a variety of tasks, 
+It also has highly ranked general embedding model that can be used for a variety of tasks,
 a general model that is optimized for retrieval, and a smaller cost-efficient retrieval model.
 
 We included a subset here for reference:
@@ -51,9 +51,9 @@ We included a subset here for reference:
 
 ## Usage
 
-Voyage has a Python, but not a Javascript, SDK. Their REST API is **almost** compatible with OpenAI's API, 
-but unfortunately, their powerful general purpose model, `voyage-large-2-instruct` requires `inputType` parameter, 
-which is not supported by OpenAI's SDK. Fortunately, LangChain has a nice community-contributed JS library for Voyage, 
+Voyage has a Python, but not a Javascript, SDK. Their REST API is **almost** compatible with OpenAI's API,
+but unfortunately, their powerful general purpose model, `voyage-large-2-instruct` requires `inputType` parameter,
+which is not supported by OpenAI's SDK. Fortunately, LangChain has a nice community-contributed JS library for Voyage,
 which supports the `inputType` parameter. So we are going to use the LangChain community library in the example below.
 
 ### Installing dependencies
@@ -66,17 +66,19 @@ npm install @niledatabase/server @langchain/community
 
 ```javascript
 const VOYAGE_API_KEY = "your voyage api key";
-const { VoyageEmbeddings } = await import("@langchain/community/embeddings/voyage");
+const { VoyageEmbeddings } = await import(
+  "@langchain/community/embeddings/voyage"
+);
 
-// we need a separate model object for documents and queries 
+// we need a separate model object for documents and queries
 // because the inputType is different and is in this object
 const embedDocs = new VoyageEmbeddings({
   apiKey: VOYAGE_API_KEY, // In Node.js defaults to process.env.VOYAGEAI_API_KEY
   inputType: "document", // for the embedding of documents stored in pg_vector
-}); 
+});
 
 const embedQueries = new VoyageEmbeddings({
-  apiKey: VOYAGE_API_KEY, 
+  apiKey: VOYAGE_API_KEY,
   inputType: "query", // for the embedding of questions used to search documents
 });
 
@@ -120,10 +122,10 @@ let db_resp = await nile.db.query(
 // Postgres returns an object, with array of rows each column is a
 // property of the row the vector is represented as a string
 let similar_str = db_resp.rows[0].embedding;
-let similar = similar_str.
-    substring(1, similar_str.length - 1).
-    split(",").
-    map((v) => parseFloat(v));
+let similar = similar_str
+  .substring(1, similar_str.length - 1)
+  .split(",")
+  .map((v) => parseFloat(v));
 
 // check that we got the same vector back
 let same = true;
@@ -138,13 +140,14 @@ console.log("got same vector? " + same);
 ```
 
 ## Additional information
+
 ### Distance metrics
 
-Voyage embeddings are normalized to length 1, which means that you can use L2, cosine, and dot product similarity 
+Voyage embeddings are normalized to length 1, which means that you can use L2, cosine, and dot product similarity
 metrics interchangeably. Dot product is the fastest to compute.
 
 ### API Rate limits
 
 Note that on the free plan, the rate limits are quite strict. Voyage gives you only 3 API calls a minute.
-Which means that after you embedded some documents, you can only generate embeddings for 2 queries before 
+Which means that after you embedded some documents, you can only generate embeddings for 2 queries before
 running out of the minute and having to wait.

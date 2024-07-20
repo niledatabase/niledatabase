@@ -7,8 +7,9 @@ export const metadata = {
 
 ## Availble models
 
-Fireworks provide a larger variety of models, here's the one we use in our example. You can replace it with any 
+Fireworks provide a larger variety of models, here's the one we use in our example. You can replace it with any
 embedding model supported by DeepInfra:
+
 <table suppressHydrationWarning>
   <tr>
     <th>Model</th>
@@ -30,7 +31,7 @@ embedding model supported by DeepInfra:
 
 ## Usage
 
-Note that DeepInfra doesn't have an SDK. Their documentation shows the use of the REST API directly with a 
+Note that DeepInfra doesn't have an SDK. Their documentation shows the use of the REST API directly with a
 client library in your language of choice, or you can use OpenAI's SDK - DeepInfra is compatible with OpenAI's API.
 
 In the examples below, we use OpenAI's SDK with DeepInfra URL, API key and models.
@@ -49,8 +50,8 @@ const { OpenAI } = await import("openai");
 const DEEPINFRA_API_KEY = "your deepinfra api key";
 
 const openai = new OpenAI({
-  apiKey: DEEPINFRA_API_KEY, 
-  baseURL: "https://api.deepinfra.com/v1/openai"
+  apiKey: DEEPINFRA_API_KEY,
+  baseURL: "https://api.deepinfra.com/v1/openai",
 });
 
 const MODEL = "thenlper/gte-large"; // or any other model supported by DeepInfra
@@ -119,6 +120,6 @@ Using larger embeddings generally costs more and consumes more compute, memory a
 When storing embeddings in Postgres, it is important that each vector will be stored in a row that fits in a single PG block (typically 8K). If this size is exceeded,
 the vector will be stored in TOAST storage which can slow down queries. In addition vectors that are "TOASTed" are not indexed, which means you can't reliably use vector indexes.
 
-Fireworks supports multiple models. `gte-large` and `nomic-embed-text-v1.5` are two of the models available. 
-The `gte-large` model has 1024 dimensions and does not support scaling down. The `nomic-embed-text-v1.5` model has 
+Fireworks supports multiple models. `gte-large` and `nomic-embed-text-v1.5` are two of the models available.
+The `gte-large` model has 1024 dimensions and does not support scaling down. The `nomic-embed-text-v1.5` model has
 768 dimensions and can scale down to 512, 256, 128 and 64.
