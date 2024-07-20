@@ -1,0 +1,119 @@
+export const metadata = {
+  title: "Cohere",
+  order: 4,
+};
+
+# Cohere Embedding Models
+
+## Availble models
+
+Cohere has multiple models with various sizes and languages, here's the one we use in our example. 
+You can replace it with any embedding model supported by Cohere:
+<table suppressHydrationWarning>
+  <tr>
+    <th>Model</th>
+    <th>dimensions</th>
+    <th>max tokens</th>
+    <th>cost</th>
+    <th>MTEB avg score</th>
+    <th>similarity metric</th>
+  </tr>
+  <tr>
+    <td>embed-english-v3.0</td>
+    <td>1024</td>
+    <td>512</td>
+    <td>$0.10 / 1M Tokens</td>
+    <td>64.5</td>
+    <td>cosine</td>
+  </tr>
+</table>
+
+## Usage
+
+Cohere's API includes an `inputType` that allows you to specify the type of input you are embedding. 
+For example, is it a document that you will later retrieve? a question that you use for searching documents? 
+Texts for classification or clustering? 
+
+### Installing dependencies
+
+```bash
+npm install @niledatabase/server cohere-ai
+```
+
+### Generating embeddings with Cohere
+
+```javascript
+const { CohereClient } = require('cohere-ai');
+const COHERE_API_KEY = "your cohere api key";
+
+const cohere = new CohereClient({
+  token: COHERE_API_KEY,
+});
+
+const model = "embed-english-v3.0"; // replace with your favorite cohere model
+
+const input_text = `The future belongs to those who believe in the beauty of their 
+                    dreams.`;
+
+const doc_vec_resp = await cohere.embed({
+    texts: [input_text], // you can pass multiple texts to embed in one batch call
+    model: model,
+    inputType: 'search_document', // used for embeddings of documents stored in pg_vector
+});
+
+const question = "Who does the future belong to?";
+
+const question_vec_resp = await cohere.embed({
+    texts: [question],
+    model: model,
+    inputType: 'search_query', // used for embeddings of questions used to search documents
+});
+
+// Cohere's response is an object with an array of vector embeddings
+// The object has other useful info like the model used, input text, billing, etc.
+const doc_vec = doc_vec_resp.embeddings[0];
+const question_vec = question_vec_resp.embeddings[0];
+```
+
+### Storing and retrieving the embeddings
+
+```javascript
+// set up Nile as the vector store
+const { Nile } = await import("@niledatabase/server");
+const NILEDB_USER = "you need a nile user with access to a nile database";
+const NILEDB_PASSWORD = "and a password for that user";
+const nile = await Nile({
+  user: NILEDB_USER,
+  password: NILEDB_PASSWORD,
+});
+
+// store vector in a table
+await nile.db.query("INSERT INTO embeddings (embedding) values ($1)", [
+  JSON.stringify(doc_vec.map((v) => Number(v))),
+]);
+
+// search for similar vectors
+let db_resp = await nile.db.query(
+  "select embedding from embeddings order by embedding<=>$1 limit 1",
+  [JSON.stringify(question_vec.map((v) => Number(v)))]
+);
+
+// Postgres returns an object, with array of rows each column is a
+// property of the row the vector is represented as a string
+let similar_str = db_resp.rows[0].embedding;
+let similar = similar_str.
+    substring(1, similar_str.length - 1).
+    split(",").
+    map((v) => parseFloat(v));
+
+// check that we got the same vector back
+let same = true;
+
+for (let i = 0; i < similar.length; i++) {
+  if (Math.abs(similar[i] - doc_vec[i]) > 0.000001) {
+    same = false;
+  }
+}
+
+console.log("got same vector? " + same);
+```

@@ -40,16 +40,39 @@ documents from the document store.
     <td>cosine, dot product, L2</td>
   </tr>
   <tr>
-    <td>Alibaba</td>
-    <td>gte-Qwen2-7B-instruct</td>
-    <td>3584</td>
-    <td>131072</td>
-    <td></td>
-    <td>70.24</td>
-    <td></td>
+    <td rowspan="2">
+        <a href="./embedding_models/fireworks">Fireworks</a>
+    </td>
+    <td>thenlper/gte-large</td>
+    <td>1024</td>
+    <td>512</td>
+    <td>$0.016 / 1M tokens</td>
+    <td>63.23</td>
+    <td>cosine</td>
+  </tr>
+    <tr>
+    <td>nomic-ai/nomic-embed-text-v1.5</td>
+    <td>768 (scales down)</td>
+    <td>8192</td>
+    <td>$0.008 / 1M tokens</td>
+    <td>62.28</td>
+    <td>cosine</td>
+  </tr>  
+  <tr>
+    <td>
+        <a href="./embedding_models/deepinfra">DeepInfra</a>
+    </td>
+    <td>gte-large</td>
+    <td>1024</td>
+    <td>512</td>
+    <td>$0.010 / 1M tokens</td>
+    <td>63.23</td>
+    <td>cosine</td>
   </tr>
   <tr>
-    <td>Cohere</td>
+    <td>
+        <a href="embedding_models/cohere">Cohere</a>
+    </td>
     <td>embed-english-v3.0</td>
     <td>1024</td>
     <td>512</td>
@@ -58,21 +81,48 @@ documents from the document store.
     <td>cosine</td>
   </tr>
   <tr>
-    <td>Voyage</td>
+    <td rowspan="4">
+        <a href="embedding_models/voyage">Voyage</a>
+    </td>
     <td>voyage-large-2-instruct</td>
     <td>1024</td>
     <td>16000</td>
     <td>$0.12 / 1M tokens</td>
     <td>68.28</td>
-    <td>cosine, L2</td>
+    <td>cosine, dot product, L2</td>
   </tr>
   <tr>
-    <td>Mistral, AWS Sagemaker</td>
-    <td>e5-mistral-7b-instruct</td>
-    <td>4096</td>
-    <td>32768</td>
+    <td>voyage-2</td>
+    <td>1024</td>
+    <td>4000</td>
+    <td> $0.1/ 1M tokens</td>
     <td></td>
-    <td>66.63</td>
+    <td>cosine, dot product, L2</td>
+  </tr>
+  <tr>
+    <td>voyage-code-2</td>
+    <td>1536</td>
+    <td>16000</td>
+    <td> $0.12/ 1M tokens</td>
     <td></td>
+    <td>cosine, dot product, L2</td>
+  </tr>
+  <tr>
+    <td>voyage-law-2</td>
+    <td>1024</td>
+    <td>16000</td>
+    <td> $0.12/ 1M tokens</td>
+    <td></td>
+    <td>cosine, dot product, L2</td>
   </tr>
 </table>
+
+## Explanation of columns
+
+- **Vendor(s)**: The vendor(s) that provide the model as a service. 
+- **Model**: The name of the model.
+- **dimensions**: The number of dimensions in the vector embeddings that the model generates
+- **max tokens**: The maximum number of tokens that can be passed to the model in a single request
+- **cost**: The cost of using the model (based on vendor pricing page, where available)
+- **MTEB avg score**: The [Massive Text Embedding Benchmark (MTEB)](https://github.com/embeddings-benchmark/mteb) average score. MTEB is a benchmark for evaluating the quality of embeddings across a range of tasks. The higher the score, the better the embeddings. 
+- **similarity metric**: The similarity metric recommended by the model authors to use with the embeddings. We only included the metrics supported by `pg_vector`, some of the models may support additional metrics.

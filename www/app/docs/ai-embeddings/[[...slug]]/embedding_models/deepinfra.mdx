@@ -1,12 +1,14 @@
 export const metadata = {
-  title: "Open AI",
-  order: 1,
+  title: "DeepInfra",
+  order: 3,
 };
 
-# Open AI Embedding Models
+# Embedding Models served by DeepInfra
 
 ## Availble models
 
+Fireworks provide a larger variety of models, here's the one we use in our example. You can replace it with any 
+embedding model supported by DeepInfra:
 <table suppressHydrationWarning>
   <tr>
     <th>Model</th>
@@ -17,24 +19,21 @@ export const metadata = {
     <th>similarity metric</th>
   </tr>
   <tr>
-    <td>text-embedding-3-small</td>
-    <td>1536 (scales down)</td>
-    <td>8191</td>
-    <td>$0.02 / 1M tokens</td>
-    <td>62.3</td>
-    <td>cosine, dot product, L2</td>
-  </tr>
-  <tr>
-    <td>text-embedding-3-large</td>
-    <td>3072 (scales down)</td>
-    <td>8191</td>
-    <td>$0.13 / 1M tokens</td>
-    <td>64.6</td>
-    <td>cosine, dot product, L2</td>
+    <td>thenlper/gte-large</td>
+    <td>1024</td>
+    <td>512</td>
+    <td>$0.010 / 1M tokens</td>
+    <td>63.23</td>
+    <td>cosine</td>
   </tr>
 </table>
 
 ## Usage
+
+Note that DeepInfra doesn't have an SDK. Their documentation shows the use of the REST API directly with a 
+client library in your language of choice, or you can use OpenAI's SDK - DeepInfra is compatible with OpenAI's API.
+
+In the examples below, we use OpenAI's SDK with DeepInfra URL, API key and models.
 
 ### Installing dependencies
 
@@ -42,18 +41,19 @@ export const metadata = {
 npm install @niledatabase/server openai
 ```
 
-### Generating embeddings with OpenAI
+### Generating embeddings with DeepInfra
 
 ```javascript
-// set up OpenAI
+// set up OpenAI SDK with Fireworks configuration
 const { OpenAI } = await import("openai");
-const OPENAI_API_KEY = "your openai api key";
+const DEEPINFRA_API_KEY = "your deepinfra api key";
 
 const openai = new OpenAI({
-  apiKey: OPENAI_API_KEY, // not necessary if you have this env variable
+  apiKey: DEEPINFRA_API_KEY, 
+  baseURL: "https://api.deepinfra.com/v1/openai"
 });
 
-const MODEL = "text-embedding-3-small"; // or text-embedding-3-large
+const MODEL = "thenlper/gte-large"; // or any other model supported by DeepInfra
 const input_text = `The future belongs to those who believe in the beauty of their 
                     dreams.`;
 
@@ -61,7 +61,6 @@ const input_text = `The future belongs to those who believe in the beauty of the
 let resp = await openai.embeddings.create({
   model: MODEL,
   input: input_text,
-  dimensions: 1024, // OpenAI models scale down to lower dimensions
 });
 
 // OpenAI's response is an object with an array of
@@ -120,11 +119,6 @@ Using larger embeddings generally costs more and consumes more compute, memory a
 When storing embeddings in Postgres, it is important that each vector will be stored in a row that fits in a single PG block (typically 8K). If this size is exceeded,
 the vector will be stored in TOAST storage which can slow down queries. In addition vectors that are "TOASTed" are not indexed, which means you can't reliably use vector indexes.
 
-Both OpenAI's embedding models were trained with a technique that allows developers to trade-off performance and cost of using embeddings. Specifically, developers can shorten embeddings
-(i.e. remove some numbers from the end of the sequence) without the embedding losing its concept-representing properties by passing in the dimensions API parameter.
-Using the dimensions parameter when creating the embedding (as shown above) is the preferred approach. In certain cases, you may need to change the embedding dimension after you generate it.
-When you change the dimension manually, you need to be sure to normalize the dimensions of the embedding.
-
-### Distance metrics
-
-OpenAI embeddings are normalized to length 1, which means that you can use L2, cosine, and dot product similarity metrics interchangeably. Dot product is the fastest to compute.
+Fireworks supports multiple models. `gte-large` and `nomic-embed-text-v1.5` are two of the models available. 
+The `gte-large` model has 1024 dimensions and does not support scaling down. The `nomic-embed-text-v1.5` model has 
+768 dimensions and can scale down to 512, 256, 128 and 64.
