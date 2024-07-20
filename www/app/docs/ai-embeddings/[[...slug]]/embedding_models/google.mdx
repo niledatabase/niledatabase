@@ -73,18 +73,21 @@ const input_text = `The future belongs to those who believe in the beauty of the
 // const doc_vec_resp = await model.embedContent(input_text);
 const doc_vec_resp = await embed.embedContent({
   content: {parts: [{text: input_text}]},
-  taskType: "RETRIEVAL_DOCUMENT", // optional. used for embeddings of documents stored in pg_vector
-  title: "" // optional title, can be used with RETRIEVAL_DOCUMENT and possibly improve the quality of the embeddings
+  taskType: "RETRIEVAL_DOCUMENT", // for embeddings of documents stored in pg_vector
+  // title of the document. can be used with RETRIEVAL_DOCUMENT and 
+  // possibly improve the quality of the embeddings
+  // title: "" 
 });
 
 const question = "Who does the future belong to?";
 
 const question_vec_resp = await embed.embedContent({
     content: {parts: [{text: question}]},
-    taskType: 'RETRIEVAL_QUERY', // used for embeddings of questions used to search documents
+    taskType: 'RETRIEVAL_QUERY', //embeddings of questions used to search documents
 });
 
-// Google returns a response object with an embedding field that contains the embeddings in the value field
+// Google returns a response object with an embedding field that 
+// contains the embeddings in the value field
 const doc_vec = doc_vec_resp.embedding.values
 const question_vec = question_vec_resp.embedding.values
 ```

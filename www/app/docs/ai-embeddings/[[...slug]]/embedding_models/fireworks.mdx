@@ -69,7 +69,8 @@ const input_text = `The future belongs to those who believe in the beauty of the
 let resp = await openai.embeddings.create({
   model: MODEL,
   input: input_text,
-  // dimensions: 512, // nomic-ai/nomic-embed-text-v1.5 can scale down, thenlper/gte-large can't
+  // nomic-ai/nomic-embed-text-v1.5 can scale down, thenlper/gte-large can't
+  // dimensions: 512, 
 });
 
 // OpenAI's response is an object with an array of

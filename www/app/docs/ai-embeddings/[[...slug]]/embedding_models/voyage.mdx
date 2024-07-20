@@ -53,91 +53,45 @@ We included a subset here for reference:
 
 Voyage has a Python, but not a Javascript, SDK. Their REST API is **almost** compatible with OpenAI's API, 
 but unfortunately, their powerful general purpose model, `voyage-large-2-instruct` requires `inputType` parameter, 
-which is not supported by OpenAI's SDK. So the example below will use the `voyage-large-2-instruct` with Javascript's
-built-in `fetch` function. This makes the example code below quite verbose, but this is their only option for 
-using the recommended model with Javascript.
-
-If you use a different model, I recommend using the OpenAI SDK, with your Voyage API key and URL.
-Also worth noting that LangChain has a nice JS library for Voyage, which supports the `inputType` parameter.
+which is not supported by OpenAI's SDK. Fortunately, LangChain has a nice community-contributed JS library for Voyage, 
+which supports the `inputType` parameter. So we are going to use the LangChain community library in the example below.
 
 ### Installing dependencies
 
 ```bash
-npm install @niledatabase/server
+npm install @niledatabase/server @langchain/community
 ```
 
 ### Generating embeddings with Voyage
 
 ```javascript
 const VOYAGE_API_KEY = "your voyage api key";
-const VOYAGE_URL = "https://api.voyageai.com/v1/embeddings";
-const VOYAGE_HEADERS = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${VOYAGE_API_KEY}`
-  }
-const model = "voyage-large-2-instruct"; // replace with your favorite cohere model
+const { VoyageEmbeddings } = await import("@langchain/community/embeddings/voyage");
 
-// this is the request for Voyage's API, for the document embedding
-const document_body = JSON.stringify({
-  input: [
-    'The future belongs to those who believe in the beauty of their dreams.'
-  ],
-  model: model,
-  input_type: 'document' // used for embeddings of documents stored in pg_vector
+// we need a separate model object for documents and queries 
+// because the inputType is different and is in this object
+const embedDocs = new VoyageEmbeddings({
+  apiKey: VOYAGE_API_KEY, // In Node.js defaults to process.env.VOYAGEAI_API_KEY
+  inputType: "document", // for the embedding of documents stored in pg_vector
+}); 
+
+const embedQueries = new VoyageEmbeddings({
+  apiKey: VOYAGE_API_KEY, 
+  inputType: "query", // for the embedding of questions used to search documents
 });
 
-const doc_vec_resp = await fetch(VOYAGE_URL, {
-  method: 'POST',
-  headers: VOYAGE_HEADERS,
-  body: document_body,
-})
+const input_text = `The future belongs to those who believe in the beauty of their 
+                    dreams.`;
 
-let doc_vec = []; // the document embedding will be here
-if (doc_vec_resp.ok) {
-    let doc_vec_json = await doc_vec_resp.json();
-    // Voyage's response is an array of objects
-    // each with a property 'embedding' that contains the vector
-    doc_vec = doc_vec_json.data[0].embedding;
-} else {
-  // some error handling, watch out for rate limits and such
-  let error = await doc_vec_resp.text();
-  console.log(`HTTP error! 
-    status: ${doc_vec_resp.status}
-    error: ${error}`
-  );
-  process.exit(1);
-}
+// embedDocuments is the batch API and can take multiple documents in one call
+const doc_vec_resp = await embedDocs.embedDocuments([input_text]);
+// it returns an array of embeddings, we have just one
+const doc_vec = doc_vec_resp[0];
 
-// this is the request for Voyage's API, for the query embedding
-const question_body = JSON.stringify({
-  input: [
-    "Who does the future belong to?"
-  ],
-  model: model,
-  input_type: 'query'
-});
+const question = "Who does the future belong to?";
 
-const question_vec_resp = await fetch(VOYAGE_URL, {
-  method: 'POST',
-  headers: VOYAGE_HEADERS,
-  body: document_body,
-})
-
-let question_vec = []; // the document embedding will be here
-if (question_vec_resp.ok) {
-    let question_vec_json = await question_vec_resp.json();
-    // Voyage's response is an array of objects
-    // each with a property 'embedding' that contains the vector
-    question_vec = question_vec_json.data[0].embedding;
-} else {
-  // some error handling, watch out for rate limits and such
-  let error = await question_vec_resp.text();
-  console.log(`HTTP error! 
-    status: ${question_vec_resp.status}
-    error: ${error}`
-  );
-  process.exit(1);
-}
+// embedQuery takes a single query string and returns a single vector
+const question_vec = await embedQueries.embedQuery(question);
 ```
 
 ### Storing and retrieving the embeddings
