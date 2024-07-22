@@ -1,7 +1,7 @@
 export const metadata = {
   title: "AI Code Assistant built on GPT-4o-mini, Langchain, Postgres and pg_vector",
   authors: ["gwenshap"],
-  image: "2024-07-13-all-about-ai/cover.webp",
+  image: "2024-07-22-building_code_assistant/cover.webp",
   sizzle:
     "Building a RAG-based AI SaaS isn't hard - but there are gotchas and decisions you need to be mindful of. Here's how to build a code assistant from scratch - including the design decisions and the implementation details. ",
   tags: ["ai", "generative", "rag", "embedding", "vector", "SaaS"],
@@ -145,7 +145,7 @@ I chose OpenAI's text-embedding-3-large model for the embeddings and OpenAI's gp
 I chose them because they are good at the task, have a reasonable cost, and are easy to use. I also experimented with some OSS models, but I had issues deploying them and didn't get the performance I expected. 
 I'll probably revisit this in the future. Because I switched between OpenAI compatible models, the changes in the code for my experiements were minimal:
 
-![Diff of switching embedding model](/blog/2024-07-22-building_code_assistant/change_model_diff.png)
+![Diff of switching embedding model](/blog/2024-07-22-building_code_assistant/change_model_diff.webp)
 
 If I switched to Google's Gemini APIs, which aren't compatible with OpenAI, it would have been a larger diff.
 
@@ -319,7 +319,7 @@ const respStream = await model.stream([
 ]);
 ```
 
-Note that the prompt is quite extensive. It took quite a few experiments to get it right, and I was surprised how much the prompt affected the quality of the response.
+Note that the prompt is quite extensive. I ran some experiments and was surprised how much the prompt affected the quality of the response.
 For example, when I told the model that it is a software engineer answering questions for other software engineers, it used more code snippets in the response. So it is 
 worth experimenting with a bit of prompt engineering.
 
