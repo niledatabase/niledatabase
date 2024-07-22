@@ -18,11 +18,11 @@ Assistant. I'll cover the design decisions, the implementation details, and the 
 You can follow along with the [source code](https://github.com/niledatabase/niledatabase/tree/main/examples/ai/code_assist/), and if you want to experiment with it yourself, 
 you can sign up for a [Nile account](https://thenile.dev) and create a free database for these experiments.
 
-## High level architecture decisions
+## High level RAG architecture
 
 As we discussed in the previous blog, I've decided to use RAG architecture for the AI Code Assistant. 
 RAG architecture were a good fit for my requirements, which involved responding to user questions based on existing code-bases.
-Whenever requirements involve "use existing data in the model response", RAG is a good choice. 
+**Whenever requirements involve "use existing data in the model response", RAG is a good choice.** 
 Fine-tuning can be used in combination to help the model understand and perform better on specific tasks, and we may add it later. 
 Starting with RAG allows you to get a good data set that you can later use to fine tune the model.
 
@@ -40,18 +40,15 @@ database is used not just to store the embeddings but also to store user identit
 Postgres with pg_vector. In our example, we naturally use Nile, which provides extra capabilities around user identity and isolating tenant data into virtual 
 tenant databases - including the embeddings.
 
-The ingest and chat flows can be completely distinct. For example, in a customer-support bot, there will be a process to update it with new documentation - this process 
+The ingest and chat flows can be completely distinct. For example, in a customer support bot, there will be a process to update it with new documentation - this process 
 is completely separate from the process in which it responds to user questions. Or they can be part of the same user experience in applications that let users upload 
 their own documents and then ask questions. 
 
-**In the Code Assistant architecture, I separated the two phases.** Updating Code Assistant with new repositories is done from a small script in the command line. 
+**In the Code Assistant architecture, I separated the ingest and conversation phases.** Updating Code Assistant with new repositories is done from a small script in the command line. 
 While interrogating the repositories is done from a SaaS-y web UI. 
 
-Within this common high-level design, there are many small decisions that make a large difference in performance and user experience. 
-In this blog I'll walk you through the major decisions, explain how I made them, and show how they are reflected in the implementation. By the time you are done reading
-(get some coffee, it isn't short), you'll know everything you need to build your own AI Code Assistant, or similar RAG-based SaaS.
-
-We are going to go over the application from the ground up - from the database schema to the user interface.
+Within this high-level design, there are many details to consider. In this blog, we'll go over the application design from the ground up - from the database schema to 
+the user interface. By the time you are done reading, you'll know everything you need to build your own AI Code Assistant, or similar RAG-based SaaS.
 
 ## Data model
 
@@ -74,17 +71,16 @@ CREATE TABLE IF NOT EXISTS embeddings_openai_text3_large (
 );
 ```
 
-Few noteworthy things in the design of this table:
+Lets look at the design of the table.
 
-**The table has a tenant_id column:** 
-Which makes the table **tenant aware** - the embeddings for each tenant are stored in their own virtual tenant database and are isolated from each other. 
-
-This has a couple of important benefits:
+### Emebeddings table is tenant aware
+You can see that the table has `tenant_id` column, which makes it tenant aware. The embeddings for each tenant are stored in their own virtual tenant database and 
+are isolated from each other. This has a couple of important benefits:
 * **Privacy:** Each tenant's embeddings and data are isolated and won't get mixed up with one another. 
 * **Performance:** We only look for relevant embeddings within the virtual tenant data, a small subset of the entire collection and therefore faster to search.
 * **Scalability:** As the set of embeddings grows, we can move some tenants to new physical machines, which allows us to use more memory and CPU for our applications over time.
 
-**Size of the embedding column:** 
+### Size of the embedding column
 As you can see, we limit the vector size (or number of features) to 1024 dimensions. Different embedding models generate different vector sizes. Interestingly, 
 there is very little correlation between the size of the embedding vectors and their quality. Models with 1024 or even 512 dimensions achieve comparable or better scores 
 than models with 4096 and above dimensions in the HuggingFace leaderboard. 
@@ -97,20 +93,20 @@ This behavior is called TOAST. Reading two rows (the original + overflow) takes 
 Note that the size of the model has to match the size of the vector column *exactly*. You can't store 2048 dimension vectors in a 1024 dimension column, but you also can't 
 store 1024 dimension vectors in a 2048 dimension column. Which brings us to the next point:
 
-**Name of the table:**
-The table is called embeddings_openai_text3_large because the embeddings in it were generated by the openai_text3_large model. I experimented with several models and used 
+### Embedding table per model
+The table is called `embeddings_openai_text3_large` because the embeddings in it were generated by the `openai_text3_large` model. I experimented with several models and used 
 a separate table for each embedding. I used different tables and not a model column in each table because different models need vector columns of different sizes (as explained above). 
-And even if the embeddings of two different models have the same size, you still can't mix models - if you embed a question with openai_text3_large, you 
+And even if the embeddings of two different models have the same size, you still can't mix models - if you embed a question with `openai_text3_large`, you 
 have to search for related embeddings using the same model. 
 
 Because I didn't want to re-chunk and re-upload all the data when trying another model - I stored the code itself in a separate table.
 
-**Lack of vector indexes:**
+### Lack of vector indexes
 After I embedded a collection of repositories for a few tenants for the live demo, I noticed that I have fewer than 100 embedding vectors per tenant. 
-At this scale, vector indexes don't add much value (full scan of 100 blocks is fast) but they add overhead and potential loss of recall. So, I skipped them for now. We'll 
+At this scale, vector indexes don't add much value (full scan of 100 blocks is plenty fast) but they add overhead and potential loss of recall. So, I skipped them for now. We'll 
 have a separate blog post about vector indexes with appropriate examples.
 
-**Additional tables:**
+### Additional tables
 Our model includes a few more tables for the documents and some metadata:
 - `projects` table stores metadata about each repository we embedded - the tenant it belongs to, URL, and description. 
 - `file_content` table stores the actual code for each project and is linked to the embeddings table. So we can easily pull up the relevant code when we search 
@@ -164,7 +160,7 @@ If you take another look at our high level diagram, I needed an API that takes a
 * Respond with the answer and also with the list documents that were used to find the answer (so we can highlight them in the UI). 
 
 To put all these steps together, I decided to use LangChain. LangChain is the most popular AI SDK for Javascript, so it looked like the right choice. 
-But I have to say that in retrospect, I am not sure I’d have used it again.
+But I have to say that in retrospect, I am not sure I'd make the same choice.
 
 I mentioned earlier that different models, vendors and model types have different APIs. LangChain does not mask this complexity - you import different modules 
 and use them with different input and output structures. Some of these modules are contributed by the community and have varying quality of documentation. 
@@ -179,12 +175,13 @@ Calling OpenAI with LangChain:
 ```javascript
 const model = new ChatOpenAI({
     temperature: 0.9,
-    // In Node.js defaults to process.env.OPENAI_API_KEY
-    });
+    model: "gpt-4o-mini",
+});
 
 const answer = await model.invoke([
-new SystemMessage(...), 
-new HumanMessage(...)])
+  new SystemMessage(...), 
+  new HumanMessage(...)]
+);
 ```
  
 And with OpenAI API directly:
@@ -192,9 +189,9 @@ And with OpenAI API directly:
 ```javascript
  const answer = await openai.chat.completions.create({
     messages: [
-  {"role": "system", "content": "..."},
-        {"role": "user", "content": "..."},],
-    model: "gpt-3.5-turbo",
+      {"role": "system", "content": "..."},
+      {"role": "user", "content": "..."},],
+    model: "gpt-4o-mini",
   });
 ```
 
@@ -212,7 +209,7 @@ running on my laptop. This made it easy to load the data - I could clone the rep
 
 The embedding model's I've experimented with (both OSS and proprietary) all accepted at least 8K input tokens. While embedding various repositories, I discovered that most 
 files that make up a code base are significantly smaller. 80% were under 1000 tokens, and 98% were under 2000. This is a sign of good code - files are relatively small 
-and are also highly cohesive - containing one class or one module with tightly related functionality. Which makes them ideal as an embedding chunk. So, I ended up 
+and are also highly cohesive - containing one class or one module with tightly related functionality. **Which makes them ideal as an embedding chunk**. So, I ended up 
 embedding entire files rather than breaking code into individual functions. 
 
 Embedding entire files doesn't always work well, though. I ran across iPython Notebooks code with very large files with very loosely coupled functionality for instance. 
@@ -227,7 +224,7 @@ I wrapped the embedding library:
 export async function createVectorEmbedding(text: string): Promise<number[]> {
   const model = new OpenAIEmbeddings({
     model: EMBEDDING_MODEL,
-    dimensions: 1024, // fewer dimensions for more efficient use of PG TOAST storage. OpenAI models were trained to scale down well to fewer dimensions.
+    dimensions: 1024,
   });
   const res = await model.embedDocuments([text]);
   return res[0]; // we sent one text, we get one embedding
@@ -242,14 +239,16 @@ But the important thing is that we now have only one type of input and output to
 The next step is to use this method to embed the files and then store the results:
 
 ```javascript
-  const client = await nile.db.connect(); // need to grab a client, so we can insert embeddings in one transaction
+  const client = await nile.db.connect();
   await client.query("BEGIN");
   try {
     for (const file of files) {
       const content = fs.readFileSync(file, "utf-8");
-      if (content.length > 0 && content.length < 8192) { // skip files that are larger than the max-token limit of the model
+      // skip files that are larger than the max-token limit of the model
+      if (content.length > 0 && content.length < 8192) {
         const result = await nile.db.query( // store file
-          "INSERT INTO file_content(tenant_id, project_id, file_name, contents) VALUES($1, $2, $3, $4) RETURNING id",
+          `INSERT INTO file_content(tenant_id, project_id, file_name, contents) 
+          VALUES($1, $2, $3, $4) RETURNING id`,
           [tenant_id, project_id, file, content]
         );
         const embedding = await createVectorEmbedding(content); // embed
@@ -267,14 +266,13 @@ The next step is to use this method to embed the files and then store the result
   await client.query("COMMIT");
 ```
 
-Note how we embed and store the entire repository in a single transaction. This way we don't end up with files that lack embeddings,or with a partially embedded repository. 
-If needed, we roll back the entire operation and re-try later. This is very useful while experimenting.
+Note how **we embed and store the entire repository in a single transaction**. This way we don't end up with files that lack embeddings,or with a partially embedded repository. 
+If needed, we roll back the entire operation and re-try later. Very useful while experimenting.
 
 ## Conversation phase - bringing embeddings to a model
 
 The conversation phase is the process of taking the user question, generating a vector embedding, searching the stored vectors for related chunks, and then 
 sending the question with the related text and a creative prompt to the model. When the model responds, the question and answer are stored and displayed to the user.
-
 This is all implemented in the [API handler](https://github.com/niledatabase/niledatabase/blob/main/examples/ai/code_assist/src/app/api/embed-query/route.ts).
 
 Embedding the user question is straightforward, we re-used the `createVectorEmbedding` method from the ingestion phase. 
@@ -309,7 +307,8 @@ const model = new ChatOpenAI({
 });
 
 const respStream = await model.stream([
-    new SystemMessage(`You are a principal software engineer, answering questions about code projects to other software engineers. 
+    new SystemMessage(`You are a principal software engineer, answering questions about code 
+                projects to other software engineers. 
                 Use the following snippets of retrieved code to answer the question. 
                 They represent code snippets from the files most similar to the question.
                 Include code snippets from the provided context in your answer when relevant.
@@ -331,7 +330,7 @@ Now that we have the response from the model, its time to get it back to the use
 As I mentioned earlier, we wanted to show the response from the model as it was getting generated, to have the same cool UX as ChatGPT. This turned out to be the hardest 
 part of the project. 
 
-Looking at the LangChain example for working with a streaming response, you see something like this (OpenAI is very similar):
+Looking at the LangChain or OpenAI example for working with a streaming response, you see something like this:
 
 ```javascript
 const stream = await model.stream("Tell me a joke.");
@@ -382,7 +381,7 @@ Putting things back together on the React side is more involved. First, we had t
 const reader = resp.body.getReader();
            const decoder = new TextDecoder();
            let done = false; // we need to read the stream until it's done
-           let partialData = ""; // we need to accumulate the data as it comes in in order to update the file selection
+           let partialData = ""; // accumulate the data as it comes in
            let recievedFiles = false;
 
            while (!done) {
@@ -391,15 +390,18 @@ const reader = resp.body.getReader();
                const chunkValue = decoder.decode(value);
                if (!recievedFiles) {
                    partialData += chunkValue;
-                   const dataParts = partialData.split("EOJSON"); // first part of the response is json, second part is the answer
+                    // first part of the response is json, second part is the answer
+                   const dataParts = partialData.split("EOJSON");
                    if (dataParts.length > 1) {
                        const jsonPart = JSON.parse(dataParts[0]);
                        setLlmResponse(jsonPart);
-                       dispatch({ type: 'updateAnswer', text: dataParts[1]}); // display first part of the answer
+                       // display first part of the answer
+                       dispatch({ type: 'updateAnswer', text: dataParts[1]}); 
                        recievedFiles = true;
                    }
                } else {
-                   dispatch({ type: 'updateAnswer', text: chunkValue}); // display another part of the answer
+                   // display another part of the answer
+                   dispatch({ type: 'updateAnswer', text: chunkValue}); 
                    if (done) {
                        dispatch({ type: "done", text: ""});
                    }
@@ -452,5 +454,3 @@ Once we store the answers, we can also ask the user to tell us if they are good 
 
 But until we add all these bells an whistles, you are welcome to try out the [Code Assistant](https://www.thenile.dev/templates/Multi-tenant%20Code%20Assistant%20built%20using%20Nile%2C%20pg_vector%20and%20OpenAI), 
 clone the repository and experiment with it. You can get a Nile account and a free database to play with by [signing up to our waitlist](https://thenile.dev).
-
-
