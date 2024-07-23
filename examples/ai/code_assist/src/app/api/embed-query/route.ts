@@ -3,7 +3,7 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { Nile } from "@niledatabase/server";
 import { createVectorEmbedding, EMBEDDING_TABLE } from "@/lib/EmbeddingUtils";
 
-const MODEL = "gpt-3.5-turbo-instruct"; // until we find a better model, this is a low cost start...
+const MODEL = "gpt-4o-mini"; // until we find a better model, this is a low cost start...
 
 function iteratorToStream(iterator: any, response: string) {
   return new ReadableStream({

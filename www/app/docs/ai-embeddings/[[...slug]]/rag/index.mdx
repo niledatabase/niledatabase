@@ -148,10 +148,10 @@ for (const [i, vec] of vectors.entries()) {
 let question_vec = await model.embedDocuments(["Tell me about React"]);
 
 // search for the nearest document by cosine distance of embedding
-let answer_vec = (answer_vec = await nile.db.query(
+let answer_vec = await nile.db.query(
   "select id from embeddings order by embedding<=>$1 limit 1",
   [JSON.stringify(question_vec[0])]
-));
+);
 
 // return the answer:
 console.log(

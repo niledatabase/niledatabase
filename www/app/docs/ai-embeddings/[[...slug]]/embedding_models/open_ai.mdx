@@ -1,0 +1,130 @@
+export const metadata = {
+  title: "Open AI",
+  order: 1,
+};
+
+# Open AI Embedding Models
+
+## Availble models
+
+<table suppressHydrationWarning>
+  <tr>
+    <th>Model</th>
+    <th>dimensions</th>
+    <th>max tokens</th>
+    <th>cost</th>
+    <th>MTEB avg score</th>
+    <th>similarity metric</th>
+  </tr>
+  <tr>
+    <td>text-embedding-3-small</td>
+    <td>1536 (scales down)</td>
+    <td>8191</td>
+    <td>$0.02 / 1M tokens</td>
+    <td>62.3</td>
+    <td>cosine, dot product, L2</td>
+  </tr>
+  <tr>
+    <td>text-embedding-3-large</td>
+    <td>3072 (scales down)</td>
+    <td>8191</td>
+    <td>$0.13 / 1M tokens</td>
+    <td>64.6</td>
+    <td>cosine, dot product, L2</td>
+  </tr>
+</table>
+
+## Usage
+
+### Installing dependencies
+
+```bash
+npm install @niledatabase/server openai
+```
+
+### Generating embeddings with OpenAI
+
+```javascript
+// set up OpenAI
+const { OpenAI } = await import("openai");
+const OPENAI_API_KEY = "your openai api key";
+
+const openai = new OpenAI({
+  apiKey: OPENAI_API_KEY, // not necessary if you have this env variable
+});
+
+const MODEL = "text-embedding-3-small"; // or text-embedding-3-large
+const input_text = `The future belongs to those who believe in the beauty of their 
+                    dreams.`;
+
+// generate embeddings
+let resp = await openai.embeddings.create({
+  model: MODEL,
+  input: input_text,
+  dimensions: 1024, // OpenAI models scale down to lower dimensions
+});
+
+// OpenAI's response is an object with an array of
+// objects that contain the vector embeddings
+let embedding = resp.data[0].embedding;
+```
+
+### Storing and retrieving the embeddings
+
+```javascript
+// set up Nile as the vector store
+const { Nile } = await import("@niledatabase/server");
+const NILEDB_USER = "you need a nile user with access to a nile database";
+const NILEDB_PASSWORD = "and a password for that user";
+const nile = await Nile({
+  user: NILEDB_USER,
+  password: NILEDB_PASSWORD,
+});
+
+// store vector in a table
+await nile.db.query("INSERT INTO embeddings (embedding) values ($1)", [
+  JSON.stringify(embedding.map((v) => Number(v))),
+]);
+
+// search for similar vectors
+let db_resp = await nile.db.query(
+  "select embedding from embeddings order by embedding<=>$1 limit 1",
+  [JSON.stringify(embedding.map((v) => Number(v)))]
+);
+
+// Postgres returns an object, with array of rows each column is a
+// property of the row the vector is represented as a string
+let similar_str = db_resp.rows[0].embedding;
+let similar = similar_str
+  .substring(1, similar_str.length - 1)
+  .split(",")
+  .map((v) => parseFloat(v));
+
+// check that we got the same vector back
+let same = true;
+
+for (let i = 0; i < similar.length; i++) {
+  if (Math.abs(similar[i] - embedding[i]) > 0.000001) {
+    same = false;
+  }
+}
+
+console.log("got same vector? " + same);
+```
+
+## Additional information
+
+### Reducing dimensions
+
+Using larger embeddings generally costs more and consumes more compute, memory and storage than using smaller embeddings. This is especially true for embeddings stored with `pg_vector`.
+When storing embeddings in Postgres, it is important that each vector will be stored in a row that fits in a single PG block (typically 8K). If this size is exceeded,
+the vector will be stored in TOAST storage which can slow down queries. In addition vectors that are "TOASTed" are not indexed, which means you can't reliably use vector indexes.
+
+Both OpenAI's embedding models were trained with a technique that allows developers to trade-off performance and cost of using embeddings. Specifically, developers can shorten embeddings
+(i.e. remove some numbers from the end of the sequence) without the embedding losing its concept-representing properties by passing in the dimensions API parameter.
+Using the dimensions parameter when creating the embedding (as shown above) is the preferred approach. In certain cases, you may need to change the embedding dimension after you generate it.
+When you change the dimension manually, you need to be sure to normalize the dimensions of the embedding.
+
+### Distance metrics
+
+OpenAI embeddings are normalized to length 1, which means that you can use L2, cosine, and dot product similarity metrics interchangeably. Dot product is the fastest to compute.
