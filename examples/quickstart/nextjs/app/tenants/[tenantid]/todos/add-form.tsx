@@ -33,7 +33,7 @@ export function AddForm({ tenantid }: { tenantid: string }) {
         variant="outlined"
         id="todo"
         name="todo"
-        sx={{ width: "80%" }}
+        sx={{ width: "95%" }}
       ></Input>
       <p aria-live="polite" className="sr-only" role="status">
         {state?.message}
