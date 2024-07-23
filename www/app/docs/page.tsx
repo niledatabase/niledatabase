@@ -87,7 +87,7 @@ export default async function Home() {
           <div className="text-3xl mb-10 lg:text-left text-center">
             Languages and frameworks
           </div>
-          <div className="flex flex-wrap flex-row gap-6 max-w-[762px] mx-auto justify-center">
+          <div className="flex flex-wrap flex-row gap-6 max-w-[852px] mx-auto justify-center">
             {languages.map(({ name, icon, path }) => {
               return (
                 <Link
