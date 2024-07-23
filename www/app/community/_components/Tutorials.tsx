@@ -20,10 +20,6 @@ const videos = [
     videoUrl: "https://www.youtube.com/embed/6Lm3-YeLzks?si=A5VNbZ5lgD40PRwm",
   },
   {
-    title: "Build a Java application with Nile",
-    videoUrl: "https://www.youtube.com/embed/xnji861fsf4?si=asdLXH-M3ACspuzf",
-  },
-  {
     title: "Built a NextJS application with Nile",
     videoUrl: "https://www.youtube.com/embed/Eo0dDROnJGg?si=qS4Rg8LAyIkK4zfB",
   },

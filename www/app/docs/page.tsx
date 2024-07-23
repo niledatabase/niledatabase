@@ -13,7 +13,10 @@ import NileBgMark from "@/public/icons/nile-bg-mark.svg";
 import Templates from "@/public/icons/templates.svg";
 
 const languages = [
-  { name: "SQL", icon: "sql.svg", path: "/docs/getting-started/languages/sql" },
+  { name: "SQL", 
+    icon: "sql.svg", 
+    path: "/docs/getting-started/languages/sql" 
+  },
   {
     name: "NextJS",
     icon: "nextjs.svg",
@@ -23,11 +26,6 @@ const languages = [
     name: "Node",
     icon: "node.svg",
     path: "/docs/getting-started/languages/node",
-  },
-  {
-    name: "Java",
-    icon: "java.svg",
-    path: "/docs/getting-started/languages/java",
   },
   {
     name: "Drizzle",
@@ -89,7 +87,7 @@ export default async function Home() {
           <div className="text-3xl mb-10 lg:text-left text-center">
             Languages and frameworks
           </div>
-          <div className="flex flex-wrap flex-row gap-6 max-w-[936px] mx-auto justify-center">
+          <div className="flex flex-wrap flex-row gap-6 max-w-[852px] mx-auto justify-center">
             {languages.map(({ name, icon, path }) => {
               return (
                 <Link

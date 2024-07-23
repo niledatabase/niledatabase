@@ -91,29 +91,6 @@ export const NodeJSQuickstart: Template = {
   },
 };
 
-export const JavaQuickstart: Template = {
-  // A great name, preferably unique, name for the template
-  name: "Java multi-tenant application with Nile",
-  // what the template does
-  description:
-    "Learn about Nile concepts from a multi-tenant Todo List app in Java",
-  // who made it
-  author: "Nile",
-  demoUrl: "https://java-quickstart-demo.vercel.app/",
-  // the location of the thumbnail. could be in /public/templates, or a CDN
-  imageSrc: "/templates/JavaTodoApp.png",
-  // the readmeURL should be publicly accessible.
-  // It should also be the real github url, not the raw readme
-  readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/java/README.md",
-  // A key/value string/string. What is put here will show up on the site exactly
-  metadata: {
-    Framework: "Java, Spring Boot 3, Hibernate",
-    "Use Case": "Building SaaS",
-    Publisher: "Nile",
-  },
-};
-
 export const DrizzleQuickstart: Template = {
   // A great name, preferably unique, name for the template
   name: "Drizzle multi-tenant application with Nile",
