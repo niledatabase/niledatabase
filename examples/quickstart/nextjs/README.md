@@ -70,7 +70,7 @@ EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
 
 Install dependencies with `yarn install` or `npm install`.
 
-### 5. Running the app
+### 6. Running the app
 
 ```bash
 npm run dev
