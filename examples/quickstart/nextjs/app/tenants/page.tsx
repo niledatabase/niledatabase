@@ -77,7 +77,7 @@ export default async function Page() {
           <Typography level="body-md" textAlign="center">
             {" "}
             You are logged in as {getUserName(cookies().get("authData"))}{" "}
-            <MUILink href="/logout" component={NextLink}>
+            <MUILink href="/logout" component={NextLink} prefetch={false}>
               (Logout)
             </MUILink>
           </Typography>

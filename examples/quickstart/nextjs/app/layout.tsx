@@ -54,7 +54,7 @@ export default function RootLayout({
           </div>
           <div>
             <Stack>
-              <Typography level="h2">Yet Another Todo Application</Typography>
+              <Typography level="h2">AI-native Todo Application</Typography>
             </Stack>
           </div>
           {children}

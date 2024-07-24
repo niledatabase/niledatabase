@@ -13,10 +13,7 @@ import NileBgMark from "@/public/icons/nile-bg-mark.svg";
 import Templates from "@/public/icons/templates.svg";
 
 const languages = [
-  { name: "SQL", 
-    icon: "sql.svg", 
-    path: "/docs/getting-started/languages/sql" 
-  },
+  { name: "SQL", icon: "sql.svg", path: "/docs/getting-started/languages/sql" },
   {
     name: "NextJS",
     icon: "nextjs.svg",
