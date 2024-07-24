@@ -45,7 +45,7 @@ You will see the new table in the panel on the left side of the screen, and you 
 See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
 ![Creating a table in Nile's admin dashboard](/docs/gui-create-table.png)
 
-The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find semantically 
+The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find semantically
 related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and using this data with text generation models is called [**RAG (Retrieval Augumented Generation)**](https://www.thenile.dev/docs/ai-embeddings/rag).
 
 ## 3. Get credentials
@@ -54,7 +54,7 @@ In the left-hand menu, click on "Settings" and then select "Credentials". Genera
 
 ### 4. 3rd party credentials
 
-This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will 
+This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will
 need access to models from a vendor with OpenAI compatible APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
 
 ## 5. Set the environment
@@ -253,7 +253,7 @@ We don't want just anyone handing us tasks and telling us to do them, right?
 
 ## 6.6 AI-driven time estimates
 
-This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. We handle the time estimates in 
+This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. We handle the time estimates in
 `app/tenants/[tenantid]/todos/todo-actions.tsx`, when we add a new task.
 
 When you add a new task, we use the embedding model to generate an embedding for the task text:
@@ -262,47 +262,47 @@ When you add a new task, we use the embedding model to generate an embedding for
 const embedding = await embedTask(title.toString());
 ```
 
-The `embedTask` function is defined in `lib/AiUtils.tsx` and uses the embedding model to generate the embedding. 
+The `embedTask` function is defined in `lib/AiUtils.tsx` and uses the embedding model to generate the embedding.
 We wrap the call to the model since some vendors have slightly different inputs and outputs. This will let us switch vendors easily in the future.
 
 ```typescript
-  // generate embeddings
-  let resp = await ai.embeddings.create({
-    model: embedding_model,
-    input: title,
-  });
+// generate embeddings
+let resp = await ai.embeddings.create({
+  model: embedding_model,
+  input: title,
+});
 ```
 
 Then we use the AI model to generate a time estimate for the task. We also wrapped this in a utility function, so the `addTodo` handler calls it:
 
 ```typescript
-  const estimate = await aiEstimate(tenantNile, title.toString());
+const estimate = await aiEstimate(tenantNile, title.toString());
 ```
 
-The `aiEstimate` function is defined in `lib/AiUtils.tsx` and first it looks up similar tasks using embeddings. Because we are still in the tenant 
+The `aiEstimate` function is defined in `lib/AiUtils.tsx` and first it looks up similar tasks using embeddings. Because we are still in the tenant
 context (see the use of `tenantNile` client), we only look up tasks for this tenant:
 
 ```typescript
-  const similarTasks = await tenantNile.db.query(
-    `SELECT title, estimate FROM todos WHERE embedding <-> $1 < 1`,
-    [embeddingToSQL(embedding)]
-  );
+const similarTasks = await tenantNile.db.query(
+  `SELECT title, estimate FROM todos WHERE embedding <-> $1 < 1`,
+  [embeddingToSQL(embedding)]
+);
 ```
 
 and finally, we use the AI model to generate the estimate. We include the similar tasks in the prompt to the model, so it can use them as reference:
 
 ```typescript
 const aiEstimate = await ai.chat.completions.create({
-    messages: [
-      {
-        role: "user",
-        content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
+  messages: [
+    {
+      role: "user",
+      content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
         I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
         respond with just the estimate, no yapping.`,
-      },
-    ],
-    model: model,
-  });
+    },
+  ],
+  model: model,
+});
 ```
 
 This estimate is then stored in the database along with the task and its vector embedding.
@@ -322,4 +322,4 @@ You can learn [More about AI in Nile](https://www.thenile.dev/docs/ai-embeddings
 
 - [Chat with PDFs](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
 - [Code Assistnat](https://www.thenile.dev/docs/getting-started/examples/code_assistant)
-You can explore Nile's JS SDK in the [SDK reference](/docs/reference/sdk-reference).
+  You can explore Nile's JS SDK in the [SDK reference](/docs/reference/sdk-reference).

@@ -28,7 +28,7 @@ In the left-hand menu, click on "Settings" and then select "Credentials". Genera
 
 ### 4. 3rd party credentials
 
-This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will 
+This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will
 need access to models from a vendor with OpenAI compatible APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
 
 ### 5. Setting the environment
@@ -41,7 +41,7 @@ cd nile-todo
 ```
 
 Rename `.env.local.example` to `.env.local`, and fill in the username and password with the
-credentials you picked up in the previous step. As well as the API key, URL and model names. 
+credentials you picked up in the previous step. As well as the API key, URL and model names.
 
 It should look something like this (you can see that I used Fireworks as the vendor, but you can use OpenAI or any compatible vendor):
 
