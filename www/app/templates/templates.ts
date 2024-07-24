@@ -1,18 +1,17 @@
 import { Template } from "./types";
 
 export const NextJSQuickstart: Template = {
-  name: "NextJS multi-tenant application with Nile",
+  name: "AI-native multi-tenant application with Nile, pg_vector, NextJS and Llama 3.1 405B",
   description:
-    "Learn about Nile concepts from a Todo multi-tenant app in NextJS",
+    "Learn about Nile and AI concepts from a multi-tenant Todo app in NextJS. We go over tenant isolation, RAG architectures and integration with AI models",
   author: "Nile",
-  imageSrc: "/templates/NextJSTodoApp.png",
+  imageSrc: "/templates/AINextJSTodoApp.png",
   demoUrl: "https://nextjs-quickstart-omega.vercel.app/",
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/nextjs/README.md",
-  // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
-    Framework: "NextJS 13",
-    "Use Case": "Building SaaS",
+    Framework: "NextJS, OpenAI, pg_vector",
+    "Use Case": "Building AI Native SaaS",
     Publisher: "Nile",
   },
 };
