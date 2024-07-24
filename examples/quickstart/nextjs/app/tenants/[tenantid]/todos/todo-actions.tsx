@@ -25,7 +25,7 @@ export async function addTodo(
   if (!title) {
     return { message: "Please enter a title" };
   }
-  // for each todo, we want to try and generate an AI estimate. 
+  // for each todo, we want to try and generate an AI estimate.
   const estimate = await aiEstimate(tenantNile, title.toString());
   // We also want to try and embed the task for future AI processing
   const embedding = await embedTask(title.toString());
