@@ -69,7 +69,7 @@ export default async function Page({
             <td style={{ width: '70%' }}>
               <DoneForm tenantId={tenantNile.tenantId!} todo={todo} />
             </td>
-            <td> 30 minutes, tops. </td>
+            <td> {todo.estimate} </td>
           </tr>
         ))}
       </Table>
