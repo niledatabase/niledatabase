@@ -2,7 +2,6 @@ import { Server } from "@niledatabase/server";
 import { OpenAI } from "openai";
 
 export function embeddingToSQL(embedding: number[]) {
-  console.log(embedding);
   return JSON.stringify(embedding);
 }
 
@@ -32,8 +31,8 @@ export async function findSimilarTasks(tenantNile: Server, title: string) {
 
   // get similar tasks, no need to filter by tenant because we are already in the tenant context
   const similarTasks = await tenantNile.db.query(
-    `SELECT title, estimate FROM todos WHERE embedding <-> $2 < 1`,
-    [tenantNile.tenantId, embeddingToSQL(embedding)]
+    `SELECT title, estimate FROM todos WHERE embedding <-> $1 < 1`,
+    [embeddingToSQL(embedding)]
   );
 
   console.log(` found ${similarTasks.rowCount} similar tasks`);

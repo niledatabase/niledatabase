@@ -74,7 +74,7 @@ export default async function Page({
               </td>
               <td>
                 {" "}
-                <Markdown>{String(todo.estimate)}</Markdown>
+                <Markdown>{todo.estimate ? String(todo.estimate) : "No estimate found"}</Markdown>
               </td>
             </tr>
           ))}
