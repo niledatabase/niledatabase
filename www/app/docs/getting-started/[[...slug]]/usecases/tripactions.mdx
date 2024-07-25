@@ -135,3 +135,96 @@ CREATE TABLE travel_analytics (
     FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id)
 );
 ```
+
+### Full Script
+
+```sql
+CREATE TABLE tenant_preferences (
+    tenant_id UUID,
+    preference_id UUID DEFAULT gen_random_uuid(),
+    preference_key VARCHAR(100) NOT NULL,
+    preference_value JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, preference_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+CREATE TABLE user_travel_history (
+    tenant_id UUID,
+    history_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    travel_date DATE NOT NULL,
+    destination VARCHAR(100) NOT NULL,
+    activities JSONB,
+    total_spend DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, history_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id)
+);
+
+CREATE TABLE itineraries (
+    tenant_id UUID,
+    itinerary_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    destinations JSONB,
+    is_draft BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, itinerary_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id)
+);
+
+CREATE TABLE itinerary_details (
+    tenant_id UUID,
+    detail_id UUID DEFAULT gen_random_uuid(),
+    itinerary_id UUID,
+    date DATE NOT NULL,
+    activity_type VARCHAR(50),
+    activity_details JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, detail_id),
+    FOREIGN KEY (tenant_id, itinerary_id) REFERENCES itineraries(tenant_id,itinerary_id)
+);
+
+CREATE TABLE bookings (
+    tenant_id UUID,
+    booking_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    itinerary_id UUID,
+    booking_type VARCHAR(50) NOT NULL,
+    booking_details JSONB NOT NULL,
+    status VARCHAR(20) DEFAULT 'confirmed',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, booking_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id),
+    FOREIGN KEY (tenant_id, itinerary_id) REFERENCES itineraries(tenant_id,itinerary_id)
+);
+
+CREATE TABLE booking_reminders (
+    tenant_id UUID,
+    reminder_id UUID DEFAULT gen_random_uuid(),
+    booking_id UUID,
+    user_id UUID,
+    reminder_date DATE NOT NULL,
+    message TEXT NOT NULL,
+    sent BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, reminder_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id),
+    FOREIGN KEY (tenant_id,booking_id) REFERENCES bookings(tenant_id,booking_id)
+);
+
+CREATE TABLE travel_analytics (
+    tenant_id UUID,
+    analytics_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    travel_date DATE NOT NULL,
+    total_spend DECIMAL(10, 2) NOT NULL,
+    categories_spend JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, analytics_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id)
+);
+```
