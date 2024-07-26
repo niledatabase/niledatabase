@@ -194,9 +194,9 @@ export const PythonQuickstart: Template = {
 };
 
 export const AIChatWithPDF: Template = {
-  name: "Multi-tenant chat with PDF application using Nile, pg_vector and OpenAI",
+  name: "KnowledgeAI - PDF search assistant for your organization",
   description:
-    "Learn how to use Nile as a multi-tenant vector database with OpenAI to build a chat with PDF application",
+    "Learn how to use Nile to build multi-tenant SaaS to build a PDF search assistant for your organization",
   author: "Nile",
   demoUrl: "https://ai-pdf-tau.vercel.app/",
   imageSrc: "/templates/ChatWithPDF.png",

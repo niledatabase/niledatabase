@@ -34,7 +34,7 @@ export const ProModal = (orgId) => {
         </div>
         <div className="text-primary mx-auto space-y-6 p-6">
           <h2 className="font-semibold text-xl">
-            Upgrade to Chatty Pro Today!
+            Upgrade to KnowledgeAI Pro Today!
           </h2>
           <Button
             disabled={isLoading}
