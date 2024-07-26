@@ -10,6 +10,7 @@ import { useParams } from "react-router";
 import { Link as ReactLink } from "react-router-dom";
 import MUILink from "@mui/joy/Link";
 import Layout from "../layout";
+import Markdown from "react-markdown";
 
 interface Todo {
   id: string;
@@ -138,7 +139,12 @@ export default function Todos() {
                       onChange={() => completeTodo(tenantId, todo)}
                     />
                     </td>
-                    <td> {todo.estimate} </td>
+                    <td>                 
+                      {" "}
+                      <Markdown>
+                        {todo.estimate ? String(todo.estimate).replaceAll('\n','  \n') : "No estimate found"}
+                      </Markdown> 
+                    </td>
                   </tr>
               ));
             }

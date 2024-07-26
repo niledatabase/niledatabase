@@ -1,10 +1,10 @@
-# Multi-tenant todo list app with Nile, Python, FastAPI and SqlAlchemy
+# Multi-tenant AI-native todo list app with Nile, Python, FastAPI and SqlAlchemy
 
-This template shows how to build a SaaS app, using Nile, Serverless Postgres for SaaS, with Python, FastAPI and SqlAlchemy. The example app we'll build is a multi-tenant task manager.
+This template shows how to build a multi-tenant AI-native todo list application, using Nile with Python, FastAPI and SqlAlchemy.
 
-- [Live demo - tbd]()
-- [Video guide - tbd]()
-- [Step by step guide - tbd]()
+- [Live demo](https://nile-python-quickstart.fly.dev/)
+- [Video guide](https://youtu.be/Axl63TUf2bc?feature=shared)
+- [Step by step guide](https://www.thenile.dev/docs/getting-started/languages/python)
 
 ## Getting Started
 
@@ -17,7 +17,7 @@ Sign up for an invite to [Nile](https://thenile.dev) if you don't have one alrea
 After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
 
 ```sql
-    create table todos (id uuid, tenant_id uuid, title varchar(256), complete boolean);
+    create table todos (id uuid, tenant_id uuid, title varchar(256), estimate varchar(256), embedding vector(768), complete boolean);
 ```
 
 If all went well, you'll see the new table in the panel on the left hand side of the query editor. You can also see Nile's built-in tenant table next to it.
@@ -25,6 +25,10 @@ If all went well, you'll see the new table in the panel on the left hand side of
 ### 3. Getting credentials
 
 In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
+
+### 4. 3rd party credentials
+
+This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
 
 ### 4. Setting the environment
 
@@ -35,7 +39,7 @@ git clone https://github.com/niledatabase/niledatabase
 cd niledatabase/examples/quickstart/python
 ```
 
-Copy `.env.example` to `.env` and fill in the details of your Nile DB.
+Copy `.env.example` to `.env` and fill in the details of your Nile DB and your AI model vendor.
 
 It should look something like this:
 
@@ -45,6 +49,12 @@ LOG_LEVEL=DEBUG
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+# for AI estimates
+AI_API_KEY=xHOdhtYABdcmqhqqgFezMf2kVBz9SKGj05xeaLVYMksuIA0T
+AI_BASE_URL=https://api.fireworks.ai/inference/v1
+AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
+EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
 ```
 
 Optional, but recommended, step is to set up a virtual Python environment:
@@ -121,8 +131,9 @@ The frontend uses the backend APIs that we described above.
 If you want to see all the data you created, you can go back to Nile Console and run a few queries:
 
 ```sql
-select * from todos;
-select * from tenants;
+select name, title, estimate, complete from
+tenants join todos on tenants.id=todos.tenant_id
+
 select * from users;
 ```
 
@@ -132,7 +143,7 @@ This repository includes example `fly.toml.example` file and `Procfile`. Assumin
 
 ```bash
 fly launch
-fly deploy
+fly deploy --ha=false
 ```
 
 You can refer to the example `fly.toml.example` for a working configuration.
