@@ -212,7 +212,7 @@ export const AIChatWithPDF: Template = {
 export const CodeAssist: Template = {
   name: "Autonomous Code Assistant - Code more, type less",
   description:
-    "Learn how to use Nile to build multi-tenant SaaS to browse PDF documents in your organization and interact with it",
+    "Learn how to use Nile to build multi-tenant SaaS that helps browse and query new code-bases",
   author: "Nile",
   demoUrl: "https://code-assist-nile.vercel.app/",
   imageSrc: "/templates/CodeAssist.png",
