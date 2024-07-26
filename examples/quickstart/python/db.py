@@ -9,7 +9,8 @@ from tenant_middleware import get_tenant_id, get_user_id
 log_sql = my_env = os.getenv("LOG_SQL", 'False').lower() in ('true', '1', 't')
 engine = create_engine(
     os.getenv("DATABASE_URL"),
-    echo=log_sql)
+    echo=log_sql,
+    connect_args={'sslmode': "disable"})
 
 # use this for cases where you don't want a specific tenant database, when creating a new tenant or signing up new users
 def get_global_session():

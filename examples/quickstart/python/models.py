@@ -1,15 +1,29 @@
-from sqlmodel import Field, SQLModel, text
+from sqlmodel import Field, Column, SQLModel, text
 from sqlalchemy import MetaData
+from pgvector.sqlalchemy import Vector
+from typing import List, Optional
 from uuid import UUID, uuid4
 
 users_schema = MetaData(schema="users")
 auth_schema = MetaData(schema="auth")
 
+'''
+  Column   |          Type          | Collation | Nullable |      Default      | Storage  | Compression | Stats target | Description
+-----------+------------------------+-----------+----------+-------------------+----------+-------------+--------------+-------------
+ id        | uuid                   |           |          | gen_random_uuid() | plain    |             |              |
+ tenant_id | uuid                   |           |          |                   | plain    |             |              |
+ title     | character varying(256) |           |          |                   | extended |             |              |
+ complete  | boolean                |           |          |                   | plain    |             |              |
+ estimate  | character varying(256) |           |          |                   | extended |             |              |
+ embedding | vector(768)            |           |          |                   | external |             |              |
+'''
 class Todo(SQLModel, table=True):
     __tablename__ = "todos"
     id: UUID = Field(primary_key=True, default_factory=uuid4)
     tenant_id: UUID
     title: str
+    estimate: str
+    embedding: Optional[List[float]] = Field(default=None, sa_column=Column(Vector(768)))
     complete: bool = False    
     
 class Tenant(SQLModel, table=True):

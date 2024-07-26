@@ -102,12 +102,12 @@ curl -b cookies -X GET 'http://localhost:8000/api/tenants'
 curl -b cookies -X POST \
   'http://localhost:8000/api/todos' \
   --header 'Content-Type: application/json' \
-  --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
-  --data-raw '{"title": "feed the cat", "complete": false}'
+  --header 'X-Tenant-Id: 179027f2-e184-4df7-a568-2be746898be2' \
+  --data-raw '{"title": "implement a small todolist app", "complete": false}'
 
 # replace the tenant ID in the URL:
 curl  -b cookies -X GET \
-  --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
+  --header 'X-Tenant-Id: 179027f2-e184-4df7-a568-2be746898be2' \
   'http://localhost:8000/api/todos'
 
 # you'll need to create another todo with another tenant to see anything different here
