@@ -142,7 +142,7 @@ export default async function Home() {
             Use cases
           </div>
           <div className="flex flex-wrap flex-row gap-6 max-w-[852px] mx-auto justify-center">
-            {languages.map(({ name, icon, path }) => {
+            {usecases.map(({ name, icon, path }) => {
               return (
                 <Link
                   key={path}
