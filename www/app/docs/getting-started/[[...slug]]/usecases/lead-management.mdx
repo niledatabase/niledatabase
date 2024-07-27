@@ -8,120 +8,189 @@ export const metadata = {
 
 # SalesLeadPilot - AI-Driven Guidance for Superior Lead Management
 
-SalesLeadPilot is designed to streamline and optimize the process of capturing, categorizing, and nurturing leads throughout the sales funnel. The system should enable users to input lead information, including the lead's name, email address, company details, and any additional relevant information. The key feature of this system is the incorporation of an intelligent lead scoring mechanism, allowing users to assign scores based on predefined criteria and engagement metrics. The system should facilitate automated follow-up actions, such as sending personalized emails and setting reminders, triggered by lead behavior or milestones in the sales process. A centralized dashboard should be provided to allow sales teams to visualize lead analytics, track lead interactions, and monitor conversion progress.
+![leadssnapshot](/docs/leadssnapshot.png)
 
-## Postgres SQL Schemas
+The Sales Lead Management application is designed to allow multiple organizations (tenants) to manage their sales leads efficiently. This application includes advanced AI features to assist in adding leads, querying past leads, and suggesting future actions to increase conversion rates. Key functionalities include lead management, status tracking, lead quality assessment, conversation tracking, note-taking, and comprehensive search capabilities.
 
-These SQL schemas represent the backbone of SalesLeadPilot. The Leads table stores basic lead information, while LeadInteractions and AutomatedActions tables track lead interactions and automated actions, respectively. The LeadScoringCriteria table defines criteria for lead scoring, and LeadScoreHistory maintains a history of lead scores based on those criteria. This structured approach ensures efficient lead management and tracking within the CRM system.
+1. **Lead Management:** Create, update, and manage sales leads.
+2. **Status Tracking:** Track the status of each lead (e.g., new, contacted, qualified, unqualified, closed).
+3. **Lead Quality:** Mark the quality of leads (e.g., hot, warm, cold).
+4. **Search Leads:** Search for past leads based on various criteria.
+5. **Conversations and Notes:** Track conversations and take notes for each lead.
+6. **AI Co-Pilot:** Assist in adding leads, asking questions about past leads, and suggesting best steps to take for future conversions.
+7. **Search with AI:** Utilize AI to search previous leads and provide insights.
 
-1. **Leads Table:**
+### Postgres Schemas
+
+![leads-schema-1](/docs/leadsschema.png)
+
+### 1. `leads`
+
+**Description:** Stores information about each sales lead. A sales person finds the right lead for a company and adds them to the system. Each lead goes through a pipeline from email reach out, phone conversation to deal closing or disqualified.
 
 ```sql
 CREATE TABLE leads (
-  tenant_id uuid,
-  lead_id uuid,
-  name VARCHAR(255),
-  email VARCHAR(255),
-  company VARCHAR(255),
-  lead_score INT,
-  engagement_date TIMESTAMP,
-  converted BOOLEAN,
-  CONSTRAINT FK_tenants FOREIGN KEY(tenant_id) REFERENCES tenants(id),
-  CONSTRAINT PK_leads PRIMARY KEY(tenant_id,lead_id));
+    tenant_id UUID,
+    lead_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    lead_name VARCHAR(100) NOT NULL,
+    lead_email VARCHAR(100) NOT NULL,
+    lead_phone VARCHAR(20),
+    lead_status VARCHAR(50) NOT NULL,
+    lead_quality VARCHAR(50),
+    deal_size DECIMAL(10, 2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
 ```
 
-2. **Lead Interactions Table:**
+### 2. `lead_notes`
+
+**Description:** Stores notes related to each lead. These are notes taken by the sales rep as they go through the process of converting a lead to a potential customer. The embeddings of these notes are stored in the table to help RAG to the notes.
 
 ```sql
-CREATE TABLE leadinteractions (
-  tenant_id uuid,
-  interaction_id uuid,
-  tenant_id uuid,
-  lead_id INT,
-  interaction_date TIMESTAMP,
-  interaction_type VARCHAR(50),
-  description TEXT,
-  CONSTRAINT FK_leads FOREIGN KEY(tenant_id, lead_id) REFERENCES leads(tenant_id,lead_id),
-  CONSTRAINT PK_leadinteractions PRIMARY KEY(tenant_id,interaction_id));
+CREATE TABLE lead_notes (
+    tenant_id UUID,
+    note_id UUID DEFAULT gen_random_uuid(),
+    lead_id UUID,
+    user_id UUID,
+    note_content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, note_id),
+    FOREIGN KEY (tenant_id, lead_id) REFERENCES leads(tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
 ```
 
-3. **Automated Actions Table:**
+### 3. `lead_conversations`
+
+**Description:** Stores conversations related to each lead, with AI-generated summaries and vector embeddings for advanced search and analysis. There are multiple things to note here. The embeddings are stored per lead conversation here. These conversations can be long and having a single embedding may not be ideal. You may want to chunk them to get better contextual search.
 
 ```sql
-CREATE TABLE AutomatedActions (
-  tenant_id uuid,
-  action_id uuid,
-  lead_id INT,
-  action_type VARCHAR(50),
-  action_date TIMESTAMP,
-  description TEXT,
-  CONSTRAINT FK_leads FOREIGN KEY(tenant_id, lead_id) REFERENCES leads(tenant_id,lead_id),
-  CONSTRAINT PK_automatedactions PRIMARY KEY(tenant_id,action_id));
+CREATE TABLE lead_conversations (
+    tenant_id UUID,
+    conversation_id UUID DEFAULT gen_random_uuid(),
+    lead_id UUID,
+    user_id UUID,
+    conversation_content TEXT NOT NULL,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, conversation_id),
+    FOREIGN KEY (tenant_id, lead_id) REFERENCES leads(tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
 ```
 
-4. **Lead Scoring Criteria Table:**
+### 4. `lead_status_history`
+
+**Description:** Tracks the status changes for each lead.
 
 ```sql
-CREATE TABLE LeadScoringCriteria (
-  criteria_id uuid PRIMARY KEY,
-  criteria_name VARCHAR(255),
-  weight INT);
+CREATE TABLE lead_status_history (
+    tenant_id UUID,
+    history_id UUID DEFAULT gen_random_uuid(),
+    lead_id UUID,
+    old_status VARCHAR(50) NOT NULL,
+    new_status VARCHAR(50) NOT NULL,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changed_by UUID,
+    PRIMARY KEY (tenant_id, history_id),
+    FOREIGN KEY (tenant_id, lead_id) REFERENCES leads(tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, changed_by) REFERENCES tenant_users(tenant_id, user_id)
+);
+
 ```
 
-5. **Lead Score History Table:**
+### 5. `global_companies`
+
+**Description:** Tracks the top 1500 companies in the world. This table is shared across all tenants. This is not a per tenant table. All the sales reps in all the tenants/customers can share this data.
 
 ```sql
-CREATE TABLE LeadScoreHistory (
-  score_id uuid,
-  tenant_id uuid,
-  lead_id INT,
-  criteria_id INT,
-  score_value INT,
-  timestamp TIMESTAMP,
-  CONSTRAINT FK_leads FOREIGN KEY(tenant_id, lead_id) REFERENCES leads(tenant_id,lead_id),
-  CONSTRAINT PK_leadscorehistory PRIMARY KEY(tenant_id,score_id));
+CREATE TABLE global_companies (
+    company_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    company_name VARCHAR(100) NOT NULL,
+    industry VARCHAR(100),
+    country VARCHAR(50),
+    revenue DECIMAL(15, 2),
+    employees INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
-## Sample data
+### Complete SQL Script
 
 ```sql
--- Sample data for Tenants table
-INSERT INTO tenants (id, name) VALUES
-  ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', 'Tenant A'),
-  ('e5a2cbb4-9b3a-4f53-8812-53799fe758a1', 'Tenant B');
 
--- Sample data for leads table
-INSERT INTO leads (tenant_id, lead_id, name, email, company, lead_score, engagement_date, converted) VALUES
-  ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', '579f0e1a-d5d4-4aeb-b0c6-12d99f7d9c57', 'John Doe', 'john.doe@example.com', 'ABC Corp', 80, '2022-01-01', true),
-  ('e5a2cbb4-9b3a-4f53-8812-53799fe758a1', '0e10c2a5-7a2a-46c9-b506-53c47128774c', 'Jane Smith', 'jane.smith@example.com', 'XYZ Ltd', 65, '2022-01-15', false),
-  ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', '91be7420-5f6b-4a2c-8e05-b2f956d720f0', 'Bob Johnson', 'bob.johnson@example.com', 'XYZ Corp', 75, '2022-02-01', true),
-  ('e5a2cbb4-9b3a-4f53-8812-53799fe758a1', 'c7fca6c9-8343-4e5a-8a3e-6e916485c92a', 'Alice White', 'alice.white@example.com', 'ABC Ltd', 50, '2022-02-10', false);
+-- Create leads table
+CREATE TABLE leads (
+    tenant_id UUID,
+    lead_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    lead_name VARCHAR(100) NOT NULL,
+    lead_email VARCHAR(100) NOT NULL,
+    lead_phone VARCHAR(20),
+    lead_status VARCHAR(50) NOT NULL,
+    lead_quality VARCHAR(50),
+    deal_size DECIMAL(10, 2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
 
--- Sample data for leadinteractions table
-INSERT INTO leadinteractions (tenant_id, interaction_id, lead_id, interaction_date, interaction_type, description) VALUES
-  ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', '1bd3625e-1a64-48aa-a69b-0ebf06d3b0e2', 1, '2022-01-05', 'Meeting', 'Discussed product features and pricing'),
-  ('e5a2cbb4-9b3a-4f53-8812-53799fe758a1', '2a2b3d44-77cd-49f8-9f9e-20a45ec3c453', 2, '2022-01-20', 'Call', 'Follow-up on feature requests'),
-  ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', '3c458193-b7d3-4dfb-ba43-26760dbf6c14', 3, '2022-01-25', 'Email', 'Sent product brochure'),
-  ('e5a2cbb4-9b3a-4f53-8812-53799fe758a1', '3c458193-b7d3-4dfb-ba43-26760dbf6c15', 1, '2022-01-30', 'Demo', 'Provided a product demo');
+-- Create lead_notes table
+CREATE TABLE lead_notes (
+    tenant_id UUID,
+    note_id UUID DEFAULT gen_random_uuid(),
+    lead_id UUID,
+    user_id UUID,
+    note_content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, note_id),
+    FOREIGN KEY (tenant_id, lead_id) REFERENCES leads(tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
 
--- Sample data for AutomatedActions table
-INSERT INTO AutomatedActions (tenant_id, action_id, lead_id, action_type, action_date, description) VALUES
-  ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', 'a5c3d86d-bf28-45df-bdba-22bb72f456a0', 1, 'Email Campaign', '2022-02-01', 'Sent promotional email to lead 1'),
-  ('e5a2cbb4-9b3a-4f53-8812-53799fe758a1', '7d2ec8f5-8a3a-4f63-bc4a-c54f9fb5ebef', 2, 'Webinar Registration', '2022-02-05', 'Lead 2 registered for the webinar'),
-  ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', 'acb5e8e1-3b6a-4a83-854a-48167032d7d8', 3, 'Product Demo', '2022-02-10', 'Scheduled a product demo for lead 3'),
-  ('e5a2cbb4-9b3a-4f53-8812-53799fe758a1', 'c4f8ae57-8d2a-4b65-b930-56ec85b960f4', 4, 'Follow-up Call', '2022-02-15', 'Scheduled a follow-up call for lead 4');
+-- Create lead_conversations table with AI-generated summaries and vector embeddings
+CREATE TABLE lead_conversations (
+    tenant_id UUID,
+    conversation_id UUID DEFAULT gen_random_uuid(),
+    lead_id UUID,
+    user_id UUID,
+    conversation_content TEXT NOT NULL,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, conversation_id),
+    FOREIGN KEY (tenant_id, lead_id) REFERENCES leads(tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
 
--- Sample data for LeadScoringCriteria table
-INSERT INTO LeadScoringCriteria (criteria_id, criteria_name, weight) VALUES
-  ('9a0f11b7-94e7-4b6b-891c-6a3b27f8ac9e', 'Engagement Level', 5),
-  ('c2f671c9-8d82-4a04-9f58-64c8107e13f8', 'Company Size', 3),
-  ('dea5f5d2-9e65-4ae4-9344-51e3771426bb', 'Lead Source', 2),
-  ('b621145a-d55f-4c10-94e2-19b4857502ce', 'Product Interest', 4);
+-- Create lead_status_history table
+CREATE TABLE lead_status_history (
+    tenant_id UUID,
+    history_id UUID DEFAULT gen_random_uuid(),
+    lead_id UUID,
+    old_status VARCHAR(50) NOT NULL,
+    new_status VARCHAR(50) NOT NULL,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changed_by UUID,
+    PRIMARY KEY (tenant_id, history_id),
+    FOREIGN KEY (tenant_id, lead_id) REFERENCES leads(tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, changed_by) REFERENCES tenant_users(tenant_id, user_id)
+);
 
--- Sample data for LeadScoreHistory table
-INSERT INTO LeadScoreHistory (score_id, tenant_id, lead_id, criteria_id, score_value, timestamp) VALUES
-  ('e26ea61f-3af4-45c4-a509-b0e88f7a5017', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c', 1,  '9a0f11b7-94e7-4b6b-891c-6a3b27f8ac9e', 20, '2022-02-10'),
-  ('db32d3f9-7b1c-4be5-88df-c4ef1b2a6a77', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1', 2, 'c2f671c9-8d82-4a04-9f58-64c8107e13f8', 15, '2022-02-12'),
-  ('a8c57b1d-8a25-4f1c-9dcd-7a3a670acff5', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c', 3, 'dea5f5d2-9e65-4ae4-9344-51e3771426bb', 12, '2022-02-15'),
-  ('f7c9169b-44f0-47d3-bf25-cd7a827c3b82', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1', 4, 'b621145a-d55f-4c10-94e2-19b4857502ce', 18, '2022-02-20');
+-- Create global_companies table
+CREATE TABLE global_companies (
+    company_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    company_name VARCHAR(100) NOT NULL,
+    industry VARCHAR(100),
+    country VARCHAR(50),
+    revenue DECIMAL(15, 2),
+    employees INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```
+
+This script sets up the necessary tables and relationships for a comprehensive multitenant sales lead management application with advanced AI capabilities.
