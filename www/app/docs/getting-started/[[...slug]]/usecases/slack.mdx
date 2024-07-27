@@ -2,118 +2,158 @@ import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
 
 export const metadata = {
-  title: "Slack Clone",
+  title: "Slack++",
   order: 3,
 };
 
-# **Slack Clone**
+### Slack++ - Built with AI to power work
 
-The Slack clone must empower organizations with seamless collaboration. Users should register with unique IDs tied to their organization's ID, managing profiles and profile pictures. Workspaces, created by users, are uniquely identified and linked to both the creator and organization. Channels within workspaces must have distinct names and connect to specific workspaces and organizations. Users should send messages with text and file attachments, and reactions to messages are tracked. Notifications keep users informed about relevant activities within the platform. Security measures include password protection and access control based on organization IDs. The system must scale effectively, ensuring quick data retrieval. Logging and analytics features aid in monitoring system activities, and the user interface should be intuitive for smooth navigation and real-time updates, facilitating efficient communication.
+![slacksnapshot](/docs/slacksnapshot.png)
 
-## **Postgres SQL Schemas**
+Slack++ is a multitenant application designed to provide a robust messaging platform similar to Slack but with additional AI-powered features. The primary tenants of this system are organizations, each identified by a `tenant_id`. The key features include:
 
-Channel table manages channels within each workspace/tenant.
-Message table records messages sent within channels, capturing sender, channel, and tenant details
-Attachment table manages file attachments associated with messages.
-Reaction table tracks reactions (emoji) added to messages.
-Notification table records notifications sent to users within a workspace/tenant.
+1. **Channels:** Users can create and join channels to facilitate team communication.
+2. **Messages:** Users can send and receive messages within channels.
+3. **Direct Messages:** Users can communicate privately with one another.
+4. **AI Summarization:** The AI system can summarize conversations within channels.
+5. **Message Search:** Users can search for messages within a channel and across channels.
+6. **Theme Highlighting:** The AI chatbot can highlight themes from discussions in a channel.
+7. **User Management:** Manage users and their membership in channels.
 
-1. **Channel Table:**
+Each table will include `tenant_id` as part of its primary key, and all IDs will be of type UUID.
+
+### Postgres Schemas
+
+![slackschema](/docs/slackschema.png)
+
+Note that the tenants, users and tenant_users tables references in these schemas are already built-in within Nile's
+Postgres database.
+
+### 1. `channels`
+
+**Description:** Stores channel information for each tenant. Users can be part of multiple channels and conversation happens within channels.
 
 ```sql
-CREATE TABLE Channels (
-  channel_id UUID,
-  channel_name VARCHAR(100) NOT NULL,
-  tenant_id UUID NOT NULL,
-  CONSTRAINT FK_Tenants FOREIGN KEY(tenant_id) REFERENCES Tenants(id),
-  CONSTRAINT PK_Channels PRIMARY KEY(tenant_id,channel_id)
+CREATE TABLE channels (
+    tenant_id UUID,
+    channel_id UUID DEFAULT gen_random_uuid(),
+    channel_name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, channel_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
 );
+
 ```
 
-2. **Message Table:**
+### 5. `channel_users`
+
+**Description:** Maps users to channels within a tenant. The users within a tenant can be part of multiple channels.
 
 ```sql
-CREATE TABLE Messages (
-  message_id UUID,
-  content TEXT NOT NULL,
-  sender_id UUID NOT NULL,
-  channel_id UUID NOT NULL,
-  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  tenant_id UUID NOT NULL,
-  CONSTRAINT FK_Channels FOREIGN KEY(tenant_id,channel_id) REFERENCES Channels(tenant_id,channel_id),
-  CONSTRAINT FK_Senders FOREIGN KEY(tenant_id,user_id) REFERENCES Tenants_User(tenant_id,user_id),
-  CONSTRAINT PK_Messages PRIMARY KEY(tenant_id,message_id));
-```
-
-3. **Attachment Table:**
-
-```sql
-CREATE TABLE Attachments (
-  attachment_id UUID,
-  message_id UUID NOT NULL,
-  file_name VARCHAR(255) NOT NULL,
-  file_type VARCHAR(50) NOT NULL,
-  file_data BYTEA NOT NULL,
-  tenant_id UUID NOT NULL,
-  CONSTRAINT FK_Messages FOREIGN KEY(tenant_id,message_id) REFERENCES Messages(tenant_id,message_id),
-  CONSTRAINT PK_Attachments PRIMARY KEY(tenant_id,attachment_id);
-```
-
-4. **Reaction Table:**
-
-```sql
-CREATE TABLE Reactions (
-    reaction_id UUID,
-    message_id UUID NOT NULL,
-    user_id UUID NOT NULL,
-    emoji VARCHAR(20) NOT NULL,
-    tenant_id UUID NOT NULL,
-    CONSTRAINT FK_Messages FOREIGN KEY(tenant_id,message_id) REFERENCES Messages(tenant_id,message_id),
-    CONSTRAINT FK_Users FOREIGN KEY(tenant_id,user_id) REFERENCES Tenants_User(tenant_id,user_id),
-    CONSTRAINT PK_Reactions PRIMARY KEY(tenant_id,reaction_id)
+CREATE TABLE channel_users (
+    tenant_id UUID,
+    channel_id UUID,
+    user_id UUID,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, channel_id, user_id),
+    FOREIGN KEY (tenant_id, channel_id) REFERENCES channels(tenant_id, channel_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
 );
+
 ```
 
-5. **Notification Table:**
+### 6. `messages`
+
+**Description:** Stores messages within channels along with vector embeddings for AI functionalities. Note that this example calculates embeddings for each message. In practice, you would not do this since it would blow up the number of embeddings and lack full context. A better option is to chunk the messages around a time range into one embedding. You could optionally have a messagechunk table that track each chunk and stores embeddings for them. 
 
 ```sql
-CREATE TABLE Notifications (
-  notification_id UUID,
-  user_id UUID NOT NULL,
-  content TEXT NOT NULL,
-  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  is_read BOOLEAN DEFAULT FALSE,
-  tenant_id UUID NOT NULL,
-  CONSTRAINT FK_Users FOREIGN KEY(tenant_id,user_id) REFERENCES Tenants_User(tenant_id,user_id),
-  CONSTRAINT PK_Notifications PRIMARY KEY(tenant_id,notification_id)
+CREATE TABLE messages (
+    tenant_id UUID,
+    message_id UUID DEFAULT gen_random_uuid(),
+    channel_id UUID,
+    user_id UUID,
+    content TEXT NOT NULL,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, message_id),
+    FOREIGN KEY (tenant_id, channel_id) REFERENCES channels(tenant_id, channel_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
 );
+
 ```
 
-## Sample data
+### 7. `direct_messages`
+
+**Description:** Stores private messages between users along with vector embeddings for AI functionalities. Like the messages table, you would want to use a chunking approach for messages.
 
 ```sql
-INSERT INTO Channels (channel_id, channel_name, tenant_id) VALUES
-  ('d9964902-d26d-4ddc-9c2e-1599f2e4f0a2', 'General', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('a9a96c7e-7a1c-4975-9671-bb37a0c6b632', 'ProjectX', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('c0b58b9d-6c0d-4905-9c38-207019c731da', 'TeamChat', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1');
+CREATE TABLE direct_messages (
+    tenant_id UUID,
+    dm_id UUID DEFAULT gen_random_uuid(),
+    sender_id UUID,
+    receiver_id UUID,
+    content TEXT NOT NULL,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, dm_id),
+    FOREIGN KEY (tenant_id, sender_id) REFERENCES tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, receiver_id) REFERENCES tenant_users(tenant_id, user_id)
+);
 
-INSERT INTO Messages (message_id, content, sender_id, channel_id, tenant_id) VALUES
-  ('04ec499f-349d-48b4-9c6a-2516bbde6dc9', 'Hello, World!', 'a8c57b1d-8a25-4f1c-9dcd-7a3a670acff5', 'd9964902-d26d-4ddc-9c2e-1599f2e4f0a2', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('f23d09d2-2d52-4bb7-9906-6a5a5082acbf', 'Discussing ProjectX updates', 'f7c9169b-44f0-47d3-bf25-cd7a827c3b82', 'a9a96c7e-7a1c-4975-9671-bb37a0c6b632', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('d9359a76-6b58-4854-90ab-4ff317493271', 'Welcome to TeamChat!', 'db32d3f9-7b1c-4be5-88df-c4ef1b2a6a77', 'c0b58b9d-6c0d-4905-9c38-207019c731da', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1');
+```
 
-INSERT INTO Attachments (attachment_id, message_id, file_name, file_type, file_data, tenant_id) VALUES
-  ('d63fcee9-451d-4df0-b9cb-518b8ebfbd1c', '04ec499f-349d-48b4-9c6a-2516bbde6dc9', 'document.pdf', 'application/pdf', 'PDF_BINARY_DATA', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('9a0f5cfa-207b-4fe3-b7d6-9c2fb30e3a8c', 'f23d09d2-2d52-4bb7-9906-6a5a5082acbf', 'image.png', 'image/png', 'PNG_BINARY_DATA', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('fce6a5ab-3f3c-478f-94fe-5b8cddfef4f1', 'd9359a76-6b58-4854-90ab-4ff317493271', 'spreadsheet.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'XLSX_BINARY_DATA', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1');
+These schemas provide the foundation for a multitenant Slack++ application with AI features, ensuring each table follows the multitenant structure with `tenant_id` and uses UUIDs for primary keys. The `vector_embedding` column is included in the `messages` and `direct_messages` tables to support AI functionalities like summarization and search.
 
-INSERT INTO Reactions (reaction_id, message_id, user_id, emoji, tenant_id) VALUES
-  ('7ea57cb0-394a-49e4-8fc7-04a638508a7f', '04ec499f-349d-48b4-9c6a-2516bbde6dc9', 'a8c57b1d-8a25-4f1c-9dcd-7a3a670acff5', '👍', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('8d49b1cb-73f2-4a48-ba93-6be5abf8fd1f', 'f23d09d2-2d52-4bb7-9906-6a5a5082acbf', 'f7c9169b-44f0-47d3-bf25-cd7a827c3b82', '❤️', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('b73c14ba-743d-4fb1-bbe3-ae79155ed7d9', 'd9359a76-6b58-4854-90ab-4ff317493271', 'db32d3f9-7b1c-4be5-88df-c4ef1b2a6a77', '😄', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1');
+### Full Script
 
-INSERT INTO Notifications (notification_id, user_id, content, tenant_id) VALUES
-  ('5a9fc3c1-5ee2-4523-bc5d-9fd90f0194c3', 'a8c57b1d-8a25-4f1c-9dcd-7a3a670acff5', 'New message in General channel', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('c3ec63b4-7a6b-4cd4-9d27-05f2673cbab2', 'f7c9169b-44f0-47d3-bf25-cd7a827c3b82', 'You have a mention in ProjectX', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('ae0a92f7-8a25-40d5-94b3-73d5543dbd49', 'db32d3f9-7b1c-4be5-88df-c4ef1b2a6a77', 'TeamChat - New member joined', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1');
+```sql
+
+-- Create channels table
+CREATE TABLE channels (
+    tenant_id UUID,
+    channel_id UUID DEFAULT gen_random_uuid(),
+    channel_name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, channel_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Create channel_users table to map users to channels within a tenant
+CREATE TABLE channel_users (
+    tenant_id UUID,
+    channel_id UUID,
+    user_id UUID,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, channel_id, user_id),
+    FOREIGN KEY (tenant_id, channel_id) REFERENCES channels(tenant_id, channel_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create messages table with vector embedding for AI functionalities
+CREATE TABLE messages (
+    tenant_id UUID,
+    message_id UUID DEFAULT gen_random_uuid(),
+    channel_id UUID,
+    user_id UUID,
+    content TEXT NOT NULL,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, message_id),
+    FOREIGN KEY (tenant_id, channel_id, user_id) REFERENCES channel_users(tenant_id, channel_id, user_id)
+);
+
+-- Create direct_messages table with vector embedding for AI functionalities
+CREATE TABLE direct_messages (
+    tenant_id UUID,
+    dm_id UUID DEFAULT gen_random_uuid(),
+    sender_id UUID,
+    receiver_id UUID,
+    content TEXT NOT NULL,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, dm_id),
+    FOREIGN KEY (tenant_id, sender_id) REFERENCES tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, receiver_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
 ```
