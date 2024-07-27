@@ -47,27 +47,27 @@ const usecases = [
     path: "/docs/getting-started/usecases/slack",
   },
   {
-    name: "Enterprise Travel CoPilot",
+    name: "AITravelMate",
     icon: "tripactions.png",
     path: "/docs/getting-started/usecases/tripactions",
   },
   {
-    name: "AI-powered Expense Management",
+    name: "SmartSpend AI",
     icon: "expensify.svg",
     path: "/docs/getting-started/usecases/expensify",
   },
   {
-    name: "Issue Tracking",
+    name: "TaskPilot AI",
     icon: "issue.svg",
     path: "/docs/getting-started/usecases/issue-tracking",
   },
   {
-    name: "Lead Management",
+    name: "SalesLeadPilot",
     icon: "lead.svg",
     path: "/docs/getting-started/usecases/lead-management",
   },
   {
-    name: "Schoology",
+    name: "SmartLearn",
     icon: "schoology.png",
     path: "/docs/getting-started/usecases/schoology",
   },
