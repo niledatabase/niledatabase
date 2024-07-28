@@ -30,7 +30,7 @@ This application aims to assist both students and teachers in managing courses, 
 
 ### Postgres Schemas
 
-![schoolsnapshot](/docs/schoolschema.png)
+![schoolschema](/docs/schoolschema.png)
 
 ### 1. `courses`
 
@@ -163,6 +163,7 @@ CREATE TABLE courses (
     course_name VARCHAR(100) NOT NULL,
     course_description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed,
     PRIMARY KEY (tenant_id, course_id),
     FOREIGN KEY (tenant_id) REFERENCES tenants(id)
 );
@@ -201,6 +202,7 @@ CREATE TABLE feedback (
     teacher_id UUID,
     feedback_text TEXT,
     feedback_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
     PRIMARY KEY (tenant_id, feedback_id),
     FOREIGN KEY (tenant_id, course_id) REFERENCES courses(tenant_id, course_id),
     FOREIGN KEY (tenant_id, student_id) REFERENCES tenant_users(tenant_id, user_id),
@@ -216,6 +218,7 @@ CREATE TABLE homework (
     homework_description TEXT,
     due_date DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
     PRIMARY KEY (tenant_id, homework_id),
     FOREIGN KEY (tenant_id, course_id) REFERENCES courses(tenant_id, course_id),
     FOREIGN KEY (tenant_id, teacher_id) REFERENCES tenant_users(tenant_id, user_id)
@@ -231,6 +234,7 @@ CREATE TABLE homework_submissions (
     submission_file BYTEA,
     grade DECIMAL(5, 2),
     feedback TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
     PRIMARY KEY (tenant_id, submission_id),
     FOREIGN KEY (tenant_id, homework_id) REFERENCES homework(tenant_id, homework_id),
     FOREIGN KEY (tenant_id, student_id) REFERENCES tenant_users(tenant_id, user_id)
