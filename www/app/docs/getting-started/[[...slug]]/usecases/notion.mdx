@@ -9,3 +9,237 @@ export const metadata = {
 # SmartNotion AI - Crafting Organized Thoughts with Artificial Intelligence
 
 ![notionsnapshot](/docs/notionsnapshot.png)
+
+SmartNotion AI allows tenants to create, edit, manage, and search documents within their workspace. The application incorporates AI features for editing, summarizing, and searching documents, including text and images. Additionally, documents should be stored close to the customer for compliance reasons, and the document editing experience must be very fast.
+
+### Key Features:
+
+1. **Document Creation and Management**:
+    - Create and manage documents within a tenant's workspace.
+    - Support for rich text editing and multi-modal content (text and images).
+    - Track document metadata such as creation date, last modified date, and author.
+    - Ensure documents are stored close to the customer for compliance purposes.
+2. **AI-Powered Editing and Summarization**:
+    - Use AI to assist with editing and modifying documents.
+    - AI-driven document summarization to provide quick overviews of content.
+3. **Advanced Search Functionality**:
+    - Search across documents within a tenant's workspace.
+    - AI-driven search to find text and images within documents.
+    - Show similar documents based on content and context.
+4. **Document Collaboration**:
+    - Support for collaborative editing and version control.
+    - Track changes and comments from multiple users.
+5. **Security and Permissions**:
+    - Role-based access control to manage who can view, edit, and delete documents.
+    - Ensure document data is securely stored and managed within the tenant's workspace.
+6. **Performance**:
+    - Ensure a fast and responsive document editing experience.
+
+### Postgres Schemas
+
+![notionschema](/docs/notionschema.png)
+
+### 1. documents
+
+Stores document information including title, content, creation and modification timestamps, author, and storage location. The embeddings for the documents are stored in a separate table to ensure these rows are not too long which can cause performance impact.
+
+```sql
+CREATE TABLE documents (
+    tenant_id UUID,
+    document_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(255),
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    author_id UUID,
+    storage_location VARCHAR(255), -- Location where the document is stored
+    FOREIGN KEY (tenant_id) REFERENCES tenants(tenant_id),
+    FOREIGN KEY (tenant_id, author_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+```
+
+### 2. document_versions
+
+Tracks versions of documents, storing historical content and metadata for each version. The old version help users to browse the history of a document and even ask AI questions on how and who made changes to the document.
+
+```sql
+CREATE TABLE document_versions (
+    tenant_id UUID,
+    document_id UUID,
+    version_id UUID DEFAULT gen_random_uuid(),
+    version_number INT,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    author_id UUID,
+    PRIMARY KEY (tenant_id, document_id, version_id),
+    FOREIGN KEY (tenant_id, document_id) REFERENCES documents(tenant_id, document_id),
+    FOREIGN KEY (tenant_id, author_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+```
+
+### 3. document_comments
+
+Stores comments made on documents, linking comments to specific documents and users. Each comment also stores its embeddings along with it. This helps to understand if a document has received generally positive or negative comments using AI. It can also help to summarize all the comments and even search through them.
+
+```sql
+CREATE TABLE document_comments (
+    tenant_id UUID,
+    comment_id UUID DEFAULT gen_random_uuid(),
+    document_id UUID,
+    user_id UUID,
+    comment TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, document_id),
+    FOREIGN KEY (tenant_id, document_id) REFERENCES documents(tenant_id, document_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+```
+
+### 4. teamspaces
+
+Tracks teamspaces created within tenants, storing metadata such as name, description, and creator.
+
+```sql
+CREATE TABLE teamspaces (
+    tenant_id UUID,
+    teamspace_id UUID DEFAULT gen_random_uuid(),
+    name VARCHAR(255),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by UUID,
+    PRIMARY KEY (tenant_id, teamspace_id),
+    FOREIGN KEY (tenant_id, created_by) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+```
+
+### 5. teamspace_documents
+
+Maps documents to teamspaces, establishing relationships between teamspaces and their documents.
+
+```sql
+CREATE TABLE teamspace_documents (
+    teamspace_id UUID,
+    tenant_id UUID,
+    document_id UUID,
+    PRIMARY KEY (tenant_id, teamspace_id, document_id),
+    FOREIGN KEY (tenant_id, teamspace_id) REFERENCES teamspaces(tenant_id, teamspace_id),
+    FOREIGN KEY (tenant_id, document_id) REFERENCES documents(tenant_id, document_id)
+);
+```
+
+### 6. document_embeddings
+
+Tracks vector embeddings for chunks of documents, supporting advanced AI-powered search capabilities. The chunking size is complex and not straightforward based on a size. It needs to be done based on context. The AI model itself can be used for this purpose to figure out what are the relevant parts of the document that can be chunked. A RAG architecture can then use these embeddings to summarize, search and even correct parts of the document.
+
+```sql
+CREATE TABLE document_embeddings (
+    tenant_id UUID,
+    document_id UUID,
+    chunk_id UUID DEFAULT gen_random_uuid(),
+    chunk_content TEXT,
+    vector_embedding VECTOR,
+    PRIMARY KEY (tenant_id, document_id, chunk_id),
+    FOREIGN KEY (tenant_id, document_id) REFERENCES documents(tenant_id, document_id)
+);
+```
+
+### 7. favourites
+
+Tracks documents that users have marked as favorites within their tenant's workspace.
+
+```sql
+CREATE TABLE favourites (
+    tenant_id UUID,
+    user_id UUID,
+    document_id UUID,
+    PRIMARY KEY (tenant_id, user_id, document_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES users.tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, document_id) REFERENCES documents(tenant_id, document_id)
+);
+```
+
+### Full Script
+
+```sql
+CREATE TABLE documents (
+    tenant_id UUID,
+    document_id UUID DEFAULT gen_random_uuid(),
+    title VARCHAR(255),
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    author_id UUID,
+    storage_location VARCHAR(255), -- Location where the document is stored
+    PRIMARY KEY (tenant_id, document_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id),
+    FOREIGN KEY (tenant_id, author_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+CREATE TABLE document_versions (
+    tenant_id UUID,
+    document_id UUID,
+    version_id UUID DEFAULT gen_random_uuid(),
+    version_number INT,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    author_id UUID,
+    PRIMARY KEY (tenant_id, document_id, version_id),
+    FOREIGN KEY (tenant_id, document_id) REFERENCES documents(tenant_id, document_id),
+    FOREIGN KEY (tenant_id, author_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+CREATE TABLE document_comments (
+    tenant_id UUID,
+    comment_id UUID DEFAULT gen_random_uuid(),
+    document_id UUID,
+    user_id UUID,
+    comment TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, document_id),
+    FOREIGN KEY (tenant_id, document_id) REFERENCES documents(tenant_id, document_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+CREATE TABLE teamspaces (
+    tenant_id UUID,
+    teamspace_id UUID DEFAULT gen_random_uuid(),
+    name VARCHAR(255),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by UUID,
+    PRIMARY KEY (tenant_id, teamspace_id),
+    FOREIGN KEY (tenant_id, created_by) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+CREATE TABLE teamspace_documents (
+    teamspace_id UUID,
+    tenant_id UUID,
+    document_id UUID,
+    PRIMARY KEY (tenant_id, teamspace_id, document_id),
+    FOREIGN KEY (tenant_id, teamspace_id) REFERENCES teamspaces(tenant_id, teamspace_id),
+    FOREIGN KEY (tenant_id, document_id) REFERENCES documents(tenant_id, document_id)
+);
+
+CREATE TABLE document_embeddings (
+    tenant_id UUID,
+    document_id UUID,
+    chunk_id UUID DEFAULT gen_random_uuid(),
+    chunk_content TEXT,
+    vector_embedding VECTOR,
+    PRIMARY KEY (tenant_id, document_id, chunk_id),
+    FOREIGN KEY (tenant_id, document_id) REFERENCES documents(tenant_id, document_id)
+);
+
+CREATE TABLE favourites (
+    tenant_id UUID,
+    user_id UUID,
+    document_id UUID,
+    PRIMARY KEY (tenant_id, user_id, document_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES users.tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, document_id) REFERENCES documents(tenant_id, document_id)
+);
+```
