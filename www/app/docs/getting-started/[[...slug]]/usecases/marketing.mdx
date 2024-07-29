@@ -114,7 +114,7 @@ CREATE TABLE campaign_emails (
 );
 ```
 
-### 5. Campaign Analytics Table
+### 5. campaign_analytics
 
 This table tracks the performance metrics of each campaign, such as the number of emails sent, opened, links clicked, and conversions achieved. It provides insights into campaign effectiveness and is associated with a specific tenant and campaign.
 
@@ -132,6 +132,8 @@ CREATE TABLE campaign_analytics (
     FOREIGN KEY (tenant_id, campaign_id) REFERENCES campaigns(tenant_id, campaign_id)
 );
 ```
+
+### Complete SQL Script
 
 ```sql
 -- Table for storing contacts information

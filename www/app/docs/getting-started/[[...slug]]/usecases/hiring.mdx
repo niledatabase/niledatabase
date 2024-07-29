@@ -34,7 +34,7 @@ The multitenant recruiting application will streamline the hiring process for re
 
 ![hiringschemas](/docs/hiringschema.png)
 
-### 1. `candidates`
+### 1. candidates
 
 This table tracks all the candidates being considered for hiring, storing personal information, contact details, and their resumes. Each candidate is associated with a tenant.
 
@@ -53,7 +53,7 @@ CREATE TABLE candidates (
 );
 ```
 
-### 2. `recruiter`
+### 2. recruiter
 
 This table contains information about recruiters, including their conversion success rates. It references the tenant and user details from the tenant_users table.
 
@@ -68,7 +68,7 @@ CREATE TABLE recruiter (
 );
 ```
 
-### 3. `hiring_manager`
+### 3. hiring_manager
 
 This table stores information about hiring managers, linking them to specific tenants and user accounts. It helps identify the hiring managers responsible for job postings.
 
@@ -82,7 +82,7 @@ CREATE TABLE hiring_manager (
 );
 ```
 
-### 4. `jobs`
+### 4. jobs
 
 This table tracks all open job positions, including the job title, description, and status. Each job is assigned to a hiring manager within a specific tenant's organization. The job description is used to calculate vector embeddings. This can be used to generate interview questions, search for matching candidates and even ask questions to a chatbot about jobs in the system.
 
@@ -101,7 +101,7 @@ CREATE TABLE jobs (
 );
 ```
 
-### 5. `candidate_jobs`
+### 5. candidate_jobs
 
 This table maps candidates to the jobs they have applied for or been considered for, tracking the status of their application for each job.
 
@@ -118,7 +118,7 @@ CREATE TABLE candidate_jobs (
 );
 ```
 
-### 6. `interviews`
+### 6. interviews
 
 This table manages the interview schedules for each job, including interview dates, questions, and expected answers. It helps organize the interview process for candidates. The questions and expected answers are converted to embeddings to help search for similar questions or similar answers. This helps to use the AI to create new questions of similar difficulty or correct answers from candidates.
 
@@ -137,7 +137,7 @@ CREATE TABLE interviews (
 );
 ```
 
-### 7. `feedback`
+### 7. feedback
 
 This table captures feedback provided by users (recruiters or hiring managers) for each interview. It includes detailed feedback text and links to the specific interview and user who provided it. The feedback are converted to embeddings to be able to search for similar feedbacks in the system and check what scores have been given by other recruiters and managers. This helps to calibrate how a particular feedback and rating correlate.
 

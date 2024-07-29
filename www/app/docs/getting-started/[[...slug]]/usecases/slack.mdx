@@ -29,9 +29,9 @@ Each table will include `tenant_id` as part of its primary key, and all IDs will
 Note that the tenants, users and tenant_users tables references in these schemas are already built-in within Nile's
 Postgres database.
 
-### 1. `channels`
+### 1. channels
 
-**Description:** Stores channel information for each tenant. Users can be part of multiple channels and conversation happens within channels.
+Stores channel information for each tenant. Users can be part of multiple channels and conversation happens within channels.
 
 ```sql
 CREATE TABLE channels (
@@ -45,9 +45,9 @@ CREATE TABLE channels (
 
 ```
 
-### 5. `channel_users`
+### 2. channel_users
 
-**Description:** Maps users to channels within a tenant. The users within a tenant can be part of multiple channels.
+Maps users to channels within a tenant. The users within a tenant can be part of multiple channels.
 
 ```sql
 CREATE TABLE channel_users (
@@ -62,9 +62,9 @@ CREATE TABLE channel_users (
 
 ```
 
-### 6. `messages`
+### 3. messages
 
-**Description:** Stores messages within channels along with vector embeddings for AI functionalities. Note that this example calculates embeddings for each message. In practice, you would not do this since it would blow up the number of embeddings and lack full context. A better option is to chunk the messages around a time range into one embedding. You could optionally have a messagechunk table that track each chunk and stores embeddings for them. 
+Stores messages within channels along with vector embeddings for AI functionalities. Note that this example calculates embeddings for each message. In practice, you would not do this since it would blow up the number of embeddings and lack full context. A better option is to chunk the messages around a time range into one embedding. You could optionally have a messagechunk table that track each chunk and stores embeddings for them. 
 
 ```sql
 CREATE TABLE messages (
@@ -82,9 +82,9 @@ CREATE TABLE messages (
 
 ```
 
-### 7. `direct_messages`
+### 4. direct_messages
 
-**Description:** Stores private messages between users along with vector embeddings for AI functionalities. Like the messages table, you would want to use a chunking approach for messages.
+Stores private messages between users along with vector embeddings for AI functionalities. Like the messages table, you would want to use a chunking approach for messages.
 
 ```sql
 CREATE TABLE direct_messages (
