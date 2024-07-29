@@ -2,178 +2,243 @@ import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
 
 export const metadata = {
-  title: "TripActions Clone",
+  title: "AITravelMate",
   order: 5,
 };
 
-# TripActions Clone
+### AITravelMate -   your business trips managed by AI
 
-This is a clone of the popular SaaS app TripActions. TripActions is a travel management company that offers a travel booking and management platform for businesses.
-It includes shared information that is available to all businesses that use it, such as flight and hotel prices, as well as information specific to each business, such as travel policies and actual bookings.
+![travel-snapshot-1](/docs/travelsnapshot.png)
 
-The schema was designed to guarantee security and privacy of each tenant information, while allowing for shared information to be available to all tenants.
-It was also designed to support collaboration between employees of the same company - HR administrators set travel policies and managers can approve exceptions.
+The AI-native travel planning SaaS will leverage Generative AI to provide personalized and efficient travel itineraries. The system must support multitenancy, allowing multiple tenants to use the application independently with their own data, preferences, and policies. Each tenant's data should be isolated and securely managed. The system needs to track a list of draft itineraries that are not yet booked, a list of completed bookings, the ability to remind users when their travel date is approaching, and store travel preferences for each tenant to inform itinerary decisions. Additionally, the system should provide analytics on past travel spends. Security and privacy are paramount; hence, the system must comply with data protection regulations and implement robust authentication and authorization mechanisms. Finally, the architecture should be scalable to handle high traffic volumes and flexible to integrate with third-party services for real-time updates on travel information.
 
-## Postgres Schema
+### PostgreSQL Schemas
 
-The schema for this example has few core tables that represent the core business entities of the application.
+![travel-schema-1](/docs/travelschema.png)
 
-We have several shared tables that are available to all tenants. This includes `flights`, `hotels`, and `car_rentals`. These tables contain information about flights, hotels and car_rentals that are available to all tenants.
+### 1. tenants_preferences
 
-We also have several tenant-aware tables that contain information private to each tenant. These include:
-
-- `travel_policies` table contains travel policies set by the HR administrator of each company.
-- `bookings` table contains travel plans made by employees of each company
-- `payment_information` table contains payment information for each employee
-
-Information about roles of each user is stored in the built-in `users` schema. This includes information about the user, such as name and email, as well as information about the user's role in the company, such as whether they are an HR administrator or a manager.
-
-Several parts of this schema were simplified for the purposes of this example.
-For example, car rental and hotel prices are likely to change over time, so a more realistic schema would include a table for hotel prices by date.
-Real world schema would also allow for more than one hotel or car rental per booking.
-
-1. **Flights** table
+This table stores various preferences for each tenant, which the AI uses to generate personalized travel plans. Preferences are stored as key-value pairs in JSON format.
 
 ```sql
-CREATE TABLE flights (
-    id int PRIMARY KEY,
-    airline VARCHAR(100),
-    flight_number VARCHAR(20),
-    departure_airport VARCHAR(100),
-    arrival_airport VARCHAR(100),
-    departure_time TIMESTAMP,
-    arrival_time TIMESTAMP,
-    price DECIMAL(10, 2),
-    class VARCHAR(50)
-);
-```
 
-2. **Hotels** table
-
-```sql
-CREATE TABLE hotels (
-    id int PRIMARY KEY,
-    name VARCHAR(100),
-    address VARCHAR(255),
-    star_rating INT,
-    room_type VARCHAR(50),
-    price_per_night DECIMAL(10, 2)
-);
-```
-
-3. **Car Rentals** table
-
-```sql
-CREATE TABLE car_rentals (
-    id int PRIMARY KEY,
-    company VARCHAR(100),
-    location VARCHAR(255),
-    car_class VARCHAR(50),
-    price DECIMAL(10, 2)
-);
-```
-
-4. **Travel Policies** table
-
-```sql
-CREATE TABLE travel_policies (
+CREATE TABLE tenant_preferences (
     tenant_id UUID,
-    id INT,
-    details JSONB,
-    PRIMARY KEY(tenant_id, id)
+    preference_id UUID DEFAULT gen_random_uuid(),
+    preference_key VARCHAR(100) NOT NULL,
+    preference_value JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, preference_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+```
+
+### 2. user_travel_history
+
+This table tracks the travel history of users per tenant. It includes details such as travel dates, destinations, activities, and total spend. This information is useful for generating analytics and improving future travel plans.
+
+```sql
+CREATE TABLE user_travel_history (
+    tenant_id UUID,
+    history_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    travel_date DATE NOT NULL,
+    destination VARCHAR(100) NOT NULL,
+    activities JSONB,
+    total_spend DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, history_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id)
+);
+
+```
+
+### 3. itineraries
+
+Itinerary Schema:** This table stores draft and confirmed itineraries for users per tenant. It includes details like start and end dates, destinations, and a flag indicating whether the itinerary is a draft.
+
+```sql
+CREATE TABLE itineraries (
+    tenant_id UUID,
+    itinerary_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    destinations JSONB,
+    is_draft BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, itinerary_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id)
 );
 ```
 
-5. **Bookings** table
+### 4. itinerary_details
+
+This table provides detailed daily activities for each itinerary. It includes the date, type of activity, and specific details about the activity, stored in JSON format.
+
+```sql
+CREATE TABLE itinerary_details (
+    tenant_id UUID,
+    detail_id UUID DEFAULT gen_random_uuid(),
+    itinerary_id UUID,
+    date DATE NOT NULL,
+    activity_type VARCHAR(50),
+    activity_details JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, detail_id),
+    FOREIGN KEY (tenant_id, itinerary_id) REFERENCES itineraries(tenant_id,itinerary_id)
+);
+```
+
+### 5. bookings
+
+This table tracks travel bookings made by users per tenant. It includes details about the booking type (e.g., flight, hotel), booking details, and status.
 
 ```sql
 CREATE TABLE bookings (
-    id int,
-    tenant_id uuid,
-    user_id uuid,
-    departing_flight_id int,
-    arriving_flight_id int,
-    hotel_id int,
-    car_rental_id int,
-    booking_date TIMESTAMP,
-    total_price DECIMAL(10, 2),
-    approval_required BOOLEAN,
-    approved BOOLEAN,
-    approver uuid,
-    PRIMARY KEY(id, tenant_id),
-    FOREIGN KEY (tenant_id, user_id) REFERENCES users.tenant_users(tenant_id, user_id),
-    FOREIGN KEY (tenant_id, approver) REFERENCES users.tenant_users(tenant_id, user_id)
+    tenant_id UUID,
+    booking_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    itinerary_id UUID,
+    booking_type VARCHAR(50) NOT NULL,
+    booking_details JSONB NOT NULL,
+    status VARCHAR(20) DEFAULT 'confirmed',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, booking_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id),
+    FOREIGN KEY (tenant_id, itinerary_id) REFERENCES itineraries(tenant_id,itinerary_id)
 );
 ```
 
-6. **Payment Information** table
+### 6. booking_reminders
+
+This table stores reminders for users about their upcoming bookings. It includes the reminder date, message, and a flag indicating whether the reminder has been sent.
 
 ```sql
-CREATE TABLE payment_information (
-    id int,
-    tenant_id uuid,
-    user_id uuid,
-    stripe_customer_id VARCHAR(255),
-    stripe_payment_method_id VARCHAR(255),
-    PRIMARY KEY(id, tenant_id),
-    FOREIGN KEY (tenant_id, user_id) REFERENCES users.tenant_users(tenant_id, user_id)
+CREATE TABLE booking_reminders (
+    tenant_id UUID,
+    reminder_id UUID DEFAULT gen_random_uuid(),
+    booking_id UUID,
+    user_id UUID,
+    reminder_date DATE NOT NULL,
+    message TEXT NOT NULL,
+    sent BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, reminder_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id),
+    FOREIGN KEY (tenant_id,booking_id) REFERENCES bookings(tenant_id,booking_id)
 );
 ```
 
-## Sample data
+### 7. travel_analytics
+
+This table stores analytics data about past travel spends for users per tenant. It includes the travel date, total spend, and a breakdown of spends by categories stored in JSON format.
 
 ```sql
--- Sample data for Tenants table
-INSERT INTO tenants (id, name) VALUES ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', 'Quantum Innovations Inc.');
-INSERT INTO tenants (id, name) VALUES ('0b657261-633d-4677-a5ad-ff89059c42c5', 'Bright Horizon Enterprises');
+CREATE TABLE travel_analytics (
+    tenant_id UUID,
+    analytics_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    travel_date DATE NOT NULL,
+    total_spend DECIMAL(10, 2) NOT NULL,
+    categories_spend JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, analytics_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id)
+);
+```
 
--- Sample data for Users table
+### Full Script
 
-INSERT INTO users.users (id, name, email) VALUES ('cef6fc75-25d2-4cfb-b328-99a0e6f79ae6',  'Emily Johnson',       'emily.johnson@gmail.com');
-INSERT INTO users.users (id, name, email) VALUES ('71d8afcc-9cbd-445d-aadc-9cb844008734',  'Sophia Martinez',     'sophia.martinez@outlook.com');
-INSERT INTO users.users (id, name, email) VALUES ('19488a0b-09c3-4613-a8c0-2874f0d66497',  'David Brown',         'david.brown@icloud.com');
-INSERT INTO users.users (id, name, email) VALUES ('997015f8-69e7-4bcb-ad39-f8f69f8e8b43',  'Isabella Rodriguez',  'isabella.rodriguez@protonmail.com');
+```sql
+CREATE TABLE tenant_preferences (
+    tenant_id UUID,
+    preference_id UUID DEFAULT gen_random_uuid(),
+    preference_key VARCHAR(100) NOT NULL,
+    preference_value JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, preference_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
 
--- Assign users to tenants
-insert into users.tenant_users (tenant_id, user_id, email, roles)
-    values ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', 'cef6fc75-25d2-4cfb-b328-99a0e6f79ae6', 'ejohnson@quantuminv.com','{"admin"}');
-insert into users.tenant_users (tenant_id, user_id, email, roles)
-    values ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', '71d8afcc-9cbd-445d-aadc-9cb844008734', 'martinex@quantuminv.com','{"engineer"}');
-insert into users.tenant_users (tenant_id, user_id, email, roles)
-    values ('0b657261-633d-4677-a5ad-ff89059c42c5', '19488a0b-09c3-4613-a8c0-2874f0d66497', 'dbrown@brighthorizon.com','{"manager"}');
-insert into users.tenant_users (tenant_id, user_id, email, roles)
-    values ('0b657261-633d-4677-a5ad-ff89059c42c5', '997015f8-69e7-4bcb-ad39-f8f69f8e8b43', 'rodriguez@brighthorizon.com','{"lawyer"}');
+CREATE TABLE user_travel_history (
+    tenant_id UUID,
+    history_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    travel_date DATE NOT NULL,
+    destination VARCHAR(100) NOT NULL,
+    activities JSONB,
+    total_spend DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, history_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id)
+);
 
--- Flights
-INSERT INTO flights (id, airline, flight_number, departure_airport, arrival_airport, departure_time, arrival_time, price, class) VALUES
-(1, 'United', 'FL809', 'SFO', 'ORD', '2024-07-02 15:21:12', '2024-11-10 14:41:12', 384.78, 'Economy'),
-(2, 'Alaska', 'FL973', 'JFK', 'LAX', '2024-11-22 21:23:21', '2024-12-04 03:12:18', 2807.42, 'Business');
+CREATE TABLE itineraries (
+    tenant_id UUID,
+    itinerary_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    destinations JSONB,
+    is_draft BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, itinerary_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id)
+);
 
--- Hotels
-INSERT INTO hotels (id, name, address, star_rating, room_type, price_per_night) VALUES
-(1, 'Hilton', '123 Main St, San Francisco, CA', 4, 'Standard', 200.00),
-(2, 'Marriott', '456 Main St, San Francisco, CA', 5, 'Deluxe', 300.00);
+CREATE TABLE itinerary_details (
+    tenant_id UUID,
+    detail_id UUID DEFAULT gen_random_uuid(),
+    itinerary_id UUID,
+    date DATE NOT NULL,
+    activity_type VARCHAR(50),
+    activity_details JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, detail_id),
+    FOREIGN KEY (tenant_id, itinerary_id) REFERENCES itineraries(tenant_id,itinerary_id)
+);
 
--- Car Rentals
-INSERT INTO car_rentals (id, company, location, car_class, price) VALUES
-(1, 'Hertz', 'SFO', 'Economy', 50.00),
-(2, 'Enterprise', 'SFO', 'Luxury', 100.00);
+CREATE TABLE bookings (
+    tenant_id UUID,
+    booking_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    itinerary_id UUID,
+    booking_type VARCHAR(50) NOT NULL,
+    booking_details JSONB NOT NULL,
+    status VARCHAR(20) DEFAULT 'confirmed',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, booking_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id),
+    FOREIGN KEY (tenant_id, itinerary_id) REFERENCES itineraries(tenant_id,itinerary_id)
+);
 
--- Travel Policies
-INSERT INTO travel_policies (tenant_id, id, details) VALUES ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', 1, '{"max_price": 500, "max_class": "Economy"}');
-INSERT INTO travel_policies (tenant_id, id, details) VALUES ('0b657261-633d-4677-a5ad-ff89059c42c5', 1, '{"max_price": 1000, "max_class": "Business"}');
+CREATE TABLE booking_reminders (
+    tenant_id UUID,
+    reminder_id UUID DEFAULT gen_random_uuid(),
+    booking_id UUID,
+    user_id UUID,
+    reminder_date DATE NOT NULL,
+    message TEXT NOT NULL,
+    sent BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, reminder_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id),
+    FOREIGN KEY (tenant_id,booking_id) REFERENCES bookings(tenant_id,booking_id)
+);
 
--- Bookings
-INSERT INTO bookings (id, tenant_id, user_id, departing_flight_id, arriving_flight_id, hotel_id, car_rental_id, booking_date, total_price, approval_required, approved, approver) VALUES
-(1, 'd5f126e8-be47-48f1-ac8d-2f69e960f04c', '71d8afcc-9cbd-445d-aadc-9cb844008734', 1, 2, 1, 1, '2024-07-02 15:21:12', 384.78, false, false, null);
-
-INSERT INTO bookings (id, tenant_id, user_id, departing_flight_id, arriving_flight_id, hotel_id, car_rental_id, booking_date, total_price, approval_required, approved, approver) VALUES
-(1, '0b657261-633d-4677-a5ad-ff89059c42c5', '997015f8-69e7-4bcb-ad39-f8f69f8e8b43', 2, 1, 2, 2, '2024-11-22 21:23:21', 2807.42, true, true, '19488a0b-09c3-4613-a8c0-2874f0d66497');
-
--- Payment Information
-INSERT INTO payment_information (id, tenant_id, user_id, stripe_customer_id, stripe_payment_method_id) VALUES
-(1, 'd5f126e8-be47-48f1-ac8d-2f69e960f04c', '71d8afcc-9cbd-445d-aadc-9cb844008734', 'cus_123', 'pm_123');
-
-INSERT INTO payment_information (id, tenant_id, user_id, stripe_customer_id, stripe_payment_method_id) VALUES
-(1, '0b657261-633d-4677-a5ad-ff89059c42c5', '997015f8-69e7-4bcb-ad39-f8f69f8e8b43', 'cus_456', 'pm_456');
+CREATE TABLE travel_analytics (
+    tenant_id UUID,
+    analytics_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    travel_date DATE NOT NULL,
+    total_spend DECIMAL(10, 2) NOT NULL,
+    categories_spend JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, analytics_id),
+    FOREIGN KEY (tenant_id,user_id) REFERENCES users.tenant_users(tenant_id,user_id)
+);
 ```

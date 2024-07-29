@@ -15,7 +15,7 @@ export const Logo = () => {
           className="bg-white"
         />
         <p className={cn("text-lg text-primary pb-1 font-switzerBold")}>
-          Chatty
+          KnowledgeAI
         </p>
       </div>
     </Link>

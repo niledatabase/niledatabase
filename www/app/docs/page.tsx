@@ -41,6 +41,38 @@ const languages = [
   },
 ];
 
+const usecases = [
+  { name: "Slack++", 
+    icon: "slack.webp", 
+    path: "/docs/getting-started/usecases/slack",
+  },
+  {
+    name: "AITravelMate",
+    icon: "tripactions.png",
+    path: "/docs/getting-started/usecases/tripactions",
+  },
+  {
+    name: "SmartSpend AI",
+    icon: "expensify.svg",
+    path: "/docs/getting-started/usecases/expensify",
+  },
+  {
+    name: "TaskPilot AI",
+    icon: "issue.svg",
+    path: "/docs/getting-started/usecases/issue-tracking",
+  },
+  {
+    name: "SalesLeadPilot",
+    icon: "lead.svg",
+    path: "/docs/getting-started/usecases/lead-management",
+  },
+  {
+    name: "SmartLearn",
+    icon: "schoology.png",
+    path: "/docs/getting-started/usecases/schoology",
+  },
+];
+
 const integrations = [
   {
     name: "Stripe",
@@ -86,6 +118,31 @@ export default async function Home() {
           </div>
           <div className="flex flex-wrap flex-row gap-6 max-w-[852px] mx-auto justify-center">
             {languages.map(({ name, icon, path }) => {
+              return (
+                <Link
+                  key={path}
+                  href={path}
+                  className="flex flex-col lg:min-w-[216px] items-center"
+                >
+                  <div className="icon rounded-[20px] flex justify-center">
+                    <Image
+                      src={`/icons/${icon}`}
+                      alt="book cover"
+                      width={24}
+                      height={24}
+                    />
+                  </div>
+                  <div className="text=[18px]">{name}</div>
+                </Link>
+              );
+            })}
+          </div>
+          <Divider />
+          <div className="text-3xl mb-10 lg:text-left text-center">
+            Use cases
+          </div>
+          <div className="flex flex-wrap flex-row gap-6 max-w-[852px] mx-auto justify-center">
+            {usecases.map(({ name, icon, path }) => {
               return (
                 <Link
                   key={path}

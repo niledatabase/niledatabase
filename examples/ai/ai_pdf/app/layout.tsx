@@ -6,8 +6,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Chatty",
-  description: "Chat with pdf's",
+  title: "KnowledgeAI",
+  description: "PDF search assistant for your organization",
 };
 
 export default function RootLayout({

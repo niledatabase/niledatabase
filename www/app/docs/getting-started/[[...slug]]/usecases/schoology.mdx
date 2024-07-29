@@ -2,100 +2,244 @@ import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
 
 export const metadata = {
-  title: "Schoology Clone",
+  title: "SmartLearn",
   order: 6,
 };
 
-# Schoology Clone
+# SmartLearn: AI Intelligence for the Modern Classroom
 
-The Schoology clone aims to replicate the functionality of an online learning management system, facilitating educators, students, and administrators to efficiently manage courses, assignments, grades, and communication. The system must support the creation and management of courses, users, assignments, grades, and discussions. Each entity in the system is uniquely identified by a UUID, ensuring scalability and uniqueness. A tenant table is introduced to segregate data for different educational institutions or organizations. Courses hold key information such as the course name, description, start date, end date, and the associated tenant. Users are managed with essential details like user ID, username, email, role, and the tenant they belong to. Assignments are associated with courses, allowing instructors to create, distribute, and evaluate tasks. Grades store student grades for each assignment, enabling instructors to track academic progress. Discussions provide a platform for students and instructors to engage in collaborative learning and communication. Foreign key relationships are established to maintain data integrity, ensuring that relationships between entities are consistent. The requirements emphasize scalability, security, and seamless collaboration within an educational environment.
+![schoolsnapshot](/docs/schoolsnapshot.png)
 
-**Postgres Schemas:**
+This application aims to assist both students and teachers in managing courses, tracking academic progress, and enhancing the educational experience through AI-driven features. The application provides functionalities for tracking courses, grades, progress, feedback, and homework. For teachers, it enables the management of students, assignment of homework, feedback provision, and grade entry. AI features include student progress analysis, future performance improvement plans, feedback search, and automated test correction.
 
-1. **Course Table Schema:**
+### Detailed Requirements
 
-   ```sql
-   CREATE TABLE Courses (
-     course_id UUID PRIMARY KEY,
-     course_name VARCHAR(100) NOT NULL,
-     description TEXT,
-     start_date DATE,
-     end_date DATE,
-     tenant_id UUID NOT NULL,
-     CONSTRAINT FK_Courses_Tenants FOREIGN KEY (tenant_id) REFERENCES Tenants(tenant_id) ON DELETE CASCADE
-   );
-   ```
+1. **Multitenancy:** Each school (tenant) has its own isolated data, ensuring data security and segregation.
+2. **Course Management:** Students can enroll in courses, track their progress, and view grades.
+3. **Grade Tracking:** Students' grades are recorded and can be analyzed over time.
+4. **Progress Monitoring:** Students can track their academic progress.
+5. **Feedback:** Teachers can provide feedback on students' performance.
+6. **Homework Management:** Teachers can assign, track, and grade homework.
+7. **AI Features:**
+    - Analyze student progress based on feedback and grades.
+    - Provide personalized improvement plans based on past performance.
+    - Assist teachers in searching through student feedback.
+    - Automatically correct handwritten tests using generative AI.
+8. **User Management:** Students and teachers can belong to multiple tenants.
+9. **Search Functionality:** Teachers can search for feedback and grades of all students.
 
-2. **User Table Schema :**
-   a. This is done automatically if you use Nile’s user management
+### Postgres Schemas
 
-   ```sql
-   CREATE TABLE Users (
-     user_id UUID PRIMARY KEY,
-     username VARCHAR(50) NOT NULL,
-     email VARCHAR(255) NOT NULL,
-     role VARCHAR(20) NOT NULL,
-     tenant_id UUID NOT NULL,
-     CONSTRAINT FK_Users_Tenants FOREIGN KEY (tenant_id) REFERENCES Tenants(tenant_id) ON DELETE CASCADE
-   );
-   ```
+![schoolschema](/docs/schoolschema.png)
 
-3. **Assignment Table Schema:**
+### 1. courses
 
-   ```sql
-   CREATE TABLE Assignments (
-     assignment_id UUID PRIMARY KEY,
-     assignment_name VARCHAR(100) NOT NULL,
-     course_id UUID NOT NULL,
-     due_date DATE,
-     tenant_id UUID NOT NULL,
-     CONSTRAINT FK_Assignments_Courses FOREIGN KEY (course_id) REFERENCES Courses(course_id) ON DELETE CASCADE,
-     CONSTRAINT FK_Assignments_Tenants FOREIGN KEY (tenant_id) REFERENCES Tenants(tenant_id) ON DELETE CASCADE
-   );
-   ```
-
-4. **Grade Table Schema:**
-
-   ```sql
-   CREATE TABLE Grades (
-     grade_id UUID PRIMARY KEY,
-     assignment_id UUID NOT NULL,
-     user_id UUID NOT NULL,
-     score FLOAT,
-     tenant_id UUID NOT NULL,
-     CONSTRAINT FK_Grades_Assignments FOREIGN KEY (assignment_id) REFERENCES Assignments(assignment_id) ON DELETE CASCADE,
-     CONSTRAINT FK_Grades_Users FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-     CONSTRAINT FK_Grades_Tenants FOREIGN KEY (tenant_id) REFERENCES Tenants(tenant_id) ON DELETE CASCADE
-   );
-   ```
-
-These schemas and data samples provide a foundation for implementing a scalable and efficient Schoology clone, ensuring data integrity and collaboration within an educational environment.
-
-## Sample data
+Stores information about each course. Both the teachers and students can ask questions about the course and teachers can generate new courses based on existing courses. For this purpose, generating embeddings for each course description would be useful. The application can then implement RAG to build use cases such as searching courses and generating new courses.
 
 ```sql
-INSERT INTO Tenants (tenant_id, name) VALUES
-  ('d5f126e8-be47-48f1-ac8d-2f69e960f04c', 'University A'),
-  ('e5a2cbb4-9b3a-4f53-8812-53799fe758a1', 'College B'),
-  ('8d3a18fc-6100-4e6a-a8e7-61d13f43e15c', 'School C'),
-  ('2f95d48b-5e4d-42a5-aa0f-c6d5b10eaf6f', 'Institute D');
+CREATE TABLE courses (
+    tenant_id UUID,
+    course_id UUID DEFAULT gen_random_uuid(),
+    course_name VARCHAR(100) NOT NULL,
+    course_description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed,
+    PRIMARY KEY (tenant_id, course_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
 
-INSERT INTO Users (user_id, username, email, role, tenant_id) VALUES
-  ('a8c57b1d-8a25-4f1c-9dcd-7a3a670acff5', 'teacher1', 'teacher1@example.com', 'instructor', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('db32d3f9-7b1c-4be5-88df-c4ef1b2a6a77', 'student1', 'student1@example.com', 'learner', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1'),
-  ('f7c9169b-44f0-47d3-bf25-cd7a827c3b82', 'teacher2', 'teacher2@example.com', 'instructor', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('db32d3f9-7b1c-4be5-88df-c4ef1b2a6a77', 'student2', 'student2@example.com', 'learner', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1');
-
-INSERT INTO Courses (course_id, course_name, description, start_date, end_date, tenant_id) VALUES
-  ('7a67bce3-2e6d-45f1-b05d-87c48c0b6d68', 'Introduction to Biology', 'Basic concepts of biology', '2024-01-10', '2024-05-30', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('bf6ebff1-3e2d-4a77-bdcb-3d16be2aa0bf', 'English Literature', 'Exploring classic literature', '2024-02-15', '2024-06-15', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1'),
-  ('c3a1f2d0-c845-4293-bdcd-210e16b8bafd', 'Computer Science Fundamentals', 'Introduction to programming', '2024-01-20', '2024-05-20', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c');
-
-INSERT INTO Assignments (assignment_id, assignment_name, course_id, due_date, tenant_id) VALUES
-  ('f73b10c0-513a-4d98-b9d3-94dce93fb4f2', 'Essay on Ecology', '7a67bce3-2e6d-45f1-b05d-87c48c0b6d68', '2024-04-30', 'd5f126e8-be47-48f1-ac8d-2f69e960f04c'),
-  ('a6e9501a-65d4-4f72-8f82-3b684f0189e1', 'Programming Assignment 1', 'c3a1f2d0-c845-4293-bdcd-210e16b8bafd', '2024-04-15', 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1');
-
-INSERT INTO Grades (grade_id, assignment_id, user_id, score, tenant_id) VALUES
-  ('f73b10c0-513a-4d98-b9d3-94dce93fb4f2', 'f73b10c0-513a-4d98-b9d3-94dce93fb4f2', 'db32d3f9-7b1c-4be5-88df-c4ef1b2a6a77', 85.5, 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1'),
-  ('a6e9501a-65d4-4f72-8f82-3b684f0189e1', 'a6e9501a-65d4-4f72-8f82-3b684f0189e1', 'db32d3f9-7b1c-4be5-88df-c4ef1b2a6a77', 92.0, 'e5a2cbb4-9b3a-4f53-8812-53799fe758a1')
 ```
+
+### 2. enrollments
+
+Tracks which students are enrolled in which courses.
+
+```sql
+CREATE TABLE enrollments (
+    tenant_id UUID,
+    enrollment_id UUID DEFAULT gen_random_uuid(),
+    course_id UUID,
+    student_id UUID,
+    enrollment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, enrollment_id),
+    FOREIGN KEY (tenant_id, course_id) REFERENCES courses(tenant_id, course_id),
+    FOREIGN KEY (tenant_id, student_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+```
+
+### 3. grades
+
+Stores grades for each student in each course.
+
+```sql
+CREATE TABLE grades (
+    tenant_id UUID,
+    grade_id UUID DEFAULT gen_random_uuid(),
+    course_id UUID,
+    student_id UUID,
+    grade DECIMAL(5, 2),
+    grade_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, grade_id),
+    FOREIGN KEY (tenant_id, course_id) REFERENCES courses(tenant_id, course_id),
+    FOREIGN KEY (tenant_id, student_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+```
+
+### 4. feedback
+
+Stores feedback from teachers for each student in each course. The feedbacks are extremely useful input to search for both students and teachers and learn about the progress. The chatbot can be used to ask questions about past feedback and even create plans for the future. So, having embeddings on the feedback helps with building RAG architecture.
+
+```sql
+CREATE TABLE feedback (
+    tenant_id UUID,
+    feedback_id UUID DEFAULT gen_random_uuid(),
+    course_id UUID,
+    student_id UUID,
+    teacher_id UUID,
+    feedback_text TEXT,
+    feedback_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, feedback_id),
+    FOREIGN KEY (tenant_id, course_id) REFERENCES courses(tenant_id, course_id),
+    FOREIGN KEY (tenant_id, student_id) REFERENCES tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, teacher_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+```
+
+### 5. homework
+
+Stores homework assignments for each course. The teachers can have AI generate solutions for the homework exercises. They can also leverage AI to help correct solutions based on the input questions. The embeddings here are on the homework questions and not the solutions themselves. This is useful for AI to generate solutions and even generate similar homeworks in the future.
+
+```sql
+CREATE TABLE homework (
+    tenant_id UUID,
+    homework_id UUID DEFAULT gen_random_uuid(),
+    course_id UUID,
+    teacher_id UUID,
+    homework_description TEXT,
+    due_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, homework_id),
+    FOREIGN KEY (tenant_id, course_id) REFERENCES courses(tenant_id, course_id),
+    FOREIGN KEY (tenant_id, teacher_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+```
+
+### 6. homework_submissions
+
+Tracks homework submissions by students. As mentioned above, these submissions are a file and the embeddings for the file are stored in the table. The table only tracks the file location and the actual file can be in some object store.
+
+```sql
+CREATE TABLE homework_submissions (
+    tenant_id UUID,
+    submission_id UUID DEFAULT gen_random_uuid(),
+    homework_id UUID,
+    student_id UUID,
+    submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    submission_file BYTEA,
+    grade DECIMAL(5, 2),
+    feedback TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, submission_id),
+    FOREIGN KEY (tenant_id, homework_id) REFERENCES homework(tenant_id, homework_id),
+    FOREIGN KEY (tenant_id, student_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+```
+
+### Complete SQL Script
+
+```sql
+
+-- Create courses table
+CREATE TABLE courses (
+    tenant_id UUID,
+    course_id UUID DEFAULT gen_random_uuid(),
+    course_name VARCHAR(100) NOT NULL,
+    course_description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed,
+    PRIMARY KEY (tenant_id, course_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Create enrollments table
+CREATE TABLE enrollments (
+    tenant_id UUID,
+    enrollment_id UUID DEFAULT gen_random_uuid(),
+    course_id UUID,
+    student_id UUID,
+    enrollment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, enrollment_id),
+    FOREIGN KEY (tenant_id, course_id) REFERENCES courses(tenant_id, course_id),
+    FOREIGN KEY (tenant_id, student_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create grades table
+CREATE TABLE grades (
+    tenant_id UUID,
+    grade_id UUID DEFAULT gen_random_uuid(),
+    course_id UUID,
+    student_id UUID,
+    grade DECIMAL(5, 2),
+    grade_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, grade_id),
+    FOREIGN KEY (tenant_id, course_id) REFERENCES courses(tenant_id, course_id),
+    FOREIGN KEY (tenant_id, student_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create feedback table
+CREATE TABLE feedback (
+    tenant_id UUID,
+    feedback_id UUID DEFAULT gen_random_uuid(),
+    course_id UUID,
+    student_id UUID,
+    teacher_id UUID,
+    feedback_text TEXT,
+    feedback_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, feedback_id),
+    FOREIGN KEY (tenant_id, course_id) REFERENCES courses(tenant_id, course_id),
+    FOREIGN KEY (tenant_id, student_id) REFERENCES tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, teacher_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create homework table
+CREATE TABLE homework (
+    tenant_id UUID,
+    homework_id UUID DEFAULT gen_random_uuid(),
+    course_id UUID,
+    teacher_id UUID,
+    homework_description TEXT,
+    due_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, homework_id),
+    FOREIGN KEY (tenant_id, course_id) REFERENCES courses(tenant_id, course_id),
+    FOREIGN KEY (tenant_id, teacher_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create homework_submissions table
+CREATE TABLE homework_submissions (
+    tenant_id UUID,
+    submission_id UUID DEFAULT gen_random_uuid(),
+    homework_id UUID,
+    student_id UUID,
+    submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    submission_file BYTEA,
+    grade DECIMAL(5, 2),
+    feedback TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, submission_id),
+    FOREIGN KEY (tenant_id, homework_id) REFERENCES homework(tenant_id, homework_id),
+    FOREIGN KEY (tenant_id, student_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+```
+
+This script sets up the necessary tables and relationships to support a robust and scalable multitenant school course management application with advanced AI capabilities, including course management, grade tracking, feedback, homework management, and AI-driven features for progress analysis and automated test correction.

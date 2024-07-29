@@ -1,15 +1,13 @@
-# CodeAssist - Use OpenAI and Nile to answer questions about popular code projects
+# Autonomous Code Assistant - Code more, type less. Built with  Nile and OpenAI to search an organization's codebase
 
-This template shows how to use Nile as a multi-tenant vector database, for an application that lets you investigate new code-bases via chat.
-We generate and store embeddings for interesting projects in advance, and then when a user asks a question, we retrieve relevant code snippets and provide them to the LLM as context.
+This template shows how to use Nile to implement multitenancy, user management and vector embeddings, to build an application that helps browse and query new code-bases via chat. We generate and store embeddings for interesting projects/tenants in advance, and then when a user asks a question, we retrieve relevant code snippets and provide them to the LLM as context.
 We then use streaming APIs to show the LLM response to the user.
 
 Because of Nile's virtual tenant databases, the retrieved code snippets will only be from the tenant the user selected,
 and Nile validates that the user has permissions to view this tenant's data. No risk of accidentally retrieving code that belongs to the wrong tenant.
 
 - [Live demo](https://code-assist-nile.vercel.app/)
-- [Video guide - TBD]()
-- [Step by step guide - TBD]()
+- [Step by step guide](https://www.thenile.dev/docs/getting-started/examples/code_assistant)
 
 ## Getting Started
 
@@ -19,7 +17,7 @@ Sign up for an invite to [Nile](https://thenile.dev) if you don't have one alrea
 
 ### 2. Create tables
 
-After you created a database, you will land in Nile's query editor. Create the following table for storing our embeddings:
+After you created a database, you will land in Nile's query editor. Create the following table for storing our embeddings per tenant:
 
 ```sql
             CREATE TABLE IF NOT EXISTS embeddings_openai_text3_large (
