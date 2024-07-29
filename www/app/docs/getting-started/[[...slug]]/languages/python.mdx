@@ -8,8 +8,8 @@ export const metadata = {
 
 # Build AI-Native SaaS with Nile and Python
 
-In this tutorial, you will learn to build a multi-tenant AI-native todo list application, using Nile with Python, FastAPI, SQLAlchemy, and OpenAI's client. 
-We'll use Nile to provide us with virtual-tenant databases - isolating the tasks for each tenant, and we'll use the AI models to generate automated time estimates 
+In this tutorial, you will learn to build a multi-tenant AI-native todo list application, using Nile with Python, FastAPI, SQLAlchemy, and OpenAI's client.
+We'll use Nile to provide us with virtual-tenant databases - isolating the tasks for each tenant, and we'll use the AI models to generate automated time estimates
 for each task in the todo list.
 
 <iframe
@@ -48,8 +48,8 @@ create table todos (
 
 You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
 
-The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find 
-semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and 
+The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find
+semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and
 using this data with text generation models is called [RAG (Retrieval Augumented Generation)](https://www.thenile.dev/docs/ai-embeddings/rag).
 
 See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
@@ -195,7 +195,7 @@ This is what the handler code looks like:
 
 As you can see, we look up similar tasks and then use the AI model to generate the estimate. We then store the task, with the estimate and the task embedding in the database.
 The stored embedding will be used to find similar tasks in the future. The methods `get_similar_tasks`, `ai_estimate` and `get_embedding` are all defined in `ai_utils.py`.
-They are wrappers around standard AI model calls and database queries, and they handle the specifics of the AI model we are using. 
+They are wrappers around standard AI model calls and database queries, and they handle the specifics of the AI model we are using.
 This will make it easy to switch models in the future.
 
 Getting similar tasks is done by querying the database for tasks with similar embeddings. Before we search the database, we need to generate the embedding for the new task:
@@ -211,13 +211,13 @@ def get_similar_tasks(session: any, text: str):
     return [{"title": task.title, "estimate": task.estimate} for task in similar_tasks_raw]
 ```
 
-We started by generating an embedding with `SEARCH_QUERY` task type. This is because we are looking for similar tasks to the new task. We use an embedding model 
-from the `nomic` family, which is trained to perform specific types of embedding tasks. Telling it that we are generating the embedding for a lookup vs 
-generating an embedding that we will store with the document (as we'll do in a bit), should help the model produce more relevant results. 
+We started by generating an embedding with `SEARCH_QUERY` task type. This is because we are looking for similar tasks to the new task. We use an embedding model
+from the `nomic` family, which is trained to perform specific types of embedding tasks. Telling it that we are generating the embedding for a lookup vs
+generating an embedding that we will store with the document (as we'll do in a bit), should help the model produce more relevant results.
 
-In order to use vector embeddings with SQL Alchemy and SQL Model ORM, we used [PG Vector's Python library](https://github.com/pgvector/pgvector-python). 
-You'll find it in `requirements.txt` for the project. Note that we filter out results where the cosine distance is higher than 1. 
-The lower the cosine distance is, the more similar the tasks are (0 indicate that they are identical). 
+In order to use vector embeddings with SQL Alchemy and SQL Model ORM, we used [PG Vector's Python library](https://github.com/pgvector/pgvector-python).
+You'll find it in `requirements.txt` for the project. Note that we filter out results where the cosine distance is higher than 1.
+The lower the cosine distance is, the more similar the tasks are (0 indicate that they are identical).
 A cosine distance of 1 means that the vectors are essentially unrelated, and when cosine distance is closer to 2, it indicates that the vectors are semantically opposites.
 
 The `get_embedding` function uses the embedding model to generate the embedding and is a very simple wrapper on the model:
@@ -229,8 +229,8 @@ response = client.embeddings.create(
 )
 ```
 
-Now that we have the similar tasks, the handler calls `ai_estimate` to generate the time estimate. 
-This function also wraps a model, this time a conversation model rather than an embedding model. And it icludes the similar tasks in the promopt, so the model will 
+Now that we have the similar tasks, the handler calls `ai_estimate` to generate the time estimate.
+This function also wraps a model, this time a conversation model rather than an embedding model. And it icludes the similar tasks in the promopt, so the model will
 generate similar estimates:
 
 ```python
@@ -239,17 +239,16 @@ response = client.chat.completions.create(
     messages = [
         {
             "role": "user",
-            "content" : 
-                f'you are an amazing project manager. I need to {text}. How long do you think this will take?' 
+            "content" :
+                f'you are an amazing project manager. I need to {text}. How long do you think this will take?'
                 f'I have a few similar tasks with their estimates, please use them as reference: {similar_tasks}.'
                 f'respond with just the estimate, no yapping.',
           },
-    ],   
+    ],
 )
 ```
 
 This estimate is then stored in the database along with the task and its vector embedding.
-
 
 ### 7.2 Working with virtual tenant databases
 

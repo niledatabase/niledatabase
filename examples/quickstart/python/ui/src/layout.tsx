@@ -51,7 +51,9 @@ export default function Layout({ children }: Props) {
       </div>
       <div>
         <Stack>
-          <Typography level="h2">TaskGenius - Task manager with ai-based estimates</Typography>
+          <Typography level="h2">
+            TaskGenius - Task manager with ai-based estimates
+          </Typography>
         </Stack>
       </div>
       {children}
