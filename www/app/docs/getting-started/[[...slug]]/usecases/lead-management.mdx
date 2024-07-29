@@ -24,9 +24,9 @@ The Sales Lead Management application is designed to allow multiple organization
 
 ![leads-schema-1](/docs/leadsschema.png)
 
-### 1. `leads`
+### 1. leads
 
-**Description:** Stores information about each sales lead. A sales person finds the right lead for a company and adds them to the system. Each lead goes through a pipeline from email reach out, phone conversation to deal closing or disqualified.
+Stores information about each sales lead. A sales person finds the right lead for a company and adds them to the system. Each lead goes through a pipeline from email reach out, phone conversation to deal closing or disqualified.
 
 ```sql
 CREATE TABLE leads (
@@ -46,9 +46,9 @@ CREATE TABLE leads (
 );
 ```
 
-### 2. `lead_notes`
+### 2. lead_notes
 
-**Description:** Stores notes related to each lead. These are notes taken by the sales rep as they go through the process of converting a lead to a potential customer. The embeddings of these notes are stored in the table to help RAG to the notes.
+Stores notes related to each lead. These are notes taken by the sales rep as they go through the process of converting a lead to a potential customer. The embeddings of these notes are stored in the table to help RAG to the notes.
 
 ```sql
 CREATE TABLE lead_notes (
@@ -64,9 +64,9 @@ CREATE TABLE lead_notes (
 );
 ```
 
-### 3. `lead_conversations`
+### 3. lead_conversations
 
-**Description:** Stores conversations related to each lead, with AI-generated summaries and vector embeddings for advanced search and analysis. There are multiple things to note here. The embeddings are stored per lead conversation here. These conversations can be long and having a single embedding may not be ideal. You may want to chunk them to get better contextual search.
+Stores conversations related to each lead, with AI-generated summaries and vector embeddings for advanced search and analysis. There are multiple things to note here. The embeddings are stored per lead conversation here. These conversations can be long and having a single embedding may not be ideal. You may want to chunk them to get better contextual search.
 
 ```sql
 CREATE TABLE lead_conversations (
@@ -83,9 +83,9 @@ CREATE TABLE lead_conversations (
 );
 ```
 
-### 4. `lead_status_history`
+### 4. lead_status_history
 
-**Description:** Tracks the status changes for each lead.
+Tracks the status changes for each lead.
 
 ```sql
 CREATE TABLE lead_status_history (
@@ -103,9 +103,9 @@ CREATE TABLE lead_status_history (
 
 ```
 
-### 5. `global_companies`
+### 5. global_companies
 
-**Description:** Tracks the top 1500 companies in the world. This table is shared across all tenants. This is not a per tenant table. All the sales reps in all the tenants/customers can share this data.
+Tracks the top 1500 companies in the world. This table is shared across all tenants. This is not a per tenant table. All the sales reps in all the tenants/customers can share this data.
 
 ```sql
 CREATE TABLE global_companies (

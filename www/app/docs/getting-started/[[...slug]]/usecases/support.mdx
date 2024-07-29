@@ -51,9 +51,9 @@ export const metadata = {
 
 ![supportschema](/docs/supportschema.png)
 
-### 1. `support_members`
+### 1. support_members
 
-**Description**: Tracks support members who are part of the support team. The support member belongs to a specific tenant.
+Tracks support members who are part of the support team. The support member belongs to a specific tenant.
 
 ```sql
 CREATE TABLE support_members (
@@ -65,9 +65,9 @@ CREATE TABLE support_members (
 );
 ```
 
-### 2. `customers`
+### 2. customers
 
-**Description:** Track a list of customers that a particular tenant is managing through support. This tracks all the details about the customer that a particular tenant is managing.
+Track a list of customers that a particular tenant is managing through support. This tracks all the details about the customer that a particular tenant is managing.
 
 ```sql
 CREATE TABLE customers (
@@ -82,9 +82,9 @@ CREATE TABLE customers (
 );
 ```
 
-### 3. `customer_employees`
+### 3. customer_employees
 
-**Description**: Tracks customer employees who are part of the customer team. The customer employees are part of a particular customer. It tracks all the information about the employee. 
+Tracks customer employees who are part of the customer team. The customer employees are part of a particular customer. It tracks all the information about the employee. 
 
 ```sql
 CREATE TABLE customer_employees (
@@ -98,9 +98,9 @@ CREATE TABLE customer_employees (
 );
 ```
 
-### 4. `support_tickets`
+### 4. support_tickets
 
-**Description**: Tracks support tickets created by customers. The table tracks all the information about a particular ticket. To implement summarization and search on tickets, the embeddings are calculated on the descriptions of the ticket. In an actual application, you may want to chunk the description to create embeddings.
+Tracks support tickets created by customers. The table tracks all the information about a particular ticket. To implement summarization and search on tickets, the embeddings are calculated on the descriptions of the ticket. In an actual application, you may want to chunk the description to create embeddings.
 
 ```sql
 CREATE TABLE support_tickets (
@@ -118,9 +118,9 @@ CREATE TABLE support_tickets (
 );
 ```
 
-### 5. `ticket_comments`
+### 5. ticket_comments
 
-**Description**: Tracks comments on support tickets. The table tracks all the comments made by both the support member and the customer employee. This is why user_id is used to reference the owner of the comment. The comments can also be auto filled by AI and to do this, we calculate the embeddings of all the past comments to feed into the AI model.
+Tracks comments on support tickets. The table tracks all the comments made by both the support member and the customer employee. This is why user_id is used to reference the owner of the comment. The comments can also be auto filled by AI and to do this, we calculate the embeddings of all the past comments to feed into the AI model.
 
 ```sql
 CREATE TABLE ticket_comments (
@@ -137,9 +137,9 @@ CREATE TABLE ticket_comments (
 );
 ```
 
-### 6. `knowledge_base`
+### 6. knowledge_base
 
-**Description**: Tracks knowledge base articles created by the support team. This table is shared across customers within a tenant. These knowledge bases have embeddings calculated for each article. In a real world application, the knowledge based are chunked to create multiple embeddings per article.
+Tracks knowledge base articles created by the support team. This table is shared across customers within a tenant. These knowledge bases have embeddings calculated for each article. In a real world application, the knowledge based are chunked to create multiple embeddings per article.
 
 ```sql
 CREATE TABLE knowledge_base (

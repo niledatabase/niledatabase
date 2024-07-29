@@ -30,9 +30,9 @@ This application allows users to manage tasks, track status, search past tasks, 
 
 ![tasks-schema-1](/docs/tasksschema.png)
 
-### 1. `projects`
+### 1. projects
 
-**Description:** Stores information about each project. The application can support multiple projects.
+Stores information about each project. The application can support multiple projects.
 
 ```sql
 CREATE TABLE projects (
@@ -52,9 +52,9 @@ CREATE TABLE projects (
 
 ```
 
-### 2. `tasks`
+### 2. tasks
 
-**Description:** Stores information about each task, linked to a project. Each project can have multiple tasks. For each task, we track vector embeddings of the description field. In a real world application, you may need to chunk the description of the tasks and have a table to track embeddings for each chunk. The model itself can be useful to figure the right way to chunk the description to ensure that the context is preserved.
+Stores information about each task, linked to a project. Each project can have multiple tasks. For each task, we track vector embeddings of the description field. In a real world application, you may need to chunk the description of the tasks and have a table to track embeddings for each chunk. The model itself can be useful to figure the right way to chunk the description to ensure that the context is preserved.
 
 ```sql
 CREATE TABLE tasks (
@@ -77,9 +77,9 @@ CREATE TABLE tasks (
 
 ```
 
-### 3. `task_status_history`
+### 3. task_status_history
 
-**Description:** Tracks the status changes for each task. The status of each task can also be converted to embeddings if they need to be searched using AI models.
+Tracks the status changes for each task. The status of each task can also be converted to embeddings if they need to be searched using AI models.
 
 ```sql
 CREATE TABLE task_status_history (
@@ -97,9 +97,9 @@ CREATE TABLE task_status_history (
 
 ```
 
-### 4. `task_comments`
+### 4. task_comments
 
-**Description:** Stores comments added to each task. The embeddings are created for each comments. Typically, comments are going to be short under tasks and one embedding per comment should be a good chunking length.
+Stores comments added to each task. The embeddings are created for each comments. Typically, comments are going to be short under tasks and one embedding per comment should be a good chunking length.
 
 ```sql
 CREATE TABLE task_comments (
@@ -117,9 +117,9 @@ CREATE TABLE task_comments (
 
 ```
 
-### 5. `roadmap`
+### 5. roadmap
 
-**Description:** Contains tasks from across projects for global planning.
+Contains tasks from across projects for global planning.
 
 ```sql
 CREATE TABLE roadmap (

@@ -1,0 +1,243 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "RecruitAI",
+  order: 9,
+};
+
+# RecruitAI - Smarter Hiring, Powered by AI
+
+![hiringsnapshot](/docs/hiringsnapshot.png)
+
+The multitenant recruiting application will streamline the hiring process for recruiters and hiring managers, incorporating AI features to enhance candidate sourcing, interview scheduling, and feedback management. Below are the detailed requirements and the necessary PostgreSQL schemas.
+
+### Key Features
+
+1. **Recruiter Features:**
+    - **Add Candidates:** Recruiters can manually add candidate profiles to different open roles.
+    - **AI Candidate Sourcing:** Recruiters can input job descriptions, and the AI will automatically find and add candidate profiles from online sources.
+    - **Interview Scheduling:** Recruiters can schedule interviews for candidates or let the AI handle scheduling.
+    - **Status Tracking:** Recruiters can update the status of candidates throughout the hiring process.
+2. **Hiring Manager Features:**
+    - **View Resumes:** Hiring managers can view candidate resumes and profiles.
+    - **Provide Feedback:** Hiring managers can add feedback for candidates, which is tracked and visible to the recruiting team.
+    - **AI Resume Query:** Hiring managers can use an AI chat interface to query candidate resumes and get summaries.
+    - **Generate Interview Questions:** Based on job descriptions, the AI can generate tailored interview questions.
+3. **AI Features:**
+    - **Candidate Sourcing:** Automatically find candidates online based on job descriptions.
+    - **Interview Scheduling:** Optimize interview schedules based on availability.
+    - **Profile Summarization:** Summarize candidate profiles and resumes for quick insights.
+    - **Interview Question Generation:** Generate relevant interview questions based on job descriptions and candidate profiles.
+
+### PostgreSQL Schemas
+
+![hiringschemas](/docs/hiringschema.png)
+
+### 1. candidates
+
+This table tracks all the candidates being considered for hiring, storing personal information, contact details, and their resumes. Each candidate is associated with a tenant.
+
+```sql
+CREATE TABLE candidates (
+    tenant_id UUID,
+    candidate_id UUID DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20),
+    resume TEXT NOT NULL, -- assuming resume is stored as text
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, candidate_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+```
+
+### 2. recruiter
+
+This table contains information about recruiters, including their conversion success rates. It references the tenant and user details from the tenant_users table.
+
+```sql
+CREATE TABLE recruiter (
+    tenant_id UUID,
+    recruiter_id UUID,
+    conversion_success INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, recruiter_id),
+    FOREIGN KEY (tenant_id, recruiter_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+```
+
+### 3. hiring_manager
+
+This table stores information about hiring managers, linking them to specific tenants and user accounts. It helps identify the hiring managers responsible for job postings.
+
+```sql
+CREATE TABLE hiring_manager (
+    tenant_id UUID,
+    manager_id UUID,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, manager_id),
+    FOREIGN KEY (tenant_id, manager_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+```
+
+### 4. jobs
+
+This table tracks all open job positions, including the job title, description, and status. Each job is assigned to a hiring manager within a specific tenant's organization. The job description is used to calculate vector embeddings. This can be used to generate interview questions, search for matching candidates and even ask questions to a chatbot about jobs in the system.
+
+```sql
+CREATE TABLE jobs (
+    tenant_id UUID,
+    job_id UUID DEFAULT gen_random_uuid(),
+    title VARCHAR(100) NOT NULL,
+    description TEXT,
+    status VARCHAR(50) DEFAULT 'open', -- e.g., open, closed, in_progress
+    hiring_manager_id UUID,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, job_id),
+    FOREIGN KEY (tenant_id, hiring_manager_id) REFERENCES hiring_manager(tenant_id, manager_id)
+);
+```
+
+### 5. candidate_jobs
+
+This table maps candidates to the jobs they have applied for or been considered for, tracking the status of their application for each job.
+
+```sql
+CREATE TABLE candidate_jobs (
+    tenant_id UUID,
+    candidate_id UUID,
+    job_id UUID,
+    status VARCHAR(50) DEFAULT 'applied', -- status of the candidate for this job
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, candidate_id, job_id),
+    FOREIGN KEY (tenant_id, candidate_id) REFERENCES candidates(tenant_id, candidate_id),
+    FOREIGN KEY (tenant_id, job_id) REFERENCES jobs(tenant_id, job_id)
+);
+```
+
+### 6. interviews
+
+This table manages the interview schedules for each job, including interview dates, questions, and expected answers. It helps organize the interview process for candidates. The questions and expected answers are converted to embeddings to help search for similar questions or similar answers. This helps to use the AI to create new questions of similar difficulty or correct answers from candidates.
+
+```sql
+CREATE TABLE interviews (
+    tenant_id UUID,
+    interview_id UUID DEFAULT gen_random_uuid(),
+    job_id UUID,
+    interview_date TIMESTAMP NOT NULL,
+    questions JSONB NOT NULL, -- storing interview questions in JSONB format
+    expected_answers JSONB, -- storing expected answers in JSONB format
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, interview_id),
+    FOREIGN KEY (tenant_id, job_id) REFERENCES jobs(tenant_id, job_id)
+);
+```
+
+### 7. feedback
+
+This table captures feedback provided by users (recruiters or hiring managers) for each interview. It includes detailed feedback text and links to the specific interview and user who provided it. The feedback are converted to embeddings to be able to search for similar feedbacks in the system and check what scores have been given by other recruiters and managers. This helps to calibrate how a particular feedback and rating correlate.
+
+```sql
+CREATE TABLE feedback (
+    tenant_id UUID,
+    feedback_id UUID DEFAULT gen_random_uuid(),
+    interview_id UUID,
+    user_id UUID,
+    feedback_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, feedback_id),
+    FOREIGN KEY (tenant_id, interview_id) REFERENCES interviews(tenant_id, interview_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+    ◦ 
+```
+
+### Complete SQL Script
+
+```sql
+CREATE TABLE candidates (
+    tenant_id UUID,
+    candidate_id UUID DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    resume TEXT NOT NULL, -- assuming resume is stored as text
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, candidate_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+CREATE TABLE recruiter (
+    tenant_id UUID,
+    recruiter_id UUID,
+    conversion_success INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, recruiter_id),
+    FOREIGN KEY (tenant_id, recruiter_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+CREATE TABLE hiring_manager (
+    tenant_id UUID,
+    manager_id UUID,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, manager_id),
+    FOREIGN KEY (tenant_id, manager_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+CREATE TABLE jobs (
+    tenant_id UUID,
+    job_id UUID DEFAULT gen_random_uuid(),
+    title VARCHAR(100) NOT NULL,
+    description TEXT,
+    status VARCHAR(50) DEFAULT 'open', -- e.g., open, closed, in_progress
+    hiring_manager_id UUID,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, job_id),
+    FOREIGN KEY (tenant_id, hiring_manager_id) REFERENCES hiring_manager(tenant_id, manager_id)
+);
+
+CREATE TABLE candidate_jobs (
+    tenant_id UUID,
+    candidate_id UUID,
+    job_id UUID,
+    status VARCHAR(50) DEFAULT 'applied', -- status of the candidate for this job
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, candidate_id, job_id),
+    FOREIGN KEY (tenant_id, candidate_id) REFERENCES candidates(tenant_id, candidate_id),
+    FOREIGN KEY (tenant_id, job_id) REFERENCES jobs(tenant_id, job_id)
+);
+
+CREATE TABLE interviews (
+    tenant_id UUID,
+    interview_id UUID DEFAULT gen_random_uuid(),
+    job_id UUID,
+    interview_date TIMESTAMP NOT NULL,
+    questions JSONB NOT NULL, -- storing interview questions in JSONB format
+    expected_answers JSONB, -- storing expected answers in JSONB format
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, interview_id),
+    FOREIGN KEY (tenant_id, job_id) REFERENCES jobs(tenant_id, job_id)
+);
+
+CREATE TABLE feedback (
+    tenant_id UUID,
+    feedback_id UUID DEFAULT gen_random_uuid(),
+    interview_id UUID,
+    user_id UUID,
+    feedback_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, feedback_id),
+    FOREIGN KEY (tenant_id, interview_id) REFERENCES interviews(tenant_id, interview_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+```

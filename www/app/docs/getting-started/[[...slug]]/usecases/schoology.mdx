@@ -32,9 +32,9 @@ This application aims to assist both students and teachers in managing courses, 
 
 ![schoolschema](/docs/schoolschema.png)
 
-### 1. `courses`
+### 1. courses
 
-**Description:** Stores information about each course. Both the teachers and students can ask questions about the course and teachers can generate new courses based on existing courses. For this purpose, generating embeddings for each course description would be useful. The application can then implement RAG to build use cases such as searching courses and generating new courses.
+Stores information about each course. Both the teachers and students can ask questions about the course and teachers can generate new courses based on existing courses. For this purpose, generating embeddings for each course description would be useful. The application can then implement RAG to build use cases such as searching courses and generating new courses.
 
 ```sql
 CREATE TABLE courses (
@@ -50,9 +50,9 @@ CREATE TABLE courses (
 
 ```
 
-### 2. `enrollments`
+### 2. enrollments
 
-**Description:** Tracks which students are enrolled in which courses.
+Tracks which students are enrolled in which courses.
 
 ```sql
 CREATE TABLE enrollments (
@@ -68,9 +68,9 @@ CREATE TABLE enrollments (
 
 ```
 
-### 3. `grades`
+### 3. grades
 
-**Description:** Stores grades for each student in each course.
+Stores grades for each student in each course.
 
 ```sql
 CREATE TABLE grades (
@@ -87,9 +87,9 @@ CREATE TABLE grades (
 
 ```
 
-### 4. `feedback`
+### 4. feedback
 
-**Description:** Stores feedback from teachers for each student in each course. The feedbacks are extremely useful input to search for both students and teachers and learn about the progress. The chatbot can be used to ask questions about past feedback and even create plans for the future. So, having embeddings on the feedback helps with building RAG architecture.
+Stores feedback from teachers for each student in each course. The feedbacks are extremely useful input to search for both students and teachers and learn about the progress. The chatbot can be used to ask questions about past feedback and even create plans for the future. So, having embeddings on the feedback helps with building RAG architecture.
 
 ```sql
 CREATE TABLE feedback (
@@ -109,9 +109,9 @@ CREATE TABLE feedback (
 
 ```
 
-### 5. `homework`
+### 5. homework
 
-**Description:** Stores homework assignments for each course. The teachers can have AI generate solutions for the homework exercises. They can also leverage AI to help correct solutions based on the input questions. The embeddings here are on the homework questions and not the solutions themselves. This is useful for AI to generate solutions and even generate similar homeworks in the future.
+Stores homework assignments for each course. The teachers can have AI generate solutions for the homework exercises. They can also leverage AI to help correct solutions based on the input questions. The embeddings here are on the homework questions and not the solutions themselves. This is useful for AI to generate solutions and even generate similar homeworks in the future.
 
 ```sql
 CREATE TABLE homework (
@@ -130,9 +130,9 @@ CREATE TABLE homework (
 
 ```
 
-### 6. `homework_submissions`
+### 6. homework_submissions
 
-**Description:** Tracks homework submissions by students. As mentioned above, these submissions are a file and the embeddings for the file are stored in the table. The table only tracks the file location and the actual file can be in some object store.
+Tracks homework submissions by students. As mentioned above, these submissions are a file and the embeddings for the file are stored in the table. The table only tracks the file location and the actual file can be in some object store.
 
 ```sql
 CREATE TABLE homework_submissions (

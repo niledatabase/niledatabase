@@ -16,7 +16,9 @@ The AI-native travel planning SaaS will leverage Generative AI to provide person
 
 ![travel-schema-1](/docs/travelschema.png)
 
-**Tenants Preferences:** This table stores various preferences for each tenant, which the AI uses to generate personalized travel plans. Preferences are stored as key-value pairs in JSON format.
+### 1. tenants_preferences
+
+This table stores various preferences for each tenant, which the AI uses to generate personalized travel plans. Preferences are stored as key-value pairs in JSON format.
 
 ```sql
 
@@ -32,7 +34,9 @@ CREATE TABLE tenant_preferences (
 
 ```
 
-**User Travel History:** This table tracks the travel history of users per tenant. It includes details such as travel dates, destinations, activities, and total spend. This information is useful for generating analytics and improving future travel plans.
+### 2. user_travel_history
+
+This table tracks the travel history of users per tenant. It includes details such as travel dates, destinations, activities, and total spend. This information is useful for generating analytics and improving future travel plans.
 
 ```sql
 CREATE TABLE user_travel_history (
@@ -50,7 +54,9 @@ CREATE TABLE user_travel_history (
 
 ```
 
-**Itinerary Schema:** This table stores draft and confirmed itineraries for users per tenant. It includes details like start and end dates, destinations, and a flag indicating whether the itinerary is a draft.
+### 3. itineraries
+
+Itinerary Schema:** This table stores draft and confirmed itineraries for users per tenant. It includes details like start and end dates, destinations, and a flag indicating whether the itinerary is a draft.
 
 ```sql
 CREATE TABLE itineraries (
@@ -67,7 +73,9 @@ CREATE TABLE itineraries (
 );
 ```
 
-**Itinerary details:** This table provides detailed daily activities for each itinerary. It includes the date, type of activity, and specific details about the activity, stored in JSON format.
+### 4. itinerary_details
+
+This table provides detailed daily activities for each itinerary. It includes the date, type of activity, and specific details about the activity, stored in JSON format.
 
 ```sql
 CREATE TABLE itinerary_details (
@@ -83,7 +91,9 @@ CREATE TABLE itinerary_details (
 );
 ```
 
-**Booking Management:** This table tracks travel bookings made by users per tenant. It includes details about the booking type (e.g., flight, hotel), booking details, and status.
+### 5. bookings
+
+This table tracks travel bookings made by users per tenant. It includes details about the booking type (e.g., flight, hotel), booking details, and status.
 
 ```sql
 CREATE TABLE bookings (
@@ -102,7 +112,9 @@ CREATE TABLE bookings (
 );
 ```
 
-**Booking reminders:** This table stores reminders for users about their upcoming bookings. It includes the reminder date, message, and a flag indicating whether the reminder has been sent.
+### 6. booking_reminders
+
+This table stores reminders for users about their upcoming bookings. It includes the reminder date, message, and a flag indicating whether the reminder has been sent.
 
 ```sql
 CREATE TABLE booking_reminders (
@@ -120,7 +132,9 @@ CREATE TABLE booking_reminders (
 );
 ```
 
-**Travel analytics:** This table stores analytics data about past travel spends for users per tenant. It includes the travel date, total spend, and a breakdown of spends by categories stored in JSON format.
+### 7. travel_analytics
+
+This table stores analytics data about past travel spends for users per tenant. It includes the travel date, total spend, and a breakdown of spends by categories stored in JSON format.
 
 ```sql
 CREATE TABLE travel_analytics (
