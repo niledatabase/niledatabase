@@ -54,7 +54,9 @@ export default function RootLayout({
           </div>
           <div>
             <Stack paddingTop={2}>
-              <Typography level="h2">Autonomous Code Assistant - Code more, type less</Typography>
+              <Typography level="h2">
+                Autonomous Code Assistant - Code more, type less
+              </Typography>
             </Stack>
           </div>
           {children}
