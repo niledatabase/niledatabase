@@ -9,3 +9,193 @@ export const metadata = {
 # SmartCampaign AI - Your AI-Driven Marketing Ally
 
 ![marketingsnapshot](/docs/marketingsnapshot.png)
+
+The Marketing Campaigns Application is a comprehensive platform designed to streamline and enhance the process of managing marketing campaigns. It supports users in creating and managing campaigns, tracking performance, and leveraging AI to optimize marketing efforts. The system allows for detailed contact management, effective campaign creation, and in-depth analytics, while providing intelligent insights to improve conversion rates and campaign effectiveness.
+
+### Key Features:
+
+1. **Contact Management:**
+    - **Add Contacts:** Users can manually or programmatically add contacts to the system.
+    - **Contact Information:** Store detailed information about each contact, including:
+        - First Name
+        - Last Name
+        - Email
+        - Phone Number
+        - Descriptive information (notes about the contact)
+2. **Campaign Creation and Management:**
+    - **Create Campaigns:** Users can create new marketing campaigns.
+    - **Associate Contacts:** Each campaign can have a list of associated contacts.
+    - **Email Template:** Attach an email template to each campaign, which will be used to send out the emails.
+    - **Campaign Status:** Track the status of each campaign (e.g., draft, sent, completed).
+3. **Campaign Analytics:**
+    - **Email Sent:** Track the number of emails sent out for each campaign.
+    - **Email Opened:** Track the number of emails that were opened by the recipients.
+    - **Links Clicked:** Track the number of clicks on links within the email.
+    - **Total Clicks:** Track the total number of overall clicks on the email.
+4. **AI Features:**
+    - **Increase Conversion Rates:** Use AI to provide insights and suggestions on how to increase conversion rates.
+    - **Search Contacts:** AI can search through contacts to find the ideal set of contacts for a specific campaign.
+    - **Campaign Insights:** AI can search past campaigns to get insights and suggest new campaigns to create based on previous performance.
+    - **Drafting Emails:** AI can help draft personalized emails for each contact within a campaign.
+    - **Summarize Campaign Performance:** AI can summarize the performance of a campaign based on various metrics.
+
+### Postgres Schemas
+
+![marketingschema](/docs/marketingschema.png)
+
+### 1. contacts
+
+This table stores detailed information about contacts, including their email addresses, names, phone numbers, and additional descriptive notes. It helps in managing the contact base for marketing campaigns and ensures each contact is associated with a specific tenant.
+
+```sql
+CREATE TABLE contacts (
+    tenant_id UUID,
+    contact_id UUID DEFAULT gen_random_uuid(),
+    email VARCHAR(255) NOT NULL,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    phone_number VARCHAR(20),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, contact_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+```
+
+### 2. campaigns
+
+This table holds information about marketing campaigns, including the campaign's name, description, start date, and current status. It enables the management of various campaigns and associates each with a tenant. We track the embeddings for all the campaigns. The embeddings are generated from the campaign description. This helps the RAG architecture to make the AI propose similar campaigns that can be executed in the future and search the past campaigns.
+
+```sql
+CREATE TABLE campaigns (
+    tenant_id UUID,
+    campaign_id UUID DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    start_date DATE,
+    status VARCHAR(50) DEFAULT 'draft',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, campaign_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+```
+
+### 3. campaign_contacts
+
+This table maps contacts to campaigns, indicating which contacts are included in which campaigns. It supports many-to-many relationships between contacts and campaigns, allowing detailed campaign targeting.
+
+```sql
+CREATE TABLE campaign_contacts (
+    tenant_id UUID,
+    campaign_id UUID,
+    contact_id UUID,
+    PRIMARY KEY (tenant_id, campaign_id, contact_id),
+    FOREIGN KEY (tenant_id, campaign_id) REFERENCES campaigns(tenant_id, campaign_id),
+    FOREIGN KEY (tenant_id, contact_id) REFERENCES contacts(tenant_id, contact_id)
+);
+```
+
+### 4. campaign_emails
+
+This table records the details of the emails sent for each campaign, including the subject, body, and sent date. It helps track email communications and their association with specific campaigns. The embeddings are calculated from the email content. These are useful for the AI to draft future emails that had much better conversion, summarize emails and also help search through the past emails across campaigns.
+
+```sql
+CREATE TABLE campaign_emails (
+    tenant_id UUID,
+    campaign_id UUID,
+    email_id UUID DEFAULT gen_random_uuid(),
+    subject VARCHAR(255),
+    body TEXT,
+    sent_date TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, campaign_id),
+    FOREIGN KEY (tenant_id, campaign_id) REFERENCES campaigns(tenant_id, campaign_id)
+);
+```
+
+### 5. Campaign Analytics Table
+
+This table tracks the performance metrics of each campaign, such as the number of emails sent, opened, links clicked, and conversions achieved. It provides insights into campaign effectiveness and is associated with a specific tenant and campaign.
+
+```sql
+CREATE TABLE campaign_analytics (
+    tenant_id UUID,
+    campaign_id UUID,
+    analytics_id UUID DEFAULT gen_random_uuid(),
+    email_sent_count INT DEFAULT 0,
+    email_opened_count INT DEFAULT 0,
+    link_clicked_count INT DEFAULT 0,
+    conversions INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, campaign_id, analytics_id),
+    FOREIGN KEY (tenant_id, campaign_id) REFERENCES campaigns(tenant_id, campaign_id)
+);
+```
+
+```sql
+-- Table for storing contacts information
+CREATE TABLE contacts (
+    tenant_id UUID,
+    contact_id UUID DEFAULT gen_random_uuid(),
+    email VARCHAR(255) NOT NULL,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    phone_number VARCHAR(20),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, contact_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Table for storing campaign information
+CREATE TABLE campaigns (
+    tenant_id UUID,
+    campaign_id UUID DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    start_date DATE,
+    status VARCHAR(50) DEFAULT 'draft',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, campaign_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Table for mapping contacts to campaigns
+CREATE TABLE campaign_contacts (
+    tenant_id UUID,
+    campaign_id UUID,
+    contact_id UUID,
+    PRIMARY KEY (tenant_id, campaign_id, contact_id),
+    FOREIGN KEY (tenant_id, campaign_id) REFERENCES campaigns(tenant_id, campaign_id),
+    FOREIGN KEY (tenant_id, contact_id) REFERENCES contacts(tenant_id, contact_id)
+);
+
+-- Table for storing information about campaign emails
+CREATE TABLE campaign_emails (
+    tenant_id UUID,
+    campaign_id UUID,
+    email_id UUID DEFAULT gen_random_uuid(),
+    subject VARCHAR(255),
+    body TEXT,
+    sent_date TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, campaign_id),
+    FOREIGN KEY (tenant_id, campaign_id) REFERENCES campaigns(tenant_id, campaign_id)
+);
+
+-- Table for storing campaign performance analytics
+CREATE TABLE campaign_analytics (
+    tenant_id UUID,
+    campaign_id UUID,
+    analytics_id UUID DEFAULT gen_random_uuid(),
+    email_sent_count INT DEFAULT 0,
+    email_opened_count INT DEFAULT 0,
+    link_clicked_count INT DEFAULT 0,
+    conversions INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, campaign_id, analytics_id),
+    FOREIGN KEY (tenant_id, campaign_id) REFERENCES campaigns(tenant_id, campaign_id)
+);
+```
