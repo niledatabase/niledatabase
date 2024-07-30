@@ -143,7 +143,7 @@ export default function Todos() {
         curr_state.push({
           title: datum[0].title,
           id: datum[0].id,
-          estimate: datum.estimate,
+          estimate: datum[0].estimate,
           complete: datum[0].complete,
         });
         setTodos(curr_state);

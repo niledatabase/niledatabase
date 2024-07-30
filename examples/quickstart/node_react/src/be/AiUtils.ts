@@ -79,9 +79,10 @@ export async function aiEstimate(title: string, similarTasks: todo[]) {
         role: "user",
         content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
         I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
-        respond with just the estimate, no yapping.`,
+        respond with just the estimate, keep the answer short.`,
       },
     ],
+    max_tokens: 64, // limit the response to 64 tokens
     model: model,
   });
 

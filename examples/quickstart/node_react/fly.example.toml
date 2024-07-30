@@ -10,11 +10,8 @@ primary_region = "sjc"
 
 [env]
   DANGEROUSLY_DISABLE_HOST_CHECK = "true"
-	NILE_DB_USER = 
-	NILE_DB_PASSWORD = 
-	NILE_WORKSPACE = 
-	NILE_DATABASE = 
-	NILE_DB_HOST = "db.thenile.dev" 
+	NILEDB_USER = 
+	NILEDB_PASSWORD = 
 	NILE_API_BASE_PATH = "https://api.thenile.dev" 
 	FE_URL = "https://demo-todo-node.fly.dev" 
 	REACT_APP_NILE_DATABASE = 
