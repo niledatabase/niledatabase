@@ -158,6 +158,7 @@ CREATE TABLE patients (
     gender VARCHAR(10),
     contact_info JSONB,
     medical_history TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (tenant_id, patient_id),
@@ -199,6 +200,7 @@ CREATE TABLE medical_records (
     record_date TIMESTAMP,
     description TEXT,
     record_data JSONB,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
     PRIMARY KEY (tenant_id, record_id),
     FOREIGN KEY (tenant_id, patient_id) REFERENCES patients(tenant_id, patient_id)
 );
@@ -212,6 +214,7 @@ CREATE TABLE test_results (
     test_name VARCHAR(100),
     test_date TIMESTAMP,
     results JSONB,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
     PRIMARY KEY (tenant_id, test_id),
     FOREIGN KEY (tenant_id, record_id) REFERENCES medical_records(tenant_id, record_id)
 );
