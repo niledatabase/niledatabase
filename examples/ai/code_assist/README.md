@@ -1,4 +1,4 @@
-# Autonomous Code Assistant - Code more, type less. Built with  Nile and OpenAI to search an organization's codebase
+# Autonomous Code Assistant - Code more, type less. Built with Nile and OpenAI to search an organization's codebase
 
 This template shows how to use Nile to implement multitenancy, user management and vector embeddings, to build an application that helps browse and query new code-bases via chat. We generate and store embeddings for interesting projects/tenants in advance, and then when a user asks a question, we retrieve relevant code snippets and provide them to the LLM as context.
 We then use streaming APIs to show the LLM response to the user.

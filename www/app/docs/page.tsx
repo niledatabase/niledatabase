@@ -42,8 +42,9 @@ const languages = [
 ];
 
 const usecases = [
-  { name: "Slack++", 
-    icon: "slack.webp", 
+  {
+    name: "Slack++",
+    icon: "slack.webp",
     path: "/docs/getting-started/usecases/slack",
   },
   {

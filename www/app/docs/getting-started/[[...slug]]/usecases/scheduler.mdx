@@ -1,0 +1,210 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "CalendiQ",
+  order: 14,
+};
+
+# CalendiQ - Intelligent Calendar Management for Busy Lives
+
+![schedulersnapshot](/docs/schedulersnapshot.png)
+
+The meeting scheduling application is designed to help organizations efficiently manage their employees' calendars, schedule meetings, and provide insights into how time is being spent. The application leverages AI to automate and optimize meeting scheduling, rescheduling, and time management.
+
+### Key Features
+
+1. **Calendar Management**
+    - Each employee has a personal calendar that tracks their availability and meetings.
+    - Calendars can be shared with others for collaboration and meeting scheduling.
+2. **Meeting Scheduling**
+    - Users can schedule meetings by selecting available times from multiple employees' calendars.
+    - AI suggests optimal meeting times based on participants' availability.
+3. **Meeting Tracking**
+    - The system tracks all scheduled meetings, including details such as participants, time, and location.
+    - Users receive reminders for upcoming meetings.
+4. **Meeting Rescheduling**
+    - AI assists in rescheduling meetings to find the most optimal times, reducing scheduling conflicts.
+5. **Statistics and Insights**
+    - Provides statistics on how employees' time is being spent in meetings.
+    - AI suggests ways to reduce time spent in meetings based on past data.
+6. **AI-Powered Features**
+    - AI books meetings automatically based on employees' calendars.
+    - AI proposes ways to optimize meeting times and reduce time in meetings.
+    - AI helps reschedule meetings for optimal use of time.
+
+### Postgres Schemas
+
+![schedulerschema](/docs/schedulerschema.png)
+
+### 1. calendars
+
+Stores calendar entries for each employee, including availability and meetings.
+
+```sql
+CREATE TABLE calendars (
+    tenant_id UUID,
+    calendar_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    event_date TIMESTAMP NOT NULL,
+    event_type VARCHAR(50) NOT NULL, -- e.g., "meeting", "available", "unavailable"
+    event_details JSONB,
+    PRIMARY KEY (tenant_id, calendar_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+```
+
+### 2. meetings
+
+Stores meeting information, including participants, time, location, and status. The embeddings are stored for the details of each meetings. This helps the AI model to understand meeting distribution and how time is spent.
+
+```sql
+CREATE TABLE meetings (
+    tenant_id UUID,
+    meeting_id UUID DEFAULT gen_random_uuid(),
+    organizer_id UUID,
+    meeting_time TIMESTAMP NOT NULL,
+    location VARCHAR(255),
+    status VARCHAR(50), -- e.g., "scheduled", "completed", "canceled"
+    details TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, meeting_id),
+    FOREIGN KEY (tenant_id, organizer_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+```
+
+### 3. meeting_participants
+
+Maps participants to meetings, tracking which employees are involved in each meeting.
+
+```sql
+CREATE TABLE meeting_participants (
+    tenant_id UUID,
+    meeting_id UUID,
+    user_id UUID,
+    PRIMARY KEY (tenant_id, meeting_id, user_id),
+    FOREIGN KEY (tenant_id, meeting_id) REFERENCES meetings(tenant_id, meeting_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+```
+
+### 4. reminders
+
+Stores reminders for meetings, including the reminder time and message.
+
+```sql
+CREATE TABLE reminders (
+    tenant_id UUID,
+    reminder_id UUID DEFAULT gen_random_uuid(),
+    meeting_id UUID,
+    reminder_time TIMESTAMP NOT NULL,
+    message TEXT,
+    PRIMARY KEY (tenant_id, reminder_id),
+    FOREIGN KEY (tenant_id, meeting_id) REFERENCES meetings(tenant_id, meeting_id)
+);
+```
+
+### 5. meeting_statistics
+
+Stores statistics on meeting attendance and duration for analysis and optimization.
+
+```sql
+CREATE TABLE meeting_statistics (
+    tenant_id UUID,
+    stat_id UUID DEFAULT gen_random_uuid(),
+    meeting_id UUID,
+    duration_minutes INT,
+    attended BOOLEAN,
+    PRIMARY KEY (tenant_id, stat_id),
+    FOREIGN KEY (tenant_id, meeting_id) REFERENCES meetings(tenant_id, meeting_id)
+);
+```
+
+### 6. shared_calendars
+
+Stores information about calendars shared between users for collaborative scheduling.
+
+```sql
+CREATE TABLE shared_calendars (
+    tenant_id UUID,
+    owner_id UUID,
+    shared_with_id UUID,
+    PRIMARY KEY (tenant_id, owner_id, shared_with_id),
+    FOREIGN KEY (tenant_id, owner_id) REFERENCES users.tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, shared_with_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+```
+
+This schema ensures that all relevant data for the meeting scheduling application is captured and organized efficiently, with AI capabilities integrated to provide advanced features and insights.
+
+### Full Script
+
+```sql
+-- Create Calendars Table
+CREATE TABLE calendars (
+    tenant_id UUID,
+    calendar_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    event_date TIMESTAMP NOT NULL,
+    event_type VARCHAR(50) NOT NULL, -- e.g., "meeting", "available", "unavailable"
+    event_details JSONB,
+    PRIMARY KEY (tenant_id, calendar_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+-- Create Meetings Table
+CREATE TABLE meetings (
+    tenant_id UUID,
+    meeting_id UUID DEFAULT gen_random_uuid(),
+    organizer_id UUID,
+    meeting_time TIMESTAMP NOT NULL,
+    location VARCHAR(255),
+    status VARCHAR(50), -- e.g., "scheduled", "completed", "canceled"
+    details TEXT,
+    PRIMARY KEY (tenant_id, meeting_id),
+    FOREIGN KEY (tenant_id, organizer_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+-- Create Meeting Participants Table
+CREATE TABLE meeting_participants (
+    tenant_id UUID,
+    meeting_id UUID,
+    user_id UUID,
+    PRIMARY KEY (tenant_id, meeting_id, user_id),
+    FOREIGN KEY (tenant_id, meeting_id) REFERENCES meetings(tenant_id, meeting_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+-- Create Reminders Table
+CREATE TABLE reminders (
+    tenant_id UUID,
+    reminder_id UUID DEFAULT gen_random_uuid(),
+    meeting_id UUID,
+    reminder_time TIMESTAMP NOT NULL,
+    message TEXT,
+    PRIMARY KEY (tenant_id, reminder_id),
+    FOREIGN KEY (tenant_id, meeting_id) REFERENCES meetings(tenant_id, meeting_id)
+);
+
+-- Create Meeting Statistics Table
+CREATE TABLE meeting_statistics (
+    tenant_id UUID,
+    stat_id UUID DEFAULT gen_random_uuid(),
+    meeting_id UUID,
+    duration_minutes INT,
+    attended BOOLEAN,
+    PRIMARY KEY (tenant_id, stat_id),
+    FOREIGN KEY (tenant_id, meeting_id) REFERENCES meetings(tenant_id, meeting_id)
+);
+
+-- Create Shared Calendars Table
+CREATE TABLE shared_calendars (
+    tenant_id UUID,
+    owner_id UUID,
+    shared_with_id UUID,
+    PRIMARY KEY (tenant_id, owner_id, shared_with_id),
+    FOREIGN KEY (tenant_id, owner_id) REFERENCES users.tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, shared_with_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+```

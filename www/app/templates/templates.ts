@@ -1,7 +1,7 @@
 import { Template } from "./types";
 
 export const NextJSQuickstart: Template = {
-  name: "AI-native multi-tenant application with Nile, pg_vector, NextJS and Llama 3.1 405B",
+  name: "AI-Native multi-tenant SaaS with Nile and NextJS",
   description:
     "Learn about Nile and AI concepts from a multi-tenant Todo app in NextJS. We go over tenant isolation, RAG architectures and integration with AI models",
   author: "Nile",
@@ -178,17 +178,17 @@ export const StripeSubscriptionsIntegration: Template = {
 };
 
 export const PythonQuickstart: Template = {
-  name: "Multi-tenant Todo List application with Python and Nile",
+  name: "AI-Native SaaS with Nile and Python",
   description:
-    "Learn how to use Nile with Python, FastAPI, SQLAlchemy, React, Vite and Nile's Serverless Postgres to build a multi-tenant app",
+    "Learn how to use Nile with Python, FastAPI, SQLAlchemy, and OpenAI client to build an AI-Native multi-tenant application",
   author: "Nile",
   demoUrl: "https://nile-python-quickstart.fly.dev/",
-  imageSrc: "/templates/PythonQuickstart.png",
+  imageSrc: "/templates/AIPythonTodoApp.png",
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/python/README.md",
   metadata: {
-    Framework: "Python, FastAPI, SQLAlchemy, React, Vite",
-    "Use Case": "Building SaaS",
+    Framework: "Python, FastAPI, SQLAlchemy, React, Vite, OpenAI, pg_vector",
+    "Use Case": "Building AI-Native SaaS",
     Publisher: "Nile",
   },
 };
