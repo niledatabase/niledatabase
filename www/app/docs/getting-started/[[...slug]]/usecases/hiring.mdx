@@ -15,20 +15,20 @@ The multitenant recruiting application will streamline the hiring process for re
 ### Key Features
 
 1. **Recruiter Features:**
-    - **Add Candidates:** Recruiters can manually add candidate profiles to different open roles.
-    - **AI Candidate Sourcing:** Recruiters can input job descriptions, and the AI will automatically find and add candidate profiles from online sources.
-    - **Interview Scheduling:** Recruiters can schedule interviews for candidates or let the AI handle scheduling.
-    - **Status Tracking:** Recruiters can update the status of candidates throughout the hiring process.
+   - **Add Candidates:** Recruiters can manually add candidate profiles to different open roles.
+   - **AI Candidate Sourcing:** Recruiters can input job descriptions, and the AI will automatically find and add candidate profiles from online sources.
+   - **Interview Scheduling:** Recruiters can schedule interviews for candidates or let the AI handle scheduling.
+   - **Status Tracking:** Recruiters can update the status of candidates throughout the hiring process.
 2. **Hiring Manager Features:**
-    - **View Resumes:** Hiring managers can view candidate resumes and profiles.
-    - **Provide Feedback:** Hiring managers can add feedback for candidates, which is tracked and visible to the recruiting team.
-    - **AI Resume Query:** Hiring managers can use an AI chat interface to query candidate resumes and get summaries.
-    - **Generate Interview Questions:** Based on job descriptions, the AI can generate tailored interview questions.
+   - **View Resumes:** Hiring managers can view candidate resumes and profiles.
+   - **Provide Feedback:** Hiring managers can add feedback for candidates, which is tracked and visible to the recruiting team.
+   - **AI Resume Query:** Hiring managers can use an AI chat interface to query candidate resumes and get summaries.
+   - **Generate Interview Questions:** Based on job descriptions, the AI can generate tailored interview questions.
 3. **AI Features:**
-    - **Candidate Sourcing:** Automatically find candidates online based on job descriptions.
-    - **Interview Scheduling:** Optimize interview schedules based on availability.
-    - **Profile Summarization:** Summarize candidate profiles and resumes for quick insights.
-    - **Interview Question Generation:** Generate relevant interview questions based on job descriptions and candidate profiles.
+   - **Candidate Sourcing:** Automatically find candidates online based on job descriptions.
+   - **Interview Scheduling:** Optimize interview schedules based on availability.
+   - **Profile Summarization:** Summarize candidate profiles and resumes for quick insights.
+   - **Interview Question Generation:** Generate relevant interview questions based on job descriptions and candidate profiles.
 
 ### PostgreSQL Schemas
 
@@ -154,7 +154,7 @@ CREATE TABLE feedback (
     FOREIGN KEY (tenant_id, interview_id) REFERENCES interviews(tenant_id, interview_id),
     FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
 );
-    ◦ 
+    ◦
 ```
 
 ### Complete SQL Script

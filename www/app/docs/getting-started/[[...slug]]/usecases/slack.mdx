@@ -64,7 +64,7 @@ CREATE TABLE channel_users (
 
 ### 3. messages
 
-Stores messages within channels along with vector embeddings for AI functionalities. Note that this example calculates embeddings for each message. In practice, you would not do this since it would blow up the number of embeddings and lack full context. A better option is to chunk the messages around a time range into one embedding. You could optionally have a messagechunk table that track each chunk and stores embeddings for them. 
+Stores messages within channels along with vector embeddings for AI functionalities. Note that this example calculates embeddings for each message. In practice, you would not do this since it would blow up the number of embeddings and lack full context. A better option is to chunk the messages around a time range into one embedding. You could optionally have a messagechunk table that track each chunk and stores embeddings for them.
 
 ```sql
 CREATE TABLE messages (

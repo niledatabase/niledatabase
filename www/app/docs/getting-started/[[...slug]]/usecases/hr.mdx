@@ -15,27 +15,27 @@ The HR management application will now include features to manage departments an
 ### Key Feature:
 
 1. **Employee Management**:
-    - Add new employees with their personal details, title, and compensation.
-    - Update employee details, including title changes, personal details, and compensation adjustments.
-    - Terminate employees and update their status.
+   - Add new employees with their personal details, title, and compensation.
+   - Update employee details, including title changes, personal details, and compensation adjustments.
+   - Terminate employees and update their status.
 2. **Department Management**:
-    - Manage information about each department.
-    - Associate employees with departments.
+   - Manage information about each department.
+   - Associate employees with departments.
 3. **Performance Management**:
-    - Track employee performance and status within the company.
-    - Managers can add performance feedback for employees who report to them.
-    - Employees can view their performance feedback and add personal feedback.
+   - Track employee performance and status within the company.
+   - Managers can add performance feedback for employees who report to them.
+   - Employees can view their performance feedback and add personal feedback.
 4. **Compensation Management**:
-    - HR can update employee compensation and receive AI-driven recommendations.
-    - Track compensation history for each employee.
+   - HR can update employee compensation and receive AI-driven recommendations.
+   - Track compensation history for each employee.
 5. **Benefits Management**:
-    - Track the benefits each employee receives.
+   - Track the benefits each employee receives.
 6. **AI Integration**:
-    - AI provides recommendations for compensation adjustments based on trends and employee performance.
-    - Co-pilot assistance for managers to generate personalized performance feedback.
+   - AI provides recommendations for compensation adjustments based on trends and employee performance.
+   - Co-pilot assistance for managers to generate personalized performance feedback.
 7. **Reporting and Summarization**:
-    - Summarize employee information, performance trends, and compensation data.
-    - Managers can view information about employees who report to them.
+   - Summarize employee information, performance trends, and compensation data.
+   - Managers can view information about employees who report to them.
 
 ### Postgres Schemas
 
@@ -119,7 +119,7 @@ CREATE TABLE compensation_history (
 
 ### 5. employee_feedback
 
-This table stores personal feedback provided by employees. It ensures feedback is linked to the specific employee who provided it. The embeddings on all the feedback of an employee helps to track similar patterns across feedbacks. This can help managers to understand which is the top priority improvement for the employee. 
+This table stores personal feedback provided by employees. It ensures feedback is linked to the specific employee who provided it. The embeddings on all the feedback of an employee helps to track similar patterns across feedbacks. This can help managers to understand which is the top priority improvement for the employee.
 
 ```sql
 CREATE TABLE employee_feedback (
