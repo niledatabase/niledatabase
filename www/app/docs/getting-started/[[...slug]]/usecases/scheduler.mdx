@@ -161,6 +161,7 @@ CREATE TABLE meetings (
     location VARCHAR(255),
     status VARCHAR(50), -- e.g., "scheduled", "completed", "canceled"
     details TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
     PRIMARY KEY (tenant_id, meeting_id),
     FOREIGN KEY (tenant_id, organizer_id) REFERENCES users.tenant_users(tenant_id, user_id)
 );
