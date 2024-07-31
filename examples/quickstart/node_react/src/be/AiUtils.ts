@@ -1,26 +1,25 @@
 import { OpenAI } from "openai";
 import { Server } from "@niledatabase/server";
 
-
 export enum EmbeddingTasks {
-    SEARCH_DOCUMENT = "search_document:",
-    SEARCH_QUERY = "search_query:"
+  SEARCH_DOCUMENT = "search_document:",
+  SEARCH_QUERY = "search_query:",
 }
 
 export interface todo {
-    title: string;
-    estimate: string;
+  title: string;
+  estimate: string;
 }
 
 const DEFAULT_MODEL = "nomic-ai/nomic-embed-text-v1.5";
 const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || DEFAULT_MODEL;
 
-function adjust_input(text: string, task: EmbeddingTasks):string {
-    if (EMBEDDING_MODEL?.indexOf("nomic")>=0){
-        return task + text
-    } else {
-      return text
-    }
+function adjust_input(text: string, task: EmbeddingTasks): string {
+  if (EMBEDDING_MODEL?.indexOf("nomic") >= 0) {
+    return task + text;
+  } else {
+    return text;
+  }
 }
 
 export function embeddingToSQL(embedding: number[]) {
@@ -28,7 +27,6 @@ export function embeddingToSQL(embedding: number[]) {
 }
 
 export async function embedTask(title: string, task: EmbeddingTasks) {
-
   const ai = new OpenAI({
     apiKey: process.env.AI_API_KEY,
     baseURL: process.env.AI_BASE_URL,
@@ -46,7 +44,10 @@ export async function embedTask(title: string, task: EmbeddingTasks) {
   return resp.data[0].embedding;
 }
 
-export async function findSimilarTasks(tenantNile: Server, title: string): Promise<todo[]> {
+export async function findSimilarTasks(
+  tenantNile: Server,
+  title: string
+): Promise<todo[]> {
   const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
 
   // get similar tasks, no need to filter by tenant because we are already in the tenant context

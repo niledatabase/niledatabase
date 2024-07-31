@@ -8,7 +8,13 @@ import {
   getUserId,
   isLoggedin,
 } from "./authUtils.js";
-import { embedTask, findSimilarTasks,  aiEstimate, EmbeddingTasks, embeddingToSQL} from "./AiUtils.js";
+import {
+  embedTask,
+  findSimilarTasks,
+  aiEstimate,
+  EmbeddingTasks,
+  embeddingToSQL,
+} from "./AiUtils.js";
 import { Nile } from "@niledatabase/server";
 import cookieParser from "cookie-parser";
 

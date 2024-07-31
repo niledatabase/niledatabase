@@ -18,7 +18,7 @@
   },
   "ts-node": {
     "esm": true,
-    "transpileOnly": true,
+    "transpileOnly": true
   },
   "include": ["**/*.ts", "**/*.tsx", "src/be/authUtils.ts", "src/be/app.ts"],
   "exclude": ["node_modules"]
