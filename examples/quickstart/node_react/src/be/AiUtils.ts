@@ -57,7 +57,6 @@ export async function findSimilarTasks(
   );
 
   console.log(` found ${similarTasks.rowCount} similar tasks`);
-  console.log(similarTasks.rows);
 
   return similarTasks.rows;
 }
