@@ -8,6 +8,7 @@ import {
   timestamp,
   varchar,
   boolean,
+  vector,
 } from "drizzle-orm/pg-core";
 
 export const usersSchema = pgSchema("users");
@@ -28,12 +29,14 @@ export const todos = pgTable(
     id: uuid("id").default(sql`gen_random_uuid()`),
     tenantId: uuid("tenant_id"),
     title: varchar("title", { length: 256 }),
+    estimate: varchar("estimate", { length: 256 }),
+    embedding: vector("embedding", { dimensions: 768 }),
     complete: boolean("complete"),
   },
   (table) => {
     return {
       // we need a composite primary key because Nile's tenant-aware tables require the tenantId as part of the primary key
-      pk: primaryKey(table.tenantId, table.id),
+      pk: primaryKey({columns: [table.tenantId, table.id]}),
     };
   }
 );
