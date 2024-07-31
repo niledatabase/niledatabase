@@ -69,14 +69,14 @@ export const OktaSSOLogin: Template = {
 
 export const NodeJSQuickstart: Template = {
   // A great name, preferably unique, name for the template
-  name: "NodeJS multi-tenant application with Nile",
+  name: "AI-Native multi-tenant SaaS with Nile, NodeJS and React",
   // what the template does
   description:
-    "Learn about Nile concepts from a multi-tenant Todo List app in NodeJS",
+    "Learn about Nile and AI concepts from an AI-native multi-tenant Todo List app in NodeJS and React",
   // who made it
   author: "Nile",
   // the location of the thumbnail. could be in /public/templates, or a CDN
-  imageSrc: "/templates/NodeTodoApp.png",
+  imageSrc: "/templates/AINodeJSTodoApp.png",
   demoUrl: "https://demo-todo-node.fly.dev",
   // the readmeURL should be publicly accessible.
   // It should also be the real github url, not the raw readme
@@ -84,8 +84,8 @@ export const NodeJSQuickstart: Template = {
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/node_react/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
-    Framework: "NodeJS",
-    "Use Case": "Building SaaS",
+    Framework: "NodeJS, React, OpenAI, pg_vector",
+    "Use Case": "Building AI Native SaaS",
     Publisher: "Nile",
   },
 };
