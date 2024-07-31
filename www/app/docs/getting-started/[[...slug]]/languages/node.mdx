@@ -8,9 +8,9 @@ export const metadata = {
 
 # Build AI-Native SaaS with Nile, NodeJS and React
 
-In this tutorial, you will learn to build a multi-tenant AI-native todo list application, using Nile with NodeJS, React and OpenAI's client. 
-We'll use Nile to provide us with virtual-tenant databases - isolating the tasks for each tenant, and we'll use the AI models to generate automated time estimates 
-for each task in the todo list. The estimates will be based on the task title, and estimates of similar tasks in the tenant's history. 
+In this tutorial, you will learn to build a multi-tenant AI-native todo list application, using Nile with NodeJS, React and OpenAI's client.
+We'll use Nile to provide us with virtual-tenant databases - isolating the tasks for each tenant, and we'll use the AI models to generate automated time estimates
+for each task in the todo list. The estimates will be based on the task title, and estimates of similar tasks in the tenant's history.
 This technique is known as [RAG architecture](https://www.thenile.dev/docs/ai-embeddings/rag).
 
 <iframe
@@ -46,8 +46,8 @@ create table todos (
 
 You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
 
-The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find 
-semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and 
+The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find
+semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and
 using this data with text generation models is a key part of [RAG (Retrieval Augumented Generation)](https://www.thenile.dev/docs/ai-embeddings/rag).
 
 See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
@@ -146,7 +146,8 @@ const newTodo = await nile.db.query(
   RETURNING *;`,
   [
     nile.tenantId, // setting from context
-    title, complete || false,
+    title,
+    complete || false,
     estimate,
     embeddingToSQL(embedding),
   ]
@@ -155,7 +156,7 @@ const newTodo = await nile.db.query(
 
 As you can see, we look up similar tasks and then use the AI model to generate the estimate. We then store the task, with the estimate and the task embedding in the database.
 The stored embedding will be used to find similar tasks in the future. The methods `findSimilarTasks`, `aiEstimate` and `embedTask` are all defined in `AiUtils.ts`.
-They are wrappers around standard AI model calls and database queries, and they handle the specifics of the AI model we are using. 
+They are wrappers around standard AI model calls and database queries, and they handle the specifics of the AI model we are using.
 This will make it easy to switch models in the future.
 
 Getting similar tasks is done by querying the database for tasks with similar embeddings. Before we search the database, we need to generate the embedding for the new task:
@@ -170,49 +171,46 @@ const similarTasks = await tenantNile.db.query(
 );
 ```
 
-We started by generating an embedding with `SEARCH_QUERY` task type. This is because we are looking for similar tasks to the new task. We use an embedding model 
-from the `nomic` family, which is trained to perform specific types of embedding tasks. Telling it that we are generating the embedding for a lookup vs 
-generating an embedding that we will store with the document (as we'll do in a bit), should help the model produce more relevant results. 
+We started by generating an embedding with `SEARCH_QUERY` task type. This is because we are looking for similar tasks to the new task. We use an embedding model
+from the `nomic` family, which is trained to perform specific types of embedding tasks. Telling it that we are generating the embedding for a lookup vs
+generating an embedding that we will store with the document (as we'll do in a bit), should help the model produce more relevant results.
 
-As you can see, we filter out results where the cosine distance is higher than 1. 
-The lower the cosine distance is, the more similar the tasks are (0 indicate that they are identical). 
+As you can see, we filter out results where the cosine distance is higher than 1.
+The lower the cosine distance is, the more similar the tasks are (0 indicate that they are identical).
 A cosine distance of 1 means that the vectors are essentially unrelated, and when cosine distance is closer to 2, it indicates that the vectors are semantically opposites.
 
 The `embedTask` function uses the embedding model to generate the embedding and is a very simple wrapper on the model:
 
 ```javascript
-  let resp = await ai.embeddings.create({
-    model: EMBEDDING_MODEL,
-    input: adjust_input(title, task),
-  });
+let resp = await ai.embeddings.create({
+  model: EMBEDDING_MODEL,
+  input: adjust_input(title, task),
+});
 ```
 
-Now that we have the similar tasks, the handler calls `aiEstimate` to generate the time estimate. 
-This function also wraps a model, this time a conversation model rather than an embedding model. And it icludes the similar tasks in the promopt, so the model will 
+Now that we have the similar tasks, the handler calls `aiEstimate` to generate the time estimate.
+This function also wraps a model, this time a conversation model rather than an embedding model. And it icludes the similar tasks in the promopt, so the model will
 generate similar estimates:
 
 ```javascript
-  const model =
-    process.env.AI_MODEL ||
-    "accounts/fireworks/models/llama-v3p1-405b-instruct";
+const model =
+  process.env.AI_MODEL || "accounts/fireworks/models/llama-v3p1-405b-instruct";
 
-  const aiEstimate = await ai.chat.completions.create({
-    messages: [
-      {
-        role: "user",
-        content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
+const aiEstimate = await ai.chat.completions.create({
+  messages: [
+    {
+      role: "user",
+      content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
         I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
         respond with just the estimate, keep the answer short.`,
-      },
-    ],
-    max_tokens: 64, // limit the response to 64 tokens, to fit in our estimate field
-    model: model,
-  });
-
+    },
+  ],
+  max_tokens: 64, // limit the response to 64 tokens, to fit in our estimate field
+  model: model,
+});
 ```
 
 This estimate is then stored in the database along with the task and its vector embedding.
-
 
 ### 8.2 Working with virtual tenant databases
 
@@ -283,7 +281,7 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
 
 ## 9. Looking good!
 
-🏆 Tada! You have learned the basic Nile, AI and RAG concepts. 
+🏆 Tada! You have learned the basic Nile, AI and RAG concepts.
 
 You now know enough to go ahead and build your own application with Nile.
 
