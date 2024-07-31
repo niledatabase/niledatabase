@@ -1,6 +1,6 @@
-# Multi-tenant todo list app with Nile, NodeJS and React
+# Multi-tenant AI-native todo list app with Nile, NodeJS and React
 
-This template shows how to use Nile in NodeJS and React for a multi-tenant todo list application.
+This template shows how to use Nile in NodeJS and React for an AI-native multi-tenant todo list application.
 
 - [Live demo](https://demo-todo-node.fly.dev)
 - [Video guide](https://youtu.be/6Lm3-YeLzks)
@@ -17,7 +17,7 @@ Sign up for an invite to [Nile](https://thenile.dev) if you don't have one alrea
 After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
 
 ```sql
-    create table todos (id uuid, tenant_id uuid, title varchar(256), complete boolean);
+    create table todos (id uuid, tenant_id uuid, title varchar(256), estimate varchar(256), embedding vector(768), complete boolean);
 ```
 
 If all went well, you'll see the new table in the panel on the left hand side of the query editor. You can also see Nile's built-in tenant table next to it.
@@ -25,8 +25,13 @@ If all went well, you'll see the new table in the panel on the left hand side of
 ### 3. Getting credentials
 
 In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
+If you want to use Google SSO, you'll want to also go to "General" settings screen and pick up the API URL.
 
-### 4. Setting the environment
+### 4. 3rd party credentials
+
+This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
+
+### 5. Setting the environment
 
 If you haven't cloned this repository yet, now will be an excellent time to do so.
 
@@ -35,9 +40,7 @@ git clone https://github.com/niledatabase/niledatabase
 cd niledatabase/examples/quickstart/node_react
 ```
 
-Rename `.env.example` to `.env`, and update it with your workspace and database name.
-_(Your workspace and database name are displayed in the header of the Nile dashboard.)_
-Also fill in the username and password with the credentials you picked up in the previous step.
+Copy `.env.example` to `.env` and fill in the details of your Nile DB and your AI model vendor.
 
 It should look something like this:
 
@@ -48,6 +51,11 @@ NILE_DB_PASSWORD = "358844ef-cb09-4758-ae77-bec13b801101"
 
 # These end up in the user's browser, so nothing secret should ever start with REACT_APP_...
 REACT_PUBLIC_NILEDB_API_URL =
+
+AI_API_KEY=your_api_key_for_openai_compatible_service
+AI_BASE_URL=https://api.fireworks.ai/inference/v1
+AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
+EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
 ```
 
 Install dependencies with `npm install`.
@@ -58,7 +66,16 @@ You can start both NodeJS api server and the React frontend with `npm run start`
 
 If all went well, your browser should show you the first page in the app, asking you to create a tenant. Feel free to create a tenant or 5.
 
-If you click on "Explore" next to one of the tenants, you can start creating todo items for this tenant.
+If you click on "Explore" next to one of the tenants, you can start creating todo items for this tenant - and see the automatic estimate that Llama generates.
+
+If you want to see all the data you created, you can go back to Nile Console and run a few queries:
+
+```sql
+select name, title, estimate, complete from
+tenants join todos on tenants.id=todos.tenant_id
+
+select * from users;
+```
 
 ## More things you can do
 
