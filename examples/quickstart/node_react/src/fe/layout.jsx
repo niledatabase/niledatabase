@@ -46,7 +46,9 @@ export default function Layout({ children }) {
 
       <div>
         <Stack>
-          <Typography level="h2">Yet Another Todo Application</Typography>
+          <Typography level="h2">
+            TaskGenius - Task manager with ai-based estimates
+          </Typography>
         </Stack>
       </div>
       {children}

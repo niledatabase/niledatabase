@@ -7,7 +7,14 @@ import {
   getUserToken,
   getUserId,
   isLoggedin,
-} from "./authUtils.ts";
+} from "./authUtils.js";
+import {
+  embedTask,
+  findSimilarTasks,
+  aiEstimate,
+  EmbeddingTasks,
+  embeddingToSQL,
+} from "./AiUtils.js";
 import { Nile } from "@niledatabase/server";
 import cookieParser from "cookie-parser";
 
@@ -123,14 +130,29 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
     const { title, complete } = req.body;
 
+    if (!title) {
+      res.status(400).json({
+        message: "No task title provided",
+      });
+    }
+
+    const similarTasks = await findSimilarTasks(nile, title);
+    console.log(similarTasks);
+    const estimate = await aiEstimate(title, similarTasks);
+    console.log(estimate);
+    // get the stored embedding for the task
+    const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
+
     const newTodo = await nile.db.query(
-      `INSERT INTO todos (title, complete, tenant_id)
-      VALUES ($1, $2, $3)
+      `INSERT INTO todos (tenant_id, title, complete, estimate, embedding)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *;`,
       [
+        nile.tenantId, // setting from context
         title,
         complete || false,
-        nile.tenantId, // setting from context
+        estimate,
+        embeddingToSQL(embedding),
       ]
     );
 

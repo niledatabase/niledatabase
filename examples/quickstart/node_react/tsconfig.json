@@ -6,8 +6,8 @@
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -17,7 +17,8 @@
     "incremental": true
   },
   "ts-node": {
-    "esm": true
+    "esm": true,
+    "transpileOnly": true
   },
   "include": ["**/*.ts", "**/*.tsx", "src/be/authUtils.ts", "src/be/app.ts"],
   "exclude": ["node_modules"]

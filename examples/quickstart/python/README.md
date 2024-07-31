@@ -51,7 +51,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # for AI estimates
-AI_API_KEY=xHOdhtYABdcmqhqqgFezMf2kVBz9SKGj05xeaLVYMksuIA0T
+AI_API_KEY=your_api_key_for_openai_compatible_service
 AI_BASE_URL=https://api.fireworks.ai/inference/v1
 AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
 EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
