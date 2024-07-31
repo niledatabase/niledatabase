@@ -9,3 +9,214 @@ export const metadata = {
 # OnboardIQ - Transform Customer Onboarding with Insightful AI
 
 ![onboardingsnapshot](/docs/onboardingsnapshot.png)
+
+The customer onboarding application is designed to streamline and manage the onboarding process for new customers. The system tracks customer projects, assigns support members, manages tasks, and utilizes AI to facilitate both customer and support team interactions. The application also integrates a knowledge base and provides notifications for project deadlines.
+
+**Key Features:**
+
+1. **Customer and Project Management:**
+    - Each customer can have multiple onboarding projects.
+    - Each project tracks progress, deadlines, and status.
+2. **Task Management:**
+    - Tasks are created and assigned to both customers and support members.
+    - Tasks include detailed information needed for completion.
+    - Task status is tracked, including whether it is done or not.
+3. **Support Member Assignment:**
+    - Each customer is assigned a support member who helps with onboarding.
+    - The support member and customer share task lists.
+4. **AI Integration:**
+    - Customers can use AI to ask questions and receive help with onboarding tasks.
+    - Support members can use AI to summarize customer actions, troubleshoot issues, and get help to unblock the customer.
+5. **Internal Knowledge Base:**
+    - An internal knowledge base is available to assist with onboarding.
+    - The AI utilizes the knowledge base to provide support and guidance.
+6. **Progress Tracking and Notifications:**
+    - Progress status is monitored for each project.
+    - Notifications are sent to sales leaders if a project is delayed beyond the deadline.
+
+### Postgres Schemas
+
+![onboardingschema](/docs/onboardingschema.png)
+
+### **1. customers**
+
+The `customers` table stores information about the customers being onboarded. Each customer belongs to a specific tenant (organization) and has a unique identifier. The table also includes contact information for each customer.
+
+```sql
+CREATE TABLE customers (
+    tenant_id UUID,                             -- Identifier for the tenant (organization) to which the customer belongs
+    customer_id UUID,                          -- Unique identifier for the customer
+    name VARCHAR(100) NOT NULL,                -- Name of the customer
+    contact_info JSONB,                        -- JSON object to store various contact details like email, phone number, etc.
+    PRIMARY KEY (tenant_id, customer_id),      -- Composite primary key combining tenant_id and customer_id
+    FOREIGN KEY (tenant_id) REFERENCES tenants(tenant_id)  -- Foreign key reference to the tenants table
+);
+```
+
+### **2. projects**
+
+The `projects` table tracks onboarding projects for each customer. It includes details about the project's status, progress, and deadline. Each project is associated with a specific customer and tenant. The embeddings on the projects description helps support to find similar projects done before and learn from them.
+
+```sql
+CREATE TABLE projects (
+    tenant_id UUID,                           -- Identifier for the tenant (organization) to which the project belongs
+    project_id UUID,                          -- Unique identifier for the project
+    customer_id UUID,                         -- Identifier for the customer associated with the project
+    name VARCHAR(100) NOT NULL,               -- Name of the project
+    description TEXT NOT NULL,                -- Detailed description of the project
+    status VARCHAR(50) NOT NULL,              -- Current status of the project (e.g., In Progress, Completed)
+    deadline TIMESTAMP,                       -- Deadline for project completion
+    progress NUMERIC(5, 2),                   -- Progress of the project as a percentage (0 to 100)
+    vector_embedding VECTOR(768),             -- Embedding vector for AI-related operations (e.g., summarization)
+    PRIMARY KEY (tenant_id, project_id),      -- Composite primary key combining tenant_id and project_id
+    FOREIGN KEY (tenant_id, customer_id) REFERENCES customers(tenant_id, customer_id)  -- Foreign key reference to the customers table
+);
+```
+
+### **3. support_members**
+
+The `support_members` table records information about support personnel assigned to assist customers. Each support member is linked to a specific tenant and is referenced through the tenant_users table.
+
+```sql
+CREATE TABLE support_members (
+    tenant_id UUID,                           -- Identifier for the tenant (organization) to which the support member belongs
+    support_member_id UUID,                   -- Unique identifier for the support member
+    PRIMARY KEY (tenant_id, support_member_id),  -- Composite primary key combining tenant_id and support_member_id
+    FOREIGN KEY (tenant_id, support_member_id) REFERENCES tenant_users(tenant_id, user_id)  -- Foreign key reference to the tenant_users table
+);
+```
+
+### **4. tasks**
+
+The `tasks` table manages tasks assigned as part of the onboarding process. Tasks can be assigned to either customers or support members. It includes details about the task, its status, and timestamps for creation and completion. The embeddings on the task description helps AI to assist the customer on how to execute the task by looking at similar tasks on other projects.
+
+```sql
+CREATE TABLE tasks (
+    tenant_id UUID,                           -- Identifier for the tenant (organization) to which the task belongs
+    task_id UUID,                             -- Unique identifier for the task
+    project_id UUID,                          -- Identifier for the project associated with the task
+    assigned_to UUID,                         -- Identifier for the person assigned the task (customer or support member)
+    description TEXT NOT NULL,                -- Detailed description of the task
+    status VARCHAR(50) NOT NULL,              -- Current status of the task (e.g., Not Started, In Progress, Completed)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp when the task was created
+    completed_at TIMESTAMP,                   -- Timestamp when the task was completed
+    vector_embedding VECTOR(768),             -- Embedding vector for AI-related operations (e.g., task analysis)
+    PRIMARY KEY (tenant_id, task_id),         -- Composite primary key combining tenant_id and task_id
+    FOREIGN KEY (tenant_id, project_id) REFERENCES projects(tenant_id, project_id),  -- Foreign key reference to the projects table
+    FOREIGN KEY (tenant_id, assigned_to) REFERENCES tenant_users(tenant_id, user_id)  -- Foreign key reference to the tenant_users table
+);
+```
+
+### **5. knowledge_base**
+
+The `knowledge_base` table contains articles and resources that assist with the onboarding process. These articles can be accessed by both customers and support members and are used to provide guidance and answers during onboarding. The embeddings on the knowledge base helps to summarize data for both the support and the customer for onboarding.
+
+```sql
+CREATE TABLE knowledge_base (
+    tenant_id UUID,                           -- Identifier for the tenant (organization) to which the knowledge base belongs
+    article_id UUID,                          -- Unique identifier for the article
+    title VARCHAR(100) NOT NULL,              -- Title of the article
+    content TEXT NOT NULL,                    -- Content of the article
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp when the article was created
+    vector_embedding VECTOR(768),             -- Embedding vector for AI-related operations (e.g., content analysis)
+    PRIMARY KEY (tenant_id, article_id),      -- Composite primary key combining tenant_id and article_id
+    FOREIGN KEY (tenant_id) REFERENCES tenants(tenant_id)  -- Foreign key reference to the tenants table
+);
+```
+
+### **6. notifications**
+
+The `notifications` table handles notifications related to the onboarding process. It tracks messages sent to designated roles (like sales leaders) and includes details about the message and its read status.
+
+```sql
+CREATE TABLE notifications (
+    tenant_id UUID,                           -- Identifier for the tenant (organization) to which the notification belongs
+    notification_id UUID,                     -- Unique identifier for the notification
+    recipient_id UUID,                       -- Identifier for the recipient of the notification (e.g., sales leader)
+    message TEXT NOT NULL,                    -- Content of the notification message
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp when the notification was created
+    is_read BOOLEAN DEFAULT FALSE,            -- Flag indicating whether the notification has been read
+    PRIMARY KEY (tenant_id, notification_id), -- Composite primary key combining tenant_id and notification_id
+    FOREIGN KEY (tenant_id, recipient_id) REFERENCES tenant_users(tenant_id, user_id)  -- Foreign key reference to the tenant_users table
+);
+```
+
+Each table schema is designed to adhere to the multitenant architecture, using `tenant_id` as a composite key and referencing other tables as needed.
+
+### Full Script
+
+```sql
+-- Customers Table
+CREATE TABLE customers (
+    tenant_id UUID,
+    customer_id UUID,
+    name VARCHAR(100) NOT NULL,
+    contact_info JSONB,
+    PRIMARY KEY (tenant_id, customer_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Projects Table
+CREATE TABLE projects (
+    tenant_id UUID,
+    project_id UUID,
+    customer_id UUID,
+    name VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    deadline TIMESTAMP,
+    progress NUMERIC(5, 2),
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, project_id),
+    FOREIGN KEY (tenant_id, customer_id) REFERENCES customers(tenant_id, customer_id)
+);
+
+-- Support Members Table
+CREATE TABLE support_members (
+    tenant_id UUID,
+    support_member_id UUID,
+    PRIMARY KEY (tenant_id, support_member_id),
+    FOREIGN KEY (tenant_id, support_member_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+-- Tasks Table
+CREATE TABLE tasks (
+    tenant_id UUID,
+    task_id UUID,
+    project_id UUID,
+    assigned_to UUID, -- Can be either customer or support member
+    description TEXT NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, task_id),
+    FOREIGN KEY (tenant_id, project_id) REFERENCES projects(tenant_id, project_id),
+    FOREIGN KEY (tenant_id, assigned_to) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+-- Knowledge Base Table
+CREATE TABLE knowledge_base (
+    tenant_id UUID,
+    article_id UUID,
+    title VARCHAR(100) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, article_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Notifications Table
+CREATE TABLE notifications (
+    tenant_id UUID,
+    notification_id UUID,
+    recipient_id UUID, -- Sales leader or any designated role
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (tenant_id, notification_id),
+    FOREIGN KEY (tenant_id, recipient_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+```
