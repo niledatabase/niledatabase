@@ -95,6 +95,7 @@ If you have Fly.io account, you can deploy on Fly.io by running:
 ```text
 fly launch
 fly secrets set DATABASE_URL=...
+fly secrets set AI_API_KEY=...
 fly deploy
 fly scale memory 1024
 fly scale count 1

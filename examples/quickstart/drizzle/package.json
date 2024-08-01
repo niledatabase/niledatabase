@@ -16,6 +16,7 @@
     "drizzle-orm": "latest",
     "express": "^4.18.2",
     "express-basic-auth": "^1.2.1",
+    "openai": "^4.53.2",
     "path-to-regexp": "^6.2.1",
     "pg": "^8.11.3",
     "postgres": "^3.4.1"
