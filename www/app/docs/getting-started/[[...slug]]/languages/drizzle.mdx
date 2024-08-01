@@ -6,10 +6,14 @@ export const metadata = {
   order: 5,
 };
 
-# Build a backend service with Nile and Drizzle
+# Build AI-Native SaaS with Nile and Drizzle ORM
 
 In this tutorial, you will learn about Nile's tenant virtualization features, while building a backend service for a todo list application.
-We'll use Drizzle as the ORM to interact with the database, Express as the web framework and NodeJS as the runtime.
+We'll use Drizzle as the ORM to interact with the database, OpenAI client to interact with AI models, Express as the web framework and NodeJS as the runtime.
+
+We'll use Nile to provide us with virtual-tenant databases - isolating the tasks for each tenant, and we'll use the AI models to generate automated time estimates
+for each task in the todo list. The estimates will be based on the task title, and estimates of similar tasks in the tenant's history.
+This technique is known as [RAG architecture](https://www.thenile.dev/docs/ai-embeddings/rag).
 
 <iframe
   width="480"
@@ -36,12 +40,18 @@ After you created a database, you will land in Nile's query editor. Since our ap
     "id" uuid DEFAULT gen_random_uuid(),
     "tenant_id" uuid,
     "title" varchar(256),
+    "estimate" varchar(256),
+    "embedding" vector(768),
     "complete" boolean,
     CONSTRAINT todos_tenant_id_id PRIMARY KEY("tenant_id","id")
   );
 ```
 
 You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
+
+The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find
+semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and
+using this data with text generation models is a key part of [RAG (Retrieval Augumented Generation)](https://www.thenile.dev/docs/ai-embeddings/rag).
 
 See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
 ![Creating a table in Nile's admin dashboard](/docs/gui-create-table.png)
@@ -52,7 +62,13 @@ In the left-hand menu, click on "Settings" and then select "Connection".
 
 Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
 
-## 4. Set the environment
+### 4. 3rd party credentials
+
+This example uses AI chat and embedding models to generate automated time estimates for each task in the todo
+list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible
+APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
+
+## 5. Set the environment
 
 Enough GUI for now. Let's get to some code.
 
@@ -63,10 +79,18 @@ git clone https://github.com/niledatabase/niledatabase
 cd niledatabase/examples/quickstart/drizzle
 ```
 
-Rename `.env.example` to `.env`, and update it with the connection string you just copied from Nile Console. Make sure you don't include the word "psql". It should look something like this:
+Rename `.env.example` to `.env`, and update it with the connection string you just
+copied from Nile Console and the configuration of your AI vendor and model. Make sure you don't include
+the word "psql". It should look something like this:
 
 ```bash
 DATABASE_URL=postgres://018b778a-30df-7cdd-b55c-2f9664db39f3:ff3fb983-683c-4616-bbbc-519d8ddbbce5@db.thenile.dev:5432/gwen_db
+
+# for AI estimates
+AI_API_KEY=your_api_key_for_openai_compatible_service
+AI_BASE_URL=https://api.fireworks.ai/inference/v1
+AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
+EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
 ```
 
 Install dependencies with `yarn install` or `npm install`.
@@ -75,7 +99,7 @@ Install dependencies with `yarn install` or `npm install`.
 npm install
 ```
 
-## 5. Run the application
+## 6. Run the application
 
 Start the web service with `npm start` or `yarn start`.
 
@@ -110,15 +134,18 @@ curl  -X GET \
 Go back to the Nile query editor and see the data you created from the app.
 
 ```sql
-SELECT tenants.name, title, complete
+SELECT tenants.name, title, estimate, complete
 FROM todos join tenants on tenants.id = todos.tenant_id;
 ```
 
 You should see all the todos you created, and the tenants they belong to.
 
+If you create more tasks via the REST APIs, the estimates for new tasks will use the embeddings of the existing tasks to
+generate the estimates.
+
 ## 7. How does it work?
 
-Let's take a look at the code. The web application starting point is in `src/app.ts`.
+Let's take a look at the code. The web application starting point is in [`src/app.ts`](https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/drizzle/src/app.ts).
 
 It creates an Express app, and sets up some of the usual middleware:
 
@@ -130,8 +157,9 @@ app.use(express.urlencoded({ extended: true }));
 ```
 
 The interesting parts are the middleware that sets up the tenant context, and `tenantDB` which wraps Drizzle and passes the tenant context to Nile.
+And of course, the handler that uses AI models to automatically estimate the time to complete tasks.
 
-Lets look at them one by one.
+Lets look at these one by one.
 
 ### 7.1 Tenant Context Middleware
 
@@ -207,7 +235,104 @@ const todos = await tenantDB(async (tx) => {
 res.json(todos);
 ```
 
-### 7.4 But wait, what's todoSchema and tenantSchema?
+### 7.4 Using AI models to estimate time to complete tasks
+
+This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. We handle the time estimates in
+the route handler for `app.post("/api/tenants/:tenantId/todos"`. This handler executes when users add new tasks.
+
+This is what the handler code looks like:
+
+```typescript
+const { title, complete } = req.body;
+const tenantId = req.params.tenantId;
+
+// We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
+const similarTasks = await findSimilarTasks(tenantDB, title);
+console.log("found similar tasks: " + JSON.stringify(similarTasks));
+
+const estimate = await aiEstimate(title, similarTasks);
+console.log("estimated time: " + estimate);
+
+// get the embedding for the task, so we can find it in future similarity searches
+const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
+
+const newTodo = await tenantDB(async (tx) => {
+  return await tx
+    .insert(todoSchema)
+    .values({ tenantId, title, complete, estimate, embedding })
+    .returning();
+});
+// return without the embedding vector, since it is huge and useless
+res.json(newTodo.map((t: any) => ({ ...t, embedding: "<omitted>" })));
+```
+
+As you can see, we look up similar tasks and then use the AI model to generate the estimate. We then store the task, with the estimate and the task embedding in the database.
+The stored embedding will be used to find similar tasks in the future. The methods `findSimilarTasks`, `aiEstimate` and `embedTask` are all defined in `AiUtils.ts`.
+They are wrappers around standard AI model calls and database queries, and they handle the specifics of the AI model we are using.
+This will make it easy to switch models in the future.
+
+Getting similar tasks is done by querying the database for tasks with similar embeddings.
+
+```typescript
+const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
+const similarity = sql<number>`(${cosineDistance(
+  todoSchema.embedding,
+  embedding
+)})`;
+
+// get similar tasks, no need to filter by tenant because we are already in the tenant context
+const similarTasks = await tenantNile(async (tx) => {
+  return await tx
+    .select({ task: todoSchema.title, estimate: todoSchema.estimate })
+    .from(todoSchema)
+    .where(lt(similarity, 1))
+    .orderBy((t: any) => desc(similarity))
+    .limit(3);
+});
+```
+
+We started by generating an embedding with `SEARCH_QUERY` task type. This is because we are looking for
+similar tasks to the new task. We use an embedding model from the `nomic` family, which is trained to perform specific types of embedding tasks. Telling it that we are generating the embedding for a lookup vs
+generating an embedding that we will store with the document (as we'll do in a bit), should help the model produce more relevant results.
+
+DrizzleORM provides the magical `sql` method, as well as the `cosineDistance` function, which we use to work
+with `pg_vector` and calculate the similarity between the embeddings of the new task and the existing tasks.
+
+As you can see, we filter out results where the cosine distance is higher than 1.
+The lower the cosine distance is, the more similar the tasks are (0 indicate that they are identical).
+A cosine distance of 1 means that the vectors are essentially unrelated, and when cosine distance is closer to 2, it indicates that the vectors are semantically opposites.
+
+The `embedTask` function uses the embedding model to generate the embedding and is a very simple wrapper on the model:
+
+```typescript
+let resp = await ai.embeddings.create({
+  model: EMBEDDING_MODEL,
+  input: adjust_input(title, task),
+});
+```
+
+Now that we have the similar tasks, the handler calls `aiEstimate` to generate the time estimate.
+This function also wraps a model, this time a conversation model rather than an embedding model. And it icludes the similar tasks in the promopt, so the model will
+generate similar estimates:
+
+```typescript
+const aiEstimate = await ai.chat.completions.create({
+  messages: [
+    {
+      role: "user",
+      content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
+        I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
+        respond with just the estimate, keep the answer short.`,
+    },
+  ],
+  max_tokens: 64, // limit the response to 64 tokens
+  model: model,
+});
+```
+
+This estimate is then stored in the database along with the task and its vector embedding.
+
+### 7.5 But wait, what's todoSchema and tenantSchema?
 
 You may have noticed that we are not using the table name directly in the code. Instead, we are using `todoSchema` and `tenantSchema`.
 We defined these in `src/db/schema.ts`, and these are the objects that Drizzle uses to interact with the database. It is an object that maps to the tables in our database.
@@ -218,11 +343,16 @@ Drizzle can also generate migration files from these objects, and we can use the
 
 This example is a good starting point for building your own application with Nile.
 
-You have learned basic Nile concepts and how to use them with Drizzle.
+You have learned basic Nile, AI and RAG concepts and how to use them with Drizzle ORM.
 
 You can learn more about Nile's tenant virtualization features in the following tutorials:
 
 - [Tenant management](/docs/tenant-management)
 - [Tenant isolation](/docs/tenant-isolation)
 
-And you can explore Nile's JS SDK in the [SDK reference](/docs/reference/sdk-reference).
+You can explore Nile's JS SDK in the [SDK reference](/docs/reference/sdk-reference).
+
+You can learn [More about AI in Nile](https://www.thenile.dev/docs/ai-embeddings), or try a more advanced example like:
+
+- [Chat with PDFs](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
+- [Code Assistnat](https://www.thenile.dev/docs/getting-started/examples/code_assistant)

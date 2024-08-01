@@ -15,23 +15,23 @@ The 360 employee feedback application allows employees to provide feedback about
 ### Key Features
 
 1. **Feedback Management:**
-    - Employees can give feedback to any other employee.
-    - Feedback can be given anonymously if desired.
-    - Employees can view all feedback given to them.
-    - Self-feedback is allowed.
+   - Employees can give feedback to any other employee.
+   - Feedback can be given anonymously if desired.
+   - Employees can view all feedback given to them.
+   - Self-feedback is allowed.
 2. **AI Features:**
-    - AI can summarize feedback and provide insights into feedback patterns for specific employees.
-    - AI can help draft feedback based on context or previous feedback.
-    - AI can analyze feedback trends to suggest improvements or recognize strengths.
+   - AI can summarize feedback and provide insights into feedback patterns for specific employees.
+   - AI can help draft feedback based on context or previous feedback.
+   - AI can analyze feedback trends to suggest improvements or recognize strengths.
 3. **Recognition:**
-    - Employees can give kudos and badges to each other.
-    - System tracks and manages all kudos and badges given.
+   - Employees can give kudos and badges to each other.
+   - System tracks and manages all kudos and badges given.
 4. **Notifications:**
-    - Notifications for employees to provide pending feedback.
-    - Alerts for HR and employees regarding feedback deadlines.
+   - Notifications for employees to provide pending feedback.
+   - Alerts for HR and employees regarding feedback deadlines.
 5. **HR Management:**
-    - HR can view and manage all feedback across the organization.
-    - HR can use AI to summarize and analyze overall feedback trends.
+   - HR can view and manage all feedback across the organization.
+   - HR can use AI to summarize and analyze overall feedback trends.
 
 ### Postgres Schemas
 
@@ -156,6 +156,7 @@ CREATE TABLE notifications (
     FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
 );
 ```
+
 ### Full Script
 
 ```sql

@@ -92,10 +92,10 @@ export const NodeJSQuickstart: Template = {
 
 export const DrizzleQuickstart: Template = {
   // A great name, preferably unique, name for the template
-  name: "Drizzle multi-tenant application with Nile",
+  name: "AI-Native multi-tenant SaaS with Nile and Drizzle ORM",
   // what the template does
   description:
-    "Learn about Nile concepts from a multi-tenant Todo List app in Drizzle",
+    "Learn about Nile and AI concepts from an AI-native multi-tenant Todo List app with NodeJS and DrizzleORM",
   // who made it
   author: "Nile",
   demoUrl: "https://nile-drizzle-quickstart.vercel.app/",
@@ -107,8 +107,8 @@ export const DrizzleQuickstart: Template = {
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/drizzle/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
-    Framework: "NodeJS, Drizzle ORM, Express",
-    "Use Case": "Building SaaS",
+    Framework: "NodeJS, Drizzle ORM, OpenAI, pg_vector, Express",
+    "Use Case": "Building AI Native SaaS",
     Publisher: "Nile",
   },
 };

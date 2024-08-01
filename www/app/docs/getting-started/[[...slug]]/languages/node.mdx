@@ -159,7 +159,7 @@ The stored embedding will be used to find similar tasks in the future. The metho
 They are wrappers around standard AI model calls and database queries, and they handle the specifics of the AI model we are using.
 This will make it easy to switch models in the future.
 
-Getting similar tasks is done by querying the database for tasks with similar embeddings. Before we search the database, we need to generate the embedding for the new task:
+Getting similar tasks is done by querying the database for tasks with similar embeddings.
 
 ```javascript
 const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
