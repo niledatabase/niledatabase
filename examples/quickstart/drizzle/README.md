@@ -21,7 +21,7 @@ After you created a database, you will land in Nile's query editor. Since our ap
     "id" uuid DEFAULT gen_random_uuid(),
     "tenant_id" uuid,
     "title" varchar(256),
-    "estimate" varchar(256), 
+    "estimate" varchar(256),
     "embedding" vector(768),
     "complete" boolean,
     CONSTRAINT todos_tenant_id_id PRIMARY KEY("tenant_id","id")

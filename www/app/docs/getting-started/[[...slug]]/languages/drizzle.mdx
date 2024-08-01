@@ -64,8 +64,8 @@ Click on the Postgres button, then click "Generate Credentials" on the top right
 
 ### 4. 3rd party credentials
 
-This example uses AI chat and embedding models to generate automated time estimates for each task in the todo 
-list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible 
+This example uses AI chat and embedding models to generate automated time estimates for each task in the todo
+list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible
 APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
 
 ## 5. Set the environment
@@ -79,8 +79,8 @@ git clone https://github.com/niledatabase/niledatabase
 cd niledatabase/examples/quickstart/drizzle
 ```
 
-Rename `.env.example` to `.env`, and update it with the connection string you just 
-copied from Nile Console and the configuration of your AI vendor and model. Make sure you don't include 
+Rename `.env.example` to `.env`, and update it with the connection string you just
+copied from Nile Console and the configuration of your AI vendor and model. Make sure you don't include
 the word "psql". It should look something like this:
 
 ```bash
@@ -140,7 +140,7 @@ FROM todos join tenants on tenants.id = todos.tenant_id;
 
 You should see all the todos you created, and the tenants they belong to.
 
-If you create more tasks via the REST APIs, the estimates for new tasks will use the embeddings of the existing tasks to 
+If you create more tasks via the REST APIs, the estimates for new tasks will use the embeddings of the existing tasks to
 generate the estimates.
 
 ## 7. How does it work?
@@ -244,27 +244,28 @@ This is what the handler code looks like:
 
 ```typescript
 const { title, complete } = req.body;
-  const tenantId = req.params.tenantId;
+const tenantId = req.params.tenantId;
 
-  // We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
-  const similarTasks = await findSimilarTasks(tenantDB, title);
-  console.log("found similar tasks: " + JSON.stringify(similarTasks));
+// We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
+const similarTasks = await findSimilarTasks(tenantDB, title);
+console.log("found similar tasks: " + JSON.stringify(similarTasks));
 
-  const estimate = await aiEstimate(title, similarTasks);
-  console.log("estimated time: " + estimate);
-  
-  // get the embedding for the task, so we can find it in future similarity searches
-  const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
+const estimate = await aiEstimate(title, similarTasks);
+console.log("estimated time: " + estimate);
 
-  const newTodo = await tenantDB(async (tx) => {
-    return await tx
-      .insert(todoSchema)
-      .values({ tenantId, title, complete, estimate, embedding })
-      .returning();
-  });
-  // return without the embedding vector, since it is huge and useless
-  res.json(newTodo.map((t: any) => ({ ...t, embedding: "<omitted>" })));
+// get the embedding for the task, so we can find it in future similarity searches
+const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
+
+const newTodo = await tenantDB(async (tx) => {
+  return await tx
+    .insert(todoSchema)
+    .values({ tenantId, title, complete, estimate, embedding })
+    .returning();
+});
+// return without the embedding vector, since it is huge and useless
+res.json(newTodo.map((t: any) => ({ ...t, embedding: "<omitted>" })));
 ```
+
 As you can see, we look up similar tasks and then use the AI model to generate the estimate. We then store the task, with the estimate and the task embedding in the database.
 The stored embedding will be used to find similar tasks in the future. The methods `findSimilarTasks`, `aiEstimate` and `embedTask` are all defined in `AiUtils.ts`.
 They are wrappers around standard AI model calls and database queries, and they handle the specifics of the AI model we are using.
@@ -274,19 +275,23 @@ Getting similar tasks is done by querying the database for tasks with similar em
 
 ```typescript
 const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
-const similarity = sql<number>`(${cosineDistance(todoSchema.embedding, embedding)})`;
+const similarity = sql<number>`(${cosineDistance(
+  todoSchema.embedding,
+  embedding
+)})`;
 
 // get similar tasks, no need to filter by tenant because we are already in the tenant context
-const similarTasks = await tenantNile(async (tx) => { 
+const similarTasks = await tenantNile(async (tx) => {
   return await tx
-  .select({ task: todoSchema.title, estimate: todoSchema.estimate})
-  .from(todoSchema)
-  .where(lt(similarity, 1))
-  .orderBy((t:any) => desc(similarity))
-  .limit(3);
+    .select({ task: todoSchema.title, estimate: todoSchema.estimate })
+    .from(todoSchema)
+    .where(lt(similarity, 1))
+    .orderBy((t: any) => desc(similarity))
+    .limit(3);
 });
 ```
-We started by generating an embedding with `SEARCH_QUERY` task type. This is because we are looking for 
+
+We started by generating an embedding with `SEARCH_QUERY` task type. This is because we are looking for
 similar tasks to the new task. We use an embedding model from the `nomic` family, which is trained to perform specific types of embedding tasks. Telling it that we are generating the embedding for a lookup vs
 generating an embedding that we will store with the document (as we'll do in a bit), should help the model produce more relevant results.
 
@@ -300,10 +305,10 @@ A cosine distance of 1 means that the vectors are essentially unrelated, and whe
 The `embedTask` function uses the embedding model to generate the embedding and is a very simple wrapper on the model:
 
 ```typescript
-  let resp = await ai.embeddings.create({
-    model: EMBEDDING_MODEL,
-    input: adjust_input(title, task),
-  });
+let resp = await ai.embeddings.create({
+  model: EMBEDDING_MODEL,
+  input: adjust_input(title, task),
+});
 ```
 
 Now that we have the similar tasks, the handler calls `aiEstimate` to generate the time estimate.
@@ -312,17 +317,17 @@ generate similar estimates:
 
 ```typescript
 const aiEstimate = await ai.chat.completions.create({
-    messages: [
-      {
-        role: "user",
-        content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
+  messages: [
+    {
+      role: "user",
+      content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
         I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
         respond with just the estimate, keep the answer short.`,
-      },
-    ],
-    max_tokens: 64, // limit the response to 64 tokens
-    model: model,
-  });
+    },
+  ],
+  max_tokens: 64, // limit the response to 64 tokens
+  model: model,
+});
 ```
 
 This estimate is then stored in the database along with the task and its vector embedding.

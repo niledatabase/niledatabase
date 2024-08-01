@@ -36,7 +36,7 @@ export const todos = pgTable(
   (table) => {
     return {
       // we need a composite primary key because Nile's tenant-aware tables require the tenantId as part of the primary key
-      pk: primaryKey({columns: [table.tenantId, table.id]}),
+      pk: primaryKey({ columns: [table.tenantId, table.id] }),
     };
   }
 );

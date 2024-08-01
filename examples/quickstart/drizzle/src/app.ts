@@ -165,7 +165,7 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
 
     const estimate = await aiEstimate(title, similarTasks);
     console.log("estimated time: " + estimate);
-    
+
     // get the embedding for the task, so we can find it in future similarity searches
     const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
 
@@ -211,12 +211,14 @@ app.get("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
     // No need for a "where" clause here because we are setting the tenant ID in the context
     const todos = await tenantDB(async (tx) => {
-      return await tx.select({
-        id: todoSchema.id, 
-        tenant_id: todoSchema.tenantId,
-        title: todoSchema.title, 
-        estimate: todoSchema.estimate,
-      }).from(todoSchema);
+      return await tx
+        .select({
+          id: todoSchema.id,
+          tenant_id: todoSchema.tenantId,
+          title: todoSchema.title,
+          estimate: todoSchema.estimate,
+        })
+        .from(todoSchema);
     });
     res.json(todos);
   } catch (error: any) {
@@ -232,12 +234,14 @@ app.get("/insecure/all_todos", async (req, res) => {
   try {
     console.log("getting all todos");
     const todos = await tenantDB(async (tx) => {
-      return await tx.select({
-        id: todoSchema.id, 
-        tenant_id: todoSchema.tenantId,
-        title: todoSchema.title, 
-        estimate: todoSchema.estimate,
-      }).from(todoSchema);
+      return await tx
+        .select({
+          id: todoSchema.id,
+          tenant_id: todoSchema.tenantId,
+          title: todoSchema.title,
+          estimate: todoSchema.estimate,
+        })
+        .from(todoSchema);
     });
     console.log("returning all todos: " + JSON.stringify(todos));
     res.json(todos);

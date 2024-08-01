@@ -1,7 +1,7 @@
 import { OpenAI } from "openai";
 import { Server } from "@niledatabase/server";
-import {todos as todoSchema} from "./db/schema";
-import { cosineDistance, desc, lt, sql } from 'drizzle-orm';
+import { todos as todoSchema } from "./db/schema";
+import { cosineDistance, desc, lt, sql } from "drizzle-orm";
 
 export enum EmbeddingTasks {
   SEARCH_DOCUMENT = "search_document:",
@@ -14,7 +14,7 @@ export interface todo {
 }
 
 // logically, this should be part of the db module, but we only need this type here...
-type TenantDB<T> = <T>(cb: (tx: any) => T | Promise<T>)=>Promise<T>
+type TenantDB<T> = <T>(cb: (tx: any) => T | Promise<T>) => Promise<T>;
 
 const DEFAULT_MODEL = "nomic-ai/nomic-embed-text-v1.5";
 const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || DEFAULT_MODEL;
@@ -54,17 +54,19 @@ export async function findSimilarTasks(
   title: string
 ): Promise<todo[]> {
   const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
-  const similarity = sql<number>`(${cosineDistance(todoSchema.embedding, embedding)})`;
-
+  const similarity = sql<number>`(${cosineDistance(
+    todoSchema.embedding,
+    embedding
+  )})`;
 
   // get similar tasks, no need to filter by tenant because we are already in the tenant context
-  const similarTasks = await tenantNile(async (tx) => { 
+  const similarTasks = await tenantNile(async (tx) => {
     return await tx
-    .select({ task: todoSchema.title, estimate: todoSchema.estimate})
-    .from(todoSchema)
-    .where(lt(similarity, 1))
-    .orderBy((t:any) => desc(similarity))
-    .limit(3);
+      .select({ task: todoSchema.title, estimate: todoSchema.estimate })
+      .from(todoSchema)
+      .where(lt(similarity, 1))
+      .orderBy((t: any) => desc(similarity))
+      .limit(3);
   });
 
   console.log(`found ${similarTasks.length} similar tasks`);
