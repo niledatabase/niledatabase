@@ -179,7 +179,7 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
     // get the embedding for the task, so we can find it in future similarity searches
     const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
     console.log("tenant_id: " + tenantId);
-    // This is actually safe because Nile validates the tenant ID and protects against SQL injection
+    // This is safe because Nile validates the tenant ID and protects against SQL injection
     const newTodo = await tenantDB.$queryRawUnsafe(
       `INSERT INTO todos (tenant_id, title, complete, estimate, embedding) VALUES ('${tenantId}', $1, $2, $3, $4::vector) 
       RETURNING id, title, complete, estimate`,

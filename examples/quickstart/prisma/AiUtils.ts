@@ -53,10 +53,9 @@ export async function findSimilarTasks(tenantNile: PrismaClient<any, any, any, T
   const similarTasks = await tenantNile.$queryRaw`SELECT title, estimate FROM todos WHERE 
     embedding <-> ${embeddingToSQL(embedding)}::vector < 1 order by embedding <-> ${embeddingToSQL(embedding)}::vector limit 3`;
 
-  console.log(` found ${similarTasks.rowCount} similar tasks`);
-  console.log(similarTasks.rows);
+  console.log(` found ${similarTasks.length} similar tasks`);
 
-  return similarTasks.rows;
+  return similarTasks;
 }
 
 export async function aiEstimate(title: string, similarTasks: Todo[]) {
@@ -76,7 +75,7 @@ export async function aiEstimate(title: string, similarTasks: Todo[]) {
       {
         role: "user",
         content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
-        I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
+        I have a few similar tasks with their estimates, please use them as reference: ${JSON.stringify(similarTasks)}.
         respond with just the estimate, no yapping.`,
       },
     ],
