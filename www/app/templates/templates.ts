@@ -130,17 +130,17 @@ export const LambdaQuickstart: Template = {
 };
 
 export const PrismaQuickstart: Template = {
-  name: "Todo List application backend with Nile and Prisma ORM",
+  name: "AI-Native multi-tenant SaaS with Nile and Prisma ORM",
   description:
-    "Learn how to use Nile with Prisma ORM to build a multi-tenant app",
+    "Learn about Nile and AI concepts from an AI-native multi-tenant Todo List app with NodeJS and Prisma ORM",
   author: "Nile",
   demoUrl: "https://todo-prisma-ten.vercel.app/",
   imageSrc: "/templates/PrismaTodoApp.png",
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/prisma/README.md",
   metadata: {
-    Framework: "NodeJS, Prisma ORM, Express",
-    "Use Case": "Building SaaS",
+    Framework: "NodeJS, Prisma ORM, OpenAI, pg_vector, Express",
+    "Use Case": "Building AI Native SaaS",
     Publisher: "Nile",
   },
 };
