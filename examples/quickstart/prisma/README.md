@@ -21,6 +21,8 @@ After you created a database, you will land in Nile's query editor. Since our ap
     "id" uuid DEFAULT gen_random_uuid(),
     "tenant_id" uuid,
     "title" varchar(256),
+    "estimate" varchar(256),
+    "embedding" vector(768),
     "complete" boolean,
     PRIMARY KEY(tenant_id,id)
   );
@@ -66,13 +68,13 @@ curl --location --request POST 'localhost:3001/api/tenants' \
 # get tenants
 curl  -X GET 'http://localhost:3001/api/tenants'
 
-# create a todo (don't forget to use a read tenant-id in the URL)
+# create a todo (don't forget to use a real tenant-id in the URL)
 curl  -X POST \
   'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' \
   --header 'Content-Type: application/json' \
   --data-raw '{"title": "feed the cat", "complete": false}'
 
-# list todos for tenant (don't forget to use a read tenant-id in the URL)
+# list todos for tenant (don't forget to use a real tenant-id in the URL)
 curl  -X GET \
   'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
 
@@ -89,10 +91,26 @@ curl  -X GET \
   npx prisma init
   npx prisma db pull
 
-  npm prisma generate
+  npx prisma generate
   ```
 
-  If starting from scratch, you need to run these _after_ you created the tables in Nile
+  If starting from scratch, you need to run these _after_ you created the tables in Nile.
+  Note that you'll need to manually add the vector column to `schema.prisma` as follows:
+
+```typescript
+model todos {
+  id        String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id String   @db.Uuid
+  title     String?  @db.VarChar(256)
+  estimate  String?  @db.VarChar(256)
+  // Prisma doesn't support vector types yet: https://github.com/prisma/prisma/issues/18442
+  embedding Unsupported("vector(768)")? 
+  complete  Boolean?
+
+  @@id([tenant_id, id], map: "todos_tenant_id_id")
+  @@schema("public")
+}
+```
 
 ### Running with Docker
 
@@ -109,6 +127,7 @@ First, create a secret with your DB connection string, right from your `.env` fi
 
 ```bash
 fly secrets set DATABASE_URL=postgresql://user:password@db.thenile.dev:5432/mydb
+fly secrets set AI_API_KEY=...
 ```
 
 Then copy over the launch example: `cp fly.example fly.toml` and make any edits you may need.
