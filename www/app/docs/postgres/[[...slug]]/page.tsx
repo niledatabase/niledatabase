@@ -11,4 +11,5 @@ export default async function Page(props: Props) {
     </Container>
   );
 }
+
 export const generateMetadata = makeMetadata(NavigationRoots.Postgres);
