@@ -128,7 +128,7 @@ model todos {
   title     String?  @db.VarChar(256)
   estimate  String?  @db.VarChar(256)
   // Prisma doesn't support vector types yet: https://github.com/prisma/prisma/issues/18442
-  embedding Unsupported("vector(768)")? 
+  embedding Unsupported("vector(768)")?
   complete  Boolean?
 
   @@id([tenant_id, id], map: "todos_tenant_id_id")

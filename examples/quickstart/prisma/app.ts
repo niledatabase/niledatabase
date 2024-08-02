@@ -2,14 +2,17 @@ import express from "express";
 import { match } from "path-to-regexp";
 import { Prisma, PrismaClient } from "@prisma/client";
 import expressBasicAuth from "express-basic-auth";
-import { v4 as uuidv4, parse } from 'uuid';
+import { v4 as uuidv4, parse } from "uuid";
 import { tenantContext } from "./storage";
-import {
-  dbAuthorizer,
-  getUnauthorizedResponse,
-} from "./basicauth";
+import { dbAuthorizer, getUnauthorizedResponse } from "./basicauth";
 import type { tenants } from "@prisma/client";
-import { findSimilarTasks, aiEstimate, embedTask, EmbeddingTasks, embeddingToSQL } from "./AiUtils.js";
+import {
+  findSimilarTasks,
+  aiEstimate,
+  embedTask,
+  EmbeddingTasks,
+  embeddingToSQL,
+} from "./AiUtils.js";
 
 const PORT = process.env.PORT || 3001;
 const REQUIRE_AUTH = process.env.REQUIRE_AUTH || false;
@@ -183,7 +186,11 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
     const newTodo = await tenantDB.$queryRawUnsafe(
       `INSERT INTO todos (tenant_id, title, complete, estimate, embedding) VALUES ('${tenantId}', $1, $2, $3, $4::vector) 
       RETURNING id, title, complete, estimate`,
-      title, complete, estimate, embeddingToSQL(embedding));
+      title,
+      complete,
+      estimate,
+      embeddingToSQL(embedding)
+    );
 
     res.json(newTodo);
   } catch (error: any) {

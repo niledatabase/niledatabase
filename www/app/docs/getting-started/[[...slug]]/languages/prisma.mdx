@@ -64,8 +64,8 @@ Click on the Postgres button, then click "Generate Credentials" on the top right
 
 ### 4. 3rd party credentials
 
-This example uses AI chat and embedding models to generate automated time estimates for each task in the todo 
-list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible 
+This example uses AI chat and embedding models to generate automated time estimates for each task in the todo
+list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible
 APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
 
 ## 5. Set the environment
@@ -168,7 +168,7 @@ model todos {
   title     String?  @db.VarChar(256)
   estimate  String?  @db.VarChar(256)
   // Prisma doesn't support vector types yet: https://github.com/prisma/prisma/issues/18442
-  embedding Unsupported("vector(768)")? 
+  embedding Unsupported("vector(768)")?
   complete  Boolean?
 
   @@id([tenant_id, id], map: "todos_tenant_id_id")
@@ -199,7 +199,7 @@ As you can see in the snippet above, we are getting the tenant database from `te
 
 We also have queries that use the `embedding` column with the `vector` data type. This column is used to store embeddings for each task, which are used to generate automated time estimates for each task in the todo list.
 Because Prisma does not yet support the `vector` data type, we need to use Prisma's `executeRaw` and `queryRaw` methods to work with this column.
-We'll show the example in the next section when we talk about the use of AI models to generate time estimates. 
+We'll show the example in the next section when we talk about the use of AI models to generate time estimates.
 After this small detour, we'll get back to the tenant context and how to use Prisma with virtual tenant databases.
 
 ### 7.3 Using AI models to estimate time to complete tasks
@@ -227,7 +227,11 @@ console.log("tenant_id: " + tenantId);
 const newTodo = await tenantDB.$queryRawUnsafe(
   `INSERT INTO todos (tenant_id, title, complete, estimate, embedding) VALUES ('${tenantId}', $1, $2, $3, $4::vector) 
   RETURNING id, title, complete, estimate`,
-  title, complete, estimate, embeddingToSQL(embedding));
+  title,
+  complete,
+  estimate,
+  embeddingToSQL(embedding)
+);
 
 res.json(newTodo);
 ```
@@ -237,28 +241,33 @@ The stored embedding will be used to find similar tasks in the future. The metho
 They are wrappers around standard AI model calls and database queries, and they handle the specifics of the AI model we are using.
 This will make it easy to switch models in the future.
 
-Note that when we save the todo with the estimate and embedding, we use `tenantDB.$queryRawUnsafe` to insert the data. 
+Note that when we save the todo with the estimate and embedding, we use `tenantDB.$queryRawUnsafe` to insert the data.
 This is because Prisma does not yet support the `vector` data type, so we need to go a bit lower level.
 
 Getting similar tasks is done by querying the database for tasks with similar embeddings:
 
 ```typescript
-  const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
+const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
 
-  // get similar tasks, no need to filter by tenant because we are already in the tenant context
-  const similarTasks = await tenantNile.$queryRaw`SELECT title, estimate FROM todos WHERE 
-    embedding <-> ${embeddingToSQL(embedding)}::vector < 1 order by embedding <-> ${embeddingToSQL(embedding)}::vector limit 3`;
+// get similar tasks, no need to filter by tenant because we are already in the tenant context
+const similarTasks =
+  await tenantNile.$queryRaw`SELECT title, estimate FROM todos WHERE 
+    embedding <-> ${embeddingToSQL(
+      embedding
+    )}::vector < 1 order by embedding <-> ${embeddingToSQL(
+    embedding
+  )}::vector limit 3`;
 
-  console.log(` found ${similarTasks.length} similar tasks`);
+console.log(` found ${similarTasks.length} similar tasks`);
 
-  return similarTasks;
+return similarTasks;
 ```
 
-We started by generating an embedding with `SEARCH_QUERY` task type. This is because we are looking for 
+We started by generating an embedding with `SEARCH_QUERY` task type. This is because we are looking for
 similar tasks to the new task. We use an embedding model from the `nomic` family, which is trained to perform specific types of embedding tasks. Telling it that we are generating the embedding for a lookup vs
 generating an embedding that we will store with the document (as we'll do in a bit), should help the model produce more relevant results.
 
-We use `queryRaw` to run the query because Prisma does not yet support the `vector` data type, and we need to use both the 
+We use `queryRaw` to run the query because Prisma does not yet support the `vector` data type, and we need to use both the
 embedding column, and the `<->` cosine distance operator in order to find the most similar tasks.
 
 As you can see, we filter out results where the cosine distance is higher than 1.
@@ -266,12 +275,12 @@ The lower the cosine distance is, the more similar the tasks are (0 indicate tha
 A cosine distance of 1 means that the vectors are essentially unrelated, and when cosine distance is closer to 2, it indicates that the vectors are semantically opposites.
 
 The `embedTask` function uses the embedding model to generate the embedding and is a very simple wrapper on the model:
-  
+
 ```typescript
-  let resp = await ai.embeddings.create({
-    model: EMBEDDING_MODEL,
-    input: adjust_input(title, task),
-  });
+let resp = await ai.embeddings.create({
+  model: EMBEDDING_MODEL,
+  input: adjust_input(title, task),
+});
 ```
 
 Now that we have the similar tasks, the handler calls `aiEstimate` to generate the time estimate.
@@ -280,17 +289,17 @@ generate similar estimates:
 
 ```typescript
 const aiEstimate = await ai.chat.completions.create({
-    messages: [
-      {
-        role: "user",
-        content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
+  messages: [
+    {
+      role: "user",
+      content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
         I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
         respond with just the estimate, keep the answer short.`,
-      },
-    ],
-    max_tokens: 64, // limit the response to 64 tokens
-    model: model,
-  });
+    },
+  ],
+  max_tokens: 64, // limit the response to 64 tokens
+  model: model,
+});
 ```
 
 As you've seen at the start of this section when we reviewed the route handler for `app.post("/api/tenants/:tenantId/todos"`, this estimate is then stored in the database along with the task and its vector embedding.
