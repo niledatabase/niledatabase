@@ -8,6 +8,7 @@ and Nile validates that the user has permissions to view this tenant's data. No 
 
 - [Live demo](https://code-assist-nile.vercel.app/)
 - [Step by step guide](https://www.thenile.dev/docs/getting-started/examples/code_assistant)
+- [Video guide](https://youtu.be/hXQ7BRlp5a8?feature=shared)
 
 ## Getting Started
 
