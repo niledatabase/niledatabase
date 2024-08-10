@@ -3,7 +3,7 @@
 This template shows how to build a multi-tenant AI-native todo list application, using Nile with Python, FastAPI and SqlAlchemy.
 
 - [Live demo](https://nile-python-quickstart.fly.dev/)
-- [Video guide](https://youtu.be/Axl63TUf2bc?feature=shared)
+- [Video guide](https://youtu.be/t2UorKhAJko?feature=shared)
 - [Step by step guide](https://www.thenile.dev/docs/getting-started/languages/python)
 
 ## Getting Started
