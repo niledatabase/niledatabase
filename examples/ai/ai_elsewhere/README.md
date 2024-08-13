@@ -131,7 +131,7 @@ tenants join todos on tenants.id=todos.tenant_id
 To learn more about how this example works and how to use Nile:
 
 - [In depth explanation of this example](https://www.thenile.dev/docs/getting-started/languages/nextjs)
-- [More about tenants in Nile](https://www.thenile.dev//docs/tenant-management)
+- [More about tenants in Nile](https://www.thenile.dev/docs/tenant-virtualization/tenant-management)
 - [More on user authentication with Nile](https://www.thenile.dev/docs/user-authentication)
 - [Nile's Javascript SDK reference](https://www.thenile.dev/docs/reference/sdk-reference)
 
