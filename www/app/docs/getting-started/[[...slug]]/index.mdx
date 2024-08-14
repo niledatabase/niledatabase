@@ -5,6 +5,19 @@ export const metadata = {
   title: "Getting started",
 };
 
+Nile is a Postgres platform specifically designed for AI-Native B2B companies, allowing them to launch and scale quickly, securely, and in the most cost-effective manner. 
+
+1. Nile has built-in tenant virtualization in Postgres for better data and vector embedding isolation and performance isolation without any RLS or complex permission logic in the application across customers.
+2. Vector embedding with RAG support for all model providers, cost-effective and auto-scales to billions of embeddings across customers
+3. Use one database in your application but get tenant-level backups, customer/tenant insights, and schema management across tenants managed by Nile
+4. Seamlessly autoscales as your customer's usage increases and scales to zero with no cold start time
+5. Place some of your tenants on dedicated compute in the same database and some in other regions. Nile lets you customize for cost, security, compliance, and latency for each tenant in your AI-native application without having to manage separate databases for each tenant
+6. You can scale to millions of customers and billions of vector embeddings effortlessly as Nile horizontally scales
+7. User management built for multitenancy with user data stored in your Postgres database and unlimited active tenants and users.
+
+
+Choose your starting point to explore and try out Nile
+
 ## Languages
 
 <Cards>
@@ -49,6 +62,16 @@ export const metadata = {
     file="./examples/task_genius.mdx"
     root="getting-started"
     icon="taskgenius2.png"
+  />
+</Cards>
+
+## AI models
+
+<Cards>
+  <Card
+    file="./embedding_models/cohere.mdx"
+    root="ai-embeddings"
+    icon="cohere.svg"
   />
 </Cards>
 
