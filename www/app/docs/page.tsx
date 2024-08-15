@@ -146,7 +146,7 @@ export default async function Home() {
                   Use cases
                 </div>
                 <div className="hidden lg:block">
-                  <GradientButton href="/templates" variant="soft">
+                  <GradientButton href="/docs/getting-started/usecases" variant="soft">
                     <Image
                       alt="book cover"
                       src={Templates}
@@ -184,7 +184,7 @@ export default async function Home() {
           </div>
           <div className="lg:hidden flex justify-center">
             <div>
-              <GradientButton href="/templates" variant="soft">
+              <GradientButton href="/docs/getting-started/usecases" variant="soft">
                 <Image
                   src={Templates}
                   alt="book cover"
