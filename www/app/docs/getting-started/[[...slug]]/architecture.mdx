@@ -1,16 +1,19 @@
-export const metadata = {
-  title: "Architecture",
-  order: 5,
-  description: "Explains Nile's architecture",
-};
+## Architecture
 
-## Architecture - Built to be tenant-aware and for the cloud
-
-Nile is taking a radical approach to building databases. Our core insight is that it is possible to push tenant awareness all the way to the page level in Postgres and design it for the cloud from first principles. This helps us to provide a comprehensive and flexible solution to all the tenant management problems for building and scaling SaaS.
+Nile is taking a radical approach to database platforms. The goal is to be the best platform for building AI-native B2B companies. Our core insight is that it is possible to push tenant/customer awareness all the way to the page level in Postgres and design it from first principles for the cloud and an AI-powered future. 
 
 ![“Nile Architecture”](/blog/architecture.png)
 
-We will have a more detailed write-up about our blueprint architecture, but here are the key highlights
+Nile's architecture includes storage/compute decoupling, page-level tenant isolation, a global routing gateway, and a database clustering technology to provide the following key benefits -
+1. Built-in tenant virtualization in Postgres for better data and vector embedding isolation and performance isolation without any RLS or complex permission logic in the application across customers.
+2. Vector embedding with RAG support for all model providers, cost-effective and auto-scales to billions of embeddings across customers
+3. Use one database in your application but get tenant-level backups, customer/tenant insights, and schema management across tenants managed by Nile
+4. Seamlessly auto scales as your customer's usage increases and scales to zero with no cold start time
+5. Place some tenants/customers on dedicated compute in the same database and some in other regions. Nile lets you customize for cost, security, compliance, and latency for each tenant in your AI-native application without having to manage separate databases for each tenant
+6. You can scale to millions of customers and billions of vector embeddings effortlessly as Nile horizontally scales
+7. User management is built for multitenancy with user data stored in your Postgres database and unlimited active tenants and users.
+
+We will have a more detailed write-up about our blueprint architecture, but here are the key highlights of each key technology component
 
 - **Global routing gateway** that can enforce tenant data isolation at the session and connection level, route to the correct tenant, and provide a single database experience across all virtual tenant DBs
 - **Database clustering technology** that helps place tenants on shared or dedicated Postgres compute anywhere globally and manage schemas migrations across tenants
