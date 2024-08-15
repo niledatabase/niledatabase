@@ -180,21 +180,21 @@ export default async function Home() {
                   );
                 })}
               </div>
-            </div>
-          </div>
-          <div className="lg:hidden flex justify-center">
-            <div>
-              <GradientButton href="/docs/getting-started/usecases" variant="soft">
-                <Image
-                  src={Templates}
-                  alt="book cover"
-                  width={24}
-                  height={24}
-                />
-                <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
-                  More tutorials
-                </span>
-              </GradientButton>
+            </div>  
+            <div className="lg:hidden flex justify-center">
+              <div>
+                <GradientButton href="/docs/getting-started/usecases" variant="soft">
+                  <Image
+                    src={Templates}
+                    alt="book cover"
+                    width={24}
+                    height={24}
+                  />
+                  <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                    More tutorials
+                  </span>
+                </GradientButton>
+              </div>
             </div>
           </div>
           <Divider />
