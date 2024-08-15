@@ -139,29 +139,63 @@ export default async function Home() {
             })}
           </div>
           <Divider />
-          <div className="text-3xl mb-10 lg:text-left text-center">
-            Use cases
-          </div>
-          <div className="flex flex-wrap flex-row gap-6 max-w-[852px] mx-auto justify-center">
-            {usecases.map(({ name, icon, path }) => {
-              return (
-                <Link
-                  key={path}
-                  href={path}
-                  className="flex flex-col lg:min-w-[216px] items-center"
-                >
-                  <div className="icon rounded-[20px] flex justify-center">
+          <div className="container mx-auto">
+            <div className="flex flex-col">
+              <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
+                <div className="text-3xl mb-10 lg:text-left text-center">
+                  Use cases
+                </div>
+                <div className="hidden lg:block">
+                  <GradientButton href="/docs/getting-started/usecases" variant="soft">
                     <Image
-                      src={`/icons/${icon}`}
                       alt="book cover"
+                      src={Templates}
                       width={24}
                       height={24}
                     />
-                  </div>
-                  <div className="text=[18px]">{name}</div>
-                </Link>
-              );
-            })}
+                    <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                      More use cases
+                    </span>
+                  </GradientButton>
+                </div>
+              </div>
+              <div className="flex flex-wrap flex-row gap-6 max-w-[852px] mx-auto justify-center">
+                {usecases.map(({ name, icon, path }) => {
+                  return (
+                    <Link
+                      key={path}
+                      href={path}
+                      className="flex flex-col lg:min-w-[216px] items-center"
+                    >
+                      <div className="icon rounded-[20px] flex justify-center">
+                        <Image
+                          src={`/icons/${icon}`}
+                          alt="book cover"
+                          width={24}
+                          height={24}
+                        />
+                      </div>
+                      <div className="text=[18px]">{name}</div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>  
+            <div className="lg:hidden flex justify-center">
+              <div>
+                <GradientButton href="/docs/getting-started/usecases" variant="soft">
+                  <Image
+                    src={Templates}
+                    alt="book cover"
+                    width={24}
+                    height={24}
+                  />
+                  <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                    More tutorials
+                  </span>
+                </GradientButton>
+              </div>
+            </div>
           </div>
           <Divider />
           <div className="container mx-auto">
@@ -239,7 +273,7 @@ export default async function Home() {
             <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
               <div className="text-3xl">Learn from our tutorials</div>
               <div className="hidden lg:block">
-                <GradientButton href="/templates" variant="soft">
+                <GradientButton href="https://www.youtube.com/@niledatabase" variant="soft">
                   <Image
                     src={Templates}
                     alt="book cover"
@@ -255,7 +289,7 @@ export default async function Home() {
             <TutorialList />
             <div className="lg:hidden flex justify-center">
               <div>
-                <GradientButton href="/templates" variant="soft">
+                <GradientButton href="https://www.youtube.com/@niledatabase" variant="soft">
                   <Image
                     src={Templates}
                     alt="book cover"
