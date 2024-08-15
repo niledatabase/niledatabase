@@ -273,7 +273,7 @@ export default async function Home() {
             <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
               <div className="text-3xl">Learn from our tutorials</div>
               <div className="hidden lg:block">
-                <GradientButton href="/templates" variant="soft">
+                <GradientButton href="https://www.youtube.com/@niledatabase" variant="soft">
                   <Image
                     src={Templates}
                     alt="book cover"
@@ -289,7 +289,7 @@ export default async function Home() {
             <TutorialList />
             <div className="lg:hidden flex justify-center">
               <div>
-                <GradientButton href="/templates" variant="soft">
+                <GradientButton href="https://www.youtube.com/@niledatabase" variant="soft">
                   <Image
                     src={Templates}
                     alt="book cover"
