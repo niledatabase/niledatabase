@@ -1,6 +1,4 @@
-import Image from "next/image";
 import styles from "./page.module.css";
-import Typography from "@mui/joy/Typography";
 import Stack from "@mui/joy/Stack";
 import GoogleAuthPanel from "@/components/GoogleSSOForm";
 import BasicLoginForm from "@/components/BasicLoginForm";
