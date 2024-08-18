@@ -317,8 +317,8 @@ export default async function Home() {
 }
 
 export const metadata = {
-  title: "Documentation Database",
-  description: "Serverless Postgres for modern SaaS",
+  title: "Documentation for Nile - The Postgres platform for AI-native B2B companies",
+  description: "Build secure, performant, and scalable multi-tenant AI applications with world-class developer experience.",
   openGraph: {
     images: "opengraph/docs.jpg",
   },
