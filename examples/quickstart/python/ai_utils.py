@@ -38,8 +38,10 @@ def get_similar_tasks(session: any, text: str):
     similar_tasks_raw = (
         session.query(Todo)
         .filter(Todo.embedding.cosine_distance(query_embedding) < 1)
-        .order_by(Todo.embedding.cosine_distance(query_embedding)).limit(3))
-    return [{"title": task.title, "estimate": task.estimate} for task in similar_tasks_raw]
+        .order_by(Todo.embedding.cosine_distance(query_embedding))
+        .limit(3))
+    return [{"title": task.title, "estimate": task.estimate} 
+            for task in similar_tasks_raw]
 
 def ai_estimate(text: str, similar_tasks):
     client = openai.OpenAI(

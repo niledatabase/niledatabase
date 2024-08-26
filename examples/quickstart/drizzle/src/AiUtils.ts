@@ -59,7 +59,6 @@ export async function findSimilarTasks(
     embedding
   )})`;
 
-  // get similar tasks, no need to filter by tenant because we are already in the tenant context
   const similarTasks = await tenantNile(async (tx) => {
     return await tx
       .select({ task: todoSchema.title, estimate: todoSchema.estimate })
@@ -68,8 +67,6 @@ export async function findSimilarTasks(
       .orderBy((t: any) => desc(similarity))
       .limit(3);
   });
-
-  console.log(`found ${similarTasks.length} similar tasks`);
 
   return similarTasks;
 }

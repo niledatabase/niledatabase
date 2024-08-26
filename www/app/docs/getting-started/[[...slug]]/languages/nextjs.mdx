@@ -9,6 +9,10 @@ export const metadata = {
 # Build a NextJS Application with Nile
 
 In this quick tutorial, you will learn about Nile's tenant virtualization features, while building a todo list application with NextJS 13.
+In this tutorial, you will learn to build a multi-tenant AI-native todo list application, using Nile with NextJS 14 and OpenAI's client.
+We'll use Nile to provide us with virtual-tenant databases - isolating the tasks for each tenant, and we'll use the AI models to generate automated time estimates
+for each task in the todo list. The estimates will be based on the task title, and estimates of similar tasks in the tenant's history.
+This technique is known as [RAG architecture](https://www.thenile.dev/docs/ai-embeddings/rag).
 
 <iframe
   width="480"
@@ -45,8 +49,9 @@ You will see the new table in the panel on the left side of the screen, and you 
 See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
 ![Creating a table in Nile's admin dashboard](/docs/gui-create-table.png)
 
-The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find semantically
-related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and using this data with text generation models is called [**RAG (Retrieval Augumented Generation)**](https://www.thenile.dev/docs/ai-embeddings/rag).
+The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find
+semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and
+using this data with text generation models is a key part of [RAG (Retrieval Augumented Generation)](https://www.thenile.dev/docs/ai-embeddings/rag).
 
 ## 3. Get credentials
 
