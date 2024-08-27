@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@mui/joy": "^5.0.0-beta.11",
-    "@niledatabase/react": "^3.0.0-alpha.6",
-    "@niledatabase/server": "^3.0.0-alpha.6",
+    "@niledatabase/react": "latest",
+    "@niledatabase/server": "latest",
     "@types/node": "^20.6.3",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",

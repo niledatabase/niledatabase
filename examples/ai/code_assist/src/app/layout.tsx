@@ -12,7 +12,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Example App for RAG with Nile and OpenAI - Code Assist",
-  description: "Built on Nile - The Postgres platform for AI-native B2B companies",
+  description:
+    "Built on Nile - The Postgres platform for AI-native B2B companies",
 };
 
 export default function RootLayout({

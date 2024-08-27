@@ -3,21 +3,26 @@ name: Format with prettier
 on:
   pull_request:
     branches:
-      - 'main'
+      - "main"
 
 jobs:
   format:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: 'npm'
+          node-version: "latest"
+
+      - name: Authenticate with GitHub Package Registry
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_PAT }}" > ~/.npmrc
+
       - name: Download dependencies
-        run: npm ci
+        run: npm install
+
       - name: Run prettier on website
         run: |-
           npx prettier -c 'www/**/*.{js,jsx,ts,tsx,css,md,mdx,json}'

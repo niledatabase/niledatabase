@@ -146,7 +146,10 @@ export default async function Home() {
                   Use cases
                 </div>
                 <div className="hidden lg:block">
-                  <GradientButton href="/docs/getting-started/usecases" variant="soft">
+                  <GradientButton
+                    href="/docs/getting-started/usecases"
+                    variant="soft"
+                  >
                     <Image
                       alt="book cover"
                       src={Templates}
@@ -180,10 +183,13 @@ export default async function Home() {
                   );
                 })}
               </div>
-            </div>  
+            </div>
             <div className="lg:hidden flex justify-center">
               <div>
-                <GradientButton href="/docs/getting-started/usecases" variant="soft">
+                <GradientButton
+                  href="/docs/getting-started/usecases"
+                  variant="soft"
+                >
                   <Image
                     src={Templates}
                     alt="book cover"
@@ -273,7 +279,10 @@ export default async function Home() {
             <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
               <div className="text-3xl">Learn from our tutorials</div>
               <div className="hidden lg:block">
-                <GradientButton href="https://www.youtube.com/@niledatabase" variant="soft">
+                <GradientButton
+                  href="https://www.youtube.com/@niledatabase"
+                  variant="soft"
+                >
                   <Image
                     src={Templates}
                     alt="book cover"
@@ -289,7 +298,10 @@ export default async function Home() {
             <TutorialList />
             <div className="lg:hidden flex justify-center">
               <div>
-                <GradientButton href="https://www.youtube.com/@niledatabase" variant="soft">
+                <GradientButton
+                  href="https://www.youtube.com/@niledatabase"
+                  variant="soft"
+                >
                   <Image
                     src={Templates}
                     alt="book cover"
@@ -317,8 +329,10 @@ export default async function Home() {
 }
 
 export const metadata = {
-  title: "Documentation for Nile - The Postgres platform for AI-native B2B companies",
-  description: "Build secure, performant, and scalable multi-tenant AI applications with world-class developer experience.",
+  title:
+    "Documentation for Nile - The Postgres platform for AI-native B2B companies",
+  description:
+    "Build secure, performant, and scalable multi-tenant AI applications with world-class developer experience.",
   openGraph: {
     images: "opengraph/docs.jpg",
   },
