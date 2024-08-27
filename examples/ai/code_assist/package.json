@@ -16,8 +16,8 @@
     "@mui/icons-material": "^5.15.20",
     "@mui/joy": "^5.0.0-beta.36",
     "@mui/material": "^5.14.18",
-    "@niledatabase/react": "latest",
-    "@niledatabase/server": "latest",
+    "@niledatabase/react": "^2.4.0",
+    "@niledatabase/server": "^2.4.0",
     "@xenova/transformers": "^2.17.2",
     "expand-tilde": "^2.0.2",
     "glob": "^10.4.1",
@@ -43,6 +43,7 @@
     "@types/react-dom": "^18",
     "@types/react-highlight": "^0.12.8",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@types/uuid": "^10.0.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "typescript": "^5"

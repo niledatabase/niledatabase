@@ -2,7 +2,6 @@
   "name": "todo-nextjs",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "npm@10.6.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,8 +10,8 @@
   },
   "dependencies": {
     "@mui/joy": "^5.0.0-beta.11",
-    "@niledatabase/react": "^2.4.2-alpha.3",
-    "@niledatabase/server": "^2.4.2-alpha.3",
+    "@niledatabase/react": "latest",
+    "@niledatabase/server": "latest",
     "@types/node": "^20.6.3",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
@@ -20,7 +19,7 @@
     "eslint-config-next": "^13.5.2",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
-    "next": "^13.5.4",
+    "next": "^14.1.0",
     "openai": "^4.53.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
