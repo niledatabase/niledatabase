@@ -6,13 +6,11 @@
 # args: ["--force-download"]
 # ---
 import modal
+from constants import MODELS_DIR, DEFAULT_NAME, DEFAULT_REVISION, MODELS_VOLUME
 
-MODELS_DIR = "/llamas"
 
-DEFAULT_NAME = "meta-llama/Meta-Llama-3.1-8B-Instruct"
-DEFAULT_REVISION = "5206a32e0bd3067aef1ce90f5528ade7d866253f" # original: "8c22764a7e3675c50d4c7c9a4edb474456022b16"
 
-volume = modal.Volume.from_name("llamas", create_if_missing=True)
+volume = modal.Volume.from_name(MODELS_VOLUME, create_if_missing=True)
 
 image = (
     modal.Image.debian_slim(python_version="3.10")

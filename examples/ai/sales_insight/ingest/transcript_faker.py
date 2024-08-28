@@ -2,7 +2,7 @@ import os
 import openai;
 import logging;
 from slugify import slugify
-from constants import tenants, industries, transcript_directory
+from ..constants import tenants, industries, transcript_directory
 from dotenv import load_dotenv
 load_dotenv()
 

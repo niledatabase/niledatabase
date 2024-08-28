@@ -12,7 +12,7 @@ import os
 import re
 import logging
 from ..ai_utils import get_embedding, EmbeddingTasks
-from constants import transcript_directory, chunked_transcript_directory
+from ..constants import transcript_directory, chunked_transcript_directory
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
