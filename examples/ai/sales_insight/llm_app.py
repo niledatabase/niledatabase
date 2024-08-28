@@ -19,7 +19,7 @@ except modal.exception.NotFoundError:
     raise Exception(""" Download models first with "modal run download_llama.py" """)
 
 
-app = modal.App(name=app_name, image=vllm_image)
+llm_app = modal.App(name=app_name+"-llm", image=vllm_image)
 
 # Using `image.imports` allows us to have a reference to vLLM in global scope without getting an error when our script executes locally.
 with vllm_image.imports():
@@ -29,7 +29,7 @@ with vllm_image.imports():
 GPU_CONFIG = modal.gpu.A100(count=1, size="40GB")
 
 # encapsulate the inference function in a class with @enter decorator, so the model is loaded once and reused across function calls
-@app.cls(gpu=GPU_CONFIG, volumes={MODELS_DIR: volume}, secrets=[modal.Secret.from_name("huggingface-secret")])
+@llm_app.cls(gpu=GPU_CONFIG, volumes={MODELS_DIR: volume}, secrets=[modal.Secret.from_name("huggingface-secret")])
 class Model:
     @modal.enter()
     def load(self):
@@ -50,16 +50,3 @@ class Model:
         print(f"Time taken: {end - start} ns")
         print(f"Raw result: {result}")
         return result[0].outputs[0].text
-
-@app.function()
-@modal.web_endpoint(method="GET")
-def get_sales_insight():
-    model = Model()
-    result = model.generate.remote(
-        "What is the best way to improve sales? be concise and give just one tip."
-    )
-    return result;
-
-@app.local_entrypoint()
-def main():
-    get_sales_insight.remote()
