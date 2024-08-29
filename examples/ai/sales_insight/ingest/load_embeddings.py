@@ -7,7 +7,7 @@ from slugify import slugify
 import pandas as pd
 import numpy as np
 import psycopg2.extras as extras
-from ..constants import chunked_transcript_directory, tenants
+from constants import chunked_transcript_directory, tenants
 
 
 # Store embeddings in the database

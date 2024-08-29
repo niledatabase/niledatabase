@@ -10,9 +10,26 @@ Sign up for an invite to [Nile](https://thenile.dev) if you don't have one alrea
 
 ### 2. Create tables
 
-After you created a database, you will land in Nile's query editor. Time to create a table for storing all the "sales" data.
+After you created a database, you will land in Nile's query editor. Time to create a table for storing all the sales calls data.
 
+```sql
+create table call_chunks_ada002 ( 
+   tenant_id uuid,
+   conversation_id varchar(50),
+   chunk_id int,
+   speaker_role varchar(20),
+   content text,
+   embedding vector(1536)
+);
+```
 
+### 3. Load data
+
+We do this locally and not in Modal. No real reason, just ended up that way. Contributions welcome.
+
+```bash
+ python -m ingest.load_embeddings
+```
 
 ### 4. Deploy the app
 
@@ -31,3 +48,28 @@ Note that Modal is Serverless - so even though the app will continue running, yo
 ```bash
 modal deploy web_app.py
 ```
+
+Once you deployed the app, you'll get a URL to access the app.
+In our example it was  `https://gwenshap--sales-insight-web-fastapi-app-dev.modal.run`.
+
+Replace this with your own URL in the following examples.
+
+### 5. Try it out
+
+```bash
+# create user
+curl -c cookies -X POST 'https://gwenshap--sales-insight-web-fastapi-app-dev.modal.run/api/sign-up' \
+--header 'Content-Type: application/json' \
+--data-raw '{"email":"test14@pytest.org","password":"foobar"}'
+
+# login
+
+curl -c cookies -X POST 'https://gwenshap--sales-insight-web-fastapi-app-dev.modal.run/api/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{"email":"test12@pytest.org","password":"foobar"}'
+
+
+# list tenants
+curl -b cookies -X GET 'https://gwenshap--sales-insight-web-fastapi-app-dev.modal.run/api/tenants'
+```
+
