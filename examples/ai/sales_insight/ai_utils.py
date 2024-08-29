@@ -6,6 +6,8 @@ from enum import Enum
 from dotenv import load_dotenv
 load_dotenv()
 
+from models import Chunk
+
 logger = logging.getLogger(__name__)
 # Wrapper functions around embedding generation and chat models
 
@@ -20,9 +22,9 @@ def adjust_input(text: str, task: EmbeddingTasks) -> str:
     else:
         return text
 
+# TODO: Move this to use Modal, so we don't need to have an extra API key, extra network hops, etc.
 def get_embedding(text: str, task: EmbeddingTasks) -> List[float]:
     client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        
     response = client.embeddings.create(
         model=os.getenv("EMBEDDING_MODEL"),
         input=adjust_input(text, task),
@@ -31,12 +33,10 @@ def get_embedding(text: str, task: EmbeddingTasks) -> List[float]:
     
     return response.data[0].embedding
 
-def get_similar(session: any, text: str):
-    ### TBD: Implement this after we have a table for storing embeddings
-    # query_embedding = get_embedding(text, EmbeddingTasks.SEARCH_QUERY)
-    # similar_tasks_raw = (
-    #    session.query(Todo)
-    #    .filter(Todo.embedding.cosine_distance(query_embedding) < 1)
-    #    .order_by(Todo.embedding.cosine_distance(query_embedding)).limit(3))
-    #return [{"title": task.title, "estimate": task.estimate} for task in similar_tasks_raw]
-    return []
+# Todo: Get the conversation before and after the chunk to provide context
+def get_similar_chunks(session: any, embedding: List[float]):
+    similar_chunks_raw = (
+        session.query(Chunk)
+        .filter(Chunk.embedding.cosine_distance(embedding) < 1)
+        .order_by(Chunk.embedding.cosine_distance(embedding)).limit(5))
+    return [{"conversation_id": chunk.conversation_id, "speaker_role": chunk.speaker_role, "content": chunk.content} for chunk in similar_chunks_raw]

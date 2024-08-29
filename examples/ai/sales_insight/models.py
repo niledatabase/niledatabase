@@ -10,6 +10,15 @@ from uuid import UUID, uuid4
 
 users_schema = MetaData(schema="users")
 auth_schema = MetaData(schema="auth")
+
+class Chunk(SQLModel, table=True):
+    __tablename__ = "call_chunks_ada002"
+    tenant_id: UUID = Field(primary_key=True)
+    conversation_id: str = Field(primary_key=True)
+    chunk_id: int = Field(primary_key=True)
+    speaker_role: str
+    content: str
+    embedding: Optional[List[float]] = Field(default=None, sa_column=Column(Vector(1536)))
     
 class Tenant(SQLModel, table=True):
     __tablename__ = "tenants"

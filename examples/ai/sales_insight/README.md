@@ -13,13 +13,13 @@ Sign up for an invite to [Nile](https://thenile.dev) if you don't have one alrea
 After you created a database, you will land in Nile's query editor. Time to create a table for storing all the sales calls data.
 
 ```sql
-create table call_chunks_ada002 ( 
+create table call_chunks ( 
    tenant_id uuid,
    conversation_id varchar(50),
    chunk_id int,
    speaker_role varchar(20),
    content text,
-   embedding vector(1536)
+   embedding vector(1536) -- must match the embedding model dimensions
 );
 ```
 
@@ -66,10 +66,14 @@ curl -c cookies -X POST 'https://gwenshap--sales-insight-web-fastapi-app-dev.mod
 
 curl -c cookies -X POST 'https://gwenshap--sales-insight-web-fastapi-app-dev.modal.run/api/login' \
 --header 'Content-Type: application/json' \
---data-raw '{"email":"test12@pytest.org","password":"foobar"}'
+--data-raw '{"email":"test14@pytest.org","password":"foobar"}'
 
 
 # list tenants
 curl -b cookies -X GET 'https://gwenshap--sales-insight-web-fastapi-app-dev.modal.run/api/tenants'
-```
 
+# ask a question
+curl -b cookies -X POST 'https://gwenshap--sales-insight-web-fastapi-app-dev.modal.run/api/chat?message=what%20were%20the%20customer%20pain%20points%3F' \
+--header 'Content-Type: application/json' \
+--header 'X-Tenant-Id: 01919b75-d63d-7642-90f9-6e90fc6cca6a'
+```

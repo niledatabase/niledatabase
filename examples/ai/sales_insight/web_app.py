@@ -21,6 +21,7 @@ from sqlmodel import text, select
 from constants import MODELS_DIR, DEFAULT_NAME, DEFAULT_REVISION, app_name, MODELS_VOLUME
 from auth import authenticated_user, create_access_token
 from llm_app import llm_app, Model
+from ai_utils import get_embedding, get_similar_chunks, EmbeddingTasks
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "DEBUG"))
 logger = logging.getLogger(__name__)
@@ -43,7 +44,8 @@ image = modal.Image.debian_slim(python_version="3.10").pip_install(
     "fastapi",
     "python-dotenv",
     "psycopg2-binary",
-    "sqlalchemy"
+    "sqlalchemy",
+    "openai"
 )
 
 app = modal.App(name=app_name+"-web", image=image)
@@ -60,6 +62,29 @@ async def get_tenants(request: Request, session = Depends(get_global_session)):
     tenants = session.query(Tenant).select_from(TenantUsers).join(Tenant, Tenant.id == TenantUsers.tenant_id).filter(TenantUsers.user_id == user_id).all()
     return tenants
 
+@web_app.post("/api/chat")
+async def chat(message: str, session = Depends(get_tenant_session)):
+    logger.debug(f"Tenant ID: {get_tenant_id()}")
+    ### Embed the user query
+    embedding = get_embedding(message, EmbeddingTasks.SEARCH_QUERY)
+    ### Get similar messages from the database via vector similarity search
+    similar_chunks = get_similar_chunks(session, embedding)
+    print("found chunks")
+    print(similar_chunks)
+    ### Generate a response
+    model = Model()
+    result = model.generate.remote(
+        system_prompt="You are a helpful assistant that can summarize sales calls for busy sales people. "
+        "The user will ask a question, and you will use the provided context to answer the question. ",
+        user_query="Please answer the question based on the provided context. "
+        "Respond with your final answer. Don't include any other text. "
+        "The context is a list of snippets from sales calls, each with a conversation_id, speaker_role, and content. "
+        "Context: " + str(similar_chunks) + " Question: " + message,
+        max_tokens=200,
+        frequency_penalty=0.6,
+        presence_penalty=0.6,
+    )
+    return result
 
 #@app.function()
 #@modal.web_endpoint(method="GET")
@@ -141,9 +166,9 @@ async def sign_up(login_data: LoginData, response: Response, session = Depends(g
 # We are returning both token and cookie, so the JWT can be used in both the frontend and backend
 @web_app.post("/api/login")
 async def login(login_data: LoginData, response: Response, session = Depends(get_global_session)):
-    user: User = authenticated_user(email, password, session)
+    user: User = authenticated_user(login_data.email, login_data.password, session)
     if not user:
-        logger.warn(f"Login failed for user: {email}")
+        logger.warn(f"Login failed for user: {login_data.email}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password"
@@ -153,17 +178,10 @@ async def login(login_data: LoginData, response: Response, session = Depends(get
     response.set_cookie(key="access_token", value=access_token)
     response.set_cookie(key="user_data", value=jsonable_encoder(user))
     return Token(access_token=access_token, token_type="bearer")
-
-@web_app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
-	exc_str = f'{exc}'.replace('\n', ' ').replace('   ', ' ')
-	logging.error(f"{request}: {exc_str}")
-	content = {'status_code': 10422, 'message': exc_str, 'data': None}
-	return JSONResponse(content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
             
-# TODO: Social login handler  
-    
-@app.function(secrets=[modal.Secret.from_name("database_url")])
+            
+# Modal function that returns the FastAPI app object, this is the entrypoint for the webapp
+@app.function(secrets=[modal.Secret.from_name("database_url"), modal.Secret.from_name("embedding-config")])
 @modal.asgi_app()
 def fastapi_app():
     return web_app

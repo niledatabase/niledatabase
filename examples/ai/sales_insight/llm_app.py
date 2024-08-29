@@ -3,7 +3,7 @@ import time
 import modal
 
 vllm_image = modal.Image.debian_slim(python_version="3.10").pip_install(
-    "vllm==0.5.3post1"
+    "vllm==0.5.5"
 )
 
 from constants import MODELS_DIR, DEFAULT_NAME, DEFAULT_REVISION, app_name, MODELS_VOLUME
@@ -40,12 +40,23 @@ class Model:
         )
 
     @modal.method()
-    def generate(self, user_query: str):
+    def generate(self, user_query: str, system_prompt: str, max_tokens: int = 2048, frequency_penalty: float = 0, presence_penalty: float = 0):
+        tokenizer = self.llm.get_tokenizer()
+        conversations = tokenizer.apply_chat_template(
+            [{'role': 'system', 'content': system_prompt},
+             {'role': 'user', 'content': user_query}],
+            tokenize=False,
+            add_generation_prompt=True
+        )
         sampling_params = vllm.SamplingParams(
             temperature=0.75,
-        )   
+            max_tokens=max_tokens,
+            frequency_penalty=frequency_penalty,
+            presence_penalty=presence_penalty,
+           # stop_token_ids=[tokenizer.eos_token_id, tokenizer.convert_tokens_to_ids("<|eot_id|>")]
+        ) 
         start = time.monotonic_ns()
-        result = self.llm.generate([user_query], sampling_params)
+        result = self.llm.generate(conversations, sampling_params)
         end = time.monotonic_ns()
         print(f"Time taken: {end - start} ns")
         print(f"Raw result: {result}")
