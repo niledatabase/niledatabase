@@ -75,29 +75,16 @@ async def chat(message: str, session = Depends(get_tenant_session)):
     model = Model()
     result = model.generate.remote(
         system_prompt="You are a helpful assistant that can summarize sales calls for busy sales people. "
-        "The user will ask a question, and you will use the provided context to answer the question. ",
-        user_query="Please answer the question based on the provided context. "
-        "Respond with your final answer. Don't include any other text. "
-        "The context is a list of snippets from sales calls, each with a conversation_id, speaker_role, and content. "
-        "Context: " + str(similar_chunks) + " Question: " + message,
+        "The user will ask a question, and you will use the provided conversation transcript to answer the question. ",
+        user_query="Please answer the question based on the provided conversation transcript. "
+        "Respond with a concise answer and include relevant quotes from the conversation transcript. Don't include any other text. "
+        "Conversation transcript: " + str(similar_chunks) + " Question: " + message,
         max_tokens=200,
         frequency_penalty=0.6,
         presence_penalty=0.6,
     )
     return result
 
-#@app.function()
-#@modal.web_endpoint(method="GET")
-#def get_sales_insight():
-#    model = Model()
-#    result = model.generate.remote(
-#        "What is the best way to improve sales? be concise and give just one tip."
-#    )
-#    return result;
-#
-# @app.local_entrypoint()
-# def main():
-#    get_sales_insight.remote()
 
 ### Authentication
 ### Note that this is slightly different from the example in the FastAPI docs
@@ -149,12 +136,8 @@ async def sign_up(login_data: LoginData, response: Response, session = Depends(g
     # You'll probably never want to do this in production.
     try:
         for tenant in session.query(Tenant).all():
-            # Work around to:
-            # ERROR:web_app:Error adding user to tenants : (psycopg2.errors.FeatureNotSupported) cannot determine tenant ID. Tenant ID must be a constant or a parameter reference (i.e: $1)
-            query = '''
-            INSERT INTO users.tenant_users(user_id, tenant_id) VALUES ('{}', '{}');
-            '''.format(user.id, tenant.id)
-            session.execute(text(query))
+            tenant_user = TenantUsers(tenant_id=tenant.id, user_id=user.id)
+            session.add(tenant_user)
             # We can't insert all tenant_users in one transaction because each lives in its own virtual tenant database
             session.commit()
         

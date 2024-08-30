@@ -44,7 +44,7 @@ for tenant in tenants:
                 batch = data.iloc[i:i+batch_size]
                 cols = ','.join(list(data.columns))
                 tuples = [tuple(x) for x in batch.to_numpy()] 
-                query = "INSERT INTO call_chunks_ada002(%s) VALUES %%s" % (cols)
+                query = "INSERT INTO call_chunks(%s) VALUES %%s" % (cols)
                 try:
                     extras.execute_values(cursor, query, tuples)
                     print(f"Inserted {i + len(batch)} rows")

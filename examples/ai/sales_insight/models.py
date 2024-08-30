@@ -12,7 +12,7 @@ users_schema = MetaData(schema="users")
 auth_schema = MetaData(schema="auth")
 
 class Chunk(SQLModel, table=True):
-    __tablename__ = "call_chunks_ada002"
+    __tablename__ = "call_chunks"
     tenant_id: UUID = Field(primary_key=True)
     conversation_id: str = Field(primary_key=True)
     chunk_id: int = Field(primary_key=True)
