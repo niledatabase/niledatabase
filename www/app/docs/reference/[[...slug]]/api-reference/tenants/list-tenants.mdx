@@ -11,10 +11,10 @@ export const metadata = {
     <CodeGroups
       title={"List Tenants Request"}
       method={"GET"}
-      pathname={"/workspaces/:workspaceSlug/databases/:databaseName/tenants"}
+      pathname={"/v2/databases/:databaseId/tenants"}
     >
       ```bash
-      curl 'https://api.thenile.dev/workspaces/<string>/databases/<string>/tenants' \
+      curl 'https://eu-central-1.api.thenile.dev/v2/databases/<string>/tenants' \
       --header 'Authorization: Bearer <string>'
       ```
     </CodeGroups>
@@ -22,7 +22,7 @@ export const metadata = {
     <CodeGroups
       title={"List Tenants Response"}
       response={"200"}
-      pathname={"/workspaces/:workspaceSlug/databases/:databaseName/tenants"}
+      pathname={"/v2/databases/:databaseId/tenants"}
     >
       ```json
       [

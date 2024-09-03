@@ -1,0 +1,33 @@
+export const metadata = {
+  title: ["Callback", "Auth API"],
+  order: 7,
+  method: "GET",
+};
+
+# Callback
+
+<div className="grid grid-cols-2 gap-4">
+    <div>
+      <p>This endpoint handles the callback from the OAuth provider after authentication.</p>
+    </div>
+
+    <CodeGroups
+      title={"Google Callback"}
+      response={"200"}
+      method={"GET"}
+      pathname={"/v2/databases/:databaseId/callback/google"}
+    >
+      ```json
+      {
+        "user": {
+          "name": "John Doe",
+          "email": "johndoe@gmail.com",
+          "image": "https://example.com/avatar.jpg"
+        },
+        "accessToken": "ya29.A0ARrdaM...",
+        "idToken": "eyJhbGciOiJSUzI1NiIsIn..."
+      }
+      ```
+    </CodeGroups>
+
+</div>

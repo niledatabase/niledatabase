@@ -9,22 +9,15 @@ export const metadata = {
 Retrieve information about the holder of an access token.
 
 <div className="grid grid-cols-2 gap-4">
-  Use the JWT generated during [user creation](/docs/reference/api-reference/users/create-user) or [user login](/docs/reference/api-reference/users/login-user) as a bearer token. (If you use your developer token, this will return 404.)
-  <CodeGroups
-    title={"Identify User Request"}
-    method={"GET"}
-    pathname={"/workspaces/:workspaceSlug/databases/:databaseName/users/me"}
-  >
-    ```bash
-    curl 'https://api.thenile.dev/workspaces/<string>/databases/<string>/users/me' \
-    --header 'Authorization: Bearer <string>'
-      ```
-  </CodeGroups>
-  The response will contain the user id, email address and tenants associated with the holder of the access token.
+  <div>
+  <p> Use the JWT or session token generated during [user creation](/docs/reference/api-reference/users/create-user) or [user login](/docs/reference/api-reference/users/login-user) as `nile.session-token` cookie.</p>
+  <p>The response will contain the user id, email address and tenants associated with the holder of the access token.</p>
+  </div>
   <CodeGroups
     title={"Identify User Response"}
     response={"200"}
-    pathname={"/workspaces/:workspaceSlug/databases/:databaseName/users/me"}
+    method={"GET"}
+    pathname={"/v2/databases/:databaseId/users/me"}
   >
     ```json
     {

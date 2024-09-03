@@ -4,25 +4,18 @@ export const metadata = {
   method: "GET",
 };
 
-# List Databases
+# List tenant users
 
 <div className="grid grid-cols-2 gap-4">
-    List the users that are associated with a specific tenant.
-    <CodeGroups
-      title={"List Users Request"}
-      method={"GET"}
-      pathname={"/workspaces/:workspaceSlug/databases/:databaseName/tenants/:tenantId/users"}
-    >
-      ```bash
-      curl 'https://api.thenile.dev/workspaces/<string>/databases/<string>/users' \
-      --header 'Authorization: Bearer <string>'
-        ```
-    </CodeGroups>
-    The response includes all information for users associated with the tenant.
+    <div>
+  <p>List the users that are associated with a specific tenant.</p>
+    <p>The response includes all information for users associated with the tenant.</p>
+  </div>
     <CodeGroups
       title={"List Users Response"}
       response={"200"}
-      pathname={"/workspaces/:workspaceSlug/databases/:databaseName/tenants/:tenantId/users/:userId"}
+      method={"GET"}
+      pathname={"/v2/databases/:databaseId/tenants/:tenantId/users/:userId"}
     >
       ```json
       [

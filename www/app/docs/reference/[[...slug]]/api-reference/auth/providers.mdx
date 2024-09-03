@@ -1,0 +1,33 @@
+export const metadata = {
+  title: ["Providers", "Auth API"],
+  order: 7,
+  method: "GET",
+};
+
+# List providers
+
+<div className="grid grid-cols-2 gap-4">
+    <div>
+      <p>Returns a list of configured OAuth services and details (e.g. sign in and callback URLs) for each service, as configured in the console</p>
+    </div>
+
+    <CodeGroups
+      title={"Sign in"}
+      response={"200"}
+      method={"POST"}
+      pathname={"/v2/databases/:databaseId/auth/providers"}
+    >
+```json
+{
+  "github": {
+    "id": "github",
+    "name": "GitHub",
+    "type": "oauth",
+    "signinUrl": "http://localhost:3000/api/auth/signin/github",
+    "callbackUrl": "http://localhost:3000/api/auth/callback/github"
+  }
+}
+```
+    </CodeGroups>
+
+</div>

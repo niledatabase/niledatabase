@@ -1,0 +1,27 @@
+export const metadata = {
+  title: "Sign in",
+  order: 7,
+  method: "POST",
+};
+
+# User sign in
+
+<div className="grid grid-cols-2 gap-4">
+    <div>
+      <p>Login a user. Based on what is configured on the (console)[https://console.thenile.dev] (either an identity provider or credentials), a user session will be created.</p>
+  <p>This endpoint requires a CSRF token to be passed, which can be obtained from [the csrf endpoint](./csrf)</p>
+  <p>This endpoint redirects to the requested provider and begins the sign in flow.</p>
+    </div>
+    <CodeGroups
+      title={"Sign In with Google"}
+      response={"302"}
+      method={"GET"}
+      pathname={"/api/auth/signin/google"}
+    >
+```http
+HTTP/1.1 302 Found
+Location: https://accounts.google.com/o/oauth2/auth?client_id=GOOGLE_CLIENT_ID&scope=openid%20profile%20email&response_type=code&redirect_uri=http://localhost:3000/api/auth/callback/google
+```
+    </CodeGroups>
+
+</div>

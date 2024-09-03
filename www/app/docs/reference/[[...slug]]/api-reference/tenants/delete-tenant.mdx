@@ -14,10 +14,10 @@ Deleting a tenant through the API does not delete the tenant's data. Instead, it
     <CodeGroups
       title={"Delete Tenant Request"}
       method={"DELETE"}
-      pathname={"/workspaces/:workspaceSlug/databases/:databaseName/tenants/:tenantId"}
+      pathname={"/v2/databases/:databaseId/tenants/:tenantId"}
     >
     ```bash
-    curl --location --request DELETE 'https://api.thenile.dev/workspaces/<string>/databases/<string>/tenants/<string>' \
+    curl --location --request DELETE 'https://eu-central-1.api.thenile.dev/v2/databases/<string>/tenants/<string>' \
     --header 'Authorization: Bearer <string>'
       ```
     </CodeGroups>
@@ -27,7 +27,7 @@ Deleting a tenant through the API does not delete the tenant's data. Instead, it
     <CodeGroups
       title={"Delete Tenant Response"}
       response={"204"}
-      pathname={"/workspaces/:workspaceSlug/databases/:databaseName/tenants/:tenantId"}
+      pathname={"/v2/databases/:databaseId/tenants/:tenantId"}
     >
     ```json
     ```
