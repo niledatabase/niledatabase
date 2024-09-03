@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Link as ReactLink } from "react-router-dom";
 import { useTranscriptHandler } from '../hooks/useTranscriptHandler';
 import { useTranscripts } from '../hooks/useTranscripts';
+import { useTenantName } from '../hooks/useTenantName';
 
 // MUI joy components
 import Box from "@mui/joy/Box";
@@ -10,14 +11,14 @@ import Grid from "@mui/joy/Grid";
 import { Typography } from "@mui/joy";
 import MUILink from "@mui/joy/Link";
 
-import { TranscriptItem } from "../types/types";
 import Layout from "../layout";
 import ContentViewer from "../components/ContentViewer";
 import Sidebar from "../components/Sidebar";
 import Chatbox from "../components/Chatbox";
 
 
-// TODO: Right now, this is set to select one sales conversation and chat with it. Do we want to have a chat with *all* conversations in the tenant?
+// TODO: Right now, this is set to select one sales conversation and chat with it. 
+// Do we want to have a chat with *all* conversations in the tenant?
 export default function Chat() {
     const params = useParams();
     const navigate = useNavigate();
@@ -29,30 +30,9 @@ export default function Chat() {
         return null; // Render nothing while redirecting
     }
 
-    const [tenantName, setTenantName] = React.useState(null);
-    const transcripts = useTranscripts(tenantId);
-
-    const { transcriptContent, selectedTranscript, handleTranscriptClick } = useTranscriptHandler(tenantId);
-
-    // get tenant name for title
-    React.useEffect(() => {
-        fetch(`/api/tenants/${tenantId}`)
-            .then(res => {
-                if (res.status >= 200 && res.status <= 399) {
-                    return res.json();
-                } else {
-                    // if we can't get tenant name, we are likely logged out
-                    console.log("failed to get tenant name, redirecting for re-login " + res.status + " " + res.statusText);
-                    throw new Error('Failed to fetch tenant name');
-                }
-            })
-            .then(data => {
-                setTenantName(data.name);
-            })
-            .catch(() => {
-                navigate('/');
-            });
-    }, [tenantId, navigate]);
+    const tenantName = useTenantName(tenantId);
+    const transcripts  = useTranscripts(tenantId);
+    const { transcriptContent, selectedTranscript, handleTranscriptClick } = useTranscriptHandler(tenantId, transcripts);
 
     return (
         <Layout>
