@@ -75,6 +75,8 @@ async def chat(message: str, session = Depends(get_tenant_session)):
     )
     return result
 
+### APIs to list and get the sales conversations
+
 @web_app.get("/api/conversations")
 async def list_conversations(request: Request, session = Depends(get_tenant_session)):
     logger.debug(f"Tenant ID: {get_tenant_id()}")
@@ -86,6 +88,26 @@ async def list_conversations(request: Request, session = Depends(get_tenant_sess
     conversation_ids = [conv[0] for conv in distinct_conversations]
     
     return conversation_ids
+
+@web_app.get("/api/conversations/{conversation_id}")
+async def get_conversation(conversation_id: str, request: Request, session = Depends(get_tenant_session)):
+    conversation = session.query(Chunk.conversation_id, Chunk.chunk_id, Chunk.speaker_role, Chunk.content)\
+        .filter(Chunk.conversation_id == conversation_id)\
+        .order_by(Chunk.chunk_id)\
+        .all()
+    
+    # Convert the results to a list of dictionaries
+    conversation_list = [
+        {
+            "conversation_id": chunk.conversation_id,
+            "chunk_id": chunk.chunk_id,
+            "speaker_role": chunk.speaker_role,
+            "content": chunk.content
+        }
+        for chunk in conversation
+    ]
+    
+    return conversation_list
 
 ### Tenant management
 ### We only implemented list and get for this demo, real apps also have create tenant

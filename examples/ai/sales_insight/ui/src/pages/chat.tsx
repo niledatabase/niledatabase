@@ -10,6 +10,7 @@ import Grid from "@mui/joy/Grid";
 import { Typography } from "@mui/joy";
 import MUILink from "@mui/joy/Link";
 
+import { TranscriptItem } from "../types/types";
 import Layout from "../layout";
 import ContentViewer from "../components/ContentViewer";
 import Sidebar from "../components/Sidebar";
@@ -27,7 +28,7 @@ export default function Chat() {
         }, []);
         return null; // Render nothing while redirecting
     }
-    
+
     const [tenantName, setTenantName] = React.useState(null);
     const transcripts = useTranscripts(tenantId);
 
@@ -36,9 +37,22 @@ export default function Chat() {
     // get tenant name for title
     React.useEffect(() => {
         fetch(`/api/tenants/${tenantId}`)
-          .then((res) => res.json())
-          .then((data) => setTenantName(data.name));
-      }, [tenantId]);
+            .then(res => {
+                if (res.status >= 200 && res.status <= 399) {
+                    return res.json();
+                } else {
+                    // if we can't get tenant name, we are likely logged out
+                    console.log("failed to get tenant name, redirecting for re-login " + res.status + " " + res.statusText);
+                    throw new Error('Failed to fetch tenant name');
+                }
+            })
+            .then(data => {
+                setTenantName(data.name);
+            })
+            .catch(() => {
+                navigate('/');
+            });
+    }, [tenantId, navigate]);
 
     return (
         <Layout>

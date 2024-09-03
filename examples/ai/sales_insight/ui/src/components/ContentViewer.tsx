@@ -1,10 +1,9 @@
-// components/FileViewer.tsx
 import React from "react";
-import { Box } from "@mui/joy";
-import Typography from "@mui/joy/Typography";
+import { Box, Typography } from "@mui/joy";
+import { TranscriptItem } from "../types/types";
 
 interface ContentViewerProps {
-  content: string[] | undefined;
+  content: TranscriptItem[] | undefined;
 }
 
 const ContentViewer: React.FC<ContentViewerProps> = ({ content }) => {
@@ -17,22 +16,21 @@ const ContentViewer: React.FC<ContentViewerProps> = ({ content }) => {
         padding: 2,
         overflow: "auto",
       }}
-      key={Date.now()} // This is a hack to force re-rendering of the Highlight component
+      key={Date.now()}
     >
-      {/* TODO: Nicer formatting of the sales transcript */}
       {content === undefined ? (
         <Typography level="body-lg">
           Please select a call transcript
         </Typography>
       ) : (
-          <Box height="60vh">
-            {
-              content.join("\n")
-            }
-          </Box>
+        <Box component="pre" sx={{ whiteSpace: "pre-wrap", fontFamily: "inherit", m: 0 }}>
+          {content.map((item, index) => (
+            `${item.speaker_role.toUpperCase()}: ${item.content}\n\n`
+          )).join("")}
+        </Box>
       )}
     </Box>
   );
 };
 
-export default ContentViewer
+export default ContentViewer;
