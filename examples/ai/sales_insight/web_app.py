@@ -14,9 +14,10 @@ from pydantic import BaseModel
 # DB related imports
 from tenant_middleware import TenantAwareMiddleware, get_tenant_id, get_user_id
 from db import get_tenant_session, get_global_session
-from models import Tenant,User, Token, TenantUsers
+from models import Tenant,User, Token, TenantUsers, Chunk
 from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import text, select
+from sqlalchemy import distinct
 
 from constants import MODELS_DIR, DEFAULT_NAME, DEFAULT_REVISION, app_name, MODELS_VOLUME
 from auth import authenticated_user, create_access_token
@@ -73,6 +74,18 @@ async def chat(message: str, session = Depends(get_tenant_session)):
         presence_penalty=0.6,
     )
     return result
+
+@web_app.get("/api/conversations")
+async def list_conversations(request: Request, session = Depends(get_tenant_session)):
+    logger.debug(f"Tenant ID: {get_tenant_id()}")
+    
+    # Query distinct conversation_id values from the Chunk table, ordered alphabetically
+    distinct_conversations = session.query(distinct(Chunk.conversation_id)).order_by(Chunk.conversation_id).all()
+    
+    # Extract the conversation_id values from the result
+    conversation_ids = [conv[0] for conv in distinct_conversations]
+    
+    return conversation_ids
 
 ### Tenant management
 ### We only implemented list and get for this demo, real apps also have create tenant

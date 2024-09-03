@@ -2,6 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Link as ReactLink } from "react-router-dom";
 import { useTranscriptHandler } from '../hooks/useTranscriptHandler';
+import { useTranscripts } from '../hooks/useTranscripts';
 
 // MUI joy components
 import Box from "@mui/joy/Box";
@@ -20,18 +21,15 @@ export default function Chat() {
     const params = useParams();
     const navigate = useNavigate();
     const tenantId = params.tenantId;
-    const [tenantName, setTenantName] = React.useState(null);
-    const [transcripts, setTranscripts] = React.useState<string[]>([]); // this gets a list of all transcripts for the tenant
-    const headers: HeadersInit = new Headers();
-    headers.set("X-Tenant-Id", tenantId || "");
-    headers.set("Content-Type", "application/json");
-
     if (!tenantId) {
         React.useEffect(() => {
             navigate('/tenants');
         }, []);
         return null; // Render nothing while redirecting
     }
+    
+    const [tenantName, setTenantName] = React.useState(null);
+    const transcripts = useTranscripts(tenantId);
 
     const { transcriptContent, selectedTranscript, handleTranscriptClick } = useTranscriptHandler(tenantId);
 
