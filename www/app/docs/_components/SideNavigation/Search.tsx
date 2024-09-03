@@ -3,7 +3,7 @@
 import { createPortal } from "react-dom";
 import { useState, useEffect, Fragment, useRef, useCallback } from "react";
 import Image from "next/image";
-import algoliasearch from "algoliasearch";
+// import algoliasearch from "algoliasearch";
 import { InstantSearch, useHits, useSearchBox } from "react-instantsearch";
 import Link from "next/link";
 import SearchIcon from "@/public/icons/search.svg";
@@ -39,10 +39,10 @@ const getStorage = () => {
   return [];
 };
 
-const searchClient = algoliasearch(
-  String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
-  String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY)
-);
+// const searchClient = algoliasearch(
+// String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
+// String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY)
+// );
 
 function Portal({ children }: { children: JSX.Element }) {
   return createPortal(children, document.body);
@@ -97,7 +97,9 @@ export default function Search() {
           <span className="opacity-80"> ⌘K</span>
         </div>
       </div>
-      {showSearch && (
+      {showSearch &&
+        {
+          /*(
         <InstantSearch searchClient={searchClient} indexName="docs">
           <Portal>
             <div
@@ -128,7 +130,8 @@ export default function Search() {
             </div>
           </Portal>
         </InstantSearch>
-      )}
+          */
+        }}
     </>
   );
 }

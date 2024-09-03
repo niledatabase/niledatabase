@@ -6,7 +6,7 @@ import Divider from "../_components/common/Divider";
 import { Authors } from "./_components/Authors";
 import { Metadata } from "./_components/Metadata";
 import { parseMetadata } from "./_components/parseMetadata";
-import algoliasearch from "algoliasearch/lite";
+// import algoliasearch from "algoliasearch/lite";
 import Footer from "./_components/Footer";
 import Search from "./_components/Search";
 import Hit from "./_components/Search/Hit";
@@ -22,11 +22,13 @@ type Props = {
   image?: string;
 };
 
+/*
 const searchClient = algoliasearch(
   String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
   String(process.env.ALGOLIA_API_KEY)
 );
 const index = searchClient.initIndex("blog");
+*/
 export const metadata = {
   title: "niledatabase Blog",
   description: "All things database SaaS",
@@ -74,13 +76,12 @@ export default async function Blog() {
   const [mostRecent]: any = await glob("app/blog/**.mdx");
   let hits: any[] = [];
 
-  // @ts-expect-error - this exists.
-  await index.browseObjects({
-    query: "",
-    batch: (batch: any) => {
-      hits = hits.concat(batch);
-    },
-  });
+  // await index.browseObjects({
+  // query: "",
+  // batch: (batch: any) => {
+  // hits = hits.concat(batch);
+  // },
+  // });
 
   const refinements: string[] = hits.reduce((accum, hit) => {
     return accum.concat(hit.tags);
