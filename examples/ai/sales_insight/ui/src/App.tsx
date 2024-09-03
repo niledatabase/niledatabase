@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Auth from "./pages/auth";
 import SignUp from "./pages/SignUpForm";
 import Tenants from "./pages/tenants";
-import Todos from "./pages/todos";
+import Chat from "./pages/chat";
 import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
@@ -17,8 +17,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "tenants/:tenantId/todos",
-    element: <Todos />,
+    path: "tenants/:tenantId/chat",
+    element: <Chat />,
     errorElement: <ErrorPage />,
   },
   {

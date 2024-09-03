@@ -51,17 +51,6 @@ image = modal.Image.debian_slim(python_version="3.10").pip_install(
 app = modal.App(name=app_name+"-web", image=image)
 app.include(llm_app)
 
-@web_app.get("/api/tenants")
-async def get_tenants(request: Request, session = Depends(get_global_session)):
-    user_id: UUID = get_user_id()
-    if not user_id:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="You need to be logged in to list tenants"
-        )
-    tenants = session.query(Tenant).select_from(TenantUsers).join(Tenant, Tenant.id == TenantUsers.tenant_id).filter(TenantUsers.user_id == user_id).all()
-    return tenants
-
 @web_app.post("/api/chat")
 async def chat(message: str, session = Depends(get_tenant_session)):
     logger.debug(f"Tenant ID: {get_tenant_id()}")
@@ -84,6 +73,36 @@ async def chat(message: str, session = Depends(get_tenant_session)):
         presence_penalty=0.6,
     )
     return result
+
+### Tenant management
+### We only implemented list and get for this demo, real apps also have create tenant
+
+@web_app.get("/api/tenants/{tenant_id}")
+async def get_tenant(tenant_id: UUID, request: Request, session = Depends(get_global_session)):
+    user_id: UUID = get_user_id()
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You need to be logged in to get tenant details"
+        )
+    tenant = session.query(Tenant).select_from(TenantUsers).join(Tenant, Tenant.id == TenantUsers.tenant_id).filter(TenantUsers.user_id == user_id).filter(Tenant.id == tenant_id).first()
+    if not tenant:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Tenant not found"
+        )
+    return tenant
+
+@web_app.get("/api/tenants")
+async def get_tenants(request: Request, session = Depends(get_global_session)):
+    user_id: UUID = get_user_id()
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You need to be logged in to list tenants"
+        )
+    tenants = session.query(Tenant).select_from(TenantUsers).join(Tenant, Tenant.id == TenantUsers.tenant_id).filter(TenantUsers.user_id == user_id).all()
+    return tenants
 
 
 ### Authentication
