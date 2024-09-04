@@ -48,12 +48,12 @@ function CarouselItem(props: Props) {
   );
 }
 const FULL_ITEM_WIDTH = 388 + 24;
-const AMOUNT_TO_MOVE = FULL_ITEM_WIDTH * 3 - 48;
+const AMOUNT_TO_MOVE = FULL_ITEM_WIDTH * 3 + 48;
 
 export default function BuiltOnNile() {
   const [x, setX] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-  const maxPosition = items.length * FULL_ITEM_WIDTH;
+  const maxPosition = items.length * FULL_ITEM_WIDTH + 48;
 
   const forward = useCallback(() => {
     const containerWidth = ref.current?.clientWidth ?? 0;

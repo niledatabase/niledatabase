@@ -1,9 +1,8 @@
 import Image from "next/image";
 import arrow from "@/public/icons/arrow.svg";
-import Footer from "@/app/blog/_components/Footer";
-import NileOutlinedLogo from "@/public/nile-outline-logo.svg";
-import GradientButton from "./GradientButton";
-import AnimatedGradient from "../AnimatedGradient";
+import AnimatedGradient from "../../AnimatedGradient";
+import GradientButton from "../GradientButton";
+import TextTyper from "./TextTyper";
 
 export function HeroText() {
   return (
@@ -11,9 +10,11 @@ export function HeroText() {
       <h1 className="text-[96px] leading-[96px] flex flex-col gap-2">
         <div className="flex flex-row gap-2 items-center font-medium">
           Build{" "}
-          <div className="gradient-dashed-border relative overflow-hidden p-6 rounded-[14px]">
-            <div className="bg-clip-text text-transparent bg-gradient-text subpixel-antialiased bg-black overflow-hidden whitespace-nowrap">
-              <div>Collaborative</div>
+          <div className="gradient-dashed-border relative overflow-hidden py-3 px-6 rounded-[14px]">
+            <div className="bg-clip-text text-transparent bg-gradient-text subpixel-antialiased bg-black overflow-hidden whitespace-nowrap leading-[120px]">
+              <TextTyper
+                words={["Collaborative", "Blazingly Fast", "World Class"]}
+              />
             </div>
           </div>
         </div>

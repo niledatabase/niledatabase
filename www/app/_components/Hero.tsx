@@ -1,4 +1,3 @@
-import { HeroText } from "@/app/_components/common/Hero";
 import { sizes } from "@/app/_components/common/sizes";
 import Image from "next/image";
 import GradientButton from "./common/GradientButton";
@@ -11,6 +10,7 @@ import artificialIntelligence from "@/public/artificial-intelligence.png";
 import elastic from "@/public/elastic-button.png";
 import benchmark from "@/public/benchmark.svg";
 import arrow from "@/public/icons/arrow.svg";
+import { HeroText } from "./common/Hero";
 
 export default function Hero() {
   return (

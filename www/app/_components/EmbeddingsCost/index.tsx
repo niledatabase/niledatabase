@@ -3,7 +3,7 @@ import Video from "../Video";
 
 export default function EmbeddingsCost() {
   return (
-    <div className="container mx-auto px-24">
+    <div className="container mx-auto px-24 mt-48">
       <div className="flex flex-col gap-16">
         <div className="flex flex-col gap-6">
           <div className="flex justify-center flex-col">

@@ -2,7 +2,7 @@ import Image from "next/image";
 import arrow from "@/public/autoscale.png";
 export default function Autoscale() {
   return (
-    <div className="container mx-auto mt-20">
+    <div className="container mx-auto mt-48">
       <div className="flex justify-center flex-col gap-16">
         <div className="flex justify-center flex-col ">
           <div className="text-[64px] leading-[64px] text-center">
