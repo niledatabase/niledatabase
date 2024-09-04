@@ -1,6 +1,8 @@
 import os
 import time
 import modal
+import asyncio
+import uuid
 
 vllm_image = modal.Image.debian_slim(python_version="3.10").pip_install(
     "vllm==0.5.5"
@@ -24,6 +26,8 @@ llm_app = modal.App(name=app_name+"-llm", image=vllm_image)
 # Using `image.imports` allows us to have a reference to vLLM in global scope without getting an error when our script executes locally.
 with vllm_image.imports():
     import vllm
+    from vllm.engine.async_llm_engine import AsyncLLMEngine
+    from vllm.engine.arg_utils import AsyncEngineArgs
 
 # TODO: may need to change this to h100?
 GPU_CONFIG = modal.gpu.A100(count=1, size="40GB")
@@ -33,15 +37,19 @@ GPU_CONFIG = modal.gpu.A100(count=1, size="40GB")
 class Model:
     @modal.enter()
     def load(self):
-        self.llm = vllm.LLM(
+        engine_args = AsyncEngineArgs (
             model=MODELS_DIR + "/" + DEFAULT_NAME,
             enforce_eager=True,
-            tensor_parallel_size=GPU_CONFIG.count,
+            tensor_parallel_size=GPU_CONFIG.count
+        )
+        
+        self.async_llm = AsyncLLMEngine.from_engine_args(
+            engine_args
         )
 
     @modal.method()
-    def generate(self, user_query: str, system_prompt: str, max_tokens: int = 2048, frequency_penalty: float = 0, presence_penalty: float = 0):
-        tokenizer = self.llm.get_tokenizer()
+    async def generate_stream(self, user_query: str, system_prompt: str, max_tokens: int = 2048, frequency_penalty: float = 0, presence_penalty: float = 0):
+        tokenizer = await self.async_llm.get_tokenizer()
         conversations = tokenizer.apply_chat_template(
             [{'role': 'system', 'content': system_prompt},
              {'role': 'user', 'content': user_query}],
@@ -53,11 +61,10 @@ class Model:
             max_tokens=max_tokens,
             frequency_penalty=frequency_penalty,
             presence_penalty=presence_penalty,
-           # stop_token_ids=[tokenizer.eos_token_id, tokenizer.convert_tokens_to_ids("<|eot_id|>")]
-        ) 
+        )
+        
         start = time.monotonic_ns()
-        result = self.llm.generate(conversations, sampling_params)
-        end = time.monotonic_ns()
-        print(f"Time taken: {end - start} ns")
-        print(f"Raw result: {result}")
-        return result[0].outputs[0].text
+        stream = self.async_llm.generate(conversations, sampling_params, uuid.uuid4())
+        print("starting to stream output")
+        async for output in stream:
+            yield output.outputs[0].text

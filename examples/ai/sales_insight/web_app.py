@@ -9,6 +9,7 @@ from fastapi import FastAPI, Depends, HTTPException, status, Request, Body, Resp
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 # DB related imports
@@ -54,7 +55,7 @@ app.include(llm_app)
 
 @web_app.post("/api/chat")
 async def chat(message: str, session = Depends(get_tenant_session)):
-    logger.debug(f"Tenant ID: {get_tenant_id()}")
+    logger.debug(f"Tenant ID in Chat: {get_tenant_id()}")
     ### Embed the user query
     embedding = get_embedding(message, EmbeddingTasks.SEARCH_QUERY)
     ### Get similar messages from the database via vector similarity search
@@ -63,17 +64,19 @@ async def chat(message: str, session = Depends(get_tenant_session)):
     print(similar_chunks)
     ### Generate a response
     model = Model()
-    result = model.generate.remote(
-        system_prompt="You are a helpful assistant that can summarize sales calls for busy sales people. "
-        "The user will ask a question, and you will use the provided conversation transcript to answer the question. ",
-        user_query="Please answer the question based on the provided conversation transcript. "
-        "Respond with a concise answer and include relevant quotes from the conversation transcript. Don't include any other text. "
-        "Conversation transcript: " + str(similar_chunks) + " Question: " + message,
-        max_tokens=200,
-        frequency_penalty=0.6,
-        presence_penalty=0.6,
+    return StreamingResponse(
+        model.generate_stream.remote_gen(
+            system_prompt="You are a helpful assistant that can summarize sales calls for busy sales people. "
+            "The user will ask a question, and you will use the provided conversation transcript to answer the question. ",
+            user_query="Please answer the question based on the provided conversation transcript. "
+            "Respond with a concise answer and include relevant quotes from the conversation transcript. Don't include any other text. "
+            "Conversation transcript: " + str(similar_chunks) + " Question: " + message,
+            max_tokens=200,
+            frequency_penalty=0.6,
+            presence_penalty=0.6,
+        ),
+        media_type="text/event-stream"
     )
-    return result
 
 ### APIs to list and get the sales conversations
 

@@ -26,7 +26,8 @@ export type MessageType = {
 };
 
 type ChatboxProps = {
-  tenantid: string;
+  tenantId: string;
+  selectedTranscript: string[];
 };
 
 type AppActions = {
@@ -40,6 +41,7 @@ interface AppState {
 }
 
 function reducer(state: AppState, action: AppActions): AppState {
+  console.log("got text: " + action.text)
   switch (action.type) {
     case "addQuestion":
       return {
@@ -55,15 +57,11 @@ function reducer(state: AppState, action: AppActions): AppState {
       const lastIndex = conversationListCopy.length - 1;
       conversationListCopy[lastIndex] = {
         ...conversationListCopy[lastIndex],
-        text: conversationListCopy[lastIndex].text + action.text,
+        text: action.text,
       };
       return {
         ...state,
         messages: conversationListCopy,
-      };
-    case "done":
-      return {
-        ...state,
       };
     default:
       return state;
@@ -72,11 +70,15 @@ function reducer(state: AppState, action: AppActions): AppState {
 
 // TODO: Add the transcript name, so we'll only chat with one transcript
 const Chatbox: React.FC<ChatboxProps> = ({
-  tenantid,
+  tenantId,
 }) => {
   const [userInput, setUserInput] = useState("");
   const [selectedInput, setSelectedInput] = useState("");
   const [state, dispatch] = useReducer(reducer, { messages: [] });
+
+  const headers: HeadersInit = new Headers();
+  headers.set("X-Tenant-Id", tenantId);
+  headers.set("Content-Type", "application/json");
 
   const handleSend = async () => {
     console.log(
@@ -89,16 +91,10 @@ const Chatbox: React.FC<ChatboxProps> = ({
       setUserInput("");
       setSelectedInput("");
 
-      const resp = await fetch("/api/embed-query", {
+      // TODO: send the selected transcript(s), so the answer will focus on them
+      const resp = await fetch(`/api/chat?message=${encodeURIComponent(input)}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          question: input,
-          tenant_id: tenantid,
-          // todo: add transcript identifier
-        }),
+        headers: headers
       });
 
       // Reader to process the streamed response
@@ -106,34 +102,20 @@ const Chatbox: React.FC<ChatboxProps> = ({
         const reader = resp.body.getReader();
         const decoder = new TextDecoder();
         let done = false; // we need to read the stream until it's done
-        let partialData = ""; // we need to accumulate the data as it comes in in order to update the file selection
-        let recievedFiles = false;
 
         while (!done) {
           const { value, done: doneReading } = await reader.read();
           done = doneReading;
           const chunkValue = decoder.decode(value);
-          if (!recievedFiles) {
-            partialData += chunkValue;
-            const dataParts = partialData.split("EOJSON"); // first part of the response is json, second part is the answer
-            if (dataParts.length > 1) {
-              const jsonPart = JSON.parse(dataParts[0]);
-              dispatch({ type: "updateAnswer", text: dataParts[1] });
-              recievedFiles = true;
-              partialData = "";
-            }
-          } else {
+          if (chunkValue) {
             dispatch({ type: "updateAnswer", text: chunkValue });
-            if (done) {
-              dispatch({ type: "done", text: "" });
-            }
           }
         }
       } else {
         console.log("No response body");
-      }
-    }
-  };
+      } // end handling of response
+    } // end hanling of input
+  }; // end handleSend method
 
   return (
     <Box>

@@ -65,7 +65,8 @@ export default function Chat() {
             <Grid xs={12} md={6}>
                 {/* TODO: pass in currently selected file */}
               <Chatbox
-                tenantid = {tenantId}
+                tenantId = {tenantId}
+                selectedTranscript={selectedTranscript}
               />
             </Grid>
           </Grid>
