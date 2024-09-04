@@ -69,6 +69,17 @@ body {
   background-color: #1e1e1e;
 }
 
+.fancyBox {
+  background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(253, 192, 103, 0.3) 31.77%,
+      rgba(131, 210, 237, 0.3) 59.9%,
+      rgba(0, 0, 0, 0) 100%
+    )
+    posioti;
+}
 .gradientBorderButton,
 .gradientBorderButtonFade,
 .gradientBorderButtonLaunch {
@@ -84,12 +95,13 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 0.75rem;
+  border-radius: 7px;
   padding: 1px;
-  background: linear-gradient(144deg, #fdc066 0%, #d8d3e9 51%, #7bd1ed 100%);
+  background: linear-gradient(90deg, #f4c587 25%, #d6d3e9 50%, #99d2ec 100%);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+  opacity: 0.25;
 }
 .gradientBorderButtonLaunch::before {
   content: "";
@@ -154,8 +166,7 @@ body {
 }
 
 html .navBlur {
-  backdrop-filter: blur(min(calc(var(--scroll) * 1px), 10px));
-  background-color: rgba(0, 0, 0, min(calc(var(--scroll) * 0), 0.5));
+  background-color: black;
 }
 
 .bgDivider {
@@ -218,7 +229,7 @@ html .navBlur {
   position: relative;
   align-items: center;
   border: solid 1px transparent;
-  border-radius: 24px;
+  border-radius: 12px;
   border-bottom: none;
 
   background-image: linear-gradient(black, black),
@@ -234,7 +245,7 @@ html .navBlur {
 .grayBorder::before {
   position: absolute;
   background-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
-  border-radius: 24px;
+  border-radius: 12px;
   content: "";
   display: block;
   height: 100%;
@@ -242,17 +253,40 @@ html .navBlur {
   right: -1px;
   top: 0;
   bottom: 0px;
-  z-index: 1;
+  z-index: -1;
 }
 
-.github-star:hover path {
-  stroke: #ffb343;
-  fill: #ffb343;
+.garbage2 {
+  color: black;
+  position: relative;
+  padding: 10px 20px;
+  border: 2px solid transparent;
+  border-radius: 4px; /* 1px rounded border */
+  background-color: blue;
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  transition: background-color 0.3s ease;
 }
 
-.github-star:hover .star {
-  opacity: 0;
+.garbage2::after {
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0)
+    ),
+    linear-gradient(144deg, #fdc066 0%, #d8d3e9 51%, #7bd1ed 100%);
+
+  position: absolute;
+  border-radius: 9px;
+  content: "";
+  display: block;
+  left: -2px;
+  right: -2px;
+  top: -2px;
+  bottom: -2px;
+  z-index: -1;
+  opacity: 0.25;
 }
+
 .icon {
   flex-shrink: 0;
   position: relative;
@@ -306,6 +340,7 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: var(--font-aeonik);
   color: white;
 }
 mark {
@@ -317,7 +352,7 @@ mark {
   background: black;
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1512px) {
   .prose {
     max-width: 80ch !important;
   }
@@ -536,4 +571,114 @@ code .hljs-string,
 
 code.hljs {
   color: white;
+}
+
+.gradient-dashed-border:before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: -4px;
+  right: -4px;
+
+  display: inline-block;
+  border-radius: 20px;
+  border: 6px dashed #000000;
+  background: linear-gradient(#000000 0 0) padding-box,
+    linear-gradient(to right, #f4c587 0%, #d6d3e9 50%, #99d2ec 100%) border-box;
+  z-index: -1;
+}
+
+.animated-gradient {
+  background: linear-gradient(90deg, #f4c587 25%, #d6d3e9 50%, #99d2ec 100%);
+  background-size: 200% 200%; /* This allows the gradient to move */
+  animation: gradientAnimation 5s ease infinite; /* Adjust timing and easing as needed */
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.perspective-container {
+  perspective: 1000px; /* Sets the perspective depth */
+}
+
+.gradient-border {
+  width: 200px;
+  height: 300px;
+  padding: 1px;
+  background-color: white; /* Content background */
+  position: relative;
+  transform: rotateX(45deg) rotateY(0deg) rotateZ(135deg);
+  background-clip: padding-box;
+
+  /* Create gradient border */
+  border: 1px solid transparent;
+  background-image: linear-gradient(black, black),
+    linear-gradient(-45deg, #f4c587 0%, #d6d3e9 50%, #99d2ec 100%);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+.cube {
+  height: 80px;
+  width: 100px;
+  font-size: 96px;
+  line-height: 96px;
+  position: absolute;
+  background: transparent;
+  cursor: default;
+  transition: all 400ms ease-in-out;
+  z-index: 1;
+}
+.cube:hover {
+  transform: translateY(-30px);
+}
+.cube:hover::before {
+  opacity: 1;
+}
+.cube::before {
+  transition: all 400ms ease-in-out;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #99d2ec;
+  filter: blur(10px);
+  z-index: -1;
+  opacity: 0;
+}
+.cube-1 {
+  top: 0px;
+  left: 20px;
+}
+.cube-2 {
+  top: 50px;
+  left: -40px;
+}
+.cube-3 {
+  top: 50px;
+  left: 80px;
+}
+.cube-4 {
+  top: 100px;
+  left: 20px;
+}
+.cube-5 {
+  top: 100px;
+  left: 150px;
+}
+.cube-6 {
+  top: 150px;
+  left: 90px;
 }

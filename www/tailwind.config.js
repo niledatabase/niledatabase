@@ -5,16 +5,27 @@ module.exports = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    container: {
+      padding: {
+        DEFAULT: "1rem",
+        sm: "2rem",
+        lg: "2rem",
+        xl: "2.25rem",
+        "2xl": "2.25rem",
+      },
+    },
     extend: {
       fontFamily: {
         sans: ["var(--font-aeonik)"],
         inter: ["var(--font-inter)"],
       },
       colors: {
-        gray: "rgba(223, 239, 254, 0.14)",
+        gray: "rgb(74,74,74)",
         lightGray: "rgba(223, 239, 254, 0.20)",
+        darkGray: "#1C1C1C",
         orange: "#F4C587",
-        blue: "#7cd1ed",
+        blue: "#7BD1ED",
+        purple: "#D8D3FF",
         dimmer: "#97a1aa",
         white: "#D9D9D9",
         black: "#0E0E0E",
@@ -23,6 +34,11 @@ module.exports = {
         success: "#00B790",
         info: "#929292",
       },
+
+      /*
+      below this probably not used
+      */
+
       backgroundImage: {
         overlay:
           "linear-gradient(90deg, #F4C587 9.19%, #D6D3E9 51.63%, #99D2EC 94.07%)",
@@ -63,7 +79,7 @@ module.exports = {
         orangeBlurText: "radial-gradient(#f4c5877a, rgba(0, 0, 0, 0.00) 80%)",
         brown:
           "linear-gradient(162deg, #FF9F30 -0.84%, #B1AFE5 48.53%, #2295B7 100%)",
-        blue: "linear-gradient(162deg, #FF9F30 -0.84%, #B1AFE5 48.53%, #2295B7 100%);",
+        // blue: "linear-gradient(162deg, #FF9F30 -0.84%, #B1AFE5 48.53%, #2295B7 100%);",
         fader: "linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, #000 50%);",
         "gradient-white":
           "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.7) 100%)",

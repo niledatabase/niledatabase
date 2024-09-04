@@ -1,19 +1,44 @@
 import Image from "next/image";
-import PageHeader, { OverrideClasses } from "./PageHeader";
-import Subscribe from "@/app/blog/_components/Footer/Subscribe";
+import arrow from "@/public/icons/arrow.svg";
 import Footer from "@/app/blog/_components/Footer";
 import NileOutlinedLogo from "@/public/nile-outline-logo.svg";
+import GradientButton from "./GradientButton";
+import AnimatedGradient from "../AnimatedGradient";
 
-export function HeroText(props: OverrideClasses & { title?: string }) {
+export function HeroText() {
   return (
-    <div className="px-4 lg:px-0">
-      <PageHeader
-        title="Serverless Postgres for modern SaaS"
-        subtitle="Launch In Days. Grow For Years."
-        {...props}
-      />
-      <div className="flex flex-row gap-4 items-center justify-center pt-5">
-        <Subscribe />
+    <div className="px-4 lg:px-0 flex gap-8 flex-col">
+      <h1 className="text-[96px] leading-[96px] flex flex-col gap-2">
+        <div className="flex flex-row gap-2 items-center font-medium">
+          Build{" "}
+          <div className="gradient-dashed-border relative overflow-hidden p-6 rounded-[14px]">
+            <div className="bg-clip-text text-transparent bg-gradient-text subpixel-antialiased bg-black overflow-hidden whitespace-nowrap">
+              <div>Collaborative</div>
+            </div>
+          </div>
+        </div>
+        <div>AI apps fast</div>
+      </h1>
+      <h2 className="text-[20px] leading-6">
+        A Postgres platform that decouples storage from compute and virtualizes
+        <br />
+        tenants to ship multi-tenant AI applications - fast, safe, and limitless
+      </h2>
+      <div className="flex gap-4 items-center justify-start">
+        <div>
+          <GradientButton subclasses="!p-[1px]">
+            <div className="bg-blue text-black px-4 py-2 rounded-md flex flex-row gap-2 items-center">
+              Build with Nile
+              <Image
+                className="-ml-1 invert"
+                src={arrow}
+                alt="arrow"
+                width={25}
+                height={30}
+              />
+            </div>
+          </GradientButton>
+        </div>
       </div>
     </div>
   );
@@ -21,19 +46,35 @@ export function HeroText(props: OverrideClasses & { title?: string }) {
 
 export function HeroBottom() {
   return (
-    <div
-      className={"w-[320px] lg:w-[784px] flex flex-col items-center mx-auto"}
-    >
-      <div className="px-4 lg:px-0 mt-32">
-        <Footer />
+    <div className="container mx-auto">
+      <div className="w-full mt-20">
+        <AnimatedGradient>
+          <div className="p-10 pt-48">
+            <div className="text-[48px] leading-[52px] text-black font-semibold">
+              Ready to launch?
+            </div>
+            <div className="text-[48px] leading-[52px] text-black">
+              Start building with Postgres.
+            </div>
+            <div className="flex gap-4 items-center justify-start">
+              <div>
+                <GradientButton subclasses="!p-[1px]">
+                  <div className="bg-blue text-black px-4 py-2 rounded-md flex flex-row gap-2 items-center">
+                    Build with Nile
+                    <Image
+                      className="-ml-1 invert"
+                      src={arrow}
+                      alt="arrow"
+                      width={25}
+                      height={30}
+                    />
+                  </div>
+                </GradientButton>
+              </div>
+            </div>
+          </div>
+        </AnimatedGradient>
       </div>
-      <Image
-        className="mt-16 -mb-36 lg:-mb-44 relative -z-[2001] px-12 lg:px-0"
-        src={NileOutlinedLogo}
-        width="646"
-        height="239"
-        alt="nile outlined logo"
-      />
     </div>
   );
 }

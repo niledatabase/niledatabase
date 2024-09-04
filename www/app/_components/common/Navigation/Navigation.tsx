@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import "./storeScroll";
+// import "./storeScroll";
 import { Links } from "./Links";
 import MobileNav, { NavMenu } from "./MobileNav";
 import { GithubCta } from "./GithubCta";
@@ -36,7 +36,7 @@ export default function Navigation({ className }: { className?: string }) {
 
             <div className="flex-row hidden lg:flex">
               <div className="flex gap-8 py-5 px-2.5">
-                <Links className="font-semibold" />
+                <Links />
               </div>
             </div>
             <div className="flex-row hidden lg:show lg:flex">

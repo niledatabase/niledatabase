@@ -836,9 +836,9 @@ select {
   }
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1512px) {
   .container {
-    max-width: 1536px;
+    max-width: 1512px;
   }
 }
 

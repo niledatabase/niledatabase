@@ -1,13 +1,13 @@
-"use client";
 import Link from "next/link";
 
-export function Links({ className }: { className?: string }) {
+export function Links({ className: cn }: { className?: string }) {
+  const className = `whitespace-nowrap text-base leading-5${cn ?? cn}`;
   return (
     <>
-      <Link href="/docs" className={`whitespace-nowrap ${className}`}>
+      <Link href="/docs" className={className}>
         Docs
       </Link>
-      <Link href="/about-us" className={`whitespace-nowrap ${className}`}>
+      <Link href="/about-us" className={className}>
         About Us
       </Link>
       <Link className={className} href="/community">

@@ -37,14 +37,14 @@ export default function MobileNav({
   toggleOpen: () => void;
 }) {
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "scroll";
-    }
-    return () => {
-      document.body.style.overflow = "scroll";
-    };
+    // if (open) {
+    // document.body.style.overflow = "hidden";
+    // } else {
+    // document.body.style.overflow = "scroll";
+    // }
+    // return () => {
+    // document.body.style.overflow = "scroll";
+    // };
   }, [open]);
   return (
     <div className="lg:hidden">

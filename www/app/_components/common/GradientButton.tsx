@@ -41,13 +41,13 @@ export default function GradientButton({
         _subz ? ` ${_subz}` : ""
       }`;
     }
-    return `bg-gradient-text-144 py-3 px-4 bg-clip-text text-transparent gradientBorderButton subpixel-antialiased bg-black overflow-hidden whitespace-nowrap${
+    return `py-3 px-4 rounded-[7px] text-transparent gradientBorderButton subpixel-antialiased overflow-hidden whitespace-nowrap${
       _subz ? ` ${_subz}` : ""
     }`;
   }, [_subz]);
   return (
     <button
-      className={`flex-1 bg-black rounded-xl relative z-[9]${
+      className={`flex-1 rounded-xl relative z-[9]${
         className ? ` ${className}` : ""
       }`}
       type={type}

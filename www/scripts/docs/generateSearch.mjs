@@ -11,8 +11,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // const client = algoliasearch(
-  // process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
-  // process.env.ALGOLIA_ADMIN_KEY
+// process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
+// process.env.ALGOLIA_ADMIN_KEY
 // );
 
 /*
