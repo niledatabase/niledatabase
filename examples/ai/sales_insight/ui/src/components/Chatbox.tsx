@@ -71,6 +71,7 @@ function reducer(state: AppState, action: AppActions): AppState {
 // TODO: Add the transcript name, so we'll only chat with one transcript
 const Chatbox: React.FC<ChatboxProps> = ({
   tenantId,
+  selectedTranscript
 }) => {
   const [userInput, setUserInput] = useState("");
   const [selectedInput, setSelectedInput] = useState("");
@@ -91,10 +92,13 @@ const Chatbox: React.FC<ChatboxProps> = ({
       setUserInput("");
       setSelectedInput("");
 
-      // TODO: send the selected transcript(s), so the answer will focus on them
-      const resp = await fetch(`/api/chat?message=${encodeURIComponent(input)}`, {
+      const resp = await fetch(`/api/chat`, {
         method: "POST",
-        headers: headers
+        headers: headers,
+        body: JSON.stringify({
+            conversation_id: selectedTranscript[0],
+            question: input
+          })
       });
 
       // Reader to process the streamed response

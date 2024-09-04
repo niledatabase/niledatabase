@@ -53,13 +53,17 @@ image = modal.Image.debian_slim(python_version="3.10").pip_install(
 app = modal.App(name=app_name+"-web", image=image)
 app.include(llm_app)
 
+class ChatData(BaseModel):
+    conversation_id: str
+    question: str
+
 @web_app.post("/api/chat")
-async def chat(message: str, session = Depends(get_tenant_session)):
+async def chat(chat_data: ChatData, session = Depends(get_tenant_session)):
     logger.debug(f"Tenant ID in Chat: {get_tenant_id()}")
     ### Embed the user query
-    embedding = get_embedding(message, EmbeddingTasks.SEARCH_QUERY)
+    embedding = get_embedding(chat_data.question, EmbeddingTasks.SEARCH_QUERY)
     ### Get similar messages from the database via vector similarity search
-    similar_chunks = get_similar_chunks(session, embedding)
+    similar_chunks = get_similar_chunks(session, embedding, chat_data.conversation_id)
     print("found chunks")
     print(similar_chunks)
     ### Generate a response
@@ -70,7 +74,7 @@ async def chat(message: str, session = Depends(get_tenant_session)):
             "The user will ask a question, and you will use the provided conversation transcript to answer the question. ",
             user_query="Please answer the question based on the provided conversation transcript. "
             "Respond with a concise answer and include relevant quotes from the conversation transcript. Don't include any other text. "
-            "Conversation transcript: " + str(similar_chunks) + " Question: " + message,
+            "Conversation transcript: " + str(similar_chunks) + " Question: " + chat_data.question,
             max_tokens=200,
             frequency_penalty=0.6,
             presence_penalty=0.6,
