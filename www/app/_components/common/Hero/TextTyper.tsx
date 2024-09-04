@@ -28,10 +28,7 @@ export default function TextTyper({ words }: { words: string[] }) {
           setDisplayedText(activeWord);
           clearTimeout(nextWordTimer.current);
           nextWordTimer.current = setTimeout(() => {
-            const nextWord = activeIndex + 1;
-            if (nextWord < words.length) {
-              setIsDeleting(true);
-            }
+            setIsDeleting(true);
           }, pauseDuration);
         }
       }
@@ -58,7 +55,13 @@ export default function TextTyper({ words }: { words: string[] }) {
           setDisplayedText("");
           nextWordTimer.current = setTimeout(() => {
             setIsDeleting(false);
-            setActiveIndex((index) => index + 1);
+            setActiveIndex((index) => {
+              const next = index + 1;
+              if (next >= words.length) {
+                return 0;
+              }
+              return next;
+            });
           }, pauseDuration);
         } else {
           setCharIndex(nextIndex);
