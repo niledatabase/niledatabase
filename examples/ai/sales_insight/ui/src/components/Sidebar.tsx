@@ -5,7 +5,6 @@ import {
   ListItemButton,
   ListItemContent,
   ListItemDecorator,
-  Tooltip,
 } from "@mui/joy";
 import Typography from "@mui/joy/Typography";
 import Description from "@mui/icons-material/Description";

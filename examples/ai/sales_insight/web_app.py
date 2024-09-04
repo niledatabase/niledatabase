@@ -1,5 +1,4 @@
 import os
-import time
 import modal
 from uuid import UUID
 from typing import Annotated
@@ -7,9 +6,8 @@ import logging
 
 from fastapi import FastAPI, Depends, HTTPException, status, Request, Body, Response
 from fastapi.encoders import jsonable_encoder
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
 from fastapi.responses import StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 # DB related imports
@@ -17,10 +15,10 @@ from tenant_middleware import TenantAwareMiddleware, get_tenant_id, get_user_id
 from db import get_tenant_session, get_global_session
 from models import Tenant,User, Token, TenantUsers, Chunk
 from sqlalchemy.exc import SQLAlchemyError
-from sqlmodel import text, select
+from sqlmodel import text
 from sqlalchemy import distinct
 
-from constants import MODELS_DIR, DEFAULT_NAME, DEFAULT_REVISION, app_name, MODELS_VOLUME
+from constants import app_name
 from auth import authenticated_user, create_access_token
 from llm_app import llm_app, Model
 from ai_utils import get_embedding, get_similar_chunks, EmbeddingTasks
@@ -35,8 +33,14 @@ web_app = FastAPI()
 # This middleware integrates our webapp with Nile's tenant isolation
 web_app.add_middleware(TenantAwareMiddleware)
 
+
+web_ui_dir = "./ui/dist"
+# place all static images in root of mount
+mount = modal.Mount.from_local_dir(web_ui_dir, remote_path="/")
+
 # This is the image for the webapp. We need to install some dependencies that don't come with the default image.
 # We are also installing a newer version of FastAPI and Pydantic than the default ones in the base image.
+# And we are copying the web ui assets into the image.
 image = modal.Image.debian_slim(python_version="3.10").pip_install(
     "passlib",
     "python-jose",
@@ -48,7 +52,7 @@ image = modal.Image.debian_slim(python_version="3.10").pip_install(
     "psycopg2-binary",
     "sqlalchemy",
     "openai"
-)
+).copy_mount(mount, remote_path="/root/ui/dist")
 
 app = modal.App(name=app_name+"-web", image=image)
 app.include(llm_app)
@@ -210,6 +214,22 @@ async def sign_up(login_data: LoginData, response: Response, session = Depends(g
 # We are returning both token and cookie, so the JWT can be used in both the frontend and backend
 @web_app.post("/api/login")
 async def login(login_data: LoginData, response: Response, session = Depends(get_global_session)):
+    print("Path at terminal when executing this file")
+    print(os.getcwd() + "\n")
+
+    print("This file path, relative to os.getcwd()")
+    print(__file__ + "\n")
+
+    print("This file full path (following symlinks)")
+    full_path = os.path.realpath(__file__)
+    print(full_path + "\n")
+
+    print("This file directory and name")
+    path, filename = os.path.split(full_path)
+    print(path + ' --> ' + filename + "\n")
+
+    print("This file directory only")
+    print(os.path.dirname(full_path))
     user: User = authenticated_user(login_data.email, login_data.password, session)
     if not user:
         logger.warn(f"Login failed for user: {login_data.email}")
@@ -222,7 +242,9 @@ async def login(login_data: LoginData, response: Response, session = Depends(get
     response.set_cookie(key="access_token", value=access_token)
     response.set_cookie(key="user_data", value=jsonable_encoder(user))
     return Token(access_token=access_token, token_type="bearer")
-            
+
+# Mount the UI. This has to go last, because it will catch all requests that don't match the API routes
+web_app.mount('/', StaticFiles(directory='./ui/dist', html=True))          
             
 # Modal function that returns the FastAPI app object, this is the entrypoint for the webapp
 @app.function(secrets=[modal.Secret.from_name("database_url"), modal.Secret.from_name("embedding-config")])

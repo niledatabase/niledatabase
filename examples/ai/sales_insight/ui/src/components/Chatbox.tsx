@@ -2,7 +2,6 @@ import React, { useState, useReducer } from "react";
 import {
   Box,
   Button,
-  Typography,
   List,
   ListItem,
   Card,
@@ -179,10 +178,10 @@ const Chatbox: React.FC<ChatboxProps> = ({
           freeSolo
           options={cannedQuestions}
           value={selectedInput}
-          onChange={(event, newValue) => {
+          onChange={(_, newValue) => {
             setSelectedInput(newValue || "");
           }}
-          onInputChange={(event, newInputValue) => {
+          onInputChange={(_, newInputValue) => {
             setUserInput(newInputValue);
           }}
           placeholder="Type your question or select one..."

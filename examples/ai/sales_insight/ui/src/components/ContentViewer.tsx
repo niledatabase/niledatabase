@@ -24,7 +24,7 @@ const ContentViewer: React.FC<ContentViewerProps> = ({ content }) => {
         </Typography>
       ) : (
         <Box component="pre" sx={{ whiteSpace: "pre-wrap", fontFamily: "inherit", m: 0 }}>
-          {content.map((item, index) => (
+          {content.map((item) => (
             `${item.speaker_role.toUpperCase()}: ${item.content}\n\n`
           )).join("")}
         </Box>
