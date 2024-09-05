@@ -1,0 +1,43 @@
+**Sales Rep**: Good afternoon! This is Sarah calling from TerraVista Properties. How are you today?
+
+**Customer**: Hi Sarah, I'm doing well, thank you. How can I help you?
+
+**Sales Rep**: I'm glad to hear that. I was just touching base to see if you might be looking for a new property or if you had any questions about the current market.
+
+**Customer**: Actually, yes. My family and I are considering upgrading to a bigger home, but we're a bit overwhelmed by the current market conditions.
+
+**Sales Rep**: I completely understand. It can be quite intimidating with everything that's going on. What specifically is overwhelming for you?
+
+**Customer**: Mainly the prices. They seem to be skyrocketing, and we're not sure if now is the right time to buy.
+
+**Sales Rep**: That's a common concern. Prices have indeed gone up, but there are still opportunities to find a great home at a reasonable price. Have you already looked at any properties?
+
+**Customer**: We've checked out a few listings online, but we're worried we might overpay, especially since we're not fully familiar with all the neighborhoods.
+
+**Sales Rep**: That's a valid concern. Location is crucial, and having an expert on your side can make a big difference. Can you tell me a bit more about what you're looking for in your new home?
+
+**Customer**: Sure. We're looking for at least four bedrooms, a good school district, and ideally something with a backyard for our kids to play in.
+
+**Sales Rep**: That makes sense. Those are important factors. Given your requirements, I can think of several neighborhoods that might be perfect for your family. How flexible is your budget?
+
+**Customer**: We were thinking somewhere between $500,000 and $650,000, but we'd need to sell our current home first.
+
+**Sales Rep**: Understood. We can definitely work within that range. Have you already started the process of selling your current home?
+
+**Customer**: Not yet. That's another challenge. We're not sure what our current home could sell for in this market.
+
+**Sales Rep**: We can help with that too. At TerraVista Properties, we offer a comprehensive market analysis to give you an accurate valuation of your property. Once you have that information, it can help you plan your next steps more confidently.
+
+**Customer**: That sounds helpful. How do we get started with that?
+
+**Sales Rep**: It's pretty straightforward. If you’re available sometime this week, we can set up a time for one of our agents to visit your property and conduct the analysis. They'll provide you with detailed insights into what you can expect in the current market.
+
+**Customer**: I think that would be beneficial. How about Thursday afternoon?
+
+**Sales Rep**: Thursday works! I'll schedule it for you. Our agent will give you a call to confirm the details. Is there anything else you're concerned about?
+
+**Customer**: No, that covers most of it. Thanks for the information, Sarah.
+
+**Sales Rep**: You're welcome! We're excited to help you find your new home. Expect a call from us soon to confirm Thursday's appointment. Have a great day!
+
+**Customer**: Thanks, you too.

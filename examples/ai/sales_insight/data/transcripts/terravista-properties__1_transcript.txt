@@ -1,0 +1,45 @@
+Sales Rep: Hi, thank you for taking the time to speak with me today. This is John from TerraVista Properties. How are you?
+
+Customer: Hi John, I'm doing well, thank you. How about you?
+
+Sales Rep: I'm doing great, thank you for asking. So, I understand you're interested in finding a new home. Can you tell me a bit more about what you're looking for?
+
+Customer: Sure. I'm looking for a 3-bedroom house with a decent backyard. I have two young kids, so a good school district is really important to us.
+
+Sales Rep: That makes sense. Finding the right home for your family is crucial. Do you have a budget in mind?
+
+Customer: I'd like to stay under $500,000, if possible. But we could stretch a bit for the right home.
+
+Sales Rep: Absolutely. Staying within budget is important. Just to clarify, are you looking to buy immediately or are you still exploring?
+
+Customer: We're hoping to buy within the next 3 to 6 months. But we've been having trouble finding something that meets our needs and doesn't exceed our budget.
+
+Sales Rep: I understand. The market can be tough right now, especially with family-oriented homes in great school districts. Besides the budget and school district, are there any other issues making your search difficult?
+
+Customer: Yes, a lot of the homes we've seen need a lot of renovation work, and we don’t have the time or money for that right now.
+
+Sales Rep: I hear you. Renovations can be quite a hassle. How about the location? Are you tied to a specific area or are you open to different neighborhoods?
+
+Customer: We'd prefer to stay within 30 minutes of work. My wife works in downtown, and I work from home, but I need access to good internet.
+
+Sales Rep: Got it. Convenience and connectivity are key. It sounds like we need to find you a move-in ready home in a family-friendly neighborhood, within your budget, and close to downtown. Have you had the chance to view any properties listed by TerraVista Properties yet?
+
+Customer: Not yet. We've mostly been looking online and through a few other agents.
+
+Sales Rep: No problem. I'd love to show you some listings that fit your criteria. How about we set up a meeting so I can show you a few homes? We have some new listings that haven't hit the major sites yet.
+
+Customer: That sounds promising. When are you available?
+
+Sales Rep: I'm available tomorrow afternoon or Friday morning. Do either of those times work for you?
+
+Customer: Tomorrow afternoon should work. Let’s say around 2 PM?
+
+Sales Rep: Perfect, I'll send you a confirmation email with the details and a preliminary list of homes. If you have any questions in the meantime, please don't hesitate to reach out. Looking forward to helping you find the perfect home!
+
+Customer: Thanks, John. I appreciate your help.
+
+Sales Rep: My pleasure. Talk to you soon!
+
+Customer: Bye.
+
+Sales Rep: Bye.

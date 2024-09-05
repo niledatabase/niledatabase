@@ -1,0 +1,35 @@
+Sales Rep: Good afternoon, this is Jake from TerraVista Properties. How can I assist you today?
+
+Customer: Hi Jake, I'm looking for a new home and came across some of your listings online. I have a few questions before I decide to move forward.
+
+Sales Rep: Absolutely, I'd be happy to help. What questions do you have?
+
+Customer: Well, I'm concerned about the overall cost. The listings look great, but the prices seem a bit higher than I expected.
+
+Sales Rep: I understand. While TerraVista focuses on high-quality homes, we also ensure that each property is a great long-term investment. Could you tell me more about your budget? Maybe we can find something that fits within your range.
+
+Customer: My budget is around $400,000. I'm looking for a three-bedroom home, preferably in a good school district since I have two kids.
+
+Sales Rep: Got it. We have a few properties around that price range in excellent school districts. Have you considered the extra benefits like lower maintenance costs and energy efficiency, which can save you money in the long run?
+
+Customer: That makes sense, but I'm also worried about the moving process itself. It's just so stressful and time-consuming.
+
+Sales Rep: Moving can indeed be daunting. At TerraVista, we offer a complimentary moving assistance program to help ease the transition. This includes moving services and even help setting up utilities. Would that make the process easier for you?
+
+Customer: That sounds helpful. But, what about the neighborhood? I'm looking for a community with a park and some recreational facilities.
+
+Sales Rep: Absolutely, we have several properties in communities with parks, playgrounds, and even fitness centers. I can send you a personalized list of homes that meet your criteria. Would that work for you?
+
+Customer: Yes, that would be great. But I'm still concerned that I might not get the best deal.
+
+Sales Rep: I understand your concern. What we can do is schedule a viewing for three properties within your budget and preferred areas. This way, you can see firsthand the value you're getting and we can discuss any potential negotiations. Would you be available this weekend?
+
+Customer: I think Saturday morning works for me.
+
+Sales Rep: Perfect. I'll send you a confirmation email with the details and the list of properties we'll visit. If you have any more questions in the meantime, feel free to reach out. Does that sound good?
+
+Customer: Yes, it does. Thank you, Jake.
+
+Sales Rep: You're welcome! Looking forward to meeting you on Saturday. Have a great day!
+
+Customer: You too. Bye!

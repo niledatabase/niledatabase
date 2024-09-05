@@ -1,0 +1,53 @@
+Sales Rep: Good afternoon, this is Andy from Verity Capital. Am I speaking with Jane?
+
+Customer: Yes, this is Jane.
+
+Sales Rep: Hi Jane, thanks for taking my call. How are you today?
+
+Customer: I'm doing well, thanks. How can I help you?
+
+Sales Rep: Great to hear. I wanted to discuss some opportunities where Verity Capital can assist you with your financial planning and investment needs. Do you have a few moments to chat?
+
+Customer: Sure, I have a few minutes.
+
+Sales Rep: Fantastic. So, Jane, can you tell me a bit about your current financial situation and any pain points you might be experiencing?
+
+Customer: Well, I've been trying to save and invest, but it's been challenging to know where to put my money. The market seems so volatile, and I'm not sure who to trust.
+
+Sales Rep: I understand how that could be overwhelming. Market volatility and trusting the right advisors are common concerns. Have you worked with a financial planner before?
+
+Customer: I have, but honestly, I didn't feel like I was getting personalized advice. It seemed very generic, and I wasn't seeing the returns I expected.
+
+Sales Rep: I'm sorry to hear that. Personalization is crucial. At Verity Capital, we emphasize creating tailored financial strategies to meet individual needs. If you don't mind me asking, what specific goals are you hoping to achieve with your investments?
+
+Customer: Mainly, I'm looking to build a solid retirement fund and perhaps save for my kids' education. But again, the lack of transparency and understanding has been a big hurdle.
+
+Sales Rep: Those are important goals. At Verity Capital, we prioritize transparency and education. We ensure you understand every step of your financial plan. Can I share how we could structure a solution for your retirement and education savings?
+
+Customer: Sure, what do you have in mind?
+
+Sales Rep: We would start with a thorough assessment of your current financial status, risk tolerance, and future goals. Based on that, we'd develop a customized investment plan focusing on a mix of low-risk bonds and higher-yield stocks, balanced to meet your specific targets. Additionally, we provide regular updates and reviews, so you're always informed about how your investments are performing.
+
+Customer: That sounds interesting, but how do I know your advice will be truly personalized?
+
+Sales Rep: That's a valid concern. Unlike other firms, we limit the number of clients each advisor handles to ensure you're getting dedicated attention. Would you be interested in scheduling a complimentary consultation to go over your needs in more detail?
+
+Customer: Yes, I think that could be helpful.
+
+Sales Rep: Perfect! How does your schedule look this week? We can set up a meeting either in person or via video call, whichever you're more comfortable with.
+
+Customer: I have some availability on Thursday afternoon. Is that possible?
+
+Sales Rep: Thursday afternoon works great. How about 2 PM?
+
+Customer: That works for me.
+
+Sales Rep: Excellent! I’ll send you a calendar invite for Thursday at 2 PM. We’ll go over everything in detail and answer any questions you might have. 
+
+Customer: Sounds good. Thank you.
+
+Sales Rep: Thank you, Jane. Looking forward to our meeting. Have a great day!
+
+Customer: You too. Bye.
+
+Sales Rep: Goodbye.

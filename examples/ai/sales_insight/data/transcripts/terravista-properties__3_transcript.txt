@@ -1,0 +1,45 @@
+Sales Rep: Hi there! This is Alex from TerraVista Properties. Is this a good time to chat?
+
+Customer: Yes, this is a good time. How can I help you?
+
+Sales Rep: Great! I understand you're in the market for a new home. Could you tell me a bit about what you're looking for?
+
+Customer: Sure. We're looking for a 3-bedroom house with a yard, and it has to be in a good school district. We also want to stay within our budget of $400,000.
+
+Sales Rep: That sounds like a reasonable request. Have you faced any challenges in your search so far?
+
+Customer: Yes, every house we've liked has either been out of our budget or sold before we could make an offer.
+
+Sales Rep: I understand how frustrating that can be. The market is really competitive right now. Have you been working with any other real estate agents?
+
+Customer: We’ve spoken to a few, but it seems like they just send us generic listings and don't really listen to what we want.
+
+Sales Rep: That’s disappointing to hear. At TerraVista Properties, we focus on personalized service. I'll make sure to find listings that specifically match your criteria. How soon are you looking to move?
+
+Customer: We were hoping to move within the next three months, but we're flexible if the right house comes along.
+
+Sales Rep: Perfect. I’ll tailor my search to meet that timeline. Before we proceed, do you have any concerns about working with another real estate company?
+
+Customer: Just that we might end up wasting time again. We've already seen so many houses that didn't meet our needs.
+
+Sales Rep: I assure you, we'll avoid those pitfalls. I’ll filter out any properties that don’t match your requirements and send you only the most relevant options. How does that sound?
+
+Customer: That sounds good. What should we do next?
+
+Sales Rep: I'll start by sending you a few curated listings by the end of the day. Once you review them, we can set up viewings for the ones you like. Does that work for you?
+
+Customer: Yes, that works perfectly.
+
+Sales Rep: Great! I'll need your email to send the listings. Could you please provide it?
+
+Customer: Sure, it's [email@example.com].
+
+Sales Rep: Thank you! Watch for an email from me shortly. If you have any questions or need anything else, feel free to call or email me anytime.
+
+Customer: Will do. Thanks a lot for your help.
+
+Sales Rep: My pleasure. Speak to you soon!
+
+Customer: Bye.
+
+Sales Rep: Goodbye!

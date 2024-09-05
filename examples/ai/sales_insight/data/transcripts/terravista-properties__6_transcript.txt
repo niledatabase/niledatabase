@@ -1,0 +1,39 @@
+Sales Rep: Good afternoon! This is Alex from TerraVista Properties. How may I assist you today?
+
+Customer: Hi Alex, I'm looking to buy a house, but I'm a bit overwhelmed with the options out there. 
+
+Sales Rep: I understand! It can be daunting. What are some of your key requirements and preferences for a new home?
+
+Customer: Well, we're a family of four, so we need at least three bedrooms, and it would be great to have a backyard for the kids. We also prefer a quiet neighborhood with good schools.
+
+Sales Rep: That makes sense. Do you have a specific budget in mind?
+
+Customer: We're looking to stay within the $400,000 to $450,000 range.
+
+Sales Rep: Perfect, we have several properties that might match your criteria. Have you had a chance to go through our listings online?
+
+Customer: Yes, but I'm not seeing anything that really fits what we're looking for. Most of the homes in our budget are either too small or not in the right areas.
+
+Sales Rep: I hear you. Sometimes the online listings don't capture everything. Have you considered slightly expanding your search radius or looking at homes that might need a little cosmetic work?
+
+Customer: We're open to it, but we really don't want a fixer-upper since we don't have the time or expertise for any major renovations. 
+
+Sales Rep: Understandable. How about newly constructed homes? They often come at a premium, but there might be some room to negotiate, especially in the current market.
+
+Customer: We did think about new constructions, but they're usually more expensive and the wait times can be long. We need to move in within the next three months.
+
+Sales Rep: Got it. Let me make a few notes here. I believe I have a couple of properties in our inventory that could be a good match. How about we schedule a tour for this weekend? 
+
+Customer: Sure, that sounds good. Do you have anything available in the Maplewood area?
+
+Sales Rep: Yes, we have a few listings in Maplewood that fit your criteria. I can arrange for us to visit those first. Would Saturday at 10 AM work for you?
+
+Customer: That works for us.
+
+Sales Rep: Great! I'll set it up and send you a confirmation email with all the details. Is there anything else you'd like to discuss before our meeting?
+
+Customer: Not at the moment. I appreciate your help, Alex.
+
+Sales Rep: My pleasure! Looking forward to meeting you on Saturday. Have a great day!
+
+Customer: You too. Thanks!

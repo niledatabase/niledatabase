@@ -1,0 +1,39 @@
+Sales Rep: Hi, thank you for taking the time to speak with me today. How are you?
+
+Customer: I'm doing well, thanks. How about you?
+
+Sales Rep: I'm great, thank you. So, I understand your company has been experiencing some challenges with your current IT infrastructure. Can you tell me a bit more about what's been going on?
+
+Customer: Sure. We've been dealing with a lot of downtime recently, and it seems like our system can't handle the increased load as we've been growing.
+
+Sales Rep: That sounds frustrating. How often do these downtimes occur, and how has that been impacting your business?
+
+Customer: More often than we'd like—at least once a month. When it happens, our operations come to a halt. It's affecting our customer service and costing us money.
+
+Sales Rep: That certainly isn't ideal. It's crucial that your infrastructure supports your growth. Could you share what solutions you're currently using?
+
+Customer: We're using a mix of outdated hardware and some cloud services, but it's not integrated well, and it's hard to manage.
+
+Sales Rep: I see. At Nexiv Solutions, we specialize in creating robust, integrated IT solutions that can scale with your business. Have you considered upgrading your hardware and integrating your services for better performance?
+
+Customer: We've thought about it, but we're concerned about the cost and the potential downtime during the transition.
+
+Sales Rep: Cost is a valid concern. However, the long-term savings and increased productivity can offset the initial investment. We also offer flexible financing options. Additionally, our team ensures a smooth transition with minimal downtime. What part of your current setup do you think needs the most immediate attention?
+
+Customer: Probably the servers. They're old and slow, and they seem to be the main cause of the downtime.
+
+Sales Rep: Upgrading your servers would definitely provide a more stable foundation for your operations. We could start with a needs assessment to identify the best solutions for your situation. Does that sound like something you'd be interested in?
+
+Customer: Yes, that sounds promising. What would the next steps look like?
+
+Sales Rep: Great! First, we'll schedule a consultation to assess your current infrastructure and discuss your specific needs in detail. Then, we'll develop a customized plan for your upgrade. When are you available for the consultation?
+
+Customer: I can do next Tuesday afternoon. Would that work?
+
+Sales Rep: Next Tuesday afternoon works perfectly. I'll send you a calendar invite shortly. We're looking forward to helping you enhance your IT infrastructure. Thank you for your time today.
+
+Customer: Thank you. I'm looking forward to the consultation.
+
+Sales Rep: Excellent. Have a great day!
+
+Customer: You too, thanks.
