@@ -13,7 +13,7 @@ export function HeroText() {
           <div className="gradient-dashed-border relative overflow-hidden py-3 px-6 rounded-[14px]">
             <div className="bg-clip-text text-transparent bg-gradient-text subpixel-antialiased bg-black overflow-hidden whitespace-nowrap leading-[120px]">
               <TextTyper
-                words={["Collaborative", "Blazingly Fast", "World Class"]}
+                words={["Marketing", "Sales", "Legal", "Finance", "Healthcare", "Collaborative", "Support", "Recruiting", "Security", "Hospitality", "Developer", "Education"]}
               />
             </div>
           </div>
