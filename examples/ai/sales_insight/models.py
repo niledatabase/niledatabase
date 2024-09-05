@@ -18,7 +18,7 @@ class Chunk(SQLModel, table=True):
     chunk_id: int = Field(primary_key=True)
     speaker_role: str
     content: str
-    embedding: Optional[List[float]] = Field(default=None, sa_column=Column(Vector(1536)))
+    embedding: Optional[List[float]] = Field(default=None, sa_column=Column(Vector(1024)))
     
 class Tenant(SQLModel, table=True):
     __tablename__ = "tenants"

@@ -11,8 +11,12 @@
 import os
 import re
 import logging
-from ..ai_utils import get_embedding, EmbeddingTasks
-from ..constants import transcript_directory, chunked_transcript_directory
+from constants import transcript_directory, chunked_transcript_directory, tenants
+import httpx
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -53,42 +57,68 @@ class TranscriptIterator:
                 return speaker, " ".join(text)
         raise StopIteration
     
-def process_transcript(transcript_file_path):
+# We are going to use our own app to generate the embeddings and store them in the DB. 
+def process_transcript(transcript_file_path, tenant_id):
     f = open(transcript_file_path, 'r')
     transcript = f.read()
     f.close()
     
     iterator = TranscriptIterator(transcript)
-    
-    # Todo: need to output a conversation identifier
-    import csv
-    from datetime import datetime
-
-    # Extract the base filename without extension
-    base_filename = os.path.splitext(os.path.basename(transcript_file_path))[0]
-
-    # Create the output directory if it doesn't exist
-    os.makedirs(output_dir, exist_ok=True)
-
-    # Create the output CSV file
-    output_file = os.path.join(chunked_transcript_directory, f'{base_filename}.csv')
     line_count = 0
-    with open(output_file, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(['Conversation', 'Chunk_id', 'Speaker', 'Text', 'Embedding'])  # Write header
-
-        # Write each speaker and text as a row to the CSV
-        for speaker, text in iterator:
-            embedding = get_embedding(text, EmbeddingTasks.SEARCH_DOCUMENT)
-            writer.writerow([base_filename, line_count, speaker, text, embedding])
-            print(f"Writing: {speaker}: {text[:50]}...")  # Print first 50 chars for debugging
-            line_count += 1
+    base_filename = os.path.splitext(os.path.basename(transcript_file_path))[0] 
+    
+    for speaker, text in iterator:
+        chunk_data = {
+            "conversation_id": base_filename,
+            "chunk_id": line_count,
+            "speaker_role": speaker,
+            "content": text
+        }
+        
+        res = httpx.post(os.getenv('WEBAPP_URL') + '/api/embed-call-chunk',
+                   headers={
+                       'Content-Type': 'application/json',
+                       'X-Tenant-Id': tenant_id
+                    },
+                    json=chunk_data,
+                    cookies=auth_cookies,
+                    timeout=None)
+        if (res.status_code >= 400):
+            print("error storing chunk ")
+            print(chunk_data)
+            print(res.status_code)
+            print(res.text)
+            # just abort on error for now
+            exit(1)
+            
+        line_count += 1
         
 
 
-for filename in os.listdir(transcript_directory):
-    if filename.endswith('_transcript.txt'):
-        transcript_file_path = os.path.join(transcript_directory, filename)
-        process_transcript(transcript_file_path)
-        print(f"Processed: {filename}")
+# Start by creating a user and logging in to Nile, the cookies will include the identifier we need
+# replace the "login" with "sign-up" if the user doesn't already exists
+user_data = {'email':'data_loader@test.org','password':'foobar'}
+r = httpx.post(f"{os.getenv("WEBAPP_URL")}/api/login",
+           headers={'Content-Type': 'application/json'},
+           json=user_data,
+           timeout=None)
+auth_cookies = r.cookies
+
+for tenant in tenants:
+    # We need to create the tenant
+    tenant_data = {'name': tenant}
+    t = httpx.post(f"{os.getenv("WEBAPP_URL")}/api/tenants",
+                   headers={'Content-Type': 'application/json'},
+                   json=tenant_data,
+                   cookies=auth_cookies,
+                   timeout=None
+                   )
+    tenant_json = t.json()
+    print(tenant_json)
+    tenant_id = tenant_json['tenant_id']
+    for filename in os.listdir(transcript_directory):
+        if filename.endswith('_transcript.txt'):
+            transcript_file_path = os.path.join(transcript_directory, filename)
+            process_transcript(transcript_file_path, tenant_id)
+            print(f"Processed: {filename}")
     

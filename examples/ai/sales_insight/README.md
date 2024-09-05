@@ -19,7 +19,7 @@ create table call_chunks (
    chunk_id int,
    speaker_role varchar(20),
    content text,
-   embedding vector(1536) -- must match the embedding model dimensions
+   embedding vector(1024) -- must match the embedding model dimensions
 );
 ```
 
@@ -60,17 +60,23 @@ Replace this with your own URL in the following examples.
 # create user
 curl -c cookies -X POST 'https://gwenshap--sales-insight-web-fastapi-app-dev.modal.run/api/sign-up' \
 --header 'Content-Type: application/json' \
---data-raw '{"email":"test14@pytest.org","password":"foobar"}'
+--data-raw '{"email":"test16@pytest.org","password":"foobar"}'
 
 # login
 
 curl -c cookies -X POST 'https://gwenshap--sales-insight-web-fastapi-app-dev.modal.run/api/login' \
 --header 'Content-Type: application/json' \
---data-raw '{"email":"test14@pytest.org","password":"foobar"}'
+--data-raw '{"email":"test16@pytest.org","password":"foobar"}'
 
 
 # list tenants
 curl -b cookies -X GET 'https://gwenshap--sales-insight-web-fastapi-app-dev.modal.run/api/tenants'
+
+# generate embedding for a chunk and store it
+curl -b cookies -X POST 'https://gwenshap--sales-insight-web-fastapi-app-dev.modal.run/api/embed-call-chunk' \
+--header 'Content-Type: application/json' \
+--header 'X-Tenant-Id: 0191bf17-a00e-7445-b33a-ad4fc3481788' \
+--data-raw '{"conversation_id":"modamart__3_transcript","chunk_id":"0","speaker_role":"Sales Rep","content":"Good afternoon! Thank you for calling ModaMart. My name is Alex. How can I assist you today?"}'
 
 # ask a question
 curl -b cookies -X POST 'https://gwenshap--sales-insight-web-fastapi-app-dev.modal.run/api/chat?message=what%20were%20the%20customer%20pain%20points%3F' \

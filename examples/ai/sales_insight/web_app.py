@@ -3,6 +3,8 @@ import modal
 from uuid import UUID
 from typing import Annotated
 import logging
+import pickle
+import numpy
 
 from fastapi import FastAPI, Depends, HTTPException, status, Request, Body, Response
 from fastapi.encoders import jsonable_encoder
@@ -21,7 +23,8 @@ from sqlalchemy import distinct
 from constants import app_name
 from auth import authenticated_user, create_access_token
 from llm_app import llm_app, Model
-from ai_utils import get_embedding, get_similar_chunks, EmbeddingTasks
+from embed_app import embed_app, TextEmbeddingsInference
+from ai_utils import get_similar_chunks
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "DEBUG"))
 logger = logging.getLogger(__name__)
@@ -51,11 +54,15 @@ image = modal.Image.debian_slim(python_version="3.10").pip_install(
     "python-dotenv",
     "psycopg2-binary",
     "sqlalchemy",
-    "openai"
+    "numpy"
 ).copy_mount(mount, remote_path="/root/ui/dist")
+
+with image.imports():
+    import numpy as np
 
 app = modal.App(name=app_name+"-web", image=image)
 app.include(llm_app)
+app.include(embed_app)
 
 class ChatData(BaseModel):
     conversation_id: str
@@ -65,7 +72,8 @@ class ChatData(BaseModel):
 async def chat(chat_data: ChatData, session = Depends(get_tenant_session)):
     logger.debug(f"Tenant ID in Chat: {get_tenant_id()}")
     ### Embed the user query
-    embedding = get_embedding(chat_data.question, EmbeddingTasks.SEARCH_QUERY)
+    tei = TextEmbeddingsInference()
+    embedding = tei.embed.remote(chat_data.question)[0]
     ### Get similar messages from the database via vector similarity search
     similar_chunks = get_similar_chunks(session, embedding, chat_data.conversation_id)
     print("found chunks")
@@ -120,6 +128,18 @@ async def get_conversation(conversation_id: str, request: Request, session = Dep
     
     return conversation_list
 
+### Generate and store embedding for a tenant
+@web_app.post("/api/embed-call-chunk")
+async def create_call_chunk(call_chunk: Chunk, request: Request, session=Depends(get_tenant_session)):
+    tei = TextEmbeddingsInference()
+    embeddings = tei.embed.remote(call_chunk.content)
+    call_chunk.embedding = embeddings[0]
+    call_chunk.tenant_id = get_tenant_id()
+    session.add(call_chunk)
+    session.commit()
+    return;
+
+
 ### Tenant management
 ### We only implemented list and get for this demo, real apps also have create tenant
 
@@ -149,6 +169,24 @@ async def get_tenants(request: Request, session = Depends(get_global_session)):
         )
     tenants = session.query(Tenant).select_from(TenantUsers).join(Tenant, Tenant.id == TenantUsers.tenant_id).filter(TenantUsers.user_id == user_id).all()
     return tenants
+
+@web_app.post("/api/tenants")
+async def create_tenant(tenant:Tenant, request: Request, session = Depends(get_global_session)):
+    tenant_id = tenant.id
+    user_id: UUID = get_user_id()
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You need to be logged in to create a tenant"
+        )
+    session.add(tenant)
+    session.commit()
+
+    # we also need to connect the current user to the tenant
+    user_tenant: TenantUsers = TenantUsers(user_id=user_id, tenant_id=tenant.id)
+    session.add(user_tenant)
+    session.commit()
+    return {"tenant_id":tenant_id}
 
 
 ### Authentication
@@ -214,22 +252,7 @@ async def sign_up(login_data: LoginData, response: Response, session = Depends(g
 # We are returning both token and cookie, so the JWT can be used in both the frontend and backend
 @web_app.post("/api/login")
 async def login(login_data: LoginData, response: Response, session = Depends(get_global_session)):
-    print("Path at terminal when executing this file")
-    print(os.getcwd() + "\n")
-
-    print("This file path, relative to os.getcwd()")
-    print(__file__ + "\n")
-
-    print("This file full path (following symlinks)")
-    full_path = os.path.realpath(__file__)
-    print(full_path + "\n")
-
-    print("This file directory and name")
-    path, filename = os.path.split(full_path)
-    print(path + ' --> ' + filename + "\n")
-
-    print("This file directory only")
-    print(os.path.dirname(full_path))
+    logger.debug("logging in " + login_data.email)
     user: User = authenticated_user(login_data.email, login_data.password, session)
     if not user:
         logger.warn(f"Login failed for user: {login_data.email}")
