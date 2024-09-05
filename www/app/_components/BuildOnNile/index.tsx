@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import arrow from "@/public/icons/arrow.svg";
+import chevron from "@/public/icons/chevron.svg";
 import { useCallback, useRef, useState } from "react";
 const items = [
   {
@@ -57,7 +57,6 @@ export default function BuiltOnNile() {
 
   const forward = useCallback(() => {
     const containerWidth = ref.current?.clientWidth ?? 0;
-    console.log(maxPosition, containerWidth);
     setX(Math.min(x + AMOUNT_TO_MOVE, maxPosition - containerWidth));
   }, [x]);
 
@@ -72,10 +71,10 @@ export default function BuiltOnNile() {
         <div className="flex flex-row gap-6">
           <button className="bg-darkGray rounded-full flex items-center justify-center w-[48px] h-[48px] rotate-180">
             <Image
-              src={arrow}
+              src={chevron}
               alt="arrow"
-              width={48}
-              height={48}
+              width={25.2}
+              height={25.2}
               className={x === 0 ? "opacity-20" : ""}
               onClick={back}
             />
@@ -84,13 +83,23 @@ export default function BuiltOnNile() {
             className="bg-darkGray rounded-full flex items-center justify-center w-[48px] h-[48px]"
             onClick={forward}
           >
-            <Image src={arrow} alt="arrow" width={48} height={48} />
+            <Image
+              className={
+                x >= maxPosition - (ref.current?.clientWidth ?? 0)
+                  ? "opacity-20"
+                  : ""
+              }
+              src={chevron}
+              alt="arrow"
+              width={25.2}
+              height={25.2}
+            />
           </button>
         </div>
       </div>
       <div className=" overflow-hidden ">
         <div
-          className="transition-transform flex flex-row align-start flex-nowrap gap-6"
+          className="transition-transform flex flex-row align-start flex-nowrap gap-6 ease-in-out"
           style={{ transform: `translateX(-${x}px)` }}
         >
           {items.map((item) => {

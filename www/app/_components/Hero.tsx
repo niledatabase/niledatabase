@@ -20,17 +20,19 @@ export default function Hero() {
           <div className="flex justify-start">
             <Link
               href="https://www.thenile.dev/blog/introducing-nile"
-              className="flex flex-row hover:opacity-70 relative"
+              className="flex flex-row relative"
             >
-              <div className="bg-gray text-center p-2 w-full text-[14px] flex flex-row gap-1 items-center justify-center text-white rounded-md px-4 py-2">
-                Nile is in private beta.{" "}
-                <span className="underline">Learn more</span>
+              <div className="bg-gray text-center p-2 w-full leading-[16px] text-[16px] flex flex-row gap-2 items-center justify-center text-white rounded-md px-4 py-2">
+                <span>
+                  Nile is in private beta.{" "}
+                  <span className="underline">Learn more</span>
+                </span>
                 <Image
                   className="-ml-1"
                   src={arrow}
                   alt="arrow"
-                  width={25}
-                  height={30}
+                  width={16}
+                  height={16}
                 />
               </div>
             </Link>

@@ -34,8 +34,8 @@ export function HeroText() {
                 className="-ml-1 invert"
                 src={arrow}
                 alt="arrow"
-                width={25}
-                height={30}
+                width={16}
+                height={16}
               />
             </div>
           </GradientButton>

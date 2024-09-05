@@ -630,10 +630,6 @@ code.hljs {
 }
 
 .cube {
-  height: 80px;
-  width: 100px;
-  font-size: 96px;
-  line-height: 96px;
   position: absolute;
   background: transparent;
   cursor: default;
@@ -660,26 +656,48 @@ code.hljs {
   opacity: 0;
 }
 .cube-1 {
-  top: 0px;
-  left: 20px;
+  top: -58px;
+  left: 246px;
 }
 .cube-2 {
-  top: 50px;
-  left: -40px;
+  top: 44px;
+  left: 72px;
 }
+
 .cube-3 {
-  top: 50px;
-  left: 80px;
+  top: 28px;
+  left: 404px;
 }
 .cube-4 {
-  top: 100px;
-  left: 20px;
+  top: 130px;
+  left: 228px;
 }
 .cube-5 {
-  top: 100px;
-  left: 150px;
+  top: 118px;
+  left: 568px;
 }
+
 .cube-6 {
-  top: 150px;
-  left: 90px;
+  top: 222px;
+  left: 384px;
+}
+
+.boxes:hover .boxes-bg {
+  opacity:1;
+}
+
+.cube .hover {
+  transition: all 400ms ease-in-out;
+  opacity: 0;
+}
+.cube .hover img {
+  transform: scale(1.35) translate(-11px, 18px);
+  filter: 
+    drop-shadow(0px 0px 50px rgba(214, 211, 233, 0.10)) 
+    drop-shadow(0px 0px 30px rgba(214, 211, 233, 0.30)) 
+    drop-shadow(0px 0px 20px rgba(214, 211, 233, 0.20));
+}
+
+.cube:hover .hover{
+  opacity: 1;
 }
