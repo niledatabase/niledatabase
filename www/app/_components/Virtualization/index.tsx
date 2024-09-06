@@ -13,7 +13,7 @@ export default function Virtualization() {
             data and embeddings
           </div>
         </div>
-        <Video src="data-isolation.mp4" poster={"data-isolation.webp"} />
+        <Video src="table.mp4" poster={"table.webp"} />
         <div className="flex flex-row gap-6">
           <div className="bg-orange rounded-lg">
             <Block

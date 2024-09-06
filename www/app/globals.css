@@ -683,7 +683,7 @@ code.hljs {
 }
 
 .boxes:hover .boxes-bg {
-  opacity:1;
+  opacity: 1;
 }
 
 .cube .hover {
@@ -692,12 +692,97 @@ code.hljs {
 }
 .cube .hover img {
   transform: scale(1.35) translate(-11px, 18px);
-  filter: 
-    drop-shadow(0px 0px 50px rgba(214, 211, 233, 0.10)) 
-    drop-shadow(0px 0px 30px rgba(214, 211, 233, 0.30)) 
-    drop-shadow(0px 0px 20px rgba(214, 211, 233, 0.20));
+  filter: drop-shadow(0px 0px 50px rgba(214, 211, 233, 0.1))
+    drop-shadow(0px 0px 30px rgba(214, 211, 233, 0.3))
+    drop-shadow(0px 0px 20px rgba(214, 211, 233, 0.2));
 }
 
-.cube:hover .hover{
+.cube:hover .hover {
   opacity: 1;
+}
+
+.vert-line {
+  stroke-width: 2px;
+  stroke: #f4c587;
+  opacity: 0.25;
+  filter: drop-shadow(0px 0px 10.26px #fff)
+    drop-shadow(0px 0px 20.52px rgba(255, 255, 255, 0.6))
+    drop-shadow(0px 0px 71.82px rgba(255, 255, 255, 0.5));
+}
+
+.code-hover .gray-logo,
+.code-hover .backdrop {
+  transition: opacity 400ms ease-in-out;
+}
+
+.code-hover:hover .gray-logo {
+  opacity: 0;
+}
+.code-hover:hover .backdrop,
+.code-hover:hover .rotater,
+.code-hover:hover .rotater-behind {
+  opacity: 1;
+}
+
+.code-hover:hover .twinkle {
+  animation: twinkleMove 2s steps(5) infinite;
+}
+
+@keyframes twinkleMove {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-875px);
+  }
+}
+
+@keyframes backgroundAngle {
+  to {
+    --angle: 360deg;
+  }
+}
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.rotater:before {
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  animation: inherit;
+  content: "";
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  border-radius: inherit;
+  position: absolute;
+  inset: 0;
+  padding: 5px;
+  background: conic-gradient(
+    from calc(var(--angle) + 180deg),
+    rgba(0, 0, 0, 0) 0%,
+    #99d2ec 10%,
+    #d6d3e9 18%,
+    #d6d3e9 22%,
+    #f4c587 30%,
+    rgba(0, 0, 0, 0) 40%
+  );
+  mask-composite: exclude;
+  opacity: 0.2;
+}
+.rotater {
+  filter: drop-shadow(0 0 5px #fff);
+  animation: backgroundAngle 4s linear infinite;
+}
+.rotater-behind:before {
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  animation: inherit;
+  content: "";
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  border-radius: inherit;
+  position: absolute;
+  inset: 0;
+  padding: 5px;
+  background: rgb(38, 38, 38);
+  mask-composite: exclude;
 }

@@ -1,5 +1,5 @@
 import { Block } from "../block";
-import Video from "../Video";
+import HoverEffect from "./HoverEffect";
 
 export default function EmbeddingsCost() {
   return (
@@ -53,14 +53,7 @@ export default function EmbeddingsCost() {
               />
             </div>
           </div>
-          <div className="flex-1 flex items-center flex-col">
-            <Video
-              poster="earth.webp"
-              src="earth.mp4"
-              className="aspect-square max-w-xl"
-            />
-            <Video poster="globe.webp" src="global.mp4" />
-          </div>
+          <HoverEffect />
         </div>
       </div>
     </div>

@@ -7,7 +7,6 @@ export default function TextTyper({ words }: { words: string[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeWord, setActiveWord] = useState(words[activeIndex]);
   const [displayedText, setDisplayedText] = useState("");
-  const [stringIndex, setStringIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   let timer = useRef<NodeJS.Timeout>();
@@ -38,14 +37,7 @@ export default function TextTyper({ words }: { words: string[] }) {
       if (timer.current) clearTimeout(timer.current);
       if (nextWordTimer.current) clearTimeout(nextWordTimer.current);
     };
-  }, [
-    charIndex,
-    isDeleting,
-    activeWord,
-    stringIndex,
-    typingSpeed,
-    pauseDuration,
-  ]);
+  }, [charIndex, isDeleting, activeWord, typingSpeed, pauseDuration]);
 
   useEffect(() => {
     if (isDeleting) {

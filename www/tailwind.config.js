@@ -53,8 +53,9 @@ module.exports = {
         circular: "radial-gradient(closest-side, #d9d9d9, #00000000)",
         "footer-fade":
           "linear-gradient(0deg, rgba(0, 0, 0, 0.00) 0%, #000 100%);",
-        fade:
-          "linear-gradient(180deg, rgba(0,0,0,0) 0%, #000 50%);",
+        fade: "linear-gradient(180deg, rgba(0,0,0,0) 0%, #000 50%);",
+        "fade-out":
+          "radial-gradient(circle, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 1) 65%)",
 
         "horizontal-fade":
           "linear-gradient(90deg, rgba(0, 0, 0, 0.00) 0%, #000 100%);",
