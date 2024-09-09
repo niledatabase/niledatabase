@@ -15,7 +15,6 @@ export default function Container({
       <Navigation />
       <main className="flex flex-col lg:items-center justify-between">
         {children}
-        <Divider />
         <Footer />
       </main>
     </Body>

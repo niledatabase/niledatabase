@@ -16,7 +16,7 @@ export default function Hero() {
   return (
     <div className="container mx-auto">
       <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-48">
-        <div className="px-4 lg:px-0 flex gap-8 flex-col">
+        <div className="flex gap-8 flex-col">
           <div className="flex justify-start">
             <Link
               href="https://www.thenile.dev/blog/introducing-nile"

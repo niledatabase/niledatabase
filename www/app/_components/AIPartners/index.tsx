@@ -58,7 +58,7 @@ export default function AIPartners() {
               return (
                 <div
                   key={partner.title}
-                  className="bg-darkGray rounded-lg w-[147px] h-[147px] flex justify-center items-center text-[96px] leading-[96px]"
+                  className="bg-darkGray rounded-lg max-w-[147px] max-h-[147px] flex justify-center items-center  text-[72px] leading-[72px] lg:text-[96px] lg:leading-[96px]"
                 >
                   {partner.icon}
                 </div>

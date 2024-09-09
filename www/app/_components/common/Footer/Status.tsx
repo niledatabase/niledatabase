@@ -78,7 +78,16 @@ export default async function Status() {
   }
   const body = await new Response(res.body).json();
   if (!Array.isArray(body)) {
-    return null;
+    return (
+      <div className="mt-40 flex flex-row gap-4 items-center">
+        <div className={variants.success}></div>
+        <div className="text-[#A1A1AA]">
+          <Link href="https://nile.instatus.com/" target="_blank">
+            All Systems Operational <span className="text-lg">↗</span>
+          </Link>
+        </div>
+      </div>
+    );
   }
   const [page] = body;
   const { status } = page;
@@ -86,7 +95,7 @@ export default async function Status() {
   const text = getText(status);
 
   return (
-    <div className="mt-40 flex flex-row gap-4 items-center pb-10 px-4">
+    <div className="mt-40 flex flex-row gap-4 items-center">
       {color && <div className={variants[color]}></div>}
       <div className="text-[#A1A1AA]">
         <Link href="https://nile.instatus.com/" target="_blank">

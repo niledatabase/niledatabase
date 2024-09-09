@@ -3,33 +3,25 @@ import HoverEffect from "./HoverEffect";
 
 export default function EmbeddingsCost() {
   return (
-    <div className="container mx-auto px-24 mt-48">
+    <div className="container mx-auto lg:px-24 mt-48">
       <div className="flex flex-col gap-16">
         <div className="flex flex-col gap-6">
-          <div className="flex justify-center flex-col">
-            <div className="text-[64px] leading-[64px] text-center">
-              Customer-specific vector
-            </div>
-            <div className="text-[64px] leading-[64px] text-center">
-              embeddings at 10x lower cost
+          <div className="flex justify-center flex-col items-center">
+            <div className="text-[32px] leading-[32px] lg:text-[64px] lg:leading-[64px] text-center w-5/6">
+              Customer-specific vector embeddings at 10x lower cost
             </div>
           </div>
           <div>
-            <div className="flex justify-center flex-col ">
-              <div className="text-[24px] leading-[24px] text-center">
+            <div className="flex justify-center flex-col">
+              <div className="leading-[20px] text-[16px] lg:text-[24px] lg:leading-[24px] text-center">
                 Use open-source pgvector extension to build multi-tenant RAG
-              </div>
-              <div className="text-[24px] leading-[24px] text-center">
                 applications. Store your vector embeddings and your tenant data
-                in one
-              </div>
-              <div className="text-[24px] leading-[24px] text-center">
-                database
+                in one database
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-row gap-20">
+        <div className="flex xl:flex-row gap-20 flex-col-reverse">
           <div className="flex flex-col gap-6">
             <div className="bg-orange rounded-lg">
               <Block

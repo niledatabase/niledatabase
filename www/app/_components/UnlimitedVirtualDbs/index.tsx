@@ -7,10 +7,10 @@ import cubeBottomRight from "@/public/cube_bottom_right.svg";
 function Cuber() {
   return (
     <>
-      <div className="absolute top-0 left-0 bottom-0 right-0 w-[203px] h-[219px] base">
+      <div className="absolute top-0 left-0 bottom-0 right-0  w-[203px] h-[219px] base">
         <Image src={cube} alt="3d cube" />
       </div>
-      <div className="absolute top-0 left-0 bottom-0 right-0 w-[203px] h-[219px] hover">
+      <div className="absolute top-0 left-0 bottom-0 right-0  w-[203px] h-[219px] hover">
         <Image src={cubePurple} alt="3d cube" />
       </div>
     </>
@@ -20,18 +20,19 @@ export default function UnlimitedVirtualDbs() {
   return (
     <div className="container mx-auto mt-20">
       <div className="flex justify-center flex-col gap-16">
-        <div className="flex justify-center flex-col ">
-          <div className="text-[64px] leading-[64px] text-center">
+        <div className="flex justify-center flex-col w-full items-center">
+          <div className="text-[32px] leading-[32px] lg:text-[64px] lg:leading-[64px] text-center w-2/3">
             One Postgres database
           </div>
-          <div className="text-[64px] leading-[64px] text-center">
+          <div className="text-[32px] leading-[32px] lg:text-[64px] lg:leading-[64px] text-center w-5/6">
             Unlimited virtual tenant databases
           </div>
         </div>
-        <div className="flex justify-center w-full boxes relative pt-16">
-          <div className="relative">
-            <div className="absolute bg-overlay w-full h-full -z-10 blur-[240px] opacity-20"></div>
-            <div className="absolute top-0 left-0 w-full h-full opacity-0 boxes-bg transition-opacity duration-500">
+        <div className="flex justify-center w-full boxes relative lg:pt-16 shrink-0 pointer-events-none lg:pointer-events-auto">
+          <div className="relative scale-[.42] md:scale-50 lg:scale-100">
+            <div className="absolute bg-overlay w-full h-full -z-10 blur-[240px] opacity-20 pointer-events-none"></div>
+
+            <div className="absolute top-0 left-0 w-full h-full opacity-0 boxes-bg transition-opacity duration-500 pointer-events-none">
               <Image
                 src={cubeBottomRight}
                 alt="3d cube"
@@ -45,41 +46,43 @@ export default function UnlimitedVirtualDbs() {
               <div className="absolute h-56 -left-2 -bottom-[180px] -right-2 bg-fade"></div>
             </div>
 
-            <Image
-              src={cubeBackdrop}
-              alt="perspective gradient lined platform"
-            />
-            <div className="cube cube-1 relative">
+            <div className="max-w-none lg:max-w-max pointer-events-none">
+              <Image
+                src={cubeBackdrop}
+                alt="perspective gradient lined platform"
+              />
+            </div>
+            <div className="cube cube-1 absolute top-0 left-0">
               <Cuber />
             </div>
-            <div className="cube cube-2 relative">
+            <div className="cube cube-2  absolute top-0 left-0">
               <Cuber />
             </div>
-            <div className="cube cube-3 relative">
+            <div className="cube cube-3 absolute top-0 left-0">
               <Cuber />
             </div>
-            <div className="cube cube-4 relative">
+            <div className="cube cube-4 absolute top-0 left-0">
               <Cuber />
             </div>
-            <div className="cube cube-5 relative">
+            <div className="cube cube-5 absolute top-0 left-0">
               <Cuber />
             </div>
-            <div className="cube cube-6 relative">
+            <div className="cube cube-6 absolute top-0 left-0">
               <Cuber />
             </div>
           </div>
         </div>
 
-        <div className="flex flex-row justify-center gap-6 relative z-10">
-          <div className="border-orange border-l-4 pl-5 w-[400px] text-[24px] leading-[24px]">
+        <div className="flex flex-col lg:flex-row justify-center gap-6 -10 items-center lg:items-start relative z-10">
+          <div className="border-orange border-l-4 pl-5 max-w-[400px] text-[20px] lg:text-[24px] leading-[24px]">
             Avoid operational nightmares, frustrating developer experiences and
             high costs of managing one database per tenant
           </div>
-          <div className="border-purple border-l-4 pl-5 w-[400px] text-[24px] leading-[24px]">
+          <div className="border-purple border-l-4 pl-5 max-w-[400px] text-[20px] lg:text-[24px] leading-[24px]">
             Eliminate noisy neighbor problems and leaky data isolation when
             using one database for all your tenants
           </div>
-          <div className="border-blue border-l-4 pl-5 w-[400px] text-[24px] leading-[24px]">
+          <div className="border-blue border-l-4 pl-5 max-w-[400px] text-[20px]  lg:text-[24px] leading-[24px]">
             Enjoy the isolation of db per tenant model with the cost efficiency
             and developer experience of one db for all the tenants
           </div>

@@ -24,6 +24,13 @@ export default function CodeTyper({ lines, allowTyping }: Props) {
   }, [position[2]]);
 
   useEffect(() => {
+    if (window.innerWidth < 968) {
+      const lastLine = lines[lines.length - 1];
+      const lastWord = lastLine[lastLine.length - 1];
+      const lastLetter = lastWord.text.length - 1;
+      setPosition([lines.length - 1, lastLine.length - 1, lastLetter]);
+    }
+
     if (!allowTyping) {
       clearTimeout(timer.current);
       return;
@@ -69,7 +76,7 @@ export default function CodeTyper({ lines, allowTyping }: Props) {
         return (
           <div
             key={`${line}${wordPosition}`}
-            className="absolute h-4 leading-4"
+            className="absolute h-4 leading-4 inline whitespace-nowrap"
             style={{ top: line * 18 }}
           >
             {words.map((word, currentWord) => {

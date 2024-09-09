@@ -99,9 +99,9 @@ const lines: Array<Array<{ text: string; color: string }>> = [
 export default function HoverEffect() {
   const [allowTyping, setAllowTyping] = useState(false);
   return (
-    <div className="-mt-[5.6rem]">
+    <div className="-mt-6 lg:-mt-[5.6rem]">
       <div
-        className="flex items-center flex-col  code-hover"
+        className="flex items-center flex-col code-hover overflow-hidden"
         onMouseEnter={() => {
           setAllowTyping(true);
         }}
@@ -166,7 +166,7 @@ export default function HoverEffect() {
             <div className="rounded-full bg-[#FFCF52] h-2 w-2"></div>
             <div className="rounded-full bg-[#78FF57] h-2 w-2"></div>
           </div>
-          <div className=" bg-[rgba(63,63,63)] rounded-[16px] p-6 flex flex-row font-mono pointer-events-none">
+          <div className=" bg-[rgba(63,63,63)] rounded-[16px] p-6 flex flex-row font-mono pointer-events-none overflow-hidden">
             <div className="flex flex-col relative">
               {Array(11)
                 .fill(null)

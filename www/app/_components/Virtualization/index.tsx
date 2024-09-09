@@ -4,17 +4,12 @@ import { Block } from "../block";
 export default function Virtualization() {
   return (
     <div className="container mx-auto mt-48">
-      <div className="flex justify-center flex-col gap-8">
-        <div>
-          <div className="text-[64px] leading-[64px] text-center">
-            Secure isolation for customer&apos;s
-          </div>
-          <div className="text-[64px] leading-[64px] text-center">
-            data and embeddings
-          </div>
+      <div className="flex justify-center flex-col gap-8 items-center">
+        <div className="text-[32px] leading-[32px] lg:text-[64px] lg:leading-[64px] text-center w-5/6">
+          Secure isolation for customer&apos;s data and embeddings
         </div>
         <Video src="table.mp4" poster={"table.webp"} />
-        <div className="flex flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6">
           <div className="bg-orange rounded-lg">
             <Block
               title="Tenant Virtualization"
