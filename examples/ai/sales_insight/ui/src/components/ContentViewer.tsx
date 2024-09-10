@@ -19,14 +19,18 @@ const ContentViewer: React.FC<ContentViewerProps> = ({ content }) => {
       key={Date.now()}
     >
       {content === undefined ? (
-        <Typography level="body-lg">
-          Please select a call transcript
-        </Typography>
+        <Typography level="body-lg">Please select a call transcript</Typography>
       ) : (
-        <Box component="pre" sx={{ whiteSpace: "pre-wrap", fontFamily: "inherit", m: 0 }}>
-          {content.map((item) => (
-            `${item.speaker_role.toUpperCase()}: ${item.content}\n\n`
-          )).join("")}
+        <Box
+          component="pre"
+          sx={{ whiteSpace: "pre-wrap", fontFamily: "inherit", m: 0 }}
+        >
+          {content
+            .map(
+              (item) =>
+                `${item.speaker_role.toUpperCase()}: ${item.content}\n\n`
+            )
+            .join("")}
         </Box>
       )}
     </Box>

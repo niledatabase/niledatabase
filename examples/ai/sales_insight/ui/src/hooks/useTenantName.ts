@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function useTenantName(tenantId: string | undefined) {
   const [tenantName, setTenantName] = useState<string | null>(null);
@@ -9,19 +9,24 @@ export function useTenantName(tenantId: string | undefined) {
     if (!tenantId) return;
 
     fetch(`/api/tenants/${tenantId}`)
-      .then(res => {
+      .then((res) => {
         if (res.status >= 200 && res.status <= 399) {
           return res.json();
         } else {
-          console.log("failed to get tenant name, redirecting for re-login " + res.status + " " + res.statusText);
-          throw new Error('Failed to fetch tenant name');
+          console.log(
+            "failed to get tenant name, redirecting for re-login " +
+              res.status +
+              " " +
+              res.statusText
+          );
+          throw new Error("Failed to fetch tenant name");
         }
       })
-      .then(data => {
+      .then((data) => {
         setTenantName(data.name);
       })
       .catch(() => {
-        navigate('/');
+        navigate("/");
       });
   }, [tenantId, navigate]);
 
