@@ -3,11 +3,9 @@ import Card from "@mui/joy/Card";
 import Typography from "@mui/joy/Typography";
 import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
-import Divider from "@mui/joy/Divider";
 import Stack from "@mui/joy/Stack";
 import ModalDialog from "@mui/joy/ModalDialog";
 import Modal from "@mui/joy/Modal";
-import Add from "@mui/icons-material/Add";
 import FormControl from "@mui/joy/FormControl";
 import Input from "@mui/joy/Input";
 import List from "@mui/joy/List";
@@ -77,30 +75,6 @@ function Tenants() {
     <Layout>
       <div className={styles.center}>
         <Card variant="outlined">
-          <CardContent>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                padding: "1rem",
-              }}
-            >
-              <div>
-                <Button
-                  variant="solid"
-                  size="md"
-                  color="primary"
-                  aria-label="add-tenant"
-                  startDecorator={<Add />}
-                  onClick={() => setOpen(true)}
-                  sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
-                >
-                  CREATE TENANT
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-          <Divider>or</Divider>
           <CardContent>
             <Typography level="title-md" textAlign="center" padding={2}>
               Use Existing Tenant

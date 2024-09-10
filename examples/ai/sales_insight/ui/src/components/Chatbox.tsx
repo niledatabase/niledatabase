@@ -1,12 +1,5 @@
 import React, { useState, useReducer } from "react";
-import {
-  Box,
-  Button,
-  List,
-  ListItem,
-  Card,
-  Autocomplete,
-} from "@mui/joy";
+import { Box, Button, List, ListItem, Card, Autocomplete } from "@mui/joy";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -15,7 +8,7 @@ const cannedQuestions = [
   "What are the customer painpoints?",
   "What are the next steps after the conversation?",
   "What did we promise the customer?",
-  "Are they using a competitor product?"
+  "Are they using a competitor product?",
 ];
 
 export type MessageType = {
@@ -40,7 +33,7 @@ interface AppState {
 }
 
 function reducer(state: AppState, action: AppActions): AppState {
-  console.log("got text: " + action.text)
+  console.log("got text: " + action.text);
   switch (action.type) {
     case "addQuestion":
       return {
@@ -68,10 +61,7 @@ function reducer(state: AppState, action: AppActions): AppState {
 }
 
 // TODO: Add the transcript name, so we'll only chat with one transcript
-const Chatbox: React.FC<ChatboxProps> = ({
-  tenantId,
-  selectedTranscript
-}) => {
+const Chatbox: React.FC<ChatboxProps> = ({ tenantId, selectedTranscript }) => {
   const [userInput, setUserInput] = useState("");
   const [selectedInput, setSelectedInput] = useState("");
   const [state, dispatch] = useReducer(reducer, { messages: [] });
@@ -95,9 +85,9 @@ const Chatbox: React.FC<ChatboxProps> = ({
         method: "POST",
         headers: headers,
         body: JSON.stringify({
-            conversation_id: selectedTranscript[0],
-            question: input
-          })
+          conversation_id: selectedTranscript[0],
+          question: input,
+        }),
       });
 
       // Reader to process the streamed response
@@ -130,7 +120,7 @@ const Chatbox: React.FC<ChatboxProps> = ({
           overflow: "auto",
         }}
       >
-      {/* <Typography level="h4" component="h1" mb={2}>
+        {/* <Typography level="h4" component="h1" mb={2}>
           Ask me about "{projectName}" project
         </Typography> */}
         <List>

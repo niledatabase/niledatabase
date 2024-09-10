@@ -15,28 +15,24 @@ interface SidebarProps {
   selectedItems: string[];
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  items,
-  onClick,
-  selectedItems,
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ items, onClick, selectedItems }) => {
   return (
     <List>
       {items.map((item, index) => (
         <ListItem key={index}>
-            <ListItemButton
-              onClick={() => onClick(items[index])}
-              selected={selectedItems?.includes(items[index])}
-            >
-              <ListItemDecorator>
-                <Description />
-              </ListItemDecorator>
-              <ListItemContent>
-                <Typography level="body-md" noWrap>
-                  {item}
-                </Typography>
-              </ListItemContent>
-            </ListItemButton>
+          <ListItemButton
+            onClick={() => onClick(items[index])}
+            selected={selectedItems?.includes(items[index])}
+          >
+            <ListItemDecorator>
+              <Description />
+            </ListItemDecorator>
+            <ListItemContent>
+              <Typography level="body-md" noWrap>
+                {item}
+              </Typography>
+            </ListItemContent>
+          </ListItemButton>
         </ListItem>
       ))}
     </List>

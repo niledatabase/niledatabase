@@ -1,15 +1,21 @@
 // just some functions to handle clicks and such
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { TranscriptItem } from "../types/types";
 
-export const useTranscriptHandler = (tenantId: string, transcripts: string[]) => {
-  const [transcriptContent, setTranscriptContent] = useState<TranscriptItem[]>([]);
+export const useTranscriptHandler = (
+  tenantId: string,
+  transcripts: string[]
+) => {
+  const [transcriptContent, setTranscriptContent] = useState<TranscriptItem[]>(
+    []
+  );
   const [selectedTranscript, setTranscript] = useState<string[]>([]);
 
   useEffect(() => {
-    if (selectedTranscript.length == 0) { // if nothing was selected, show default
-      console.log("loading transcript with " + transcripts[0])
+    if (transcripts.length > 0 && selectedTranscript.length == 0) {
+      // if nothing was selected, show default
+      console.log("loading transcript with " + transcripts[0]);
       handleTranscriptClick(transcripts[0]);
     }
   }, [transcripts]); // depends on transcripts so it will run after they load
@@ -23,10 +29,9 @@ export const useTranscriptHandler = (tenantId: string, transcripts: string[]) =>
       const response = await fetch(`/api/conversations/` + conversation_id, {
         method: "GET",
         headers: headers,
-
       });
       const resp = await response.json();
-      console.log(resp)
+      console.log(resp);
       setTranscriptContent(resp);
       setTranscript([conversation_id]);
     } catch (error) {
