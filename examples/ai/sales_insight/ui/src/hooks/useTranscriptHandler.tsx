@@ -8,7 +8,7 @@ export const useTranscriptHandler = (tenantId: string, transcripts: string[]) =>
   const [selectedTranscript, setTranscript] = useState<string[]>([]);
 
   useEffect(() => {
-    if (selectedTranscript.length == 0) { // if nothing was selected, show default
+    if (transcripts.length > 0 && selectedTranscript.length == 0) { // if nothing was selected, show default
       console.log("loading transcript with " + transcripts[0])
       handleTranscriptClick(transcripts[0]);
     }

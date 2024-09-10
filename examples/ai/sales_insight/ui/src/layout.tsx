@@ -52,11 +52,11 @@ export default function Layout({ children }: Props) {
       <div>
         <Stack alignItems="center" sx={{ width: '100%' }}>
           <Typography level="h2" textAlign="center" maxWidth="800px">
-            Sales Insight
+            Sales Insight (Demo)
           </Typography>
           <Typography level="body-lg" textAlign="center" maxWidth="800px">
             Using Llama 3.1 model, running on A100 GPU by Modal, Sales Assistant will summarize sales calls for you.
-            Learn customer needs and next steps at a glance.
+            Learn customer needs and next steps at a glance. This demo uses simulated transcripts of sales calls.
           </Typography>
         </Stack>
       </div>
