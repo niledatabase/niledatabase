@@ -89,7 +89,7 @@ In the left-hand menu, click on "Settings" and then select "Credentials". Genera
 
 ### 4. Setting up Google Authentication
 
-This demo uses Google authentication for signup. You will need to configure this in both Google and Nile, following the instructions in [Nile documentation](https://www.thenile.dev/docs/user-authentication/social-login/google).
+This demo uses Google authentication for signup. You will need to configure this in both Google and Nile, following the instructions [in the example](https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/social_login_google/NextJS/README.md).
 
 ### 4. Setting up 3rd Party SaaS
 
