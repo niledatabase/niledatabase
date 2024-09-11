@@ -6,10 +6,10 @@ The examples are organized by the Nile feature that they demonstrate and below t
 
 Each example has its own README that briefly shows how to run it, and links to additional resources.
 
-## Available Examples:
+## Available Examples
 
-- **`quickstart`**: These examples demonstrate Nile's built-in tables, tenant-aware tables and virtual tenant databases. You can find examples in [NextJS](./quickstart/nextjs/README.md), [Node](./quickstart/node_react/README.md), [Java](./quickstart/java/README.md)
-- **`user_management`**: These examples show how to use Nile to signup and authenticate users, create new tenants, and build a simple user dashboard. You can find examples for [email login](./user_management/email_login/NextJS/README.md), [social login with Google](./user_management/social_login_google/NextJS/README.md) and [enterprise login with Okta](./user_management/sso_login_okta/NextJS/README.md)
+- **`quickstart`**: These examples demonstrate Nile's built-in tables, tenant-aware tables and virtual tenant databases. You can find examples in [NextJS](./quickstart/nextjs/README.md), [Node](./quickstart/node_react/README.md), [Python](./quickstart/python/README.md) and many more.
+- **`ai`**: These examples show how to use Nile to build AI applications. You can find examples for [code assistant](./ai/code_assistant/README.md), [sales insight](./ai/sales_insight/README.md) and [knowledge ai](./ai/ai_pdf/README.md)
 
 ## Interested in Contributing to the examples?
 
