@@ -1,0 +1,33 @@
+Sales Rep: Good afternoon, this is James from TerraVista Properties. How can I help you today?
+
+Customer: Hi James, I'm considering buying a home but I'm a bit overwhelmed by the process and the current market conditions.
+
+Sales Rep: I completely understand; the market can be quite daunting. Do you have any specific concerns or questions?
+
+Customer: Well, for one, prices seem really high right now. I'm worried about overpaying and not getting my money's worth.
+
+Sales Rep: That's a valid concern. Prices have certainly gone up, but the good news is that with interest rates still relatively low, your monthly mortgage payments could be quite manageable. Have you had a chance to get pre-approved for a loan?
+
+Customer: Not yet, I've been meaning to but haven't found the time.
+
+Sales Rep: Getting pre-approved can give you a clearer picture of your budget and strengthen your offer when you find the right home. Would you like me to connect you with a trusted mortgage advisor?
+
+Customer: That might be helpful, yes. But I'm also worried about finding a good location. I have kids who would need good schools, and I'd like a short commute to work.
+
+Sales Rep: Absolutely, location is key. At TerraVista Properties, we specialize in matching families with neighborhoods that fit their needs. We can focus our search on areas with top-rated schools and convenient commute options. Do you already have a particular area in mind?
+
+Customer: Kind of. I've been looking at Benson Hills, but I'm not sure if it's the right fit.
+
+Sales Rep: Benson Hills is a great area with excellent schools and lots of family-friendly amenities. I'd be happy to set up a neighborhood tour or even arrange for you to meet some locals for their perspectives. Would that help you feel more confident in your decision?
+
+Customer: That sounds really useful. I'd appreciate that.
+
+Sales Rep: Perfect. Let's schedule a tour for you sometime this week. When are you available?
+
+Customer: How about Saturday morning?
+
+Sales Rep: Saturday morning works. I'll arrange for a comprehensive tour and introduce you to someone from the community. In the meantime, I'll also have our mortgage advisor reach out to you.
+
+Customer: That sounds great. Thanks so much for your help, James.
+
+Sales Rep: You're welcome! I'm looking forward to helping you find your perfect home. Talk to you soon!

@@ -1,0 +1,49 @@
+Sales Rep: Good afternoon, this is Sarah from TerraVista Properties. How are you today?
+
+Customer: Hi, I'm doing good, thanks. How about you?
+
+Sales Rep: I'm well, thank you. I see that you recently visited our website and showed interest in some properties. Are you currently in the market to buy?
+
+Customer: Yes, I am. But I'm a bit overwhelmed with the whole process. This is my first time buying a home.
+
+Sales Rep: I understand; it can be daunting. But that's what we're here for. Could you tell me a bit more about what you're looking for in a property?
+
+Customer: Sure. I'm looking for a 3-bedroom house, preferably with a yard, in a good school district. My budget is around $400,000.
+
+Sales Rep: That sounds like a reasonable request. We have a few listings that fit your criteria. Is there a specific area you have in mind?
+
+Customer: I've been looking mostly in the Westside area, but I'm open to other suggestions if they meet my needs.
+
+Sales Rep: The Westside has some great properties, but it can be a bit pricey. Have you considered neighborhoods like Oakwood or Maple Ridge? They are a bit more affordable and still have good schools.
+
+Customer: I haven't looked into those areas much. I'm worried about the commute to work. How's the traffic from there?
+
+Sales Rep: Oakwood and Maple Ridge are both about a 20 to 30-minute commute to downtown, depending on traffic. They also have good public transportation options.
+
+Customer: That's not too bad. I suppose the public transportation could help.
+
+Sales Rep: Absolutely. Plus, properties in those areas are usually within your budget and you might get a bigger yard as well.
+
+Customer: That's definitely something to consider. But I'm still concerned about the current market conditions. I've heard house prices are really high right now.
+
+Sales Rep: Yes, it’s a competitive market, but interest rates are relatively low, which can offset some of the cost. Plus, we can help you negotiate to get the best possible deal.
+
+Customer: Negotiation is definitely something I’m worried about. I don't want to end up overpaying.
+
+Sales Rep: That's a valid concern. We have experienced negotiators on our team who will work to ensure you get the best value for your money. How about we schedule a time for you to visit a few properties this weekend?
+
+Customer: That sounds good. Saturday afternoon works for me.
+
+Sales Rep: Perfect. I'll prepare a list of properties that meet your criteria in Oakwood, Maple Ridge, and a few in the Westside. Can I have your email to send you the details?
+
+Customer: Sure, it's johndoe@example.com.
+
+Sales Rep: Great, John. I'll send you the list shortly. If you have any more questions or concerns, feel free to reach out.
+
+Customer: Thanks, Sarah. Looking forward to it.
+
+Sales Rep: You're welcome, John. Have a great day and talk to you soon!
+
+Customer: You too, bye.
+
+Sales Rep: Goodbye.

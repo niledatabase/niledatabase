@@ -1,0 +1,37 @@
+Sales Rep: Hi there, this is John from Nexiv Solutions. How are you today?
+
+Customer: Hi, John. I’m doing well, thanks. How about you?
+
+Sales Rep: I’m great, thanks for asking. I wanted to take a few minutes of your time to discuss how Nexiv Solutions can help streamline your current tech processes. Is now a good time?
+
+Customer: Sure, I have about 15 minutes.
+
+Sales Rep: Perfect. To start, can you tell me a bit about your current setup and any challenges you’re facing?
+
+Customer: Well, we’ve been having issues with our data management system. It’s clunky and doesn’t integrate well with other software we’re using. It’s causing a lot of downtime and frustration among the team.
+
+Sales Rep: I hear you. That’s a common pain point. Integration issues can really hinder productivity. Have you looked at any other solutions?
+
+Customer: Yes, but most of them are either too expensive or don’t solve our specific problems. We need something scalable and within our budget.
+
+Sales Rep: Understood. One of the advantages of Nexiv Solutions is that our platform is both scalable and cost-effective. We’ve helped many companies like yours improve data management and streamline operations. Would you be interested in seeing a demo to understand how it might fit your needs?
+
+Customer: I’m interested, but we’ve been burned before by promising demos that didn’t deliver in practice. How can I be sure this will be any different?
+
+Sales Rep: That’s a valid concern. Our demo is highly customized to show exactly how our platform can be implemented based on your unique requirements. Additionally, we offer a trial period so you can test it out before making any commitments.
+
+Customer: A trial period sounds good, but what if we encounter problems during the trial? Will we have support?
+
+Sales Rep: Absolutely. We provide 24/7 customer support during the trial, and you’ll have access to a dedicated account manager to ensure everything runs smoothly.
+
+Customer: That’s reassuring. What are the next steps if we decide to move forward?
+
+Sales Rep: If you’re interested, we can schedule a detailed demo tailored to your specific needs. Afterward, we’ll set up your trial account and ensure you have all the support you need. How does that sound?
+
+Customer: That sounds reasonable. Let’s go ahead and schedule the demo.
+
+Sales Rep: Great! I’ll send you an email with available times for the demo. Looking forward to showing you what Nexiv Solutions can do for your team.
+
+Customer: Thanks, John. Talk to you soon.
+
+Sales Rep: Thank you! Have a great day.

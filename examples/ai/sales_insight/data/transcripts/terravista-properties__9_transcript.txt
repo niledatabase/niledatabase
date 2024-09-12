@@ -1,0 +1,33 @@
+Sales Rep: Good afternoon, this is Jane from TerraVista Properties. How can I assist you today?
+
+Customer: Hi Jane, I'm considering buying a home, but I'm not sure where to start. I've seen a few listings on your website and wanted more information.
+
+Sales Rep: I'd be happy to help. What areas are you looking at, and what kind of property are you interested in?
+
+Customer: I'm looking for a 3-bedroom house with a decent yard for my kids. I'm primarily interested in the Willow Creek and Pine Hills neighborhoods.
+
+Sales Rep: Both are great choices. Willow Creek has excellent schools, and Pine Hills is known for its community feel. Do you have a budget in mind?
+
+Customer: Yes, my budget is around $400,000. But honestly, I'm a bit concerned about finding something decent within that range, especially with the market being so competitive.
+
+Sales Rep: I understand your concern. The market can indeed be competitive, but we have several listings that fit your criteria in both neighborhoods. Have you been pre-approved for a mortgage yet?
+
+Customer: Not yet. That's another thing I'm a bit worried about. I've heard it can be a lengthy process.
+
+Sales Rep: Getting pre-approved is a crucial first step, but it doesn't have to be daunting. We have partnerships with several lenders who can help streamline the process for you. Once you're pre-approved, you'll be in a stronger position to make an offer quickly.
+
+Customer: That sounds helpful. I guess my main concern is making sure I find something that meets all our needs without breaking the bank.
+
+Sales Rep: Absolutely, we aim to find you the perfect home within your budget. How about we schedule a personalized tour of a few properties in Willow Creek and Pine Hills? This way, you can get a feel for the neighborhoods and see some options that are available.
+
+Customer: That sounds like a good plan. I’m available this Saturday. Does that work for you?
+
+Sales Rep: Saturday works perfectly. I'll email you a confirmation along with the details of the properties we'll be visiting. Also, I'll get you in touch with one of our mortgage partners to get the pre-approval process started. Does that sound good?
+
+Customer: Yes, that sounds great. Thanks for your help, Jane.
+
+Sales Rep: My pleasure. Looking forward to meeting you on Saturday. Have a great day!
+
+Customer: You too. Bye.
+
+Sales Rep: Goodbye.

@@ -1,0 +1,29 @@
+Sales Rep: Good afternoon, this is Mark from Nexiv Solutions. Am I speaking with Jane Miller?
+
+Customer: Yes, this is Jane. How can I help you today?
+
+Sales Rep: Thanks for taking my call, Jane. I understand you're handling IT for your company. I wanted to see if we could schedule some time to discuss how Nexiv Solutions can help streamline your software development processes and improve your team's productivity. Do you have a few minutes?
+
+Customer: Sure, but to be honest, we're pretty satisfied with our current setup. We've been using the same development tools for a while now.
+
+Sales Rep: That's great to hear, Jane. But if you don't mind, can I ask if there are any challenges you're currently facing with your existing tools or processes?
+
+Customer: Well, time management has been a bit of an issue. We have some projects running behind schedule, and our current tools aren't really helping us catch up.
+
+Sales Rep: I see. Delays can certainly be frustrating. One of the key features of Nexiv Solutions is our advanced project management and tracking system, which helps teams like yours stay on schedule and even anticipate potential delays. How does that sound?
+
+Customer: That does sound helpful. But we're also working on a tight budget. I’m worried about the costs associated with switching to a new system.
+
+Sales Rep: That's a valid concern, Jane. Our pricing is competitive, and we offer flexible payment plans to fit various budget constraints. Plus, the increase in productivity and reduced delays you’ll experience can lead to significant cost savings in the long run. Would you be open to a free demo to see how it could work for your team?
+
+Customer: I guess a demo wouldn’t hurt. But I also need to ensure that the new system will integrate well with our existing software. 
+
+Sales Rep: Absolutely, seamless integration is one of our priorities. Our technical team will work closely with yours to ensure a smooth transition. We also offer full support during and after the integration process. Can I go ahead and schedule a time for the demo? How about Thursday at 2 PM?
+
+Customer: Thursday at 2 PM works for me.
+
+Sales Rep: Great! I'll send over a calendar invite and include some additional information on what to expect. If you have any questions before then, feel free to reach out. Thanks, Jane. Looking forward to the demo!
+
+Customer: Thank you, Mark. Have a great day.
+
+Sales Rep: You too, Jane. Take care.
