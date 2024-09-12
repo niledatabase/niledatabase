@@ -57,6 +57,8 @@ image = modal.Image.debian_slim(python_version="3.10").pip_install(
 app = modal.App(name=app_name+"-web", image=image)
 app.include(llm_app)
 
+model = Model()
+
 class ChatData(BaseModel):
     conversation_id: str
     question: str
@@ -71,7 +73,6 @@ async def chat(chat_data: ChatData, session = Depends(get_tenant_session)):
     print("found chunks")
     print(similar_chunks)
     ### Generate a response
-    model = Model()
     return StreamingResponse(
         model.generate_stream.remote_gen(
             system_prompt="You are a helpful assistant that can summarize sales calls for busy sales people. "
@@ -125,6 +126,11 @@ async def get_conversation(conversation_id: str, request: Request, session = Dep
 
 @web_app.get("/api/tenants/{tenant_id}")
 async def get_tenant(tenant_id: UUID, request: Request, session = Depends(get_global_session)):
+    # Since this is called when the user navigates to the chat page, but no one will notice if the tenant name takes a second to load
+    # this is a good time to wake up the model container
+    model.wake_up.remote()
+    
+    # now get the tenant
     user_id: UUID = get_user_id()
     if not user_id:
         raise HTTPException(
@@ -214,22 +220,6 @@ async def sign_up(login_data: LoginData, response: Response, session = Depends(g
 # We are returning both token and cookie, so the JWT can be used in both the frontend and backend
 @web_app.post("/api/login")
 async def login(login_data: LoginData, response: Response, session = Depends(get_global_session)):
-    print("Path at terminal when executing this file")
-    print(os.getcwd() + "\n")
-
-    print("This file path, relative to os.getcwd()")
-    print(__file__ + "\n")
-
-    print("This file full path (following symlinks)")
-    full_path = os.path.realpath(__file__)
-    print(full_path + "\n")
-
-    print("This file directory and name")
-    path, filename = os.path.split(full_path)
-    print(path + ' --> ' + filename + "\n")
-
-    print("This file directory only")
-    print(os.path.dirname(full_path))
     user: User = authenticated_user(login_data.email, login_data.password, session)
     if not user:
         logger.warn(f"Login failed for user: {login_data.email}")

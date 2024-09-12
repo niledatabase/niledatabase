@@ -47,6 +47,8 @@ class Model:
             engine_args
         )
 
+        print("Model loaded and ready to serve requests!")
+
     @modal.method()
     async def generate_stream(self, user_query: str, system_prompt: str, max_tokens: int = 2048, frequency_penalty: float = 0, presence_penalty: float = 0):
         tokenizer = await self.async_llm.get_tokenizer()
@@ -68,3 +70,8 @@ class Model:
         print("starting to stream output")
         async for output in stream:
             yield output.outputs[0].text
+
+    # This is a no-op, but it's a good way to wake up the container ahead of time
+    @modal.method()
+    async def wake_up(self):
+        print("Woke up, because I was asked to")
