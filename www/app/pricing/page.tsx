@@ -1,88 +1,245 @@
 import Image from "next/image";
+import queryTokens from "@/public/query-tokens.png";
 import Container from "../_components/common/Container";
 import PageHeader from "../_components/common/PageHeader";
 import FAQ from "./_components/FAQ";
-import ContactUs from "./_components/ContactUs";
-import JoinWaitlist from "./_components/JoinWaitlist";
-import BulletIcon from "@/public/icons/bullet.svg";
+import Divider from "../_components/common/Divider";
+import TokenCost, { TableRow } from "./_components/TokenCost";
+import { SupportRow, ConsoleRow, DatabaseRow } from "./_components/Rows";
+import Pro from "./_components/Pro";
+import Scale from "./_components/Scale";
+import Free from "./_components/Free";
+import Enterprise from "./_components/Enterprise";
+import PlanPicker from "./_components/PlanPicker";
 
-function Bullet({ children }: { children: string | JSX.Element }) {
-  return (
-    <li className="flex flex-row gap-2">
-      <Image
-        src={BulletIcon}
-        alt="gradient bullet"
-        width={8}
-        height={8}
-        priority
-      />
-      <span className="opacity-60">{children}</span>
-    </li>
-  );
-}
+const Line = ({
+  text,
+  children,
+  hideDivider,
+}: {
+  text?: string;
+  children?: JSX.Element | string;
+  hideDivider?: boolean;
+}) => (
+  <>
+    <div>
+      <div className="opacity-70 leading-[20px]">{text}</div>
+      {children}
+    </div>
+    <div
+      className={"h-px  bg-white"}
+      style={{ opacity: hideDivider ? 0 : 0.3 }}
+    />
+  </>
+);
+
 export default function Pricing() {
   return (
-    <Container background="circular">
+    <Container>
       <PageHeader
         titleClasses="mt-32"
         title="Start building AI apps with unlimited DBs"
         subtitle="Build and scale multi-tenant AI applications with Nile's Postgres"
         color="white"
       />
-      <div className="flex w-full mt-20 justify-center">
-        <div className="flex flex-col md:flex-row w-full justify-center gap-2 items-start">
-          <div className="md:w-1/2 flex justify-end w-full">
-            <div className="grayBorder rounded-[20px] w-100 md:w-auto flex-1 md:flex-grow-0">
-              <div className="p-8 z-10 relative md:min-w-[392px] w-100 md:w-auto flex-1">
-                <div className="bg-gradient-text bg-clip-text text-transparent text-[40px] leading-[48px] w-fit">
-                  Free
+      <div className="container mx-auto">
+        <div className="flex w-full mt-56 justify-center flex-col  gap-20 relative">
+          <div>
+            <div className="flex-col lg:flex-row flex justify-center 2xl:px-32">
+              <div className="flex flex-col lg:flex-row border rounded-lg border-zinc-700 bg-black relative flex-1">
+                <div className="absolute -top-32 left-24 -z-10 -rotate-[3deg] hidden lg:flex">
+                  <div className="gradientBorderGray w-[254px] bg-gradient py-11 px-6 rounded-[7px]">
+                    <div className="bg-gradient-text bg-clip-text text-transparent text-[20px] w-fit justify-center">
+                      <div className="text-center">Unlimited Databases</div>
+                      <div className="text-center">Unlimited Tenants</div>
+                    </div>
+                  </div>
                 </div>
-                <div className="bg-gradient-text bg-clip-text text-transparent text-[24px] leading-[32px] w-fit">
-                  $0/month
+
+                <div className="absolute -top-32 left-1/2 -translate-x-1/2 -z-10 -rotate-[3deg] hidden lg:flex">
+                  <div className="gradientBorderGray w-[254px] bg-gradient py-11 px-6 rounded-[7px]">
+                    <div className="bg-gradient-text bg-clip-text text-transparent text-[20px] w-fit justify-center">
+                      <div className="text-center">Pay for queries</div>
+                      <div className="text-center">Not for instances</div>
+                    </div>
+                  </div>
                 </div>
-                <JoinWaitlist />
-                <div className="opacity-60 text-lg">Limit of 10 databases</div>
-                <div className="bg-divider-bold h-px my-6" />
-                <div className="text-lg flex gap-4 flex-col">
-                  <div className="opacity-60">Start your application with:</div>
-                  <ul className="flex gap-4 flex-col">
-                    <Bullet>Unlimited API Requests</Bullet>
-                    <Bullet>Unlimited Users</Bullet>
-                    <Bullet>Up to 100 Tenants per workspace</Bullet>
-                    <Bullet>2B row reads/ month per workspace</Bullet>
-                    <Bullet>20M row writes/ month per workspace</Bullet>
-                    <Bullet>Up to 10GB of Storage per workspace</Bullet>
-                    <Bullet>Social & Enterprise Auth</Bullet>
-                    <Bullet>Community & email support</Bullet>
-                  </ul>
+                <div className="absolute -top-32 right-20 -z-10 rotate-[3deg] hidden lg:flex">
+                  <div className="gradientBorderGray w-[254px] bg-gradient py-11 px-6 rounded-[7px]">
+                    <div className="bg-gradient-text bg-clip-text text-transparent text-[20px] w-fit justify-center">
+                      <div className="text-center">Limitless vector</div>
+                      <div className="text-center">embeddings</div>
+                    </div>
+                  </div>
+                </div>
+                <PlanPicker />
+                <div className="border-r border-r-zinc-700 w-1/4 hidden lg:flex">
+                  <div className="p-5">
+                    <div className="pt-[240px] text-lg">
+                      <DatabaseRow />
+                    </div>
+                    <div className="flex flex-col gap-4 justify-center">
+                      <Line text="# of databases" />
+                      <Line text="# of tenant DBs" />
+                      <Line text="# of vector embeddings" />
+                      <Line text="Tenant isolation" />
+                      <Line>
+                        <div className="leading-[44px] opacity-70">
+                          Serverless compute
+                        </div>
+                      </Line>
+                      <Line>
+                        <div className="leading-[44px] opacity-70">Storage</div>
+                      </Line>
+
+                      <Line text="DB Level backups">
+                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
+                          Coming soon
+                        </div>
+                      </Line>
+                      <Line text="Region availability" />
+                      <Line text="Autoscaling" />
+                      <Line text="# of connections" />
+                      <Line text="SLA" />
+                      <Line text="Workspace sharing" />
+                      <Line text="No cold start" />
+                      <Line text="Branching">
+                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
+                          Coming soon
+                        </div>
+                      </Line>
+                      <Line text="SOC 2" hideDivider>
+                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
+                          Coming soon
+                        </div>
+                      </Line>
+                      <ConsoleRow />
+                      <Line text="Tenant overrides" />
+                      <Line text="Tenant insights" />
+                      <Line text="Tenant administration" />
+                      <Line text="APIs" hideDivider />
+                      <SupportRow />
+                      <Line text="Community" />
+                      <Line text="Email" />
+                      <Line text="Email with SLA" />
+                      <Line text="Designated" hideDivider />
+                    </div>
+                  </div>
+                </div>
+                <div className="hidden lg:flex lg:w-1/4">
+                  <Free />
+                </div>
+                <div className="hidden lg:flex lg:w-1/4">
+                  <div className="relative w-full">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                      <div className="gradientButton after:rounded-full !py-0 !px-3 leading-[22px] font-semibold">
+                        Recommended
+                      </div>
+                    </div>
+                    <div className="border border-gradient-color relative overflow-hidden">
+                      <div className="w-5/6 h-32 -top-7 absolute pointer-events-none left-1/2 -translate-x-1/2 bg-circular-blur -translate-y-3 blur-[40px] opacity-40" />
+                      <div className="relative z-10">
+                        <Pro />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="hidden lg:flex lg:w-1/4">
+                  <Scale />
                 </div>
               </div>
             </div>
           </div>
-          <div className="md:w-1/2 flex justify-start w-full">
-            <div className="grayBorder rounded-[20px] w-full md:w-auto">
-              <div className="p-8 z-10 relative md:min-w-[392px] w-100 md:w-auto flex-1">
-                <div className="bg-gradient-text bg-clip-text text-transparent text-[40px] leading-[48px] w-fit">
-                  Custom
-                </div>
-                <div className="bg-gradient-text bg-clip-text text-transparent text-[24px] leading-[32px] w-fit">
-                  Contact Us
-                </div>
-                <div className="my-[24px]">
-                  <ContactUs />
-                </div>
-                <div className="opacity-60 text-lg">Unlimited databases</div>
-                <div className="bg-divider-bold h-px my-6" />
-                <div className="text-lg flex gap-4 flex-col">
-                  <div className="opacity-60">Start your application with:</div>
-                  <ul className="flex gap-4 flex-col">
-                    <Bullet>Custom pricing</Bullet>
-                    <Bullet>Volume discounts</Bullet>
-                    <Bullet>Unlimited connections</Bullet>
-                    <Bullet>Private Slack channel</Bullet>
-                  </ul>
-                </div>
+          <div className="hidden lg:flex flex-col lg:flex-row justify-center gap-2 items-center 2xl:px-32">
+            <div className="border border-transparent flex flex-row w-full p-10 gap-36 gradientBorderGray">
+              <Enterprise />
+            </div>
+          </div>
+        </div>
+      </div>
+      <Divider />
+      <div className="container mx-auto">
+        <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
+          <div className="flex flex-col lg:flex-row justify-center gap-2 items-start 2xl:px-24 mb-24">
+            <div className="lg:w-1/2">
+              <div className="px-20">
+                <Image
+                  src={queryTokens}
+                  alt="nile logo blue orange gradient with text background"
+                />
               </div>
+            </div>
+            <div className="flex flex-col gap-4 lg:w-1/2">
+              <div className="bg-gradient-text bg-clip-text text-transparent text-3xl w-fit">
+                What are query tokens?
+              </div>
+              <div className="opacity-70 text-[16px]">
+                Query tokens are abstract units of CPU and memory used when
+                queries are executed on the serverless compute.
+              </div>
+              <div className="opacity-70 text-[16px]">
+                Currently, we support usage-based pricing and query tokens let
+                you apy exactly for hte resources a query tool. The exact CPU
+                and memory utilized by a query are abstracted, and users only
+                need to care about query tokens, which normalizer the resource
+                consumed by queries executed on the serverless compute on Nile.
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-12">
+            <div>
+              <TokenCost header="Reading rows to a tenant" />
+              <TableRow
+                col1="Reading one row from table"
+                col2="30"
+                col3="$0.1"
+              />
+              <TableRow
+                col1="Reading 10 rows from table"
+                col2="30"
+                col3="$0.1"
+              />
+              <TableRow
+                col1="Reading 100 rows from table"
+                col2="30"
+                col3="$0.1"
+              />
+            </div>
+            <div>
+              <TokenCost header="Writing rows to a tenant" />
+              <TableRow
+                col1="Writing one row into table"
+                col2="30"
+                col3="$0.1"
+              />
+              <TableRow
+                col1="Writing 10 rows into table"
+                col2="30"
+                col3="$0.1"
+              />
+              <TableRow
+                col1="Writing 100 rows into table"
+                col2="30"
+                col3="$0.1"
+              />
+            </div>
+            <div>
+              <TokenCost header="Scanning rows to a tenant" />
+              <TableRow
+                col1="Scanning 10 rows across tenants"
+                col2="30"
+                col3="$0.1"
+              />
+              <TableRow
+                col1="Scanning 100 rows across tenants"
+                col2="30"
+                col3="$0.1"
+              />
+              <TableRow
+                col1="Scanning 1000 rows across tenants"
+                col2="30"
+                col3="$0.1"
+              />
             </div>
           </div>
         </div>
