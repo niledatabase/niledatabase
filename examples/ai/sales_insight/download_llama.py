@@ -16,8 +16,8 @@ image = (
     modal.Image.debian_slim(python_version="3.10")
     .pip_install(
         [
-            "huggingface_hub",  # download models from the Hugging Face Hub
-            "hf-transfer",  # download models faster with Rust
+            "huggingface_hub==0.24.6",  # download models from the Hugging Face Hub
+            "hf-transfer==0.1.8",  # download models faster with Rust
         ]
     )
     .env({"HF_HUB_ENABLE_HF_TRANSFER": "1"})
