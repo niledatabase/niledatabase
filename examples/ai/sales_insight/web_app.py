@@ -70,8 +70,7 @@ async def chat(chat_data: ChatData, session = Depends(get_tenant_session)):
     embedding = get_embedding(chat_data.question, EmbeddingTasks.SEARCH_QUERY)
     ### Get similar messages from the database via vector similarity search
     similar_chunks = get_similar_chunks(session, embedding, chat_data.conversation_id)
-    print("found chunks")
-    print(similar_chunks)
+    logger.debug("found chunks: " + str(similar_chunks))
     ### Generate a response
     return StreamingResponse(
         model.generate_stream.remote_gen(

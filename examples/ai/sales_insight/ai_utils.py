@@ -42,7 +42,7 @@ def get_similar_chunks(session: any, embedding: List[float], conversation_id: in
         WHERE conversation_id = '{}' 
         AND (embedding <=> '{}') < 1 
         ORDER BY embedding <=> '{}' LIMIT 3 ) 
-    select cc.conversation_id, cc.speaker_role, cc.content from src
+    select distinct on (cc.chunk_id) cc.chunk_id, cc.conversation_id, cc.speaker_role, cc.content from src
     join call_chunks as cc on 
         cc.conversation_id = src.conversation_id 
         and cc.tenant_id = src.tenant_id 

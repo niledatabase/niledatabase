@@ -33,7 +33,7 @@ with vllm_image.imports():
 GPU_CONFIG = modal.gpu.A100(count=1, size="40GB")
 
 # encapsulate the inference function in a class with @enter decorator, so the model is loaded once and reused across function calls
-@llm_app.cls(gpu=GPU_CONFIG, volumes={MODELS_DIR: volume}, secrets=[modal.Secret.from_name("huggingface-secret")])
+@llm_app.cls(gpu=GPU_CONFIG, volumes={MODELS_DIR: volume}, secrets=[modal.Secret.from_name("huggingface-secret")], allow_concurrent_inputs=10)
 class Model:
     @modal.enter()
     def load(self):
