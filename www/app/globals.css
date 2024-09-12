@@ -166,7 +166,8 @@ body {
 }
 
 html .navBlur {
-  background-color: black;
+  backdrop-filter: blur(min(calc(var(--scroll) * 1px), 10px));
+  background-color: rgba(0, 0, 0, min(calc(var(--scroll) * 0), 0.5));
 }
 
 .bgDivider {

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-// import "./storeScroll";
+import "./storeScroll";
 import { Links } from "./Links";
 import MobileNav, { NavMenu } from "./MobileNav";
 import { GithubCta } from "./GithubCta";
