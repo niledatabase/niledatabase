@@ -8,5 +8,6 @@ MODELS_VOLUME = "llamas"
 
 
 # TODO: Try using other small models: Gemma, Mixtral, Phi
-DEFAULT_NAME = "meta-llama/Meta-Llama-3.1-8B-Instruct"
-DEFAULT_REVISION = "5206a32e0bd3067aef1ce90f5528ade7d866253f" # original: "8c22764a7e3675c50d4c7c9a4edb474456022b16"
+# We are using FP8 quantized model from Neural Magic, which is smaller and faster than the original model
+DEFAULT_NAME = "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8"
+DEFAULT_REVISION = "3aed33c3d2bfa212a137f6c855d79b5426862b24"

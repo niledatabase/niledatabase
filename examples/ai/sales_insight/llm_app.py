@@ -33,7 +33,7 @@ with vllm_image.imports():
 GPU_CONFIG = modal.gpu.A100(count=1, size="40GB")
 
 # encapsulate the inference function in a class with @enter decorator, so the model is loaded once and reused across function calls
-@llm_app.cls(gpu=GPU_CONFIG, volumes={MODELS_DIR: volume}, secrets=[modal.Secret.from_name("huggingface-secret")])
+@llm_app.cls(gpu=GPU_CONFIG, volumes={MODELS_DIR: volume}, secrets=[modal.Secret.from_name("huggingface-secret")], allow_concurrent_inputs=10)
 class Model:
     @modal.enter()
     def load(self):
@@ -46,6 +46,8 @@ class Model:
         self.async_llm = AsyncLLMEngine.from_engine_args(
             engine_args
         )
+
+        print("Model loaded and ready to serve requests!")
 
     @modal.method()
     async def generate_stream(self, user_query: str, system_prompt: str, max_tokens: int = 2048, frequency_penalty: float = 0, presence_penalty: float = 0):
@@ -68,3 +70,8 @@ class Model:
         print("starting to stream output")
         async for output in stream:
             yield output.outputs[0].text
+
+    # This is a no-op, but it's a good way to wake up the container ahead of time
+    @modal.method()
+    async def wake_up(self):
+        print("Woke up, because I was asked to")
