@@ -6,11 +6,12 @@ export const metadata = {
 
 ## Architecture
 
-Nile is taking a radical approach to database platforms. The goal is to be the best platform for building AI-native B2B companies. Our core insight is that it is possible to push tenant/customer awareness all the way to the page level in Postgres and design it from first principles for the cloud and an AI-powered future. 
+Nile is taking a radical approach to database platforms. The goal is to be the best platform for building AI-native B2B companies. Our core insight is that it is possible to push tenant/customer awareness all the way to the page level in Postgres and design it from first principles for the cloud and an AI-powered future.
 
 ![“Nile Architecture”](/blog/architecture.png)
 
 Nile's architecture includes storage/compute decoupling, page-level tenant isolation, a global routing gateway, and a database clustering technology to provide the following key benefits -
+
 1. Built-in tenant virtualization in Postgres for better data and vector embedding isolation and performance isolation without any RLS or complex permission logic in the application across customers.
 2. Vector embedding with RAG support for all model providers, cost-effective and auto-scales to billions of embeddings across customers
 3. Use one database in your application but get tenant-level backups, customer/tenant insights, and schema management across tenants managed by Nile
