@@ -6,7 +6,7 @@ import Link from "@mui/joy/Link";
 import Alert from "@mui/joy/Alert";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { NileProvider, SignUpForm } from "@niledatabase/react";
+import { NileProvider, UserSignupForm } from "@niledatabase/react";
 
 export default function SignUp() {
   const [error, setError] = useState<string | null>(null);
@@ -16,7 +16,7 @@ export default function SignUp() {
       <Stack gap={2} sx={{ maxWidth: "40ch" }}>
         <Typography level="h1">Sign up</Typography>
         {error && <Alert>{error}</Alert>}
-        <SignUpForm
+        <UserSignupForm
           onSuccess={(response) => push("/tenants")}
           onError={() => {
             setError("an error has occurred.");

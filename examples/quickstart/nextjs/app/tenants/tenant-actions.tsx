@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { configureNile } from "@/lib/NileServer";
 
 export async function createTenant(prevState: any, formData: FormData) {
-  const nile = await configureNile();
+  const nile = await configureNile(cookies().get("authData"), null);
   const tenantName = formData.get("tenantname")?.toString();
   if (!tenantName) {
     return { message: "No tenant name provided" };
@@ -19,10 +19,10 @@ export async function createTenant(prevState: any, formData: FormData) {
   let tenantID = null;
   try {
     // The token is sent to Nile API and the tenant is created for the specific user
-    const tenant = await nile.api.tenants.createTenant(tenantName);
-    if (tenant instanceof Response) {
-      return { message: "no tenant" };
-    }
+    const createTenantResponse = await nile.api.tenants.createTenant({
+      name: tenantName,
+    });
+    const tenant = await createTenantResponse.json();
     tenantID = tenant.id;
     console.log(
       "created tenant with tenantID: ",

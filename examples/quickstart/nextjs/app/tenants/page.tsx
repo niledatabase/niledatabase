@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import styles from "../page.module.css";
+import { getUserName } from "@/lib/AuthUtils";
 import NextLink from "next/link";
+import MUILink from "@mui/joy/Link";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Divider from "@mui/joy/Divider";
@@ -9,9 +11,7 @@ import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
 import { AddForm } from "@/app/tenants/add-form";
-import { nile } from "../api/[...nile]/nile";
-import { redirect } from "next/navigation";
-import SignoutButton from "./SignoutButton";
+import { configureNile } from "@/lib/NileServer";
 
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
@@ -21,21 +21,24 @@ export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 export default async function Page() {
-  const headers = new Headers({ cookie: cookies().toString() });
-  const [tenants, me] = await Promise.all([
-    nile.api.tenants.listTenants(headers),
-    nile.api.users.me(headers),
-  ]);
+  // This is the tenant selector, so we use Nile with just the current user and reset tenant_id if already set
+  // if Nile is already configured for this user, it will reuse the existing Nile instance
+  const nile = await configureNile(cookies().get("authData"), undefined);
+  console.log("showing tenants page for user: " + nile.userId);
+  let tenants: any = [];
 
-  if (tenants instanceof Response) {
-    // signed out
-    if (tenants.status === 401) {
-      return redirect("/");
+  if (nile.userId) {
+    // TODO: Replace with API call to get tenants for user when the SDK supports this
+    const res = await nile.db.query(
+      `SELECT tenants.id, tenants.name
+       FROM tenants
+       JOIN users.tenant_users ON tenants.id = tenant_users.tenant_id
+       WHERE tenant_users.user_id = $1`,
+      [nile.userId]
+    );
+    if (res) {
+      tenants = res.rows;
     }
-    throw Error(await tenants.text());
-  }
-  if (me instanceof Response) {
-    throw Error(await me.text());
   }
 
   return (
@@ -60,16 +63,23 @@ export default async function Page() {
           <List variant="outlined">
             {tenants.map((tenant: any) => (
               <ListItem key={tenant.id}>
-                <NextLink href={`/tenants/${tenant.id}/todos`}>
-                  <ListItemButton>{tenant.name}</ListItemButton>
-                </NextLink>
+                <ListItemButton
+                  component={NextLink}
+                  href={`/tenants/${tenant.id}/todos`}
+                >
+                  {tenant.name}
+                </ListItemButton>
               </ListItem>
             ))}
           </List>
         </CardContent>
         <CardContent>
           <Typography level="body-md" textAlign="center">
-            You are logged in as {me.email} <SignoutButton />
+            {" "}
+            You are logged in as {getUserName(cookies().get("authData"))}{" "}
+            <MUILink href="/logout" component={NextLink} prefetch={false}>
+              (Logout)
+            </MUILink>
           </Typography>
         </CardContent>
       </Card>

@@ -1,9 +1,13 @@
-import "@/app/page.module.css";
+import styles from "@/app/page.module.css";
 import Typography from "@mui/joy/Typography";
+import List from "@mui/joy/List";
+import ListItem from "@mui/joy/ListItem";
+import ListDivider from "@mui/joy/ListDivider";
 import Stack from "@mui/joy/Stack";
 import NextLink from "next/link";
 import MUILink from "@mui/joy/Link";
 import Table from "@mui/joy/Table";
+import { cookies } from "next/headers";
 import { AddForm } from "./add-form";
 import { DoneForm } from "./done-form";
 import { configureNile } from "@/lib/NileServer";
@@ -25,7 +29,10 @@ export default async function Page({
 }) {
   // Here we are getting a connection to a specific tenant database for the current usr
   // if we already got such connection earlier, it will reuse the existing one
-  const tenantNile = await configureNile(params.tenantid);
+  const tenantNile = await configureNile(
+    cookies().get("authData"),
+    params.tenantid
+  );
 
   console.log(
     "showing todos for user " +
@@ -35,12 +42,8 @@ export default async function Page({
   );
   const todos = await tenantNile.db.query("select * from todos order by title"); // no need for where clause because we previously set Nile context
   // Get tenant name doesn't need any input parameters because it uses the tenant ID and user token from the context
-  const tenant = await tenantNile.api.tenants.getTenant();
-
-  if (tenant instanceof Response) {
-    throw new Error("unable to get tenant");
-  }
-
+  const resp = await tenantNile.api.tenants.getTenant();
+  const tenant = await resp.json();
   return (
     <Stack spacing={2} width={"50%"}>
       <Typography
@@ -50,9 +53,9 @@ export default async function Page({
       >
         {tenant.name}&apos;s Todos
       </Typography>
-      <NextLink href="/tenants">
-        <MUILink justifyContent={"center"}>(Back to tenant selection) </MUILink>
-      </NextLink>
+      <MUILink href="/tenants" component={NextLink} justifyContent={"center"}>
+        (Back to tenant selection){" "}
+      </MUILink>
       <AddForm tenantid={tenantNile.tenantId!} />
       <Divider />
       <Table variant="plain" size="lg">

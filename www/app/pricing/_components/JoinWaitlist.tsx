@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Arrow from "@/public/icons/arrow.svg";
 export default function JoinWaitlist() {
   const [submitted, setDidSubmit] = useState(false);
+  console.log(submitted, "what the hell?");
   const ref = useRef<HTMLInputElement>(null);
   return (
     <div
