@@ -25,7 +25,7 @@ Learn about Nile's tenant aware tables and how they provide tenant isolation thr
 
 ## 2. Create a table
 
-Lets imagine that we are building a todo list app that maintains task for each tenant/customer and also uses AI to automatically predict the time required to complete the task.
+Lets imagine that we are building a todo list app that maintains task for each tenant/customer and also uses AI to predict the time required to complete the task.
 
 Let us create our first table that has a tenant_id column and a vector :
 
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS "todos" (
   "tenant_id" uuid,
   "title" varchar(256),
   "estimate" varchar(256),
-  "embedding" vector(768),
+  "embedding" vector(3),
   "complete" boolean,
   CONSTRAINT todos_pkey PRIMARY KEY("tenant_id","id")
 );
@@ -46,7 +46,7 @@ You will see the new table in the panel on the left side of the screen, and you 
 See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
 ![Creating a table in Nile's admin dashboard](/docs/gui-create-table.png)
 
-## 3. Insert tenant
+## 3. Insert first tenant/customer
 
 Nile ships with built-in tables, like `tenants` table that you used earlier. They are covered in more depth in our concepts documentation.
 
@@ -57,79 +57,114 @@ Meanwhile, lets insert a tenant into the built-in tenant table:
 insert into tenants (id, name) values ('d24419bf-6122-4879-afa5-1d9c1b051d72', 'my first customer');
 select * from tenants;
 ```
+## 4. Insert first todo task for the first tenant/customer with vector embeddings
 
-Now, with the new tenant created, lets insert a record to the “todos” table - don’t forget to include the `tenant_id`:
-We will use some synthetic value for the vector embeddings. In the real world, you would get the embeddings from one
-of the model providers.
+
+Now, with the new tenant created, lets insert a record to the “todos” table. For the first task, we simply retrieve the embedding and the estimate from the large language model using the title of the task. 
+Let us assume we got the embedding and the estimate from the model as [1,2,3] and 1h
 
 ```sql
--- adding a todo item for this tenant. We calculate the 
-insert into todos (tenant_id, title, estimate, embedding, complete) values (d24419bf-6122-4879-afa5-1d9c1b051d72, 'feed my cat', '2h', [1,2,3], false);
+-- adding a todo item for this tenant. 
 
-SELECT tenants.name, title, complete
-FROM todos join tenants on tenants.id = todos.tenant_id;
+insert into todos (tenant_id, title, estimate, embedding, complete) values ('d24419bf-6122-4879-afa5-1d9c1b051d72', 'feed my cat', '1h', '[1,2,3]', false);
+
+SELECT tenants.name, title, embedding, estimate, complete
+FROM todoscorrect join tenants on tenants.id = todoscorrect.tenant_id;
 ```
 
 If all went well, you’ll see the first todo of your first customer 🏆
 
 ```
-name                 title          complete
----------------------------------------------
-my first customer    feed my cat    f
+name                 title          embedding          estimate       complete
+-------------------------------------------------------------------------------
+my first customer    feed my cat     [1,2,3]             1h            false
 ```
 
-## 4. Add another tenant
+## 5. Add another tenant/customer and the first todo task for it with vector embeddings
 
 It is now time for our second customer and their todo item:
 
 ```sql
 -- creating my second tenant
-insert into tenants (name) values ('different customer');
+insert into tenants (id, name) values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'second customer');
 select * from tenants;
 ```
 
+Insert the first todo item for this tenant/customer
 ```sql
 -- a new todo item for our second tenant
-insert into todos (tenant_id, title, complete) values ('<tenant_id_of_different_customer>',
-'take out the trash', false);
+insert into todos (tenant_id, title, estimate, embedding, complete) values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'take out the trash', '2h', '[2,3,4]', false);
 
-SELECT tenants.name, title, complete
-FROM todos join tenants on tenants.id = todos.tenant_id;
+SELECT tenants.name, title, embedding, estimate, complete
+FROM todoscorrect join tenants on tenants.id = todoscorrect.tenant_id;
 ```
 
 If all went well, you now see the todo items for both customers:
 
 ```
-name                 title                 complete
-----------------------------------------------------
-my first customer    feed my cat           f
-different customer   take out the trash    f
+name                 title                 embedding         estimate       complete
+-------------------------------------------------------------------------------------
+my first customer    feed my cat           [1,2,3]             1h             false
+second customer   take out the trash       [2,3,4]             2h             false
 ```
 
-## 5. Tenant isolation
+## 6. Tenant isolation
 
 Nile goes a step further and provides tenant isolation. You can set the session to a specific tenant, and every query that follows will only return data that belongs to this specific tenant.
 
-Think of it as querying a virtual database dedicated to this one specific tenant.
+Think of it as querying a virtual database dedicated to a tenant.
 
 You can select a tenant either from the drop-down list next to the ▶️ button. Or by setting the session parameter in SQL.
 
 ```sql
-select * from tenants;
 -- set context to isolate query to a specific tenant DB
 -- our example uses the second tenant here
-set nile.tenant_id = '<tenant_id>';
+set nile.tenant_id = '7e93c45f-fe65-4f26-8ab6-922850fa4c7a';
 
-SELECT tenants.name, title, complete
-FROM todos join tenants on tenants.id = todos.tenant_id;
+SELECT tenants.name, title, embedding, estimate, complete
+FROM todoscorrect join tenants on tenants.id = todoscorrect.tenant_id;
 ```
 
-If all went well, you’ll see the todo task for “different customer” and not the first customer:
+If all went well, you’ll see the todo task for second customer” and not the first customer:
 
 ```
-name                 title                 complete
----------------------------------------------------
-different customer   take out the trash    f
+name                 title                 embedding         estimate       complete
+-------------------------------------------------------------------------------------
+second customer   take out the trash    [2,3,4]             2h             false
+```
+
+## 7. Inserting second todo item for the second customer using vector similarity and enforcing tenant isolation
+
+The embedding for the new todo task is calculated first from the LLM (let's say this is [2,3,4]). We will get similar tasks for the second customer based on the new task's embedding. 
+Note that we don't need to specify the second customer in the query since the session is already pointing to the second customer's virtual DB.
+```sql
+-- Note the tenant context is already set to the second customer and the session points to that tenant's virtual DB
+
+SELECT title, estimate FROM todos WHERE embedding <-> '[2,3,4]' < 1;
+```
+title               estimate       complete
+-------------------------------------------------------------------------------------
+take out the trash    2h             false
+
+
+We can now ask the LLM to estimate the time for the new task by providing the estimates for similar tasks for the second customer
+Assume the LLM returned 1.5h.
+
+We can now insert the new task for the second customer.
+
+```sql
+-- a new todo item for our second tenant
+insert into todos (tenant_id, title, estimate, embedding, complete) values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'clean the house', '1.5h', '[2,3,4]', false);
+
+SELECT tenants.name, title, embedding, estimate, complete
+FROM todoscorrect join tenants on tenants.id = todoscorrect.tenant_id;
+```
+Note that you only see the two tasks for the second customer. This is because the session is still pointing to the second customer's virtual DB.
+```
+name                 title                 embedding         estimate       complete
+-------------------------------------------------------------------------------------
+second customer   take out the trash       [2,3,4]             2h             false
+second customer   clean the house          [2,3,4]             2h             false
 ```
 
 ## 6. Looking good! What's next?
