@@ -5,11 +5,12 @@ import Add from "@mui/icons-material/Add";
 import Input from "@mui/joy/Input";
 import ListItermDecorator from "@mui/joy/ListItemDecorator";
 import Box from "@mui/joy/Box";
+// @ts-expect-error -- useFormState is new and lacks type definitions
+import { experimental_useFormState as useFormState } from "react-dom";
 import { addTodo } from "./todo-actions";
-import { useFormState } from "react-dom";
 
 const initialState = {
-  message: "",
+  message: null,
 };
 
 export function AddForm({ tenantid }: { tenantid: string }) {
@@ -24,7 +25,8 @@ export function AddForm({ tenantid }: { tenantid: string }) {
       style={{ display: "flex", flexWrap: "nowrap", width: "100%" }}
     >
       <IconButton type="submit">
-        <Add />
+        {" "}
+        <Add />{" "}
       </IconButton>
       <Input
         placeholder="Add task"

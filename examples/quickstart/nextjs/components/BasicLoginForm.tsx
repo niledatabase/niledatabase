@@ -8,7 +8,7 @@ import Alert from "@mui/joy/Alert";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { SignInForm, NileProvider } from "@niledatabase/react";
+import { UserLoginForm, NileProvider } from "@niledatabase/react";
 
 export default function BasicLoginForm() {
   const { push } = useRouter();
@@ -19,8 +19,7 @@ export default function BasicLoginForm() {
         <Stack gap={2} justifyContent="center" alignItems="center">
           {/* Nile's Login component calls the auth API route, which will set the right cookies. So we just need to redirect to the right page. */}
           {error && <Alert>{error}</Alert>}
-          <SignInForm
-            callbackUrl="/tenants"
+          <UserLoginForm
             onSuccess={(resp) => push("/tenants")}
             onError={(resp) => {
               setError("An error has occurred. " + resp.message);
