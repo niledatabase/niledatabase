@@ -25,14 +25,20 @@ Learn about Nile's tenant aware tables and how they provide tenant isolation thr
 
 ## 2. Create a table
 
-Lets imagine that we are building a todo list app and create our first table:
+Lets imagine that we are building a todo list app that maintains task for each tenant/customer and also uses AI to automatically predict the time required to complete the task.
+
+Let us create our first table that has a tenant_id column and a vector :
 
 ```sql
-create table todos (
-    id uuid DEFAULT (gen_random_uuid()),
-    tenant_id uuid,
-    title varchar(256),
-    complete boolean);
+CREATE TABLE IF NOT EXISTS "todos" (
+  "id" uuid DEFAULT gen_random_uuid(),
+  "tenant_id" uuid,
+  "title" varchar(256),
+  "estimate" varchar(256),
+  "embedding" vector(768),
+  "complete" boolean,
+  CONSTRAINT todos_pkey PRIMARY KEY("tenant_id","id")
+);
 ```
 
 You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns. If you are in `psql`, you can do `\d todos` in order to view the schema.
@@ -47,16 +53,18 @@ Nile ships with built-in tables, like `tenants` table that you used earlier. The
 Meanwhile, lets insert a tenant into the built-in tenant table:
 
 ```sql
--- Creating my first tenant
-insert into tenants (name) values ('my first customer');
+-- Creating the first tenant
+insert into tenants (id, name) values ('d24419bf-6122-4879-afa5-1d9c1b051d72', 'my first customer');
 select * from tenants;
 ```
 
 Now, with the new tenant created, lets insert a record to the “todos” table - don’t forget to include the `tenant_id`:
+We will use some synthetic value for the vector embeddings. In the real world, you would get the embeddings from one
+of the model providers.
 
 ```sql
--- adding a todo item for this tenant
-insert into todos (tenant_id, title, complete) values ('<tenant_id>', 'feed my cat', false);
+-- adding a todo item for this tenant. We calculate the 
+insert into todos (tenant_id, title, estimate, embedding, complete) values (d24419bf-6122-4879-afa5-1d9c1b051d72, 'feed my cat', '2h', [1,2,3], false);
 
 SELECT tenants.name, title, complete
 FROM todos join tenants on tenants.id = todos.tenant_id;
