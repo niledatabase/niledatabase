@@ -133,7 +133,7 @@ name                 title                 embedding         estimate       comp
 second customer   take out the trash    [0.8,0.2,0.6]             2h             false
 ```
 
-## 7. Inserting second todo item for the second customer using vector similarity and enforcing tenant isolation
+## 7. Inserting second todo item for the second customer using vector similarity and tenant isolation
 
 The embedding for the new todo task is calculated first from the LLM (let's say this is [0.78,0.18,0.62]). We will get similar tasks for the second customer based on the new task's embedding. 
 Note that we don't need to specify the second customer in the query since the session is already pointing to the second customer's virtual DB.
@@ -142,10 +142,12 @@ Note that we don't need to specify the second customer in the query since the se
 
 SELECT title, estimate FROM todos WHERE embedding <-> '[0.78,0.18,0.62]' < 1;
 ```
+
+```
 title               estimate       complete
 -------------------------------------------------------------------------------------
 take out the trash    2h             false
-
+```
 
 We can now ask the LLM to estimate the time for the new task by providing the estimates for similar tasks for the second customer
 Assume the LLM returned 1.5h.
@@ -167,7 +169,7 @@ second customer   take out the trash       [0.8,0.2,0.6]                2h      
 second customer   clean the house          [0.78,0.18,0.62]             2h             false
 ```
 
-## 6. Looking good! What's next?
+## 8. Looking good! What's next?
 
 🏆 Tada! You have learned the key Nile concepts. And it only took 5 minutes.
 
