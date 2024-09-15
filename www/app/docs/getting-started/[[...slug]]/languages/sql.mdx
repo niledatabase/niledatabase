@@ -93,7 +93,7 @@ select * from tenants;
 Insert the first todo item for this tenant/customer
 ```sql
 -- a new todo item for our second tenant
-insert into todos (tenant_id, title, estimate, embedding, complete) values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'take out the trash', '2h', '[2,3,4]', false);
+insert into todos (tenant_id, title, estimate, embedding, complete) values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'take out the trash', '2h', '[0.8,0.2,0.6]', false);
 
 SELECT tenants.name, title, embedding, estimate, complete
 FROM todoscorrect join tenants on tenants.id = todoscorrect.tenant_id;
@@ -102,10 +102,10 @@ FROM todoscorrect join tenants on tenants.id = todoscorrect.tenant_id;
 If all went well, you now see the todo items for both customers:
 
 ```
-name                 title                 embedding         estimate       complete
--------------------------------------------------------------------------------------
-my first customer    feed my cat           [1,2,3]             1h             false
-second customer   take out the trash       [2,3,4]             2h             false
+name                 title                 embedding              estimate       complete
+-------------------------------------------------------------------------------------------
+my first customer    feed my cat           [1,2,3]                   1h             false
+second customer   take out the trash       [0.8,0.2,0.6]             2h             false
 ```
 
 ## 6. Tenant isolation
@@ -130,17 +130,17 @@ If all went well, you’ll see the todo task for second customer” and not the 
 ```
 name                 title                 embedding         estimate       complete
 -------------------------------------------------------------------------------------
-second customer   take out the trash    [2,3,4]             2h             false
+second customer   take out the trash    [0.8,0.2,0.6]             2h             false
 ```
 
 ## 7. Inserting second todo item for the second customer using vector similarity and enforcing tenant isolation
 
-The embedding for the new todo task is calculated first from the LLM (let's say this is [2,3,4]). We will get similar tasks for the second customer based on the new task's embedding. 
+The embedding for the new todo task is calculated first from the LLM (let's say this is [0.78,0.18,0.62]). We will get similar tasks for the second customer based on the new task's embedding. 
 Note that we don't need to specify the second customer in the query since the session is already pointing to the second customer's virtual DB.
 ```sql
 -- Note the tenant context is already set to the second customer and the session points to that tenant's virtual DB
 
-SELECT title, estimate FROM todos WHERE embedding <-> '[2,3,4]' < 1;
+SELECT title, estimate FROM todos WHERE embedding <-> '[0.78,0.18,0.62]' < 1;
 ```
 title               estimate       complete
 -------------------------------------------------------------------------------------
@@ -154,17 +154,17 @@ We can now insert the new task for the second customer.
 
 ```sql
 -- a new todo item for our second tenant
-insert into todos (tenant_id, title, estimate, embedding, complete) values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'clean the house', '1.5h', '[2,3,4]', false);
+insert into todos (tenant_id, title, estimate, embedding, complete) values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'clean the house', '1.5h', '[0.78,0.18,0.62]', false);
 
 SELECT tenants.name, title, embedding, estimate, complete
 FROM todoscorrect join tenants on tenants.id = todoscorrect.tenant_id;
 ```
 Note that you only see the two tasks for the second customer. This is because the session is still pointing to the second customer's virtual DB.
 ```
-name                 title                 embedding         estimate       complete
--------------------------------------------------------------------------------------
-second customer   take out the trash       [2,3,4]             2h             false
-second customer   clean the house          [2,3,4]             2h             false
+name                 title                 embedding                 estimate       complete
+----------------------------------------------------------------------------------------------
+second customer   take out the trash       [0.8,0.2,0.6]                2h             false
+second customer   clean the house          [0.78,0.18,0.62]             2h             false
 ```
 
 ## 6. Looking good! What's next?
@@ -176,6 +176,5 @@ You can learn more about Nile's tenant virtualization features in the following 
 - [Tenant management](/docs/tenant-virtualization/tenant-management)
 - [Tenant isolation](/docs/tenant-virtualization/tenant-isolation)
 
-{/* link to "how to connect" TBD */}
 Next, you will probably want to learn how to use Nile for building an app in your favorite language.
 Check out our [Getting Started](/docs/getting-started) guides for more information.
