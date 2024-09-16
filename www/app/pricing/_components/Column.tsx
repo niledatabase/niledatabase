@@ -123,6 +123,7 @@ type Props = {
   sharing?: boolean;
   noColdStart?: boolean;
   branches: string;
+  crosstenantanalytics?: boolean;
   globalplacement:string;
   soc2?: boolean;
   tenantOverrides?: boolean;
