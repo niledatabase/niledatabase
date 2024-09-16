@@ -87,6 +87,7 @@ export default function Pricing() {
                       <Line text="SLA" />
                       <Line text="Region availability" />
                       <Line text="Autoscaling" />
+                      <Line text="Cross tenant analytics" />
                       <Line text="# of connections" />
                       <Line text="Workspace sharing" />
                       <Line text="No cold start" />

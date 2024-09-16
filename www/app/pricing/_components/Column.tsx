@@ -150,6 +150,7 @@ export default function Column(props: Props) {
     tenantBack,
     regionAvailable = "All",
     autoscale = true,
+    crosstenantanalytics = true,
     connections,
     sharing = false,
     noColdStart = true,
@@ -207,6 +208,7 @@ export default function Column(props: Props) {
         <Line text={sla} header="SLA" />
         <Line text={regionAvailable} header="Region availability" />
         <Indicator value={autoscale} header="Autoscaling" />
+        <Indicator value={crosstenantanalytics} header="Crosstenantanalytics" />
         <Line text={connections} header="# of connections" />
         <Indicator value={sharing} header="Workspace sharing" />
         <Indicator value={noColdStart} header="No cold start" />
