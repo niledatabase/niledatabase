@@ -106,6 +106,11 @@ export default function Pricing() {
                           Coming soon
                         </div>
                       </Line>
+                      <Line text="Global Placement">
+                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
+                          Coming soon
+                        </div>
+                      </Line>
                       <Line text="SOC 2" hideDivider>
                         <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
                           Coming soon

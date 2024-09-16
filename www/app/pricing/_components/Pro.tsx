@@ -19,6 +19,7 @@ export default function Pro() {
       sla="99.95%"
       sharing
       branches="50 branches"
+      globalplacement="2 regions"
       tenantInsights="2 weeks retention"
       emailSla
       startButton={

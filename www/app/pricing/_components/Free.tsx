@@ -15,6 +15,7 @@ export default function Free() {
       storageSub="$1.50 per additional GB"
       connections="1,000"
       branches="One branch"
+      globalplacement="One region"
       tenantInsights="1 day retention"
       startButton={
         <Link

@@ -123,6 +123,7 @@ type Props = {
   sharing?: boolean;
   noColdStart?: boolean;
   branches: string;
+  globalplacement:string;
   soc2?: boolean;
   tenantOverrides?: boolean;
   tenantInsights: string;
@@ -155,6 +156,7 @@ export default function Column(props: Props) {
     sharing = false,
     noColdStart = true,
     branches,
+    globalplacement,
     soc2 = false,
     tenantOverrides = true,
     tenantInsights,
@@ -239,6 +241,17 @@ export default function Column(props: Props) {
           header={
             <div className="flex flex-col items-start">
               <div className="leading-[24px] opacity-70">Tenant level backups</div>
+              <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
+                Coming soon
+              </div>
+            </div>
+          }
+        />
+        <DoubleHeight
+          text={globalplacement}
+          header={
+            <div className="flex flex-col items-start">
+              <div className="leading-[24px] opacity-70">Global placement</div>
               <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
                 Coming soon
               </div>
