@@ -114,6 +114,7 @@ type Props = {
   tenants?: string;
   vectors?: string;
   isolation?: boolean;
+  pooling?: boolean;
   sla?: string;
   dbBack?: string | null;
   tenantBack?: string | null;
@@ -144,6 +145,7 @@ export default function Column(props: Props) {
     tenants = "Unlimited",
     vectors = "Unlimited",
     isolation = true,
+    pooling = true,
     computeTop,
     computeSub,
     storageTop,
@@ -215,6 +217,7 @@ export default function Column(props: Props) {
         <Indicator value={autoscale} header="Autoscaling" />
         <Indicator value={crosstenantanalytics} header="Crosstenantanalytics" />
         <Line text={connections} header="# of connections" />
+        <Indicator value={pooling} header="Connection pooling" />
         <Indicator value={sharing} header="Workspace sharing" />
         <Indicator value={noColdStart} header="No cold start" />
         <DoubleHeight

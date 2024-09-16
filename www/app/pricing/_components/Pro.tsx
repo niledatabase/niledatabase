@@ -15,7 +15,7 @@ export default function Pro() {
       storageSub="$1.00 per additional GB"
       dbBack="1 week"
       tenantBack="1 week"
-      connections="10,000"
+      connections="10,000 per DB"
       sla="99.95%"
       sharing
       branches="50 branches"

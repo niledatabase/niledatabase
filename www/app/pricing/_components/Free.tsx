@@ -13,7 +13,7 @@ export default function Free() {
       computeSub="$0.06 per million additional tokens"
       storageTop="1 GB"
       storageSub="$1.50 per additional GB"
-      connections="1,000"
+      connections="200 per DB"
       branches="One branch"
       globalplacement="One region"
       tenantInsights="1 day retention"
