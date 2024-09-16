@@ -14,6 +14,7 @@ export default function Scale() {
       storageTop="50 GB"
       storageSub="$0.75 per additional GB"
       dbBack="1 week"
+      tenantBack="1 week"
       connections="100,000"
       sla="99.99%"
       sharing

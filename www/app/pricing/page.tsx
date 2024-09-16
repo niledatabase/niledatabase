@@ -85,17 +85,22 @@ export default function Pricing() {
                         <div className="leading-[44px] opacity-70">Storage</div>
                       </Line>
                       <Line text="SLA" />
-                      <Line text="DB Level backups">
-                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
-                          Coming soon
-                        </div>
-                      </Line>
                       <Line text="Region availability" />
                       <Line text="Autoscaling" />
                       <Line text="# of connections" />
                       <Line text="Workspace sharing" />
                       <Line text="No cold start" />
                       <Line text="Branching">
+                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
+                          Coming soon
+                        </div>
+                      </Line>
+                      <Line text="DB Level backups">
+                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
+                          Coming soon
+                        </div>
+                      </Line>
+                      <Line text="Tenant Level backups">
                         <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
                           Coming soon
                         </div>

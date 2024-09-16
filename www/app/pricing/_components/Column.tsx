@@ -116,6 +116,7 @@ type Props = {
   isolation?: boolean;
   sla?: string;
   dbBack?: string | null;
+  tenantBack?: string | null;
   regionAvailable?: string;
   autoscale?: boolean;
   connections: string;
@@ -146,6 +147,7 @@ export default function Column(props: Props) {
     storageSub,
     sla,
     dbBack,
+    tenantBack,
     regionAvailable = "All",
     autoscale = true,
     connections,
@@ -203,6 +205,22 @@ export default function Column(props: Props) {
         />
         <DoubleLine text={storageTop} lower={storageSub} header="Storage" />
         <Line text={sla} header="SLA" />
+        <Line text={regionAvailable} header="Region availability" />
+        <Indicator value={autoscale} header="Autoscaling" />
+        <Line text={connections} header="# of connections" />
+        <Indicator value={sharing} header="Workspace sharing" />
+        <Indicator value={noColdStart} header="No cold start" />
+        <DoubleHeight
+          text={branches}
+          header={
+            <div className="flex flex-col items-start">
+              <div className="leading-[24px] opacity-70">Branching</div>
+              <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
+                Coming soon
+              </div>
+            </div>
+          }
+        />
         <DoubleHeight
           text={dbBack}
           header={
@@ -214,16 +232,11 @@ export default function Column(props: Props) {
             </div>
           }
         />
-        <Line text={regionAvailable} header="Region availability" />
-        <Indicator value={autoscale} header="Autoscaling" />
-        <Line text={connections} header="# of connections" />
-        <Indicator value={sharing} header="Workspace sharing" />
-        <Indicator value={noColdStart} header="No cold start" />
         <DoubleHeight
-          text={branches}
+          text={tenantBack}
           header={
             <div className="flex flex-col items-start">
-              <div className="leading-[24px] opacity-70">Branching</div>
+              <div className="leading-[24px] opacity-70">Tenant level backups</div>
               <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
                 Coming soon
               </div>
