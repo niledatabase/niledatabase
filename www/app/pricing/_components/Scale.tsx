@@ -19,6 +19,7 @@ export default function Scale() {
       sla="99.99%"
       sharing
       branches="Unlimited"
+      provisionedcompute="upto 8 VCPU"
       globalplacement="5 regions"
       soc2
       tenantInsights="2 months retention"

@@ -123,6 +123,7 @@ type Props = {
   sharing?: boolean;
   noColdStart?: boolean;
   branches: string;
+  provisionedcompute?: string;
   crosstenantanalytics?: boolean;
   globalplacement:string;
   soc2?: boolean;
@@ -157,6 +158,7 @@ export default function Column(props: Props) {
     sharing = false,
     noColdStart = true,
     branches,
+    provisionedcompute,
     globalplacement,
     soc2 = false,
     tenantOverrides = true,
@@ -215,6 +217,17 @@ export default function Column(props: Props) {
         <Line text={connections} header="# of connections" />
         <Indicator value={sharing} header="Workspace sharing" />
         <Indicator value={noColdStart} header="No cold start" />
+        <DoubleHeight
+          text={provisionedcompute}
+          header={
+            <div className="flex flex-col items-start">
+              <div className="leading-[24px] opacity-70">Provisioned Compute</div>
+              <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
+                Coming soon
+              </div>
+            </div>
+          }
+        />
         <DoubleHeight
           text={branches}
           header={
