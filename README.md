@@ -25,7 +25,8 @@ This is a great resource to read more about Nile in 3 minutes https://www.thenil
 - Fully integrated ready to use UI components
 - Extensive support for popular Postgres extensions
 
-<img width="1437" alt="Screen Shot 2023-10-15 at 5 52 35 PM" src="https://github.com/niledatabase/niledatabase/assets/2977624/42668baf-0067-4b94-a3b5-65bfa33a5aeb">
+<img width="1438" alt="Screen Shot 2024-09-16 at 1 35 05 PM" src="https://github.com/user-attachments/assets/51bdcb1f-5981-4589-aae7-3f2ed72c723c">
+
 
 ## Documentation
 
