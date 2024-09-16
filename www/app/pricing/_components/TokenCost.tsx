@@ -10,7 +10,7 @@ export default function TokenCost({ header }: { header: string }) {
           <div className="opacity-70 w-2/3">Query</div>
           <div className="opacity-70 flex flex-row w-1/3">
             <div className="flex flex-col w-1/2">
-              <div>Avg compute tokens</div>
+              <div>Avg query tokens</div>
               <div>for one million queries</div>
             </div>
             <div className="flex flex-col w-1/2">

@@ -8,13 +8,14 @@ export default function Free() {
     <Column
       tier={"Free"}
       price={0}
-      tierSizzle={"For prototyping or side projects"}
+      tierSizzle={"For prototyping or side projects. No pauses, always available"}
       computeTop="50 million query tokens"
-      computeSub="$0.3 per million additional tokens"
+      computeSub="$0.06 per million additional tokens"
       storageTop="1 GB"
       storageSub="$1.50 per additional GB"
-      connections="1,000"
+      connections="500"
       branches="One branch"
+      globalplacement="One region"
       tenantInsights="1 day retention"
       startButton={
         <Link

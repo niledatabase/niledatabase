@@ -91,19 +91,35 @@ export default function Pricing() {
                       <Line>
                         <div className="leading-[44px] opacity-70">Storage</div>
                       </Line>
-
+                      <Line text="SLA" />
+                      <Line text="Region availability" />
+                      <Line text="Autoscaling" />
+                      <Line text="Cross tenant analytics" />
+                      <Line text="# of connections" />
+                      <Line text="Connection pooling" />
+                      <Line text="Workspace sharing" />
+                      <Line text="No cold start" />
+                      <Line text="Provisioned compute">
+                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
+                          Coming soon
+                        </div>
+                      </Line>
+                      <Line text="Branching">
+                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
+                          Coming soon
+                        </div>
+                      </Line>
                       <Line text="DB Level backups">
                         <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
                           Coming soon
                         </div>
                       </Line>
-                      <Line text="Region availability" />
-                      <Line text="Autoscaling" />
-                      <Line text="# of connections" />
-                      <Line text="SLA" />
-                      <Line text="Workspace sharing" />
-                      <Line text="No cold start" />
-                      <Line text="Branching">
+                      <Line text="Tenant Level backups">
+                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
+                          Coming soon
+                        </div>
+                      </Line>
+                      <Line text="Global Placement">
                         <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
                           Coming soon
                         </div>
@@ -179,28 +195,28 @@ export default function Pricing() {
               </div>
               <div className="opacity-70 text-[16px]">
                 Currently, we support usage-based pricing and query tokens let
-                you apy exactly for hte resources a query tool. The exact CPU
+                you pay exactly for the resources a query took. The exact CPU
                 and memory utilized by a query are abstracted, and users only
-                need to care about query tokens, which normalizer the resource
+                need to care about query tokens, which normalize the resource
                 consumed by queries executed on the serverless compute on Nile.
               </div>
             </div>
           </div>
           <div className="flex flex-col gap-12">
             <div>
-              <TokenCost header="Reading rows to a tenant" />
+              <TokenCost header="Reading rows from a tenant" />
               <TableRow
-                col1="Reading one row from table"
+                col1="Reading one row of 64 bytes"
                 col2="30"
                 col3="$0.1"
               />
               <TableRow
-                col1="Reading 10 rows from table"
+                col1="Reading one row of 256 bytes"
                 col2="30"
                 col3="$0.1"
               />
               <TableRow
-                col1="Reading 100 rows from table"
+                col1="Reading one row of 1024 bytes"
                 col2="30"
                 col3="$0.1"
               />
@@ -208,35 +224,35 @@ export default function Pricing() {
             <div>
               <TokenCost header="Writing rows to a tenant" />
               <TableRow
-                col1="Writing one row into table"
+                col1="Writing one row of 64 bytes"
                 col2="30"
                 col3="$0.1"
               />
               <TableRow
-                col1="Writing 10 rows into table"
+                col1="Writing one row of 256 bytes"
                 col2="30"
                 col3="$0.1"
               />
               <TableRow
-                col1="Writing 100 rows into table"
+                col1="Writing one row of 1024 bytes"
                 col2="30"
                 col3="$0.1"
               />
             </div>
             <div>
-              <TokenCost header="Scanning rows to a tenant" />
+              <TokenCost header="Scanning rows of a tenant" />
               <TableRow
-                col1="Scanning 10 rows across tenants"
+                col1="Scanning 1000 rows of 64 bytes, return 1"
                 col2="30"
                 col3="$0.1"
               />
               <TableRow
-                col1="Scanning 100 rows across tenants"
+                col1="Scanning 1000 rows of 256 bytes, return 1"
                 col2="30"
                 col3="$0.1"
               />
               <TableRow
-                col1="Scanning 1000 rows across tenants"
+                col1="Scanning 1000 rows of 1024 bytes, return 1"
                 col2="30"
                 col3="$0.1"
               />

@@ -114,14 +114,19 @@ type Props = {
   tenants?: string;
   vectors?: string;
   isolation?: boolean;
+  pooling?: boolean;
+  sla?: string;
   dbBack?: string | null;
+  tenantBack?: string | null;
   regionAvailable?: string;
   autoscale?: boolean;
   connections: string;
-  sla?: string;
   sharing?: boolean;
   noColdStart?: boolean;
   branches: string;
+  provisionedcompute?: string;
+  crosstenantanalytics?: boolean;
+  globalplacement:string;
   soc2?: boolean;
   tenantOverrides?: boolean;
   tenantInsights: string;
@@ -140,18 +145,23 @@ export default function Column(props: Props) {
     tenants = "Unlimited",
     vectors = "Unlimited",
     isolation = true,
+    pooling = true,
     computeTop,
     computeSub,
     storageTop,
     storageSub,
+    sla,
     dbBack,
+    tenantBack,
     regionAvailable = "All",
     autoscale = true,
+    crosstenantanalytics = true,
     connections,
-    sla,
     sharing = false,
     noColdStart = true,
     branches,
+    provisionedcompute,
+    globalplacement,
     soc2 = false,
     tenantOverrides = true,
     tenantInsights,
@@ -202,6 +212,36 @@ export default function Column(props: Props) {
           header="Serverless compute"
         />
         <DoubleLine text={storageTop} lower={storageSub} header="Storage" />
+        <Line text={sla} header="SLA" />
+        <Line text={regionAvailable} header="Region availability" />
+        <Indicator value={autoscale} header="Autoscaling" />
+        <Indicator value={crosstenantanalytics} header="Crosstenantanalytics" />
+        <Line text={connections} header="# of connections" />
+        <Indicator value={pooling} header="Connection pooling" />
+        <Indicator value={sharing} header="Workspace sharing" />
+        <Indicator value={noColdStart} header="No cold start" />
+        <DoubleHeight
+          text={provisionedcompute}
+          header={
+            <div className="flex flex-col items-start">
+              <div className="leading-[24px] opacity-70">Provisioned Compute</div>
+              <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
+                Coming soon
+              </div>
+            </div>
+          }
+        />
+        <DoubleHeight
+          text={branches}
+          header={
+            <div className="flex flex-col items-start">
+              <div className="leading-[24px] opacity-70">Branching</div>
+              <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
+                Coming soon
+              </div>
+            </div>
+          }
+        />
         <DoubleHeight
           text={dbBack}
           header={
@@ -213,17 +253,22 @@ export default function Column(props: Props) {
             </div>
           }
         />
-        <Line text={regionAvailable} header="Region availability" />
-        <Indicator value={autoscale} header="Autoscaling" />
-        <Line text={connections} header="# of connections" />
-        <Line text={sla} header="SLA" />
-        <Indicator value={sharing} header="Workspace sharing" />
-        <Indicator value={noColdStart} header="No cold start" />
         <DoubleHeight
-          text={branches}
+          text={tenantBack}
           header={
             <div className="flex flex-col items-start">
-              <div className="leading-[24px] opacity-70">Branching</div>
+              <div className="leading-[24px] opacity-70">Tenant level backups</div>
+              <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
+                Coming soon
+              </div>
+            </div>
+          }
+        />
+        <DoubleHeight
+          text={globalplacement}
+          header={
+            <div className="flex flex-col items-start">
+              <div className="leading-[24px] opacity-70">Global placement</div>
               <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
                 Coming soon
               </div>

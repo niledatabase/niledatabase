@@ -8,16 +8,19 @@ export default function Pro() {
     <Column
       tier={"Pro"}
       price={15}
-      tierSizzle={"For prototyping or side projects"}
+      tierSizzle={"For launching production workloads. With production SLA"}
       computeTop="150 million query tokens"
-      computeSub="$0.25 per million additional tokens"
+      computeSub="$0.05 per million additional tokens"
       storageTop="5 GB"
       storageSub="$1.00 per additional GB"
       dbBack="1 week"
+      tenantBack="1 week"
       connections="10,000"
       sla="99.95%"
       sharing
       branches="50 branches"
+      provisionedcompute="upto 4 VCPU"
+      globalplacement="2 regions"
       tenantInsights="2 weeks retention"
       emailSla
       startButton={

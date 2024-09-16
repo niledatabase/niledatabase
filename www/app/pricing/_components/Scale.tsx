@@ -8,16 +8,19 @@ export default function Scale() {
     <Column
       tier={"Scale"}
       price={350}
-      tierSizzle={"For scale, more security or global presence"}
+      tierSizzle={"For scale, more security and global presence"}
       computeTop="500 million query tokens"
-      computeSub="$0.22 per million additional tokens"
+      computeSub="$0.04 per million additional tokens"
       storageTop="50 GB"
       storageSub="$0.75 per additional GB"
       dbBack="1 week"
+      tenantBack="1 week"
       connections="100,000"
       sla="99.99%"
       sharing
       branches="Unlimited"
+      provisionedcompute="upto 8 VCPU"
+      globalplacement="5 regions"
       soc2
       tenantInsights="2 months retention"
       emailSla
