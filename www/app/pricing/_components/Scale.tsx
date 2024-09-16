@@ -8,7 +8,7 @@ export default function Scale() {
     <Column
       tier={"Scale"}
       price={350}
-      tierSizzle={"For scale, more security or global presence"}
+      tierSizzle={"For scale, more security and global presence"}
       computeTop="500 million query tokens"
       computeSub="$0.04 per million additional tokens"
       storageTop="50 GB"

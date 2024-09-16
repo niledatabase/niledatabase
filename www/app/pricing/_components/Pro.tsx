@@ -8,7 +8,7 @@ export default function Pro() {
     <Column
       tier={"Pro"}
       price={15}
-      tierSizzle={"For prototyping or side projects"}
+      tierSizzle={"For launching production workloads. With production SLA"}
       computeTop="150 million query tokens"
       computeSub="$0.05 per million additional tokens"
       storageTop="5 GB"
