@@ -18,8 +18,7 @@ export default [
     content: (
       <>
         Yes, most limits are per workspace. This enables us to provide unlimited DBs for free tier
-        and you can decide how to distributed the total available limits across the DBs. There are
-        some limits that are at the DB level like the connection count.
+        and you can decide how to distributed the total available limits across the DBs.
       </>
     ),
   },
