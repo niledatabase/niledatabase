@@ -40,7 +40,6 @@ export default function Pricing() {
                 <div className="bg-gradient-text bg-clip-text text-transparent text-[24px] leading-[32px] w-fit">
                   $0/month
                 </div>
-<<<<<<< HEAD
                 <JoinWaitlist />
                 <div className="opacity-60 text-lg">Limit of 10 databases</div>
                 <div className="bg-divider-bold h-px my-6" />
@@ -56,100 +55,6 @@ export default function Pricing() {
                     <Bullet>Social & Enterprise Auth</Bullet>
                     <Bullet>Community & email support</Bullet>
                   </ul>
-=======
-                <div className="absolute -top-32 right-20 -z-10 rotate-[3deg] hidden lg:flex">
-                  <div className="gradientBorderGray w-[254px] bg-gradient py-11 px-6 rounded-[7px]">
-                    <div className="bg-gradient-text bg-clip-text text-transparent text-[20px] w-fit justify-center">
-                      <div className="text-center">Limitless vector</div>
-                      <div className="text-center">embeddings</div>
-                    </div>
-                  </div>
-                </div>
-                <PlanPicker />
-                <div className="border-r border-r-zinc-700 w-1/4 hidden lg:flex">
-                  <div className="p-5">
-                    <div className="pt-[240px] text-lg">
-                      <DatabaseRow />
-                    </div>
-                    <div className="flex flex-col gap-4 justify-center">
-                      <Line text="# of databases" />
-                      <Line text="# of tenant DBs" />
-                      <Line text="# of vector embeddings" />
-                      <Line text="Tenant isolation" />
-                      <Line>
-                        <div className="leading-[44px] opacity-70">
-                          Serverless compute
-                        </div>
-                      </Line>
-                      <Line>
-                        <div className="leading-[44px] opacity-70">Storage</div>
-                      </Line>
-                      <Line text="SLA" />
-                      <Line text="Region availability" />
-                      <Line text="Autoscaling" />
-                      <Line text="Cross tenant analytics" />
-                      <Line text="# of connections" />
-                      <Line text="Workspace sharing" />
-                      <Line text="No cold start" />
-                      <Line text="Branching">
-                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
-                          Coming soon
-                        </div>
-                      </Line>
-                      <Line text="DB Level backups">
-                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
-                          Coming soon
-                        </div>
-                      </Line>
-                      <Line text="Tenant Level backups">
-                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
-                          Coming soon
-                        </div>
-                      </Line>
-                      <Line text="Global Placement">
-                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
-                          Coming soon
-                        </div>
-                      </Line>
-                      <Line text="SOC 2" hideDivider>
-                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
-                          Coming soon
-                        </div>
-                      </Line>
-                      <ConsoleRow />
-                      <Line text="Tenant overrides" />
-                      <Line text="Tenant insights" />
-                      <Line text="Tenant administration" />
-                      <Line text="APIs" hideDivider />
-                      <SupportRow />
-                      <Line text="Community" />
-                      <Line text="Email" />
-                      <Line text="Email with SLA" />
-                      <Line text="Designated" hideDivider />
-                    </div>
-                  </div>
-                </div>
-                <div className="hidden lg:flex lg:w-1/4">
-                  <Free />
-                </div>
-                <div className="hidden lg:flex lg:w-1/4">
-                  <div className="relative w-full">
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                      <div className="gradientButton after:rounded-full !py-0 !px-3 leading-[22px] font-semibold">
-                        Recommended
-                      </div>
-                    </div>
-                    <div className="border border-gradient-color relative overflow-hidden">
-                      <div className="w-5/6 h-32 -top-7 absolute pointer-events-none left-1/2 -translate-x-1/2 bg-circular-blur -translate-y-3 blur-[40px] opacity-40" />
-                      <div className="relative z-10">
-                        <Pro />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="hidden lg:flex lg:w-1/4">
-                  <Scale />
->>>>>>> 821f0c3 (some changes to pricing)
                 </div>
               </div>
             </div>
@@ -179,6 +84,81 @@ export default function Pricing() {
                 </div>
               </div>
             </div>
+<<<<<<< HEAD
+=======
+            <div className="flex flex-col gap-4 lg:w-1/2">
+              <div className="bg-gradient-text bg-clip-text text-transparent text-3xl w-fit">
+                What are query tokens?
+              </div>
+              <div className="opacity-70 text-[16px]">
+                Query tokens are abstract units of CPU and memory used when
+                queries are executed on the serverless compute.
+              </div>
+              <div className="opacity-70 text-[16px]">
+                Currently, we support usage-based pricing and query tokens let
+                you pay exactly for the resources a query took. The exact CPU
+                and memory utilized by a query are abstracted, and users only
+                need to care about query tokens, which normalize the resource
+                consumed by queries executed on the serverless compute on Nile.
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-12">
+            <div>
+              <TokenCost header="Reading rows from a tenant" />
+              <TableRow
+                col1="Reading one row of 64 bytes"
+                col2="30"
+                col3="$0.1"
+              />
+              <TableRow
+                col1="Reading one row of 256 bytes"
+                col2="30"
+                col3="$0.1"
+              />
+              <TableRow
+                col1="Reading one row of 1024 bytes"
+                col2="30"
+                col3="$0.1"
+              />
+            </div>
+            <div>
+              <TokenCost header="Writing rows to a tenant" />
+              <TableRow
+                col1="Writing one row of 64 bytes"
+                col2="30"
+                col3="$0.1"
+              />
+              <TableRow
+                col1="Writing one row of 256 bytes"
+                col2="30"
+                col3="$0.1"
+              />
+              <TableRow
+                col1="Writing one row of 1024 bytes"
+                col2="30"
+                col3="$0.1"
+              />
+            </div>
+            <div>
+              <TokenCost header="Scanning rows of a tenant" />
+              <TableRow
+                col1="Scanning 1000 rows of 64 bytes, return 1"
+                col2="30"
+                col3="$0.1"
+              />
+              <TableRow
+                col1="Scanning 1000 rows of 256 bytes, return 1"
+                col2="30"
+                col3="$0.1"
+              />
+              <TableRow
+                col1="Scanning 1000 rows of 1024 bytes, return 1"
+                col2="30"
+                col3="$0.1"
+              />
+            </div>
+>>>>>>> 79bfee3 (more fixes)
           </div>
         </div>
       </div>
