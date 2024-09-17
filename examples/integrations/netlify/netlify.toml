@@ -1,0 +1,13 @@
+[functions]
+  external_node_modules = ["express"]
+  node_bundler = "esbuild"
+
+[build]
+  command = "echo Building Functions"
+  directory = "/functions"
+
+[[redirects]]
+  force = true
+  from = "/api/*"
+  status = 200
+  to = "/functions/api/:splat"
