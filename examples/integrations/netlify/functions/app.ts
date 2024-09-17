@@ -92,10 +92,9 @@ app.post("/api/tenants", async (req, res) => {
       // need to connect user to tenant
       // @ts-ignore
       await tenantDB(async (tx) => {
-
         return await tx
           .insert(tenant_users)
-                  // @ts-ignore
+          // @ts-ignore
           .values({ tenant_id: tenants[0].id, user_id: req.auth.user });
       });
     }
