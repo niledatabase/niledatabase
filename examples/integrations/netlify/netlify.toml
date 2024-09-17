@@ -6,11 +6,6 @@
   command = "echo Building Functions"
   directory = "functions"
 
-[dev]
-  command = "node --loader ts-node/esm  functions/app.ts"
-  port = 3001
-
-
 [[redirects]]
   force = true
   from = "/api/*"

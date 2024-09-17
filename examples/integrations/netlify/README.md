@@ -71,6 +71,11 @@ Now you'll want to update environment variables for the site. You can do it from
 
 ```bash
 netlify env:import .env
+
+You can run the site locally with:
+
+```bash
+netlify dev --cwd ./
 ```
 
 and as the last step, you'll want to deploy the site:
