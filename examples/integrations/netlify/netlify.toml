@@ -4,10 +4,15 @@
 
 [build]
   command = "echo Building Functions"
-  directory = "/functions"
+  directory = "functions"
+
+[dev]
+  command = "node --loader ts-node/esm  functions/app.ts"
+  port = 3001
+
 
 [[redirects]]
   force = true
   from = "/api/*"
   status = 200
-  to = "/functions/api/:splat"
+  to = ".netlify/functions/app/api/:splat"

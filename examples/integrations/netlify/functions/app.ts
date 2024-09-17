@@ -34,13 +34,15 @@ app.use((req, res, next) => {
 
 // add basic auth middleware if required
 // we are doing this after setting the tenant context, so we'll have an appropriate connection to the DB
-app.use(
-  expressBasicAuth({
-    authorizer: dbAuthorizer,
-    authorizeAsync: true,
-    unauthorizedResponse: getUnauthorizedResponse,
-  })
-);
+if (REQUIRE_AUTH) {
+  app.use(
+    expressBasicAuth({
+      authorizer: dbAuthorizer,
+      authorizeAsync: true,
+      unauthorizedResponse: getUnauthorizedResponse,
+    })
+  );
+}
 
 async function dbAuthorizer(
   username: string,
@@ -90,9 +92,10 @@ app.post("/api/tenants", async (req, res) => {
       // need to connect user to tenant
       // @ts-ignore
       await tenantDB(async (tx) => {
-        // @ts-ignore
+
         return await tx
           .insert(tenant_users)
+                  // @ts-ignore
           .values({ tenant_id: tenants[0].id, user_id: req.auth.user });
       });
     }

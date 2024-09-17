@@ -25,11 +25,11 @@ export function tenantDB<T>(cb: (tx: any) => T | Promise<T>): Promise<T> {
   return db.transaction(async (tx) => {
     const tenantId = tenantContext.getStore();
     console.log("executing query with tenant: " + tenantId);
-    // clean old context
-    await tx.execute(sql`reset nile.tenant_id`);
     // if there's a tenant ID, set it in the context
     if (tenantId) {
       await tx.execute(sql`set nile.tenant_id = '${sql.raw(tenantId)}'`);
+    } else {
+      await tx.execute(sql`reset nile.tenant_id`);
     }
 
     return cb(tx);
