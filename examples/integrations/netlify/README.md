@@ -69,14 +69,14 @@ This will create a site in your Netlify account and connect it to the fork you c
 
 Now you'll want to update environment variables for the site. You can do it from the CLI:
 
-```bash
+````bash
 netlify env:import .env
 
 You can run the site locally with:
 
 ```bash
 netlify dev --cwd ./
-```
+````
 
 and as the last step, you'll want to deploy the site:
 
