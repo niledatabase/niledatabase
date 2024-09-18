@@ -75,12 +75,13 @@ export default async function Blog() {
   const [mostRecent]: any = await glob("app/blog/**.mdx");
   let hits: any[] = [];
 
-  // await index.browseObjects({
-  // query: "",
-  // batch: (batch: any) => {
-  // hits = hits.concat(batch);
-  // },
-  // });
+  //@ts-expect-error - this exists
+  await index.browseObjects({
+    query: "",
+    batch: (batch: any) => {
+      hits = hits.concat(batch);
+    },
+  });
 
   const refinements: string[] = hits.reduce((accum, hit) => {
     return accum.concat(hit.tags);
