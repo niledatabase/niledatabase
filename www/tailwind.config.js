@@ -24,14 +24,9 @@ module.exports = {
         gray: "rgba(255, 255, 255, 0.25)",
         lightGray: "rgba(255, 255, 255, 0.50)",
         darkGray: "#1C1C1C",
-<<<<<<< HEAD
-        orange: "#F4C587",
-        blue: "#7BD1ED",
-=======
         orange: "#FFBA6A",
         brightOrange: "rgb(244,194,117)",
         blue: "#6FE2FF",
->>>>>>> ba95bad (fix(www): website design updates)
         purple: "#D8D3FF",
         dimmer: "#97a1aa",
         white: "#D9D9D9",

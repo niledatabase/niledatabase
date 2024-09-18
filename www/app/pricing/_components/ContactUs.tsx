@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ContactForm } from "@/app/contact-us/_components/Contact";
 import { useCallback, useState } from "react";
 import Arrow from "@/public/icons/arrow.svg";
+import GradientButton from "@/app/_components/common/GradientButton";
 
 export default function ContactUs() {
   const [show, setShow] = useState(false);

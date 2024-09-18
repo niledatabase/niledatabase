@@ -81,11 +81,8 @@ body {
 }
 .gradientBorderButton,
 .gradientBorderButtonFade,
-<<<<<<< HEAD
-=======
 .gradientBorderGray,
 .gradientBorderBox,
->>>>>>> ba95bad (fix(www): website design updates)
 .gradientBorderButtonLaunch {
   position: relative;
   display: flex;

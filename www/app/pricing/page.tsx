@@ -84,85 +84,12 @@ export default function Pricing() {
                 </div>
               </div>
             </div>
-<<<<<<< HEAD
-=======
-            <div className="flex flex-col gap-4 lg:w-1/2">
-              <div className="bg-gradient-text bg-clip-text text-transparent text-3xl w-fit">
-                What are query tokens?
-              </div>
-              <div className="opacity-70 text-[16px]">
-                Query tokens are abstract units of CPU and memory used when
-                queries are executed on the serverless compute.
-              </div>
-              <div className="opacity-70 text-[16px]">
-                Currently, we support usage-based pricing and query tokens let
-                you pay exactly for the resources a query took. The exact CPU
-                and memory utilized by a query are abstracted, and users only
-                need to care about query tokens, which normalize the resource
-                consumed by queries executed on the serverless compute on Nile.
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-12">
-            <div>
-              <TokenCost header="Reading rows from a tenant" />
-              <TableRow
-                col1="Reading one row of 64 bytes"
-                col2="30"
-                col3="$0.1"
-              />
-              <TableRow
-                col1="Reading one row of 256 bytes"
-                col2="30"
-                col3="$0.1"
-              />
-              <TableRow
-                col1="Reading one row of 1024 bytes"
-                col2="30"
-                col3="$0.1"
-              />
-            </div>
-            <div>
-              <TokenCost header="Writing rows to a tenant" />
-              <TableRow
-                col1="Writing one row of 64 bytes"
-                col2="30"
-                col3="$0.1"
-              />
-              <TableRow
-                col1="Writing one row of 256 bytes"
-                col2="30"
-                col3="$0.1"
-              />
-              <TableRow
-                col1="Writing one row of 1024 bytes"
-                col2="30"
-                col3="$0.1"
-              />
-            </div>
-            <div>
-              <TokenCost header="Scanning rows of a tenant" />
-              <TableRow
-                col1="Scanning 1000 rows of 64 bytes, return 1"
-                col2="30"
-                col3="$0.1"
-              />
-              <TableRow
-                col1="Scanning 1000 rows of 256 bytes, return 1"
-                col2="30"
-                col3="$0.1"
-              />
-              <TableRow
-                col1="Scanning 1000 rows of 1024 bytes, return 1"
-                col2="30"
-                col3="$0.1"
-              />
-            </div>
->>>>>>> 79bfee3 (more fixes)
           </div>
         </div>
       </div>
-      <FAQ />
+      <div className="container mx-auto">
+        <FAQ />
+      </div>
     </Container>
   );
 }

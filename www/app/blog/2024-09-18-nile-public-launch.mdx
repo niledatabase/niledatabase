@@ -2,8 +2,7 @@ export const metadata = {
   title: "It is time for Postgres to care about customers!",
   authors: ["ram"],
   image: "nile-banner.png",
-  sizzle:
-    "I am excited to announce that Nile is live today!",
+  sizzle: "I am excited to announce that Nile is live today!",
   tags: ["database", "serverless", "postgres", "AI", "B2B"],
 };
 
@@ -15,7 +14,7 @@ We are taking a new approach to building databases that have not been attempted 
 
 # Why B2B, Why AI, and Why Postgres?
 
-Modern relational databases have been in existence for several decades. They have undergone numerous improvements, becoming significantly faster and capable of supporting more relational features. However, the gap between the application and the database has continued to grow. There are a significant number of problems that are being tackled by B2B developers, which should be solved within the database. A general-purpose DB will always be designed to solve only the lowest common denominator and push a lot of problems unique to B2B to the application layer. 
+Modern relational databases have been in existence for several decades. They have undergone numerous improvements, becoming significantly faster and capable of supporting more relational features. However, the gap between the application and the database has continued to grow. There are a significant number of problems that are being tackled by B2B developers, which should be solved within the database. A general-purpose DB will always be designed to solve only the lowest common denominator and push a lot of problems unique to B2B to the application layer.
 
 ## Multi-tenant architectures - can you have the cake and eat it too?
 
@@ -36,7 +35,7 @@ On one extreme, you can use one **database per tenant**. This approach has sever
 - The application has to be designed to work with multiple databases, custom routing, and multiple connection pools.
 - Lots of tooling is needed to do fleet upgrades, metrics aggregation, alerting, and data ingestion from back-office tools into the DB.
 
-The other extreme is to have **one database across tenants**. 
+The other extreme is to have **one database across tenants**.
 
 **Benefits**
 
@@ -70,7 +69,7 @@ In recent years, numerous vector databases have emerged. This trend separates cu
 
 **Lack of isolation for customer workloads**
 
-AI workloads demand significantly more memory and compute than traditional SaaS workloads. Customer adoption and growth are much faster with AI, though some of this can be attributed to a hype cycle. Moreover, rebuilding indexes for embeddings requires additional resources and may impact production workloads. The ability to isolate customer data and their AI workloads has a significant impact on the customer's experience. Isolation is a key customer requirement (no one wants their data mixed with anyone else’s) and also critical to performance - 3 million embeddings is very large. 1000 tenants with 3000 embeddings each is very manageable - you get lower latency and 100% recall. 
+AI workloads demand significantly more memory and compute than traditional SaaS workloads. Customer adoption and growth are much faster with AI, though some of this can be attributed to a hype cycle. Moreover, rebuilding indexes for embeddings requires additional resources and may impact production workloads. The ability to isolate customer data and their AI workloads has a significant impact on the customer's experience. Isolation is a key customer requirement (no one wants their data mixed with anyone else’s) and also critical to performance - 3 million embeddings is very large. 1000 tenants with 3000 embeddings each is very manageable - you get lower latency and 100% recall.
 
 **Scaling to billions of embeddings across customers**
 
@@ -93,6 +92,7 @@ The main restriction to an agent world with millions of apps is database access.
 # Designing a Postgres platform from first principles for AI B2B apps
 
 ## Customer - the atomic unit of a business
+
 ![“Customer focus](/blog/customer-focus.png)
 
 Nile aims to build Postgres from the ground up, focusing specifically on B2B AI applications. **The customer or tenant is a core building block of B2B companies**—everything revolves around them. It's logical, then, that a data platform built for B2B companies should have the tenant as a native primitive in the database. By defining a customer in the database and extending this concept through to the storage layer, we can address the previously discussed problems at a fundamental level, potentially reducing costs by 10–20x. This approach also simplifies customer workflows that connect to other organizations. For instance, when a premium-tier customer onboards, creating a new customer in the support platform becomes straightforward, as the database can integrate with external APIs. This eliminates the risk of losing customer activity due to failed transactions with third-party services.
@@ -126,6 +126,7 @@ This architecture offers numerous surprising benefits. Nile supports various mul
 ### Unlimited database and virtual tenant databases
 
 In Nile, a database is a logical concept. Our serverless compute allows us to offer a truly cost-effective, multi-tenant solution that provisions new databases rapidly. This enables Nile to provide unlimited databases, even for free tiers. Serverless compute is ideal for testing, prototyping, and supporting early customers. As customers become more active, you can seamlessly transition them to provisioned compute for enhanced security or scalability. Nile's efficiency is remarkable—a new database is provisioned in under a second. The accompanying video demonstrates a typical Nile database creation process and shows the execution of an initial use case.
+
 <Video src="/blog/newdbprovision.mp4" />
 
 ### Tenant placement on both serverless or provisioned compute with 10x compute cost savings
