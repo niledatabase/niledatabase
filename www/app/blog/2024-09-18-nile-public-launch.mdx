@@ -143,3 +143,5 @@ Each tenant in this architecture functions as its own virtual database. The Post
 ### Branching, backups, query insights and read replicas by tenant/customer
 
 Since Postgres understands tenant boundaries, we can now maintain one database for all tenants while executing database operations at the tenant level. This allows us to reproduce customer issues by simply branching the specific customer's data and replaying their workload. If a customer accidentally deletes their data, backups can be restored instantly. We can create read replicas only for customers with higher workloads, saving both compute and storage resources. Moreover, we can now debug performance for specific tenants or customers, eliminating the need to treat the database as a black box.
+
+We are excited once again to be in public preview today. [Try out Nile](https://console.thenile.dev/) and build your AI B2B apps with a Postgres platform purpose built for it. We are looking forward to all the feedback!
