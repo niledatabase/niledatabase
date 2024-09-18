@@ -84,6 +84,6 @@ async function generate() {
     }
   }
   // upload to search service
-  await upload(out);
+  // await upload(out);
 }
 generate();
