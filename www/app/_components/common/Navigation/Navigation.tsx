@@ -27,7 +27,7 @@ export default function Navigation({ className }: { className?: string }) {
                   width={80}
                   height={30}
                   priority
-                  // className="m-auto scale-[1.3] translate-x-[10px] lg:m-0 md:scale-100 lg:translate-y-0"
+                  className="m-auto scale-[1.3] translate-x-[10px] lg:m-0 md:scale-100 lg:translate-y-0"
                   data-image-zoom-disabled
                 />
               </Link>
@@ -35,7 +35,7 @@ export default function Navigation({ className }: { className?: string }) {
             <MobileNav open={open} toggleOpen={toggleOpen} />
 
             <div className="flex-row hidden lg:flex">
-              <div className="flex gap-2 xl:gap-8 py-6 px-2.5">
+              <div className="flex py-6 px-2.5">
                 <Links />
               </div>
             </div>
