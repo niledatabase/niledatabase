@@ -14,3 +14,12 @@ I am excited to announce that Nile is live today! Nile is a Postgres platform th
 Nile’s goal is simple - **To be the best platform to build and scale multi-tenant AI applications.**
 
 We are taking a new approach to building databases that have not been attempted before. We are virtualizing the concept of a customer (or tenant) into Postgres, making Postgres and its ecosystem perfect for creating B2B AI companies. We have been working on this for the past eighteen months, and we believe it is the fastest and safest way to develop AI-native B2B applications and scale globally.
+
+# Why B2B, Why AI, and Why Postgres?
+
+Modern relational databases have been in existence for several decades. They have undergone numerous improvements, becoming significantly faster and capable of supporting more relational features. However, the gap between the application and the database has continued to grow. There are a significant number of problems that are being tackled by B2B developers, which should be solved within the database. A general-purpose DB will always be designed to solve only the lowest common denominator and push a lot of problems unique to B2B to the application layer. 
+
+## Multi-tenant architectures - can you have the cake and eat it too?
+
+The foundation of B2B applications is a multi-tenant architecture, where each tenant typically represents a customer, workspace, organization, etc. The main challenge is how to store and query many customers/tenants in the database. Various patterns have been proposed, but at a high level, there are two main approaches.
+![“Multitenant types”](/blog/multitenant-types.png)
