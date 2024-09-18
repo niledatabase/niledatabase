@@ -19,7 +19,7 @@ export default function Navigation({ className }: { className?: string }) {
       <div className={`w-fill sticky top-0 z-30 navBlur ${className ?? ""}`}>
         <div className="container flex-col justify-between mx-auto lg:items-center">
           <div className="flex flex-row items-center justify-between w-full lg:h-auto h-[76px]">
-            <div className="flex items-center lg:block lg:items-start lg:w-44">
+            <div className="flex items-center lg:block lg:items-start">
               <Link href="/">
                 <Image
                   src={Logo}
@@ -27,7 +27,7 @@ export default function Navigation({ className }: { className?: string }) {
                   width={80}
                   height={30}
                   priority
-                  className="m-auto scale-[1.3] translate-x-[10px] lg:m-0 md:scale-100 lg:translate-y-0"
+                  // className="m-auto scale-[1.3] translate-x-[10px] lg:m-0 md:scale-100 lg:translate-y-0"
                   data-image-zoom-disabled
                 />
               </Link>
@@ -35,7 +35,7 @@ export default function Navigation({ className }: { className?: string }) {
             <MobileNav open={open} toggleOpen={toggleOpen} />
 
             <div className="flex-row hidden lg:flex">
-              <div className="flex gap-8 py-6 px-2.5">
+              <div className="flex gap-2 xl:gap-8 py-6 px-2.5">
                 <Links />
               </div>
             </div>

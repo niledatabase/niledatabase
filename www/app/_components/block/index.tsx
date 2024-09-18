@@ -21,20 +21,22 @@ export function Block({
           {subTitle}
         </div>
       </div>
-      <div className="flex flex-row items-center gap-2">
+      <div>
         <Link
-          className="text-black text-[16px] leading-[24px] font-medium hover:underline"
+          className="text-black text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
           href={href}
         >
-          Learn more
+          <div className="transition-colors border-b border-b-transparent hover:border-b-[#000] flex flex-row items-center gap-2">
+            Learn more
+            <Image
+              src={arrow}
+              alt="arrow"
+              width={24}
+              height={24}
+              className="invert"
+            />
+          </div>
         </Link>
-        <Image
-          src={arrow}
-          alt="arrow"
-          width={24}
-          height={24}
-          className="invert"
-        />
       </div>
     </div>
   );

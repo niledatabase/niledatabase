@@ -142,21 +142,21 @@ export default function PlaceTenants() {
         </div>
       </div>
       <div className="flex flex-col lg:flex-row gap-6">
-        <div className="bg-orange rounded-lg">
+        <div className="bg-orange rounded-[20px]">
           <Block
             title="Secure"
             subTitle="Place critical customers on dedicated Postgres compute for performance isolation and security"
             href="/docs/tenant-virtualization/tenant-placement"
           />
         </div>
-        <div className="bg-purple rounded-lg">
+        <div className="bg-purple rounded-[20px]">
           <Block
             title="Low latency"
             subTitle="Place customer's data and vector embeddings in different region for low latency"
             href="/docs/tenant-virtualization/tenant-placement"
           />
         </div>
-        <div className="bg-blue rounded-lg">
+        <div className="bg-blue rounded-[20px]">
           <Block
             title="Flexibility"
             subTitle="Move tenants between serverless and provisioned compute with no downtime or application changes"

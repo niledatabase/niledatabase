@@ -24,21 +24,21 @@ export default function EmbeddingsCost() {
         </div>
         <div className="flex lg:flex-row gap-20 flex-col-reverse">
           <div className="flex flex-col gap-6 flex-1">
-            <div className="bg-orange rounded-lg">
+            <div className="bg-orange rounded-[20px]">
               <Block
                 title="Cost optimized"
                 subTitle="Built on object storage and shared compute to be 10x lower cost"
                 href="/docs/ai-embeddings"
               />
             </div>
-            <div className="bg-purple rounded-lg">
+            <div className="bg-purple rounded-[20px]">
               <Block
                 title="Limitless embeddings"
                 subTitle="Scale to billions of vector embeddings across thousands of tenants"
                 href="/docs/ai-embeddings"
               />
             </div>
-            <div className="bg-blue rounded-lg">
+            <div className="bg-blue rounded-[20px]">
               <Block
                 title="Low latency and performance"
                 subTitle="Deploy embeddings closer to customer and LLMs for latency and compliance needs with one database"

@@ -3,7 +3,7 @@ type Props = { children: JSX.Element | JSX.Element[] };
 export default function AnimatedGradient(props: Props) {
   const { children } = props;
   return (
-    <div className="animated-gradient rounded-lg relative">
+    <div className="animated-gradient rounded-[20px] relative">
       <div
         className="absolute top-0 left-0 bottom-0 right-0 opacity-60 w-full h-full pointer-events-none"
         style={{

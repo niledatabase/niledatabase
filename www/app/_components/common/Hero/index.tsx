@@ -73,6 +73,7 @@ export function HeroBottom() {
                   <Image
                     src={postgresBlack}
                     alt="black postgres logo"
+                    className="w-7 lg:w-auto"
                     height={40}
                     width={40}
                   />

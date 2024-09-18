@@ -13,7 +13,7 @@ export default function Hero() {
               href="https://www.thenile.dev/blog/nile-public-launch"
               className="flex flex-row relative"
             >
-              <div className="hover:underline bg-gray hover:bg-lightGray transition-colors text-center p-2 w-full leading-[20px] text-[16px] flex flex-row gap-2 items-center justify-center text-[#fff] rounded-md px-4 py-2">
+              <div className="bg-gray hover:bg-lightGray transition-colors text-center p-2 w-full leading-[20px] text-[16px] flex flex-row gap-2 items-center justify-center text-[#fff] rounded-[10px] px-4 py-2">
                 <span>
                   Nile is in public preview. <span>Learn more</span>
                 </span>
