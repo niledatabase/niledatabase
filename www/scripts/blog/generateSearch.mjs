@@ -2,13 +2,12 @@ import "dotenv/config";
 import { renderToStaticMarkup } from "react-dom/server";
 import React from "react";
 import { glob } from "glob";
-// import algoliasearch from "algoliasearch";
+import algoliasearch from "algoliasearch";
 import path from "node:path";
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-/*
 const client = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
   process.env.ALGOLIA_ADMIN_KEY
@@ -27,7 +26,6 @@ async function upload(output) {
       .catch(console.error);
   });
 }
-  */
 
 async function run() {
   const files = await glob("app/blog/**.mdx");
@@ -50,6 +48,6 @@ async function run() {
     out.push(metadata);
   }
   // upload to search service
-  // await upload(out);
+  await upload(out);
 }
 run();
