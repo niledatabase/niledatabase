@@ -13,21 +13,21 @@ export default function Virtualization() {
           <Video src="table.mp4" poster={"table.webp"} />
         </div>
         <div className="flex flex-col lg:flex-row gap-6">
-          <div className="bg-orange rounded-lg">
+          <div className="bg-orange rounded-[20px]">
             <Block
               title="Tenant virtualization"
               subTitle="Built-in tenant virtualization isolates data access across tenants. Restrict access to a specific virtual tenant database from application."
               href="/docs/tenant-virtualization"
             />
           </div>
-          <div className="bg-purple rounded-lg">
+          <div className="bg-purple rounded-[20px]">
             <Block
               title="Hassle free"
               subTitle="No more struggle with Postgres row level security or with complex application-level authorization logic."
               href="/docs/tenant-virtualization"
             />
           </div>
-          <div className="bg-blue rounded-lg">
+          <div className="bg-blue rounded-[20px]">
             <Block
               title="Share data"
               subTitle="Securely share data across tenants using shared tables"

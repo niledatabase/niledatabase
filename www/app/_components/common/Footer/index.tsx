@@ -4,6 +4,7 @@ import Link from "next/link";
 import X from "@/public/x-white.svg";
 import LinkedIn from "@/public/linkedin.svg";
 import Github from "@/public/githubLogo-white.svg";
+import Discord from "@/public/discord-mark-white.svg";
 import Logo from "@/public/logo.svg";
 export default async function Footer({ className }: { className?: string }) {
   return (
@@ -13,9 +14,9 @@ export default async function Footer({ className }: { className?: string }) {
       <div className="container mx-auto">
         <div className="z-10 relative">
           <div className="flex flex-col lg:flex-row  justify-between w-full gap-32">
-            <div className="flex flex-row flex-wrap gap-20">
+            <div className="flex flex-row flex-wrap gap-16">
               <div className="flex flex-col gap-4">
-                <Link href="/docs" className="text-[16px] mb-3">
+                <Link href="/docs" className="text-[16px] mb-3 font-medium">
                   Documentation
                 </Link>
                 <Link href="/docs/getting-started" className="text-[16px] ">
@@ -29,14 +30,14 @@ export default async function Footer({ className }: { className?: string }) {
                 </Link>
               </div>
               <div className="flex flex-col gap-4">
-                <div className="text-[16px] mb-3">Resources</div>
+                <div className="text-[16px] mb-3 font-medium">Resources</div>
 
                 <Link href="/blog" className="text-[16px] ">
                   Blog
                 </Link>
               </div>
               <div className="flex flex-col gap-4">
-                <div className="text-[16px] mb-3">Company</div>
+                <div className="text-[16px] mb-3 font-medium">Company</div>
                 <Link href="/about-us" className="text-[16px] ">
                   About
                 </Link>
@@ -48,7 +49,7 @@ export default async function Footer({ className }: { className?: string }) {
                 </Link>
               </div>
               <div className="flex flex-col gap-4">
-                <div className="text-[16px] mb-3">Support</div>
+                <div className="text-[16px] mb-3 font-medium">Support</div>
                 <Link href="/contact-us" className="text-[16px] ">
                   Contact Sales
                 </Link>
@@ -61,8 +62,8 @@ export default async function Footer({ className }: { className?: string }) {
                 </Link>
               </div>
             </div>
-            <div className="flex flex-col gap-4">
-              <div className="text-[16px] mb-3">Social</div>
+            <div className="flex flex-col gap-4 ">
+              <div className="text-[16px] mb-3 font-medium">Social</div>
               <div className="text-[16px]">
                 <Link
                   href="https://www.linkedin.com/company/niledatabase/"
@@ -101,6 +102,21 @@ export default async function Footer({ className }: { className?: string }) {
                 >
                   <Image src={X} alt="twitter logo" width={15} height={14} />X
                   (twitter)
+                </Link>
+              </div>
+              <div className="text-[16px] flex flex-row items-center gap-3">
+                <Link
+                  href="https://x.com/niledatabase"
+                  target="_blank"
+                  className="flex flex-row items-center gap-3"
+                >
+                  <Image
+                    src={Discord}
+                    alt="twitter logo"
+                    width={15}
+                    height={14}
+                  />
+                  Discord
                 </Link>
               </div>
             </div>

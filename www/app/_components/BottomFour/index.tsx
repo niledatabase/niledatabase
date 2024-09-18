@@ -22,8 +22,8 @@ export default function BottomFour() {
         </NewHeading>
       </div>
       <div className="flex flex-row flex-wrap">
-        <div className="w-full lg:w-1/2 lg:h-[640px] xl:h-[720px] mb-3">
-          <div className="lg:pr-1.5 h-full">
+        <div className="w-full lg:w-1/2 lg:h-[640px] xl:h-[720px] mb-6">
+          <div className="lg:pr-3 h-full">
             <Box
               title={["Fine grained", "branching"]}
               bullets={[
@@ -36,8 +36,8 @@ export default function BottomFour() {
             </Box>
           </div>
         </div>
-        <div className="w-full lg:w-1/2 lg:h-[640px] xl:h-[720px] mb-3">
-          <div className="lg:pl-1.5 h-full">
+        <div className="w-full lg:w-1/2 lg:h-[640px] xl:h-[720px] mb-6">
+          <div className="lg:pl-3 h-full">
             <div className="relative h-full">
               <ChartHover />
               <Box
@@ -81,7 +81,7 @@ export default function BottomFour() {
           </div>
         </div>
         <div className="w-full lg:w-1/2 lg:h-[720px] mb-3">
-          <div className="lg:pr-1.5 h-full overflow-hidden">
+          <div className="lg:pr-3 h-full overflow-hidden">
             <Box
               title={["Automated schema migration across tenants"]}
               bullets={[
@@ -153,7 +153,7 @@ export default function BottomFour() {
           </div>
         </div>
         <div className="w-full lg:w-1/2 lg:h-[720px] mb-3">
-          <div className="lg:pl-1.5 h-full">
+          <div className="lg:pl-3 h-full">
             <Box
               title={["Tenant-level backups for instant restores"]}
               bullets={[

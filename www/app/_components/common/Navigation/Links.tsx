@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export function Links({ className: cn }: { className?: string }) {
-  const className = `whitespace-nowrap text-[16px] leading-[20px]${
+  const className = `whitespace-nowrap text-[16px] leading-[20px] rounded-[10px] hover:bg-[#1C1C1C] px-4 py-2 ${
     cn ? cn : ""
   }`;
   return (

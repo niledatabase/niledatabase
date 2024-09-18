@@ -12,7 +12,7 @@ type Props = {
 export default function Box(props: Props) {
   const { title, bullets, children } = props;
   return (
-    <div className="flex flex-col bg-darkGray rounded-lg h-full justify-between overflow-hidden">
+    <div className="flex flex-col bg-darkGray rounded-[20px] h-full justify-between overflow-hidden">
       <BgHoverer>
         <div className="inline-flex lg:block gap-2 p-4 lg:p-10">
           {title.map((item) => {
