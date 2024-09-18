@@ -4,26 +4,16 @@ export const metadata = {
   description: "Explains Nile's architecture",
 };
 
-## Architecture
+Nile has built Postgres from the ground up with tenants/customers as a core building block. The key highlights of our design are:
 
-Nile is taking a radical approach to database platforms. The goal is to be the best platform for building AI-native B2B companies. Our core insight is that it is possible to push tenant/customer awareness all the way to the page level in Postgres and design it from first principles for the cloud and an AI-powered future.
+**Decoupled storage and compute**. The compute layer is essentially Postgres, modified to store each tenant's data in separate pages. The storage layer consists of a fleet of machines that house these pages. An external machine stores the log, while both the log and pages are archived in S3 for long-term storage.
 
-![“Nile Architecture”](/blog/architecture.png)
+**Tenant-aware Postgres pages**. A typical Postgres database comprises objects like tables and indexes, represented by 8KB pages. In Nile, tables are either tenant-specific or shared. Each page of a tenant table belongs exclusively to one tenant, with all records within a page associated with that tenant. This decoupled storage and tenant-dedicated page system allows for instantaneous tenant migration between different Postgres compute instances. Moving a tenant simply involves transferring tenant leadership from one compute instance to another while maintaining references to the same pages in the storage layer.
 
-Nile's architecture includes storage/compute decoupling, page-level tenant isolation, a global routing gateway, and a database clustering technology to provide the following key benefits -
+![nilearchitecture](/docs/nile-arch.png)
 
-1. Built-in tenant virtualization in Postgres for better data and vector embedding isolation and performance isolation without any RLS or complex permission logic in the application across customers.
-2. Vector embedding with RAG support for all model providers, cost-effective and auto-scales to billions of embeddings across customers
-3. Use one database in your application but get tenant-level backups, customer/tenant insights, and schema management across tenants managed by Nile
-4. Seamlessly auto scales as your customer's usage increases and scales to zero with no cold start time
-5. Place some tenants/customers on dedicated compute in the same database and some in other regions. Nile lets you customize for cost, security, compliance, and latency for each tenant in your AI-native application without having to manage separate databases for each tenant
-6. You can scale to millions of customers and billions of vector embeddings effortlessly as Nile horizontally scales
-7. User management is built for multitenancy with user data stored in your Postgres database and unlimited active tenants and users.
+**Support for both serverless and provisioned compute.** The Postgres compute layer offers two types of compute. Serverless compute is built with true multitenancy, while provisioned compute is dedicated to a single Nile customer. Nile users can have any number of provisioned compute instances in the same database. Tenants can be placed on either serverless or provisioned compute.
 
-We will have a more detailed write-up about our blueprint architecture, but here are the key highlights of each key technology component
+**Distributed querying across tenants and a central schema store.** The distributed query layer operates across tenants and functions between serverless and provisioned compute instances. A central schema store employs distributed transactions to apply schemas to every tenant during DDL execution. This ensures correct schema application and enables schema recovery for tenants during failures.
 
-- **Global routing gateway** that can enforce tenant data isolation at the session and connection level, route to the correct tenant, and provide a single database experience across all virtual tenant DBs
-- **Database clustering technology** that helps place tenants on shared or dedicated Postgres compute anywhere globally and manage schemas migrations across tenants
-- **Tenant-aware Postgres pages** that ensure pages are always isolated to a single tenant, which helps to move tenants instantaneously, generate backups per tenant/customer, fork the database with data of a specific customer for testing, and provide performance insights by tenants.
-- **Storage and compute decoupling** to move tenant pages instantaneously across computes to provide instant capacity and manage performance guarantees for any tenants
-- **Cloud-native architecture** by leveraging S3 for permanent storage and replication cross-region
+**A global gateway for tenant routing, inter-region communication, and connection pooling.** The gateway uses the Postgres protocol to route requests to different tenants. It can communicate with gateways in other regions and serves as a connection pooling layer, eliminating the need for a separate pooler.

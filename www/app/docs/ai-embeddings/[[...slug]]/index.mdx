@@ -4,10 +4,10 @@ export const metadata = {
   order: 4,
   title: "Artificial Intelligence",
   description:
-    "Generative AI is truly transforming every industry and vertical in SaaS.",
+    "Generative AI is truly transforming every industry and vertical in B2B.",
 };
 
-Generative AI is truly transforming every industry and vertical in SaaS. It significantly improves the experience of the product, the value the user receives and increases the overall productivity.
+Generative AI is truly transforming every industry and vertical in B2B. It significantly improves the experience of the product, the value the user receives and increases the overall productivity.
 
 For example,
 
@@ -15,13 +15,28 @@ For example,
 2. A chatbot for a CRM (eg. Salesforce, Hubspot) that sales reps can use to ask questions about past and future customer deals and can have a back and forth conversation
 3. An autopilot for developers in their code repository (Github, Gitlab) to improve productivity. The autopilot should run on the companies code as well apart from learning on public repositories.
 
-## Challenges with AI in SaaS
+## Challenges with AI in B2B
 
-There are standard problems in implementing generative AI such as increasing accuracy and total throughput of the system. In addition, there are some unique challenges with SaaS to achieve a great experience.
+Separate databases for vector embeddings and customer data
 
-1. Fine tuning the large language model to be domain and customer aware is complex. Typically, large language models are trained on publicly available data. In SaaS, majority of the data are specific to a particular domain and also unique to a specific customer. For example, in a corporate wiki application, employees would want to search on their companies documents. This requires feeding domain and customer context to the model.
-2. Ability to store embedding per tenant and scale them independently. Embeddings grow large, really fast. This is because the data set for each customer can get pretty large. You would need to figure how to store embeddings in multiple databases to scale the embeddings for each tenant independently.
-3. Low latency search is challenging if your customers are in different parts of the globe. The queries to find similarities are already resource intensive. You want to store the embeddings closer to your customer to be able to execute similarity searches with low latency.
+In recent years, numerous vector databases have emerged. This trend separates customers' core data and metadata from their embeddings, forcing companies to manage multiple databases. Such separation increases costs, significantly complicates application development and operation, and leads to inefficient resource utilization between vector embeddings and customer metadata. Moreover, keeping these databases synchronized with customer changes adds yet another layer of complexity.
+
+Lack of isolation for customer workloads
+
+AI workloads demand significantly more memory and compute than traditional SaaS workloads. Customer adoption and growth are much faster with AI, though some of this can be attributed to a hype cycle. Moreover, rebuilding indexes for embeddings requires additional resources and may impact production workloads. The ability to isolate customer data and their AI workloads has a significant impact on the customer's experience. Isolation is a key customer requirement (no one wants their data mixed with anyone else’s) and also critical to performance - 3 million embeddings is very large. 1000 tenants with 3000 embeddings each is very manageable - you get lower latency and 100% recall.
+
+Scaling to billions of embeddings across customers
+
+AI workloads scale to 50-100 million embeddings and in some cases even a billion embeddings. The biggest unlock with AI is the ability to search through unstructured data. All the data in different PDFs, Images, Wikis are now searchable. In addition, these unstructured data need to be chunked to do better contextual search. The explosion of vector embeddings requires a scalable database that can store billions of embeddings at a really low cost.
+
+Connecting all the customer’s data to the OLTP
+
+90% of AI use cases involve extracting data from customers' various SaaS services, making it accessible to LLMs, and allowing users to write prompts against this data. For instance, Glean, an AI-first company, aggregates data from issue trackers, wikis, and Salesforce, making it searchable in one central location using LLMs. Glean must offer a streamlined process for each customer to extract data from their SaaS APIs and transfer it to Glean's database. This data needs to be stored and managed on a per-customer basis. Vector embeddings must be computed during data ingestion. In the AI era, ETL pipelines from SaaS services to OLTP databases need to be reimagined for each customer.
+
+Cost of computing, storing and querying customer vector embeddings
+
+The sheer scale of vector embeddings and their associated workloads significantly increases the cost of managing AI infrastructure. The primary expenses stem from compute and storage, which typically align with customer activity. Ideally, you'd want to pay only for the exact resources a customer uses for compute. Similarly, you'd prefer cheaper storage options when embeddings aren't being accessed. By implementing per-customer cost management for their workloads, it should be possible to reduce expenses by 10 to 20 times.
+
 
 ## What are embeddings?
 
@@ -69,4 +84,4 @@ In this example, we used sentence embeddings to represent the entire sentences i
 
 ## Support for embeddings in Nile - pg_vector
 
-Embeddings in Nile is enabled using pg_vector, the Postgres extension. This extension is enabled by default in Nile and is available to be used once you create a database. You can read more about how to use pg_vector and build a real world AI native SaaS application in the pg_vector section.
+Embeddings in Nile is enabled using pg_vector, the Postgres extension. This extension is enabled by default in Nile and is available to be used once you create a database. You can read more about how to use pg_vector and build a real world AI native B2B application in the pg_vector section.
