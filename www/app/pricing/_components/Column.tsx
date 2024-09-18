@@ -40,8 +40,14 @@ const DoubleHeightIndicator = ({
       <div className="flex align-center justify-between lg:justify-center py-3">
         <div className="lg:hidden">{header}</div>
         {value ? (
-          <div className="bg-orange rounded-full flex align-center justify-center">
-            <Image src={check} alt="check" width={20} height={20} />
+          <div className="bg-brightOrange rounded-full flex align-center justify-center w-5 h-5">
+            <Image
+              src={check}
+              alt="check"
+              className="invert"
+              width={14}
+              height={14}
+            />
           </div>
         ) : (
           <NotApplicable />
@@ -126,7 +132,7 @@ type Props = {
   branches: string;
   provisionedcompute?: string;
   crosstenantanalytics?: boolean;
-  globalplacement:string;
+  globalplacement: string;
   soc2?: boolean;
   tenantOverrides?: boolean;
   tenantInsights: string;
@@ -224,7 +230,9 @@ export default function Column(props: Props) {
           text={provisionedcompute}
           header={
             <div className="flex flex-col items-start">
-              <div className="leading-[24px] opacity-70">Provisioned Compute</div>
+              <div className="leading-[24px] opacity-70">
+                Provisioned Compute
+              </div>
               <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
                 Coming soon
               </div>
@@ -257,7 +265,9 @@ export default function Column(props: Props) {
           text={tenantBack}
           header={
             <div className="flex flex-col items-start">
-              <div className="leading-[24px] opacity-70">Tenant level backups</div>
+              <div className="leading-[24px] opacity-70">
+                Tenant level backups
+              </div>
               <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
                 Coming soon
               </div>

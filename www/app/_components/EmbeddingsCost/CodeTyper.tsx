@@ -8,7 +8,15 @@ type Props = {
 };
 
 export default function CodeTyper({ lines, allowTyping }: Props) {
-  const [position, setPosition] = useState([0, 0, 0]);
+  const lastLine = lines[lines.length - 1];
+  const lastWord = lastLine[lastLine.length - 1];
+  const lastLetter = lastWord.text.length - 1;
+
+  const [position, setPosition] = useState([
+    lines.length - 1,
+    lastLine.length - 1,
+    lastLetter,
+  ]);
   let timer = useRef<NodeJS.Timeout>();
 
   const lineNumber = useMemo(() => {
@@ -23,14 +31,8 @@ export default function CodeTyper({ lines, allowTyping }: Props) {
     return position[2];
   }, [position[2]]);
 
+  /*
   useEffect(() => {
-    if (window.innerWidth < 968) {
-      const lastLine = lines[lines.length - 1];
-      const lastWord = lastLine[lastLine.length - 1];
-      const lastLetter = lastWord.text.length - 1;
-      setPosition([lines.length - 1, lastLine.length - 1, lastLetter]);
-    }
-
     if (!allowTyping) {
       clearTimeout(timer.current);
       return;
@@ -63,6 +65,7 @@ export default function CodeTyper({ lines, allowTyping }: Props) {
       if (timer.current) clearTimeout(timer.current);
     };
   }, [lineNumber, wordPosition, letterPosition, allowTyping]);
+  */
 
   return (
     <div className="relative pl-5 w-full" style={{ height: lines.length * 18 }}>

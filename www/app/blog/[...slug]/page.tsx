@@ -6,8 +6,6 @@ import { parseMetadata } from "../_components/parseMetadata";
 import { Authors } from "../_components/Authors";
 import Heading from "@/app/_components/common/Heading";
 import Image from "next/image";
-import Footer from "../_components/Footer";
-import Divider from "@/app/_components/common/Divider";
 import { Metadata, ResolvingMetadata } from "next";
 import Coffee from "@/public/blog/coffee.webp";
 import BlogImageZoom from "./ImageZoom";
@@ -79,8 +77,6 @@ export default async function BlogPage(props: Props) {
           </div>
         </div>
       </div>
-      <Divider />
-      <Footer />
     </Container>
   );
 }

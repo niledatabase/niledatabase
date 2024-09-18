@@ -8,7 +8,9 @@ export default function Free() {
     <Column
       tier={"Free"}
       price={0}
-      tierSizzle={"For prototyping or side projects. No pauses, always available"}
+      tierSizzle={
+        "For prototyping or side projects. No pauses, always available"
+      }
       computeTop="50 million query tokens"
       computeSub="$0.06 per million additional tokens"
       storageTop="1 GB"
@@ -22,8 +24,8 @@ export default function Free() {
           href="https://console.thenile.dev"
           className="flex w-full justify-center"
         >
-          <button className="bg-brightOrange lg:bg-transparent gradientBorderButton text-black lg:text-[#fff] rounded-md before:opacity-0 lg:before:opacity-100 lg:w-full flex flex-row px-20 lg:px-5 xl:px-11 justify-center">
-            <div className="px-5 py-2.5 rounded-md flex flex-row items-center justify-center">
+          <button className="bg-brightOrange lg:bg-transparent gradientBorderButton text-black lg:text-[#fff] rounded-md before:opacity-0 lg:before:opacity-100 lg:w-full flex flex-row px-5 xl:px-11 justify-center">
+            <div className="px-5 py-2.5 rounded-md flex flex-row items-center justify-center w-full">
               Start now
               <Image src={arrow} alt="arrow" className="invert lg:invert-0" />
             </div>

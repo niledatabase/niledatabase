@@ -15,19 +15,28 @@ export default async function Footer({ className }: { className?: string }) {
           <div className="flex flex-col lg:flex-row  justify-between w-full gap-32">
             <div className="flex flex-row flex-wrap gap-20">
               <div className="flex flex-col gap-4">
-                <Link href="/docs" className="text-[16px] ">
+                <Link href="/docs" className="text-[16px] mb-3">
                   Documentation
                 </Link>
                 <Link href="/docs/getting-started" className="text-[16px] ">
                   Quick Start
                 </Link>
+                <Link
+                  href="/docs/getting-started/usecases"
+                  className="text-[16px] "
+                >
+                  Use cases
+                </Link>
               </div>
               <div className="flex flex-col gap-4">
+                <div className="text-[16px] mb-3">Resources</div>
+
                 <Link href="/blog" className="text-[16px] ">
                   Blog
                 </Link>
               </div>
               <div className="flex flex-col gap-4">
+                <div className="text-[16px] mb-3">Company</div>
                 <Link href="/about-us" className="text-[16px] ">
                   About
                 </Link>
@@ -39,39 +48,41 @@ export default async function Footer({ className }: { className?: string }) {
                 </Link>
               </div>
               <div className="flex flex-col gap-4">
+                <div className="text-[16px] mb-3">Support</div>
                 <Link href="/contact-us" className="text-[16px] ">
                   Contact Sales
                 </Link>
+                <Link href="/contact-us" className="text-[16px] ">
+                  Get help
+                </Link>
+
                 <Link href="/pricing#faq" className="text-[16px] ">
                   FAQ
                 </Link>
               </div>
             </div>
-            <div className="flex flex-col gap-3 items-start lg:items-end">
-              <Image src={Logo} alt="nile logo" width={80} height={30} />
-
-              <div className=" flex flex-row gap-1">
-                <Link href="/privacy-policy">Privacy policy</Link>|
-                <Link href="/cookie-policy">Cookie policy</Link>
-              </div>
-              <div className="flex flex-row gap-5">
-                <Link href="https://x.com/niledatabase" target="_blank">
-                  <Image src={X} alt="twitter logo" width={15} height={14} />
-                </Link>
+            <div className="flex flex-col gap-4">
+              <div className="text-[16px] mb-3">Social</div>
+              <div className="text-[16px]">
                 <Link
                   href="https://www.linkedin.com/company/niledatabase/"
                   target="_blank"
+                  className="flex flex-row items-center gap-3"
                 >
                   <Image
                     src={LinkedIn}
                     alt="linkedin logo"
-                    width={15}
-                    height={14}
+                    width={16}
+                    height={16}
                   />
+                  LinkedIn
                 </Link>
+              </div>
+              <div className="text-[16px]">
                 <Link
                   href="https://github.com/niledatabase/niledatabase"
                   target="_blank"
+                  className="flex flex-row items-center gap-3"
                 >
                   <Image
                     src={Github}
@@ -79,8 +90,27 @@ export default async function Footer({ className }: { className?: string }) {
                     width={15}
                     height={14}
                   />
+                  Github
                 </Link>
               </div>
+              <div className="text-[16px] flex flex-row items-center gap-3">
+                <Link
+                  href="https://x.com/niledatabase"
+                  target="_blank"
+                  className="flex flex-row items-center gap-3"
+                >
+                  <Image src={X} alt="twitter logo" width={15} height={14} />X
+                  (twitter)
+                </Link>
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 items-start lg:items-end">
+              <Image src={Logo} alt="nile logo" width={80} height={30} />
+              <div className="opacity-40 flex flex-row gap-1 text-[12px]">
+                <Link href="/privacy-policy">Privacy policy</Link>|
+                <Link href="/cookie-policy">Cookie policy</Link>
+              </div>
+              <div className="flex flex-row gap-5"></div>
             </div>
           </div>
 

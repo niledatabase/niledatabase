@@ -2,14 +2,9 @@
 import Image from "next/image";
 import verticalLine from "@/public/vertical-line.svg";
 import nileTwinkle from "@/public/nile-twinkle.svg";
-import nileTwinkleColor from "@/public/nile-twinkle-color.svg";
-import dots1 from "@/public/dots_1.svg";
-import dots2 from "@/public/dots_2.svg";
-import dots3 from "@/public/dots_3.svg";
-import dots4 from "@/public/dots_4.svg";
-import dots5 from "@/public/dots_5.svg";
 import React, { useState } from "react";
 import CodeTyper from "./CodeTyper";
+import MobileLines from "./MobileLines";
 
 const lp = {
   color: "white",
@@ -97,19 +92,19 @@ const lines: Array<Array<{ text: string; color: string }>> = [
   ],
 ];
 export default function HoverEffect() {
-  const [allowTyping, setAllowTyping] = useState(false);
+  const [allowTyping] = useState(false);
   return (
-    <div className="-mt-6 lg:-mt-[5.6rem]">
+    <div className="-mt-6 lg:-mt-[5.6rem] mx-auto">
       <div
-        className="flex items-center flex-col code-hover overflow-hidden"
+        className="flex items-center flex-col code-hover overflow-hidden lg:max-w-xl 2xl:max-w-full"
         onMouseEnter={() => {
-          setAllowTyping(true);
+          // setAllowTyping(true);
         }}
         onMouseLeave={() => {
-          setAllowTyping(false);
+          // setAllowTyping(false);
         }}
       >
-        <div className="flex items-center flex-col relative w-[720px] h-[720px]">
+        <div className="flex items-center flex-col relative w-[360px] h-[360px] md:w-[720px] md:h-[720px]">
           <div className="flex flex-row w-full h-full rounded-full overflow-hidden relative">
             {Array(15)
               .fill(null)
@@ -132,41 +127,23 @@ export default function HoverEffect() {
 
           <div className="absolute h-full w-full flex ">
             <div className="flex flex-1 items-center justify-center pointer-events-none">
-              <div className="absolute rounded-full bg-[#d9d9d9] blur-[85px] w-1/3 h-1/3 -mt-14 backdrop opacity-0"></div>
-              <div className="relative pb-14 w-full h-full mt-64 ml-40">
-                <Image
-                  src={nileTwinkleColor}
-                  alt="twinkling nile logo"
-                  className="absolute top-[67px] left-[64px]"
-                />
+              <div className="relative md:pb-14 w-full h-full md:mt-64 md:ml-40 flex items-center justify-center">
                 <Image
                   src={nileTwinkle}
                   alt="twinkling nile logo"
-                  className="absolute top-0 left-0 gray-logo"
+                  className="absolute top-0 left-0"
                 />
-                <div className="absolute top-[100px] left-[97px] rotater-behind w-[213px] h-[213px] rounded-[32px] opacity-0 transition-opacity" />
-                <div className="absolute top-[100px] left-[97px] rotater w-[213px] h-[213px] rounded-[32px] opacity-0 transition-opacity" />
-
-                <div className="absolute top-[114px] left-[114px] overflow-hidden w-[175px]">
-                  <div className="twinkle flex flex-row items-center">
-                    <Image src={dots1} alt="twinkling nile logo" />
-                    <Image src={dots2} alt="twinkling nile logo" />
-                    <Image src={dots3} alt="twinkling nile logo" />
-                    <Image src={dots4} alt="twinkling nile logo" />
-                    <Image src={dots5} alt="twinkling nile logo" />
-                  </div>
-                </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="bg-[#1E1E1E] rounded-[24px] p-3 w-full -mt-52 relative z-10">
+        <div className="bg-[#1E1E1E] rounded-[24px] p-3 w-full md:-mt-52 relative z-10">
           <div className="flex flex-row gap-1 px-3 py-2">
             <div className="rounded-full bg-[#FF5656] h-2 w-2"></div>
             <div className="rounded-full bg-[#FFCF52] h-2 w-2"></div>
             <div className="rounded-full bg-[#78FF57] h-2 w-2"></div>
           </div>
-          <div className=" bg-[rgba(63,63,63)] rounded-[16px] p-6 flex flex-row font-mono pointer-events-none overflow-hidden">
+          <div className=" bg-[rgba(63,63,63)] rounded-[16px] p-6 flex-row font-mono pointer-events-none overflow-hidden hidden md:flex ">
             <div className="flex flex-col relative">
               {Array(11)
                 .fill(null)
@@ -183,6 +160,9 @@ export default function HoverEffect() {
                 })}
             </div>
             <CodeTyper lines={lines} allowTyping={allowTyping} />
+          </div>
+          <div className=" bg-[rgba(63,63,63)] rounded-[16px] py-6 px-3 lg:px-6 flex-row font-mono pointer-events-none overflow-hidden md:hidden flex ">
+            <MobileLines />
           </div>
         </div>
       </div>

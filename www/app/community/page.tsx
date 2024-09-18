@@ -23,7 +23,7 @@ export default async function Home() {
           <div className="flex items-center flex-col mb-[184px]">
             <PageHeader
               title={
-                <div className="flex flex-row mt-5 items-center w-full justify-center">
+                <div className="flex flex-row mt-32 items-center w-full justify-center">
                   We
                   <Image
                     src={Heart}

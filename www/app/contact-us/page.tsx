@@ -12,7 +12,7 @@ export default function ContactUs() {
       <div className="flex flex-col md:flex-row mt-24 w-full gap-3">
         <div className="md:w-1/2">
           <div className="itemDivider px-12 py-8 flex justify-center flex-col">
-            <div className="flex flex-row mt-5 items-center w-full justify-center text-[40px] z-10">
+            <div className="flex flex-row mt-32 items-center w-full justify-center text-[40px] z-10">
               We
               <Image
                 src={Heart}

@@ -17,13 +17,13 @@ export function Block({
         <div className="text-black  text-[24px] leading-[24px] font-medium">
           {title}
         </div>
-        <div className="text-black text-[16px] leading-[20px] lg:text-[20px] lg:leading-[24px] font-normal w-5/6">
+        <div className="text-black text-[16px] leading-[20px] xl:text-[20px] xl:leading-[24px] lg:text-[18px] lg:leading-[18px] font-normal">
           {subTitle}
         </div>
       </div>
-      <div className="flex flex-row items-center">
+      <div className="flex flex-row items-center gap-2">
         <Link
-          className="text-black text-[16px] leading-[24px] font-medium"
+          className="text-black text-[16px] leading-[24px] font-medium hover:underline"
           href={href}
         >
           Learn more

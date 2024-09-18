@@ -1,36 +1,40 @@
-import { useCallback, useState } from "react";
+"use client";
+import { useCallback, useRef, useState } from "react";
 
 type Props = {
   children: JSX.Element | JSX.Element[];
 };
 export default function BgHoverer(props: Props) {
+  const { children } = props;
   const [bgPosition, setBgPosition] = useState("50% 50%");
   const [active, setActive] = useState(false);
 
-  const { children } = props;
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Event handler to update position based on mouse movement within the div
   const handleMouseMove = useCallback(
-    (e: { nativeEvent: { offsetX: any; offsetY: any; target: any } }) => {
-      if (active) {
-        const { offsetX, offsetY, target } = e.nativeEvent;
-        const width = target?.offsetWidth;
-        const height = target?.offsetHeight;
+    (event: { clientX: any; clientY: any }) => {
+      const container = containerRef.current;
+      if (container != null) {
+        const { left, top } = container.getBoundingClientRect();
+        const { clientX, clientY } = event;
 
-        const xPos = (offsetX / width) * 100;
-        const yPos = (offsetY / height) * 100;
-
-        setBgPosition(`${xPos}% ${yPos}%`);
+        // Calculate position relative to the container
+        setPosition({
+          x: clientX - left - 90, // Center the 180px box
+          y: clientY - top - 90, // Center the 180px box
+        });
       }
     },
-    [active]
+    []
   );
 
   return (
     <div
-      className="bg-hover border w-full"
+      ref={containerRef}
+      className="bg-hover w-full h-full flex relative overflow-hidden"
       style={{
-        background: active
-          ? `radial-gradient(circle at ${bgPosition}, #f4c5872e 0.12%, #d6d3e938 2.04%, transparent 5.97%)`
-          : "",
         transition: "background 0.3s ease",
       }}
       onMouseMove={handleMouseMove}
@@ -41,7 +45,20 @@ export default function BgHoverer(props: Props) {
         setActive(true);
       }}
     >
-      <div style={{ pointerEvents: active ? "none" : "all" }}>{children}</div>
+      <div
+        className="pointer-events-none absolute blur-[25px] bg-white opacity-20 h-[180px] w-[180px] bg-90 rounded-full translate-z-0 will-change-transform"
+        style={{
+          transform: `translate(${position.x}px, ${position.y}px)`,
+          transition: "opacity 200ms",
+          opacity: !active ? 0 : 0.2,
+        }}
+      ></div>
+      <div
+        className="flex-1 flex flex-col"
+        style={{ pointerEvents: active ? "none" : "all" }}
+      >
+        {children}
+      </div>
     </div>
   );
 }

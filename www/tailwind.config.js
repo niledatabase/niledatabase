@@ -17,14 +17,21 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["var(--font-aeonik)"],
+        medium: ["var(--font-aeonik-medium)"],
         inter: ["var(--font-inter)"],
       },
       colors: {
-        gray: "rgb(74,74,74)",
-        lightGray: "rgba(223, 239, 254, 0.20)",
+        gray: "rgba(255, 255, 255, 0.25)",
+        lightGray: "rgba(255, 255, 255, 0.50)",
         darkGray: "#1C1C1C",
+<<<<<<< HEAD
         orange: "#F4C587",
         blue: "#7BD1ED",
+=======
+        orange: "#FFBA6A",
+        brightOrange: "rgb(244,194,117)",
+        blue: "#6FE2FF",
+>>>>>>> ba95bad (fix(www): website design updates)
         purple: "#D8D3FF",
         dimmer: "#97a1aa",
         white: "#D9D9D9",
@@ -54,8 +61,11 @@ module.exports = {
         "footer-fade":
           "linear-gradient(0deg, rgba(0, 0, 0, 0.00) 0%, #000 100%);",
         fade: "linear-gradient(180deg, rgba(0,0,0,0) 0%, #000 50%);",
+        90: "linear-gradient(180deg, #f4c587, #d6d3e9, #99d2ec)",
         "fade-out":
           "radial-gradient(circle, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 1) 65%)",
+        "fade-out-gray":
+          "radial-gradient(circle, rgba(28, 28, 28, 0.00) 0%, #1C1C1C 1000%)",
 
         "horizontal-fade":
           "linear-gradient(90deg, rgba(0, 0, 0, 0.00) 0%, #000 100%);",

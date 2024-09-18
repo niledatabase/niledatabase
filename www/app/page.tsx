@@ -5,7 +5,6 @@ import { HeroBottom } from "@/app/_components/common/Hero";
 import BuiltOnNile from "./_components/BuildOnNile";
 import PurposeBuilt from "./_components/PurposeBuilt";
 import UnlimitedVirtualDbs from "./_components/UnlimitedVirtualDbs";
-import AIPartners from "./_components/AIPartners";
 import EmbeddingsCost from "./_components/EmbeddingsCost";
 import Autoscale from "./_components/Autoscale";
 import PlaceTenants from "./_components/PlaceTenants";
@@ -17,7 +16,7 @@ export default function Home() {
       <BuiltOnNile />
       <PurposeBuilt />
       <UnlimitedVirtualDbs />
-      <AIPartners />
+      {/* <AIPartners /> */}
       <EmbeddingsCost />
       <Virtualization />
       <Autoscale />

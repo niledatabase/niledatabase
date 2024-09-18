@@ -24,7 +24,7 @@ export default function Pricing() {
   return (
     <Container background="circular">
       <PageHeader
-        titleClasses="mt-5"
+        titleClasses="mt-32"
         title="Start building AI apps with unlimited DBs"
         subtitle="Build and scale multi-tenant AI applications with Nile's Postgres"
         color="white"

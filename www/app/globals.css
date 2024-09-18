@@ -71,17 +71,21 @@ body {
 
 .fancyBox {
   background: linear-gradient(
-      90deg,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(253, 192, 103, 0.3) 31.77%,
-      rgba(131, 210, 237, 0.3) 59.9%,
-      rgba(0, 0, 0, 0) 100%
-    )
-    posioti;
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(253, 192, 103, 0.3) 31.77%,
+    rgba(131, 210, 237, 0.3) 59.9%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 .gradientBorderButton,
 .gradientBorderButtonFade,
+<<<<<<< HEAD
+=======
+.gradientBorderGray,
+.gradientBorderBox,
+>>>>>>> ba95bad (fix(www): website design updates)
 .gradientBorderButtonLaunch {
   position: relative;
   display: flex;
@@ -91,6 +95,37 @@ body {
   -moz-osx-font-smoothing: auto;
 }
 
+.gradientBorderBox::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  padding: 1px;
+  background: linear-gradient(90deg, #f4c587 25%, #d6d3e9 50%, #99d2ec 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: opacity 300ms ease-in;
+  opacity: 0;
+}
+.gradientBorderGray::before {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 7px;
+  padding: 1px;
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 1)
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.25;
+}
 .gradientBorderButton::before {
   content: "";
   position: absolute;
@@ -583,7 +618,7 @@ code.hljs {
   right: -4px;
 
   display: inline-block;
-  border-radius: 20px;
+  border-radius: 25px;
   border: 6px dashed #000000;
   background: linear-gradient(#000000 0 0) padding-box,
     linear-gradient(to right, #f4c587 0%, #d6d3e9 50%, #99d2ec 100%) border-box;
@@ -792,6 +827,9 @@ code.hljs {
 .gradientborder {
   border-image: linear-gradient(90deg, #f4c587, #d6d3e9, #99d2ec) 1;
 }
+.gradientborder180 {
+  border-image: linear-gradient(180deg, #f4c587, #d6d3e9, #99d2ec) 1;
+}
 .dashed-gradient-line {
   width: 1px;
   background: linear-gradient(180deg, #f4c587, #d6d3e9, #99d2ec);
@@ -813,12 +851,6 @@ code.hljs {
   );
   mask-image: linear-gradient(180deg, #f4c587, #d6d3e9, #99d2ec);
 }
-.regions:hover .bg-hover {
-  background: #99d2ec4a;
-}
-.region-tenants:hover .hover-bg {
-  background: rgb(42, 42, 42);
-}
 
 @keyframes noise {
   0% {
@@ -827,4 +859,33 @@ code.hljs {
   100% {
     background-position: 100% 100%;
   }
+}
+
+.chart {
+  background: #000;
+  position: relative;
+}
+.chart::before {
+  transition: opacity 300ms;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  content: "";
+  background: linear-gradient(180deg, #f4c587, #d6d3e9, #99d2ec);
+  opacity: 0;
+}
+
+button.bg-blue:hover {
+  background-color: rgb(161, 230, 252);
+  box-shadow: 0px 0px 10px 0px rgba(255, 255, 255, 0.05);
+}
+.no-scrollbar {
+  /* Hide scrollbar for WebKit-based browsers */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
