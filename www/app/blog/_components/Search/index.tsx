@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import algoliasearch from "algoliasearch/lite";
+// import algoliasearch from "algoliasearch/lite";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   InstantSearch,
@@ -14,10 +14,10 @@ import { Metadata } from "../Metadata";
 import Coffee from "@/public/blog/coffee.webp";
 import SearchIcon from "@/public/icons/search.svg";
 
-const searchClient = algoliasearch(
-  String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
-  String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY)
-);
+// const searchClient = algoliasearch(
+// String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
+// String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY)
+// );
 function RefinementItem({
   item,
   refine,
@@ -197,6 +197,8 @@ function Hits() {
   );
 }
 export default function Search() {
+  return null;
+  /*
   return (
     <div className="flex flex-col gap-4 w-full">
       <InstantSearch searchClient={searchClient} indexName="blog">
@@ -208,4 +210,5 @@ export default function Search() {
       </InstantSearch>
     </div>
   );
+  */
 }

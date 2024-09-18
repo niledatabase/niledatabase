@@ -2,43 +2,66 @@ import Link from "next/link";
 
 export default [
   {
-    header: "How long will Nile be free?",
+    header: "How does billing work?",
     content: (
       <>
-        Nile will always have a free tier. We will go through a few iterations
-        to get the limits and dimensions correct. We will try our best to do
-        what is right for developers
+        Nile is billed on query tokens for usage on serverless compute and on
+        storage. In the near future, you will be billed on provisioned compute
+        (coming soon) if you choose to use it for some of your
+        tenants/customers. You get billed on the first of every month for the
+        usage consumed. All billing happens at the workspace level.
       </>
     ),
   },
   {
-    header: "Can I use Nile for production?",
+    header: "Are the limits per workspace?",
     content: (
       <>
-        Nile is private beta at this point. We would recommend using Nile for
-        side projects but not to production.
+        Yes, most limits are per workspace. This enables us to provide unlimited
+        DBs for free tier and you can decide how to distributed the total
+        available limits across the DBs.
       </>
     ),
   },
   {
-    header: "Can I use Nile above the limits specified in free tier?",
+    header: "What happens when I hit the limits of a tier?",
     content: (
       <>
-        We would love to discuss your use case and see how we can support it.{" "}
-        <Link href="/contact-us" className="underline text-blue">
-          You can contact us here
-        </Link>
+        We will reach out to you when you are nearing your usage limits. You can
+        typically pay for additional capacity without having to move to a higher
+        tier. This is true even when you are on the free tier.
       </>
     ),
   },
   {
-    header: "How can I get my questions answered about free tier?",
+    header: "Do I get notified if I am reaching my usage limits?",
     content: (
       <>
-        You can visit our Github discussions page or join our Discord channel.{" "}
-        <Link className="text-blue underline" href="community">
-          You can join the community here
-        </Link>
+        Yes, you will be notified when you are close to 70% of the limits for
+        your current tier. Note that
+      </>
+    ),
+  },
+  {
+    header: "How is your cost so low for serverless compute?",
+    content: (
+      <>
+        Nile's serverless compute is truly multi-tenant. This enables us to
+        provide the ability to charge for the exact cpu and memory utilized per
+        query. This reduces the cost on an average by 10x over provisioned
+        compute. We take care of providing isolation across tenants.You can
+        place tenants on the serverless compute or provisioned compute (coming
+        soon).
+      </>
+    ),
+  },
+  {
+    header: "Does my db pause in the free tier?",
+    content: (
+      <>
+        No, the db never pauses. We don't have any cold start time on the free
+        tier. This is because we have built our serverless compute to be
+        multitenant that lets us provide 'always on' dbs for free tier users.
       </>
     ),
   },

@@ -108,7 +108,7 @@ export default async function Home() {
             />
             <PageHeader
               title="Nile Documentation"
-              subtitle="Serverless Postgres for modern SaaS"
+              subtitle="A Postgres platform to ship multi-tenant AI applications - fast, safe, and limitless"
             />
           </div>
         </div>

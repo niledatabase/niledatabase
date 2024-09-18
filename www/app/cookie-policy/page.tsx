@@ -4,7 +4,7 @@ import PageHeader from "../_components/common/PageHeader";
 export default function () {
   return (
     <Container>
-      <PageHeader titleClasses="mt-5" title="Cookie notice" />
+      <PageHeader titleClasses="mt-44" title="Cookie notice" />
       <div className="prose prose-invert">
         <p>
           This Cookie Notice explains how Nile Platform, Inc. (

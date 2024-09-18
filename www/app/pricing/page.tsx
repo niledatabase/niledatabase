@@ -24,9 +24,9 @@ export default function Pricing() {
   return (
     <Container background="circular">
       <PageHeader
-        titleClasses="mt-5"
-        title="Build your modern Saas for free"
-        subtitle="Launch your first SaaS application in days and grow your business"
+        titleClasses="mt-32"
+        title="Start building AI apps with unlimited DBs"
+        subtitle="Build and scale multi-tenant AI applications with Nile's Postgres"
         color="white"
       />
       <div className="flex w-full mt-20 justify-center">
@@ -87,7 +87,9 @@ export default function Pricing() {
           </div>
         </div>
       </div>
-      <FAQ />
+      <div className="container mx-auto">
+        <FAQ />
+      </div>
     </Container>
   );
 }

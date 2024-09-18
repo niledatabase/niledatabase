@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <Container>
       <div className="container mx-auto">
-        <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
+        <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4  mt-32">
           <div className="flex gap-24 items-center flex-col">
             <div className="flex gap-4 items-center flex-col">
               <Image src={AboutLogo} alt="nile logo" width={150} height={151} />

@@ -69,8 +69,20 @@ body {
   background-color: #1e1e1e;
 }
 
+.fancyBox {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(253, 192, 103, 0.3) 31.77%,
+    rgba(131, 210, 237, 0.3) 59.9%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
 .gradientBorderButton,
 .gradientBorderButtonFade,
+.gradientBorderGray,
+.gradientBorderBox,
 .gradientBorderButtonLaunch {
   position: relative;
   display: flex;
@@ -80,16 +92,48 @@ body {
   -moz-osx-font-smoothing: auto;
 }
 
+.gradientBorderBox::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  padding: 1px;
+  background: linear-gradient(90deg, #f4c587 25%, #d6d3e9 50%, #99d2ec 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: opacity 300ms ease-in;
+  opacity: 0;
+}
+.gradientBorderGray::before {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 7px;
+  padding: 1px;
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 1)
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.25;
+}
 .gradientBorderButton::before {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 0.75rem;
+  border-radius: 7px;
   padding: 1px;
-  background: linear-gradient(144deg, #fdc066 0%, #d8d3e9 51%, #7bd1ed 100%);
+  background: linear-gradient(90deg, #f4c587 25%, #d6d3e9 50%, #99d2ec 100%);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+  opacity: 0.25;
 }
 .gradientBorderButtonLaunch::before {
   content: "";
@@ -218,7 +262,7 @@ html .navBlur {
   position: relative;
   align-items: center;
   border: solid 1px transparent;
-  border-radius: 24px;
+  border-radius: 12px;
   border-bottom: none;
 
   background-image: linear-gradient(black, black),
@@ -234,7 +278,7 @@ html .navBlur {
 .grayBorder::before {
   position: absolute;
   background-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
-  border-radius: 24px;
+  border-radius: 12px;
   content: "";
   display: block;
   height: 100%;
@@ -242,17 +286,40 @@ html .navBlur {
   right: -1px;
   top: 0;
   bottom: 0px;
-  z-index: 1;
+  z-index: -1;
 }
 
-.github-star:hover path {
-  stroke: #ffb343;
-  fill: #ffb343;
+.garbage2 {
+  color: black;
+  position: relative;
+  padding: 10px 20px;
+  border: 2px solid transparent;
+  border-radius: 4px; /* 1px rounded border */
+  background-color: blue;
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  transition: background-color 0.3s ease;
 }
 
-.github-star:hover .star {
-  opacity: 0;
+.garbage2::after {
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0)
+    ),
+    linear-gradient(144deg, #fdc066 0%, #d8d3e9 51%, #7bd1ed 100%);
+
+  position: absolute;
+  border-radius: 9px;
+  content: "";
+  display: block;
+  left: -2px;
+  right: -2px;
+  top: -2px;
+  bottom: -2px;
+  z-index: -1;
+  opacity: 0.25;
 }
+
 .icon {
   flex-shrink: 0;
   position: relative;
@@ -306,6 +373,7 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: var(--font-aeonik);
   color: white;
 }
 mark {
@@ -317,7 +385,7 @@ mark {
   background: black;
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1512px) {
   .prose {
     max-width: 80ch !important;
   }
@@ -536,4 +604,285 @@ code .hljs-string,
 
 code.hljs {
   color: white;
+}
+
+.gradient-dashed-border:before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: -4px;
+  right: -4px;
+
+  display: inline-block;
+  border-radius: 25px;
+  border: 6px dashed #000000;
+  background: linear-gradient(#000000 0 0) padding-box,
+    linear-gradient(to right, #f4c587 0%, #d6d3e9 50%, #99d2ec 100%) border-box;
+  z-index: -1;
+}
+
+.animated-gradient {
+  background: linear-gradient(90deg, #f4c587 25%, #d6d3e9 50%, #99d2ec 100%);
+  background-size: 200% 200%; /* This allows the gradient to move */
+  animation: gradientAnimation 5s ease infinite; /* Adjust timing and easing as needed */
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.perspective-container {
+  perspective: 1000px; /* Sets the perspective depth */
+}
+
+.gradient-border {
+  width: 200px;
+  height: 300px;
+  padding: 1px;
+  background-color: white; /* Content background */
+  position: relative;
+  transform: rotateX(45deg) rotateY(0deg) rotateZ(135deg);
+  background-clip: padding-box;
+
+  /* Create gradient border */
+  border: 1px solid transparent;
+  background-image: linear-gradient(black, black),
+    linear-gradient(-45deg, #f4c587 0%, #d6d3e9 50%, #99d2ec 100%);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+.cube {
+  position: absolute;
+  background: transparent;
+  cursor: default;
+  transition: all 400ms ease-in-out;
+  z-index: 1;
+  transform: translate3d(calc(var(--offsetX)), calc(var(--offsetY)), 0);
+  will-change: transform, opacity;
+}
+.cube:hover {
+  transform: translate3d(calc(var(--offsetX)), calc(var(--offsetY) - 30px), 0);
+}
+.cube:hover::before {
+  opacity: 1;
+}
+.cube::before {
+  transition: all 400ms ease-in-out;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #99d2ec;
+  filter: blur(10px);
+  z-index: -1;
+  opacity: 0;
+}
+.cube-1 {
+  --offsetY: -58px;
+  --offsetX: 246px;
+}
+.cube-2 {
+  --offsetY: 44px;
+  --offsetX: 72px;
+}
+
+.cube-3 {
+  --offsetY: 28px;
+  --offsetX: 404px;
+}
+.cube-4 {
+  --offsetY: 130px;
+  --offsetX: 228px;
+}
+.cube-5 {
+  --offsetY: 118px;
+  --offsetX: 568px;
+}
+
+.cube-6 {
+  --offsetY: 222px;
+  --offsetX: 384px;
+}
+
+.boxes:hover .boxes-bg {
+  opacity: 1;
+}
+
+.cube .hover {
+  transition: all 400ms ease-in-out;
+  opacity: 0;
+}
+.cube .hover img {
+  transform: scale(1.35) translate(-11px, 18px);
+  filter: drop-shadow(0px 0px 50px rgba(214, 211, 233, 0.1))
+    drop-shadow(0px 0px 30px rgba(214, 211, 233, 0.3))
+    drop-shadow(0px 0px 20px rgba(214, 211, 233, 0.2));
+}
+
+.cube:hover .hover {
+  opacity: 1;
+}
+
+.vert-line {
+  stroke-width: 2px;
+  stroke: #f4c587;
+  opacity: 0.25;
+  filter: drop-shadow(0px 0px 10.26px #fff)
+    drop-shadow(0px 0px 20.52px rgba(255, 255, 255, 0.6))
+    drop-shadow(0px 0px 71.82px rgba(255, 255, 255, 0.5));
+}
+
+.code-hover .gray-logo,
+.code-hover .backdrop {
+  transition: opacity 400ms ease-in-out;
+}
+
+.code-hover:hover .gray-logo {
+  opacity: 0;
+}
+.code-hover:hover .backdrop,
+.code-hover:hover .rotater,
+.code-hover:hover .rotater-behind {
+  opacity: 1;
+}
+
+.code-hover:hover .twinkle {
+  animation: twinkleMove 2s steps(5) infinite;
+}
+
+@keyframes twinkleMove {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-875px);
+  }
+}
+
+@keyframes backgroundAngle {
+  to {
+    --angle: 360deg;
+  }
+}
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.rotater:before {
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  animation: inherit;
+  content: "";
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  border-radius: inherit;
+  position: absolute;
+  inset: 0;
+  padding: 5px;
+  background: conic-gradient(
+    from calc(var(--angle) + 180deg),
+    rgba(0, 0, 0, 0) 0%,
+    #99d2ec 10%,
+    #d6d3e9 18%,
+    #d6d3e9 22%,
+    #f4c587 30%,
+    rgba(0, 0, 0, 0) 40%
+  );
+  mask-composite: exclude;
+  opacity: 0.2;
+}
+.rotater {
+  filter: drop-shadow(0 0 5px #fff);
+  animation: backgroundAngle 4s linear infinite;
+}
+.rotater-behind:before {
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  animation: inherit;
+  content: "";
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  border-radius: inherit;
+  position: absolute;
+  inset: 0;
+  padding: 5px;
+  background: rgb(38, 38, 38);
+  mask-composite: exclude;
+}
+
+.gradientborder {
+  border-image: linear-gradient(90deg, #f4c587, #d6d3e9, #99d2ec) 1;
+}
+.gradientborder180 {
+  border-image: linear-gradient(180deg, #f4c587, #d6d3e9, #99d2ec) 1;
+}
+.dashed-gradient-line {
+  width: 1px;
+  background: linear-gradient(180deg, #f4c587, #d6d3e9, #99d2ec);
+}
+
+.dashed-gradient-line::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0px,
+    transparent 5px,
+    black 5px,
+    black 10px
+  );
+  mask-image: linear-gradient(180deg, #f4c587, #d6d3e9, #99d2ec);
+}
+
+@keyframes noise {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+.chart {
+  background: #000;
+  position: relative;
+}
+.chart::before {
+  transition: opacity 300ms;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  content: "";
+  background: linear-gradient(180deg, #f4c587, #d6d3e9, #99d2ec);
+  opacity: 0;
+}
+
+button.bg-blue:hover {
+  background-color: rgb(161, 230, 252);
+  box-shadow: 0px 0px 10px 0px rgba(255, 255, 255, 0.05);
+}
+.no-scrollbar {
+  /* Hide scrollbar for WebKit-based browsers */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import Arrow from "@/public/icons/arrow.svg";
 export default function JoinWaitlist() {
   const [submitted, setDidSubmit] = useState(false);
-  console.log(submitted, "what the hell?");
   const ref = useRef<HTMLInputElement>(null);
   return (
     <div
@@ -33,7 +32,7 @@ export default function JoinWaitlist() {
         className="flex flex-row gap-2 text-[16px] gradientButton mb-[24px] leading-[24px] after:rounded-[12px] px-1 w-full"
       >
         <div
-          className="flex flex-row  duration-500 trasition-opacity gap-[24px] justify-between w-full"
+          className="flex flex-row  duration-500 transition-opacity gap-[24px] justify-between w-full"
           style={{
             opacity: submitted ? 0 : 100,
           }}
@@ -50,7 +49,7 @@ export default function JoinWaitlist() {
           />
         </div>
         <div
-          className="absolute whitespace-nowrap pointer-events-none trasition-opacity delay-500 duration-500 -ml-2"
+          className="absolute whitespace-nowrap pointer-events-none transition-opacity delay-500 duration-500 -ml-2"
           style={{
             opacity: submitted ? 100 : 0,
           }}

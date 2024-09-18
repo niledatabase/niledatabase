@@ -10,7 +10,7 @@ export default async function Home() {
   return (
     <Container background={null}>
       <div className="container mx-auto">
-        <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
+        <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4  mt-32">
           <div className="relative md:bg-templates bg-[center_110px] bg-[size:80%] bg-no-repeat xl:pb-[86px]">
             <PageHeader
               title="Find your template"
