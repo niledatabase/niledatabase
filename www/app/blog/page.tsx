@@ -4,9 +4,9 @@ import Link from "next/link";
 import { glob } from "glob";
 import Divider from "../_components/common/Divider";
 import { Authors } from "./_components/Authors";
-import { Metadata } from "./_components/Metadata";
+import { Metadata as Meta } from "./_components/Metadata";
 import { parseMetadata } from "./_components/parseMetadata";
-// import algoliasearch from "algoliasearch/lite";
+import algoliasearch from "algoliasearch/lite";
 import Search from "./_components/Search";
 import Hit from "./_components/Search/Hit";
 import Coffee from "@/public/blog/coffee.webp";
@@ -21,13 +21,11 @@ type Props = {
   image?: string;
 };
 
-/*
 const searchClient = algoliasearch(
   String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
   String(process.env.ALGOLIA_API_KEY)
 );
 const index = searchClient.initIndex("blog");
-*/
 export const metadata = {
   title: "Blog | Nile Database",
   description: "All things database SaaS",
@@ -58,7 +56,7 @@ function HeroArticle(props: Props) {
           )}
         </div>
         <div className="flex justify-center flex-col">
-          <Metadata
+          <Meta
             publishDate={publishDate}
             readLength={readLength}
             title={title}
