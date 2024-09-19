@@ -38,7 +38,7 @@ export default [
     content: (
       <>
         Yes, you will be notified when you are close to 70% of the limits for
-        your current tier. Note that
+        your current tier.
       </>
     ),
   },
