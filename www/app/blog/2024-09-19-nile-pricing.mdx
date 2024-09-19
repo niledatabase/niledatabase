@@ -6,22 +6,19 @@ export const metadata = {
   tags: ["database", "serverless", "postgres", "AI", "B2B"],
 };
 
-Today, I am excited to introduce Nile’s pricing. Nile is a Postgres platform that decouples storage from compute, virtualizes tenants, and supports both vertical and horizontal scaling globally to ship multi-tenant AI applications fast while being safe and allowing limitless scale. Our pricing model allows unlimited databases,  unbounded virtual tenant databases in a single Postgres database, and supports billions of vector embeddings across B2B customers. You can get started with Nile today by following one of our getting started guides.
+Today, I am excited to introduce Nile’s pricing. Nile is a Postgres platform that decouples storage from compute, virtualizes tenants, and supports both vertical and horizontal scaling globally to ship multi-tenant AI applications fast while being safe and allowing limitless scale. Our pricing model allows unlimited databases,  unbounded virtual tenant databases in a single Postgres database, and supports billions of vector embeddings across B2B customers. We [announced](https://www.thenile.dev/blog/app/blog/nile-public-launch) public preview yesterday. You can [sign up](https://console.thenile.dev/) to Nile today and follow one of our [getting started](https://website-git-formatfix-niledatabase.vercel.app/docs/getting-started/languages) guides.
 
-# Our pricing principles
+# Our pricing principle
 
 We want pricing to be transparent and fair. We also wanted it to be 10x better than anything out there, given the future of AI, which is going to 100x the number of databases. At the same time, pricing is complex, and these principles are based on how we think about pricing today. We will continue to iterate on pricing and be transparent and honest about it. We have three core values on which our pricing has been built.
 
 **Value vs Usage**
-
 Users pay for additional value when upgrading to higher tiers. However, they can remain on their current tier indefinitely if they only need increased usage without extra features.
 
 **Pay for utilization vs Pay for usage**
-
 Pay for only queries on serverless and capacity on provisioned compute.
 
 **Democratizing databases and virtual tenant databases for AI**
-
 Every developer in an organization should have access to a database with limitless virtual tenant databases and billions of vector embeddings.
 
 ## Value vs Usage
@@ -35,7 +32,7 @@ This principle applies to all of our tiers, including the free tier. You can rem
 
 ## Pay for Utilization vs Pay for usage
 
- ****Nile offers the flexibility to allocate B2B customers/tenants to serverless or provisioned compute (coming soon) based on their security, performance, and cost requirements. Initially, tenants can be placed on serverless and later transitioned to provisioned compute as they expand. With serverless, you only pay for the exact CPU and memory usage when a query is executed, eliminating costs for underutilized resources. Additionally, inactive tenants transitioning to active mode incur zero cold start time. Provisioned compute follows the conventional payment model based on VCPUs but now allows for smaller sizes tailored to specific tenant needs. This aids in better aligning business revenue with the cost of infrastructure per customer (COGS).
+Nile offers the flexibility to allocate B2B customers/tenants to serverless or provisioned compute (coming soon) based on their security, performance, and cost requirements. Initially, tenants can be placed on serverless and later transitioned to provisioned compute as they expand. With serverless, you only pay for the exact CPU and memory usage when a query is executed, eliminating costs for underutilized resources. Additionally, inactive tenants transitioning to active mode incur zero cold start time. Provisioned compute follows the conventional payment model based on VCPUs but now allows for smaller sizes tailored to specific tenant needs. This aids in better aligning business revenue with the cost of infrastructure per customer (COGS).
 
 A typical B2B workload is mostly predictable but continues to grow at a steady rate with some step function growth from time to time due to product changes or new distribution channels. The compute utilization will continue to increase gradually over the period of growth. For a compute requirement shown below, you would typically need to opt for a 4 VCPU instance on RDS when you hit the 2 VCPU limit.
 ![“Utilization Graph"](/blog/utilizationgraph.png)
@@ -60,4 +57,4 @@ I have been in the business of building SaaS for over a decade now, and very oft
 An excellent way to rationalize the cost is to calculate the gross margin per customer and understand where and how the cost is spread. Nile’s virtual tenant databases and the ability to place tenants between serverless or provisioned compute provides a pretty good control on this number. It is easy to understand the exact cost at the database level per tenant and optimize it. One possible strategy for a company is to place the customers on their free tier and lower tiers with lesser utilization on serverless and only place the security-conscious customers on provisioned compute. It is also possible to move tenants from one deployment to another as they grow without any application changes. Remember, these customers are represented in Nile’s Postgres as tenants and are still in one single database
 ![“Cogs"](/blog/cogs.png)
 
-We described our current approach to pricing. We would love to get feedback and continue to improve. We have modelled and designed the system with the intent to make our users successful and have a stronger alignment to ensure Nile only succeeds if our customers and their customers succeed. Try out Nile today and let us know.
+We described our current approach to pricing. We would love to get feedback and continue to improve. We have modelled and designed the system with the intent to make our users successful and have a stronger alignment to ensure Nile only succeeds if our customers and their customers succeed. [Try out Nile](https://console.thenile.dev/) today and let us know.
