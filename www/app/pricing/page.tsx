@@ -207,17 +207,17 @@ export default function Pricing() {
               <TokenCost header="Reading rows from a tenant" />
               <TableRow
                 col1="Reading one row of 64 bytes"
-                col2="640,000"
+                col2="640K"
                 col3="$0.030"
               />
               <TableRow
                 col1="Reading one row of 256 bytes"
-                col2="650,000"
+                col2="650K"
                 col3="$0.032"
               />
               <TableRow
                 col1="Reading one row of 1024 bytes"
-                col2="680,000"
+                col2="680K"
                 col3="$0.034"
               />
             </div>
@@ -225,17 +225,17 @@ export default function Pricing() {
               <TokenCost header="Writing rows to a tenant" />
               <TableRow
                 col1="Writing one row of 64 bytes"
-                col2="1,430,200"
+                col2="1.4M"
                 col3="$0.07"
               />
               <TableRow
                 col1="Writing one row of 256 bytes"
-                col2="1,450,000"
+                col2="1.45M"
                 col3="$0.073"
               />
               <TableRow
                 col1="Writing one row of 1024 bytes"
-                col2="1,460,000"
+                col2="1.46M"
                 col3="$0.074"
               />
             </div>
@@ -243,17 +243,17 @@ export default function Pricing() {
               <TokenCost header="Scanning rows of a tenant" />
               <TableRow
                 col1="Scanning 1000 rows of 64 bytes, return 1"
-                col2="8,500,000"
+                col2="8.5M"
                 col3="$0.42"
               />
               <TableRow
                 col1="Scanning 1000 rows of 256 bytes, return 1"
-                col2="8,800,00"
+                col2="8.8M"
                 col3="$0.44"
               />
               <TableRow
                 col1="Scanning 1000 rows of 1024 bytes, return 1"
-                col2="9,000,000"
+                col2="9M"
                 col3="$0.45"
               />
             </div>
