@@ -42,6 +42,7 @@ module.exports = {
       */
 
       backgroundImage: {
+        gradient: "linear-gradient(90deg, rgb(14,14,14), rgb(20,20,20))",
         overlay:
           "linear-gradient(90deg, #F4C587 9.19%, #D6D3E9 51.63%, #99D2EC 94.07%)",
         icon: "linear-gradient(134deg, #FDC066 7.53%, #D8D3E9 51.23%, #7BD1ED 93.21%)",
@@ -53,6 +54,8 @@ module.exports = {
           "linear-gradient(0deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.00) 0%, rgba(253, 192, 103, 0.50) 31.77%, rgba(131, 210, 237, 0.50) 71.35%, rgba(0, 0, 0, 0.00) 100%);",
 
         circular: "radial-gradient(closest-side, #d9d9d9, #00000000)",
+        "circular-blur":
+          "linear-gradient(144deg, #f4c5877a, #7CD1ED7a, rgba(0,0,0,0))",
         "footer-fade":
           "linear-gradient(0deg, rgba(0, 0, 0, 0.00) 0%, #000 100%);",
         fade: "linear-gradient(180deg, rgba(0,0,0,0) 0%, #000 50%);",

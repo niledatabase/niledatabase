@@ -10,10 +10,10 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
- const client = algoliasearch(
- process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
- process.env.ALGOLIA_ADMIN_KEY
- );
+const client = algoliasearch(
+  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
+  process.env.ALGOLIA_ADMIN_KEY
+);
 
 async function upload(output) {
   return new Promise((resolve) => {

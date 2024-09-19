@@ -12,14 +12,17 @@ export default function ContactUs() {
     setShow(!show);
   }, [show]);
   return (
-    <div className="py-[25px]">
+    <div>
       <ContactForm show={show} setShow={setShow} />
-      <GradientButton className="w-full" onClick={showModal}>
-        <div className="w-full flex flex-row justify-between items-center">
-          <span className="text-[white]">Contact Us</span>
+      <button
+        className="gradientBorderButton before:opacity-100 w-content flex flex-row px-8 before:rounded-xl"
+        onClick={showModal}
+      >
+        <div className="flex flex-row justify-between items-center">
+          <span className="text-[white] leading-10">Contact Sales</span>
           <Image src={Arrow} alt="arrow" width={25} height={30} priority />
         </div>
-      </GradientButton>
+      </button>
     </div>
   );
 }

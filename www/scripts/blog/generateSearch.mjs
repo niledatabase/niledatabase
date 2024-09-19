@@ -16,7 +16,7 @@ const client = algoliasearch(
 async function upload(output) {
   return new Promise((resolve) => {
     const index = client.initIndex("blog");
-    algoliasearch
+    algoliasearch;
     index
       .saveObjects(output)
       .then(() => {
