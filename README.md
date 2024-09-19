@@ -19,7 +19,7 @@
 
 We are in public preview currently. You can sign up to Nile at https://console.thenile.dev/
 
-This is a great resource to read more about Nile in 3 minutes https://www.thenile.dev/docs/nile-in-3-minutes
+This is a great resource to read more about Nile in 3 minutes [https://www.thenile.dev/docs/nile-in-3-minutes](https://www.thenile.dev/docs/getting-started/whatisnile)
 
 <img width="1434" alt="Screen Shot 2024-09-18 at 9 20 04 AM" src="https://github.com/user-attachments/assets/a78a2181-c00a-47e8-aa17-3d8b99cbe70d">
 
