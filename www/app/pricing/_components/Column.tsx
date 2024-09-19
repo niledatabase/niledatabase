@@ -126,7 +126,7 @@ type Props = {
   branches: string;
   provisionedcompute?: string;
   crosstenantanalytics?: boolean;
-  globalplacement:string;
+  globalplacement: string;
   soc2?: boolean;
   tenantOverrides?: boolean;
   tenantInsights: string;
@@ -224,7 +224,9 @@ export default function Column(props: Props) {
           text={provisionedcompute}
           header={
             <div className="flex flex-col items-start">
-              <div className="leading-[24px] opacity-70">Provisioned Compute</div>
+              <div className="leading-[24px] opacity-70">
+                Provisioned Compute
+              </div>
               <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
                 Coming soon
               </div>
@@ -257,7 +259,9 @@ export default function Column(props: Props) {
           text={tenantBack}
           header={
             <div className="flex flex-col items-start">
-              <div className="leading-[24px] opacity-70">Tenant level backups</div>
+              <div className="leading-[24px] opacity-70">
+                Tenant level backups
+              </div>
               <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] leading-[22px]">
                 Coming soon
               </div>
