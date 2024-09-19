@@ -36,32 +36,32 @@ export default async function BlogPage(props: Props) {
     <Container background={null}>
       <BlogImageZoom />
       <div className="container mx-auto prose prose-invert">
+        <div className="bg-[#2D2D2D] rounded-xl aspect-video w-full overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex relative border border-[#1c1c1c]">
+          {metadata?.image ? (
+            <Image
+              className="object-cover object-center h-full w-full absolute"
+              data-image-zoom-disabled
+              alt={metadata.image}
+              width={800}
+              height={505}
+              sizes="50vw"
+              src={`/blog/${metadata.image}`}
+              style={{
+                width: "100%",
+              }}
+            />
+          ) : (
+            <Image
+              className="object-cover object-center h-full w-full absolute"
+              data-image-zoom-disabled
+              alt="coffee"
+              width={800}
+              height={505}
+              src={Coffee}
+            />
+          )}
+        </div>
         <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
-          <div className="bg-[#2D2D2D] rounded-xl aspect-video w-[390px] xl:w-[800px] overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex relative">
-            {metadata?.image ? (
-              <Image
-                className="object-cover object-center h-full w-full absolute"
-                data-image-zoom-disabled
-                alt={metadata.image}
-                width={800}
-                height={505}
-                sizes="50vw"
-                src={`/blog/${metadata.image}`}
-                style={{
-                  width: "100%",
-                }}
-              />
-            ) : (
-              <Image
-                className="object-cover object-center h-full w-full absolute"
-                data-image-zoom-disabled
-                alt="coffee"
-                width={800}
-                height={505}
-                src={Coffee}
-              />
-            )}
-          </div>
           <div className="flex flex-col md:flex-row gap-3 items-center mb-5 w-full justify-center">
             <div className="flex flex-row justify-center items-center gap-3">
               <div className="opacity-60">{publishDate}</div>
