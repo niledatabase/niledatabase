@@ -38,9 +38,7 @@ web_ui_dir = "./ui/dist"
 # place all static images in root of mount
 mount = modal.Mount.from_local_dir(web_ui_dir, remote_path="/")
 
-# This is the image for the webapp. We need to install some dependencies that don't come with the default image.
-# We are also installing a newer version of FastAPI and Pydantic than the default ones in the base image.
-# And we are copying the web ui assets into the image.
+# Install dependencies and copy web ui assets into the image
 image = modal.Image.debian_slim(python_version="3.10").pip_install(
     "passlib==1.7.4",
     "python-jose==3.3.0",

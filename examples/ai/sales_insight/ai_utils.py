@@ -34,7 +34,6 @@ def get_embedding(text: str, task: EmbeddingTasks) -> List[float]:
     
     return response.data[0].embedding
 
-# Todo: Get the conversation before and after the chunk to provide context
 def get_similar_chunks(session: any, embedding: List[float], conversation_id: int):
     query = """
     with src as (
