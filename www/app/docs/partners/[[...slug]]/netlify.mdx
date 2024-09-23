@@ -1,0 +1,133 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "Netlify",
+  order: 5,
+};
+
+# Netlify
+
+Netlify is a platform for delivering modern web applications. It supports a wide range of frameworks and provides a comprehensive set of tools for building, deploying,
+and managing web apps.
+
+## Using Netlify and Nile together
+
+Netlify supports deployment of serverless functions that can be used with any UI framework to add business logic to your application.
+Nile's serverless database is a great fit for Netlify serverless functions and together they can be used to build B2B applications that are entirely serverless.
+With Nile's tenant virtualization, you can store private data and embeddings for each of your customers in a secure and scalable manner.
+
+In this example, we'll show you how we deploy an Express-based backend to Netlify that uses Nile as a database.
+
+### Setting Up Nile
+
+Start by signing up for [Nile](https://console.thenile.dev/). Once you've signed up for Nile, you'll be promoted to create your first database. Go ahead and do so.
+You'll be redirected to the "Query Editor" pageof your new database. This is a good time to create the table we'll be using in this example:
+
+```sql
+    CREATE TABLE todos (
+        id uuid DEFAULT (gen_random_uuid()),
+        tenant_id uuid,
+        title varchar(256),
+        estimate varchar(256),
+        embedding vector(768), -- must match the embedding model dimension
+        complete boolean);
+```
+
+Once you've created the table, you'll see it on the left-hand side of the screen. You'll also see the `tenants` table that is built-in to Nile.
+
+Next, you'll want to pick up your database connection string: Navigate to the "Settings" page, select "Connections" and click "Generate credentials".
+Copy the connection string and keep it in a secure location.
+
+### Setting Up Netlify
+
+If you don't already have a Netlify account, go ahead and create one [here](https://www.netlify.com/). Pretty simple.
+
+### Quickstart
+
+You'll want to start by forking [Nile's github repo](https://github.com/niledatabase/niledatabase). You can do this by clicking the "Fork" button in the top right corner of the screen.
+
+Now that you have your own fork, you have the option to import it to Netlify and configure the deployment using the UI or the CLI. We'll use the CLI for this example:
+
+First, you'll want to install the Netlify CLI:
+
+```bash
+npm install -g netlify-cli
+```
+
+And to clone your fork to your local machine:
+
+```bash
+git clone https://github.com/<your-username>/niledatabase.git
+cd niledatabase/examples/integration/netlify
+```
+
+Rename `.env.example` to `.env`, and update it with the connection string you just copied from Nile Console. Make sure you don't include the word "psql". It should look something like this:
+
+```bash
+DATABASE_URL=postgres://018b778a-30df-7cdd-b55c-2f9664db39f3:ff3fb983-683c-4616-bbbc-519d8ddbbce5@db.thenile.dev:5432/gwen_db
+```
+
+Install dependencies with `npm install`.
+
+Initialize the project with Netlify:
+
+```bash
+netlify init
+```
+
+This will create a site in your Netlify account and connect it to the fork you created earlier.
+You'll want to update environment variables for the site. You can do it from the CLI:
+
+```bash
+netlify env:import .env
+```
+
+You can also check the site that you created in Netlify by selecting it from the "Sites" page. Check the configuration, especially under "Continous Deployment" -
+make sure the base directory is set to "examples/integration/netlify" and functions directory is set to "examples/integration/netlify/functions".
+
+You can also test the site locally by running `netlify dev --cwd ./`. This will start a local server and open your default browser to `http://localhost:8888`.
+You can close the browser and run the `curl` commands below to test the API by replacing the URL with `http://localhost:8888`.
+
+If everything looks good, you can deploy the site to Netlify:
+
+```bash
+netlify deploy --prod
+```
+
+This will deploy the application to the live URL and return a "production URL" based on the site name you chose during the initialization step. In the examples below, I used the production URL of my demo site: `nile-netlify.netlify.app` - you'll want to replace it with the URL of your site.
+
+Congratulations! You've now deployed a serverless backend that uses Nile as the database and Netlify as the serverless compute platform.
+
+### 6. Try it out
+
+Now you can take the URL above and use `curl` to explore the APIs. Here are a few examples:
+
+```bash
+# create a tenant
+curl --location --request POST 'https://nile-netlify.netlify.app/api/tenants' \
+--user 'test-user:' \
+--header 'Content-Type: application/json' \
+--header 'Accept: application/json' \
+--data-raw '{"name":"my first customer"}'
+
+# get tenants
+curl  -X GET 'https://nile-netlify.netlify.app/api/tenants' --user 'test-user:'
+
+# create a todo (don't forget to use a real tenant-id in the URL)
+curl  -X POST \
+  'https://nile-netlify.netlify.app/api/tenants/0191f72c-fe16-7ef7-b776-a8dc970fd65a/todos' \
+  --user 'test-user:' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{"title": "feed the cat", "complete": false}'
+
+# list todos for tenant (don't forget to use a read tenant-id in the URL)
+curl  -X GET \
+  --user 'test-user:' \
+  'https://nile-netlify.netlify.app/api/tenants/0191f72c-fe16-7ef7-b776-a8dc970fd65a/todos'
+
+# list todos for all tenants
+curl  -X GET \
+  --user 'test-user:' \
+  'http://localhost:8888/api/insecure/all_todos'
+```

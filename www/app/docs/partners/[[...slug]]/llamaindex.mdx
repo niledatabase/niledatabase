@@ -1,0 +1,137 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "LlamaIndex",
+  order: 3,
+};
+
+# LlamaIndex
+
+[LlamaIndex](https://llamaindex.ai/) is a framework for building context-augmented generative AI applications with LLMs.
+It provides a wide range of functionality including data connectors, index building, query engines, agents, workflows and observability.
+Making it easy to build powerful RAG applications.
+
+## Using LlamaIndex and Nile together
+
+LlamaIndex can be used with Nile to build RAG (Retrieval Augmented Generation) architectures.
+You'll use LLamaIndex to simply and orchestrate the different steps in your RAG workflows, and Nile to store and query data and embeddings.
+
+In this example, we'll show how to chat with a sales transcript in just a few lines of code, using LlamaIndex's high-level interface and its integration with Nile and OpenAI.
+
+We'll walk you through the setup steps and then explain the code line by line. The entire script is available [here](https://github.com/niledatabase/niledatabase/blob/main/examples/integrations/code_snippets/nile_llamaindex_quickstart.py).
+
+### Setting Up Nile
+
+Start by signing up for [Nile](https://console.thenile.dev/). Once you've signed up for Nile, you'll be promoted to create your first database. Go ahead and do so. You'll be redirected to the "Query Editor" page
+of your new database. This is a good time to create the table we'll be using in this example:
+
+```sql
+create table data_document_vectors (
+    id uuid DEFAULT (gen_random_uuid()),
+    "text" varchar,
+    metadata_ json,
+    node_id varchar,
+    embedding vector(1536));
+```
+
+Once you've created the table, you'll see it on the left-hand side of the screen. You'll also see the `tenants` table that is built-in to Nile.
+
+Next, you'll want to pick up your database connection string: Navigate to the "Settings" page, select "Connections" and click "Generate credentials".
+Copy the connection string and keep it in a secure location.
+
+### Setting Up LlamaIndex
+
+LlamaIndex is a Python library, so you'll need to set up a Python environment with the necessary dependencies.
+We recommend using [venv](https://docs.python.org/3/library/venv.html) to create a virtual environment.
+This step is optional, but it will help you manage your dependencies and avoid conflicts.
+
+```bash
+python3 -m venv llama-env
+source llama-env/bin/activate
+```
+
+Once you've activated your virtual environment, you can install the necessary dependencies:
+
+```bash
+pip install llama-index-vector-stores-postgres llama-index
+```
+
+### Quickstart
+
+In this example, we'll chat with a sales transcript. Download it to `./data` directory.
+
+```bash
+mkdir -p data/sales
+curl -L https://raw.githubusercontent.com/niledatabase/niledatabase/main/examples/ai/sales_insight/data/transcripts/nexiv-solutions__0_transcript.txt -o data/sales/sales_transcript.txt
+```
+
+Open a file named `nile_llamaindex_quickstart.py` and start by importing the necessary dependencies:
+
+```python
+import os
+
+from llama_index.core import SimpleDirectoryReader, StorageContext
+from llama_index.core import VectorStoreIndex
+from llama_index.vector_stores.postgres import PGVectorStore
+
+import openai
+```
+
+This quickstart uses OpenAI's API to generate embeddings.
+This will be a good time to grab your [OpenAI API key](https://platform.openai.com/api-keys).
+
+```python
+os.environ["OPENAI_API_KEY"] = "your-openai-api-key"
+openai.api_key = os.environ["OPENAI_API_KEY"]
+```
+
+Next, add your Nile database connection string. LlamaIndex uses both synchronous and asynchronous connection strings, so we generate both.
+
+```python
+base_connection_string = "01919b11-44b6-72f4-9f70-7897eeb3cd77:f7888d52-11f4-422f-9665-f950db6406b0@us-west-2.db.thenile.dev:5432/sales_insight"
+connection_string = "postgresql+psycopg2://" + base_connection_string
+async_connection_string = "postgresql+asyncpg://" + base_connection_string
+```
+
+With all this in place, we'll load the data from the sales transcript:
+
+```python
+documents = SimpleDirectoryReader("./data/sales").load_data()
+print("Document ID:", documents[0].doc_id)
+```
+
+Connect to Nile and store the documents with their embeddings. LlamaIndex automatically chunks and embeds the documents for us:
+
+```python
+vector_store = PGVectorStore.from_params(
+    connection_string=connection_string,
+    async_connection_string=async_connection_string,
+    table_name="document_vectors",
+    embed_dim=1536, # 1536 is the embedding dimension for the OpenAI embedding model we're using
+    perform_setup=False,)
+
+storage_context = StorageContext.from_defaults(vector_store=vector_store)
+index = VectorStoreIndex.from_documents(
+    documents, storage_context=storage_context, show_progress=True
+)
+```
+
+Now that we have our vector embeddings stored in Nile, we can build a query engine and chat with the documents:
+
+```python
+query_engine = index.as_query_engine()
+print("test query: ", query_engine.query("What were the customer pain points?"))
+```
+
+And run the script:
+
+```bash
+python nile_llamaindex_quickstart.py
+```
+
+Thats it! You've now built a (small)RAG application with LlamaIndex and Nile.
+
+## Full application
+
+Coming soon!
