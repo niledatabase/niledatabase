@@ -1,6 +1,7 @@
 # Sales Insight
 
-This example shows how to use Nile with Modal to build a sales insight application.
+Using Llama 3.1 model, running on A100 GPU by Modal and Serverless Postgres by Nile, Sales Assistant will summarize sales calls for you.
+This is a demo of multi-tenant SaaS app powered by Nile and Modal.
 
 ## Getting Started
 
