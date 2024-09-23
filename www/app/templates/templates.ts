@@ -16,57 +16,6 @@ export const NextJSQuickstart: Template = {
   },
 };
 
-export const EmailLogin: Template = {
-  name: "Email Login Example for multi-tenant application",
-  description:
-    "Learn about simple Authentication for multi-tenant application with Nile",
-  author: "Nile",
-  imageSrc: "/templates/EmailLogin.png",
-  demoUrl: "https://email-authn.vercel.app/",
-  readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/email_login/NextJS/README.md",
-  // A key/value string/string. What is put here will show up on the site exactly
-  metadata: {
-    Framework: "NextJS 13",
-    "Use Case": "SaaS Authentication",
-    Publisher: "Nile",
-  },
-};
-
-export const SocialLoginGoogle: Template = {
-  name: "Social Login for multi-tenant application with Google",
-  description:
-    "Build social login for multi-tenant application with Google and Nile",
-  author: "Nile",
-  imageSrc: "/templates/GoogleSocialLogin.png",
-  demoUrl: "https://niledatabase-google-sso.vercel.app",
-  readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/social_login_google/NextJS/README.md",
-  // A key/value string/string. What is put here will show up on the site exactly
-  metadata: {
-    Framework: "NextJS 13",
-    "Use Case": "SaaS Authentication, Social Login",
-    Publisher: "Nile",
-  },
-};
-
-export const OktaSSOLogin: Template = {
-  name: "SSO Login for multi-tenant application with Okta",
-  description:
-    "Build multi-tenant application using enterprise SSO login with Okta and Nile",
-  author: "Nile",
-  imageSrc: "/templates/OktaSSOLogin.png",
-  demoUrl: "https://login-okta-demo.vercel.app/",
-  readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/sso_login_okta/NextJS/README.md",
-  // A key/value string/string. What is put here will show up on the site exactly
-  metadata: {
-    Framework: "NextJS 13",
-    "Use Case": "SaaS Authentication, Enterprise SSO",
-    Publisher: "Nile",
-  },
-};
-
 export const NodeJSQuickstart: Template = {
   // A great name, preferably unique, name for the template
   name: "AI-Native multi-tenant SaaS with Nile, NodeJS and React",
@@ -220,6 +169,22 @@ export const CodeAssist: Template = {
     "https://github.com/niledatabase/niledatabase/blob/main/examples/ai/code_assist/README.md",
   metadata: {
     Framework: "OpenAI, pg_vector, LangChain, NextJS",
+    "Use Case": "AI SaaS",
+    Publisher: "Nile",
+  },
+};
+
+export const SalesInsights: Template = {
+  name: "Sales Insights - AI-Native Sales Assistant",
+  description:
+    "Learn how to use Nile and Modal to build a serverless multi-tenant app that helps analyze sales conversations",
+  author: "Nile",
+  demoUrl: "https://gwenshap--sales-insight-web-fastapi-app.modal.run/",
+  imageSrc: "/templates/SalesInsights.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/ai/sales_insight/README.md",
+  metadata: {
+    Framework: "Modal, Nile, FastAPI, pgvector, Llama 3.1, Vite",
     "Use Case": "AI SaaS",
     Publisher: "Nile",
   },
