@@ -32,7 +32,7 @@ export function HeroText() {
             </div>
           </div>
         </div>
-        <div>AI apps fast</div>
+        <div>B2B apps fast</div>
       </h1>
       <h2 className="text-[20px] leading-6">
         A Postgres platform that decouples storage from compute and virtualizes
