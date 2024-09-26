@@ -37,7 +37,7 @@ export function HeroText() {
       <h2 className="text-[20px] leading-6">
         A Postgres platform that decouples storage from compute and virtualizes
         <br />
-        tenants to ship multi-tenant AI applications - fast, safe, and limitless
+        tenants to ship multi-tenant applications - fast, safe, and limitless
       </h2>
       <div className="flex gap-4 items-center justify-start">
         <a href="https://console.thenile.dev" className="flex">
