@@ -38,8 +38,8 @@ export default function Pricing() {
     <Container>
       <PageHeader
         titleClasses="mt-32"
-        title="Start building AI apps with unlimited DBs"
-        subtitle="Build and scale multi-tenant AI applications with Nile's Postgres"
+        title="Start building B2B and AI apps with unlimited DBs"
+        subtitle="Build and scale multi-tenant applications with Nile's Postgres"
         color="white"
       />
       <div className="container mx-auto">
