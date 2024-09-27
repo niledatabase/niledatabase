@@ -1,5 +1,5 @@
 <p align="center">
-  ![Github-header](https://github.com/user-attachments/assets/20585883-5cdc-4f15-93d3-dc150e87bc11)
+  <img width="1434" alt="Screen Shot 2024-09-18 at 9 20 04 AM" src="https://github.com/user-attachments/assets/20585883-5cdc-4f15-93d3-dc150e87bc11">
 </p>
 
 ---
