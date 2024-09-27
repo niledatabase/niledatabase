@@ -1,7 +1,6 @@
 <p align="center">
-  ![Github](https://github.com/user-attachments/assets/44abe7ba-1067-47be-9e90-2e056ff318f9)
+  ![Github](https://github.com/user-attachments/assets/f086f845-3483-4c04-8993-72dea5fa4180)
 </p>
-
 ---
 
 # Nile
