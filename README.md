@@ -1,19 +1,19 @@
 <p align="center">
-<img width="1356" alt="Screen Shot 2023-06-21 at 7 35 32 PM" src="https://github.com/user-attachments/assets/b117a6ad-589e-4c73-a550-ef671c012430">
+  ![Github](https://github.com/user-attachments/assets/44abe7ba-1067-47be-9e90-2e056ff318f9)
 </p>
 
 ---
 
 # Nile
 
-**Nile is a Postgres platform that decouples storage from compute, virtualizes tenants, and supports vertical and horizontal scaling globally to ship AI-native B2B applications fast while being safe with limitless scale.** All B2B applications are multi-tenant. A tenant/customer is primarily a company, an organization, or a workspace in your product that contains a group of users. A B2B application provides services to multiple tenants. Tenant is the basic building block of all B2B applications.
+**Nile is a Postgres platform that decouples storage from compute, virtualizes tenants, and supports vertical and horizontal scaling globally to ship B2B applications fast while being safe with limitless scale.** All B2B applications are multi-tenant. A tenant/customer is primarily a company, an organization, or a workspace in your product that contains a group of users. A B2B application provides services to multiple tenants. Tenant is the basic building block of all B2B applications.
 
 ## Features
 
 - Unlimited Postgres databases, Unlimited virtual tenant databases
-- Secure isolation for customer's data and embeddings
+- Secure isolation for customer's data and vector embeddings
 - Customer-specific vector embeddings at 10x lower cost
-- Autoscale to millions of tenants and billions of embeddings
+- Autoscale to millions of tenants and billions of vector embeddings
 - Place tenants on serverless or provisioned compute - globally
 - Tenant-level branching, backups, schema migration, and insights
 
