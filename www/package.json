@@ -22,7 +22,7 @@
     "fast-image-zoom": "^7.0.1",
     "highlight.js": "^11.9.0",
     "lodash": "^4.17.21",
-    "next": "^13.4.19",
+    "next": "^14.2.10",
     "prism-react-renderer": "^2.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
