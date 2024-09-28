@@ -34,9 +34,9 @@ export default async function Page({
       " for tenant " +
       tenantNile.tenantId
   );
-  const todos = await tenantNile.db("todos").select("*").orderBy("title"); // no need for where clause because we previously set Nile context
-  const resp = await tenantNile.db("tenants").select("name"); // no need for where clause because we previously set Nile context
-  const tenant = resp[0].name;
+  const todos = await tenantNile.db.query("SELECT * FROM todos ORDER BY title"); // no need for where clause because we previously set Nile context
+  const resp = await tenantNile.db.query("SELECT name FROM tenants"); // no need for where clause because we previously set Nile context
+  const tenant = resp.rows[0].name;
   return (
     <Stack spacing={2} width={"50%"}>
       <Typography
@@ -54,7 +54,7 @@ export default async function Page({
           <AddForm tenantid={tenantNile.tenantId!} />
         </ListItem>
         <ListDivider />
-        {todos.map((todo: any) => (
+        {todos.rows.map((todo: any) => (
           <div
             key={todo.id}
             style={{ display: "flex", flexWrap: "nowrap", padding: "0.5rem" }}

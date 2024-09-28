@@ -1,24 +1,14 @@
-import Server from "@niledatabase/server";
+import Nile from "@niledatabase/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../app/api/auth/[...nextauth]/route";
 
 // Initialize the Nile server object for reuse in all pages
 // Note that the Nile server configuration points to Nile APIs as the base path
 
-const nile = Server({
-  workspace: String(process.env.NEXT_PUBLIC_WORKSPACE),
-  database: String(process.env.NEXT_PUBLIC_DATABASE),
-  api: {
-    basePath: String(process.env.NEXT_PUBLIC_NILE_API),
-  },
-  db: {
-    connection: {
-      host: process.env.NILE_DB_HOST,
-      user: process.env.NILE_USER,
-      password: process.env.NILE_PASSWORD,
-    },
-  },
-});
+// Initialize the Nile server object for reuse in all pages
+// Note that the Nile server configuration points to Nile APIs as the base path
+
+const nile = Nile();
 
 export default nile;
 
@@ -28,7 +18,8 @@ export async function configureNile(tenantId: string | null | undefined) {
   console.log("configureNile", tenantId);
   const session = await getServerSession(authOptions);
   console.log(session);
-  return nile.getInstance({
+  const server = await nile;
+  return server.getInstance({
     tenantId: tenantId,
     //@ts-ignore
     userId: session?.user?.id,
