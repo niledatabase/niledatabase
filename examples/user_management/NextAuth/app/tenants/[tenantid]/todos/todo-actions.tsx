@@ -23,11 +23,10 @@ export async function addTodo(
   );
   try {
     // need to set tenant ID because it is part of the primary key
-    await tenantNile.db("todos").insert({
-      tenant_id: tenantNile.tenantId,
-      title: title,
-      complete: false,
-    });
+    await tenantNile.db.query(
+      `INSERT INTO todos (tenant_id, title, complete) VALUES ($1, $2, $3)`,
+      [tenantNile.tenantId, title, false]
+    );
     revalidatePath("/tenants/${tenantID}/todos");
   } catch (e) {
     console.error(e);
@@ -52,10 +51,10 @@ export async function completeTodo(
   );
   try {
     // Tenant ID and user ID are in the context, so we don't need to specify them as query filters
-    await tenantNile
-      .db("todos")
-      .update({ complete: complete })
-      .where({ id: id });
+    await tenantNile.db.query(
+      `UPDATE todos SET complete = $1 WHERE id = $2`,
+      [complete, id]
+    );
     revalidatePath("/tenants/${tenantID}/todos");
   } catch (e) {
     console.error(e);

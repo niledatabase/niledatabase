@@ -17,15 +17,15 @@ export async function createTenant(prevState: any, formData: FormData) {
   let success = false; // needed because redirect can't be used in try-catch block
   let tenantId = null;
   try {
-    const tenants = await nile
-      .db("tenants")
-      .insert({ name: tenantName })
-      .returning("id");
-    tenantId = tenants[0].id;
-    await nile
-      .db("users.tenant_users")
-      .insert({ user_id: nile.userId, tenant_id: tenantId });
-
+    const tenants = await nile.db.query(
+      `INSERT INTO tenants (name) VALUES ($1) RETURNING id`,
+      [tenantName]
+    );
+    tenantId = tenants.rows[0].id;
+    await nile.db.query(
+      `INSERT INTO users.tenant_users (user_id, tenant_id) VALUES ($1, $2)`,
+      [nile.userId, tenantId]
+    );
     console.log(
       "created tenant with tenantID: ",
       tenantId,

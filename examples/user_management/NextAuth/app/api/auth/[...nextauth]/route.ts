@@ -7,11 +7,11 @@ import "dotenv/config";
 import type { NextAuthOptions } from "next-auth";
 
 const pool = new Pool({
-  host: process.env.NILE_DB_HOST,
-  user: process.env.NILE_USER,
+  host: process.env.NILEDB_HOST,
+  user: process.env.NILEDB_USER,
   max: 1, // no need for a serious pool for auth in a demo app. For now, this is separate from the Nile SDK pool used elsewhere.
-  password: process.env.NILE_PASSWORD,
-  database: process.env.NILE_DATABASE,
+  password: process.env.NILEDB_PASSWORD,
+  database: process.env.NILEDB_DATABASE,
 });
 
 export const authOptions: NextAuthOptions = {
