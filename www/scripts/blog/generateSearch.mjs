@@ -9,8 +9,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const client = algoliasearch(
-  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
-  process.env.ALGOLIA_ADMIN_KEY
+ process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
+ process.env.ALGOLIA_ADMIN_KEY
 );
 
 async function upload(output) {
@@ -34,7 +34,8 @@ async function run() {
   for (const fileName of files) {
     const file = path.join(__dirname, "../app/www/../../../", fileName);
     const { metadata, default: Content } = await import(file);
-    metadata.objectID = fileName;
+    const title = fileName.split('/').reverse()[0];
+    metadata.objectID = title;
     const output = renderToStaticMarkup(React.createElement(Content));
     const cleaned = output
       .toString()

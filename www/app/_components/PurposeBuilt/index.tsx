@@ -20,7 +20,7 @@ export default function PurposeBuilt() {
                   />
                 </span>
                 <span>
-                  Postgres is purpose-built for multi tenant AI applications.
+                  PostgreSQL reengineered for multi-tenant apps
                 </span>
               </div>
             </div>

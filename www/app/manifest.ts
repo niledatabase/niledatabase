@@ -2,10 +2,10 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Nile Postgres — Built for AI-native B2B companies",
+    name: "Postgres rengineered for multitenant and AI apps",
     short_name: "Nile Postgres",
     description:
-      "The Postgres platform for AI-native B2B companies. Build secure, performant, and scalable multi-tenant AI applications with world-class developer experience.",
+      "Postgres reengineered for multitenant apps. Build secure, scalable and AI-native multi-tenant applications with world-class developer experience.",
     start_url: "/",
     display: "standalone",
     background_color: "#000",

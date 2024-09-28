@@ -17,4 +17,5 @@ export enum NavigationRoots {
   TenantVirtualization = "tenant-virtualization",
   Usecases = "usecases",
   Postgres = "postgres",
+  Partners = "partners",
 }

@@ -1,0 +1,72 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "Vercel",
+  order: 6,
+};
+
+# Vercel
+
+## Using Vercel and Nile together
+
+[Vercel](https://vercel.com) provides the developer tools and cloud infrastructure to build, scale, and secure high performance web applications.
+
+Nile's NextJS examples such as the [AI-native Todo App](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%20and%20NextJS),
+[KnowledgeAI](https://www.thenile.dev/templates/KnowledgeAI%20-%20PDF%20search%20assistant%20for%20your%20organization)
+and [Code Assistant](https://www.thenile.dev/templates/Autonomous%20Code%20Assistant%20-%20Code%20more%2C%20type%20less) are all written in NextJS and deployed on Vercel.
+
+In this guide we'll walk you through how to deploy the AI-native Todo App on Vercel.
+
+### Setting Up Nile
+
+Start by signing up for [Nile](https://console.thenile.dev/). Once you've signed up for Nile, you'll be promoted to create your first database. Go ahead and do so.
+You'll be redirected to the "Query Editor" pageof your new database. This is a good time to create the table we'll be using in this example:
+
+```sql
+    CREATE TABLE todos (
+        id uuid DEFAULT (gen_random_uuid()),
+        tenant_id uuid,
+        title varchar(256),
+        estimate varchar(256),
+        embedding vector(768), -- must match the embedding model dimension
+        complete boolean);
+```
+
+Once you've created the table, you'll see it on the left-hand side of the screen. You'll also see the `tenants` table that is built-in to Nile.
+
+Next, you'll want to pick up your database connection string: Navigate to the "Settings" page, select "Connections" and click "Generate credentials".
+Copy the connection string and keep it in a secure location.
+Then, navigate to the "general" settings page and copy the `API URL`.
+
+### Setting Up Vercel
+
+If you don't already have a Vercel account, go ahead and create one [here](https://vercel.com/). Pretty simple.
+
+### Quickstart
+
+You'll want to start by forking [Nile's github repo](https://github.com/niledatabase/niledatabase). You can do this by clicking the "Fork" button in the top right corner of the screen.
+
+After you sign up for Vercel, you'll have the option to connect your GitHub account. This will allow you to import a project directly from
+GitHub. In this case, we'll be importing the Nile Todo App.
+
+Once you connected your Github account, you'll see the fork you just created in the "Import project" screen. Click "Import".
+
+You'll be redirected to the "Configure project" screen. There are few things we need to change:
+
+1. **Project name**: Give your project a meaningful name. For example `nile-vercel-nextjs`.
+2. **Root Directory**: Set the root directory to `/examples/quickstart/nextjs`
+3. **Environment Variables**: We need to add several environment variables. You can add them manually, but the simplest way is to
+   copy-paste the contents of [`.env.local.example`](https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/nextjs/.env.local.example),
+   and replace the values with your own:
+
+- You can find `NILEDB_USER` and `NILEDB_PASSWORD` in the connection string you copied in the previous step.
+- `NILEDB_API_URL` is the URL you copied in the previous step.
+- `NEXT_PUBLIC_APP_URL` is the URL of your app. This is based on the proect name. In our case it is `https://nile-vercel-nextjs.vercel.app`.
+- And don't forget to fill in your AI vendor API key. While the example uses Fireworks as the AI vendor, you can use any other [AI vendor](../../ai-embeddings/embedding-models) that you like by replacing the URL and model names.
+
+After you've added the environment variables, click "Deploy". Wait a few minutes for the deployment to complete and visit the app URL to see your app in action.
+Make sure you are using the same URL in the `NEXT_PUBLIC_APP_URL` environment variable as the one you are visiting, otherwise you'll get CORS errors.
+You can sign up, create a tenant and start creating todos - watch the AI estimate the time it will take to complete each todo!
+
+You've now deployed a smart todo list app, written in Next.js, that uses Nile as the database and Vercel as the serverless compute platform.
