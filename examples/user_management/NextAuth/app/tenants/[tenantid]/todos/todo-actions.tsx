@@ -51,10 +51,10 @@ export async function completeTodo(
   );
   try {
     // Tenant ID and user ID are in the context, so we don't need to specify them as query filters
-    await tenantNile.db.query(
-      `UPDATE todos SET complete = $1 WHERE id = $2`,
-      [complete, id]
-    );
+    await tenantNile.db.query(`UPDATE todos SET complete = $1 WHERE id = $2`, [
+      complete,
+      id,
+    ]);
     revalidatePath("/tenants/${tenantID}/todos");
   } catch (e) {
     console.error(e);
