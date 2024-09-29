@@ -17,7 +17,7 @@ export async function configureNile(
   const authData = JSON.parse(rawAuthCookie.value) as AuthCookieData;
   const server = await nile;
   return server.getInstance({
-    // debug: true,
+    //debug: true,
     tenantId: tenantId,
     userId: authData.tokenData?.sub,
     api: {

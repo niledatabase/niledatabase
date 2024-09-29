@@ -34,21 +34,27 @@ export async function addTodo(
   if (!title) {
     return { message: "Please enter a title" };
   }
-  // use embeddings to get some similar tasks, for reference
-  startTime = performance.now();
-  const similarTasks = await findSimilarTasks(tenantNile, title.toString());
-  endTime = performance.now();
-  let timeToFindSimilarTasks = endTime - startTime;
-  startTime = performance.now();
-  // for each todo, we want to try and generate an AI estimate.
-  const estimate = await aiEstimate(tenantNile, title.toString(), similarTasks);
-  endTime = performance.now();
-  let timeToAiEstimate = endTime - startTime;
+
   // We also want to try and embed the task for future AI processing
   startTime = performance.now();
   const embedding = await embedTask(title.toString());
   endTime = performance.now();
   let timeToEmbedTask = endTime - startTime;
+  // use embeddings to get some similar tasks, for reference
+  startTime = performance.now();
+  const similarTasks = await findSimilarTasks(
+    tenantNile,
+    title.toString(),
+    embedding
+  );
+  endTime = performance.now();
+  let timeToFindSimilarTasks = endTime - startTime;
+  // for each todo, we want to try and generate an AI estimate.
+  startTime = performance.now();
+  const estimate = await aiEstimate(tenantNile, title.toString(), similarTasks);
+  endTime = performance.now();
+  let timeToAiEstimate = endTime - startTime;
+
   try {
     // need to set tenant ID because it is part of the primary key
     startTime = performance.now();
@@ -72,9 +78,9 @@ export async function addTodo(
     return {
       Message: "Todo added successfully",
       // "Time to configure Nile (ms)": timeToConfigureNile,
+      "Request embedding from LLM(ms)": timeToEmbedTask.toFixed(2),
       "Vector similarity search in Postgres (ms)":
         timeToFindSimilarTasks.toFixed(2),
-      "Request embedding from LLM(ms)": timeToEmbedTask.toFixed(2),
       "Prompt response from LLM (ms)": timeToAiEstimate.toFixed(2),
       "Insert todo to Postgres (ms)": timeToInsertTodo.toFixed(2),
       // "Time to revalidate (ms)": timeToRevalidate,
