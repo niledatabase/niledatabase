@@ -5,14 +5,12 @@ import Add from "@mui/icons-material/Add";
 import Input from "@mui/joy/Input";
 import Snackbar from "@mui/joy/Snackbar";
 import Alert from "@mui/joy/Alert";
-import CheckIcon from "@mui/icons-material/Check";
-import ListItermDecorator from "@mui/joy/ListItemDecorator";
 import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
 // @ts-expect-error -- useFormState is new and lacks type definitions
 import { experimental_useFormState as useFormState } from "react-dom";
 import { addTodo } from "./todo-actions";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 const initialState = {
   message: null,
@@ -21,50 +19,63 @@ const initialState = {
 export function AddForm({ tenantid }: { tenantid: string }) {
   const addTodoWithTenant = addTodo.bind(null, tenantid);
   const [state, formAction] = useFormState(addTodoWithTenant, initialState);
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSnackbarClose = useCallback(() => {
+    setSnackbarMessage(null);
+  }, []);
+
+  const handleSubmit = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      formAction(formData);
+      if (formRef.current) formRef.current.reset();
+    },
+    [formAction]
+  );
 
   useEffect(() => {
     if (state.message !== null) {
-      setIsSnackbarOpen(true);
+      setSnackbarMessage(JSON.stringify(state));
     }
-  }, [state.message]);
-
-  const handleSnackbarClose = () => {
-    setIsSnackbarOpen(false);
-  };
+  }, [state]);
 
   return (
-    <form
-      name="newtodo"
-      id="newtodo"
-      action={formAction}
-      style={{ display: "flex", flexWrap: "nowrap", width: "100%" }}
-    >
-      <IconButton type="submit">
-        {" "}
-        <Add />{" "}
-      </IconButton>
-      <Input
-        placeholder="Add task"
-        variant="outlined"
-        id="todo"
-        name="todo"
-        sx={{ width: "95%" }}
-      ></Input>
-      <br />
+    <>
+      <form
+        ref={formRef}
+        name="newtodo"
+        id="newtodo"
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexWrap: "nowrap", width: "100%" }}
+      >
+        <IconButton type="submit">
+          <Add />
+        </IconButton>
+        <Input
+          placeholder="Add task"
+          variant="outlined"
+          id="todo"
+          name="todo"
+          sx={{ width: "95%" }}
+        />
+      </form>
       <Snackbar
-        open={isSnackbarOpen}
+        open={snackbarMessage !== null}
         onClose={handleSnackbarClose}
         autoHideDuration={30000}
       >
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          {Object.entries(state).map(([key, value]) => (
-            <Typography key={key} level="body-md" textAlign="left">
-              {key}: {String(value)}
-            </Typography>
-          ))}
+          {snackbarMessage &&
+            Object.entries(JSON.parse(snackbarMessage)).map(([key, value]) => (
+              <Typography key={key} level="body-md" textAlign="left">
+                {key + ": " + value}
+              </Typography>
+            ))}
         </Box>
       </Snackbar>
-    </form>
+    </>
   );
 }
