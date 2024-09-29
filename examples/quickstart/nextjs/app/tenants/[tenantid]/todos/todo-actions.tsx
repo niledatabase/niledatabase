@@ -4,7 +4,7 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { configureNile } from "@/lib/NileServer";
-import { aiEstimate, embedTask, embeddingToSQL } from "@/lib/AiUtils";
+import { aiEstimate, embedTask, embeddingToSQL, findSimilarTasks } from "@/lib/AiUtils";
 
 export async function addTodo(
   tenantId: string,
@@ -12,7 +12,11 @@ export async function addTodo(
   formData: FormData
 ) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
+  let startTime = performance.now();
   const tenantNile = await configureNile(cookies().get("authData"), tenantId);
+  let endTime = performance.now();
+  let timeToConfigureNile = endTime - startTime;
+
   const title = formData.get("todo");
   console.log(
     "adding Todo " +
@@ -25,18 +29,44 @@ export async function addTodo(
   if (!title) {
     return { message: "Please enter a title" };
   }
+  // use embeddings to get some similar tasks, for reference
+  startTime = performance.now();
+  const similarTasks = await findSimilarTasks(tenantNile, title.toString());
+  endTime = performance.now();
+  let timeToFindSimilarTasks = endTime - startTime;
+  startTime = performance.now();
   // for each todo, we want to try and generate an AI estimate.
-  const estimate = await aiEstimate(tenantNile, title.toString());
+  const estimate = await aiEstimate(tenantNile, title.toString(), similarTasks);
+  endTime = performance.now();
+  let timeToAiEstimate = endTime - startTime;
   // We also want to try and embed the task for future AI processing
+  startTime = performance.now();
   const embedding = await embedTask(title.toString());
+  endTime = performance.now();
+  let timeToEmbedTask = endTime - startTime;
   try {
     // need to set tenant ID because it is part of the primary key
+    startTime = performance.now();
     await tenantNile.db.query(
       `INSERT INTO todos (tenant_id, title, estimate, embedding, complete)
         VALUES ($1, $2, $3, $4, $5)`,
-      [tenantNile.tenantId, title, estimate, embeddingToSQL(embedding), false]
+      [tenantNile.tenantId, title, estimate?.substring(0, 255), embeddingToSQL(embedding), false]
     );
+    endTime = performance.now();
+    let timeToInsertTodo = endTime - startTime;
+    startTime = performance.now();
     revalidatePath("/tenants/${tenantID}/todos");
+    endTime = performance.now();
+    let timeToRevalidate = endTime - startTime;
+    return {
+      "Message": "Todo added successfully",
+     // "Time to configure Nile (ms)": timeToConfigureNile,
+      "Time to find similar tasks (ms)": timeToFindSimilarTasks,
+      "Time for AI to provide estimate (ms)": timeToAiEstimate,
+      "Time to generate embedding (ms)": timeToEmbedTask,
+      "Time to insert todo (ms)": timeToInsertTodo,
+     // "Time to revalidate (ms)": timeToRevalidate,
+    };
   } catch (e) {
     console.error(e);
     return { message: "Failed to add todo" };

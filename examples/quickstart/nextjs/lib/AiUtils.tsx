@@ -41,7 +41,7 @@ export async function findSimilarTasks(tenantNile: Server, title: string) {
   return similarTasks.rows;
 }
 
-export async function aiEstimate(tenantNile: Server, title: string) {
+export async function aiEstimate(tenantNile: Server, title: string, similarTasks: any) {
   // I use Fireworks as the model vendor for this example, but any OpenAI-compatible vendor will work
   // Just swap the API key, URL and model
   const ai = new OpenAI({
@@ -52,9 +52,6 @@ export async function aiEstimate(tenantNile: Server, title: string) {
   const model =
     process.env.AI_MODEL ||
     "accounts/fireworks/models/llama-v3p1-405b-instruct";
-
-  // use embeddings to get some similar tasks, for reference
-  const similarTasks = await findSimilarTasks(tenantNile, title);
 
   const aiEstimate = await ai.chat.completions.create({
     messages: [
