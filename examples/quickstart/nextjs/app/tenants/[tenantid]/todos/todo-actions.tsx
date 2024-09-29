@@ -61,10 +61,10 @@ export async function addTodo(
     return {
       "Message": "Todo added successfully",
      // "Time to configure Nile (ms)": timeToConfigureNile,
-      "Time to find similar tasks (ms)": timeToFindSimilarTasks,
-      "Time for AI to provide estimate (ms)": timeToAiEstimate,
-      "Time to generate embedding (ms)": timeToEmbedTask,
-      "Time to insert todo (ms)": timeToInsertTodo,
+      "Vector similarity search in Postgres (ms)": timeToFindSimilarTasks.toFixed(2),
+      "Request embedding from LLM(ms)": timeToEmbedTask.toFixed(2),
+      "Prompt response from LLM (ms)": timeToAiEstimate.toFixed(2),
+      "Insert todo to Postgres (ms)": timeToInsertTodo.toFixed(2),
      // "Time to revalidate (ms)": timeToRevalidate,
     };
   } catch (e) {
