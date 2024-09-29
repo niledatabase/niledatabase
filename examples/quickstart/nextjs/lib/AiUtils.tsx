@@ -41,7 +41,11 @@ export async function findSimilarTasks(tenantNile: Server, title: string) {
   return similarTasks.rows;
 }
 
-export async function aiEstimate(tenantNile: Server, title: string, similarTasks: any) {
+export async function aiEstimate(
+  tenantNile: Server,
+  title: string,
+  similarTasks: any
+) {
   // I use Fireworks as the model vendor for this example, but any OpenAI-compatible vendor will work
   // Just swap the API key, URL and model
   const ai = new OpenAI({

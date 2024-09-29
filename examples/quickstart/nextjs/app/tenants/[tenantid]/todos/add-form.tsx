@@ -50,13 +50,14 @@ export function AddForm({ tenantid }: { tenantid: string }) {
         id="todo"
         name="todo"
         sx={{ width: "95%" }}
-      ></Input><br />
-      <Snackbar 
-        open={isSnackbarOpen} 
+      ></Input>
+      <br />
+      <Snackbar
+        open={isSnackbarOpen}
         onClose={handleSnackbarClose}
         autoHideDuration={30000}
       >
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
           {Object.entries(state).map(([key, value]) => (
             <Typography key={key} level="body-md" textAlign="left">
               {key}: {String(value)}

@@ -4,7 +4,12 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { configureNile } from "@/lib/NileServer";
-import { aiEstimate, embedTask, embeddingToSQL, findSimilarTasks } from "@/lib/AiUtils";
+import {
+  aiEstimate,
+  embedTask,
+  embeddingToSQL,
+  findSimilarTasks,
+} from "@/lib/AiUtils";
 
 export async function addTodo(
   tenantId: string,
@@ -50,7 +55,13 @@ export async function addTodo(
     await tenantNile.db.query(
       `INSERT INTO todos (tenant_id, title, estimate, embedding, complete)
         VALUES ($1, $2, $3, $4, $5)`,
-      [tenantNile.tenantId, title, estimate?.substring(0, 255), embeddingToSQL(embedding), false]
+      [
+        tenantNile.tenantId,
+        title,
+        estimate?.substring(0, 255),
+        embeddingToSQL(embedding),
+        false,
+      ]
     );
     endTime = performance.now();
     let timeToInsertTodo = endTime - startTime;
@@ -59,13 +70,14 @@ export async function addTodo(
     endTime = performance.now();
     let timeToRevalidate = endTime - startTime;
     return {
-      "Message": "Todo added successfully",
-     // "Time to configure Nile (ms)": timeToConfigureNile,
-      "Vector similarity search in Postgres (ms)": timeToFindSimilarTasks.toFixed(2),
+      Message: "Todo added successfully",
+      // "Time to configure Nile (ms)": timeToConfigureNile,
+      "Vector similarity search in Postgres (ms)":
+        timeToFindSimilarTasks.toFixed(2),
       "Request embedding from LLM(ms)": timeToEmbedTask.toFixed(2),
       "Prompt response from LLM (ms)": timeToAiEstimate.toFixed(2),
       "Insert todo to Postgres (ms)": timeToInsertTodo.toFixed(2),
-     // "Time to revalidate (ms)": timeToRevalidate,
+      // "Time to revalidate (ms)": timeToRevalidate,
     };
   } catch (e) {
     console.error(e);
