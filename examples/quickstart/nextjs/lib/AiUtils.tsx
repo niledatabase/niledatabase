@@ -59,13 +59,22 @@ export async function aiEstimate(
     process.env.AI_MODEL ||
     "accounts/fireworks/models/llama-v3p1-405b-instruct";
 
+  let content = `you are an amazing project manager. I need to ${title}. How long do you think this will take? ${
+    similarTasks?.length > 0
+      ? `I have a few similar tasks with their estimates, please use them as reference: ${JSON.stringify(
+          similarTasks
+        )}.`
+      : ""
+  }
+  respond with just the estimate, no yapping. If you can't estimate, respond with "Sorry, I can't estimate this task".`;
+
+  console.log("Using prompt:", content);
+
   const aiEstimate = await ai.chat.completions.create({
     messages: [
       {
         role: "user",
-        content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
-        I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
-        respond with just the estimate, no yapping.`,
+        content: content,
       },
     ],
     model: model,
@@ -73,6 +82,7 @@ export async function aiEstimate(
 
   // if we got a valid response, return it
   if (aiEstimate.choices[0].finish_reason === "stop") {
+    console.log("AI estimate:", aiEstimate.choices[0].message.content);
     return aiEstimate.choices[0].message.content;
   }
   // otherwise, we simply don't have an estimate
