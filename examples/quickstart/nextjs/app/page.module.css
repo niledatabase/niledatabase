@@ -1,7 +1,6 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
   min-height: 100vh;
 }
@@ -17,7 +16,7 @@
   padding: 2rem;
   z-index: 2;
   font-family: var(--font-mono);
-  background: #e7e7e7;
+  background: var(--background-rgb);
 }
 
 .description a {

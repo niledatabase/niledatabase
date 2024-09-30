@@ -52,12 +52,12 @@ export default function RootLayout({
               </a>
             </div>
           </div>
-          <div>
-            <Stack>
-              <Typography level="h2">AI-native Todo Application</Typography>
-            </Stack>
-          </div>
-          {children}
+          <Stack flex={1}>
+            <Typography level="h2" marginBottom={10} mt={20}>
+              AI-native Todo Application
+            </Typography>
+            {children}
+          </Stack>
           <div className={styles.grid}>
             <Card
               variant="outlined"
