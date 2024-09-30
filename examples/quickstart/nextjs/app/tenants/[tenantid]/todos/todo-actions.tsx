@@ -2,7 +2,6 @@
 // ^^^ This has to run on the server because it uses database operations and updates the cache
 
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 import { configureNile } from "@/lib/NileServer";
 import {
   aiEstimate,
@@ -18,7 +17,7 @@ export async function addTodo(
 ) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
   let startTime = performance.now();
-  const tenantNile = await configureNile(cookies().get("authData"), tenantId);
+  const tenantNile = await configureNile(tenantId);
   let endTime = performance.now();
   let timeToConfigureNile = endTime - startTime;
 
@@ -97,7 +96,7 @@ export async function completeTodo(
   complete: boolean
 ) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
-  const tenantNile = await configureNile(cookies().get("authData"), tenantId);
+  const tenantNile = await configureNile(tenantId);
   console.log(
     "updating Todo " +
       id +

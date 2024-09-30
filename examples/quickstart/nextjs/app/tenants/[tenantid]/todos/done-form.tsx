@@ -4,10 +4,6 @@ import Typography from "@mui/joy/Typography";
 import { useTransition } from "react";
 import { completeTodo } from "./todo-actions";
 
-const initialState = {
-  message: null,
-};
-
 export function DoneForm({
   tenantId,
   todo,
@@ -15,7 +11,7 @@ export function DoneForm({
   tenantId: string;
   todo: { id: string; title: string; complete: boolean };
 }) {
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   return (
     <Checkbox
       label={<Typography>{todo.title}</Typography>}

@@ -7,13 +7,12 @@ import Snackbar from "@mui/joy/Snackbar";
 import Alert from "@mui/joy/Alert";
 import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
-// @ts-expect-error -- useFormState is new and lacks type definitions
-import { experimental_useFormState as useFormState } from "react-dom";
-import { addTodo } from "./todo-actions";
 import { useState, useEffect, useCallback, useRef } from "react";
+import { addTodo } from "./todo-actions";
+import { useFormState } from "react-dom";
 
 const initialState = {
-  message: null,
+  message: "",
 };
 
 export function AddForm({ tenantid }: { tenantid: string }) {
