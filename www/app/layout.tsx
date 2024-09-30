@@ -2,9 +2,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Postgres reengineered for B2B apps",
+  title: "Postgres re-engineered for B2B apps",
   description:
-    "Postgres reengineered for multi-tenant apps. Build secure, scalable and AI-native multi-tenant applications with world-class developer experience.",
+    "Postgres re-engineered for multi-tenant apps. Build secure, scalable and AI-native multi-tenant applications with world-class developer experience.",
   applicationName: "Nile postgres",
   metadataBase: new URL("https://www.thenile.dev/"),
   manifest: new URL("https://www.thenile.dev/manifest.json"),
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     title: "Nile Postgres — Built for B2B and AI companies",
     siteName: "Nile Postgres — Built for B2B and AI companies",
     description:
-      "Postgres reengineered for multi-tenant apps. Build secure, scalable and AI-native multi-tenant applications with world-class developer experience.",
+      "Postgres re-engineered for multi-tenant apps. Build secure, scalable and AI-native multi-tenant applications with world-class developer experience.",
   },
   twitter: {
     card: "summary_large_image",

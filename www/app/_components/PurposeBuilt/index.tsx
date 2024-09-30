@@ -19,7 +19,7 @@ export default function PurposeBuilt() {
                     className="brightness-0 leading-[32px] xl:leading-[64px] translate-y-1 lg:translate-y-2"
                   />
                 </span>
-                <span>PostgreSQL reengineered for multi-tenant apps</span>
+                <span>PostgreSQL re-engineered for multi-tenant apps</span>
               </div>
             </div>
           </div>
