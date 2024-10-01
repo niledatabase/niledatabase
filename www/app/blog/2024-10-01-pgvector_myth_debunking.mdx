@@ -7,96 +7,96 @@ export const metadata = {
   tags: ["database", "serverless", "postgres", "vectordatabase", "AI", "B2B"],
 };
 
-Pgvector is Postgres' highly popular extension for storing, indexing and querying vectors. Vectors have been a useful data type for a long time, 
-but recently they've seen rise in popularity due to their usefulness in RAG (Retrieval Augmented Generation) architectures of AI-based applications. 
-Vectors typically power the retrieval part - using vector similarity search and nearest-neighbor algorithms, one can find the most relevant documents 
-for a given user question. 
+Pgvector is Postgres' highly popular extension for storing, indexing and querying vectors. Vectors have been a useful data type for a long time,
+but recently they've seen rise in popularity due to their usefulness in RAG (Retrieval Augmented Generation) architectures of AI-based applications.
+Vectors typically power the retrieval part - using vector similarity search and nearest-neighbor algorithms, one can find the most relevant documents
+for a given user question.
 
-Having the ability to store vectors in your normal relational database, as opposed to a dedicated vector store, means that you can use all the 
-normal relational database capabilities together with vector search - join vector tables with other data and metadata, use additional fields for filtering, 
+Having the ability to store vectors in your normal relational database, as opposed to a dedicated vector store, means that you can use all the
+normal relational database capabilities together with vector search - join vector tables with other data and metadata, use additional fields for filtering,
 retrieve related information and so on.
 
-[Nile](https://www.thenile.dev/) has [supported pg_vector](https://www.thenile.dev/docs/ai-embeddings/pg_vector) since our first private beta release, 
-about a year ago. From conversations with both our users and in the pgvector community, it became clear that there are some common misconceptions and 
-misunderstandings around its best practices and use. As a result of these misunderstandings, some people avoid pg_vector completely or use it less effectively 
+[Nile](https://www.thenile.dev/) has [supported pg_vector](https://www.thenile.dev/docs/ai-embeddings/pg_vector) since our first private beta release,
+about a year ago. From conversations with both our users and in the pgvector community, it became clear that there are some common misconceptions and
+misunderstandings around its best practices and use. As a result of these misunderstandings, some people avoid pg_vector completely or use it less effectively
 than they otherwise would. So, let's fix this!
 ![Image of Mark Twain with his quote: "It ain't what you don't know that gets you in trouble, its what you think you know that just ain't so"](/blog/2024-10-01-pgvector_myth_debunking/mark_twain.png)
 
 ## Myth 1: You always need to use a vector index
 
-This myth is a result of certain vector stores and popular libraries using the term "index" to describe any method of storing vectors. 
+This myth is a result of certain vector stores and popular libraries using the term "index" to describe any method of storing vectors.
 This has led to the misconception that indexes are the only way to store vectors.
- 
-This isn't true in Postgres terminology. The trick is that other vector stores have what they call a “flat” index. Flat index basically means “no hierarchy”. 
-In postgres, the default table structure is flat. So if you just create a table with a column of vector type, insert some vectors and don't create any indexes, 
+
+This isn't true in Postgres terminology. The trick is that other vector stores have what they call a “flat” index. Flat index basically means “no hierarchy”.
+In postgres, the default table structure is flat. So if you just create a table with a column of vector type, insert some vectors and don't create any indexes,
 you actually have what is called elsewhere a flat vector index.
 
-Now that we know that you technically don't need to create a vector index in order to use pg_vector, you still need to decide when to use an index, 
+Now that we know that you technically don't need to create a vector index in order to use pg_vector, you still need to decide when to use an index,
 which one to use and when to use it.
 
-Let's take as an example an application that embeds transcripts of sales conversations for searches and knowledge extraction. You may have 10M embeddings in 
-your database, but each one of your customers will have under 10,000. And each sales person has under 1000. And maybe they typically only search calls from 
+Let's take as an example an application that embeds transcripts of sales conversations for searches and knowledge extraction. You may have 10M embeddings in
+your database, but each one of your customers will have under 10,000. And each sales person has under 1000. And maybe they typically only search calls from
 the last few weeks, so it is actually under 100.
 
-If you usually only need to search 100 or 1000 vectors, you are almost certainly better off without any vector index. Instead, you can use normal b-tree indexes 
-(maybe with partitions) to limit the query to scan just the right subset of vectors. This means you will have full recall 
-(the indexes perform approximate nearest neighbor search, so there could be loss of recall) and can save on the time, memory and CPU of maintaining indexes that 
+If you usually only need to search 100 or 1000 vectors, you are almost certainly better off without any vector index. Instead, you can use normal b-tree indexes
+(maybe with partitions) to limit the query to scan just the right subset of vectors. This means you will have full recall
+(the indexes perform approximate nearest neighbor search, so there could be loss of recall) and can save on the time, memory and CPU of maintaining indexes that
 are unlikely to help you (and that the Postgres planner may rightly decide not to use).
 
 ## Myth 2: Vector indexes semantics are similar to other indexes
 
-If you are familiar with indexes in relational databases, but less familiar with vector indexes, the last few paragraphs may have been very confusing. What do 
-I mean by trading off performance vs recall? 
+If you are familiar with indexes in relational databases, but less familiar with vector indexes, the last few paragraphs may have been very confusing. What do
+I mean by trading off performance vs recall?
 
-Typically a query that uses the index will return the exact same data that will be returned by a query that doesn't use the index. This is basic SQL/relational 
+Typically a query that uses the index will return the exact same data that will be returned by a query that doesn't use the index. This is basic SQL/relational
 semantics and is expected to be guaranteed for every index and every query. This expectation is so ingrained that most of us aren't even aware that we expect it.
 
-But vector indexes are not like that. They are data structures for efficient approximate nearest neighbor search (ANN). They improve performance by 
-limiting the search for nearest neighbors to specific subsets of the graph. These subsets are selected because they are likely to contain the nearest 
+But vector indexes are not like that. They are data structures for efficient approximate nearest neighbor search (ANN). They improve performance by
+limiting the search for nearest neighbors to specific subsets of the graph. These subsets are selected because they are likely to contain the nearest
 neighbors, but not guaranteed.
 
-This also gives you a hint on how the performance / recall tradeoff works - the more graph subsets you search, the more likely you are to find 
-the actual nearest neighbors, but the longer it takes. In addition, different types of vector indexes give you additional configuration options - how 
-many subsets do you split the collection into? How exhaustively you “map” each subset? These decisions will also impact the performance / recall tradeoff of the index. 
+This also gives you a hint on how the performance / recall tradeoff works - the more graph subsets you search, the more likely you are to find
+the actual nearest neighbors, but the longer it takes. In addition, different types of vector indexes give you additional configuration options - how
+many subsets do you split the collection into? How exhaustively you “map” each subset? These decisions will also impact the performance / recall tradeoff of the index.
 
-[PG Vector documentation](https://github.com/pgvector/pgvector?tab=readme-ov-file#indexing) explains the types of indexes and the different parameters 
-you can configure when creating and querying them. Definitely worth reading in detail and experimenting with them. 
+[PG Vector documentation](https://github.com/pgvector/pgvector?tab=readme-ov-file#indexing) explains the types of indexes and the different parameters
+you can configure when creating and querying them. Definitely worth reading in detail and experimenting with them.
 
 ## Myth 3: You can't store more than 2000 dimensions in a vector index
 
-At the root of this myth is the simple fact that Postgres blocks are limited to 8K in size. By default, vectors are a collection of floats, and each float is 32bit. 
-A simple math shows that if you take overheads into consideration, at around 2000 dimensions, you get very close to the 8K limit. 
-You can still store the data, [Postgres has a TOAST feature](https://wiki.postgresql.org/wiki/TOAST) which uses "pointers" to store a row in more than one block. 
+At the root of this myth is the simple fact that Postgres blocks are limited to 8K in size. By default, vectors are a collection of floats, and each float is 32bit.
+A simple math shows that if you take overheads into consideration, at around 2000 dimensions, you get very close to the 8K limit.
+You can still store the data, [Postgres has a TOAST feature](https://wiki.postgresql.org/wiki/TOAST) which uses "pointers" to store a row in more than one block.
 But - you can't build a vector index if the rows are split using TOAST.
 
-One option is to use embedding models that output vectors with fewer dimensions, or a model that has been 
-[trained to "scale down" without losing performance](https://www.nomic.ai/blog/posts/nomic-embed-matryoshka). But, what if you have an embedding model 
+One option is to use embedding models that output vectors with fewer dimensions, or a model that has been
+[trained to "scale down" without losing performance](https://www.nomic.ai/blog/posts/nomic-embed-matryoshka). But, what if you have an embedding model
 that works really well for your data and has more dimensions? Switching to a different model may be completely unacceptable.
 
 Another option is to use feature extraction algorithms that reduce dimensions of vectors from other models while attempting to preserve accuracy.
-PCA, t-SNE, and UMAP are relatively well known for this, and there are [some results that show they work quite well](https://arxiv.org/abs/1708.03629). 
+PCA, t-SNE, and UMAP are relatively well known for this, and there are [some results that show they work quite well](https://arxiv.org/abs/1708.03629).
 
-However a much simpler approach is to use quantization. Quantization is the process of using smaller data type for each dimension. Pgvector supports `half_vec` type 
-with scalar quantization. It converts the floats to 16bit type by removing the least significant digits. This makes sense - we typically use vectors and indexes for 
-nearest neighbor search. These insignificant digits typically don't have much impact on the relative distances between vectors.  
+However a much simpler approach is to use quantization. Quantization is the process of using smaller data type for each dimension. Pgvector supports `half_vec` type
+with scalar quantization. It converts the floats to 16bit type by removing the least significant digits. This makes sense - we typically use vectors and indexes for
+nearest neighbor search. These insignificant digits typically don't have much impact on the relative distances between vectors.
 
-Since `half_vec` takes half the size of the usual float, you can store 4000-ish dimensions of `half_vec` type. Looking ahead, the community is also 
-iterating on 8bit quantization of embeddings with an int_vec type which will allow storing 8000-ish dimensions. 
+Since `half_vec` takes half the size of the usual float, you can store 4000-ish dimensions of `half_vec` type. Looking ahead, the community is also
+iterating on 8bit quantization of embeddings with an int_vec type which will allow storing 8000-ish dimensions.
 
-Even if you have smaller embeddings that already fit into a Postgres block and can be indexed, storing half the data will greatly improve performance and 
+Even if you have smaller embeddings that already fit into a Postgres block and can be indexed, storing half the data will greatly improve performance and
 reduce resource utilization. [All with almost no impact on recall](https://jkatz05.com/post/postgres/pgvector-scalar-binary-quantization/).
 
 ## Myth 4: Using vector index with other filters will miss data
 
 This isn't quite as myth-y as the others. In fact, at the time of writing, this is still true. But in the upcoming pg_vector release, 0.8.0, we will be
 able to relegate this to a myth.
-So what does “use vector index with other filters” mean? 
+So what does “use vector index with other filters” mean?
 
-Imagine that you indexed your company wiki, and now you want to find the documents most similar to “promotion process and policy”. But since your company has 
+Imagine that you indexed your company wiki, and now you want to find the documents most similar to “promotion process and policy”. But since your company has
 several business units with their own policies, you want to search only within the “engineering” category. Your query will look like:
 
 ```sql
-select doc_id, doc_title from document_embeddings 
+select doc_id, doc_title from document_embeddings
 where embedding <-> $1 < 1
 and doc_category = 'engineering'
 order by embedding <-> $1
@@ -109,29 +109,30 @@ While we may want it to search only a subset of the vector index that belongs to
 such a subset will not exist.
 
 What happens is that Postgres uses the vector index first, finds the 10 nearest neighbors, and then filters them and throws out anything that isn't in the engineering
-category. The problem, of course, is that this may result in anything from 10 to 0 rows. And we wanted to show 10 rows in our search results. This is the 
+category. The problem, of course, is that this may result in anything from 10 to 0 rows. And we wanted to show 10 rows in our search results. This is the
 problem - we want K nearest neighbors after filtering, but we can't know in advance how many neighbors we need the index to return in order to achieve this.
 
-Version 0.8.0 will introduce iterative vector indexes. This will allow Postgres to scan the index, find nearest neighbors, apply the filter, scan the index a 
+Version 0.8.0 will introduce iterative vector indexes. This will allow Postgres to scan the index, find nearest neighbors, apply the filter, scan the index a
 bit more, filter more… and continue until the desired number of neighbors is found and can be returned.
 
-Version 0.8.0 will also include an improvement to the cost estimate of using vector indexes. This will help Postgres decide when to use the vector index and when 
-to rely on just the B-Tree or GiST indexes. Both these improvements together will make it much easier to create indexes and run queries, 
+Version 0.8.0 will also include an improvement to the cost estimate of using vector indexes. This will help Postgres decide when to use the vector index and when
+to rely on just the B-Tree or GiST indexes. Both these improvements together will make it much easier to create indexes and run queries,
 knowing that Postgres will do the right thing with them.
 
 ## Myth 5: Vector similarity is only useful for RAG
-Vector embeddings are becoming increasingly popular due to their role in Retrieval-Augmented Generation (RAG). In RAG, embeddings help locate and retrieve relevant 
+
+Vector embeddings are becoming increasingly popular due to their role in Retrieval-Augmented Generation (RAG). In RAG, embeddings help locate and retrieve relevant
 context, which allows large language models (LLMs) to answer questions more accurately and reduce the risk of hallucination.
 
-But sometimes it looks like we forgot all the other uses of vector embeddings. Vectors help find semantically similar items. Finding similar items 
+But sometimes it looks like we forgot all the other uses of vector embeddings. Vectors help find semantically similar items. Finding similar items
 is useful even without the LLM. For example:
 
-* **Support**: Find knowledge base articles that are relevant to a support ticket and suggest them to the customer or support agent.
-* **Issue tracking**: Detect duplicate reports of the same issue.
-* **Recommendations**: Recommend items that are similar to ones that the customer already liked. “If you enjoyed this book, you'll probably also like…”
-* **Anomaly detection**: instead of finding the most similar items, we can use vector distance to detect when a new item has no nearest neighbors. If it is very 
-far from every existing item, it is an anomaly and can be reported.
-* **Shop for similar items**: Given a photo of a product, you can search for the most similar products.
+- **Support**: Find knowledge base articles that are relevant to a support ticket and suggest them to the customer or support agent.
+- **Issue tracking**: Detect duplicate reports of the same issue.
+- **Recommendations**: Recommend items that are similar to ones that the customer already liked. “If you enjoyed this book, you'll probably also like…”
+- **Anomaly detection**: instead of finding the most similar items, we can use vector distance to detect when a new item has no nearest neighbors. If it is very
+  far from every existing item, it is an anomaly and can be reported.
+- **Shop for similar items**: Given a photo of a product, you can search for the most similar products.
 
 In all these cases, just finding the nearest neighbors is enough, there is no need for an LLM in the loop.
 
@@ -139,33 +140,33 @@ In all these cases, just finding the nearest neighbors is enough, there is no ne
 
 There are two types of vector embeddings: Dense and Sparse.
 
-**Dense vectors** are typically generated by trained language models and they encode the semantic meaning behind a sentence or a document. This 
-representation is a bit opaque, in the sense that you cannot map each dimension to a specific word or a concept. Dense vectors typically have 256-4096 
+**Dense vectors** are typically generated by trained language models and they encode the semantic meaning behind a sentence or a document. This
+representation is a bit opaque, in the sense that you cannot map each dimension to a specific word or a concept. Dense vectors typically have 256-4096
 dimensions.
 
-**Sparse vectors** are typically the result of traditional text search algorithms (TF-IDF, BM25, SPLADE) that use vectors to represent information about 
-the importance of words used in each text. In sparse vectors, each dimension represents a word and the value indicates how common / important the word 
-is in each text. The number of dimensions in sparse vectors depends on either the number of distinct words in the dataset (TF-IDF, BM25) or the number 
-of words the model was trained on (30,522 in case of SPLADE). Since most texts only contain a small subset of all words, when using sparse vectors 
-most of the dimensions have the value 0. 
+**Sparse vectors** are typically the result of traditional text search algorithms (TF-IDF, BM25, SPLADE) that use vectors to represent information about
+the importance of words used in each text. In sparse vectors, each dimension represents a word and the value indicates how common / important the word
+is in each text. The number of dimensions in sparse vectors depends on either the number of distinct words in the dataset (TF-IDF, BM25) or the number
+of words the model was trained on (30,522 in case of SPLADE). Since most texts only contain a small subset of all words, when using sparse vectors
+most of the dimensions have the value 0.
 
-[In version 0.7.0, pg_vector added support for sparse vectors](https://github.com/pgvector/pgvector?tab=readme-ov-file#sparse-vectors) with the `sparsevec` type. 
-This type only stores the non-zero elements of the vector. You insert sparse vectors by specifying only the non-zero values and their indexes. 
-If you use pg_vector client libraries (they have libraries for many languages and ORMs), you’ll use their sparse vector type, which automatically 
+[In version 0.7.0, pg_vector added support for sparse vectors](https://github.com/pgvector/pgvector?tab=readme-ov-file#sparse-vectors) with the `sparsevec` type.
+This type only stores the non-zero elements of the vector. You insert sparse vectors by specifying only the non-zero values and their indexes.
+If you use pg_vector client libraries (they have libraries for many languages and ORMs), you’ll use their sparse vector type, which automatically
 convert vectors to the correct text representation.
 
 ## Summary
 
-Vector indexes behave a bit differently than typical indexes in relational databases. In addition, the domain of vector embeddings has its own terminology, 
-which isn’t always clear for new arrivals. 
+Vector indexes behave a bit differently than typical indexes in relational databases. In addition, the domain of vector embeddings has its own terminology,
+which isn’t always clear for new arrivals.
 
-When I first started working with vector embeddings and pg_vector, I found many of the topics above confusing. From my interactions with our 
-users and the pgvector community, I've seen others face similar challenges. I hope this blog will be helpful, and I believe almost everyone will walk away with at 
-least one new insight. 
+When I first started working with vector embeddings and pg_vector, I found many of the topics above confusing. From my interactions with our
+users and the pgvector community, I've seen others face similar challenges. I hope this blog will be helpful, and I believe almost everyone will walk away with at
+least one new insight.
 
-Perhaps the most important lesson is that pg_vector is constantly evolving. Version 0.7.0 was released in April this year, version 0.8.0 is anticipated for October. 
-Each vector adds more functionality and resolves old limitations. So it is important to revisit our assumptions and refresh our knowledge on a regular basis. 
+Perhaps the most important lesson is that pg_vector is constantly evolving. Version 0.7.0 was released in April this year, version 0.8.0 is anticipated for October.
+Each vector adds more functionality and resolves old limitations. So it is important to revisit our assumptions and refresh our knowledge on a regular basis.
 Remember: It isn't what you don't know that gets you, its what you think you know but is no longer true.
 
-And if I convinced you to give pgvector a try, and you want to use it together with Nile, check out the 
+And if I convinced you to give pgvector a try, and you want to use it together with Nile, check out the
 [Nile documentation on using pgvector](https://www.thenile.dev/docs/ai-embeddings/pg_vector) and [sign up for a free account](https://console.thenile.dev).
