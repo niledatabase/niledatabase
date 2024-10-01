@@ -67,7 +67,7 @@ you can configure when creating and querying them. Definitely worth reading in d
 At the root of this myth is the simple fact that Postgres blocks are limited to 8K in size. By default, vectors are a collection of floats, and each float is 32bit.
 A simple math shows that if you take overheads into consideration, at around 2000 dimensions, you get very close to the 8K limit.
 You can still store the data, [Postgres has a TOAST feature](https://wiki.postgresql.org/wiki/TOAST) which uses "pointers" to store a row in more than one block.
-But - you can't build a vector index if the rows are split using TOAST.
+But - you can't build a vector index if the vector embedding is too large to fit in a block.
 
 One option is to use embedding models that output vectors with fewer dimensions, or a model that has been
 [trained to "scale down" without losing performance](https://www.nomic.ai/blog/posts/nomic-embed-matryoshka). But, what if you have an embedding model
@@ -158,7 +158,7 @@ convert vectors to the correct text representation.
 ## Summary
 
 Vector indexes behave a bit differently than typical indexes in relational databases. In addition, the domain of vector embeddings has its own terminology,
-which isn’t always clear for new arrivals.
+which isn't always clear for new arrivals.
 
 When I first started working with vector embeddings and pg_vector, I found many of the topics above confusing. From my interactions with our
 users and the pgvector community, I've seen others face similar challenges. I hope this blog will be helpful, and I believe almost everyone will walk away with at
