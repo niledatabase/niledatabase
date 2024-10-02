@@ -1,5 +1,6 @@
 export const metadata = {
-  title: "End to End Serverless: Nile and Netlify Partner for Seamless Multi-Tenant Applications",
+  title:
+    "End to End Serverless: Nile and Netlify Partner for Seamless Multi-Tenant Applications",
   authors: ["gwenshap"],
   image: "2024-10-03-nile_netlify/cover.png",
   sizzle:
@@ -7,8 +8,8 @@ export const metadata = {
   tags: ["database", "serverless", "postgres", "netlify", "AI", "B2B"],
 };
 
-We're excited to announce a powerful new partnership between Nile, the serverless PostgreSQL platform engineered for multi-tenant applications, 
-and [Netlify](https://www.netlify.com/), the leader in web application delivery. This collaboration aims to provide developers with a seamless experience in 
+We're excited to announce a powerful new partnership between Nile, the serverless PostgreSQL platform engineered for multi-tenant applications,
+and [Netlify](https://www.netlify.com/), the leader in web application delivery. This collaboration aims to provide developers with a seamless experience in
 building and deploying multi-tenant applications at scale, safely and with great developer experience.
 
 With Nile's Netlify integration, using Nile as the database for your multi-tenant application is as simple as a click in the Netlify dashboard. Not only that,
@@ -16,8 +17,8 @@ it is also cost-effective - Nile's free tier lets you create unlimited databases
 
 All you need to do is:
 
-1. Enable the Nile integration for your team in the Netlify dashboard. This will redirect you to Nile to complete the authentication. 
-If you don't have a Nile account, you'll be able to sign up for one.
+1. Enable the Nile integration for your team in the Netlify dashboard. This will redirect you to Nile to complete the authentication.
+   If you don't have a Nile account, you'll be able to sign up for one.
 2. Create a Netlify project or choose an existing one
 3. Select the Nile database you want to use for your project or create a new one
 4. Click "Deploy" and Netlify will handle the rest.
@@ -26,19 +27,19 @@ No more copy-pasting database credentials around. No more worrying about acciden
 
 ## How it works
 
-When you enable the Nile integration for your team, you initiate an OAuth2 flow in which Nile validates your identity and gets your permission for Netlify to 
-create databases and database credentials on your behalf. 
+When you enable the Nile integration for your team, you initiate an OAuth2 flow in which Nile validates your identity and gets your permission for Netlify to
+create databases and database credentials on your behalf.
 
-![Enabling the Nile integration](/blog/2024-10-03-nile_netlify/integration_config.png) 
+![Enabling the Nile integration](/blog/2024-10-03-nile_netlify/integration_config.png)
 
-Once you've enabled the integration, you can select or create a Nile database for your Netlify project. 
+Once you've enabled the integration, you can select or create a Nile database for your Netlify project.
 
-![Selecting Nile database for Netlify project](/blog/2024-10-03-nile_netlify/project_settings.png) 
+![Selecting Nile database for Netlify project](/blog/2024-10-03-nile_netlify/project_settings.png)
 
-When you select or create a Nile database for your Netlify project, Netlify will recieve the connection information it needs to connect to your database from 
-Nile and store it in its environment variables. 
+When you select or create a Nile database for your Netlify project, Netlify will recieve the connection information it needs to connect to your database from
+Nile and store it in its environment variables.
 
-You can then use the connection information to connect to your database from your application code. Nile will work with any Postgres client or ORM that 
+You can then use the connection information to connect to your database from your application code. Nile will work with any Postgres client or ORM that
 you prefer - just make sure you configure it using the environment variables that were added to your Netlify project.
 
 For example, if you are using Drizzle ORM, you can configure it like this:
@@ -64,11 +65,10 @@ await client.connect();
 const db = drizzle(client);
 ```
 
-Netlify supports environment variables for different environments and branches (production, preview, etc). And Nile gives you free, unlimited, databases. 
+Netlify supports environment variables for different environments and branches (production, preview, etc). And Nile gives you free, unlimited, databases.
 So feel free to create as many databases as you need for your development and deployment workflow.
 
 ## Next steps
 
-You can jump right in with an example project. You'll find the documentation [here](https://www.thenile.dev/docs/partners/netlify) 
+You can jump right in with an example project. You'll find the documentation [here](https://www.thenile.dev/docs/partners/netlify)
 and the code [here](https://github.com/niledatabase/niledatabase/tree/main/examples/integrations/netlify).
-
