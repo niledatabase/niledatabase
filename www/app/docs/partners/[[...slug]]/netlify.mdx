@@ -73,7 +73,7 @@ AI_BASE_URL=https://api.fireworks.ai/inference/v1
 AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
 ```
 
-Use your own Netlify project name in the `NEXT_PUBLIC_APP_URL` variable. 
+Use your own Netlify project name in the `NEXT_PUBLIC_APP_URL` variable.
 And use whatever OpenAI-compatible inference API you like in the `AI_API_KEY`, `AI_BASE_URL` and `AI_MODEL` variables.
 
 Once you set this, click on "Deploy site".
@@ -82,14 +82,14 @@ In the Site screen, click on "Site configuration". Scroll down to "Nile" (or sel
 
 ![Selecting Nile database for Netlify project](/blog/2024-10-03-nile_netlify/project_settings.png)
 
-Click "Save". This will automatically populate Nile's connection information in your environment variables. Then check on the "Deploys" tab to see the build in progress. 
+Click "Save". This will automatically populate Nile's connection information in your environment variables. Then check on the "Deploys" tab to see the build in progress.
 You will need to re-build in order to pick up any new environment variables you set.
 
 Once the the build is complete, you'll see "Open Production Deploy" button on top. Click on it to open your app.
 
 Congratulations! You've now deployed a serverless backend that uses Nile as the database and Netlify as the serverless compute platform.
 
-Feel free to explore the app (or you can try [the live demo version](https://nile-netlify-todo.netlify.app/) of it). You can sign up as a new user, create a new tenant, create todos for that tenant, and even use the embedding search functionality. 
+Feel free to explore the app (or you can try [the live demo version](https://nile-netlify-todo.netlify.app/) of it). You can sign up as a new user, create a new tenant, create todos for that tenant, and even use the embedding search functionality.
 
-You will see all these users, tenants and todos stored in your Nile database. 
+You will see all these users, tenants and todos stored in your Nile database.
 You can explore them in [Nile Console](https://console.thenile.dev/) or via your favorite Postgres client.
