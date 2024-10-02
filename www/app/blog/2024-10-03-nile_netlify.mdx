@@ -51,15 +51,15 @@ import { Client } from "pg";
 dotenv.config();
 
 const client = new Client({
-  connectionString: process.env.NILE_URL,
+  connectionString: process.env.NILEDB_URL,
 });
 // or
 const client = new Client({
-  host: process.env.NILE_REGION.toLowerCase() + ".db.thenile.dev",
+  host: process.env.NILEDB_HOST,
   port: 5432,
   user: process.env.NILEDB_USER,
   password: process.env.NILEDB_PASSWORD,
-  database: process.env.NILE_DB,
+  database: process.env.NILEDB_NAME,
 });
 await client.connect();
 const db = drizzle(client);
