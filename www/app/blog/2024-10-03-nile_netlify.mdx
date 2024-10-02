@@ -22,16 +22,14 @@ If you don't have a Nile account, you'll be able to sign up for one.
 3. Select the Nile database you want to use for your project or create a new one
 4. Click "Deploy" and Netlify will handle the rest.
 
-No more copy-pasting database credentials around. 
-No more worrying about accidentally exposing database credentials.
-Managing your database and credentials is now as easy as deploying your application to Netlify.
+No more copy-pasting database credentials around. No more worrying about accidentally exposing database credentials. Creating and connecting to a database is now as easy as deploying your application to Netlify.
 
 ## How it works
 
 When you enable the Nile integration for your team, you initiate an OAuth2 flow in which Nile validates your identity and gets your permission for Netlify to 
 create databases and database credentials on your behalf. 
 
-![The Nile integration in the Netlify dashboard](/blog/2024-10-03-nile_netlify/integration_dashboard.png) 
+![Enabling the Nile integration](/blog/2024-10-03-nile_netlify/integration_config.png) 
 
 Once you've enabled the integration, you can select or create a Nile database for your Netlify project. 
 
@@ -39,8 +37,6 @@ Once you've enabled the integration, you can select or create a Nile database fo
 
 When you select or create a Nile database for your Netlify project, Netlify will recieve the connection information it needs to connect to your database from 
 Nile and store it in its environment variables. 
-
-![Netlify environment variables](/blog/2024-10-03-nile_netlify/environment_variables.png) 
 
 You can then use the connection information to connect to your database from your application code. Nile will work with any Postgres client or ORM that 
 you prefer - just make sure you configure it using the environment variables that were added to your Netlify project.
