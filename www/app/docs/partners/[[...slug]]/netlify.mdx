@@ -13,11 +13,11 @@ and managing web apps.
 
 ## Using Netlify and Nile together
 
-Netlify supports deployment of serverless functions that can be used with any UI framework to add business logic to your application.
-Nile's serverless database is a great fit for Netlify serverless functions and together they can be used to build B2B applications that are entirely serverless.
+Netlify supports deployment of various web frameworks and of serverless functions.
+Nile's serverless database is a great fit for frameworks like NextJS and for Netlify serverless functions. Together they can be used to build B2B applications that are entirely serverless.
 With Nile's tenant virtualization, you can store private data and embeddings for each of your customers in a secure and scalable manner.
 
-In this example, we'll show you how we deploy an Express-based backend to Netlify that uses Nile as a database.
+In this example, we'll show you how we deploy a NextJS application to Netlify that uses Nile as a database.
 
 ### Setting Up Nile
 
@@ -36,98 +36,60 @@ You'll be redirected to the "Query Editor" pageof your new database. This is a g
 
 Once you've created the table, you'll see it on the left-hand side of the screen. You'll also see the `tenants` table that is built-in to Nile.
 
-Next, you'll want to pick up your database connection string: Navigate to the "Settings" page, select "Connections" and click "Generate credentials".
-Copy the connection string and keep it in a secure location.
+**Note:** You can also start by setting up a new Netlify project and enabling the Nile integration from there. If you choose this route, make sure you still create the `todos` table.
 
 ### Setting Up Netlify
 
 If you don't already have a Netlify account, go ahead and create one [here](https://www.netlify.com/). Pretty simple.
 
+In your Netlify dashboard, navigate to "Extensions", choose "Nile" and click on the Tile.
+You'll see a page that looks like this:
+![Enabling the Nile integration](/blog/2024-10-03-nile_netlify/integration_config.png)
+
+Click on the "Connect" button. You'll be redirected to Nile, where you can log in and authorize Netlify to create databases and database credentials on your behalf.
+
+Once this is done, you'll be redirected back to Netlify. Time to create your project!
+
 ### Quickstart
 
 You'll want to start by forking [Nile's github repo](https://github.com/niledatabase/niledatabase). You can do this by clicking the "Fork" button in the top right corner of the screen.
 
-Now that you have your own fork, you have the option to import it to Netlify and configure the deployment using the UI or the CLI. We'll use the CLI for this example:
+Now that you have your own fork, you have the option to import it to Netlify and configure the deployment using the UI or the CLI. Let's do it via the UI.
 
-First, you'll want to install the Netlify CLI:
+In Netlfiy dashboard, navigate to "Sites", click on "Add new site", choose "Import existing project" and pick "github". Authorize Netlify access to your GitHub account and select your fork.
 
-```bash
-npm install -g netlify-cli
-```
+Back on Netlfiy, you'll be asked to choose a name for your project. We chose `nile-netlify-todo`, but you can choose anything you like.
 
-And to clone your fork to your local machine:
+When choosing "Site to Deploy", make sure you choose the "main" branch and the "todo-nextjs" site.
 
-```bash
-git clone https://github.com/<your-username>/niledatabase.git
-cd niledatabase/examples/integration/netlify
-```
-
-Rename `.env.example` to `.env`, and update it with the connection string you just copied from Nile Console. Make sure you don't include the word "psql". It should look something like this:
+This project needs a few environment variables to be set (in addition to the Nile database connection variables that you'll get automatically from the extension). You can set them here:
 
 ```bash
-DATABASE_URL=postgres://018b778a-30df-7cdd-b55c-2f9664db39f3:ff3fb983-683c-4616-bbbc-519d8ddbbce5@db.thenile.dev:5432/gwen_db
+# the URL of this example + where the api routes are located
+NEXT_PUBLIC_APP_URL=https://nile-netlify-todo.netlify.app/api
+# For automatic time estimates of todos - replace with your own
+AI_API_KEY=xHOdh...
+AI_BASE_URL=https://api.fireworks.ai/inference/v1
+AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
 ```
 
-Install dependencies with `npm install`.
+Use your own Netlify project name in the `NEXT_PUBLIC_APP_URL` variable. 
+And use whatever OpenAI-compatible inference API you like in the `AI_API_KEY`, `AI_BASE_URL` and `AI_MODEL` variables.
 
-Initialize the project with Netlify:
+Once you set this, click on "Deploy site".
 
-```bash
-netlify init
-```
+In the Site screen, click on "Site configuration". Scroll down to "Nile" (or select it on the left hand menu), and pick the database you created earlier.
 
-This will create a site in your Netlify account and connect it to the fork you created earlier.
-You'll want to update environment variables for the site. You can do it from the CLI:
+![Selecting Nile database for Netlify project](/blog/2024-10-03-nile_netlify/project_settings.png)
 
-```bash
-netlify env:import .env
-```
+Click "Save". This will automatically populate Nile's connection information in your environment variables. Then check on the "Deploys" tab to see the build in progress. 
+You will need to re-build in order to pick up any new environment variables you set.
 
-You can also check the site that you created in Netlify by selecting it from the "Sites" page. Check the configuration, especially under "Continous Deployment" -
-make sure the base directory is set to "examples/integration/netlify" and functions directory is set to "examples/integration/netlify/functions".
-
-You can also test the site locally by running `netlify dev --cwd ./`. This will start a local server and open your default browser to `http://localhost:8888`.
-You can close the browser and run the `curl` commands below to test the API by replacing the URL with `http://localhost:8888`.
-
-If everything looks good, you can deploy the site to Netlify:
-
-```bash
-netlify deploy --prod
-```
-
-This will deploy the application to the live URL and return a "production URL" based on the site name you chose during the initialization step. In the examples below, I used the production URL of my demo site: `nile-netlify.netlify.app` - you'll want to replace it with the URL of your site.
+Once the the build is complete, you'll see "Open Production Deploy" button on top. Click on it to open your app.
 
 Congratulations! You've now deployed a serverless backend that uses Nile as the database and Netlify as the serverless compute platform.
 
-### 6. Try it out
+Feel free to explore the app (or you can try [the live demo version](https://nile-netlify-todo.netlify.app/) of it). You can sign up as a new user, create a new tenant, create todos for that tenant, and even use the embedding search functionality. 
 
-Now you can take the URL above and use `curl` to explore the APIs. Here are a few examples:
-
-```bash
-# create a tenant
-curl --location --request POST 'https://nile-netlify.netlify.app/api/tenants' \
---user 'test-user:' \
---header 'Content-Type: application/json' \
---header 'Accept: application/json' \
---data-raw '{"name":"my first customer"}'
-
-# get tenants
-curl  -X GET 'https://nile-netlify.netlify.app/api/tenants' --user 'test-user:'
-
-# create a todo (don't forget to use a real tenant-id in the URL)
-curl  -X POST \
-  'https://nile-netlify.netlify.app/api/tenants/0191f72c-fe16-7ef7-b776-a8dc970fd65a/todos' \
-  --user 'test-user:' \
-  --header 'Content-Type: application/json' \
-  --data-raw '{"title": "feed the cat", "complete": false}'
-
-# list todos for tenant (don't forget to use a read tenant-id in the URL)
-curl  -X GET \
-  --user 'test-user:' \
-  'https://nile-netlify.netlify.app/api/tenants/0191f72c-fe16-7ef7-b776-a8dc970fd65a/todos'
-
-# list todos for all tenants
-curl  -X GET \
-  --user 'test-user:' \
-  'http://localhost:8888/api/insecure/all_todos'
-```
+You will see all these users, tenants and todos stored in your Nile database. 
+You can explore them in [Nile Console](https://console.thenile.dev/) or via your favorite Postgres client.
