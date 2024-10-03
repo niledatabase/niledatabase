@@ -1,31 +1,35 @@
 "use client";
 
-import Stack from "@mui/joy/Stack";
-import Typography from "@mui/joy/Typography";
-import Link from "@mui/joy/Link";
-import Alert from "@mui/joy/Alert";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { NileProvider, SignUpForm } from "@niledatabase/react";
+import { SignUpForm } from "@niledatabase/react";
+import Link from "next/link";
 
 export default function SignUp() {
   const [error, setError] = useState<string | null>(null);
   const { push } = useRouter();
   return (
-    <NileProvider appUrl={process.env.NEXT_PUBLIC_APP_URL}>
-      <Stack gap={2} sx={{ maxWidth: "40ch" }}>
-        <Typography level="h1">Sign up</Typography>
-        {error && <Alert>{error}</Alert>}
-        <SignUpForm
-          onSuccess={(response) => push("/tenants")}
-          onError={() => {
-            setError("an error has occurred.");
-          }}
-        />
-        <p>
-          Already a user? <Link href="/">Log in here</Link>
-        </p>
-      </Stack>
-    </NileProvider>
+    <div className="flex flex-col gap-5">
+      {error && (
+        <div className="text-white bg-destructive rounded-lg p-4">{error}</div>
+      )}
+      <SignUpForm
+        onSuccess={(response) => {
+          if (response.ok) {
+            push("/tenants");
+          }
+        }}
+        onError={(e) => {
+          // console.log(e);
+          setError("an error has occurred.");
+        }}
+      />
+      <div className="text-sm">
+        Already a user?{" "}
+        <Link href="/" className="hover:underline">
+          Log in here
+        </Link>
+      </div>
+    </div>
   );
 }

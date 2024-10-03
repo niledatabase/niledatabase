@@ -1,15 +1,11 @@
 "use client";
-
-import IconButton from "@mui/joy/IconButton";
-import Add from "@mui/icons-material/Add";
-import Input from "@mui/joy/Input";
-import Snackbar from "@mui/joy/Snackbar";
-import Alert from "@mui/joy/Alert";
-import Box from "@mui/joy/Box";
-import Typography from "@mui/joy/Typography";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { addTodo } from "./todo-actions";
 import { useFormState } from "react-dom";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/hooks/use-toast";
 
 const initialState = {
   message: "",
@@ -18,12 +14,9 @@ const initialState = {
 export function AddForm({ tenantid }: { tenantid: string }) {
   const addTodoWithTenant = addTodo.bind(null, tenantid);
   const [state, formAction] = useFormState(addTodoWithTenant, initialState);
-  const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSnackbarClose = useCallback(() => {
-    setSnackbarMessage(null);
-  }, []);
+  const { toast } = useToast();
 
   const handleSubmit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
@@ -37,9 +30,22 @@ export function AddForm({ tenantid }: { tenantid: string }) {
 
   useEffect(() => {
     if (state.message !== null) {
-      setSnackbarMessage(JSON.stringify(state));
+      const msg = Object.entries(state)
+        .map(([key, value]) => {
+          return `${key}:${value}`;
+        })
+        .filter(Boolean);
+      toast({
+        title: (
+          <div className="flex flex-col gap-3">
+            {msg.map((m) => (
+              <div key={m}>{m}</div>
+            ))}
+          </div>
+        ),
+      });
     }
-  }, [state]);
+  }, [state, toast]);
 
   return (
     <>
@@ -48,33 +54,13 @@ export function AddForm({ tenantid }: { tenantid: string }) {
         name="newtodo"
         id="newtodo"
         onSubmit={handleSubmit}
-        style={{ display: "flex", flexWrap: "nowrap", width: "100%" }}
+        className="flex flex-row gap-2"
       >
-        <IconButton type="submit">
-          <Add />
-        </IconButton>
-        <Input
-          placeholder="Add task"
-          variant="outlined"
-          id="todo"
-          name="todo"
-          sx={{ width: "95%" }}
-        />
+        <Button type="submit">
+          <Plus />
+        </Button>
+        <Input placeholder="Add task" id="todo" name="todo" />
       </form>
-      <Snackbar
-        open={snackbarMessage !== null}
-        onClose={handleSnackbarClose}
-        autoHideDuration={30000}
-      >
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          {snackbarMessage &&
-            Object.entries(JSON.parse(snackbarMessage)).map(([key, value]) => (
-              <Typography key={key} level="body-md" textAlign="left">
-                {key + ": " + value}
-              </Typography>
-            ))}
-        </Box>
-      </Snackbar>
     </>
   );
 }

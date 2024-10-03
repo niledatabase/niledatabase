@@ -1,17 +1,14 @@
 import { cookies } from "next/headers";
 import styles from "../page.module.css";
 import NextLink from "next/link";
-import Card from "@mui/joy/Card";
-import CardContent from "@mui/joy/CardContent";
-import Divider from "@mui/joy/Divider";
-import Typography from "@mui/joy/Typography";
-import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
-import ListItemButton from "@mui/joy/ListItemButton";
+
 import { AddForm } from "@/app/tenants/add-form";
 import { nile } from "../api/[...nile]/nile";
 import { redirect } from "next/navigation";
 import SignoutButton from "./SignoutButton";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tenant } from "@niledatabase/server/dist/tenants";
 
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
@@ -20,6 +17,28 @@ export const dynamicParams = true;
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
+function ExistingTenants({ tenants }: { tenants: Tenant[] }) {
+  if (tenants.length === 0) {
+    return null;
+  }
+  return (
+    <>
+      <div className="flex flex-row gap-6 items-center w-full flex-1 px-6">
+        <div className="border-b h-px flex-1" />
+        or
+        <div className="border-b h-px flex-1" />
+      </div>
+      <div className="text-lg text-center p-4">Use Existing Tenant</div>
+      <div className="p-6 border rounded-lg flex flex-col gap-2">
+        {tenants.map((tenant: any) => (
+          <NextLink href={`/tenants/${tenant.id}/todos`} key={tenant.id}>
+            <Button>{tenant.name}</Button>
+          </NextLink>
+        ))}
+      </div>
+    </>
+  );
+}
 export default async function Page() {
   const headers = new Headers({ cookie: cookies().toString() });
   const [tenants, me] = await Promise.all([
@@ -40,7 +59,7 @@ export default async function Page() {
 
   return (
     <div className={styles.center}>
-      <Card variant="outlined">
+      <Card className="py-8 px-10">
         <CardContent>
           <div
             style={{
@@ -51,26 +70,11 @@ export default async function Page() {
           >
             <AddForm />
           </div>
-        </CardContent>
-        <Divider>or</Divider>
-        <CardContent>
-          <Typography level="title-md" textAlign="center" padding={2}>
-            Use Existing Tenant
-          </Typography>
-          <List variant="outlined">
-            {tenants.map((tenant: any) => (
-              <ListItem key={tenant.id}>
-                <NextLink href={`/tenants/${tenant.id}/todos`}>
-                  <ListItemButton>{tenant.name}</ListItemButton>
-                </NextLink>
-              </ListItem>
-            ))}
-          </List>
-        </CardContent>
-        <CardContent>
-          <Typography level="body-md" textAlign="center">
+
+          <ExistingTenants tenants={tenants} />
+          <div className="text-sm text-center p-4">
             You are logged in as {me.email} <SignoutButton />
-          </Typography>
+          </div>
         </CardContent>
       </Card>
     </div>

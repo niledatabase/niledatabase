@@ -1,7 +1,7 @@
-import styles from "./page.module.css";
-import Stack from "@mui/joy/Stack";
+// import styles from "./page.module.css";
+// import GoogleAuthPanel from "@/components/GoogleSSOForm";
+import BasicLoginForm from "@/components/BasicSignInForm";
 import GoogleAuthPanel from "@/components/GoogleSSOForm";
-import BasicLoginForm from "@/components/BasicLoginForm";
 
 export default function Home() {
   // This demo supports both Google and email/password auth.
@@ -10,12 +10,10 @@ export default function Home() {
   const authType = process.env.AUTH_TYPE;
   return (
     <div>
-      <div className={styles.center}>
-        <Stack gap={5} sx={{ maxWidth: "40rem" }} alignItems={"center"}>
-          {/* These components are simple wrappers around Nile's React components. 
-           It is needed because Nile's React components are client-side only. */}
+      <div className="flex flex-col gap-2 justify-center items-center">
+        <div className="items-center justify-center flex flex-col gap-3 w-full">
           {authType === "google" ? <GoogleAuthPanel /> : <BasicLoginForm />}
-        </Stack>
+        </div>
       </div>
     </div>
   );
