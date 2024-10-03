@@ -7,13 +7,12 @@ import Snackbar from "@mui/joy/Snackbar";
 import Alert from "@mui/joy/Alert";
 import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
-// @ts-expect-error -- useFormState is new and lacks type definitions
-import { experimental_useFormState as useFormState } from "react-dom";
-import { addTodo } from "./todo-actions";
 import { useState, useEffect, useCallback, useRef } from "react";
+import { addTodo } from "./todo-actions";
+import { useFormState } from "react-dom";
 
 const initialState = {
-  message: null,
+  message: "",
 };
 
 export function AddForm({ tenantid }: { tenantid: string }) {
@@ -43,39 +42,25 @@ export function AddForm({ tenantid }: { tenantid: string }) {
   }, [state]);
 
   return (
-    <>
-      <form
-        ref={formRef}
-        name="newtodo"
-        id="newtodo"
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexWrap: "nowrap", width: "100%" }}
-      >
-        <IconButton type="submit">
-          <Add />
-        </IconButton>
-        <Input
-          placeholder="Add task"
-          variant="outlined"
-          id="todo"
-          name="todo"
-          sx={{ width: "95%" }}
-        />
-      </form>
-      <Snackbar
-        open={snackbarMessage !== null}
-        onClose={handleSnackbarClose}
-        autoHideDuration={30000}
-      >
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          {snackbarMessage &&
-            Object.entries(JSON.parse(snackbarMessage)).map(([key, value]) => (
-              <Typography key={key} level="body-md" textAlign="left">
-                {key + ": " + value}
-              </Typography>
-            ))}
-        </Box>
-      </Snackbar>
-    </>
+    <form
+      name="newtodo"
+      id="newtodo"
+      action={formAction}
+      style={{ display: "flex", flexWrap: "nowrap", width: "100%" }}
+    >
+      <IconButton type="submit">
+        <Add />
+      </IconButton>
+      <Input
+        placeholder="Add task"
+        variant="outlined"
+        id="todo"
+        name="todo"
+        sx={{ width: "95%" }}
+      ></Input>
+      <p aria-live="polite" className="sr-only" role="status">
+        {state?.message}
+      </p>
+    </form>
   );
 }
