@@ -29,7 +29,6 @@ export default function Chat() {
     return null; // Render nothing while redirecting
   }
 
-  
   const transcripts = useTranscripts(tenantId);
   const { transcriptContent, selectedTranscript, handleTranscriptClick } =
     useTranscriptHandler(tenantId, transcripts);
