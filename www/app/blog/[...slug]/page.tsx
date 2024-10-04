@@ -10,6 +10,7 @@ import { Metadata, ResolvingMetadata } from "next";
 import Coffee from "@/public/blog/coffee.webp";
 import BlogImageZoom from "./ImageZoom";
 
+export const dynamic = "force-dynamic";
 type Props = { params: { slug: string[] } };
 
 async function getBlog(props: Props) {
