@@ -19,7 +19,7 @@ export default function PurposeBuilt() {
                     className="brightness-0 leading-[32px] xl:leading-[64px] translate-y-1 lg:translate-y-2"
                   />
                 </span>
-                <span>A Postgres database  that enables all database operations at the tenant-level — auto-scaling, branching, backups and insights with complete tenant isolation. Place tenants in any region on serverless or dedicated compute, all at the cost and operational efficiency of a single, scalable database.</span>
+                <span>A Postgres database  that enables all database operations at the tenant level, including auto-scaling, branching, backups and insights, while ensuring complete tenant isolation. Place tenants in any region on serverless or dedicated compute, with the cost and operational efficiency of a single, scalable database.</span>
               </div>
             </div>
           </div>
