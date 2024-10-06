@@ -34,7 +34,7 @@ export function HeroText() {
         </div>
         <div>B2B apps fast</div>
       </h1>
-      <h2 className="text-[40px] leading-6">
+      <h2 className="text-[32px] leading-[32px]">
         PostgreSQL re-engineered for multi-tenant apps
       </h2>
       <div className="flex gap-4 items-center justify-start">
