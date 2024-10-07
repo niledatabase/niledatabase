@@ -34,7 +34,7 @@ export function HeroText() {
         </div>
         <div>B2B apps fast</div>
       </h1>
-      <h2 className="text-[32px] leading-[32px]">
+      <h2 className="text-[16px] leading-[16px] xl:text-[32px] xl:leading-[32px]">
         PostgreSQL&nbsp;
         <br className="block md:hidden" /> 
         re-engineered for&nbsp;
