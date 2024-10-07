@@ -34,12 +34,10 @@ export function HeroText() {
         </div>
         <div>B2B apps fast</div>
       </h1>
-      <h2 className="text-[16px] leading-[16px] xl:text-[32px] xl:leading-[32px]">
-        PostgreSQL&nbsp;
+      <h2 className="text-[24px] leading-[24px] xl:text-[32px] xl:leading-[32px]">
+        PostgreSQL re-engineered&nbsp;
         <br className="block md:hidden" /> 
-        re-engineered for&nbsp;
-        <br className="block md:hidden" /> 
-        multi-tenant apps
+        for multi-tenant apps &nbsp;
       </h2>
       <div className="flex gap-4 items-center justify-start">
         <a href="https://console.thenile.dev" className="flex">
