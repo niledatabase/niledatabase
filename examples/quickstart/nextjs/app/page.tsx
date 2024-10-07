@@ -1,5 +1,5 @@
 import BasicLoginForm from "@/components/BasicSignInForm";
-import GoogleAuthPanel from "@/components/GoogleSSOForm";
+import GoogleAuthPanel from "@/components/GoogleButton";
 
 export default function Home() {
   // This demo supports both Google and email/password auth.

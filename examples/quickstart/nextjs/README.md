@@ -59,7 +59,6 @@ NILE_PASSWORD = "73d32231-1d21-4990-a4f4-g6447507c271"
 NEXT_PUBLIC_APP_URL=http://localhost:3000/api
 
 # Uncomment if you want to try Google Auth
-# NEXT_PUBLIC_NILEDB_API_URL=
 # AUTH_TYPE=google
 
 AI_API_KEY=your-ai-vendor-api-key

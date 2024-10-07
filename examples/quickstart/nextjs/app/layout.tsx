@@ -51,7 +51,7 @@ export default function RootLayout({
               </a>
             </div>
           </div>
-          <div className="flex flex-col flex-1">
+          <div className="flex flex-col flex-1 max-w-3xl">
             <div className="text-4xl mb-10 mt-20">
               AI-native Todo Application
             </div>
