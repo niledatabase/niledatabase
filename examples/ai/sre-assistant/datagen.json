@@ -1,0 +1,28 @@
+{
+    "generators": [
+      {
+        "topic": "testTopic",
+        "value": {
+          "emoji": {
+            "_gen": "oneOf",
+            "choices": [
+              "👍", "🔥", "❤️"
+            ]
+          }
+        }
+      }
+    ],
+    "connections": {
+            "sre-assistant-dev": {
+                "kind": "postgres",
+                "tablePolicy": "manual",
+                "connectionConfigs": {
+                    "host": "us-west-2.db.thenile.dev",
+                    "port": 5432,
+                    "username": "01914e52-6d5d-789f-bd5e-9d0ac1df382c",
+                    "password": "037b6e46-6a3f-484e-8b4a-5468b3689b1e",
+                    "db": "sre_assistant_dev",
+                }
+            }
+        }
+  }
