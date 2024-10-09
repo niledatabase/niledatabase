@@ -19,7 +19,7 @@ export default function PurposeBuilt() {
                     className="brightness-0 leading-[32px] xl:leading-[64px] translate-y-1 lg:translate-y-2"
                   />
                 </span>
-                <span> is Postgres re-engineered for B2B apps. Build multi-tenant apps fast that are secure and cost-effective with effortless scale.</span>
+                <span>is Postgres re-engineered for B2B apps. Build multi-tenant apps fast that are secure and cost-effective with effortless scale.</span>
               </div>
             </div>
           </div>
