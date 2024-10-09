@@ -9,7 +9,7 @@ export default function PurposeBuilt() {
         <AnimatedGradient>
           <div className="px-4 py-6 pt-24 lg:px-10 lg:py-10 lg:pt-48">
             <div className="flex gap-3">
-              <div className="text-[32px] leading-[36px] xl:text-[40px] xl:leading-[44px] text-black inline">
+              <div className="text-[28px] leading-[32px] xl:text-[40px] xl:leading-[44px] text-black inline">
                 <span className="pr-1 lg:pr-3 shrink-0 inline-flex items-center w-[84px] lg:w-auto">
                   <Image
                     src={Logo}
