@@ -1,0 +1,27 @@
+export const metadata = {
+  title: ["Sign out", "Auth API"],
+  order: 7,
+  method: "GET",
+};
+
+# Sign Out
+
+<div className="grid grid-cols-2 gap-4">
+    <div>
+      <p>Ends the user's session and signs them out.</p>
+    </div>
+
+    <CodeGroups
+      title={"Sign Out"}
+      response={"200"}
+      method={"POST"}
+      pathname={"/v2/databases/:databaseId/auth"}
+    >
+      ```json
+      {
+        "message": "Signed out"
+      }
+      ```
+    </CodeGroups>
+
+</div>

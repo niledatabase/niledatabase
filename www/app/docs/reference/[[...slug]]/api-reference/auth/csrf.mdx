@@ -1,0 +1,28 @@
+export const metadata = {
+  title: ["CSRF", "Auth API"],
+  order: 2,
+  method: "POST",
+};
+
+# Obtain a csrf token
+
+<div className="grid grid-cols-2 gap-4">
+    <div>
+<p>Returns object containing CSRF token. In NextAuth.js, CSRF protection is present on all authentication routes. It uses the "double submit cookie method", which uses a signed HttpOnly, host-only cookie.
+</p><p>The CSRF token returned by this endpoint must be passed as form variable named csrfToken in all POST submissions to any API endpoint.</p>
+
+    </div>
+    <CodeGroups
+      title={"CSRF Token"}
+      response={"200"}
+      method={"GET"}
+      pathname={"/v2/databases/:databaseId/auth/csrf"}
+    >
+      ```json
+      {
+        "csrfToken": "abc123..."
+      }
+      ```
+    </CodeGroups>
+
+</div>

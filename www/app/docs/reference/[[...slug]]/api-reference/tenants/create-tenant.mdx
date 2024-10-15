@@ -7,27 +7,16 @@ export const metadata = {
 # Create a Tenant
 
 <div className="grid grid-cols-2 gap-4">
+    <div>
     Create a new tenant by providing a tenant name. Tenant names must be unique within a database.
-    <CodeGroups
-      title={"Create Tenant Request"}
-      method={"POST"}
-      pathname={"/workspaces/:workspaceSlug/databases/:databaseName/tenants"}
-    >
-      ```bash
-      curl 'https://api.thenile.dev/workspaces/<string>/databases/<string>/tenants' \
-      --header 'Authorization: Bearer <string>' \
-      --data '{
-        "name": "<string>"
-      }'
-      ```
-    </CodeGroups>
-
     The response includes the generated tenant id and the name you provided.
+    </div>
 
     <CodeGroups
       title={"Create Tenant Response"}
       response={"201"}
-      pathname={"/workspaces/:workspaceSlug/databases/:databaseName/tenants"}
+      method={"POST"}
+      pathname={"/v2/databases/:databaseId/tenants"}
     >
       ```json
       {

@@ -2,7 +2,6 @@
 // ^^^ This has to run on the server because it uses database operations and updates the cache
 
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 import { configureNile } from "@/lib/NileServer";
 import {
   aiEstimate,
@@ -18,7 +17,7 @@ export async function addTodo(
 ) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
   let startTime = performance.now();
-  const tenantNile = await configureNile(cookies().get("authData"), tenantId);
+  const tenantNile = await configureNile(tenantId);
   let endTime = performance.now();
   let timeToConfigureNile = endTime - startTime;
 
@@ -35,27 +34,31 @@ export async function addTodo(
     return { message: "Please enter a title" };
   }
 
-  // We also want to try and embed the task for future AI processing
-  startTime = performance.now();
-  const embedding = await embedTask(title.toString());
-  endTime = performance.now();
-  let timeToEmbedTask = endTime - startTime;
-  // use embeddings to get some similar tasks, for reference
-  startTime = performance.now();
-  const similarTasks = await findSimilarTasks(
-    tenantNile,
-    title.toString(),
-    embedding
-  );
-  endTime = performance.now();
-  let timeToFindSimilarTasks = endTime - startTime;
-  // for each todo, we want to try and generate an AI estimate.
-  startTime = performance.now();
-  const estimate = await aiEstimate(tenantNile, title.toString(), similarTasks);
-  endTime = performance.now();
-  let timeToAiEstimate = endTime - startTime;
-
   try {
+    // We also want to try and embed the task for future AI processing
+    startTime = performance.now();
+    const embedding = await embedTask(title.toString());
+    endTime = performance.now();
+    let timeToEmbedTask = endTime - startTime;
+    // use embeddings to get some similar tasks, for reference
+    startTime = performance.now();
+    const similarTasks = await findSimilarTasks(
+      tenantNile,
+      title.toString(),
+      embedding
+    );
+    endTime = performance.now();
+    let timeToFindSimilarTasks = endTime - startTime;
+    // for each todo, we want to try and generate an AI estimate.
+    startTime = performance.now();
+    const estimate = await aiEstimate(
+      tenantNile,
+      title.toString(),
+      similarTasks
+    );
+    endTime = performance.now();
+    let timeToAiEstimate = endTime - startTime;
+
     // need to set tenant ID because it is part of the primary key
     startTime = performance.now();
     await tenantNile.db.query(
@@ -75,6 +78,7 @@ export async function addTodo(
     revalidatePath("/tenants/${tenantID}/todos");
     endTime = performance.now();
     let timeToRevalidate = endTime - startTime;
+    revalidatePath("/tenants/[tenantid]/todos");
     return {
       Message: "Todo added successfully",
       // "Time to configure Nile (ms)": timeToConfigureNile,
@@ -97,7 +101,7 @@ export async function completeTodo(
   complete: boolean
 ) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
-  const tenantNile = await configureNile(cookies().get("authData"), tenantId);
+  const tenantNile = await configureNile(tenantId);
   console.log(
     "updating Todo " +
       id +
@@ -114,8 +118,9 @@ export async function completeTodo(
       WHERE id = $2`,
       [complete, id]
     );
-    revalidatePath("/tenants/${tenantID}/todos");
+    revalidatePath("/tenants/[tenantid]/todos");
   } catch (e) {
     console.error(e);
+    return { message: "Failed to update todo" };
   }
 }

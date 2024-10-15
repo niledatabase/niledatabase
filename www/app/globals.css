@@ -417,6 +417,40 @@ h6 {
   font-family: var(--font-aeonik);
   color: white;
 }
+h1 code::after,
+h1 code::after,
+h2 code::after,
+h3 code::after,
+h4 code::after,
+h5 code::after,
+h6 code::after,
+h1 code::before,
+h1 code::before,
+h2 code::before,
+h3 code::before,
+h4 code::before,
+h5 code::before,
+h6 code::before {
+  display: none;
+}
+h4 code {
+  background-image: linear-gradient(
+    100deg,
+    #f4c587 0%,
+    #d6d3e9 60.42%,
+    #99d2ec 95.31%
+  );
+  background-clip: text;
+  color: transparent !important;
+  border-radius: 6px;
+  border-color: rgba(223, 239, 254, 0.2);
+  border-width: 1px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
 mark {
   background: none;
   opacity: 1;

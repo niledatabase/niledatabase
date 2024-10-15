@@ -1,0 +1,32 @@
+export const metadata = {
+  title: ["Session ", "Auth API"],
+  order: 7,
+  method: "GET",
+};
+
+# Session
+
+<div className="grid grid-cols-2 gap-4">
+    <div>
+      <p>Returns the current session object, including information about the authenticated user, or `null` if no session exists.</p>
+    </div>
+
+    <CodeGroups
+      title={"Session"}
+      response={"200"}
+      method={"GET"}
+      pathname={"/v2/databases/:databaseId/auth/session"}
+    >
+      ```json
+      {
+        "user": {
+          "name": "John Doe",
+          "email": "johndoe@gmail.com",
+          "image": "https://example.com/avatar.jpg"
+        },
+        "expires": "2024-10-01T12:34:56.789Z"
+      }
+      ```
+    </CodeGroups>
+
+</div>

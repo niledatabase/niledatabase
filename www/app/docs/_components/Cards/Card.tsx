@@ -32,6 +32,9 @@ export default async function Card(props: Props) {
       return maybePart;
     })
     .join("/");
+  const title = Array.isArray(metadata.title)
+    ? metadata.title[0]
+    : metadata.title;
   return (
     <Link href={`/docs/${root}/${href}`} style={{ textDecoration: "none" }}>
       <div className="border-2 w-64 px-4 py-1 border-gray hover:border-lightGray transition-colors rounded-xl flex flex-row items-center gap-4 hover:bg-divider-glow">
@@ -47,7 +50,7 @@ export default async function Card(props: Props) {
           </div>
         )}
         <div className="flex flex-col">
-          <h4 className="text-lg">{metadata.title}</h4>
+          <h4 className="text-lg">{title}</h4>
           <p className="text-sm font-light">{metadata.description}</p>
         </div>
       </div>
