@@ -21,10 +21,10 @@ In this quick tutorial, you will learn about Nile's tenant virtualization featur
 
 ## 1. Create a database
 
-1. Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already
+1. Go to the [Nile console](https://console.thenile.dev) and create a workspace and database if you have not done so already.
 2. You should see a welcome message. Click on "Lets get started"
    ![Nile welcome.](/docs/nile-welcome.png)
-3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to “Use Token in Browser”.
+3. Give your workspace and database names, or you can accept the default auto-generated names.
 
 ## 2. Create a table
 
@@ -37,7 +37,8 @@ create table todos (
     title varchar(256),
     estimate varchar(256),
     complete boolean,
-    embedding vector(768);
+    embedding vector(768)
+);
 ```
 
 You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
@@ -46,7 +47,7 @@ See the `tenant_id` column? By specifying this column, You are making the table 
 ![Creating a table in Nile's admin dashboard](/docs/gui-create-table.png)
 
 The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find semantically
-related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and using this data with text generation models is called [**RAG (Retrieval Augumented Generation)**](https://www.thenile.dev/docs/ai-embeddings/rag).
+related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and using this data with text generation models is called [**RAG (Retrieval Augmented Generation)**](https://www.thenile.dev/docs/ai-embeddings/rag).
 
 ## 3. Get credentials
 
@@ -77,8 +78,6 @@ It should look something like this (you can see that I used Fireworks as the ven
 # These are used by the server to connect to Nile database
 NILEDB_USER=018ad484-0d52-7274-8639-057814be60c3
 NILEDB_PASSWORD=0d11b8e5-fbbc-4639-be44-8ab72947ec5b
-
-NEXT_PUBLIC_NILE_API_URL=https://eu-central-1.api.thenile.dev/databases/018ec979-2412-7062-9cda-35ae6fea7837
 
 AI_API_KEY=your-ai-vendor-api-key
 AI_BASE_URL=https://api.fireworks.ai/inference/v1
@@ -122,7 +121,7 @@ tenants join todos on tenants.id=todos.tenant_id;
 There are a few moving pieces here, so let's break it down.
 
 This example uses NextJS `app router`, so the application landing page is in `app/page.tsx`.
-You can see the user authentication components `<GoogleAuthPanel />` and `<BasicLoginForm />` there.
+You can see the user authentication components `<GoogleButton />` and `<SignUpForm />` there.
 If you are interested in learning how to use Nile for authentication, check out the [authentication tutorials](/docs/user-authentication).
 
 This explanation will focus on creating tenants, selecting tenants and adding tasks.
@@ -134,7 +133,7 @@ All the signup and login methods eventually route users to `/tenants`. You'll fi
 The first thing we do in this page is to configure Nile SDK for the current user:
 
 ```typescript
-configureNile(cookies().get("authData"), null);
+configureNile();
 ```
 
 This method configures a shared instance of `nile` that is used throughout the application.
@@ -147,33 +146,40 @@ const nile = await Nile();
 The SDK uses your credentials to call the Nile API. Every page, route and function in our app can use the same `nile` instance to access Nile APIs and DB.
 
 But, we need to make sure we are using the right user and tenant context.
-So we call `configureNile` and pass in the cookies and the tenant ID.
-After this point, we can use `nile` to access the database and APIs, and it will use the right user and tenant context.
+So we call `configureNile`, which take the cookies from `next/headers` and the tenant ID.
+After this point, we can use `nile` to access the database and APIs, and it will use the authenticated user and tenant context.
+
+In addition to accessing the database and requesting data server side, there are also APIs that are integrated for you via [dynamic routes](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes).
+The route file `api/[...nile]/route.ts` intercepts routes from the client and responds accordingly. There is a single file that is used to export the nile instance into the routes, which is then used to export the various handlers.
+
+```typescript
+import NileServer from "@niledatabase/server";
+const _nile = await NileServer();
+
+export const { handlers } = _nile.api;
+export const nile = _nile;
+```
 
 ### 6.2 Listing tenants
 
-Next thing we do in `app/tenants/page.tsx` is to list all the tenants for the current user.
-We use Nile SDK to query the database for all the tenants that the current user is a member of:
+Next thing we do in `app/tenants/page.tsx` is to list all the tenants for the current user, but the SDK must know about the user. The simplest way to do that is to pass the NextJS cookies to the function.
+We use Nile SDK to query the database for all the tenants for the current user:
 
 ```typescript
-tenants = await db("tenants")
-  .select("tenants.id", "tenants.name")
-  .join("users.tenant_users", "tenants.id", "=", "tenant_users.tenant_id")
-  .where("tenant_users.user_id", "=", nile.userId);
+const headers = new Headers({ cookie: cookies().toString() });
+const tenants = nile.api.tenants.listTenants(headers);
 ```
 
 and then we render the list of tenants as a list of links:
 
 ```typescript
-<List variant="outlined">
+<div className="p-6 border rounded-lg flex flex-col gap-2">
   {tenants.map((tenant: any) => (
-    <ListItem key={tenant.id}>
-      <ListItemButton component={NextLink} href={`/tenants/${tenant.id}/todos`}>
-        {tenant.name}
-      </ListItemButton>
-    </ListItem>
+    <NextLink href={`/tenants/${tenant.id}/todos`} key={tenant.id}>
+      <Button>{tenant.name}</Button>
+    </NextLink>
   ))}
-</List>
+</div>
 ```
 
 It looks a bit like magic, but [NextJS server fetching](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#fetching-data-on-the-server-with-third-party-libraries) and Nile SDK are integrated together to make this happen.
@@ -186,37 +192,32 @@ Create tenant logic is in `app/tenants/tenant-actions.tsx`.
 In `createTenant` method, we use Nile SDK to create a new tenant and link it to the current user.
 
 ```typescript
-  configureNile(cookies().get('authData'), null); // we don't have a tenant yet
-
-  let tenantID = null;
-  try {
-    const createTenantResponse = await nile.api.tenants.createTenant({
-      name: tenantName,
-    });
-  }
+configureNile(); // we don't have a tenant yet
+const createTenantResponse = await nile.api.tenants.createTenant({
+  name: tenantName,
+});
 ```
 
 This call inserts a new tenant to `tenants` table, and also inserts a new row to `tenant_users` table, linking the current user to the new tenant.
 You can see the new tenant in the Nile console by running `select * from tenants`.
 
-By setting `nile.token = userToken` we are telling Nile SDK to use the user's token to make the API call. This is important, since Nile uses this token to both validate the user's identity and to link the tenant with this user.
+Because the user is authenticated to the API, Nile automatically adds the user to the tenant they are creating.
 
 ### 6.4 Listing tasks
 
 When you create a tenant or select an existing tenant, you are taken to the tenant's todo list.
 The code for this page is in `app/tenants/[tenantid]/todos/page.tsx`.
 
-We could have used the same logic to list todos for a tenant as we did for listing tenants for a user, but we wanted to show you a different way to do this.
+Since there is no API for listing specific data in your database, it is now time to being writing queries. Normally, you would write a `where` clause to accomplish some tenant-level isolation (and you still can), the Nile SDK does it a little bit differently.
 Instead of using SQL `where` clauses to get only todos for this specific tenant, we are relying on Nile's tenant isolation feature:
 
 ```typescript
-configureNile(cookies().get("authData"), params.tenantid);
+const nile = configureNile(params.tenantId);
 // no need for where clause because we previously set Nile context
-const todos = await nile.db("todos").select("*");
+const todos = await nile.db.query("select * from todos");
 ```
 
-Note that this time we are configuring Nile with the tenant ID too. Previously we only used the user because there was no tenant yet.
-Then we run a simple SQL query to get all the todos.
+Note that this time we are configuring Nile with the tenant ID too. Previously called `configureNile` without parameters because there was no tenant yet.
 
 Behind the scenes, Nile does two things:
 
@@ -233,17 +234,30 @@ You can find the logic for adding a task in `app/tenants/[tenantid]/todos/todo-a
 As you can see, we again use the tenant context to insert the new task:
 
 ```typescript
-configureNile(cookies().get("authData"), tenantId);
-await nile
-  .db("todos")
-  .insert({ tenant_id: nile.tenantId, title: title, complete: false });
+const nile = configureNile(tenantId);
+await nile.db.query(
+  `INSERT INTO todos (tenant_id, title, estimate, embedding, complete)
+    VALUES ($1, $2, $3, $4, $5)`,
+  [
+    tenantNile.tenantId,
+    title,
+    estimate?.substring(0, 255),
+    embeddingToSQL(embedding),
+    false,
+  ]
+);
 ```
 
 or update an existing one:
 
 ```typescript
-configureNile(cookies().get("authData"), tenantId);
-await nile.db("todos").update({ complete: complete }).where({ title: title });
+const nile = configureNile(tenantId);
+await tenantNile.db.query(
+  `UPDATE todos 
+  SET complete = $1
+  WHERE id = $2`,
+  [complete, id]
+);
 ```
 
 By setting the context, Nile will validate that the user indeed has permission to add tasks for this tenant,

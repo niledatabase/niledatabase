@@ -86,7 +86,8 @@ export default async function Blog() {
   }, []);
   const refinementItems = uniq(refinements);
 
-  const { default: FirstArticle, metadata } = await import(`${mostRecent}`);
+  const [localFile] = mostRecent.split("/").reverse();
+  const { default: FirstArticle, metadata } = await import(`./${localFile}`);
   return (
     <Container background={null}>
       <div className="container mx-auto">

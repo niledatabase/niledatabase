@@ -36,7 +36,7 @@ export function HeroText() {
       </h1>
       <h2 className="text-[24px] leading-[24px] xl:text-[32px] xl:leading-[32px]">
         PostgreSQL re-engineered&nbsp;
-        <br className="block md:hidden" /> 
+        <br className="block md:hidden" />
         for multi-tenant apps &nbsp;
       </h2>
       <div className="flex gap-4 items-center justify-start">

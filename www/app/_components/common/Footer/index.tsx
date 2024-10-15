@@ -71,6 +71,7 @@ export default async function Footer({ className }: { className?: string }) {
                   className="flex flex-row items-center gap-3"
                 >
                   <Image
+                    data-image-zoom-disabled
                     src={LinkedIn}
                     alt="linkedin logo"
                     width={16}
@@ -87,6 +88,7 @@ export default async function Footer({ className }: { className?: string }) {
                 >
                   <Image
                     src={Github}
+                    data-image-zoom-disabled
                     alt="github octocat"
                     width={15}
                     height={14}
@@ -100,8 +102,14 @@ export default async function Footer({ className }: { className?: string }) {
                   target="_blank"
                   className="flex flex-row items-center gap-3"
                 >
-                  <Image src={X} alt="twitter logo" width={15} height={14} />X
-                  (twitter)
+                  <Image
+                    src={X}
+                    alt="twitter logo"
+                    width={15}
+                    height={14}
+                    data-image-zoom-disabled
+                  />
+                  X (twitter)
                 </Link>
               </div>
               <div className="text-[16px] flex flex-row items-center gap-3">
@@ -115,13 +123,20 @@ export default async function Footer({ className }: { className?: string }) {
                     alt="twitter logo"
                     width={15}
                     height={14}
+                    data-image-zoom-disabled
                   />
                   Discord
                 </Link>
               </div>
             </div>
             <div className="flex flex-col gap-3 items-start lg:items-end">
-              <Image src={Logo} alt="nile logo" width={80} height={30} />
+              <Image
+                src={Logo}
+                alt="nile logo"
+                width={80}
+                height={30}
+                data-image-zoom-disabled
+              />
               <div className="opacity-40 flex flex-row gap-1 text-[12px]">
                 <Link href="/privacy-policy">Privacy policy</Link>|
                 <Link href="/cookie-policy">Cookie policy</Link>

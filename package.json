@@ -45,5 +45,6 @@
   "devDependencies": {
     "prettier": "^2.8.8",
     "turbo": "^1.10.13"
-  }
+  },
+  "packageManager": "npm@10.8.3"
 }

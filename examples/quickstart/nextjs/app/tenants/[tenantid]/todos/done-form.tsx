@@ -1,12 +1,7 @@
 "use client";
-import Checkbox from "@mui/joy/Checkbox";
-import Typography from "@mui/joy/Typography";
 import { useTransition } from "react";
 import { completeTodo } from "./todo-actions";
-
-const initialState = {
-  message: null,
-};
+import { Checkbox } from "@/components/ui/checkbox";
 
 export function DoneForm({
   tenantId,
@@ -15,16 +10,18 @@ export function DoneForm({
   tenantId: string;
   todo: { id: string; title: string; complete: boolean };
 }) {
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   return (
-    <Checkbox
-      label={<Typography>{todo.title}</Typography>}
-      checked={todo.complete}
-      onChange={() =>
-        startTransition(() => {
-          completeTodo(tenantId, todo.id, !todo.complete);
-        })
-      }
-    />
+    <div className="flex flex-row gap-4 items-center">
+      <Checkbox
+        checked={todo.complete}
+        onCheckedChange={() =>
+          startTransition(() => {
+            completeTodo(tenantId, todo.id, !todo.complete);
+          })
+        }
+      />
+      <div>{todo.title}</div>
+    </div>
   );
 }

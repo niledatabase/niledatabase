@@ -41,8 +41,10 @@ export default function Home() {
             <form
               onSubmit={(event) => {
                 event.preventDefault();
-                const data = new FormData(event.currentTarget);
-                const email = data.entries().next().value[1];
+                const data: undefined | FormData = new FormData(
+                  event.currentTarget
+                );
+                const email = data.entries().next()?.value?.[1];
                 signIn("email", { email, callbackUrl: "/tenants" });
               }}
             >
