@@ -52,7 +52,7 @@ async function run() {
     out.push(obj);
   }
   // clear the docs because they move and change a lot
-  const index = client.initIndex('docs');
+  const index = client.initIndex("docs");
   await index.clearObjects();
   // upload to search service
   await upload(out);

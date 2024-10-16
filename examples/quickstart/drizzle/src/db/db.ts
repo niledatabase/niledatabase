@@ -10,7 +10,7 @@ import { AsyncLocalStorage } from "async_hooks";
 dotenv.config();
 
 // You can get the connection string with credentials from the Nile console
-const client = new Client({
+export const client = new Client({
   connectionString: process.env.DATABASE_URL,
 });
 
