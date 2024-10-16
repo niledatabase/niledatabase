@@ -85,7 +85,7 @@ export default function CodeGroups(props: Props) {
                   active === className ? variants.active : variants.base
                 }
               >
-                {child}
+                {child as unknown as JSX.Element}
               </div>
             );
           }

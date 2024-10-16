@@ -16,7 +16,6 @@ export const metadata: Metadata = {
     "saas",
     "multi-tenant",
   ],
-  colorScheme: "dark",
   creator: "Nile database",
   publisher: "Nile database",
   icons: [
@@ -58,3 +57,7 @@ export default function RootLayout({
 }) {
   return <html lang="en">{children}</html>;
 }
+
+export const viewport = {
+  colorScheme: "dark",
+};

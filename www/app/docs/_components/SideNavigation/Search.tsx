@@ -1,7 +1,7 @@
 "use client";
 
 import { createPortal } from "react-dom";
-import { useState, useEffect, Fragment, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import algoliasearch from "algoliasearch";
 import { InstantSearch, useHits, useSearchBox } from "react-instantsearch";
@@ -44,7 +44,7 @@ const searchClient = algoliasearch(
   String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY)
 );
 
-function Portal({ children }: { children: JSX.Element }) {
+function Portal({ children }: { children: any }) {
   return createPortal(children, document.body);
 }
 
