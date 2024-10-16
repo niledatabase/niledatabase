@@ -110,10 +110,7 @@ async def create_todo(todo:Todo, session = Depends(get_tenant_session)):
 @app.get("/api/todos")
 async def get_todos(session = Depends(get_tenant_session)):
     results = session.exec(select(Todo.id, Todo.tenant_id,Todo.title, Todo.estimate, Todo.complete)).all()
-    # Convert the results into Todo instances (needed, because I'm returning a subset of the columns)
-    # There has to be a better way to do this, but I haven't found it yet
-    todos = [Todo(id=row.id, tenant_id=row.tenant_id, title=row.title, estimate=row.estimate, complete=row.complete) for row in results]
-    return todos
+    return results
 
 # Note that this endpoint is identical to the previous one
 # but it uses the global session instead of the tenant session.
