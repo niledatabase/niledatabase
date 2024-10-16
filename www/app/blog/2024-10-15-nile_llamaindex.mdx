@@ -1,37 +1,46 @@
 export const metadata = {
-  title:
-    "LlamaIndex + Nile: Build Multi-Tenant RAG Applications with Ease",
+  title: "LlamaIndex + Nile: Build Multi-Tenant RAG Applications with Ease",
   authors: ["gwenshap"],
   image: "2024-10-15-nile_llamaindex/cover.png",
   sizzle:
     "Supercharge your multi-tenant RAG applications with LlamaIndex and Nile's Vector Store. Build, scale, and manage AI-powered search and recommendations across multiple customers with ease and efficiency.",
-  tags: ["database", "serverless", "postgres", "netlify", "AI", "B2B", "LlamaIndex", "Vector Store", "RAG"],
+  tags: [
+    "database",
+    "serverless",
+    "postgres",
+    "netlify",
+    "AI",
+    "B2B",
+    "LlamaIndex",
+    "Vector Store",
+    "RAG",
+  ],
 };
 
 We are excited to announce that [LlamaIndex](https://www.llamaindex.ai/) now integrates with Nile - making it easy to build multi-tenant RAG applications, by using Nile to isolate documents and embeddings for each tenant.
 
-Multi-tenant RAG applications are increasingly popular, since they provide security and privacy while using large language models. 
+Multi-tenant RAG applications are increasingly popular, since they provide security and privacy while using large language models.
 
-However, managing the underlying Postgres database is not straightforward. DB-per-tenant is expensive and complex to manage, while shared-DB has security and privacy concerns, and also limits the 
-scalability and performance of the RAG application. Nile re-engineered Postgres to deliver the best of all worlds - the isolation of DB-per-tenant, at the cost, efficiency and developer experience of 
+However, managing the underlying Postgres database is not straightforward. DB-per-tenant is expensive and complex to manage, while shared-DB has security and privacy concerns, and also limits the
+scalability and performance of the RAG application. Nile re-engineered Postgres to deliver the best of all worlds - the isolation of DB-per-tenant, at the cost, efficiency and developer experience of
 a shared-DB.
 
-Storing millions of vectors in a shared-DB can be slow and require significant resources to index and query. But if you store 1000 tenants in Nile's virtual tenant databases, each with 1000 vectors, 
+Storing millions of vectors in a shared-DB can be slow and require significant resources to index and query. But if you store 1000 tenants in Nile's virtual tenant databases, each with 1000 vectors,
 this can be quite managable. Especially since you can place larger tenants on their own compute, while smaller tenants can efficiently share compute resources and auto-scale as needed.
 
 LlamaIndex is a powerful tool for building RAG applications, and its integration with Nile makes it easy to build multi-tenant RAG applications with just a few lines of code.
 
 All you need to do is:
 
-1. Load documents using [SimpleDirectoryReader](https://docs.llamaindex.ai/en/stable/module_guides/loading/simpledirectoryreader/), 
-or one of the many other [data connectors](https://docs.llamaindex.ai/en/stable/module_guides/loading/connector/).
+1. Load documents using [SimpleDirectoryReader](https://docs.llamaindex.ai/en/stable/module_guides/loading/simpledirectoryreader/),
+   or one of the many other [data connectors](https://docs.llamaindex.ai/en/stable/module_guides/loading/connector/).
 2. Enrich the documents and add tenant_id to the metadata.
 3. Create a `NileVectorStore` instance and use it to create an index.
 4. Create a `QueryEngine` for each tenant and use it to chat with the documents for that tenant alone.
 
 ## How it works
 
-When you use `NileVectorStore` as the vector store for LlamaIndex and configure it with `tenant_aware=True`, it will automatically extract the `tenant_id` from the metadata and 
+When you use `NileVectorStore` as the vector store for LlamaIndex and configure it with `tenant_aware=True`, it will automatically extract the `tenant_id` from the metadata and
 store the documents and embeddings in a virtual tenant database for that tenant - isolated from other tenants. Documents without a `tenant_id` will not be rejected with an exception.
 
 In this snippet, we load and store documents from two different tenants:
@@ -60,8 +69,8 @@ index = VectorStoreIndex.from_documents(
 )
 ```
 
-When its time to query the documents, you can use the `NileVectorStore` instance to create a `QueryEngine` for each tenant. The `QueryEngine` will use the `tenant_id` to query the 
-virtual tenant database for the tenant and respond with an answer that is based only on the documents for that tenant. The snippet below will respond with different customer painpoints, 
+When its time to query the documents, you can use the `NileVectorStore` instance to create a `QueryEngine` for each tenant. The `QueryEngine` will use the `tenant_id` to query the
+virtual tenant database for the tenant and respond with an answer that is based only on the documents for that tenant. The snippet below will respond with different customer painpoints,
 depending on the tenant for whom we ask.
 
 ```python
@@ -79,7 +88,7 @@ This way you have full isolation and privacy for each tenant, while using the sa
 
 Other vector store functionality like filtering on additional metadata fields, deleting and updating documents is also supported.
 
-You can also use `NileVectorStore` with `tenant_aware=False` in which case the documents stored will be shared and accessible across all tenants. This is useful if you have a shared dataset 
+You can also use `NileVectorStore` with `tenant_aware=False` in which case the documents stored will be shared and accessible across all tenants. This is useful if you have a shared dataset
 that you want to use for RAG applications.
 
 ## Next steps
@@ -87,5 +96,5 @@ that you want to use for RAG applications.
 Nile's [LlamaIndex integration documentation](https://www.thenile.dev/docs/partners/llamaindex) will walk you through a small quickstart example.
 Or if you prefer, you can get started with LlamaIndex's [iPython/Jupyter Notebook](https://docs.llamaindex.ai/en/stable/examples/vector_stores/NileVectorStore/).
 
-Or you can just right in to a full-stack application. Check out the [TaskGenius example](https://github.com/niledatabase/niledatabase/tree/main/examples/ai/local_llama_task_genius) to see a full 
+Or you can just right in to a full-stack application. Check out the [TaskGenius example](https://github.com/niledatabase/niledatabase/tree/main/examples/ai/local_llama_task_genius) to see a full
 application that uses LlamaIndex and Nile with a Local LLama model to build a multi-tenant RAG application.

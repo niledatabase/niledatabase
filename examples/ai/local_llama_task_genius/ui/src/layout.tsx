@@ -55,10 +55,10 @@ export default function Layout({ children }: Props) {
             TaskGenius - Task manager with ai-based estimates
           </Typography>
           <Typography level="body-lg" textAlign="center" maxWidth="800px">
-            Using LlamaIndex, Llama 3.2 model and running local Ollama, 
-            we can automatically estimate the time to complete a task 
-            based on the task description and previous tasks - but only those 
-            that belong to the same tenant.
+            Using LlamaIndex, Llama 3.2 model and running local Ollama, we can
+            automatically estimate the time to complete a task based on the task
+            description and previous tasks - but only those that belong to the
+            same tenant.
           </Typography>
         </Stack>
       </div>

@@ -19,13 +19,13 @@ You'll use LLamaIndex to simply and orchestrate the different steps in your RAG 
 
 In this example, we'll show how to chat with a sales transcript in just a few lines of code, using LlamaIndex's high-level interface and its integration with Nile and OpenAI.
 
-We'll walk you through the setup steps and then explain the code line by line. The entire Python script is available 
-[here](https://github.com/niledatabase/niledatabase/blob/main/examples/integrations/code_snippets/nile_llamaindex_quickstart.py) 
+We'll walk you through the setup steps and then explain the code line by line. The entire Python script is available
+[here](https://github.com/niledatabase/niledatabase/blob/main/examples/integrations/code_snippets/nile_llamaindex_quickstart.py)
 or in [iPython/Jupyter Notebook](https://github.com/niledatabase/niledatabase/blob/main/examples/integrations/code_snippets/nile_llamaindex_quickstart.ipynb).
 
 ### Setting Up Nile
 
-Start by signing up for [Nile](https://console.thenile.dev/?utm_campaign=partnerlaunch&utm_source=nilewebsite&utm_medium=docs). Once you've signed up for Nile, you'll be promoted to create your 
+Start by signing up for [Nile](https://console.thenile.dev/?utm_campaign=partnerlaunch&utm_source=nilewebsite&utm_medium=docs). Once you've signed up for Nile, you'll be promoted to create your
 first database. Go ahead and do so. You'll be redirected to the "Query Editor" page of your new database. You can see the built-in `tenants` table on the left-hand side.
 
 From there, click on "Home" (top icon on the left menu), click on "generate credentials" and copy the resulting connection string. You will need it in a sec.
@@ -99,12 +99,12 @@ vector_store = NileVectorStore(
 
 Note that in addition to the usual parameters like URL and dimensions, we also set `tenant_aware=True`. This is because we want to isolate the documents for each tenant in our vector store.
 
-🔥 NileVectorStore supports both tenant-aware vector stores, that isolates the documents for each tenant and a regular store which is typically used for shared data that all tenants can access. 
-Below, we'll demonstrate the tenant-aware vector store. 
+🔥 NileVectorStore supports both tenant-aware vector stores, that isolates the documents for each tenant and a regular store which is typically used for shared data that all tenants can access.
+Below, we'll demonstrate the tenant-aware vector store.
 
 ### Loading and transforming the data
 
-With all this in place, we'll load the data for the sales transcripts. We'll use LlamaIndex's `SimpleDirectoryReader` to load the documents. Because we want to update the documents with the tenant 
+With all this in place, we'll load the data for the sales transcripts. We'll use LlamaIndex's `SimpleDirectoryReader` to load the documents. Because we want to update the documents with the tenant
 metadata after loading, we'll use a separate reader for each tenant.
 
 ```python
@@ -115,7 +115,7 @@ reader = SimpleDirectoryReader(input_files=["modamart__0_transcript.txt"])
 documents_modamart = reader.load_data()
 ```
 
-We are going to create two Nile tenants and the add the tenant ID of each to the document metadata. We are also adding some additional metadata like a custom document ID and a category. This metadata can be used for filtering documents during the retrieval process. 
+We are going to create two Nile tenants and the add the tenant ID of each to the document metadata. We are also adding some additional metadata like a custom document ID and a category. This metadata can be used for filtering documents during the retrieval process.
 Of course, in your own application, you could also load documents for existing tenants and add any metadata information you find useful.
 
 ```python
@@ -136,8 +136,8 @@ for i, doc in enumerate(documents_modamart, start=1):
     doc.id_ = f"modamart_doc_id_{i}"
 ```
 
-We are loading all documents to the same `VectorStoreIndex`. Since we created a tenant-aware `NileVectorStore` when we set things up, 
-Nile will correctly use the `tenant_id` field in the metadata to isolate them. Loading documents without `tenant_id` to a tenant-aware store will throw a `ValueException`. 
+We are loading all documents to the same `VectorStoreIndex`. Since we created a tenant-aware `NileVectorStore` when we set things up,
+Nile will correctly use the `tenant_id` field in the metadata to isolate them. Loading documents without `tenant_id` to a tenant-aware store will throw a `ValueException`.
 
 ```python
 storage_context = StorageContext.from_defaults(vector_store=vector_store)
@@ -182,8 +182,8 @@ Nexiv is an IT company and Modamart is a retail company. You can see that the qu
 
 Thats it! You've now built a (small)RAG application with LlamaIndex and Nile.
 
-The 
-[Python script](https://github.com/niledatabase/niledatabase/blob/main/examples/integrations/code_snippets/nile_llamaindex_quickstart.py) 
+The
+[Python script](https://github.com/niledatabase/niledatabase/blob/main/examples/integrations/code_snippets/nile_llamaindex_quickstart.py)
 and [iPython/Jupyter Notebook](https://github.com/niledatabase/niledatabase/blob/main/examples/integrations/code_snippets/nile_llamaindex_quickstart.ipynb) include all the code for this quickstart,
 as well as few additional examples - for example, how to use metadata filters to farther restrict the search results, or how to delete documents from the vector store.
 
@@ -191,13 +191,13 @@ as well as few additional examples - for example, how to use metadata filters to
 
 Ready to build something amazing? Check out our [TaskGenius example](https://github.com/niledatabase/niledatabase/tree/main/examples/ai/local_llama_task_genius).
 
-The README includes step by step instructions on how to run the application locally. 
+The README includes step by step instructions on how to run the application locally.
 
 Lets go over a few of the code highlights:
 
 ### Use of LlamaIndex with FastAPI
 
-The example is a full-stack application with a FastAPI back-end and a React front-end. 
+The example is a full-stack application with a FastAPI back-end and a React front-end.
 
 When we initialize FastAPI, we create an instance of our `AIUtils` class, which is responsible for interfacing with the Nile vector store and the OpenAI API.
 
@@ -212,13 +212,14 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 ```
+
 Then, in the handler for the `POST /api/todos` endpoint, we use the `AIUtils` instance to generate a time estimate for the todo item, and to store the embedding in the Nile vector store.
 
 ```python
 @app.post("/api/todos")
 async def create_todo(todo: Todo, request: Request, session = Depends(get_tenant_session)):
     ai_utils = AIUtils() # get an instance of AIUtils
-    todo.tenant_id = get_tenant_id(); 
+    todo.tenant_id = get_tenant_id();
     todo.id = str(uuid4())
     estimate = ai_utils.ai_estimate(todo.title, todo.tenant_id)
     todo.estimate = estimate
@@ -273,7 +274,7 @@ response = query_engine.query(
 
 ### Using FastAPI with Nile for tenant isolation
 
-If you look at the `POST /api/todos` handler, you'll see that we get all the todos for a tenant without needing to do any filtering. 
+If you look at the `POST /api/todos` handler, you'll see that we get all the todos for a tenant without needing to do any filtering.
 This is because the `get_tenant_session` function returns a session for the tenant database:
 
 ```python
@@ -288,12 +289,12 @@ async def get_todos(session = Depends(get_tenant_session)):
 ```python
 def get_tenant_session():
     session = Session(bind=engine)
-    try: 
+    try:
         tenant_id = get_tenant_id()
         user_id = get_user_id()
         session.execute(text(f"SET LOCAL nile.tenant_id='{tenant_id}';"))
         # This will raise an error if user_id doesn't exist or doesn't have access to the tenant DB.
-        session.execute(text(f"SET LOCAL nile.user_id='{user_id}';")) 
+        session.execute(text(f"SET LOCAL nile.user_id='{user_id}';"))
         yield session
 ```
 
@@ -305,7 +306,7 @@ You can see it in `tenant_middleware.py`.
 class TenantAwareMiddleware:
     def __init__(self, app):
         self.app = app
-        
+
     async def __call__(self, scope, receive, send):
         headers = Headers(scope=scope)
         maybe_tenant_id = headers.get("X-Tenant-Id")
@@ -319,5 +320,5 @@ class TenantAwareMiddleware:
 
 ### Summary
 
-This example shows how to use LlamaIndex with Nile to build a RAG application. It demonstrates how to store and query documents in a tenant-aware vector store, and how to use 
+This example shows how to use LlamaIndex with Nile to build a RAG application. It demonstrates how to store and query documents in a tenant-aware vector store, and how to use
 metadata filters to further restrict the search results. It also shows how to use FastAPI with Nile to build a full-stack application with tenant isolation.
