@@ -32,7 +32,7 @@ In the left-hand menu, click on "Settings" and then select "Credentials". Genera
 
 This example uses Ollama to run models locally.
 
-Go to[Ollama.com](https://ollama.com/), download and install Ollama. Make sure you install the CLI. 
+Go to[Ollama.com](https://ollama.com/), download and install Ollama. Make sure you install the CLI.
 Then, use the Ollama CLI to install the two models we will use:
 
 ```bash
