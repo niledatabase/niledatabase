@@ -36,7 +36,20 @@ To start using Nile with LlamaIndex, you just need to install LlamaIndex's integ
 pip install llama-index llama-index-vector-stores-nile
 ```
 
-And you are ready to build your multi-tenant RAG application. Then you load your data and start chatting with it:
+Initialize the Nile vector store:
+
+```python
+vector_store = NileVectorStore(
+    service_url="postgresql://user:password@us-west-2.db.thenile.dev:5432/niledb",
+    table_name="test_table",
+    tenant_aware=True,
+    num_dimensions=1536,
+)
+```
+
+And you are ready to build your multi-tenant RAG application.
+
+Its just a few steps to load your data and start chatting with it:
 
 1. Load documents using [SimpleDirectoryReader](https://docs.llamaindex.ai/en/stable/module_guides/loading/simpledirectoryreader/),
    or one of the many other [data connectors](https://docs.llamaindex.ai/en/stable/module_guides/loading/connector/).
