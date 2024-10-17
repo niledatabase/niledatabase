@@ -30,7 +30,13 @@ this can be quite managable. Especially since you can place larger tenants on th
 
 LlamaIndex is a powerful tool for building RAG applications, and its integration with Nile makes it easy to build multi-tenant RAG applications with just a few lines of code.
 
-All you need to do is:
+To start using Nile with LlamaIndex, you just need to install LlamaIndex's integration package for Nile vector store:
+
+```bash
+pip install llama-index llama-index-vector-stores-nile
+```
+
+And you are ready to build your multi-tenant RAG application. Then you load your data and start chatting with it:
 
 1. Load documents using [SimpleDirectoryReader](https://docs.llamaindex.ai/en/stable/module_guides/loading/simpledirectoryreader/),
    or one of the many other [data connectors](https://docs.llamaindex.ai/en/stable/module_guides/loading/connector/).
