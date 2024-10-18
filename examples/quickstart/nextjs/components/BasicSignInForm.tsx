@@ -17,7 +17,6 @@ export default function BasicLoginForm() {
       )}
       <SignInForm
         callbackUrl="/tenants"
-        onSuccess={() => push("/tenants")}
         onError={(resp) => {
           setError("An error has occurred. " + resp.message);
         }}
