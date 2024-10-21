@@ -1,4 +1,5 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+//nextjs throws a fit if this is co-located with a dynamic route
 import { renderToStaticMarkup } from "react-dom/server";
 import React from "react";
 import { glob } from "glob";
@@ -8,14 +9,21 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+if (process.env.LOCAL === "true") {
+  const envPath = path.resolve(__dirname, `../.env.local`);
+  console.log(envPath);
+  dotenv.config({ path: envPath });
+}
+
 const client = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
   process.env.ALGOLIA_ADMIN_KEY
 );
 
+const index = client.initIndex("blog");
+
 async function upload(output) {
   return new Promise((resolve) => {
-    const index = client.initIndex("blog");
     index
       .saveObjects(output)
       .then(() => {
@@ -32,7 +40,8 @@ async function run() {
   files.shift();
   const out = [];
   for (const fileName of files) {
-    const file = path.join(__dirname, "../app/www/../../../", fileName);
+    const file = path.join(__dirname, "app/www/../../../", fileName);
+    console.log(file);
     const { metadata, default: Content } = await import(file);
     const title = fileName.split("/").reverse()[0];
     metadata.objectID = title;
@@ -47,7 +56,7 @@ async function run() {
     metadata.readLength = Math.floor(cleaned.length / 238);
     out.push(metadata);
   }
-  // upload to search service
+  await index.clearObjects();
   await upload(out);
 }
 run();

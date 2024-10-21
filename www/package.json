@@ -10,8 +10,10 @@
     "lint": "next lint",
     "build:templates": "node ./app/templates/_build/templates.mjs",
     "build:sidenav": "node ./app/docs/_build/sidenav.mjs",
-    "build:blogSearch": "node -r dotenv/config --experimental-loader=./scripts/blog/loader.mjs ./scripts/blog/generateSearch.mjs",
-    "build:docSearch": "node -r dotenv/config --experimental-loader=./scripts/blog/loader.mjs ./scripts/docs/generateSearch.mjs"
+    "build:blogSearch": "node -r dotenv/config --experimental-loader=./scripts/loader.mjs ./scripts/buildBlogSearch.mjs",
+    "build:docSearch": "node -r dotenv/config --experimental-loader=./scripts/loader.mjs ./app/docs/_build/generateSearch.mjs",
+    "build:docSearchDev": "LOCAL=true npm run build:docSearch",
+    "build:blogSearchDev": "LOCAL=true npm run build:blogSearch"
   },
   "overrides": {
     "graceful-fs": "4.2.11"

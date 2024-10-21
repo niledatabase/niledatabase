@@ -4,7 +4,6 @@ import CodeGroups from "./app/docs/_components/CodeGroups";
 import Video from "./app/_components/Video";
 import CopyToClipboard from "./app/docs/_components/CopyToClipboard";
 import { Col, Row } from "./app/docs/_components/Layout";
-import Head from "next/head";
 import Image from "next/image";
 import DataFlows from "./app/blog/_components/data-flows";
 
@@ -24,7 +23,6 @@ export const useMDXComponents = (components: MDXComponents): MDXComponents => {
     CodeGroups: (props) => <CodeGroups {...props} />,
     Col: (props) => <Col {...props} />,
     Row: (props) => <Row {...props} />,
-    head: ({ children }) => <Head>{children}</Head>,
     Image: (props) => <Image {...props} />,
     pre: ({ children }) => (
       <CopyToClipboard>{children as JSX.Element}</CopyToClipboard>
