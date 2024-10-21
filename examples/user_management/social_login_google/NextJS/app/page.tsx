@@ -1,13 +1,9 @@
-import styles from "./page.module.css";
-
-import ErrorBox from "@/app/components/ErrorBox";
-import GoogleAuthPanel from "@/app/components/GoogleAuthPanel";
+import GoogleButton from "@/components/ui/GoogleButton";
 
 export default function Home() {
   return (
-    <div>
-      <ErrorBox />
-      <GoogleAuthPanel />
+    <div className="mt-56">
+      <GoogleButton />
     </div>
   );
 }
