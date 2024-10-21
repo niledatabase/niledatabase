@@ -213,7 +213,12 @@ function Hits() {
   const { hits, results } = useHits();
   const groups = results?.hits.reduce(
     (accum: { [key: string]: any[] }, item: any) => {
-      const key = item.categories.join(" > ");
+      if (item === "index") {
+        return accum;
+      }
+      const key = item.categories
+        .filter((cat: string) => cat !== "index")
+        .join(" > ");
       if (accum[key]) {
         accum[key].push(item);
       } else {
@@ -231,7 +236,7 @@ function Hits() {
           const hits = groups[key];
           return (
             <div key={key}>
-              <div className="text-lg">{key}</div>
+              <div className="text-lg capitalize">{key.replace(/-/g, " ")}</div>
               <div className="">
                 {hits.map((hit) => (
                   <Hit
@@ -255,15 +260,19 @@ function Hit({ hit, allowHighlight = true }: any) {
       onClick={() => {
         addItem(hit);
       }}
-      href={`/${hit.objectID.replace(/\d+-/, "")}#${hit.hash}`}
-      className="rounded-md bg-gray hover:bg-lightGray my-3 p-1 px-5 flex flex-row justify-between items-center"
+      href={`/${hit.objectID.replace(/\d+-/, "")}${
+        hit.hash ? `#${hit.hash}` : ""
+      }`}
+      className="rounded-md bg-white transition-colors bg-opacity-10 hover:bg-opacity-20 my-3 p-1 px-5 flex flex-row justify-between items-center"
     >
       <div>
-        <div className="font-bold py-2">{hit.header}</div>
+        <div className="font-bold pt-2">
+          {hit.header ? <div className="pb-2">{hit.header}</div> : null}
+        </div>
         <div
           className="font-bold"
           dangerouslySetInnerHTML={{
-            __html: hit.title,
+            __html: hit.title?.replace("-", " "),
           }}
         />
         {hit.header !== hit.content && (
@@ -271,7 +280,9 @@ function Hit({ hit, allowHighlight = true }: any) {
             <span
               className="text-dimmer"
               dangerouslySetInnerHTML={{
-                __html: allowHighlight ? highlight.content.value : hit.content,
+                __html: allowHighlight
+                  ? highlight.content.value.slice(0, 300)
+                  : hit.content.slice(0, 300),
               }}
             />
           </div>

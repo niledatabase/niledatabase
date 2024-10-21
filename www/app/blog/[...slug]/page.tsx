@@ -36,7 +36,7 @@ export default async function BlogPage(props: Props) {
   return (
     <Container background={null}>
       <BlogImageZoom />
-      <div className="container mx-auto prose prose-invert">
+      <div className="container mx-auto prose prose-invert mt-56">
         <div className="bg-[#2D2D2D] rounded-xl aspect-video w-full overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex relative border border-[#1c1c1c]">
           {metadata?.image ? (
             <Image
