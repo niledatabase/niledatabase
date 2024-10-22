@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import SignoutButton from "./SignoutButton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tenant } from "@niledatabase/server/dist/tenants";
+import { Tenant } from "@niledatabase/server";
 
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
