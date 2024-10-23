@@ -3,8 +3,7 @@
 export const metadata = {
   order: 1,
   title: "Vector database",
-  description:
-    "Explain what is a vector database and when do you need one",
+  description: "Explain what is a vector database and when do you need one",
 };
 
 ### **What is a Vector Database?**
@@ -18,13 +17,13 @@ Vector databases are optimized for **similarity searches**, meaning they help yo
 ### **Core Concepts and Examples**
 
 1. **Vectors**: A vector is a list of numbers that represents the essential characteristics of data. In AI, vectors are created using models that capture relationships between elements of the data.
-    - **Example in NLP**: A sentence like "The cat sat on the mat" can be converted into a vector by a language model such as BERT or GPT. The vector might look something like `[0.34, 0.67, -0.23, 0.88, ...]`. This vector contains semantic information about the sentence.
-    - **Example in Image Recognition**: An image of a car could be transformed into a vector that represents its visual features, such as color, shape, and texture: `[0.23, -0.12, 0.98, 0.34, ...]`.
+   - **Example in NLP**: A sentence like "The cat sat on the mat" can be converted into a vector by a language model such as BERT or GPT. The vector might look something like `[0.34, 0.67, -0.23, 0.88, ...]`. This vector contains semantic information about the sentence.
+   - **Example in Image Recognition**: An image of a car could be transformed into a vector that represents its visual features, such as color, shape, and texture: `[0.23, -0.12, 0.98, 0.34, ...]`.
 2. **Similarity Search**: The main task of a vector database is to find vectors that are "close" to each other in a high-dimensional space. For example, you may want to find images that are visually similar to a query image or articles that are semantically similar to a query sentence.
-    - **Example in Product Recommendations**: If a user looks at a product on an e-commerce website, the system converts the product into a vector. The vector database is then queried to find vectors of similar products, which are displayed as recommendations.
-    - **Example in Large Language Models (LLMs)**: After processing a user query like "What is quantum computing?", the LLM generates a vector representing the query’s meaning. The vector database is queried to find documents or articles with similar meaning, even if the exact words differ.
+   - **Example in Product Recommendations**: If a user looks at a product on an e-commerce website, the system converts the product into a vector. The vector database is then queried to find vectors of similar products, which are displayed as recommendations.
+   - **Example in Large Language Models (LLMs)**: After processing a user query like "What is quantum computing?", the LLM generates a vector representing the query’s meaning. The vector database is queried to find documents or articles with similar meaning, even if the exact words differ.
 3. **Nearest Neighbor Search**: Vectors in a vector database are stored in such a way that when you search for one vector, the database can efficiently find the "nearest" vectors, based on a distance metric such as **cosine similarity** or **Euclidean distance**.
-    - **Example in Music Recommendation**: A music streaming app converts songs into vectors based on their audio features (e.g., tempo, rhythm). When a user likes a song, the app searches the vector database to find similar songs.
+   - **Example in Music Recommendation**: A music streaming app converts songs into vectors based on their audio features (e.g., tempo, rhythm). When a user likes a song, the app searches the vector database to find similar songs.
 4. **Indexing in Vector Databases**: To search efficiently in high-dimensional spaces, vector databases use special indexing methods such as **Hierarchical Navigable Small World (HNSW)** or **IVF (Inverted File Index)**.
 
 ---
@@ -38,44 +37,44 @@ Large Language Models, such as GPT-4 or BERT, generate vectors (embeddings) from
 When a user enters a query like "Best way to learn machine learning," an LLM transforms this query into a vector embedding that captures the essence of the question. This vector is then passed to the vector database, which searches for similar vectors (e.g., documents, articles, blog posts) related to machine learning education.
 
 - **How it works**:
-    1. LLM converts the query into a vector.
-    2. The vector database performs a similarity search to find the closest matching vectors.
-    3. The system retrieves and returns relevant documents, even if they don’t contain the exact words “best way to learn machine learning” but discuss similar concepts.
+  1. LLM converts the query into a vector.
+  2. The vector database performs a similarity search to find the closest matching vectors.
+  3. The system retrieves and returns relevant documents, even if they don’t contain the exact words “best way to learn machine learning” but discuss similar concepts.
 
 ### **Example 2: Document Search and Retrieval**
 
 Imagine a legal firm storing thousands of legal documents. Each document is processed by a transformer model, generating a vector that represents its content. These vectors are then stored in a vector database. When a user searches for "case law on intellectual property infringement," the query is transformed into a vector, and the database retrieves documents that are semantically similar.
 
 - **How it works**:
-    1. The LLM transforms each document into a vector embedding at the time of ingestion.
-    2. When the user performs a search, the query is also converted into a vector.
-    3. The vector database searches for documents with vectors close to the query vector, effectively finding relevant documents.
+  1. The LLM transforms each document into a vector embedding at the time of ingestion.
+  2. When the user performs a search, the query is also converted into a vector.
+  3. The vector database searches for documents with vectors close to the query vector, effectively finding relevant documents.
 
 ### **Example 3: Chatbots with LLMs and Vector Databases**
 
 In an LLM-based chatbot, user queries can be mapped into vector embeddings, and these embeddings can be stored for future use. If the user asks a similar question later, the chatbot can use the vector database to retrieve past responses based on vector similarity, enabling more coherent and contextually aware responses.
 
 - **How it works**:
-    1. User query gets converted into a vector by the LLM.
-    2. The chatbot stores this vector in a vector database alongside the generated response.
-    3. Future similar queries are compared with vectors in the database to retrieve the most relevant responses.
+  1. User query gets converted into a vector by the LLM.
+  2. The chatbot stores this vector in a vector database alongside the generated response.
+  3. Future similar queries are compared with vectors in the database to retrieve the most relevant responses.
 
 ---
 
 ### **Use cases for Vector Databases**
 
 1. **Recommendation Engines**:
-    - **Use Case**: A movie streaming platform uses a vector database to store user preferences and movie vectors (e.g., genre, ratings). When a user watches or likes a movie, the system searches for movies with similar vectors.
-    - **Example**: The user likes a drama film with vectors such as `[0.45, -0.32, 0.78, 0.11]`. The vector database returns films with vectors close to this one.
+   - **Use Case**: A movie streaming platform uses a vector database to store user preferences and movie vectors (e.g., genre, ratings). When a user watches or likes a movie, the system searches for movies with similar vectors.
+   - **Example**: The user likes a drama film with vectors such as `[0.45, -0.32, 0.78, 0.11]`. The vector database returns films with vectors close to this one.
 2. **Image Search**:
-    - **Use Case**: A social media platform uses vector databases to store image embeddings. When users upload an image, the platform uses a deep learning model to generate a vector for the image. A similarity search is then performed to find images with similar vectors.
-    - **Example**: A user uploads a picture of a sunset, and the vector database retrieves other sunset images, even though they are different in pixel composition.
+   - **Use Case**: A social media platform uses vector databases to store image embeddings. When users upload an image, the platform uses a deep learning model to generate a vector for the image. A similarity search is then performed to find images with similar vectors.
+   - **Example**: A user uploads a picture of a sunset, and the vector database retrieves other sunset images, even though they are different in pixel composition.
 3. **Fraud Detection**:
-    - **Use Case**: In financial services, transaction histories are represented as vectors. Fraud detection systems use vector databases to find anomalous behavior by searching for transactions whose vectors deviate significantly from normal patterns.
-    - **Example**: A fraudulent transaction might produce a vector that is distant from typical transaction vectors. The system flags it as suspicious based on vector distance.
+   - **Use Case**: In financial services, transaction histories are represented as vectors. Fraud detection systems use vector databases to find anomalous behavior by searching for transactions whose vectors deviate significantly from normal patterns.
+   - **Example**: A fraudulent transaction might produce a vector that is distant from typical transaction vectors. The system flags it as suspicious based on vector distance.
 4. **Search in Chatbots**:
-    - **Use Case**: LLMs combined with vector databases are used in chatbots to improve user query resolution. When a user asks a question, the chatbot converts the query into a vector and searches a vector database to retrieve the most relevant answer.
-    - **Example**: A user asks, "What are the top programming languages?" The LLM produces a vector for the query and retrieves responses that contain information about programming languages like Python, Java, and C++.
+   - **Use Case**: LLMs combined with vector databases are used in chatbots to improve user query resolution. When a user asks a question, the chatbot converts the query into a vector and searches a vector database to retrieve the most relevant answer.
+   - **Example**: A user asks, "What are the top programming languages?" The LLM produces a vector for the query and retrieves responses that contain information about programming languages like Python, Java, and C++.
 
 ---
 

@@ -135,12 +135,12 @@ let vectors = await model.embedDocuments(documents);
 
 // store embeddings
 await nile.db.query(
-  "CREATE TABLE IF NOT EXISTS embeddings (id integer, embedding vector(1024));"
+  "CREATE TABLE IF NOT EXISTS embeddings (id integer, embedding vector(1024));",
 );
 for (const [i, vec] of vectors.entries()) {
   await nile.db.query(
     "INSERT INTO embeddings (id, embedding) values ($1, $2)",
-    [i, JSON.stringify(vec.map((v) => Number(v)))]
+    [i, JSON.stringify(vec.map((v) => Number(v)))],
   );
 }
 
@@ -150,13 +150,13 @@ let question_vec = await model.embedDocuments(["Tell me about React"]);
 // search for the nearest document by cosine distance of embedding
 let answer_vec = await nile.db.query(
   "select id from embeddings order by embedding<=>$1 limit 1",
-  [JSON.stringify(question_vec[0])]
+  [JSON.stringify(question_vec[0])],
 );
 
 // return the answer:
 console.log(
   "based on your question, this document is relevant: " +
-    documents[answer_vec.rows[0].id]
+    documents[answer_vec.rows[0].id],
 );
 ```
 
