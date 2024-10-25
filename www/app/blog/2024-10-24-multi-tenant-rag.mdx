@@ -17,17 +17,17 @@ export const metadata = {
 
 If you look at many of the popular B2B applications that integrate AI capabilities, most of them use RAG architectures. Few examples:
 
-- Zendesk uses solved tickets to power a copilot that assists the suppot team. 
-- Hubspot uses existing information about your customers and past interactions to generate personalized emails. 
-- Notion uses existing content to help draft and edit documents. 
+- Zendesk uses solved tickets to power a copilot that assists the suppot team.
+- Hubspot uses existing information about your customers and past interactions to generate personalized emails.
+- Notion uses existing content to help draft and edit documents.
 
 If you think about these examples (and there are hundreds more), you'll notice that they have additional pattern in common: These are multi-tenant applications, and in any interaction, they only retrieve data for the currect tenant.
 
 This is obvious, when you think about it. No marketing team wants to send personalized emails based on customer's interactions with a different company. And Hubspot certainly can't allow this to happen on their platform. **Customer trust is the most important asset of B2B applications** and the addition of AI makes trust even more critical.
 
-Multi-tenant RAG also has performance benefits. Indexing and searching vectors of a single customer is many orders of magnitude faster and more efficient than searching through all customers and then filtering the result. In many cases the number of vectors per customer is small enough that if you limit search to a specific customer, you can perform exact nearest neighbor search in a reasonable time, which means you benefit from perfect recall. As opposed to approximate nearest neighbor search, using indexes such as HNSW where you trade-off resources, latency and recall. 
+Multi-tenant RAG also has performance benefits. Indexing and searching vectors of a single customer is many orders of magnitude faster and more efficient than searching through all customers and then filtering the result. In many cases the number of vectors per customer is small enough that if you limit search to a specific customer, you can perform exact nearest neighbor search in a reasonable time, which means you benefit from perfect recall. As opposed to approximate nearest neighbor search, using indexes such as HNSW where you trade-off resources, latency and recall.
 
-Multi-tenant RAG provides privacy, efficiency and accuracy. Now how do we build one? 
+Multi-tenant RAG provides privacy, efficiency and accuracy. Now how do we build one?
 
 ### Multi-tenant RAG Architectures
 
@@ -55,7 +55,7 @@ It has the following tradeoffs:
 
 ### Hybrid options
 
-The alternatives above represent two extremes - isolation and scalability on one side, ease of use and efficiency on the other. Some vector stores also offer alternatives between these two extremes. This involve putting tenants in the same database and adding isolation by separating tenants into their own schema (also called namespaces), tables (aka collections) or partitions. Each one of these options provide additional isolation but also some additional downsides. These options also have limits on the number of tenants, because they all represent additional objects in the database. The limits will range from few thousands to around 100,000, depending on the exact solution and on the database. 
+The alternatives above represent two extremes - isolation and scalability on one side, ease of use and efficiency on the other. Some vector stores also offer alternatives between these two extremes. This involve putting tenants in the same database and adding isolation by separating tenants into their own schema (also called namespaces), tables (aka collections) or partitions. Each one of these options provide additional isolation but also some additional downsides. These options also have limits on the number of tenants, because they all represent additional objects in the database. The limits will range from few thousands to around 100,000, depending on the exact solution and on the database.
 
 ## Multi-tenant RAG with Nile and pgvector
 
@@ -65,22 +65,23 @@ However, behind the scenes, Nile stores tenant's data in their own virtual tenan
 
 These capabilities are supported by Nile for any table and any type of data. For vectors, Nile integrates with `pgvector` - Postgres popular vector type. `pgvector` provides optimized vector types for both dense, quantized and sparse vectors, as well as various distance functions and vector indexes (flat, IVFFlat, HNSW).
 
-Combining vector store with relational data is very powerful. You can: 
+Combining vector store with relational data is very powerful. You can:
+
 - Query vector data using familiar SQL syntax
 - Use your favorite clients, SDKs and ORMs on vector data
 - Join vectors and documents with related data - relevant metadata, summaries, other documents with the same context.
 - Efficient B-Tree indexes on metadata for additional filtering
-- ACID compliance. You can store all related documents, metadata and embeddings in one transaction, to avoid missing or out of sync information. 
+- ACID compliance. You can store all related documents, metadata and embeddings in one transaction, to avoid missing or out of sync information.
 
 If you take another look at the examples of multi-tenant RAG applications that I mentioned in the beginning of this blog: Zenefits, Hubspot, Notion. They all combine RAG with application data in seamless user experience. Using Postgres to store both application data and vectors is a simple and efficient way to implement the same experience.
 
-Lets take a look at a few examples of using Nile for multi-tenant RAG. We'll implement the same similarity search in 5 different languages and frameworks. 
+Lets take a look at a few examples of using Nile for multi-tenant RAG. We'll implement the same similarity search in 5 different languages and frameworks.
 
 In all these examples, we are building a smart task manager that uses past tasks, their time estimates and an LLM to estimate how long new tasks will take. To implement this, we insert tasks with embeddings and later search for similar tasks based on their embeddings. Naturally, we don't want to mix tasks between tenants.
 
 ### Using SQL
 
-You can use Nile exactly as you'd use pgvector, except that you'll want to let Nile know which tenant you are working on. 
+You can use Nile exactly as you'd use pgvector, except that you'll want to let Nile know which tenant you are working on.
 For example:
 
 ```sql
@@ -122,17 +123,15 @@ const similarTasks = await tenantNile.db.query(
 );
 ```
 
-You can find full example applications using our SDK with [NextJS](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%20and%20NextJS) or [NodeJS](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%2C%20NodeJS%20and%20React). 
+You can find full example applications using our SDK with [NextJS](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%20and%20NextJS) or [NodeJS](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%2C%20NodeJS%20and%20React).
 
 ### Using Drizzle (Typescript)
 
 Drizzle is a popular Typescript ORM with great support for vector types. It is extensible, so you can wrap each transaction in a bit of code that injects the tenant_id. Once we do that, performing nearest neighbor search will look like this:
 
 ```javascript
-const similarity = sql<number>`(${cosineDistance(
-  todoSchema.embedding,
-  embedding
-)})`;
+const similarity =
+  sql < number > `(${cosineDistance(todoSchema.embedding, embedding)})`;
 
 // get similar tasks, no need to filter by tenant because we are already in the tenant context
 const similarTasks = await tenantNile(async (tx) => {
@@ -145,7 +144,7 @@ const similarTasks = await tenantNile(async (tx) => {
 });
 ```
 
-We defined a similarity method - in this cosine distance between our document embedding and the embedding column in the table, and then use Drizzle client objects to build and execute the query. If you are interested to try, we have a [full example application](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%20and%20Drizzle%20ORM) that uses Drizzle with Nile and pgvector. 
+We defined a similarity method - in this cosine distance between our document embedding and the embedding column in the table, and then use Drizzle client objects to build and execute the query. If you are interested to try, we have a [full example application](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%20and%20Drizzle%20ORM) that uses Drizzle with Nile and pgvector.
 
 ### Using SQL Alchemy (Python)
 
@@ -194,6 +193,6 @@ You can find the full example of using LlamaIndex to build multi-tenant RAG appl
 
 ## Summing things up
 
-In this blog, we explored how multi-tenant Retrieval-Augmented Generation (RAG) is used in AI-powered B2B applications like Zendesk, HubSpot, and Notion. These apps retrieve data specific to each tenant, ensuring both data isolation and improved performance. We dive into different multi-tenant RAG implementation strategies, from the extremes of DB per tenant to using a tenant column in a single database. We also showcase how Nile's Postgres-based solution combines the simplicity of tenant-column architecture with powerful isolation, enabling efficient and secure AI experiences. And we demonstrated its use in a variety of languages and frameworks. 
+In this blog, we explored how multi-tenant Retrieval-Augmented Generation (RAG) is used in AI-powered B2B applications like Zendesk, HubSpot, and Notion. These apps retrieve data specific to each tenant, ensuring both data isolation and improved performance. We dive into different multi-tenant RAG implementation strategies, from the extremes of DB per tenant to using a tenant column in a single database. We also showcase how Nile's Postgres-based solution combines the simplicity of tenant-column architecture with powerful isolation, enabling efficient and secure AI experiences. And we demonstrated its use in a variety of languages and frameworks.
 
 Ready to build your multi-tenant RAG app? [Get started with Nile](https://console.thenile.dev).
