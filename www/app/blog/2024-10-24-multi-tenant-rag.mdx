@@ -1,0 +1,187 @@
+export const metadata = {
+  title: "Why and How to Build Multi-Tenant RAG Applications",
+  authors: ["gwenshap"],
+  image: "2024-10-24-multi-tenant-rag/cover.png",
+  sizzle:
+    "Multi-tenant RAG applications provide privacy, reliability and scalability. Nile makes it easy to build multi-tenant RAG applications and in this blog, we'll show you how.",
+  tags: [
+    "postgres",
+    "AI",
+    "B2B",
+    "multi-tenant",
+    "LlamaIndex",
+    "Vector Store",
+    "RAG",
+  ],
+};
+
+If you look at many of the popular B2B applications that integrate AI capabilities, most of them use RAG. Zendesk uses solved tickets to 
+power a copilot that assists the suppot team. Hubspot uses existing information about your customers and past interactions to generate personalized emails. Notion uses existing content to help draft and edit documents. 
+
+If you think about these examples (and there are hundreds more), you'll notice that while they all use RAG, they actually use a more specific variation of RAG:
+
+- They retrieve data that already exists in their database as a result of users simply using their application
+- They are multi-tenant applications, and they make sure they only retrieve data for the currect tenant
+
+This is obvious, when you think about it. No marketing team wants to send personalized emails based on customer's interactions with a different company. And Hubspot certainly can't allow this to happen on their platform. Customer trust is the most important asset of B2B applications.
+
+Limiting RAG to a tenant at a time also has performance benefits. It should be pretty obvious that indexing and searching through vectors of one customer is many orders of magnitude faster and more efficient than searching through all customers and then filtering the result. In many cases, the number of vectors per customer is small enough that if you limit the search to a specific customer, you can perform **exact nearest neighbor** search in a reasonable time, which means you benefit from perfect recall. 
+
+So, we want to implement multi-tenant RAG. Now what?
+
+### Multi-tenant RAG implementation alternatives
+
+Multi-tenant RAG is a popular pattern, so all the popular vector stores provide some solution for multi-tenancy. Sometimes more than one. Unfortunately, there is no standard terminology for multi-tenancy in vector stores, so solutions with nearly identical behavior can have different names in different vector stores.
+
+If you've ever built any kind of multi-tenant application, you'll be familiar with the types of solutions available.
+
+### DB per Tenant
+
+On one end of the spectrum, there is the DB per tenant approach. This approach maximizes isolation, but it has serious trade-offs:
+- **Resource inefficiency**: Even the most active tenant imaginable doesn't use all the resources allocated to a database. Significant portions of memory and CPU are used for maintaining the database - internal data structures, compaction processes, statistics, etc. In multi-tenant databases, this overhead is amortized among all tenants. With a database per tenant, you pay for this overhead for each tenant.
+- **Client inefficiency**: With DB per tenant approach, you need to maintain a connection pool for each tenant for their database. This adds complexity to the application code as well as bloats the memory used by the application.
+- **Reporting**: If you do need to run any query across all your tenants (lets say, activity report for billing), you'll need to write a script that queries across all these databases and then aggregates the result. You'll likely need to build a data warehose and ETL process much sooner than you would in the case of multi-tenant database.
+- **Administration**: Any admin operation, such as upgrades, that you want to automate will need to run across all databases. 
+
+### Tenant column
+
+At the other end of the spectrum, you place all tenants in the same DB and use the same tables (sometimes called collections) for all tenants. A `tenant_id` column (also called field) will be used to distinguish vectors that belong to different tenants. Developers are expecte to add a filter to each query that will limit the responses to just the current tenant. This approach minimizes overhead and simplifies management and reporting, but also has serious trade-offs:
+- **low isolation**: At the DB layer, tenants are not isolated at all. They share storage, memory, compute, network. Everything. If a developer codes carefully, you won't have any place where data is accidentally leaked between tenants, but this is the most you can guarantee.
+- **lower scalability**: Building and re-building Approximate Nearest Neighbor (ANN) indexes takes more time and resources when you need to index all the data for all tenants in a single index. Similarly, searching one giant index will take longer. Remember that you can't prune an ANN index based on another field before searching it, you are forced to search the entire index. This also means that the only way to filter data for a single tenant is to first find the nearest neighbors, then filter them based on the tenant, and keep iterating until you have sufficient vectors from that specific tenant.
+- **no tenant-level admin**: Because all the tenants are placed in the same database, operations such as upgrades or restoring backups will always affect all tenants. If some tenants need to stay on an old version for some reason, this will be very difficult to solve.
+
+### Hybrid options
+
+The alternatives above represent two extremes - isolation and scalability on one side, ease of use and efficiency on the other. Some vector stores also offer alternatives between these two extremes. This involve putting tenants in the same database and applying some additional isolation by separating tenants into their own schema (also called namespaces), tables (aka collections) or partitions. Each one of these options provide additional isolation but also some additional downsides. Most of these options also have limits on the number of tenants. Since they all represent additional objects in the database and these are typically limited to 10,000 or 100,000ish (depends on the exact solution and on the database). 
+
+## Multi-tenant RAG with Nile and Pgvector
+
+Nile is Postgres, re-engineered for multi-tenant applications. When you use Nile, you'll notice that the developer experience is very similar to the "tenant column" architecture. You'll have a `tenants` table and you will need to add `tenant_id` column to each table that holds tenant-specific data or vectors. So you get this familiar experience. However, behind the scenes, Nile isolates the tenants to their own virtual tenant databases and handles the routing of queries to the right destination. In order to provide this isolation, Nile enforces rules such as "every insert must specify the tenant ID" and "mixing different tenants in one transaction is not allowed". This allows us to enforce this isolation as well as additional capabilities such as placing tenants on dedicated or shared compute.
+
+These capabilities are supported by Nile for any table and any type of data. In order to support multi-tenancy for vectors, Nile integrates with `pgvector` - Postgres popular vector type. `pgvector` provides optimized vector types for both dense, quantized and sparse vectors, as well as various distance functions and vector indexes (flat, IVFFlat, HNSW).
+
+Combining vector store with relational data is very powerful. It allows you to combine vector similarity search with related data using the powerful yet familiar SQL language or your favorite ORM. It also allows you to create b-tree indexes on vector metadata for more efficient filtering. And of course ACID compliance.
+
+Lets table a look at a few examples of using Nile for multi-tenant RAG. In all the examples, we are building a smart task manager that uses past tasks, their time estimates and an LLM to estimate how long new tasks will take.
+
+We insert tasks with embeddings, and we later search for similar tasks based on their embeddings. Naturally, we don't want to mix tasks between tenants. Lets see how to do it.
+
+### Using SQL
+
+You can use Nile exactly as you'd use pgvector, except that you'll want to let Nile know which tenant you are working on. 
+For example:
+
+```sql
+-- creating a table to store wiki documents for a Notion like
+-- SaaS application with vector dimension of 3
+CREATE TABLE todos(
+    tenant_id uuid,
+    title varchar(256),
+    embedding vector(3),
+    estimate text
+    );
+
+-- store vector for a tenant
+INSERT INTO todos (tenant_id,title, embedding, estimate)
+VALUES ('018ade1a-7843-7e60-9686-714bab650998','feed the cat', '[1,2,3]', '5 minutes');
+
+-- Find 10 nearest neighbors, but only for documents that belong to one tenant
+SET nile.tenant_id = '018ade1a-7843-7e60-9686-714bab650998';
+
+SELECT * FROM wiki_documents
+ORDER BY embedding <=> '[3,1,2]'
+LIMIT 10;
+```
+
+### Using Nile SDK (Typescript / Javascript)
+
+Using Nile SDK is very similar. You still write plain SQL. Nile SDK will handle connection pooling and setting the tenant ID where needed:
+
+```javascript
+// grab a connection to a virtual tenant database
+const tenantNile = await configureNile(params.tenantid);
+
+// get similar tasks, no need to filter by tenant because we are already in the tenant context
+const similarTasks = await tenantNile.db.query(
+  `SELECT title, estimate FROM todos 
+  ORDER BY embedding <-> $1
+  LIMIT 10`,
+  [embeddingToSQL(embedding)]
+);
+```
+
+You can find full example applications using our SDK with [NextJS](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%20and%20NextJS) or [NodeJS](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%2C%20NodeJS%20and%20React). 
+
+### Using Drizzle (Typescript)
+
+Drizzle is a popular Typescript ORM with great support for vector types. It is extensible, so you can wrap each transaction in a bit of code that injects the tenant_id. Once we do that, performing nearest neighbor search will look like this:
+
+```javascript
+const similarity = sql<number>`(${cosineDistance(
+  todoSchema.embedding,
+  embedding
+)})`;
+
+// get similar tasks, no need to filter by tenant because we are already in the tenant context
+const similarTasks = await tenantNile(async (tx) => {
+  return await tx
+    .select({ task: todoSchema.title, estimate: todoSchema.estimate })
+    .from(todoSchema)
+    .where(lt(similarity, 1))
+    .orderBy((t: any) => desc(similarity))
+    .limit(3);
+});
+```
+
+We defined a similarity method - in this cosine distance between our document embedding and the embedding column in the table, and then use Drizzle client objects to build and execute the query. If you are interested to try, we have a [full example application](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%20and%20Drizzle%20ORM) that uses Drizzle with Nile and pgvector. 
+
+### Using SQL Alchemy (Python)
+
+SQL Alchemy is a Python ORM and works quite similarly to Drizzle. It integrates well with FastAPI, so tenant-specific connections are injected as dependencies into route handles that work with tenant data. With the tenant-specific connections, I can perform similarity search for each tenant as follows:
+
+```Python
+# get similar tasks, no need to filter by tenant because we are already in the tenant context
+similar_tasks_raw = (
+    session.query(Todo)
+    .filter(Todo.embedding.cosine_distance(query_embedding) < 1)
+    .order_by(Todo.embedding.cosine_distance(query_embedding)).limit(3))
+return [{"title": task.title, "estimate": task.estimate} for task in similar_tasks_raw]
+```
+
+The `session` object is already set with the tenant ID, thanks to a tenant-aware middleware. We used `pgvector` integration with `sqlalchemy` to add `embedding` column to the `Todo` model with vector type. Then we can call its `cosine_distance` function as you see above.
+
+You can browse the full example [here](https://www.thenile.dev/templates/AI-Native%20SaaS%20with%20Nile%20and%20Python).
+
+### Using LlamaIndex (Python)
+
+Nile has a LlamaIndex integration, which lets you create tenant-aware vector stores in LlamaIndex and use them with LlamaIndex's simple RAG SDK and workflows. You can really see how LlamaIndex simplifies things, because you never need to explicitly search for nearest neighbors. You initialize an index from a table on Nile, and simply prompt the LLM. LlamaIndex and Nile integration handle it all behind the scenes.
+
+```Python
+# Initialize an index from a table on Nile - this is done once when app starts
+self.vector_store = NileVectorStore(
+    service_url=os.getenv("DATABASE_URL"),
+    table_name="todos_embedding",
+    tenant_aware=True,
+    num_dimensions=768
+)
+self.index = VectorStoreIndex.from_vector_store(self.vector_store)
+
+# create a query engine for specific tenant, this is a light wrapper
+query_engine = self.index.as_query_engine(vector_store_kwargs={
+          "tenant_id": str(tenant_id),
+      })
+
+# Just prompt with the task you need to estimate
+response = query_engine.query(
+    f'you are an amazing project manager. I need to {text}. How long do you think this will take? '
+    f'respond with just the estimate, no yapping.'
+)
+```
+
+You can find the full example of using LlamaIndex to build multi-tenant RAG application [here](https://github.com/niledatabase/niledatabase/tree/main/examples/ai/local_llama_task_genius).
+
+## Summing things up
+
+In this blog, we explored how multi-tenant Retrieval-Augmented Generation (RAG) is used in AI-powered B2B applications like Zendesk, HubSpot, and Notion. These apps retrieve data specific to each tenant, ensuring both data isolation and improved performance. We dive into different multi-tenant RAG implementation strategies, from the extremes of DB per tenant to using a tenant column in a single database. We also showcase how Nile's Postgres-based solution combines the simplicity of tenant-column architecture with powerful isolation, enabling efficient and secure AI experiences. And we demonstrated its use in a variety of languages and frameworks. 
+
+Ready to build your multi-tenant RAG app? [Get started with Nile](https://console.thenile.dev).
