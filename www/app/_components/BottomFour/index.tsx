@@ -163,7 +163,7 @@ export default function BottomFour() {
               ]}
             >
               <div className="flex items-center justify-center px-8">
-                <Image src={backups} alt="linked databases" />
+                <Image src={backups} alt="linked databases invert" />
               </div>
             </Box>
           </div>
