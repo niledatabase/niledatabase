@@ -10,9 +10,6 @@ export const metadata = {
 Nile provides a cloud offering to help build multi-tenant apps. You can also get started with Nile's Docker image
 and try Nile locally.
 
-✏️ Note that the container uses ephemeral storage, so all the data will be lost when the container is stopped.
-This is intentional, as it simplifies the setup (and more importantly - the cleanup), while still allowing you to experiment and test your application.
-
 ### Prerequisites
 
 - [Docker](https://www.docker.com/get-started)
@@ -126,6 +123,8 @@ set nile.tenant_id = '7e93c45f-fe65-4f26-8ab6-922850fa4c7a';
 SELECT tenants.name, title, embedding, estimate, complete
 FROM todos join tenants on tenants.id = todos.tenant_id;
 ```
+✏️ Note that the container uses ephemeral storage, so all the data will be lost when the container is stopped.
+This is intentional, as it simplifies the setup (and more importantly - the cleanup), while still allowing you to experiment and test your application.
 
 ### Looking good! What's next?
 
