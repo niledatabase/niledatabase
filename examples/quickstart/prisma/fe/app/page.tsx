@@ -1,4 +1,4 @@
-import GoogleAuthPanel from "@/components/GoogleSSOForm";
+import GoogleAuthPanel from "../components/GoogleSSOForm";
 
 export default function Home() {
   return (
