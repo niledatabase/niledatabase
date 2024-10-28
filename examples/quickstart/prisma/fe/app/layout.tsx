@@ -2,7 +2,6 @@
 
 import "./globals.css";
 import styles from "./page.module.css";
-import React from "react";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import Link from "@mui/joy/Link";
