@@ -17,7 +17,9 @@
 - Place tenants on serverless or provisioned compute - globally
 - Tenant-level branching, backups, schema migration, and insights
 
-We are in public preview currently. You can sign up to Nile at https://console.thenile.dev/
+We are in public preview currently. 
+
+To get started with Nile, you can sign up to Nile at https://console.thenile.dev/ or try locally using our docker image https://www.thenile.dev/docs/getting-started/postgres_docker
 
 This is a great resource to read more about Nile in 3 minutes [https://www.thenile.dev/docs/nile-in-3-minutes](https://www.thenile.dev/docs/getting-started/whatisnile)
 
