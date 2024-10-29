@@ -96,9 +96,10 @@ Let's take all the examples of multi-tenant RAG applications that I mentioned in
 
 Next, we'll look at a few examples of using Nile for multi-tenant RAG. We'll implement the same similarity search in 5 different languages and frameworks.
 
+![Architecture of our smart task manager](/blog/2024-10-24-multi-tenant-rag/task_genius_arch.png)
+
 In all these examples, we are building a smart task manager that uses past tasks, their time estimates and an LLM to estimate how long new tasks will take. To implement this, we insert tasks with embeddings and later search for similar tasks based on their embeddings. Naturally, we don't want to mix tasks between tenants.
 
-![Architecture of our smart task manager](/blog/2024-10-24-multi-tenant-rag/task_genius_arch.png)
 
 ### Using SQL
 
@@ -116,18 +117,20 @@ CREATE TABLE todos(
     );
 
 -- store vector for a tenant
+-- you'll typically use an embedding model to generate the vector
+-- in the real world these vectors have hundreds of floating point dimensions
 INSERT INTO todos (tenant_id,title, embedding, estimate)
 VALUES ('018ade1a-7843-7e60-9686-714bab650998','feed the cat', '[1,2,3]', '5 minutes');
 
 -- Find 10 nearest neighbors, but only for documents that belong to one tenant
 SET nile.tenant_id = '018ade1a-7843-7e60-9686-714bab650998';
 
-SELECT * FROM wiki_documents
+SELECT * FROM todos
 ORDER BY embedding <=> '[3,1,2]'
 LIMIT 10;
 ```
 
-### Using Nile SDK (Typescript / Javascript)
+### Using the Nile SDK (Typescript / Javascript)
 
 Using Nile SDK is very similar. You still write plain SQL. Nile SDK will handle connection pooling and setting the tenant ID where needed:
 
@@ -165,7 +168,26 @@ const similarTasks = await tenantNile(async (tx) => {
 });
 ```
 
-We defined a similarity method - in this cosine distance between our document embedding and the embedding column in the table, and then use Drizzle client objects to build and execute the query. If you are interested to try, we have a [full example application](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%20and%20Drizzle%20ORM) that uses Drizzle with Nile and pgvector.
+We defined a similarity method using cosine distance between our document embedding and the embedding column in the table, and then use Drizzle client objects to build and execute the query. Drizzle supports all the distance metrics available in pgvector. You can find the rest and additional examples in [Drizzle documentation](https://orm.drizzle.team/docs/extensions/pg). If you are interested to try, we have a [full example application](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%20and%20Drizzle%20ORM) that uses Drizzle with Nile and pgvector.
+
+### Using Psycopg (Python)
+
+Psycopg is Python's most popular Postgres client. It has an [extension](https://github.com/pgvector/pgvector-python/tree/master?tab=readme-ov-file#psycopg-3) for `pgvector`.
+You use Psycopg with the same SQL syntax that we've seen in the SQL example above. The only difference is that we pass the vector as a parameter, per `psycopg` best practices:
+
+```Python
+conn = psycopg.connect(os.getenv("DATABASE_URL"))
+
+query = sql.SQL( 
+  """
+  SELECT title, estimate 
+  FROM todos  
+  ORDER BY %(query_embedding)s::vector <-> embedding
+  LIMIT 3
+  """)
+cursor.execute(query, {"query_embedding": query_embedding})
+return cursor.fetchall()
+```
 
 ### Using SQL Alchemy (Python)
 
