@@ -49,7 +49,7 @@ If you've ever built any kind of multi-tenant application, these alternatives wi
 
 ### Database per Tenant
 
-On one end of the spectrum, there is the DB per tenant approach. This approach maximizes isolation and lets you treat each tenant's database as an individual pet with individualized care. It is a good fit if you have a relatively small number of high-paying customers.
+On one end of the spectrum, there is the "database per tenant" approach. This approach maximizes isolation and lets you treat each tenant's database as an individual pet with individualized care. It is a good fit if you have a relatively small number of high-paying customers.
 
 ![Vector Store per tenant](/blog/2024-10-24-multi-tenant-rag/vector_db_per_tenant.png)
 
@@ -64,7 +64,11 @@ It has the following tradeoffs:
 
 At the other end of the spectrum, you place all your tenants in the same DB and use the same tables (sometimes called collections) for all tenants. A `tenant_id` column (also called field) will be used to determine which row and vector belong to which tenant. Developers are expected to add a filter to each query that will limit the responses to just the current tenant. This approach minimizes overhead and simplifies operations by letting you manage all tenants as identical cattle. It is a good fit if you plan for a very large number (potentially millions) of small and price sensitive tenants, since it has the lowest overhead compared to all alternative solutions.
 
-![Vector Store per tenant](/blog/2024-10-24-multi-tenant-rag/tenant_column.png)
+<Image
+  src="/blog/2024-10-24-multi-tenant-rag/tenant_column.png"
+  width="400"
+  height="400"
+/>
 
 It has the following tradeoffs:
 
