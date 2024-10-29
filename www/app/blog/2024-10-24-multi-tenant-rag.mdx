@@ -176,7 +176,8 @@ You use Psycopg with the same SQL syntax that we've seen in the SQL example abov
 
 ```Python
 conn = psycopg.connect(os.getenv("DATABASE_URL"))
-
+cursor = conn.cursor()
+cursor.execute('set nile.tenant_id = %s', (tenant_id,))
 query = sql.SQL(
   """
   SELECT title, estimate
