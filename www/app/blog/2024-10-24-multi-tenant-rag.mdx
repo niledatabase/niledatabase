@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "5 Ways to Build Multi-Tenant RAG Applications",
+  title: "Building successful multi-tenant RAG applications",
   authors: ["gwenshap"],
   image: "2024-10-24-multi-tenant-rag/cover.png",
   sizzle:
@@ -15,57 +15,76 @@ export const metadata = {
   ],
 };
 
-If you look at many of the popular B2B applications that integrate AI capabilities, most of them use [RAG architectures](https://thenile.dev/docs/ai-embeddings/rag). Few examples:
+Many popular business apps that have AI capabilities use the common [RAG architectures](https://thenile.dev/docs/ai-embeddings/rag) pattern to generate more relevant and accurate results. Few examples:
 
-- Zendesk uses solved tickets to power a copilot that assists the suppot team.
-- Hubspot uses existing information about your customers and past interactions to generate personalized emails.
-- Notion uses existing content to help draft and edit documents.
+- [Zendesk](https://zendesk.com) allows you to use your solved support tickets as input data to power a copilot that assists the support team in answering future customer support issues.
+- [Hubspot](https://hubspot.com) uses existing information about your customers and past interactions to generate personalized emails.
+- [Notion](https://notion.so) uses existing content to help draft and edit documents.
 
-If you think about these examples (and there are hundreds more), you'll notice that they have additional pattern in common: These are multi-tenant applications, and in any interaction, they only retrieve data for the currect tenant.
+Aside from being RAG apps, these examples all have something else in common: they're all These are multi-tenant applications, and in any given interaction, they only retrieve data for the current tenant. 
 
-This is obvious, when you think about it. No marketing team wants to send personalized emails based on customer's interactions with a different company. And Hubspot certainly can't allow this to happen on their platform. **Customer trust is the most important asset of B2B applications** and the addition of AI makes trust even more critical.
+This makes sense when you think about it. No marketing team wants to send personalized emails based on customer's interactions with a different company. **Customer trust is the most important asset of B2B applications** and the addition of AI makes establishing trust even more critical.
 
-Multi-tenant RAG also has performance benefits. Indexing and searching vectors of a single customer is many orders of magnitude faster and more efficient than searching through all customers and then filtering the result. In many cases the number of vectors per customer is small enough that if you limit search to a specific customer, you can perform exact nearest neighbor search in a reasonable time, which means you benefit from perfect recall. As opposed to approximate nearest neighbor search, using indexes such as HNSW where you trade-off resources, latency and recall.
+In addition to benefits from a user trust perspective, multi-tenant RAG also has performance benefits. RAG architectures have two high-latency steps: Retrieving vectors and LLM inference. Multi-tenant RAG makes vector storage and retrieval significantly more efficient: Searching vectors for a single customer is many orders of magnitude faster and more efficient than searching through all customers and then filtering the result. In many cases the number of vectors per customer is small enough that if you limit search to a specific customer, you can perform exact nearest neighbor search in a reasonable time, which means you benefit from perfect recall. As opposed to approximate nearest neighbor search, using indexes such as HNSW, where you trade-off resources, latency and recall.
 
-Multi-tenant RAG provides privacy, efficiency and accuracy. Now how do we build one?
+In summary, multi-tenant RAG provides privacy, efficiency and accuracy. Now how do we build one?
+
+### Storing and retrieving vectors in a nutshell
+
+RAG architectures rely on the ability to efficiently store and search large collections of vectors. The idea is that you take some input text and embed it (that is, turn it into a vector that represents essential properties of that text). Vectors have distance metrics - that is, you can take two vectors and check the distance between them. This means that for a given input vector, you can search a collection of stored vectors for the K nearest vectors (also known as [K nearest neighbors](https://www.cs.cmu.edu/~15451-s19/lectures/lec22-nearest-neighbor.pdf)). These vectors represent stored documents that are the most similar to the input text, and persumably most relevant as context for the LLM.
+
+Nearest neighbor search can be done naively, by simply scanning the entire collection of vectors and comparing the distance of each stored vector to the input. This is O(N) operation, but given that vectors are usually large (1536 dimensions is common), it can take a few seconds to search through 10,000 vectors.
+
+**[Vector indexes](https://www.thenile.dev/docs/ai-embeddings/pg_vector#vector-indexes)** are used to speed up searches in larger collections. 
+
+Vector indexes are not like b-tree indexes that are common in databases. They improve performance by limiting the nearest neighbor search to subsets of the vectors stored. Subsets that are likely (but not guaranteed!) to contain the nearest neighbors. When using vector indexes you trade off performance for recall - you use parameters to decide how much data you want to search through (details vary depending on the indexing algorithm). Searching through less data means better performance, but higher probability that some relevant results will get missed (worse recall). Because of the loss of recall, searches that use vector indexes are called "approximate nearest neighbor" search, or ANN.
+
+Vector indexes only include data about the indexes themselves, but no additional metadata (also unlike b-trees that can include multiple columns). This means that if you search a vector index, you can't pre-filter the search space based on additional information, you always use the vector index as a whole.
 
 ### Multi-tenant RAG Architectures
 
-Multi-tenant RAG is a popular pattern, so many vector stores provide some kind of solution for multi-tenancy. Sometimes have more than one option. Unfortunately, comparing them can be a bit challenging: There is no standard terminology for multi-tenancy in vector stores, so identical solutions can have different names in different vector stores.
+Many vector stores provide solutions for multi-tenancy. Sometimes they have more than one option. Unfortunately, comparing them can be a bit challenging: There is no standard terminology for multi-tenancy in vector stores, so identical solutions can have different names in different vector stores.
 
-If you've ever built any kind of multi-tenant application, you'll be familiar with these solution. Lets revisit the alternatives and the tradeoffs involved.
+If you've ever built any kind of multi-tenant application, these alternatives will look familiar. Lets look the alternatives and the tradeoffs involved, I'll use the terms common in relational databases and mention the terms used by other types of vector stores.
 
-### DB per Tenant
+### Database per Tenant
 
-On one end of the spectrum, there is the DB per tenant approach. This approach maximizes isolation and lets you treat each tenant as an individual pet with individualized care. It is a good fit if you have a relatively small number of high-paying customers. It has the following tradeoffs:
+On one end of the spectrum, there is the DB per tenant approach. This approach maximizes isolation and lets you treat each tenant's database as an individual pet with individualized care. It is a good fit if you have a relatively small number of high-paying customers. 
+
+![Vector Store per tenant](/blog/2024-10-24-multi-tenant-rag/vector_db_per_tenant.png)
+
+It has the following tradeoffs:
 
 - **Resource inefficiency**: Even the most active tenant imaginable doesn't use all the resources allocated to a database. Significant portions of memory and CPU are used for maintaining the database - internal data structures, compaction processes, statistics, etc. In multi-tenant databases, this overhead is amortized among all tenants. With a database per tenant, you pay for this overhead for each tenant.
 - **Client inefficiency**: With DB per tenant approach, you need to maintain a connection pool for each tenant for their database. This adds complexity to the application code as well as bloats the memory used by the application. In many cases, developers who choose this architecture also deploy an isolated application stack for each tenant.
-- **Reporting**: If you do need to run any query across all your tenants (lets say, activity report for billing), you'll need to write a script that queries across all these databases and then aggregates the result. You'll likely need to build a data warehose and ETL process much sooner than you would in the case of multi-tenant database.
+- **Reporting**: If you do need to run any query across all your tenants (lets say, activity report for billing), you'll need to write a script that queries across all these databases and then aggregates the result. You'll likely need to build a data warehouse and ETL process much sooner than you would in the case of multi-tenant database.
 - **Administration**: Any admin operation, such as upgrades or even schema migrations, will need to run across all databases.
 
 ### Tenant column
 
-At the other end of the spectrum, you place all tenants in the same DB and use the same tables (sometimes called collections) for all tenants. A `tenant_id` column (also called field) will be used to determine which row and vector belog to which tenant. Developers are expecte to add a filter to each query that will limit the responses to just the current tenant. This approach minimizes overhead and simplifies operations by letting you manage all tenants as identical cattle. It is a good fit if you plan for very large number (potentially millions) of small and price sensitive tenants.  
+At the other end of the spectrum, you place all your tenants in the same DB and use the same tables (sometimes called collections) for all tenants. A `tenant_id` column (also called field) will be used to determine which row and vector belong to which tenant. Developers are expected to add a filter to each query that will limit the responses to just the current tenant. This approach minimizes overhead and simplifies operations by letting you manage all tenants as identical cattle. It is a good fit if you plan for a very large number (potentially millions) of small and price sensitive tenants, since it has the lowest overhead compared to all alternative solutions.
+
+![Vector Store per tenant](/blog/2024-10-24-multi-tenant-rag/tenant_column.png)
+
 It has the following tradeoffs:
 
-- **low isolation**: At the DB layer, tenants are not isolated at all. They share storage, memory, compute, network. Everything. If a developer codes carefully, you won't have any place where data is accidentally leaked between tenants, but this is the most you can guarantee.
-- **lower scalability**: Building and re-building Approximate Nearest Neighbor (ANN) indexes takes more time and resources when you need to index all the data for all tenants in a single index. Similarly, searching one giant index will take longer. Remember that you can't prune an ANN index based on another field before searching it, you are forced to search the entire index. This also means that the only way to filter data for a single tenant is to first find the nearest neighbors, then filter them based on the tenant, and keep iterating until you have sufficient vectors from that specific tenant.
+- **low isolation**: At the DB layer, tenants are not isolated at all. They share storage, memory, compute and network. Everything. If a developer codes carefully, you won't have any place where data is accidentally leaked between tenants, but this is a fragile guarantee.
+- **lower scalability**: Building and re-building Approximate Nearest Neighbor (ANN) indexes takes more time and resources when you need to index all the data for all tenants in a single index. Similarly, searching one giant index will take longer. As we mentioned earlier, you can't prune an ANN index based on another field before searching it, so you are forced to search the entire index. This also means that the only way to filter data for a single tenant is to first find the nearest neighbors, then filter them based on the tenant, and keep iterating until you find sufficient vectors from that specific tenant.
 - **no tenant-level admin**: Because all the tenants are placed in the same database, operations such as upgrades or restoring backups will always affect all tenants. If some tenants need to stay on an old version for some reason, this will be very difficult to solve.
 
 ### Hybrid options
 
-The alternatives above represent two extremes - isolation and scalability on one side, ease of use and efficiency on the other. Some vector stores also offer alternatives between these two extremes. This involve putting tenants in the same database and adding isolation by separating tenants into their own schema (also called namespaces), tables (aka collections) or partitions. Each one of these options provide additional isolation but also some additional downsides. These options also have limits on the number of tenants, because they all represent additional objects in the database. The limits will range from few thousands to around 100,000, depending on the exact solution and on the database.
+The alternatives above represent two extremes - isolation and scalability on one side, ease of use and efficiency on the other. Some vector stores also offer alternatives between these two extremes. This involves putting tenants in the same database and adding isolation by separating tenants into their own schema (also called namespaces), tables (aka collections) or partitions. Each one of these options provide additional isolation but also some additional downsides. These options also have limits on the number of tenants, because they all represent additional objects in the database. The limits will range from a few thousands to around 100,000, depending on the exact solution and on the database.
 
 ## Multi-tenant RAG with Nile and pgvector
 
-Nile is Postgres, re-engineered for multi-tenant applications. When you use Nile, you'll notice that the developer experience is very similar to the "tenant column" architecture. You'll have a `tenants` table and you will need to add `tenant_id` column to each table that holds tenant-specific data or vectors. So you get this familiar experience.
+Nile is Postgres, re-engineered for multi-tenant applications. When you use Nile, you'll notice that the developer experience is very similar to the "tenant column" architecture. You'll have a `tenants` table and you will need to add `tenant_id` column to each table that holds tenant-specific data or vectors.
 
 However, behind the scenes, Nile stores tenant's data in their own virtual tenant databases and handles the routing of queries to the right destination. This way, Nile enforces isolation and provides additional capabilities such as placing tenants on dedicated or shared compute. In order to provide these capabilities, Nile checks that developers follow policies such as: "every insert must specify the tenant ID" and "mixing different tenants in one transaction is not allowed", these rules are guardrails that help developers build secure and private applications.
 
-These capabilities are supported by Nile for any table and any type of data. For vectors, Nile integrates with `pgvector` - Postgres popular vector type. `pgvector` provides optimized vector types for both dense, quantized and sparse vectors, as well as various distance functions and vector indexes (flat, IVFFlat, HNSW).
+These capabilities are supported by Nile for any table and any type of data. For vectors, Nile integrates with `pgvector` - Postgres' popular vector type. `pgvector` provides optimized vector types for both dense, quantized and sparse vectors, as well as various distance functions and vector indexes (flat, IVFFlat, HNSW).
 
-Combining vector store with relational data is very powerful. You can:
+Combining a vector store with a relational data structure is very powerful. You can:
 
 - Query vector data using familiar SQL syntax
 - Use your favorite clients, SDKs and ORMs on vector data
@@ -73,11 +92,13 @@ Combining vector store with relational data is very powerful. You can:
 - Efficient B-Tree indexes on metadata for additional filtering
 - ACID compliance. You can store all related documents, metadata and embeddings in one transaction, to avoid missing or out of sync information.
 
-If you take another look at the examples of multi-tenant RAG applications that I mentioned in the beginning of this blog: Zenefits, Hubspot, Notion. They all combine RAG with application data in seamless user experience. Using Postgres to store both application data and vectors is a simple and efficient way to implement the same experience.
+Let's take all the examples of multi-tenant RAG applications that I mentioned in the beginning of this blog: Zenefits, Hubspot, Notion. They all combine RAG with application data in a seamless user experience. Using Postgres to store both application data and vectors is a simple and efficient way to implement the same experience.
 
-Lets take a look at a few examples of using Nile for multi-tenant RAG. We'll implement the same similarity search in 5 different languages and frameworks.
+Next, we'll look at a few examples of using Nile for multi-tenant RAG. We'll implement the same similarity search in 5 different languages and frameworks.
 
 In all these examples, we are building a smart task manager that uses past tasks, their time estimates and an LLM to estimate how long new tasks will take. To implement this, we insert tasks with embeddings and later search for similar tasks based on their embeddings. Naturally, we don't want to mix tasks between tenants.
+
+![Architecture of our smart task manager](/blog/2024-10-24-multi-tenant-rag/task_genius_arch.png)
 
 ### Using SQL
 
