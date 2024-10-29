@@ -20,6 +20,8 @@ The Docker image includes:
 - All functionalities documented in our docs work with the image
 - At this point, the UI console is not included in the image
 
+[Join our discord](https://discord.com/invite/8UuBB84tTy) to give feedback or ask questions about running and testing with Nile's Docker image.
+
 ## Using Nile's docker container with TestContainers
 
 A common way to automate integration tests is using [TestContainers](https://testcontainers.org/).
@@ -67,6 +69,7 @@ Troubleshooting tip:
 
 ✏️ Note that the container uses ephemeral storage, so all the data will be lost when the container is stopped.
 This is intentional, as it simplifies the setup (and more importantly - the cleanup), while still allowing you to experiment and test your application.
+
 - You can get the containter logs while tests are running by running `export DEBUG=testcontainers*` before running the tests.
 
 ### Python
@@ -104,6 +107,7 @@ Troubleshooting tip:
 
 ✏️ Note that the container uses ephemeral storage, so all the data will be lost when the container is stopped.
 This is intentional, as it simplifies the setup (and more importantly - the cleanup), while still allowing you to experiment and test your application.
+
 - On MacOS, you may need to explicitly set the `DOCKER_HOST` environment variable:
 
 ```bash
