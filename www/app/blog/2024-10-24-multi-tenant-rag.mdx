@@ -21,7 +21,7 @@ Many popular business apps that have AI capabilities use the common [RAG archite
 - [Hubspot](https://hubspot.com) uses existing information about your customers and past interactions to generate personalized emails.
 - [Notion](https://notion.so) uses existing content to help draft and edit documents.
 
-Aside from being RAG apps, these examples all have something else in common: they're all These are multi-tenant applications, and in any given interaction, they only retrieve data for the current tenant.
+Aside from being RAG apps, these examples all have something else in common: they are all multi-tenant applications, and in any given interaction, they only retrieve data for the current tenant.
 
 This makes sense when you think about it. No marketing team wants to send personalized emails based on customer's interactions with a different company. **Customer trust is the most important asset of B2B applications** and the addition of AI makes establishing trust even more critical.
 
@@ -31,15 +31,15 @@ In summary, multi-tenant RAG provides privacy, efficiency and accuracy. Now how 
 
 ### Storing and retrieving vectors in a nutshell
 
-RAG architectures rely on the ability to efficiently store and search large collections of vectors. The idea is that you take some input text and embed it (that is, turn it into a vector that represents essential properties of that text). Vectors have distance metrics - that is, you can take two vectors and check the distance between them. This means that for a given input vector, you can search a collection of stored vectors for the K nearest vectors (also known as [K nearest neighbors](https://www.cs.cmu.edu/~15451-s19/lectures/lec22-nearest-neighbor.pdf)). These vectors represent stored documents that are the most similar to the input text, and persumably most relevant as context for the LLM.
+RAG architectures rely on the ability to efficiently store and search large collections of vectors. The idea is that we take an input text and embed it (turn it into a vector that represents essential properties of that text). The reason we want to turn text into vectors is that we can take two vectors and check the distance between them. This means that for a given input vector, we can search a collection of stored vectors for the K nearest vectors (also known as [K nearest neighbors](https://www.cs.cmu.edu/~15451-s19/lectures/lec22-nearest-neighbor.pdf)). These vectors represent stored documents that are the most similar to the input text, and persumably most relevant as context for the LLM.
 
 Nearest neighbor search can be done naively, by simply scanning the entire collection of vectors and comparing the distance of each stored vector to the input. This is O(N) operation, but given that vectors are usually large (1536 dimensions is common), it can take a few seconds to search through 10,000 vectors.
 
 **[Vector indexes](https://www.thenile.dev/docs/ai-embeddings/pg_vector#vector-indexes)** are used to speed up searches in larger collections.
 
-Vector indexes are not like b-tree indexes that are common in databases. They improve performance by limiting the nearest neighbor search to subsets of the vectors stored. Subsets that are likely (but not guaranteed!) to contain the nearest neighbors. When using vector indexes you trade off performance for recall - you use parameters to decide how much data you want to search through (details vary depending on the indexing algorithm). Searching through less data means better performance, but higher probability that some relevant results will get missed (worse recall). Because of the loss of recall, searches that use vector indexes are called "approximate nearest neighbor" search, or ANN.
+Vector indexes are not like b-tree indexes that are common in databases. They improve performance by limiting the nearest neighbor search to subsets of the vectors stored. Subsets that are likely (but not guaranteed!) to contain the nearest neighbors. When using vector indexes we trade off performance for recall - we use parameters to decide how much data we want to search through (details vary depending on the indexing algorithm). Searching through less data means better performance, but higher probability that some relevant results will get missed (worse recall). Because of the loss of recall, searches that use vector indexes are called "approximate nearest neighbor" search, or ANN.
 
-Vector indexes only include data about the indexes themselves, but no additional metadata (also unlike b-trees that can include multiple columns). This means that if you search a vector index, you can't pre-filter the search space based on additional information, you always use the vector index as a whole.
+Vector indexes only include data about the indexes themselves, but no additional metadata (also unlike b-trees that can include multiple columns). This means that if we search a vector index, we can't pre-filter the search space based on additional information, we always use the vector index as a whole.
 
 ### Multi-tenant RAG Architectures
 
