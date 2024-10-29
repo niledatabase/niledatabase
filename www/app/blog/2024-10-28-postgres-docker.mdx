@@ -19,7 +19,7 @@ export const metadata = {
 We launched Nile to the public a month ago, and since then, we have been iterating and improving the product based on user feedback. For those who are unfamiliar, Nile is Postgres re-engineered for multi-tenant applications. It is purpose-built from the ground up to help build multi-tenant apps fast that are secure and cost-effective with effortless scale. You can try out Nile and build B2B and AI apps with our free tier offering with unlimited databases. While our hosted solution is ideal for running applications in production, many users have expressed the need for the ability to quickly iterate locally. Today, we are excited to announce that the entire Nile stack is now available for download through our official Docker repository.
 
 ```bash
-docker run -p 5432:5432 -p 8080:8080 -ti ghcr.io/niledatabase/testingcontainer:v0.0.1
+docker run -p 5432:5432 -ti ghcr.io/niledatabase/testingcontainer:v0.0.2
 ```
 
 The Docker image includes:
@@ -45,7 +45,7 @@ psql postgres://00000000-0000-0000-0000-000000000000:password@localhost:5432/tes
 
 Let us create our first table that has a tenant_id column and a vector column:
 
-```bash
+```sql
 CREATE TABLE IF NOT EXISTS "todos" (
   "id" uuid DEFAULT gen_random_uuid(),
   "tenant_id" uuid,
@@ -71,12 +71,13 @@ insert into todos (tenant_id, title, estimate, embedding, complete) values ('d24
 
 and you can verify the data was inserted correctly by running:
 
-`select * from todos;`
+```sql
+select * from todos;
+```
 
 You can add another tenant and insert data for that tenant in a similar fashion. This will allow us to explore tenant isolation (in the next section).
 
 ```sql
--- creating my second tenant
 -- creating my second tenant
 insert into tenants (id, name) values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'second customer');
 select * from tenants;
