@@ -21,7 +21,7 @@ Many popular business apps that have AI capabilities use the common [RAG archite
 - [Hubspot](https://hubspot.com) uses existing information about your customers and past interactions to generate personalized emails.
 - [Notion](https://notion.so) uses existing content to help draft and edit documents.
 
-Aside from being RAG apps, these examples all have something else in common: they're all These are multi-tenant applications, and in any given interaction, they only retrieve data for the current tenant. 
+Aside from being RAG apps, these examples all have something else in common: they're all These are multi-tenant applications, and in any given interaction, they only retrieve data for the current tenant.
 
 This makes sense when you think about it. No marketing team wants to send personalized emails based on customer's interactions with a different company. **Customer trust is the most important asset of B2B applications** and the addition of AI makes establishing trust even more critical.
 
@@ -35,7 +35,7 @@ RAG architectures rely on the ability to efficiently store and search large coll
 
 Nearest neighbor search can be done naively, by simply scanning the entire collection of vectors and comparing the distance of each stored vector to the input. This is O(N) operation, but given that vectors are usually large (1536 dimensions is common), it can take a few seconds to search through 10,000 vectors.
 
-**[Vector indexes](https://www.thenile.dev/docs/ai-embeddings/pg_vector#vector-indexes)** are used to speed up searches in larger collections. 
+**[Vector indexes](https://www.thenile.dev/docs/ai-embeddings/pg_vector#vector-indexes)** are used to speed up searches in larger collections.
 
 Vector indexes are not like b-tree indexes that are common in databases. They improve performance by limiting the nearest neighbor search to subsets of the vectors stored. Subsets that are likely (but not guaranteed!) to contain the nearest neighbors. When using vector indexes you trade off performance for recall - you use parameters to decide how much data you want to search through (details vary depending on the indexing algorithm). Searching through less data means better performance, but higher probability that some relevant results will get missed (worse recall). Because of the loss of recall, searches that use vector indexes are called "approximate nearest neighbor" search, or ANN.
 
@@ -49,7 +49,7 @@ If you've ever built any kind of multi-tenant application, these alternatives wi
 
 ### Database per Tenant
 
-On one end of the spectrum, there is the DB per tenant approach. This approach maximizes isolation and lets you treat each tenant's database as an individual pet with individualized care. It is a good fit if you have a relatively small number of high-paying customers. 
+On one end of the spectrum, there is the DB per tenant approach. This approach maximizes isolation and lets you treat each tenant's database as an individual pet with individualized care. It is a good fit if you have a relatively small number of high-paying customers.
 
 ![Vector Store per tenant](/blog/2024-10-24-multi-tenant-rag/vector_db_per_tenant.png)
 
@@ -99,7 +99,6 @@ Next, we'll look at a few examples of using Nile for multi-tenant RAG. We'll imp
 ![Architecture of our smart task manager](/blog/2024-10-24-multi-tenant-rag/task_genius_arch.png)
 
 In all these examples, we are building a smart task manager that uses past tasks, their time estimates and an LLM to estimate how long new tasks will take. To implement this, we insert tasks with embeddings and later search for similar tasks based on their embeddings. Naturally, we don't want to mix tasks between tenants.
-
 
 ### Using SQL
 
@@ -178,10 +177,10 @@ You use Psycopg with the same SQL syntax that we've seen in the SQL example abov
 ```Python
 conn = psycopg.connect(os.getenv("DATABASE_URL"))
 
-query = sql.SQL( 
+query = sql.SQL(
   """
-  SELECT title, estimate 
-  FROM todos  
+  SELECT title, estimate
+  FROM todos
   ORDER BY %(query_embedding)s::vector <-> embedding
   LIMIT 3
   """)
