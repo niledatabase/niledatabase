@@ -29,7 +29,7 @@ The Docker image includes:
 - All functionalities documented in our docs work with the image
 - At this point, the UI console is not included in the image
 
-We want to make the entire development lifecycle of using a multi-tenant database seamless. The docker image with the full Nile stack is the first step towards a long set of features we hope to release to simplify local development. 
+We want to make the entire development lifecycle of using a multi-tenant database seamless. The docker image with the full Nile stack is the first step towards a long set of features we hope to release to simplify local development.
 
 ## Getting started with Nile using Docker
 
@@ -66,7 +66,7 @@ Now that we have a tenant, we can insert data into our tenant-aware table:
 ```sql
 -- adding a todo item for this tenant
 
-insert into todos (tenant_id, title, estimate, embedding, complete) 
+insert into todos (tenant_id, title, estimate, embedding, complete)
 values ('d24419bf-6122-4879-afa5-1d9c1b051d72', 'feed my cat', '1h', '[1,2,3]', false);
 ```
 
@@ -80,11 +80,11 @@ You can add another tenant and insert data for that tenant in a similar fashion.
 
 ```sql
 -- creating my second tenant
-insert into tenants (id, name) 
+insert into tenants (id, name)
 values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'second customer');
 select * from tenants;
 
-insert into todos (tenant_id, title, estimate, embedding, complete) 
+insert into todos (tenant_id, title, estimate, embedding, complete)
 values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'take out trash', '2h', '[0.8,0.2,0.6]', false);
 select * from todos;
 ```
@@ -143,6 +143,6 @@ We have more examples in our documentation for other languages. Take a spin and 
 
 ## The Nile developer journey
 
-We are just getting started and hope to launch features that make the entire developer lifecycle really easy to build multi-tenant apps on Postgres. We plan to invest in features for seeding data, branching the database, schema migrations etc over the course of next few months. 
+We are just getting started and hope to launch features that make the entire developer lifecycle really easy to build multi-tenant apps on Postgres. We plan to invest in features for seeding data, branching the database, schema migrations etc over the course of next few months.
 
 We are excited to launch a full local option for Nile. [**Try out Nile**](https://console.thenile.dev/) and build your AI B2B apps with a Postgres platform purpose built for it. We are looking forward to all the feedback!
