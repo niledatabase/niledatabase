@@ -25,5 +25,8 @@ export var useMDXComponents = function () {
     DataFlows: function () {
       return null;
     },
+    Image: function () {
+      return null;
+    },
   };
 };
