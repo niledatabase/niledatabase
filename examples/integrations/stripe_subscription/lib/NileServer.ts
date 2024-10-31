@@ -1,4 +1,4 @@
-import { nile } from "@/app/api/[...nile]/nile";
+import { nile } from "../app/api/[...nile]/nile";
 import { cookies } from "next/headers";
 
 // This returns a reference to the Nile Server, configured with the user's auth token and tenantID (if any)
