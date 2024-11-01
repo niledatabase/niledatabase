@@ -59,7 +59,7 @@ export async function cancelSubscription(formData: FormData) {
     await stripe.subscriptions.cancel(subscriptionId);
     // if we got here, subscription was cancelled successfully, lets downgrade the tenant tier too
     // we need to reset the tenantID before we update the tenant
-    tenantNile.tenantId=null;
+    tenantNile.tenantId = null;
     await tenantNile.db.query(
       `UPDATE tenants 
        SET tenant_tier = $1,

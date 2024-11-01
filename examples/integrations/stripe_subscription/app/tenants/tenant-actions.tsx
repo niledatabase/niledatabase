@@ -5,8 +5,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { configureNile } from "@/lib/NileServer";
 
-export async function createTenant(prevState: { message: string | null }, formData: FormData) {
-  
+export async function createTenant(
+  prevState: { message: string | null },
+  formData: FormData
+) {
   const tenantName = formData.get("tenantname")?.toString();
   if (!tenantName) {
     return { message: "No tenant name provided" };
@@ -24,9 +26,7 @@ export async function createTenant(prevState: { message: string | null }, formDa
       return { message: "no tenant" };
     }
     tenantID = tenant.id;
-    console.log(
-      "created tenant with tenantID: ", tenantID
-    );
+    console.log("created tenant with tenantID: ", tenantID);
 
     revalidatePath("/tenants");
     success = true;

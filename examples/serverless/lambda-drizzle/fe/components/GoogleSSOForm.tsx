@@ -11,7 +11,7 @@ export default function GoogleAuthPanel() {
 
   React.useEffect(() => {
     // Check if the current URL includes ?logout
-    if (window.location.search.includes('logout')) {
+    if (window.location.search.includes("logout")) {
       Cookies.remove("authData");
       // Optionally, redirect to clean URL
       router.replace(pathname);

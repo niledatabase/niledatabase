@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense } from "react";
 import GoogleAuthPanel from "../components/GoogleSSOForm";
 
 export default function Home() {
