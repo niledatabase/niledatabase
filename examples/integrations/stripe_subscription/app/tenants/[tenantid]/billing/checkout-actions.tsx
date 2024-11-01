@@ -42,7 +42,7 @@ export async function cancelSubscription(formData: FormData) {
   console.log("cancelSubscription called");
 
   const tenantid = formData.get("tenantid")?.toString();
-  const tenantNile = configureNile(cookies().get("authData"), tenantid);
+  const tenantNile = await configureNile(tenantid);
 
   // We are looking up the subscription ID from the tenant database
   const resp = await tenantNile.db.query(
@@ -58,15 +58,18 @@ export async function cancelSubscription(formData: FormData) {
   try {
     await stripe.subscriptions.cancel(subscriptionId);
     // if we got here, subscription was cancelled successfully, lets downgrade the tenant tier too
+    // we need to reset the tenantID before we update the tenant
+    tenantNile.tenantId = null;
     await tenantNile.db.query(
       `UPDATE tenants 
        SET tenant_tier = $1,
-           stripe_subscription_id = NULL`,
-      ["free"]
+           stripe_subscription_id = NULL
+       WHERE id = $2`,
+      ["free", tenantid]
     );
   } catch (e) {
+    console.log("error cancelling subscription", e);
     console.error(e);
-    return { message: "Failed to cancel subscription" };
   }
 
   revalidatePath("/tenants/" + tenantid + "/billing");
@@ -79,11 +82,10 @@ export async function redirectToStripePortal(formData: FormData) {
 
   if (!tenantId) {
     console.log("missing tenant_id from request");
-    return { message: "tenant_id missing from request" }; // TODO: Better error handling
   }
 
   // Here we are getting a connection to a specific tenant database
-  const tenantNile = configureNile(cookies().get("authData"), tenantId);
+  const tenantNile = await configureNile(tenantId);
 
   // Get the Stripe customer ID from the database
   const resp = await tenantNile.db.query(
