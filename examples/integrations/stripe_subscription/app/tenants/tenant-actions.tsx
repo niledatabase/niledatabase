@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 import { configureNile } from "@/lib/NileServer";
 
 export async function createTenant(
-  prevState: { message: string | null },
   formData: FormData
 ) {
   const tenantName = formData.get("tenantname")?.toString();
