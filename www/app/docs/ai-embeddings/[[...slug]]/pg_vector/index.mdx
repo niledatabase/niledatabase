@@ -360,7 +360,7 @@ WITH nearest_results AS MATERIALIZED (
 ) SELECT * FROM nearest_results WHERE distance < 1 ORDER BY distance;
 ```
 
-Even with iterative scans, pgvector limits the index scan in order to balance time, resource use and recall. 
+Even with iterative scans, pgvector limits the index scan in order to balance time, resource use and recall.
 Increasing these limits can increase query latency but potentially improve recall:
 
 HSNW has a configuration that controls the total number of rows that will be scanned by a query across all iterations (20,000 is the default):

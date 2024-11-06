@@ -9,7 +9,6 @@ import Input from "@mui/joy/Input";
 import { createTenant } from "@/app/tenants/tenant-actions";
 // ^^^ the actual actions are in a server component because they are database operations
 
-
 export function AddForm() {
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<{ message?: string }>({});
@@ -44,7 +43,7 @@ export function AddForm() {
               <Typography>Name</Typography>
               <Input id="tenantname" name="tenantname" autoFocus required />
               <p aria-live="polite" className="sr-only" role="status">
-                  {state?.message}
+                {state?.message}
               </p>
               <Button type="submit" variant="solid">
                 Submit
