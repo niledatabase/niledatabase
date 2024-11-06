@@ -323,21 +323,23 @@ Using iterative index scans, Postgres will scan the approximate index for neares
 neighbors after filtering is insufficient, it will continue scanning until sufficient results are found.
 
 Each index has its own configuration (GUC) for iterative scans: `hnsw.iterative_scan` and `ivfflat.iterative_scan`.
-And these can be set to `strict_order` or `relaxed_order`.
+By default both configurations are set to `off`.
+
+HNSW indexes support both relaxed and strict ordering for the iterative scans. Strict order guarantees that the returned results are ordered by exact distance.
+Relaxed order allows results that are slightly out of order, but provides better recall (i.e. fewer missed results due to the approximate
+nature of the index).
 
 ```sql
 SET hnsw.iterative_scan = strict_order;
 -- or
 SET hnsw.iterative_scan = relaxed_order;
--- or
-SET ivfflat.iterative_scan = strict_order;
--- or
-SET ivfflat.iterative_scan = relaxed_order;
 ```
 
-Strict order guarantees that results returned are ordered by exact distance.
-Relaxed order allows results that are slightly out of order, but provides better recall (i.e. fewer missed results due to the approximate
-nature of the index).
+IVFFlat indexes only allow relaxed ordering:
+
+```sql
+SET ivfflat.iterative_scan = relaxed_order;
+```
 
 Once you set these configs, you don't need to change your existing queries. You should immediately see the same queries return the correct number of results.
 
@@ -356,6 +358,21 @@ materialized CTE and place the filter outside the CTE in order to avoid overscan
 WITH nearest_results AS MATERIALIZED (
     SELECT id, embedding <=> '[1,2,3]' AS distance FROM items ORDER BY distance LIMIT 5
 ) SELECT * FROM nearest_results WHERE distance < 1 ORDER BY distance;
+```
+
+Even with iterative scans, pgvector limits the index scan in order to balance time, resource use and recall.
+Increasing these limits can increase query latency but potentially improve recall:
+
+HSNW has a configuration that controls the total number of rows that will be scanned by a query across all iterations (20,000 is the default):
+
+```sql
+SET hnsw.max_scan_tuples = 20000;
+```
+
+IVFFLat lets you configure the maximum number of lists that will be checked for nearest neighbors:
+
+```sql
+SET ivfflat.max_probes = 100;
 ```
 
 ## Quantization
