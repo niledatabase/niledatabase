@@ -36,7 +36,7 @@ impractical or undesirable. The new iterative scan feature offers a more straigh
 ## Demonstrating iterative scans
 
 Lets see this in action with a very small example. I strongly recommend running small experiments - you learn so 
-much if the actual results don't match my expectations. Follow along for important pgvector lessons:
+much if the actual results don't match your expectations. Follow along for important pgvector lessons:
 
 To start, I create a table with sample data:
 
@@ -58,9 +58,9 @@ category 1 differ significantly, representing **orthogonal** (unrelated) data.
 What would you expect the following query to return?
 
 ```sql
-select id, category, embedding<=>'[1,2,3]'  AS distance 
-FROM filtest where category=1 
-order by distance limit 3;
+SELECT id, category, embedding<=>'[1,2,3]'  AS distance 
+FROM filtest WHERE category=1 
+ORDER BY distance LIMIT 3;
 ```
 
 ### Index scans in pgvector 0.7.4
@@ -81,8 +81,8 @@ SELECT extversion FROM pg_extension WHERE extname = 'vector';
  0.7.4
 (1 row)
 
-select id, category, embedding<=>'[1,2,3]'  AS distance 
-FROM filtest where category=1 order by distance limit 3;
+SELECT id, category, embedding<=>'[1,2,3]'  AS distance 
+FROM filtest WHERE category=1 ORDER BY distance LIMIT 3;
  id | category |      distance
 ----+----------+--------------------
   3 |        1 | 1.0714285714285714
@@ -100,7 +100,8 @@ Lets try with a tweaked configuration:
 SET hnsw.ef_search = 3;
 SET
 
-select id, category, embedding<=>'[1,2,3]'  AS distance FROM filtest where category=1 order by distance limit 3;
+SELECT id, category, embedding<=>'[1,2,3]'  AS distance 
+FROM filtest WHERE category=1 ORDER BY distance LIMIT 3;
  id | category |      distance
 ----+----------+--------------------
   3 |        1 | 1.0714285714285714
@@ -123,7 +124,8 @@ SELECT extversion FROM pg_extension WHERE extname = 'vector';
 SET hnsw.ef_search = 3;
 SET
 
- select id, category, embedding<=>'[1,2,3]'  AS distance FROM filtest where category=1 order by distance limit 3;
+SELECT id, category, embedding<=>'[1,2,3]'  AS distance 
+FROM filtest WHERE category=1 ORDER BY distance LIMIT 3;
  id | category |      distance
 ----+----------+--------------------
   1 |        1 | 1.0714285714285714
@@ -135,7 +137,7 @@ SET
 Great! pgvector 0.8.0 delivers! Yes, but not in the way you think:
 
 ```sql
-show hnsw.iterative_scan;
+SHOW hnsw.iterative_scan;
  hnsw.iterative_scan
 ---------------------
  off
@@ -143,11 +145,11 @@ show hnsw.iterative_scan;
 ```
 
 Oops! `hnsw.iterative_scan` is disabled. So how did it still work? 
-Use of `explain plan` shows that the index wasn't used:
+Use of `explain` shows that the index wasn't used:
 
 ```sql
-explain select id, category, embedding<=>'[1,2,3]'  AS distance 
-FROM filtest where category=1 order by distance limit 3;
+EXPLAIN SELECT id, category, embedding<=>'[1,2,3]' AS distance 
+FROM filtest WHERE category=1 ORDER BY distance LIMIT 3;
                              QUERY PLAN
 ---------------------------------------------------------------------
  Limit  (cost=25.09..25.10 rows=3 width=16)
@@ -168,10 +170,11 @@ it no longer happens.
 This is good news, but I really want to check the iterative scan. So lets force the use of index and try again:
 
 ```sql
-set enable_seqscan=false; -- force use of index, don't do this in production!
+SET enable_seqscan=false; -- force use of index, don't do this in production!
+SET
 
-select id, category, embedding<=>'[1,2,3]'  AS distance 
-FROM filtest where category=1 order by distance limit 3;
+SELECT id, category, embedding<=>'[1,2,3]'  AS distance 
+FROM filtest WHERE category=1 ORDER BY distance LIMIT 3;
  id | category |      distance
 ----+----------+--------------------
   2 |        1 | 1.0714285714285714
@@ -181,8 +184,8 @@ FROM filtest where category=1 order by distance limit 3;
 SET hnsw.iterative_scan = relaxed_order; -- enable iterative scan
 SET
 
-select id, category, embedding<=>'[1,2,3]'  AS distance 
-FROM filtest where category=1 order by distance limit 3;
+SELECT id, category, embedding<=>'[1,2,3]'  AS distance 
+FROM filtest WHERE category=1 ORDER BY distance LIMIT 3;
  id | category |      distance
 ----+----------+--------------------
   2 |        1 | 1.0714285714285714
