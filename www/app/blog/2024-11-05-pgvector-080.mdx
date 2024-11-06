@@ -1,0 +1,193 @@
+export const metadata = {
+  title: "PGVector 0.8.0 released and available on Nile",
+  authors: ["gwenshap"],
+  image: "2024-11-05-pgvector-080/cover.png",
+  sizzle:
+    "PGVector 0.8.0 released and available on Nile including iterative scan and major performance improvements",
+  tags: ["database", "serverless", "postgres", "pgvector", "vectordatabase", "AI", "B2B"]
+};
+
+The pgvector community shipped the much anticipated version 0.8.0 with significant improvements. 
+Naturally, we couldn't wait to bring it to Nile users. 
+
+Here's the content of the release, per the official release notes:
+
+* Added support for iterative index scans
+* Added casts for arrays to sparsevec
+* Improved cost estimation for better index selection when filtering
+* Improved performance of HNSW index scans
+* Improved performance of HNSW inserts and on-disk index builds
+* Dropped support for Postgres 12
+
+The big news is the support for iterative index scans. 
+This addition fixes a long standing issue with use of vector indexes. Normal filters were 
+applied **after** the index scan finished and returned the desired number of results. 
+This often lead to significantly fewer results than expected. As explained in `pgvector` docs:
+
+> With approximate indexes, filtering is applied after the index is scanned. If a condition matches 10% of rows,
+> with HNSW and the default hnsw.ef_search of 40, only 4 rows will match on average.
+
+There are known work-arounds to this situation - scanning more rows, partial indexes or partitioning.
+But these aren't always practical or desired for other reasons. 
+
+Iterative scan is a much simpler approach, and quite intuitive:
+
+1. Scan the vector index
+2. Apply filter
+3. Check if there are enough results. If yes, return them. Otherwise, go back to step 1.
+
+Lets see this in action, on a very small example. I strongly recommend running small experiments - you learn so 
+much if the actual results don't match my expectations. Follow along for important pgvector lessons:
+
+First, I'm creating a table with some sample data:
+
+```sql
+CREATE TABLE filtest(id INTEGER, category INTEGER, embedding vector(3));
+INSERT INTO filtest VALUES 
+    (1, 1, '[3, 1, -2]'),
+    (2, 1, '[3, 1, -2]'),
+    (3, 1, '[3, 1, -2]'),
+    (1, 2, '[1.1, 2.2, 3.3]'), 
+    (2, 2, '[1.1, 2.2, 3.3]'),
+    (3, 2, '[1.1, 2.2, 3.3]');
+CREATE INDEX ON filtest USING hnsw (embedding vector_cosine_ops);
+```
+
+My table has 6 rows in two categories. Note that all vectors in category 2 are very similar to `[1,2,3]`, 
+vectors in category 1 are quite different (in fact, they are almost **orthogonal** - meaning that they represent unrelated data).
+
+What would you expect the following query to return?
+
+```sql
+select id, category, embedding<=>'[1,2,3]'  AS distance 
+FROM filtest where category=1 
+order by distance limit 3;
+```
+
+I asked for 3 vectors, from category 1, that are closest to `[1,2,3]`, so the correct answer 
+is to return all vectors from category 1. However, this is what I expected pgvector 0.7.4 to do:
+
+1. Scan the vector index and find the 3 vectors closest to `[1,2,3]`, some of which should belong to category 2.
+2. Filter the results and keep only vectors from category 1.
+3. Return partial results.
+
+However, in practice:
+
+```sql
+SELECT extversion FROM pg_extension WHERE extname = 'vector';
+ extversion
+------------
+ 0.7.4
+(1 row)
+
+select id, category, embedding<=>'[1,2,3]'  AS distance 
+FROM filtest where category=1 order by distance limit 3;
+ id | category |      distance
+----+----------+--------------------
+  3 |        1 | 1.0714285714285714
+  1 |        1 | 1.0714285714285714
+  2 |        1 | 1.0714285714285714
+```
+
+How can this happen? pgvector's default parameter for the number of rows to scan in the vector index is 40.
+So the index scan in fact returned the entire table, and after filtering, we got the right result. 
+Thats the problem with small examples... if I tried with 100 vectors, it would have worked.
+
+Lets try with a tweaked parameter:
+
+```sql
+SET hnsw.ef_search = 3;
+SET
+
+select id, category, embedding<=>'[1,2,3]'  AS distance FROM filtest where category=1 order by distance limit 3;
+ id | category |      distance
+----+----------+--------------------
+  3 |        1 | 1.0714285714285714
+  2 |        1 | 1.0714285714285714
+(2 rows)
+```
+
+Ah, this is the problem result that I expected! Now lets see how pgvector 0.8.0 fixes it: 
+
+```sql
+SELECT extversion FROM pg_extension WHERE extname = 'vector';
+ extversion
+------------
+ 0.8.0
+
+SET hnsw.ef_search = 3;
+SET
+
+ select id, category, embedding<=>'[1,2,3]'  AS distance FROM filtest where category=1 order by distance limit 3;
+ id | category |      distance
+----+----------+--------------------
+  1 |        1 | 1.0714285714285714
+  2 |        1 | 1.0714285714285714
+  3 |        1 | 1.0714285714285714
+(3 rows)
+```
+
+Great! pgvector 0.8.0 delivers! Right? Yes, but not in the way you think:
+
+```sql
+show hnsw.iterative_scan;
+ hnsw.iterative_scan
+---------------------
+ off
+(1 row)
+```
+
+Oops! `hnsw.iterative_scan` is disabled. So how come we get all results? 
+Use of `explain plan` shows that the index wasn't even used:
+
+```sql
+explain select id, category, embedding<=>'[1,2,3]'  AS distance 
+FROM filtest where category=1 order by distance limit 3;
+                             QUERY PLAN
+---------------------------------------------------------------------
+ Limit  (cost=25.09..25.10 rows=3 width=16)
+   ->  Sort  (cost=25.09..25.11 rows=6 width=16)
+         Sort Key: ((embedding <=> '[1,2,3]'::vector))
+         ->  Seq Scan on filtest  (cost=0.00..25.02 rows=6 width=16)
+               Filter: (category = 1)
+(5 rows)
+```
+
+This is a good time to remember an important improvement of pgvector 0.8.0:
+
+> Improved cost estimation for better index selection when filtering
+
+It is really silly to use a vector index when scanning a 6-row table. So with the improved cost estimation, 
+it no longer happens.
+
+This is good news, but I really want to check the iterative scan. So lets force the use of index and try again:
+
+```sql
+set enable_seqscan=false; -- force use of index, don't do this in production!
+
+select id, category, embedding<=>'[1,2,3]'  AS distance 
+FROM filtest where category=1 order by distance limit 3;
+ id | category |      distance
+----+----------+--------------------
+  2 |        1 | 1.0714285714285714
+  3 |        1 | 1.0714285714285714
+(2 rows)
+
+SET hnsw.iterative_scan = relaxed_order; -- enable iterative scan
+SET
+
+select id, category, embedding<=>'[1,2,3]'  AS distance 
+FROM filtest where category=1 order by distance limit 3;
+ id | category |      distance
+----+----------+--------------------
+  2 |        1 | 1.0714285714285714
+  3 |        1 | 1.0714285714285714
+  1 |        1 | 1.0714285714285714
+(3 rows)
+```
+
+And we can see that pgvector 0.8.0 and iterative scans work as expected. As a bonus, we also saw the cost optimization in action, 
+and learned about `hnsw.ef_search` query configuration.
+
+If you are a Nile user, you already have pgvector 0.8.0, so I recommend taking advantage of it. Head over to our [documentation](https://www.thenile.dev/docs/ai-embeddings/pg_vector#iterative-index-scans) 
+for detailed explanation of iterative_scan options, and fancy optimizations.
