@@ -33,8 +33,6 @@ impractical or undesirable. The new iterative scan feature offers a more straigh
 2. Apply filter
 3. Check if enough results are returned. If not, repeat the scan.
 
-## Demonstrating iterative scans
-
 Lets see this in action with a very small example. I strongly recommend running small experiments - you learn so 
 much if the actual results don't match your expectations. Follow along for important pgvector lessons:
 
@@ -166,9 +164,7 @@ This is due to a different improvement in pgvector 0.8.0:
 > Improved cost estimation for better index selection when filtering
 
 It is really silly to use a vector index when scanning a 6-row table. So with the improved cost estimation, 
-it no longer happens.
-
-This is good news, but I really want to check the iterative scan. So lets force the use of index and try again:
+it no longer happens. This is good news, but I really want to check the iterative scan. So lets force the use of index and try again:
 
 ```sql
 SET enable_seqscan=false; -- force use of index, don't do this in production!
