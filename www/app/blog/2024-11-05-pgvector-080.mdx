@@ -53,7 +53,8 @@ CREATE INDEX ON filtest USING hnsw (embedding vector_cosine_ops);
 ```
 
 The table contains six rows divided into two categories. Vectors in category 2 closely resemble `[1, 2, 3]`, while vectors in 
-category 1 differ significantly, representing **orthogonal** (unrelated) data.
+category 1 differ significantly, representing **orthogonal** (unrelated) data. In real use-cases, categories can be different companies 
+(tenants), different departments within the same company, genres if the table stores information about movies, etc. Anything that you may want to use for filtering.
 
 What would you expect the following query to return?
 
@@ -195,7 +196,7 @@ FROM filtest WHERE category=1 ORDER BY distance LIMIT 3;
 ```
 
 And we can see that pgvector 0.8.0 and iterative scans work as expected. As a bonus, we also saw the cost optimization in action, 
-and learned about `hnsw.ef_search` query configuration.
+and learned about `hnsw.ef_search` query configuration. One last tip: In production use, you will likely want an index on the columns you use for filtering, and not just the vector index.
 
 If you are a Nile user, you already have pgvector 0.8.0, so I recommend taking advantage of it. Head over to our [documentation](https://www.thenile.dev/docs/ai-embeddings/pg_vector#iterative-index-scans) 
 for detailed explanation of iterative_scan options, and fancy optimizations.
