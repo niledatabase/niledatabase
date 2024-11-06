@@ -323,11 +323,25 @@ Using iterative index scans, Postgres will scan the approximate index for neares
 neighbors after filtering is insufficient, it will continue scanning until sufficient results are found.
 
 Each index has its own configuration (GUC) for iterative scans: `hnsw.iterative_scan` and `ivfflat.iterative_scan`.
-And these can be set to `strict_order` or `relaxed_order`. Strict order guarantees that results returned are ordered by exact distance.
+And these can be set to `strict_order` or `relaxed_order`.
+
+```sql
+SET hnsw.iterative_scan = strict_order;
+-- or
+SET hnsw.iterative_scan = relaxed_order;
+-- or
+SET ivfflat.iterative_scan = strict_order;
+-- or
+SET ivfflat.iterative_scan = relaxed_order;
+```
+
+Strict order guarantees that results returned are ordered by exact distance.
 Relaxed order allows results that are slightly out of order, but provides better recall (i.e. fewer missed results due to the approximate
 nature of the index).
 
-If you use relaxed ordering, you can re-order the result using materialized CTE:
+Once you set these configs, you don't need to change your existing queries. You should immediately see the same queries return the correct number of results.
+
+However, if you use relaxed ordering, you can re-order the result using materialized CTE:
 
 ```sql
 WITH relaxed_results AS MATERIALIZED (
