@@ -9,7 +9,7 @@ export const metadata = {
 
 The **`pgvector`** extension in PostgreSQL is used to efficiently store and query vector data. The **`pgvector`** extension provides
 PostgreSQL with the ability to store and perform operations on vectors directly within the database.
-Nile supports **`pgvector`** out of the box on the latest version - `0.7.4`.
+Nile supports **`pgvector`** out of the box on the latest version - `0.8.0`.
 
 Pgvector lets you store and query vectors directly within your usual Postgres database - with the rest of your data. This is both convenient and efficient. It supports:
 
@@ -44,7 +44,7 @@ VALUES ('018ade1a-7843-7e60-9686-714bab650998',1, '[1,2,3]');
 
 ## Query vectors
 
-In version `0.7.4`, pgvector supports 6 types of vector similarity operators:
+Pgvector supports 6 types of vector similarity operators:
 
 <table>
   <thead>
@@ -311,6 +311,52 @@ LIMIT 10;
 It is recommended to add indexes on the columns used for filtering, so the query can be optimized.
 Especially when the use of the filter can lead to small enough result sets that a sequential scan is faster than use of the vector index.
 This will optimize not just performance but also recall.
+
+With approximate indexes, filtering is applied after the index is scanned. If a condition matches 10% of rows,
+with HNSW and the default hnsw.ef_search of 40, only 4 rows will match on average.
+
+Starting in version `0.8.0`, you can enable **iterative index scans**, which will automatically scan more of the index when needed.
+
+### Iterative Index scans
+
+Using iterative index scans, Postgres will scan the approximate index for nearest neighbors, apply additional filters and, if the number of
+neighbors after filtering is insufficient, it will continue scanning until sufficient results are found.
+
+Each index has its own configuration (GUC) for iterative scans: `hnsw.iterative_scan` and `ivfflat.iterative_scan`.
+And these can be set to `strict_order` or `relaxed_order`.
+
+```sql
+SET hnsw.iterative_scan = strict_order;
+-- or
+SET hnsw.iterative_scan = relaxed_order;
+-- or
+SET ivfflat.iterative_scan = strict_order;
+-- or
+SET ivfflat.iterative_scan = relaxed_order;
+```
+
+Strict order guarantees that results returned are ordered by exact distance.
+Relaxed order allows results that are slightly out of order, but provides better recall (i.e. fewer missed results due to the approximate
+nature of the index).
+
+Once you set these configs, you don't need to change your existing queries. You should immediately see the same queries return the correct number of results.
+
+However, if you use relaxed ordering, you can re-order the result using materialized CTE:
+
+```sql
+WITH relaxed_results AS MATERIALIZED (
+    SELECT id, embedding <-> '[1,2,3]' AS distance FROM items WHERE category_id = 123 ORDER BY distance LIMIT 5
+) SELECT * FROM relaxed_results ORDER BY distance;
+```
+
+If you filter by distance (recommended, to avoid nonsense results in case there aren't many similar vectors), it is recommended to use
+materialized CTE and place the filter outside the CTE in order to avoid overscanning:
+
+```sql
+WITH nearest_results AS MATERIALIZED (
+    SELECT id, embedding <=> '[1,2,3]' AS distance FROM items ORDER BY distance LIMIT 5
+) SELECT * FROM nearest_results WHERE distance < 1 ORDER BY distance;
+```
 
 ## Quantization
 
