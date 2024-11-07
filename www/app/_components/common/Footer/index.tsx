@@ -114,7 +114,7 @@ export default async function Footer({ className }: { className?: string }) {
               </div>
               <div className="text-[16px] flex flex-row items-center gap-3">
                 <Link
-                  href="https://x.com/niledatabase"
+                  href="https://discord.gg/8UuBB84tTy"
                   target="_blank"
                   className="flex flex-row items-center gap-3"
                 >
