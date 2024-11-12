@@ -4,30 +4,23 @@ export const metadata = {
   image: "2024-11-12-fine-tuning-or-rag/cover.webp",
   sizzle:
     "Discover the key differences between Retrieval-Augmented Generation (RAG) and fine-tuning AI models. Learn when to use each approach to optimize performance, reduce costs, and solve complex business challenges.",
-  tags: [
-    "database",
-    "serverless",
-    "postgres",
-    "RAG",
-    "AI",
-    "B2B",
-  ],
+  tags: ["database", "serverless", "postgres", "RAG", "AI", "B2B"],
 };
 
 Couple of weeks ago, Bram from Meta posted the following rule of thumb on how to add information to an LLM:
 
 > when it comes to adding data to an LLM, i tend to follow this token count rule  
-one comma: put it in the prompt  
-two commas: use RAG  
-three commas: finetune  
-four commas: pretrain (i'll be honest i've never actually hit this one 😜)
+> one comma: put it in the prompt  
+> two commas: use RAG  
+> three commas: finetune  
+> four commas: pretrain (i'll be honest i've never actually hit this one 😜)
 
 ![Social media post from Bram, making the claim above](/blog/2024-11-12-fine-tuning-or-rag/social_screenshot.png)
 
 While I appreciate a good rule of thumb as much as the next engineer, I think this rule will not work for most organizations. Comparing RAG (Retrieval Augumented Generation) to fine-tuning is a bit like comparing apples to turkeys. Yes, they are both foods and can be used when you are hungry.
 But they are different in many ways - how they are grown, packages, cooked, served, and eaten. And also in their health benefits.
 
-Because of these differences, the number of tokens isn't sufficient input to decide on RAG vs fine tuning. To make the right choice, you need to understand the best 
+Because of these differences, the number of tokens isn't sufficient input to decide on RAG vs fine tuning. To make the right choice, you need to understand the best
 use-cases and common pitfalls for each technology - so you can use it for its strength and avoid the pitfalls.
 
 ## When to use RAG
@@ -111,8 +104,6 @@ Note that there are also quite a few cases where you could combine both approach
 For example, in customer support scenario you can use RAG to retrieve relevant documents and use a model that was fine-tuned to ask customers clarifying questions.
 Or you can fine-tune a model to generate embeddings for your specific domain, and then use this model in RAG architecture.
 
-In either case, there will be a lot of iterations and experimentation with various models, data sets, and techniques. 
-Quite handy that Nile's free tier includes 50 million free compute tokens for these experiments. [Try it out](https://console.thenile.dev) 
-and [let us know](https://discord.gg/xxZ4ZfNB) which method you picked for your AI application. 
-
-
+In either case, there will be a lot of iterations and experimentation with various models, data sets, and techniques.
+Quite handy that Nile's free tier includes 50 million free compute tokens for these experiments. [Try it out](https://console.thenile.dev)
+and [let us know](https://discord.gg/xxZ4ZfNB) which method you picked for your AI application.
