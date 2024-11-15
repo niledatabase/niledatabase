@@ -15,7 +15,7 @@ Broadly speaking, there are two main approaches. The first is database per tenan
 
 This architecture provides isolation and flexibility, but it uses more resources and more effort to operate. 
 
-The other approach is to place all tenants in the same schema, and add a tenant identifier to all the tables:
+The other approach is to place all tenants in the same shared schema and add a tenant identifier to all the tables:
 
 ![Shared schema for all tenants](/blog/2024-11-19-distributed-ddl/shared_schema.png)
 
@@ -38,7 +38,53 @@ Lets see how we implemented this. I'll start with a high level overview of the a
 
 Get some coffee and lets get started.
 
-## How it works
+## Distributed DDL architecture walkthrough
+
+We've implemented our distributed DDL with two main components:
+- `nile_ddl` extension. This extension is loaded into every Postgres instance and is responsible for intercepting DDLs, extracting key information and initiating the distributed transactions.
+- `transaction coordinator`. This is a stand-alone service that distributes the DDLs to all relevant databases and guarantees that each DDL is either applied successfully to all databases or to none of them.
+
+To understand how these components work together to execute a DDL statement, lets look at what happens when a user connects to their Nile database and sends `CREATE TABLE` command. This command is sent from the client to one of the Postgres instances. 
+
+### Intercepting DDL with `process_utility_hook`
+
+In order to intercept the DDL before it executes, `nile_ddl` uses the `process_utility_hook`. To understand why and how our extension uses the `process_utility_hook`, we need to know what is a utility and how Postgres handles them. 
+
+In Postgres terms, a "utility" is any command except SELECT, INSERT, UPDATE and DELETE. This includes all DDL as well as many other commands. When Postgres recieves a utility command, it uses `ProcessUtility(..)` method to process it. This is a simple wrapper that looks like this:
+
+```
+	if (ProcessUtility_hook)
+		(*ProcessUtility_hook) (...);
+	else
+		standard_ProcessUtility(...);
+```
+
+It checks if there are any extensions that want to process the utility command before Postgres runs its standard processing. `nile_ddl` extension provides such a hook, and is therefore called before Postgres processes any command. This is super useful because `process_utility_hook` is called for almost everything that isn't a query or a DML. This means that we have one entry point for almost everything we need to process. 
+
+Once we are done processing the command, it is our responsibility to call `standard_ProcessUtility`,  so that Postgres can continue with its standard flow. A bit off-topic, but in case you are curious: `standard_ProcessUtility` method is essentially a gigantic switch statement that routes every one of the 60+ utility commands to their appropriate handler.
+
+![Process utility hook](/blog/2024-11-19-distributed-ddl/process_utility_hook.png)
+
+So, our extension got called with a utility command. What now? Now it has to do few things:
+
+1. Check that the command is actually a DDL. If the command isn't `ALTER`, `CREATE` or `DROP` we are not interested and can skip it.
+2. Raise error on unsupported DDL. Nile has a few restrictions on the relations we allow. For example, primary keys **must** include the `tenant_id` column and `tablespace` commands are not supported at all (Nile handles these automatically). 
+3. Extract the locks that the DDL will require.
+4. Begin a distributed transaction (only needed if this is the first DDL in a transaction)
+5. Ask the transaction coordinator to distribute the locks
+
+The reason we extract the locks and distribute them so early in the process is in order to minimize the time we wait while holding the lock. Most DDL require `access exclusive` lock, which not only prevents any queries from accessing the table in question while the DDL is executing, it also prevents any new queries from accessing the table while the DDL is waiting to acquire the lock. This makes these locks quite expensive. To minimize the risk and the time spent while holding the lock, Nile will attempt to acquire the necessary locks, with a short lock timeout, on all relevant databases before starting to execute the DDLs. If the lock acquisition failed on any database, the DDL will return an error rather than continue waiting for the lock.
+
+Acquiring locks with a short timeout before executing DDLs is considered a best practice in Postgres, for the reasons we just explained. Nile's distributed DDL implement this best practice for our users. We'll discuss the locks in (a lot) more detail in a later section, since some DDL (and `CREATE TABLE` is one of them) required a bit of special trickery in order to properly apply locks.
+
+### Transaction coordinator
+
+
+
+
+
+
+
 
 ## DDL Transactions
 
