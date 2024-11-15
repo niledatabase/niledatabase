@@ -7,36 +7,35 @@ export const metadata = {
   tags: ["database", "serverless", "postgres", "distributed systems"],
 };
 
-When we need to describe Nile in a single sentence, we say "PostgreSQL re-engineered for multi-tenant apps". By multi-tenant app we mean applications like Stripe, Figma, Twilio, Notion, Workday, Gusto... where a large number of customers is served off a single application stack. In this type of application, a key part of the architecture is deciding how to store the data for each customer. 
+When we need to describe Nile in a single sentence, we say **"PostgreSQL re-engineered for multi-tenant apps"**. By multi-tenant apps, we mean applications like Stripe, Figma, Twilio, Notion, Workday, and Gusto - here a large number of customers is served from a shared application stack. In these types of applications, a key architectural challenge is deciding how to store data for each customer. 
 
-Broadly speaking, there are two main approaches. The first is database per tenant (or sometimes schema per tenant):
+Broadly speaking, there are two main approaches. The first is **database per tenant** (or sometimes **schema per tenant**):
 
 ![Database per tenant architecture](/blog/2024-11-19-distributed-ddl/db_per_tenant.png)
 
-This architecture provides isolation and flexibility, but it uses more resources and more effort to operate. 
+This architecture provides isolation and flexibility but requires more resources and effort to operate. 
 
-The other approach is to place all tenants in the same shared schema and add a tenant identifier to all the tables:
+The other approach is to place all tenants in the same shared schema and add a tenant identifier to every table:
 
 ![Shared schema for all tenants](/blog/2024-11-19-distributed-ddl/shared_schema.png)
 
-This approach is simple and cheap, which is why most new applications start here. Later on, it can run into scalability issues or ability to adapt to individual customer needs and requirements. 
+This approach is simple and cost-effective, which is why most new applications start here. However, over time, it can run into scalability issues and difficulties in adapting to individual customer needs and requirements. 
 
-Which is why, no matter where you start, you eventually end up with a hybrid model. In a typical hybrid architecture, the database is scaled out by sharding. Most tenants are placed on shared shards, but larger and more demanding customers get allocated dedicated shards.
+That's why, no matter where you start, you eventually end up with a **hybrid model**. In a typical hybrid architecture, the database is scaled out through sharding. Most tenants are placed on shared shards, while larger and more demanding customers are allocated dedicated shards.
 
-Nile's model aims at providing you with the simple developer experience of shared schema, but with the isolation and flexibility of DB per tenant. In our model, tenants are separated into "virtual tenant databases". These virtual tenant databases can be placed on shared compute (which may be sharded, depending on the workload), or on dedicated compute. Regardless of how the tenenant databases are organized, developers can work as if they were all in one shared schema. 
+Nile's model aims to provide the simple developer experience of shared schema while maintaining the isolation and flexibility of a database-per-tenant model. In our system, tenants are separated into **"virtual tenant databases"**. These virtual tenant databases can be placed on shared compute (which may be sharded depending on the workload), or on dedicated compute. Regardless of how the tenenant databases are organized, developers can work as if everything were in a single shared schema. 
 
 ![Nile virtual databases](/blog/2024-11-19-distributed-ddl/nile_virtual_databases.png)
 
-Our goal is to have any number of virtual databases, spread across a number of physical postgres instances, and yet provide the developer experience of a single schema shared by all tenants. DDLs are SQL commands that modify the schema - things like `CREATE TABLE`, `ALTER TABLE`, `DROP INDEX`, etc. Our goals for the developer experience with DDLs were:
+Our goal is to support any number of virtual databases, distributed across a number of physical PostgreSQL instances, while still providing the seamless developer experience of a single schema shared by all tenants. **DDLs** (Data Definition Language commands) are SQL commands that modify the schema - things like `CREATE TABLE`, `ALTER TABLE` and `DROP INDEX`. Our goals for the developer experience with DDLs are:
 
-* Each DDL applies to all tenants 
-* At the same time (or as close to it as feasible)
-* DDL should behave exactly as they normally do in Postgres. This includes supporting transactions with DDL (IMO, one of the best features in Postgres).
+* Each DDL applies to all tenants concurrently
+* Behaves exactly as it normally would in Postgres. This includes supporting transactions with DDL and all the transactional guarantees (which we consider one of PostgreSQL's best features).
 * The fact that each DDL executes over multiple virtual databases and physical instances should be completely transparent to developers
 
-Lets see how we implemented this. I'll start with a high level overview of the architecture and walk you through the green path flow of executing one simple DDL. Then I'll dive into the details of how we solved the 3 most challenging problems with distributed DDLs: Transactions, locks and failure handling. On the way, we'll share some tips and tricks we used in building our Postgres extension, which may come handy when you decide to write your own extensions.
+Let's dive into the architecture and implementation. we'll start with a high-level overview of the architecture and walk you through the green-path flow of executing a simple DDL. Then we'll dive into the details of how we solved the three most challenging problems with distributed DDLs: transactions, locks and failure handling. Along the way, we'll share some tips and tricks we used in building our Postgres extension -- these might come in handy if you decide to write your own extensions.
 
-Get some coffee and lets get started.
+So, grab a coffee, and let's get started!
 
 ## Distributed DDL architecture walkthrough
 
