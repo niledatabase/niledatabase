@@ -39,80 +39,80 @@ So, grab a coffee, and let's get started!
 
 ## Distributed DDL architecture walkthrough
 
-We've implemented our distributed DDL with two main components:
-- `nile_ddl` extension. This extension is loaded into every Postgres instance and is responsible for intercepting DDLs, extracting key information and initiating the distributed transactions.
-- `transaction coordinator`. This is a stand-alone service that distributes the DDLs to all relevant databases and guarantees that each DDL is either applied successfully to all databases or to none of them.
+We've implemented our distributed DDL system using two main components:
+1. **`nile_ddl` extension:** This extension is loaded into every Postgres instance. It is responsible for intercepting DDL statements, extracting key information, and initiating the distributed transactions.
+2. **Transaction coordinator:** This is a stand-alone service that distributes the DDL statements to all relevant databases and ensures that each DDL is either applied successfully to all databases or to none of them.
 
-To understand how these components work together to execute a DDL statement, lets look at what happens when a user connects to their Nile database and sends `CREATE TABLE` command. This command is sent from the client to one of the Postgres instances. 
+To understand how these components work together to execute a DDL statement, let's look at what happens when a user connects to their Nile database and issues a  `CREATE TABLE` command. This command is sent from the client to one of the Postgres instances, where it is intercepted by the `nile_ddl` extension. 
 
-### Intercepting DDL with `process_utility_hook`
+### Intercepting DDL with `processUtility_hook`
 
-In order to intercept the DDL before it executes, `nile_ddl` uses the `process_utility_hook`. To understand why and how our extension uses the `process_utility_hook`, we need to know what is a utility and how Postgres handles them. 
+In order to intercept the DDL before it executes, `nile_ddl` uses the `processUtility_hook`. To understand why and how our extension uses this hook, we first need to explain what a utility command is and how PostgreSQL handles them. 
 
-In Postgres terms, a "utility" is any command except SELECT, INSERT, UPDATE and DELETE. This includes all DDL as well as other commands like COMMIT, NOTIFY or DO. When Postgres recieves a utility command, it uses `ProcessUtility(..)` method to process it. This is a simple wrapper that looks like this:
+In Postgres terms, a "utility" is any command except `SELECT`, `INSERT`, `UPDATE` and `DELETE`. This includes all DDL commands as well as other commands like `COMMIT`, `NOTIFY` or `DO`. When Postgres recieves a utility command, it uses `ProcessUtility(..)` method to process it. This is a simple wrapper that looks like this:
 
-```
+```c
 	if (ProcessUtility_hook)
 		(*ProcessUtility_hook) (...);
 	else
 		standard_ProcessUtility(...);
 ```
 
-It checks if there are any extensions that want to process the utility command before Postgres runs its standard processing. `nile_ddl` extension provides such a hook, and is therefore called before Postgres processes any command. This is super useful because `process_utility_hook` is called for almost everything that isn't a query or a DML. This means that we have one entry point for almost everything we need to process. 
+This method checks if there are any extensions that want to process the utility command before Postgres runs its standard processing. The `nile_ddl` extension provides such a hook and, as a result, is called before Postgres processes any command. This is incredibly useful because `processUtility_hook` is triggered for nearly everything that isn't a query or a DML, giving us a single entry point for almost everything we need to handle. 
 
-Once we are done processing the command, it is our responsibility to call `standard_ProcessUtility`,  so that Postgres can continue with its standard flow. A bit off-topic, but in case you are curious: `standard_ProcessUtility` method is essentially a gigantic switch statement that routes every one of the 60+ utility commands to their appropriate handler.
+Once we are finish processing the command, it is our responsibility to call `standard_ProcessUtility`,  so that Postgres can continue its normal flow. A bit off-topic, but in case you're curious: `standard_ProcessUtility` method is essentially a gigantic switch statement that routes every one of the 60+ utility commands to their appropriate handler.
 
 ![Process utility hook](/blog/2024-11-19-distributed-ddl/process_utility_hook.png)
 
-So, our extension got called with a utility command. What now? Now it has to do few things:
+So, our extension gets called with a utility command. What happens next? At this point, it needs to perform a few tasks:
 
-1. Check that the command is actually a DDL. If the command isn't `ALTER`, `CREATE` or `DROP` we are not interested and can skip it.
-2. Raise error on unsupported DDL. Nile has a few restrictions on the relations we allow. For example, primary keys **must** include the `tenant_id` column and `tablespace` commands are not supported at all (Nile handles these automatically). 
-3. Determine which locks the DDL requires.
-4. Begin a distributed transaction (only needed if this is the first DDL in a transaction)
-5. Ask the transaction coordinator to distribute the locks
+1. **Check that the command is actually a DDL.** If the command isn't `ALTER`, `CREATE` or `DROP` we can skip it.
+2. **Raise error for unsupported DDL.** Nile has specific restrictions on the type of relations we allow. For example, primary keys **must** include the `tenant_id` column, and `tablespace` commands are not supported at all (Nile handles these automatically). 
+3. **Determine which locks the DDL requires.**
+4. **Begin a distributed transaction** (only needed if this is the first DDL in a transaction)
+5. **Ask the transaction coordinator to distribute the locks**
 
-The reason we extract the locks and distribute them so early in the process is in order to minimize the time we wait while holding the lock. Most DDL require `access exclusive` lock, which not only prevents any queries from accessing the table in question while the DDL is executing, it also prevents any new queries from accessing the table while the DDL is waiting to acquire the lock. This makes these locks quite expensive. To minimize the risk and the time spent while holding the lock, Nile will attempt to acquire the necessary locks, with a short lock timeout, on all relevant databases before starting to execute the DDLs. If the lock acquisition failed on any database, the DDL will return an error rather than continue waiting for the lock.
+The reason we extract the locks and distribute them early in the process is to minimize the time spent holding a lock. Most DDL statements require an `ACCESS EXCLUSIVE` lock, which not only prevents any queries from accessing the table in question while the DDL is executing but also prevents any new queries from accessing the table while the DDL is waiting to acquire the lock. To minimize the risk and the time spent while holding the lock, Nile attempts to acquire the necessary locks - with a short lock timeout - on all relevant databases before starting to execute the DDLs. If the lock acquisition fails on any database, the DDL will return an error rather than continue waiting for the lock.
 
-Acquiring locks with a short timeout before executing DDLs is considered a best practice in Postgres, for the reasons we just explained. Nile's distributed DDL implement this best practice for our users.
+Acquiring locks with a short timeout before executing DDLs is considered a best practice in Postgres for the reasons we just explained. Nile's distributed DDL implement this best practice for our users.
 
 ### Transaction coordinator
 
-Once `nile_ddl` extension determines the necessary locks, it calls the transaction coordinator to start a transaction (if necessary) and distribute the locks.
-Starting the transaction is very straight forward - the coordinator has an open connection to all databases, and it simply sends everyone `BEGIN`. 
+Once the `nile_ddl` extension determines the necessary locks, it calls the transaction coordinator to start a transaction (if necessary) and distribute the locks.
 
-Distributing the locks is similar: The coordinator sends all databases the commands that acquire the locks (more on that in the section on locking). In order to avoid deadlocks, we make sure to always acquire locks in the exact same order - both order of databases on which we acquire the locks and order of locks within each database. This guarantees that we'll fail early in case of conflict and that we won't run into a case where two concurrent transactions each wait for the other to release a lock on a different database.
+Starting the transaction is straightforward: the coordinator maintains open connections to all databases and simply sends each one a `BEGIN` command. 
+
+Distributing the locks works similarly. The coordinator sends all databases the commands required to acquire the locks (more details in the section on locking). To avoid deadlocks, we ensure that locks are always acquired in the exact same order - both in terms of the sequence of databases and the order of locks within each database. This guarantees early failure in the event of conflicts and prevents situations where two concurrent transactions are each waiting for the other to release a lock on a different database.
 
 ![Distributing locks](/blog/2024-11-19-distributed-ddl/distribute_locks.png)
 
-Once the locks are acquired, the `nile_ddl` extension asks the coordinator to distribute the DDL itself. While the coordinator sends all the other databases the DDL to execute, the extension where the DDLs originated can proceed to call `standard_ProcessUtility` and process the DDL locally.
+Once the locks are acquired, the `nile_ddl` extension instructs the coordinator to distribute the DDL itself. While the coordinator sends the DDL command to all other databases, the original extension that first recieved the DDL proceeds to call `standard_ProcessUtility` and process the DDL locally.
 
-Meanwhile, every remote database recieved a DDL. Since every database is running our extension, these DDLs are intercepted by the extension on each database. It is very important the extension will not attempt to distribute this DDL, as this will lead to an infinite loop. Therefore the extension has to know that these DDLs arrived from the transaction coordinator and can be sent to `standard_ProcessUtility` directly. We do this via a configuration (GUC) that is set when the transaction coordinator first initializes the transaction, this configuration tells the extension that it doesn't need to process the DDLs that follow - they were already validated by the extension that the origin database and distributed by the coordinator.
+Meanwhile, each remote database recieves the DDL command. Since every database runs our extension, these DDL commands are intercepted by the extension on each database. It is crucial that the extension does not attempt to redistribute these DDLs, as doing so would lead to an infinite loop. Therefore, the extension has to recognize that these DDLs were sent by the transaction coordinator and can be passed directly to `standard_ProcessUtility`. To achieve this, we use a configuration (GUC) set when the transaction coordinator initializes the transaction. This configuration indicates to the extension that it doesn't need to reprocess the DDLs that follow, as they have already been validated by the originating extension and distributed by the coordinator.
 
 ![Distributing DDL](/blog/2024-11-19-distributed-ddl/distribute_ddl.png)
 
-Once all the databases finished processing the DDL, the coordinator returns successful completion to the extension. The extension, which meanwhile finished processing the DDL locally, can return the response to the client. We have successfully executed a distributed DDL. 
+Once all the databases finished processing the DDL, the coordinator notifies the originating extension of successful completion. The extension, which has already finished processing the DDL locally, can return the response to the client. At this point, we have successfully executed a distributed DDL. 
 
-Or almost. We still need to commit the transaction. And in order to maintain atomicity guarantees, it has to commit on all databases or on none. Lets see how we do this.
+Or almost. We still need to commit the transaction. To maintain atomicity guarantees, it must commit on all databases or none at all. Let's look in detail at how we commit the distributed transaction.
 
 ## Transactions
 
-You may remember from an earlier section that `BEGIN`, `COMMIT`, `ABORT` and `ROLLBACK` are all utility commands, so it may seem that we can handle transactions by having our `process_utility_hook` intercept and handle these commands in order to implement distributed transactions. This is a tempting path, but it has some critical drawbacks:
+You may recall from an earlier section that `BEGIN`, `COMMIT`, `ABORT` and `ROLLBACK` are all utility commands. So it might seem like we could handle transactions by having our `processUtility_hook` intercept these commands and implement distributed transactions. This approach is tempting, but it has some critical drawbacks:
 
-- Intercepting every `BEGIN` will be very costly in a transaction-heavy OLTP database. And most of this effort will be wasted. An OLTP system will process billions of DML transactions for every DDL. 
-- Transactions can be implicit - stand alone DDL is a transaction for instance. We won't always have a `BEGIN` to intercept. We must handle each DDL as potentially starting a transaction.
-- Intercepting a `COMMIT` only gives us a single point to intercept - when the `COMMIT` command is sent. Distributed transactions require a two-phase commit, which can't be implemented with this single hook.
+- Intercepting every `BEGIN` will be very costly in a transaction-heavy database. Most of this effort will be wasted, as an OLTP system processes billions of DML transactions for every DDL. 
+- Transactions can be implicit - standalone DDL statements are treated as transactions, for example. We won't always have a `BEGIN` to intercept, so we must treat each DDL as potentially starting a transaction.
+- Intercepting a `COMMIT` only gives us a single point to intercept - when the `COMMIT` command is sent. However, distributed transactions require a two-phase commit, which can't be implemented with this single hook.
 
-Fortunately, Postgres provides a better way for extensions to hook into the transaction lifecycle - `XactCallback` (pronounced "transaction callback").
+Fortunately, PostgreSQL provides a better mechanism for extensions to hook into the transaction lifecycle: `XactCallback` (pronounced "transaction callback").
 
-This callback is called on variable events in the transaction lifecycle with an enum parameter that specifies which event occured. The events that we are interested in are:
+This callback is triggered on various events within the transaction lifecycle, with an enum parameter that specifies which event occured. The events that we are interested in are:
 
-- `XACT_EVENT_PRE_COMMIT` - This event happens before the commit itself. The callback method is allowed to return an error while processing it. If it returns an error, Postgres will abort the transaction and force a rollback. 
-- `XACT_EVENT_COMMIT` - This event happens after the commit, and the callback is not allowed to return an error when processing it. No matter what happened, it must get to a healthy and successful state since the client it going to recieve a message that the transaction was successfully committed.
-- `XACT_EVENT_ABORT` - This event is called when the transaction is aborted and the callback needs to handle rollback.
+- `XACT_EVENT_PRE_COMMIT` - This event occurs just before the commit itself. The callback method is allowed to return an error while processing it. If an error is returned, Postgres will abort the transaction and force a rollback. 
+- `XACT_EVENT_COMMIT` - This event happens after the commit. At this point, the callback is not allowed to return an error. Regardless of what happened, it must reach a healthy and successful state since the client will recieve a confirmation that the transaction was successfully committed.
+- `XACT_EVENT_ABORT` - This event is triggered when the transaction is abortedm and the callback needs to handle the rollback.
 
-`nile_ddl` extension maps these events into a distributed two phase commit.
-
+The `nile_ddl` extension maps these events into a distributed two-phase commit process.
 
 
 
