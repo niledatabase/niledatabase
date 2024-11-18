@@ -116,29 +116,28 @@ This callback is triggered on various events within the transaction lifecycle, w
 
 The `nile_ddl` extension maps these events into a distributed two-phase commit (2PC) process.
 
-The first thing the extension has to do is detect when to start a transaction. This is simpler than it sounds - if `processUtility_hook` is called with a DDL and there's no currently active transaction on the same session, then the extension tells the transaction coordinator to begin a transaction. There's no such case as processing a DDL without a transaction. If there is a transaction in progress for the session, then the extension will process all arriving DDLs. 
+The first task for the extension is to detect when to start a transaction. This is simpler than it sounds: if `processUtility_hook` is called with a DDL and there's no currently active transaction in the same session, then the extension tells the transaction coordinator to begin a transaction. There's no scenario where a DDL is processed without an active transaction. If a transaction is already in progress for the session, the extension will continue to process all arriving DDLs. 
 
-This will continue until `XactCallback` is called with `XACT_EVENT_PRE_COMMIT` event. This indicates that Postgres is preparing to commit the transaction. The same callback and event will be triggered whether there is an explicit transaction with explicit `COMMIT` or whether Postgres is committing an implicit transaction. The callback handles the pre-commit by notifying the transaction coordinator and passing along the transaction ID.
+This process continues until `XactCallback` is triggered with `XACT_EVENT_PRE_COMMIT` event, which indicates that Postgres is preparing to commit the transaction. This callback is triggered regardless of whether there is an explicit transaction with an explicit `COMMIT` or  Postgres is committing an implicit transaction. The callback handles the pre-commit event by notifying the transaction coordinator and passing along the transaction ID.
 
-The transaction coordinator then calls all relevant databases with `PREPARE TRANSACTION` command. 
+The transaction coordinator then sends the `PREPARE TRANSACTION` command to all relevant databases.
 
 ![Prepare transaction flow](/blog/2024-11-19-distributed-ddl/prepare_xact.png)
 
-[Postgres documentation](https://www.postgresql.org/docs/current/sql-prepare-transaction.html) describes `PREPARE TRANSACTION` command as follows:
+According to the [Postgres documentation](https://www.postgresql.org/docs/current/sql-prepare-transaction.html), the `PREPARE TRANSACTION` behaves as follows:
 
 > `PREPARE TRANSACTION` prepares the current transaction for two-phase commit. After this command, the transaction is no longer associated with the current session; instead, its state is fully stored on disk, and there is a very high probability that it can be committed successfully, even if a database crash occurs before the commit is requested.  
 > Once prepared, a transaction can later be committed or rolled back with `COMMIT PREPARED` or `ROLLBACK PREPARED`, respectively. Those commands can be issued from any session, not only the one that executed the original transaction.
 
-The part where the documentation says "very high probability that it can be committed successfully" sound a bit less reassuring than we'd ideally like. What this means in practice is that `PREPARE TRANSACTION` is successful when it persisted the transaction state to disk. The transaction will be committed successfully unless the database crashes **and** the files or disks where this is persisted are completely lost. If this happens, you probably lost a lot more than this one transaction.
+The phrase "very high probability that it can be committed successfully" may sound a bit less reassuring than we'd like. In practice, it means that `PREPARE TRANSACTION` is successful when it has persisted the transaction state to disk. The transaction will be committed successfully unless the database crashes **and** the files or disks where it is stored are completely lost. If this happens, it is likely that much more than just this one transaction is lost.
 
-Barring this unlikely case, `PREPARE TRANSACTION` has all the properties we need from the first phase of two-phase commit: It is durable and the prepared transaction can be committed or rolled back from any session. Which means that once we successfully prepared transactions on all databases, we'll be able to get to a consistent state no matter what else happens. The other useful property is that if `PREPARE TRANSACTION` fails, it will automatically trigger a transaction rollback on the database where it failed. 
+Barring this very rare scenario, `PREPARE TRANSACTION` has all the properties we need from the first phase of two-phase commit: It is durable, and the prepared transaction can be committed or rolled back from any session. This ensures that once we successfully prepared transactions on all databases, we can reach a consistent state no matter what else happens. Additionally, if `PREPARE TRANSACTION` fails, it will automatically trigger a rollback on the database where it failed. 
 
-Lets assume that all databases successfully prepared their transactions for commit (we'll cover the cases where they fail to prepare in the failure handling section). This indicates the succesful completion of the first phase of the 2PC. The `XactCallback` on the originating database will return successfully and Postgres will continue the transaction commit. `XactCallback` will be called once more, this time with `XACT_EVENT_COMMIT`. When processing the event, the first thing that the `nile_ddl` extension does is reset its state, for example clean up the transaction in progress, so that the next DDL to arrive will begin a new transaction. Cleanup comes first to make error handling simpler. Then the extension tells the transaction coordinator to send `COMMIT PREPARED` to all databases. This will cause all the prepared transactions to commit.
+Let's assume that all databases successfully prepared their transactions for commit (we'll cover the failure scenarios in the next section). This succesful preparation completes the first phase of the two-phase commit (2PC). The `XactCallback` on the originating database will then return successfully, allowing Postgres to proceed with the transaction commit. The `XactCallback` will be triggered once more, this time with `XACT_EVENT_COMMIT` event. During this phase, the first action the `nile_ddl` extension takes is to reset its state - such as cleaning up the transaction in progress - so that the next DDL command will begin a new transaction. This cleanup comes first to simplify error handling. The extension then instructs the transaction coordinator to send the `COMMIT PREPARED` command to all databases, which commits all the prepared transactions.
 
 ![Commit prepared transaction flow](/blog/2024-11-19-distributed-ddl/prepare_xact.png)
 
-Once they all commit, the second phase of the 2-PC is completed and the distributed transaction has been committed. We still need to discuss what happens if they don't, but before that, we'll talk a bit about how we handle locks.
-
+Once all the databases commit, the second phase of the 2PC is completed, and the distributed transaction is fully committed. We still need to discuss what happens if they don't commit successfully. But before diving into that, lets take a quick detour and look at how we handle locks.
 
 ## Locks
 
