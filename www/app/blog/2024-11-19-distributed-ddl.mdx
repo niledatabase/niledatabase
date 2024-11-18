@@ -33,7 +33,7 @@ Our goal is to support any number of virtual databases, distributed across a num
 * Behaves exactly as it normally would in Postgres. This includes supporting transactions with DDL and all the transactional guarantees (which we consider one of PostgreSQL's best features).
 * The fact that each DDL executes over multiple virtual databases and physical instances should be completely transparent to developers
 
-Let's dive into the architecture and implementation. we'll start with a high-level overview of the architecture and walk you through the green-path flow of executing a simple DDL. Then we'll dive into the details of how we solved the three most challenging problems with distributed DDLs: transactions, locks and failure handling. Along the way, we'll share some tips and tricks we used in building our Postgres extension -- these might come in handy if you decide to write your own extensions.
+Let's dive into the architecture and implementation. We'll start with a high-level overview of the architecture and walk you through the green-path flow of executing a simple DDL. Then we'll dive into the details of how we solved the three most challenging problems with distributed DDLs: transactions, locks and failure handling. Along the way, we'll share some tips and tricks we used in building our Postgres extension -- these might come in handy if you decide to write your own extensions.
 
 So, grab a coffee, and let's get started!
 
@@ -58,21 +58,21 @@ In Postgres terms, a "utility" is any command except `SELECT`, `INSERT`, `UPDATE
 		standard_ProcessUtility(...);
 ```
 
-This method checks if there are any extensions that want to process the utility command before Postgres runs its standard processing. The `nile_ddl` extension provides such a hook and, as a result, is called before Postgres processes any command. This is incredibly useful because `processUtility_hook` is triggered for nearly everything that isn't a query or a DML, giving us a single entry point for almost everything we need to handle. 
+This method checks if there are any extensions that want to process the utility command before Postgres runs its standard processing. The `nile_ddl` extension provides such a hook and, as a result, is called before Postgres processes any command. This is incredibly useful because `processUtility_hook` is triggered for nearly everything that isn't a SELECT or a DML, giving us a single entry point for almost everything we need to handle. 
 
-Once we are finish processing the command, it is our responsibility to call `standard_ProcessUtility`,  so that Postgres can continue its normal flow. A bit off-topic, but in case you're curious: `standard_ProcessUtility` method is essentially a gigantic switch statement that routes every one of the 60+ utility commands to their appropriate handler.
+Once we finished processing the command, it is our responsibility to call `standard_ProcessUtility`,  so that Postgres can continue its normal flow. A bit off-topic, but in case you're curious: `standard_ProcessUtility` method is essentially a gigantic switch statement that routes every one of the 60+ utility commands to their appropriate handler.
 
 ![Process utility hook](/blog/2024-11-19-distributed-ddl/process_utility_hook.png)
 
 So, our extension gets called with a utility command. What happens next? At this point, it needs to perform a few tasks:
 
-1. **Check that the command is actually a DDL.** If the command isn't `ALTER`, `CREATE` or `DROP` we can skip it.
+1. **Check that the command is one we want to handle** There are many utility commands and we only handle a subset. Commands that we don't handle, like `FETCH`, `SHOW` or `DISCARD` are just passed directly to  `standard_ProcessUtility`.
 2. **Raise error for unsupported DDL.** Nile has specific restrictions on the type of relations we allow. For example, primary keys **must** include the `tenant_id` column, and `tablespace` commands are not supported at all (Nile handles these automatically). 
 3. **Determine which locks the DDL requires.**
 4. **Begin a distributed transaction** (only needed if this is the first DDL in a transaction)
 5. **Ask the transaction coordinator to distribute the locks**
 
-The reason we extract the locks and distribute them early in the process is to minimize the time spent holding a lock. Most DDL statements require an `ACCESS EXCLUSIVE` lock, which not only prevents any queries from accessing the table in question while the DDL is executing but also prevents any new queries from accessing the table while the DDL is waiting to acquire the lock. To minimize the risk and the time spent while holding the lock, Nile attempts to acquire the necessary locks - with a short lock timeout - on all relevant databases before starting to execute the DDLs. If the lock acquisition fails on any database, the DDL will return an error rather than continue waiting for the lock.
+The reason we extract the locks and distribute them early in the process is to minimize the time spent holding a lock and reduce the risk of lock conflict. Most DDL statements require an `ACCESS EXCLUSIVE` lock, which not only prevents any queries from accessing the table in question while the DDL is executing but also prevents any new queries from accessing the table while the DDL is waiting to acquire the lock. To minimize the risk and the time spent while holding the lock, Nile attempts to acquire the necessary locks - with a short lock timeout - on all relevant databases before starting to execute the DDLs. If the lock acquisition fails on any database, the DDL will return an error rather than continue waiting for the lock.
 
 Acquiring locks with a short timeout before executing DDLs is considered a best practice in Postgres for the reasons we just explained. Nile's distributed DDL implement this best practice for our users.
 
@@ -86,9 +86,11 @@ Distributing the locks works similarly. The coordinator sends all databases the 
 
 ![Distributing locks](/blog/2024-11-19-distributed-ddl/distribute_locks.png)
 
-Once the locks are acquired, the `nile_ddl` extension instructs the coordinator to distribute the DDL itself. While the coordinator sends the DDL command to all other databases, the original extension that first recieved the DDL proceeds to call `standard_ProcessUtility` and process the DDL locally.
+Once the locks are acquired, the `nile_ddl` extension instructs the coordinator to distribute the DDL itself. But first, it has to make sure the DDL is fully qualified. `CREATE TABLE todos (...)` can be ambigous - in which schema should Postgres create the table? This depends on the current `search_path` config and the existing schema, which can change on some databases while the DDL is distributed (for example, if there's a concurrect `CREATE SCHEMA` operation). To avoid an inconsistent result, `nile_ddl` modifies the DDL and makes sure all objects are fully qualified. Only then it sends the DDL to the transaction coordinator for distribution.
 
-Meanwhile, each remote database recieves the DDL command. Since every database runs our extension, these DDL commands are intercepted by the extension on each database. It is crucial that the extension does not attempt to redistribute these DDLs, as doing so would lead to an infinite loop. Therefore, the extension has to recognize that these DDLs were sent by the transaction coordinator and can be passed directly to `standard_ProcessUtility`. To achieve this, we use a configuration (GUC) set when the transaction coordinator initializes the transaction. This configuration indicates to the extension that it doesn't need to reprocess the DDLs that follow, as they have already been validated by the originating extension and distributed by the coordinator.
+While the coordinator sends the DDL command to all other databases, the original extension that first received the DDL proceeds to call `standard_ProcessUtility` and process the DDL locally.
+
+Meanwhile, each remote database receives the DDL command. Since every database runs our extension, these DDL commands are intercepted by the extension on each database. It is crucial that the extension does not attempt to redistribute these DDLs, as doing so would lead to an infinite loop. Therefore, the extension has to recognize that these DDLs were sent by the transaction coordinator and can be passed directly to `standard_ProcessUtility`. To achieve this, we use a configuration (GUC) set when the transaction coordinator initializes the transaction. This configuration indicates to the extension that it doesn't need to reprocess the DDLs that follow, as they have already been validated by the originating extension and distributed by the coordinator.
 
 ![Distributing DDL](/blog/2024-11-19-distributed-ddl/distribute_ddl.png)
 
@@ -110,7 +112,7 @@ This callback is triggered on various events within the transaction lifecycle, w
 
 - `XACT_EVENT_PRE_COMMIT` - This event occurs just before the commit itself. The callback method is allowed to return an error while processing it. If an error is returned, Postgres will abort the transaction and force a rollback. 
 - `XACT_EVENT_COMMIT` - This event happens after the commit. At this point, the callback is not allowed to return an error. Regardless of what happened, it must reach a healthy and successful state since the client will recieve a confirmation that the transaction was successfully committed.
-- `XACT_EVENT_ABORT` - This event is triggered when the transaction is abortedm and the callback needs to handle the rollback.
+- `XACT_EVENT_ABORT` - This event is triggered when the transaction is aborted and the callback needs to handle the rollback.
 
 The `nile_ddl` extension maps these events into a distributed two-phase commit (2PC) process.
 
