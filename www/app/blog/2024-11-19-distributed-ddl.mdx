@@ -141,6 +141,87 @@ Once all the databases commit, the second phase of the 2PC is completed, and the
 
 ## Locks
 
+If you recall back, the first step the `nile_ddl` takes toward distributing a DDL, is to determine the locks the DDL will need and attempt to acquire them on all relevant databases. We do this with 3 simple goals in mind:
+
+1. **Fail early:** If a DDL is going to fail due to inability to acquire locks, we want to know about this before performing any resource intensive operations.
+2. **Don't block for too long:** Many DDLs require `ACCESS EXCLUSIVE` lock. Attempts to acquire this lock will block other sessions, even while waiting for the lock to get acquired. On a busy OLTP system it is important to minimize such blocks.
+3. **Don't deadlock:** We want to avoid a situation where two sessions are stuck, each waiting for the other to release a lock and both failing to make progress. 
+
+In order to fail early, we make sure to acquire all the necessary locks as the first step in processing a DDL. Before we even run the DDL locally. We could do it in parallel, but this can be very wasteful - imagine building an index on a large table locally, only to roll it back because we couldn't acquire the lock on a table on one of the remote databases. 
+
+So the `nile_ddl` extension takes the DDL and tries to determine which locks it will need. `ALTER` and `DROP` are fairly straight forward, we need to acquire a lock on the objects that the DDL is modifying. In most cases, acquiring the lock is simply a matter of sending `LOCK TABLE <table name> IN <lock level> MODE` with the same level that the DDL will require later. So before distributing `DROP TABLE todos`, the transaction coordinator must distribute `LOCK TABLE todos ACCESS EXLUSIVE MODE`. However, `LOCK TABLE` only applies to... well, tables. And we sometimes need to lock other objects. For example `DROP SCHEMA` requires locking the schema. Postgres has internal methods for locking other objects, so in our extension, we added the following logic:
+
+```c
+	if (is_rel)
+		LockRelationOid(objid, lockmode);
+	else
+		LockDatabaseObject(classid, objid, objsubid, lockmode);
+```
+
+If we need to lock a table (also called relation), we use `LockRelationOid`, the Postgres method behind `LOCK TABLE`. If we need to lock another object, we use `LockDatabaseObject` and directly lock the object we need.
+
+This is simple enough when acquiring locks locally, but how do we distribute this logic? We wrapped the object lock acquisition logic in the `nile_ddl` extension in a function and then exported it as a function:
+
+```c
+PGDLLEXPORT Datum nile_ddl_objectlock(PG_FUNCTION_ARGS);
+
+PG_FUNCTION_INFO_V1(nile_ddl_objectlock);
+```
+
+Then the transaction coordinator can send `SELECT nile_ddl.nile_ddl_objectlock(...)` to all the databases and acquire all the necessary locks for the DDL.
+
+When the transaction coordinator distributes the actual DDL, Postgres will try to re-acquire the locks. Because the DDL execution will happen in the same session in which we acquired the locks initially, and the locks are on the same objects and with the same level, we are guaranteed that the DDL processing will successfully acquire these locks. 
+
+So far we dealt with acquiring locks on existing tables and other objects. But there is one other case we need to handle before we are done. `CREATE TABLE` also requires locks - in order to avoid conflict between two sessions attempting to create the same table. How can we lock a table that does not exist yet? 
+
+Normally Postgres uses the data dictionary for this. It inserts a row for this new table into several tables in pg_catalog, the table name is added to unique indexes, and any attempt to insert another row with the same name into the same unique index will first block and then fail after the first session commits. Unfortunately, we can't use the same method. Row locks behave differently from table locks - they can't get re-acquired. Which means that if we manage to successfully acquire such lock, the actual DDL will then block on the same lock. 
+
+Another option would be to use an "advisory lock". These are locks not enforced by Postgres itself, but they can be acquired and used by application logic. The problem is that there is a fixed number of advisory locks per transaction and we want to leave all of them to our users, since their application logic may depend on having these locks available.
+
+To resolve this, we dove deep into the implementation of locks inside Postgres. All the locks we discussed so far - table locks, object locks, advisory locks - they all use the lower level `LockAcquire` method. This method signature is:
+
+```c
+extern LockAcquireResult LockAcquire(const LOCKTAG *locktag,
+									 LOCKMODE lockmode,
+									 bool sessionLock,
+									 bool dontWait);
+```
+
+The first parameter, `LOCKTAG` is a struct identifies the "thing" we are locking. This includes the type of lock and then 4 integers with more specific identifiers. Their meaning depend on the type of lock - these can be object ID, block number, row id, transaction ID, etc.
+
+If you look at the enum for the type of locks, you'll see:
+
+```c
+typedef enum LockTagType
+{
+	LOCKTAG_RELATION,			/* whole relation */
+	... /* left out more locks, check the PG source code for details */
+	LOCKTAG_USERLOCK,			/* reserved for old contrib/userlock code */
+	LOCKTAG_ADVISORY			/* advisory user locks */
+} LockTagType;
+```
+
+See the `USERLOCK` type? It is reserved, but no longer used. So we will use it. We'll use the 4 fields in `LOCKTAG` to identify the table with database ID, schema ID and a hash of the table name (since an integer isn't enough space for the actual name):
+
+```c
+locktag.locktag_type = LOCKTAG_USERLOCK;
+
+locktag.locktag_field1 = logical_db_id;
+locktag.locktag_field2 = schema_name_hash;
+locktag.locktag_field3 = object_name_hash;
+
+res = LockAcquire(&locktag,AccessExclusiveLock…);
+```
+
+And just like we did for previous locks, we wrapped the code that acquires the user locks in a method that we then exposed as part of the `nile_ddl` extension. Before distributing `CREATE TABLE todos()` the transaction coordinator has to distribute `SELECT nile_ddl.nile_ddl_userlock(...)` which acquire the user locks which we hold for the table creation.
+
+In order to avoid lock contention, long blocking and deadlock we take few safety precautions in addition to the early lock acquisition:
+- We acquire locks in the same order on all databases
+- We always start acquiring locks with the same database, so there won't be distributed conflicts and local conflicts will be detected early
+- We set `LOCK_TIMEOUT` to a low value before executing anything related to distributed DDLs
+
+Even with all the precautions, things can still go wrong. In the next section we'll discuss our failure handling mechanisms.
+
 ## When things go wrong
 
 ## Sum things up
