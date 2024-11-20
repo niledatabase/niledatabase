@@ -242,7 +242,9 @@ In order to resolve the state of transactions, we reconcile information from sev
 - `dist_tx_participants` - This table is in separate database. Nile uses this table to maintain overall state from all databases. It isn't guaranteed to always have the latest state. Therefore we use this table as an optimization, but we also check individual databases for newer information.
 - Transaction Coordinator in-memory state - The transaction coordinator maintains an in-memory cache with all the connections to the databases, the transaction IDs of active transactions and the status of these transactions. Unlike the other sources of information, this information is not persisted - if the coordinator crashes, we will recover this state from the other sources.
 
-During failure recovery, we collect the state from all these sources and reconcile it into a consistent state using few simple rules. Lets look at how these rules play out in two scenarios - a failed database and a failed transaction coordinator.
+Note that we use the existing implementation of transactions and ACID in Postgres to make sure we have all the state information that we need, persisted in the database. Postgres provides us with the basic primitives of atomicity, isolation and durability that makes the architecture reliable.
+ 
+During failure recovery, we collect the state from all these sources and reconcile it into a consistent state using few simple rules. Lets look at how these rules play out in two scenarios - a failed database and a failed transaction coordinator. 
 
 ### Recovering from database failure
 
@@ -268,6 +270,21 @@ For each transaction, each database can either have it in committed state, in pr
 And thats it, our distributed DDL system can now handle any failure. You may be curious how we tested all this, but we'll leave that to another blog post.
 
 ## Sum things up
+
+Its been quite a deep dive into the nooks and crannies of an architecture that overall isn't very complex, as far as distributed systems go.
+Lets recap the main points:
+
+Nile re-engineered Postgres for multi-tenant applications with out virtual tenant databases. Each virtual tenant database provides isolation and the flexibility to place, backup or branch the tenant's data independently. On the other hand, we preserve the developer experience of a single database and allow queries, including DDL across all tenant databases.
+
+In order to preserve the normal behavior of DDLs across all tenants and multiple physical databases, we developed a distributed transaction architecture. This architecture consists of two key parts - transaction coordinator service and a Postgres extension.
+
+We have shown how our extension hooks into the DDL processing flow via `processUtility_hook` and into the transaction lifecycle via the `XactCallback` and its events. We also showed how the extension can use lower level lock structures to achieve a locking behavior that we needed and wasn't exposed by high level Postgres commands.
+
+We discussed how the transaction coordinator starts distributed transactions, distributes DDL and uses Postgres' existing transactions, their implementation and guarantees, to both commit the distributed transactions and handle failures. Our architecture benefits from relying on mechanisms and guarantees that have been battle-tested in production systems for over 35 years.
+
+Finally, perhaps the biggest lesson we learned, is that while multi-tenant applications have been around for decades, their requirements are only partially addressed by most existing databases. This is great news because it means there are plenty of fun technical challenges to resolve for these applications. Reliably distributing DDLs is only one example for such requirement. Nile focuses on multi-tenant applications and their requirements, we can address those problems that every engineer knows about, but are rarely tackled systematically in the database. [Sign up to Nile](https://console.thenile.dev) and join us on this journey.
+
+
 
 
 
