@@ -41,7 +41,7 @@ So, grab a coffee, and let's get started!
 
 We've implemented our distributed DDL system using two main components:
 1. **`nile_ddl` extension:** This extension is loaded into every Postgres instance. It is responsible for intercepting DDL statements, extracting key information, and initiating the distributed transactions.
-2. **Transaction coordinator:** This is a stand-alone service that distributes the DDL statements to all relevant databases and ensures that each DDL is either applied successfully to all databases or to none of them. 
+2. **Transaction coordinator:** This is a stand-alone service that distributes the DDL statements to all relevant databases and ensures that each DDL is either applied successfully to all databases or to none of them.
 
 To understand how these components work together to execute a DDL statement, let's look at what happens when a user connects to their Nile database and issues a  `CREATE TABLE` command. This command is sent from the client to one of the Postgres instances, where it is intercepted by the `nile_ddl` extension. 
 
@@ -176,7 +176,7 @@ So far we dealt with acquiring locks on existing tables and other objects. But t
 
 Normally Postgres uses the data dictionary for this. It inserts a row for this new table into several tables in pg_catalog, the table name is added to unique indexes, and any attempt to insert another row with the same name into the same unique index will first block and then fail after the first session commits. Unfortunately, we can't use the same method. Row locks behave differently from table locks - they can't get re-acquired. Which means that if we manage to successfully acquire such lock, the actual DDL will then block on the same lock. 
 
-Another option would be to use an "advisory lock". These are locks not enforced by Postgres itself, but they can be acquired and used by application logic. The problem is that there is a fixed number of advisory locks available and we want to leave all of them to our users, since their application logic may depend on having these locks available.
+Another option would be to use an "advisory lock". These are locks not enforced by Postgres itself, but they can be acquired and used by application logic. However, our users may be using advisory locks, and unlike other lock types, they don't have namespaces - each advisory lock is identified by its ID only. This creates a risk of collision - where we need to use an advisory lock with an ID that one of our users is also using. It will be a bit weird if some part of the application will block when someone creates tables.
 
 To resolve this, we dove deep into the implementation of locks inside Postgres. All the locks we discussed so far - table locks, object locks, advisory locks - they all use the lower level `LockAcquire` method. This method signature is:
 
