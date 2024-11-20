@@ -116,7 +116,7 @@ This callback is triggered on various events within the transaction lifecycle, w
 
 The `nile_ddl` extension maps these events into a distributed two-phase commit (2PC) process.
 
-The first task for the extension is to detect when to start a transaction. This is simpler than it sounds: if `processUtility_hook` is called with a DDL and there's no currently active transaction in the same session, then the extension tells the transaction coordinator to begin a transaction. There's no scenario where a DDL is processed without an active transaction. If a transaction is already in progress for the session, the extension will continue to process all arriving DDLs. 
+The first task for the extension is to detect when to start a distributed transaction. This is simpler than it sounds: if `processUtility_hook` is called with a DDL and there's no currently active transaction in the same session, then the extension tells the transaction coordinator to begin a transaction. There's no scenario where a DDL is processed without an active transaction. If a transaction is already in progress for the session, the extension will continue to process all arriving DDLs. 
 
 This process continues until `XactCallback` is triggered with `XACT_EVENT_PRE_COMMIT` event, which indicates that Postgres is preparing to commit the transaction. This callback is triggered regardless of whether there is an explicit transaction with an explicit `COMMIT` or  Postgres is committing an implicit transaction. The callback handles the pre-commit event by notifying the transaction coordinator and passing along the transaction ID.
 
@@ -129,7 +129,7 @@ According to the [Postgres documentation](https://www.postgresql.org/docs/curren
 > `PREPARE TRANSACTION` prepares the current transaction for two-phase commit. After this command, the transaction is no longer associated with the current session; instead, its state is fully stored on disk, and there is a very high probability that it can be committed successfully, even if a database crash occurs before the commit is requested.  
 > Once prepared, a transaction can later be committed or rolled back with `COMMIT PREPARED` or `ROLLBACK PREPARED`, respectively. Those commands can be issued from any session, not only the one that executed the original transaction.
 
-The phrase "very high probability that it can be committed successfully" may sound a bit less reassuring than we'd like. In practice, it means that `PREPARE TRANSACTION` is successful when it has persisted the transaction state to disk. The transaction will be committed successfully unless the database crashes **and** the files or disks where it is stored are completely lost. If this happens, it is likely that much more than just this one transaction is lost.
+The phrase "very high probability that it can be committed successfully" may sound a bit less reassuring than we'd like. In practice, it means that `PREPARE TRANSACTION` is successful when it has persisted the transaction state to disk. The transaction will be committed successfully unless the database crashes **and** the files or disks where it is stored are completely lost. If this happens, it is likely that much more than just this one transaction is lost. In other scenarios, such as running out of memory, the "prepared" state is preserved and the transaction can be committed if `COMMIT PREPARED` is retried, even from other sessions. 
 
 Barring this very rare scenario, `PREPARE TRANSACTION` has all the properties we need from the first phase of two-phase commit: It is durable, and the prepared transaction can be committed or rolled back from any session. This ensures that once we successfully prepared transactions on all databases, we can reach a consistent state no matter what else happens. Additionally, if `PREPARE TRANSACTION` fails, it will automatically trigger a rollback on the database where it failed. 
 
@@ -149,7 +149,7 @@ If you recall back, the first step the `nile_ddl` takes toward distributing a DD
 
 In order to fail early, we make sure to acquire all the necessary locks as the first step in processing a DDL. Before we even run the DDL locally. We could do it in parallel, but this can be very wasteful - imagine building an index on a large table locally, only to roll it back because we couldn't acquire the lock on a table on one of the remote databases. 
 
-So the `nile_ddl` extension takes the DDL and tries to determine which locks it will need. `ALTER` and `DROP` are fairly straight forward, we need to acquire a lock on the objects that the DDL is modifying. In most cases, acquiring the lock is simply a matter of sending `LOCK TABLE <table name> IN <lock level> MODE` with the same level that the DDL will require later. So before distributing `DROP TABLE todos`, the transaction coordinator must distribute `LOCK TABLE todos ACCESS EXLUSIVE MODE`. However, `LOCK TABLE` only applies to... well, tables. And we sometimes need to lock other objects. For example `DROP SCHEMA` requires locking the schema. Postgres has internal methods for locking other objects, so in our extension, we added the following logic:
+So the `nile_ddl` extension takes the DDL and tries to determine which locks it will need. `ALTER` and `DROP` are fairly straight forward, we need to acquire a lock on the objects that the DDL is modifying (`DROP CASCADE` can be more complex since we need to determine all dependent objects and lock them too). In most cases, acquiring the lock is simply a matter of sending `LOCK TABLE <table name> IN <lock level> MODE` with the same level that the DDL will require later. So before distributing `DROP TABLE todos`, the transaction coordinator must distribute `LOCK TABLE todos ACCESS EXLUSIVE MODE`. However, `LOCK TABLE` only applies to... well, tables. And we sometimes need to lock other objects. For example `DROP SCHEMA` requires locking the schema. Postgres has internal methods for locking other objects, so in our extension, we added the following logic:
 
 ```c
 	if (is_rel)
@@ -158,7 +158,7 @@ So the `nile_ddl` extension takes the DDL and tries to determine which locks it 
 		LockDatabaseObject(classid, objid, objsubid, lockmode);
 ```
 
-If we need to lock a table (also called relation), we use `LockRelationOid`, the Postgres method behind `LOCK TABLE`. If we need to lock another object, we use `LockDatabaseObject` and directly lock the object we need.
+If we need to lock a relation such as a table or a view, we use `LockRelationOid`, the Postgres method behind `LOCK TABLE`. If we need to lock another object, we use `LockDatabaseObject` and directly lock the object we need.
 
 This is simple enough when acquiring locks locally, but how do we distribute this logic? We wrapped the object lock acquisition logic in the `nile_ddl` extension in a function and then exported it as a function:
 
@@ -176,7 +176,7 @@ So far we dealt with acquiring locks on existing tables and other objects. But t
 
 Normally Postgres uses the data dictionary for this. It inserts a row for this new table into several tables in pg_catalog, the table name is added to unique indexes, and any attempt to insert another row with the same name into the same unique index will first block and then fail after the first session commits. Unfortunately, we can't use the same method. Row locks behave differently from table locks - they can't get re-acquired. Which means that if we manage to successfully acquire such lock, the actual DDL will then block on the same lock. 
 
-Another option would be to use an "advisory lock". These are locks not enforced by Postgres itself, but they can be acquired and used by application logic. The problem is that there is a fixed number of advisory locks per transaction and we want to leave all of them to our users, since their application logic may depend on having these locks available.
+Another option would be to use an "advisory lock". These are locks not enforced by Postgres itself, but they can be acquired and used by application logic. The problem is that there is a fixed number of advisory locks available and we want to leave all of them to our users, since their application logic may depend on having these locks available.
 
 To resolve this, we dove deep into the implementation of locks inside Postgres. All the locks we discussed so far - table locks, object locks, advisory locks - they all use the lower level `LockAcquire` method. This method signature is:
 
@@ -283,8 +283,3 @@ We have shown how our extension hooks into the DDL processing flow via `processU
 We discussed how the transaction coordinator starts distributed transactions, distributes DDL and uses Postgres' existing transactions, their implementation and guarantees, to both commit the distributed transactions and handle failures. Our architecture benefits from relying on mechanisms and guarantees that have been battle-tested in production systems for over 35 years.
 
 Finally, perhaps the biggest lesson we learned, is that while multi-tenant applications have been around for decades, their requirements are only partially addressed by most existing databases. This is great news because it means there are plenty of fun technical challenges to resolve for these applications. Reliably distributing DDLs is only one example for such requirement. Nile focuses on multi-tenant applications and their requirements, we can address those problems that every engineer knows about, but are rarely tackled systematically in the database. [Sign up to Nile](https://console.thenile.dev) and join us on this journey.
-
-
-
-
-
