@@ -21,7 +21,11 @@ The other approach is to place all tenants in the same shared schema and add a t
 
 This approach is simple and cost-effective, which is why most new applications start here. However, over time, it can run into scalability issues and difficulties in adapting to individual customer needs and requirements. 
 
-That's why, no matter where you start, you eventually end up with a **hybrid model**. In a typical hybrid architecture, the database is scaled out through sharding. Most tenants are placed on shared shards, while larger and more demanding customers are allocated dedicated shards.
+That's why, no matter where you start, you eventually end up with a **hybrid model**. In a typical hybrid architecture, the database is distributed out through sharding. Most tenants are placed on shared shards, while larger and more demanding customers are allocated dedicated shards. 
+
+Scale isn't the only reason to use the hybrid architecture. A more common reason is the need to store data in multiple regions. Tenants always prefer low latency, which requires data to be placed close to them or in a specific region. Some tenants also have compliance concerns that requires storing their data in specific countries.
+
+Both hybrid and db-per-tenant architectures require a way to propagate the DDL changes to all the tenants instantaneously with great devex and high reliability.
 
 Nile's model aims to provide the simple developer experience of shared schema while maintaining the isolation and flexibility of a database-per-tenant model. In our system, tenants are separated into **"virtual tenant databases"**. These virtual tenant databases can be placed on shared compute (which may be sharded depending on the workload), or on dedicated compute. Regardless of how the tenenant databases are organized, developers can work as if everything were in a single shared schema. 
 
@@ -30,7 +34,7 @@ Nile's model aims to provide the simple developer experience of shared schema wh
 Our goal is to support any number of virtual databases, distributed across a number of physical PostgreSQL instances, while still providing the seamless developer experience of a single schema shared by all tenants. **DDLs** (Data Definition Language commands) are SQL commands that modify the schema - things like `CREATE TABLE`, `ALTER TABLE` and `DROP INDEX`. Our goals for the developer experience with DDLs are:
 
 * Each DDL applies to all tenants concurrently
-* Behaves exactly as it normally would in Postgres. This includes supporting transactions with DDL and all the transactional guarantees (which we consider one of PostgreSQL's best features).
+* Behaves exactly as it normally would in Postgres. This includes supporting transactions with DDL and all the transactional guarantees (which we consider one of PostgreSQL's best features). It also includes performing the DDL synchronously from the user point of view, when the `CREATE TABLE` command returns, the table must be visible and usable for all tenants, regardless of their placement.
 * The fact that each DDL executes over multiple virtual databases and physical instances should be completely transparent to developers
 
 Let's dive into the architecture and implementation. We'll start with a high-level overview of the architecture and walk you through the green-path flow of executing a simple DDL. Then we'll dive into the details of how we solved the three most challenging problems with distributed DDLs: transactions, locks and failure handling. Along the way, we'll share some tips and tricks we used in building our Postgres extension -- these might come in handy if you decide to write your own extensions.
