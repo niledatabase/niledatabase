@@ -147,15 +147,17 @@ Once all the databases commit, the second phase of the 2PC is completed, and the
 
 ## Locks
 
-If you recall back, the first step the `pg_karnak` takes toward distributing a DDL, is to determine the locks the DDL will need and attempt to acquire them on all relevant databases. We do this with 3 simple goals in mind:
+If you recall, the first step the `pg_karnak` extension takes toward distributing a DDL is to determining the locks the DDL will need and attempt to acquire them on all relevant databases. We approach this with 3 simple goals in mind:
 
-1. **Fail early:** If a DDL is going to fail due to inability to acquire locks, we want to know about this before performing any resource intensive operations.
-2. **Don't block for too long:** Many DDLs require `ACCESS EXCLUSIVE` lock. Attempts to acquire this lock will block other sessions, even while waiting for the lock to get acquired. On a busy OLTP system it is important to minimize such blocks.
-3. **Don't deadlock:** We want to avoid a situation where two sessions are stuck, each waiting for the other to release a lock and both failing to make progress. 
+1. **Fail early:** If a DDL is going to fail due to inability to acquire locks, we want to detect this before performing any resource-intensive operations.
+2. **Minimize blocking:** Many DDLs require `ACCESS EXCLUSIVE` lock and attempts to acquire this lock will block other sessions, even while waiting. In a busy OLTP system, it is important to minimize such blocks.
+3. **Avoid deadlock:** We want to prevent situations where two sessions are stuck waiting for each other to release a lock, resulting in neither making progress.
 
-In order to fail early, we make sure to acquire all the necessary locks as the first step in processing a DDL. Before we even run the DDL locally. We could do it in parallel, but this can be very wasteful - imagine building an index on a large table locally, only to roll it back because we couldn't acquire the lock on a table on one of the remote databases. 
+To fail early, we ensure all the necessary locks are acquired as the first step in processing a DDL, even before executing the DDL locally. While we could acquire locks in parallel, this approach could be wasteful - imagine building an index on a large table locally only to roll it back because we couldn't acquire the lock on a table in one of the remote databases. 
 
-So the `pg_karnak` extension takes the DDL and tries to determine which locks it will need. `ALTER` and `DROP` are fairly straight forward, we need to acquire a lock on the objects that the DDL is modifying (`DROP CASCADE` can be more complex since we need to determine all dependent objects and lock them too). In most cases, acquiring the lock is simply a matter of sending `LOCK TABLE <table name> IN <lock level> MODE` with the same level that the DDL will require later. So before distributing `DROP TABLE todos`, the transaction coordinator must distribute `LOCK TABLE todos ACCESS EXLUSIVE MODE`. However, `LOCK TABLE` only applies to... well, tables. And we sometimes need to lock other objects. For example `DROP SCHEMA` requires locking the schema. Postgres has internal methods for locking other objects, so in our extension, we added the following logic:
+The `pg_karnak` extension determines the required locks by analyzing the DDL. `ALTER` and `DROP` are fairly straight forward: we acquire locks on the objects being modifying. `DROP CASCADE` may require identifying and locking all dependent objects. In most cases, acquiring the lock is simply a matter of sending `LOCK TABLE <table name> IN <lock level> MODE` with the appropriate lock level for the DDL. For instance, before distributing `DROP TABLE todos`, the transaction coordinator must first distribute `LOCK TABLE todos IN ACCESS EXCLUSIVE MODE..`. 
+
+However, `LOCK TABLE` only applies to tables. Some DDLs, such as `DROP SCHEMA`, require locking other objects. Postgres has internal methods for locking any object, so we added logic to handle this in our extension::
 
 ```c
 	if (is_rel)
@@ -164,9 +166,9 @@ So the `pg_karnak` extension takes the DDL and tries to determine which locks it
 		LockDatabaseObject(classid, objid, objsubid, lockmode);
 ```
 
-If we need to lock a relation such as a table or a view, we use `LockRelationOid`, the Postgres method behind `LOCK TABLE`. If we need to lock another object, we use `LockDatabaseObject` and directly lock the object we need.
+When locking a relation, such as a table or a view, we use `LockRelationOid`, the Postgres method underlying `LOCK TABLE`. For other objects, we use `LockDatabaseObject` and directly lock the object.
 
-This is simple enough when acquiring locks locally, but how do we distribute this logic? We wrapped the object lock acquisition logic in the `pg_karnak` extension in a function and then exported it as a function:
+This approach works well for local locks, but how do we distribute it? We wrapped the object lock acquisition logic in a function within the `pg_karnak` extension and exported it:
 
 ```c
 PGDLLEXPORT Datum nile_ddl_objectlock(PG_FUNCTION_ARGS);
@@ -174,17 +176,17 @@ PGDLLEXPORT Datum nile_ddl_objectlock(PG_FUNCTION_ARGS);
 PG_FUNCTION_INFO_V1(nile_ddl_objectlock);
 ```
 
-Then the transaction coordinator can send `SELECT nile_ddl.nile_ddl_objectlock(...)` to all the databases and acquire all the necessary locks for the DDL.
+The transaction coordinator can then send `SELECT nile_ddl.nile_ddl_objectlock(...)` to all the databases and acquire all the necessary locks for the DDL.
 
-When the transaction coordinator distributes the actual DDL, Postgres will try to re-acquire the locks. Because the DDL execution will happen in the same session in which we acquired the locks initially, and the locks are on the same objects and with the same level, we are guaranteed that the DDL processing will successfully acquire these locks. 
+When the transaction coordinator distributes the actual DDL, Postgres will try to re-acquire the locks. Because the DDL execution occurs in the same session as the initial lock acquisition, and the locks are on the same objects at the same level, the DDL processing will succeed in acquiring the locks - guaranteed. 
 
-So far we dealt with acquiring locks on existing tables and other objects. But there is one other case we need to handle before we are done. `CREATE TABLE` also requires locks - in order to avoid conflict between two sessions attempting to create the same table. How can we lock a table that does not exist yet? 
+So far, we discussed acquiring locks on existing objects, but what about cases like `CREATE TABLE`? Table creation also requires locks to prevent conflict between sessions trying to create the same table. How do we lock a table that does not exist yet? 
 
-Normally Postgres uses the data dictionary for this. It inserts a row for this new table into several tables in pg_catalog, the table name is added to unique indexes, and any attempt to insert another row with the same name into the same unique index will first block and then fail after the first session commits. Unfortunately, we can't use the same method. Row locks behave differently from table locks - they can't get re-acquired. Which means that if we manage to successfully acquire such lock, the actual DDL will then block on the same lock. 
+Normally Postgres uses the data dictionary for this. It inserts a row for the new table into several pg_catalog tables, with the table name added to unique indexes. If another session tries to insert a row with the same name, it will block and fail if the first session commits. Unfortunately, this method isn't usable for us. Row locks cannot be re-acquired, which means the actual DDL would block on the same lock during execution.
 
-Another option would be to use an "advisory lock". These are locks not enforced by Postgres itself, but they can be acquired and used by application logic. However, our users may be using advisory locks, and unlike other lock types, they don't have namespaces - each advisory lock is identified by its ID only. This creates a risk of collision - where we need to use an advisory lock with an ID that one of our users is also using. It will be a bit weird if some part of the application will block when someone creates tables.
+Another option is using "advisory locks", which are application-defined locks managed by Postgres. However, advisory locks lack namespaces and are identified solely by their ID. This introduces a risk of collision if a user's application also uses advisory locks. It would be problematic if parts of an application were blocked unexpectedly due to table creation.
 
-To resolve this, we dove deep into the implementation of locks inside Postgres. All the locks we discussed so far - table locks, object locks, advisory locks - they all use the lower level `LockAcquire` method. This method signature is:
+To resolve this, we explored PostgreSQL's lock implementation. All the locks we discussed so far - table, object and advisory - use the low-level `LockAcquire` method. The method signature is:
 
 ```c
 extern LockAcquireResult LockAcquire(const LOCKTAG *locktag,
@@ -193,9 +195,9 @@ extern LockAcquireResult LockAcquire(const LOCKTAG *locktag,
 									 bool dontWait);
 ```
 
-The first parameter, `LOCKTAG` is a struct identifies the "thing" we are locking. This includes the type of lock and then 4 integers with more specific identifiers. Their meaning depend on the type of lock - these can be object ID, block number, row id, transaction ID, etc.
+The `LOCKTAG` parameter identifies the lock target and includes the lock type and four integers for specific identifiers. Their meaning depends on the lock type - these can be object ID, block number, row id, transaction ID, etc.
 
-If you look at the enum for the type of locks, you'll see:
+Looking at the `enum` that specifies the types of locks, you'll all the familiar types we discussed and a few more:
 
 ```c
 typedef enum LockTagType
@@ -207,7 +209,7 @@ typedef enum LockTagType
 } LockTagType;
 ```
 
-See the `USERLOCK` type? It is reserved, but no longer used. So we will use it. We'll use the 4 fields in `LOCKTAG` to identify the table with database ID, schema ID and a hash of the table name (since an integer isn't enough space for the actual name):
+`LOCKTAG_USERLOCK` is reserved but no longer in use, so we repurposed it for our needs. Using the four LOCKTAG fields, we identify the table with a database ID, schema ID, and a hash of the table name (since a name doesn’t fit in an integer):
 
 ```c
 locktag.locktag_type = LOCKTAG_USERLOCK;
@@ -219,12 +221,13 @@ locktag.locktag_field3 = object_name_hash;
 res = LockAcquire(&locktag,AccessExclusiveLock…);
 ```
 
-And just like we did for previous locks, we wrapped the code that acquires the user locks in a method that we then exposed as part of the `pg_karnak` extension. Before distributing `CREATE TABLE todos()` the transaction coordinator has to distribute `SELECT nile_ddl.nile_ddl_userlock(...)` which acquire the user locks which we hold for the table creation.
+As with other locks, we wrapped this user-lock acquisition logic in a method and exposed it through the `pg_karnak` extension. Before distributing `CREATE TABLE todos()` the transaction coordinator distributes `SELECT nile_ddl.nile_ddl_userlock(...)` to acquire the locks necessary for table creation.
 
-In order to avoid lock contention, long blocking and deadlock we take few safety precautions in addition to the early lock acquisition:
-- We acquire locks in the same order on all databases
-- We always start acquiring locks with the same database, so there won't be distributed conflicts and local conflicts will be detected early
-- We set `LOCK_TIMEOUT` to a low value before executing anything related to distributed DDLs
+To avoid lock contention, long blocking times, and deadlocks, we implement several safety measures:
+
+- Acquire locks in a consistent order across all databases.
+- Always start lock acquisition with the same database to prevent distributed conflicts while detecting local conflicts early.
+- Set `LOCK_TIMEOUT` to a low value for all distributed DDL operations.
 
 Even with all the precautions, things can still go wrong. In the next section we'll discuss our failure handling mechanisms.
 
