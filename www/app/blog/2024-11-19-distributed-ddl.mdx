@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Distributed DDL at Global Scale",
+  title: "Introducing pg_karnak: Transactional schema migration across tenant databases",
   authors: ["gwenshap"],
   image: "2024-11-19-distributed-ddl/cover.webp",
   sizzle:
@@ -7,9 +7,9 @@ export const metadata = {
   tags: ["database", "serverless", "postgres", "distributed systems"],
 };
 
-When we need to describe Nile in a single sentence, we say **"PostgreSQL re-engineered for multi-tenant apps"**. By multi-tenant apps, we mean applications like Stripe, Figma, Twilio, Notion, Workday, and Gusto - here a large number of customers is served from a shared application stack. In these types of applications, a key architectural challenge is deciding how to store data for each customer. 
+When we need to describe Nile in a single sentence, we say **"PostgreSQL re-engineered for multi-tenant apps"**. By multi-tenant apps, we mean applications like Stripe, Figma, Twilio, Notion, Workday, and Gusto - here a large number of customers is served from a shared application stack. In these types of applications, a key architectural challenge is deciding how to store data for each customer. What makes the data architecture challenging is that on one hand there are critical requirements that push toward placing tenants on multiple databases - latency, compliance or scale. On the other hand, a single database has significantly better developer experience and cost model.
 
-Broadly speaking, there are two main approaches. The first is **database per tenant** (or sometimes **schema per tenant**):
+Broadly speaking, there are two main approaches. The first is **database per tenant** (or sometimes schema per tenant:
 
 ![Database per tenant architecture](/blog/2024-11-19-distributed-ddl/db_per_tenant.png)
 
