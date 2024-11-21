@@ -7,9 +7,11 @@ export const metadata = {
   tags: ["database", "serverless", "postgres", "distributed systems"],
 };
 
-When we need to describe Nile in a single sentence, we say **"PostgreSQL re-engineered for multi-tenant apps"**. By multi-tenant apps, we mean applications like Stripe, Figma, Twilio, Notion, Workday, and Gusto - here a large number of customers is served from a shared application stack. In these types of applications, a key architectural challenge is deciding how to store data for each customer. What makes the data architecture challenging is that on one hand there are critical requirements that push toward placing tenants on multiple databases - latency, compliance or scale. On the other hand, a single database has significantly better developer experience and cost model.
+When we need to describe Nile in a single sentence, we say **"PostgreSQL re-engineered for multi-tenant apps"**. By multi-tenant apps, we mean applications like Stripe, Figma, Twilio, Notion, Workday, and Gusto - here a large number of customers is served from a shared application stack. In these types of applications, a key architectural challenge is deciding how to store data for each customer. 
 
-Broadly speaking, there are two main approaches. The first is **database per tenant** (or sometimes schema per tenant:
+What makes this data architecture especially challenging is the tension between two opposing needs. On one hand, requirements like latency, compliance, and scalability often push toward placing tenants on multiple databases. On the other hand, a single database offers a significantly better developer experience and cost model. Broadly speaking, there are two main approaches. 
+
+The first is **database per tenant** (or sometimes schema per tenant:
 
 ![Database per tenant architecture](/blog/2024-11-19-distributed-ddl/db_per_tenant.png)
 
@@ -233,62 +235,68 @@ Even with all the precautions, things can still go wrong. In the next section we
 
 ## When things go wrong
 
-Failure handling in distributed systems has to be built into every part of the architecture, it can't be added of as an afterthought. This is why we oriented our architecture around tried-and-true transaction handling - Postgres transaction mechanism and 2PC. The architecture provides the basic primitives for handling failure scenarios safely. In this section we'll look into key failure scenarios and how we used the components described above to deal with these scenarios.
+Failure handling in distributed systems must be part of the architecture, it cannot be added as an afterthought. This is why we designed our architecture around tried-and-true primitives - Postgres' transaction mechanism and two-phase commit (2PC). These provide the basic primitives needed to safely handle failure scenarios. In this section, we will describe key failure scenarios and how the components outlined earlier address them.
 
-If you were to start listing out all the failure scenarios - the state of the database, the type of failures that can occure and the possible ways to handle each, you'll end up with a rather intimidating list. We went through this exercise and listed dozens of possible scenarios. This list is useful both to make sure we are thinking comprehensively, and also later on when it comes time to test our handling of all these scenarios.
+If you were to list all the failure scenarios - considering the state of the database, the types of failures that can occur, and the possible ways to handle each - you would end up with a long and complicated list. We performed this exercise and identified dozens of possible scenarios. This was useful for ensuring that we approached the problem comprehensively and later for testing our handling of these scenarios.
 
-By examining all the failure scenarios, we derived two key insights that guided our design.
+From this analysis, we derived two key insights that shaped our design:
 
-The first insight is that there are two distinct types of failures: Failures that happen before the `PRECOMMIT` phase succeeds, which always result in `ROLLBACK` and failures that happen after and will always result in `COMMIT`.
+### Insight 1: Two Types of Failures
+
+Failures fall into two distinct categories: 
+1. Failures that happen **before** the `PRECOMMIT` phase succeeds, which always result in a `ROLLBACK`.
+2. Failures that happen **after** the `PRECOMMIT` phase succeeds, which always result in a `COMMIT`.
 
 The transition happens when all databases respond to the `PREPARE TRANSACTION` command from the transaction coordinator.  We consider the responses to `PREPARE TRANSACTION` as votes from each database on the decision to commit. This to be a unanimous decision - if any database returns an error, we will force everyone to roll back with `ROLLBACK PREPARED` command. If every database responded successfully, we have a successful vote to commit, everyone is committed to commit the transaction. At this point, we say that the commit is **"doomed to succeed"**, as per Postgres we can no longer return errors or roll back.
 
-The second insight is that all types of database failures result in a database failing to respond to the transaction coordinator for longer than a set timeout value. This isn't a new insight - this is a classic result in distributed systems. The insight is that this failure to communicate leads to a transaction in an unknown state - did the faulty database prepare the transaction? rolled it back? committed? We can't know until we can get a response from the database again. Therefore the first step in handling failure scenarios is to determine the current state of the system.
+### Insight 2: All database failures are communication failures
 
-In order to resolve the state of transactions, we reconcile information from several sources:
-- `pg_prepared_xact` - This is where Postgres stores the state of prepared transactions. Every transaction in this table was successfully prepared but not yet committed. 
-- `distributed_transactions` - This is a table that Nile maintains on each database. We insert and update it as part of each DDL transaction. Rows here are only visible by other sessions after the transaction committed successfully, as part of Postgres' ACID guarantees which only allow reading committed rows. In addition, we have a table by that name on a separate database (called "metadata database"), which centralizes the state of all transactions for fast lookup. The `distributed_transactions` table on each database is a source of truth, as its integrity is guaranteed by Postgres. The centralized table is maintained with "best effort" and isn't guaranteed to be 100% up to date at any point. 
-- `dist_tx_participants` - This table is also in the metadata database. This table tracks the state of each transaction for each participating database in a central location. It isn't guaranteed to always have the latest state. Therefore we use this table as an optimization, but we also check individual databases for newer information.
-- Transaction Coordinator in-memory state - The transaction coordinator maintains an in-memory cache with all the connections to the databases, the transaction IDs of active transactions and the status of these transactions. Unlike the other sources of information, this information is not persisted - if the coordinator crashes, we will recover this state from the other sources.
+All types of database failures result in a database failing to respond to the transaction coordinator within a specified timeout. This is a classic result in distributed systems. The insight is that this failure to communicate leads to uncertainty about the state of the transaction. We don't know whether the faulty database prepare, rolled back or committed the transaction. Resolving this uncertainty requires restoring communication with the database and determining its state. Therefore, the first step in handling failures is reconciling the current state of the system.
 
-Note that we use the existing implementation of transactions and ACID in Postgres to make sure we have all the state information that we need, persisted in the database. Postgres provides us with the basic primitives of atomicity, isolation and durability that makes the architecture reliable.
+### Reconciling transaction states
+
+To determine the state of transactions, we use information from several sources:
+
+- `pg_prepared_xact`: This is where Postgres stores the state of prepared transactions. Transactions in this table have been successfully prepared but not yet committed.
+- `distributed_transactions`: This is a table that Nile maintains on each database. It is updated as part of every DDL transaction, but rows only become visible to other sessions after the transaction successfully commits. This visibility is enforced by PostgreSQL's ACID guarantees. Additionally, we maintain a centralized version of this table in a separate metadata database, which provides a fast, approximate view of transaction states. The local `distributed_transactions` table on each database is the authoritative source of truth, while the centralized table is maintained on a best-effort basis and may not always be completely up to date.
+- `dist_tx_participants`: This table, located in the metadata database, tracks the state of each transaction for every participating database. Like the centralized `distributed_transactions` table, it provides an optimized but not always current view. We use this table to improve efficiency but verify its data against individual databases for accuracy.
+- **Transaction Coordinator in-memory state:** The transaction coordinator maintains an in-memory cache of active database connections, transaction IDs, and their statuses. Unlike the other sources, this state is not persisted. If the coordinator crashes, its state is reconstructed using the other sources.
+
+PostgreSQL's implementation of transactions and ACID guarantees ensures that all state information we need is safely persisted in the database. Its atomicity, isolation, and durability primitives form the backbone of our reliable architecture.
  
 During failure recovery, we collect the state from all these sources and reconcile it into a consistent state using few simple rules. Lets look at how these rules play out in two scenarios - a failed database and a failed transaction coordinator. 
 
 ### Recovering from database failure
 
-This is a case where the transaction coordinator lost contact with a database. The first order of business is to get back in touch. Unfortunately, Postgres does not have "database is back up" hook that we can use for a callback. Therefore both the coordinator and the `pg_karnak` extension periodically check the connection and attempt to reconnect if there is an issue. Once a connection is established, the transaction coordinator will check `pg_prepared_xact` and `distributed_transactions` tables on the recovering database. For every open transaction in the coordinator's in-memory state, the recovering DB can be in one of 3 states:
+This scenario occurs the transaction coordinator loses contact with a database. The first pririty is to re-establish communication. Unfortunately, Postgres does not provide "database is back up" hook that can be used for a callback. As a result, both the coordinator and the `pg_karnak` extension periodically check the connection and attempt to reconnect if there is an issue. Once a connection is re-established, the transaction coordinator will check `pg_prepared_xact` and `distributed_transactions` tables on the recovering database. For every open transaction in the coordinator's in-memory state, the recovering database can be in one of three states:
 
-- Transaction committed successfuly. In this case, the coordinator just needs to update its in-memory state and the status tables in the metadata database. 
-- Transaction prepared successfully but did not commit. In this case the coordinator checks the results of the transaction vote in its in-memory state, adding a "yes" vote from the recovered database. Based on the overall vote, the coordinator then decides if the transaction should commit or roll-back and distributes commands accordingly. 
-- Transaction does not appear in either of the database state tables. This means that this database already rolled back the transaction, and it never successfully prepared. This means that the database voted "no" in the commit vote, and the transaction coordinator has to distribute `ROLLBACK PREPARED` to the other databases that participated in the transaction.
+- **Transaction committed successfuly**: In this case, the coordinator updates its in-memory state and the status tables in the metadata database accordingly. 
+- **Transaction prepared successfully but did not commit**: Here, the coordinator checks the results of the transaction vote in its in-memory state, adding a "yes" vote from the recovered database. Based on the overall vote, the coordinator then decides if the transaction should commit or roll-back and distributes the appropriate commands. 
+- **Transaction does not appear in either of the database state tables**: This indicates that the database already rolled back the transaction, and never successfully prepared it. This means that the database voted "no" during the commit vote, and the transaction coordinator has to distribute `ROLLBACK PREPARED` to the other participating databases.
 
-There is one special case for database failure, which is the case where the database where the transaction originated has failed. If you recall, this database is responsible for notifying the transaction coordinator that about the `XACT_EVENT_PRE_COMMIT` and `XACT_EVENT_COMMIT` events for the transaction. If the originating database fails, the coordinator may be stuck with an "orphan" transactions that never get prepared or committed. For this case, we rely on the transaction timeouts and a scheduled thread on the coordinator to roll back the orphaned transaction.
+There is a special case for database failure, which is the case where the database where the transaction originated has failed. This database is responsible for notifying the transaction coordinator that about the `XACT_EVENT_PRE_COMMIT` and `XACT_EVENT_COMMIT` events for the transaction. If the originating database fails, the coordinator may be stuck with "orphaned" transactions that were never prepared or committed. To handle this, the coordinator relies on the transaction timeouts and a scheduled thread to roll back the orphaned transaction.
 
 ### Recovering from coordinator failure
 
-If the coordinator itself fails, the first order of business is to reconstruct the in-memory state, so it will be aware of all the on-going transactions and capable of completing them. It first uses the latest state from the status tables in the metadata database, and then start checking state of individual databases.
-For each transaction, each database can either have it in committed state, in prepared state, or not have it at all. This leads to a few possible scenarios:
+If the coordinator itself fails, the first priority is to reconstruct its in-memory state so it can resume managing ongoing transactions and complete them. The coordinator first uses the latest state from the status tables in the metadata database, then checks the state of individual databases. For each transaction, a database can have it in one of three states: committed, prepared or non-existant. This leads to the following scenarios:
 
-- Transaction is in a committed state in all databases. In this case, we are done and can update the in-memory state and the status tables in the metadata database accordingly.
-- Transaction is in prepared state in some databases and committed in others. This indicates that the vote was successful, but the commit wasn't fully distributed. The coordinator will distribute `COMMIT PREPARED` to the databases that are still in prepared state and complete the transaction.
-- Transaction is in prepared state in some databases and does not exist in others. This indicates a failed vote. The databases where the transaction does not exist have rolled it back already. The coordinator will distribute `ROLLBACK PREPARED` to the remaining databases. 
-- Transaction is in committed state in some databases and does not exist in others. This should never ever happen. If some databases committed, it indicates a unanimous vote to commit, but the databases without the transaction have voted "no" and rolled back. This shouldn't happen, and hasn't happened in months of both intensive testing and production use.
+- **Transaction is in a committed state in all databases:** In this case, the coordinator will update the in-memory state and the status tables in the metadata database to reflect the committed status.
+- **Transaction is in prepared state in some databases and committed in others:** This indicates that the commit vote was successful, but `COMMIT PREPARED` wasn't fully distributed. The coordinator will distribute `COMMIT PREPARED` to the databases still in prepared state and complete the transaction.
+- **Transaction is in prepared state in some databases and nonexistant in others:** This indicates a failed vote. Databases where the transaction does not exist have already rolled back the transaction. The coordinator will distribute `ROLLBACK PREPARED` to the remaining databases. 
+- **Transaction is in committed state in some databases and nonexistant in others:** This should never ever happen. If some databases committed, it indicates a unanimous vote to commit, yet databases without the transaction voted "no" and rolled back. This inconsistency is theoretically impossible. After months of intensive testing and production use, we have never encountered this situation.
 
-
-And thats it, our distributed DDL system can now handle any failure. You may be curious how we tested all this, but we'll leave that to another blog post.
+And that's it—our distributed DDL system can now handle any failure scenario. You might be curious about how we tested all of this, but that's a topic for another blog post.
 
 ## Sum things up
 
-Its been quite a deep dive into the nooks and crannies of an architecture that overall isn't very complex, as far as distributed systems go.
-Lets recap the main points:
+We've taken a deep dive into the details of an architecture that, while not overly complex as far as distributed systems go, addresses some challenging problems. Let's recap the key points:
 
-Nile re-engineered Postgres for multi-tenant applications with out virtual tenant databases. Each virtual tenant database provides isolation and the flexibility to place, backup or branch the tenant's data independently. On the other hand, we preserve the developer experience of a single database and allow queries, including DDL across all tenant databases.
+Nile re-engineered Postgres for multi-tenant applications with **virtual tenant databases**. Each virtual tenant database provides isolation and flexibility to independently place, store, back up or branch tenant's data. At the same time, we preserve the developer experience of working with a single database, allowing queries—including DDL—to span all tenant databases seamlessly.
 
-In order to preserve the normal behavior of DDLs across all tenants and multiple physical databases, we developed a distributed transaction architecture. This architecture consists of two key parts - transaction coordinator service and a Postgres extension.
+To maintain the expected behavior of DDLs across all tenants and multiple physical databases, we developed a distributed transaction architecture. This architecture consists of a PostgreSQL extension, a transaction coordinator and a metadata store.
 
-We have shown how our extension hooks into the DDL processing flow via `processUtility_hook` and into the transaction lifecycle via the `XactCallback` and its events. We also showed how the extension can use lower level lock structures to achieve a locking behavior that we needed and wasn't exposed by high level Postgres commands.
+We demonstrated how our extension hooks into the DDL processing flow via `processUtility_hook` and hooks into the transaction lifecycle using `XactCallback` and its events. We also showed how the extension leverages low-level lock structures to implement the precise locking behavior required — functionality not exposed by higher-level PostgreSQL commands.
 
-We discussed how the transaction coordinator starts distributed transactions, distributes DDL and uses Postgres' existing transactions, their implementation and guarantees, to both commit the distributed transactions and handle failures. Our architecture benefits from relying on mechanisms and guarantees that have been battle-tested in production systems for over 35 years.
+We discussed how the transaction coordinator initializes distributed transactions, distributes DDL commands, and relies on PostgreSQL's existing transaction mechanisms and guarantees to manage commits and recover from failures. By building on PostgreSQL's proven architecture—refined over 35 years of production use—we ensure robustness and reliability.
 
-Finally, perhaps the biggest lesson we learned, is that while multi-tenant applications have been around for decades, their requirements are only partially addressed by most existing databases. This is great news because it means there are plenty of fun technical challenges to resolve for these applications. Reliably distributing DDLs is only one example for such requirement. Nile focuses on multi-tenant applications and their requirements, we can address those problems that every engineer knows about, but are rarely tackled systematically in the database. [Sign up to Nile](https://console.thenile.dev) and join us on this journey.
+Finally, perhaps the most significant insight we gained is that while multi-tenant applications have been around for decades, their needs are only partially addressed by most existing databases. We see this as an opportunity to tackle interesting technical challenges specific to multi-tenancy. Reliably distributing DDLs is just one example of such a requirement. Nile focuses on solving these multi-tenant challenges systematically at the database level, addressing the issues every engineer encounters but few platforms tackle comprehensively. [Sign up to Nile](https://console.thenile.dev) and join us on this journey.
