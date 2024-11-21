@@ -37,21 +37,23 @@ Our goal is to support any number of virtual databases, distributed across a num
 * Behaves exactly as it normally would in Postgres. This includes supporting transactions with DDL and all the transactional guarantees (which we consider one of PostgreSQL's best features). It also includes performing the DDL synchronously from the user point of view, when the `CREATE TABLE` command returns, the table must be visible and usable for all tenants, regardless of their placement.
 * The fact that each DDL executes over multiple virtual databases and physical instances should be completely transparent to developers
 
-To deliver on these requirements, Nile built `pg_karnak` - an extension and transaction coordinator which we'll open source soon. In this blog, we'll dive into the architecture and implementation of `pg_karnak`. We'll start with a high-level overview of the architecture and walk you through the green-path flow of executing a simple DDL. Then we'll dive into the details of how we solved the three most challenging problems with distributed DDLs: transactions, locks and failure handling. Along the way, we'll share some tips and tricks we used in building our Postgres extension -- these might come in handy if you decide to write your own extensions.
+To deliver on these requirements, Nile built `pg_karnak`. `pg_karnak` is a distributed ddl layer that operates across tenants and postgres instances. It includes an extension that intercepts ddls, a transaction coordinator to apply schemas to every tenant during DDL execution and a central metadata store. This ensures correct DDL application and enables recovery for tenants in case of failure.
+
+In this blog, we'll dive into the architecture and implementation of `pg_karnak`. We'll start with a high-level overview of the architecture and walk you through the green-path flow of executing a simple DDL. Then we'll dive into the details of how we solved the three most challenging problems with distributed DDLs: transactions, locks and failure handling. Along the way, we'll share some tips and tricks we used in building our Postgres extension -- these might come in handy if you decide to write your own extensions.
 
 So, grab a coffee, and let's get started!
 
 ## Distributed DDL architecture walkthrough
 
 We've implemented our distributed DDL system using two main components:
-1. **`nile_ddl` extension:** This extension is loaded into every Postgres instance. It is responsible for intercepting DDL statements, extracting key information, and initiating the distributed transactions.
+1. **`pg_karnak` extension:** This extension is loaded into every Postgres instance. It is responsible for intercepting DDL statements, extracting key information, and initiating the distributed transactions.
 2. **Transaction coordinator:** This is a stand-alone service that distributes the DDL statements to all relevant databases and ensures that each DDL is either applied successfully to all databases or to none of them.
 
-To understand how these components work together to execute a DDL statement, let's look at what happens when a user connects to their Nile database and issues a  `CREATE TABLE` command. This command is sent from the client to one of the Postgres instances, where it is intercepted by the `nile_ddl` extension. 
+To understand how these components work together to execute a DDL statement, let's look at what happens when a user connects to their Nile database and issues a  `CREATE TABLE` command. This command is sent from the client to one of the Postgres instances, where it is intercepted by the `pg_karnak` extension. 
 
 ### Intercepting DDL with `processUtility_hook`
 
-In order to intercept the DDL before it executes, `nile_ddl` uses the `processUtility_hook`. To understand why and how our extension uses this hook, we first need to explain what a utility command is and how PostgreSQL handles them. 
+In order to intercept the DDL before it executes, `pg_karnak` uses the `processUtility_hook`. To understand why and how our extension uses this hook, we first need to explain what a utility command is and how PostgreSQL handles them. 
 
 In Postgres terms, a "utility" is any command except `SELECT`, `INSERT`, `UPDATE` and `DELETE`. This includes all DDL commands as well as other commands like `COMMIT`, `NOTIFY` or `DO`. When Postgres recieves a utility command, it uses `ProcessUtility(..)` method to process it. This is a simple wrapper that looks like this:
 
@@ -62,7 +64,7 @@ In Postgres terms, a "utility" is any command except `SELECT`, `INSERT`, `UPDATE
 		standard_ProcessUtility(...);
 ```
 
-This method checks if there are any extensions that want to process the utility command before Postgres runs its standard processing. The `nile_ddl` extension provides such a hook and, as a result, is called before Postgres processes any command. This is incredibly useful because `processUtility_hook` is triggered for nearly everything that isn't a SELECT or a DML, giving us a single entry point for almost everything we need to handle. 
+This method checks if there are any extensions that want to process the utility command before Postgres runs its standard processing. The `pg_karnak` extension provides such a hook and, as a result, is called before Postgres processes any command. This is incredibly useful because `processUtility_hook` is triggered for nearly everything that isn't a SELECT or a DML, giving us a single entry point for almost everything we need to handle. 
 
 Once we finished processing the command, it is our responsibility to call `standard_ProcessUtility`,  so that Postgres can continue its normal flow. A bit off-topic, but in case you're curious: `standard_ProcessUtility` method is essentially a gigantic switch statement that routes every one of the 60+ utility commands to their appropriate handler.
 
@@ -82,7 +84,7 @@ Acquiring locks with a short timeout before executing DDLs is considered a best 
 
 ### Transaction coordinator
 
-Once the `nile_ddl` extension determines the necessary locks, it calls the transaction coordinator to start a transaction (if necessary) and distribute the locks.
+Once the `pg_karnak` extension determines the necessary locks, it calls the transaction coordinator to start a transaction (if necessary) and distribute the locks.
 
 Starting the transaction is straightforward: the coordinator maintains open connections to all databases and simply sends each one a `BEGIN` command. 
 
@@ -90,7 +92,7 @@ Distributing the locks works similarly. The coordinator sends all databases the 
 
 ![Distributing locks](/blog/2024-11-19-distributed-ddl/distribute_locks.png)
 
-Once the locks are acquired, the `nile_ddl` extension instructs the coordinator to distribute the DDL itself. But first, it has to make sure the DDL is fully qualified. `CREATE TABLE todos (...)` can be ambigous - in which schema should Postgres create the table? This depends on the current `search_path` config and the existing schema, which can change on some databases while the DDL is distributed (for example, if there's a concurrect `CREATE SCHEMA` operation). To avoid an inconsistent result, `nile_ddl` modifies the DDL and makes sure all objects are fully qualified. Only then it sends the DDL to the transaction coordinator for distribution.
+Once the locks are acquired, the `pg_karnak` extension instructs the coordinator to distribute the DDL itself. But first, it has to make sure the DDL is fully qualified. `CREATE TABLE todos (...)` can be ambigous - in which schema should Postgres create the table? This depends on the current `search_path` config and the existing schema, which can change on some databases while the DDL is distributed (for example, if there's a concurrect `CREATE SCHEMA` operation). To avoid an inconsistent result, `pg_karnak` modifies the DDL and makes sure all objects are fully qualified. Only then it sends the DDL to the transaction coordinator for distribution.
 
 While the coordinator sends the DDL command to all other databases, the original extension that first received the DDL proceeds to call `standard_ProcessUtility` and process the DDL locally.
 
@@ -118,7 +120,7 @@ This callback is triggered on various events within the transaction lifecycle, w
 - `XACT_EVENT_COMMIT` - This event happens after the commit. At this point, the callback is not allowed to return an error. Regardless of what happened, it must reach a healthy and successful state since the client will recieve a confirmation that the transaction was successfully committed.
 - `XACT_EVENT_ABORT` - This event is triggered when the transaction is aborted and the callback needs to handle the rollback.
 
-The `nile_ddl` extension maps these events into a distributed two-phase commit (2PC) process.
+The `pg_karnak` extension maps these events into a distributed two-phase commit (2PC) process.
 
 The first task for the extension is to detect when to start a distributed transaction. This is simpler than it sounds: if `processUtility_hook` is called with a DDL and there's no currently active transaction in the same session, then the extension tells the transaction coordinator to begin a transaction. There's no scenario where a DDL is processed without an active transaction. If a transaction is already in progress for the session, the extension will continue to process all arriving DDLs. 
 
@@ -137,7 +139,7 @@ The phrase "very high probability that it can be committed successfully" may sou
 
 Barring this very rare scenario, `PREPARE TRANSACTION` has all the properties we need from the first phase of two-phase commit: It is durable, and the prepared transaction can be committed or rolled back from any session. This ensures that once we successfully prepared transactions on all databases, we can reach a consistent state no matter what else happens. Additionally, if `PREPARE TRANSACTION` fails, it will automatically trigger a rollback on the database where it failed. 
 
-Let's assume that all databases successfully prepared their transactions for commit (we'll cover the failure scenarios in the next section). This succesful preparation completes the first phase of the two-phase commit (2PC). The `XactCallback` on the originating database will then return successfully, allowing Postgres to proceed with the transaction commit. The `XactCallback` will be triggered once more, this time with `XACT_EVENT_COMMIT` event. During this phase, the first action the `nile_ddl` extension takes is to reset its state - such as cleaning up the transaction in progress - so that the next DDL command will begin a new transaction. This cleanup comes first to simplify error handling. Then the extension commits the transaction locally and instructs the transaction coordinator to send the `COMMIT PREPARED` command to all databases, which commits all the prepared transactions in the remote databases.
+Let's assume that all databases successfully prepared their transactions for commit (we'll cover the failure scenarios in the next section). This succesful preparation completes the first phase of the two-phase commit (2PC). The `XactCallback` on the originating database will then return successfully, allowing Postgres to proceed with the transaction commit. The `XactCallback` will be triggered once more, this time with `XACT_EVENT_COMMIT` event. During this phase, the first action the `pg_karnak` extension takes is to reset its state - such as cleaning up the transaction in progress - so that the next DDL command will begin a new transaction. This cleanup comes first to simplify error handling. Then the extension commits the transaction locally and instructs the transaction coordinator to send the `COMMIT PREPARED` command to all databases, which commits all the prepared transactions in the remote databases.
 
 ![Commit prepared transaction flow](/blog/2024-11-19-distributed-ddl/prepare_xact.png)
 
@@ -145,7 +147,7 @@ Once all the databases commit, the second phase of the 2PC is completed, and the
 
 ## Locks
 
-If you recall back, the first step the `nile_ddl` takes toward distributing a DDL, is to determine the locks the DDL will need and attempt to acquire them on all relevant databases. We do this with 3 simple goals in mind:
+If you recall back, the first step the `pg_karnak` takes toward distributing a DDL, is to determine the locks the DDL will need and attempt to acquire them on all relevant databases. We do this with 3 simple goals in mind:
 
 1. **Fail early:** If a DDL is going to fail due to inability to acquire locks, we want to know about this before performing any resource intensive operations.
 2. **Don't block for too long:** Many DDLs require `ACCESS EXCLUSIVE` lock. Attempts to acquire this lock will block other sessions, even while waiting for the lock to get acquired. On a busy OLTP system it is important to minimize such blocks.
@@ -153,7 +155,7 @@ If you recall back, the first step the `nile_ddl` takes toward distributing a DD
 
 In order to fail early, we make sure to acquire all the necessary locks as the first step in processing a DDL. Before we even run the DDL locally. We could do it in parallel, but this can be very wasteful - imagine building an index on a large table locally, only to roll it back because we couldn't acquire the lock on a table on one of the remote databases. 
 
-So the `nile_ddl` extension takes the DDL and tries to determine which locks it will need. `ALTER` and `DROP` are fairly straight forward, we need to acquire a lock on the objects that the DDL is modifying (`DROP CASCADE` can be more complex since we need to determine all dependent objects and lock them too). In most cases, acquiring the lock is simply a matter of sending `LOCK TABLE <table name> IN <lock level> MODE` with the same level that the DDL will require later. So before distributing `DROP TABLE todos`, the transaction coordinator must distribute `LOCK TABLE todos ACCESS EXLUSIVE MODE`. However, `LOCK TABLE` only applies to... well, tables. And we sometimes need to lock other objects. For example `DROP SCHEMA` requires locking the schema. Postgres has internal methods for locking other objects, so in our extension, we added the following logic:
+So the `pg_karnak` extension takes the DDL and tries to determine which locks it will need. `ALTER` and `DROP` are fairly straight forward, we need to acquire a lock on the objects that the DDL is modifying (`DROP CASCADE` can be more complex since we need to determine all dependent objects and lock them too). In most cases, acquiring the lock is simply a matter of sending `LOCK TABLE <table name> IN <lock level> MODE` with the same level that the DDL will require later. So before distributing `DROP TABLE todos`, the transaction coordinator must distribute `LOCK TABLE todos ACCESS EXLUSIVE MODE`. However, `LOCK TABLE` only applies to... well, tables. And we sometimes need to lock other objects. For example `DROP SCHEMA` requires locking the schema. Postgres has internal methods for locking other objects, so in our extension, we added the following logic:
 
 ```c
 	if (is_rel)
@@ -164,7 +166,7 @@ So the `nile_ddl` extension takes the DDL and tries to determine which locks it 
 
 If we need to lock a relation such as a table or a view, we use `LockRelationOid`, the Postgres method behind `LOCK TABLE`. If we need to lock another object, we use `LockDatabaseObject` and directly lock the object we need.
 
-This is simple enough when acquiring locks locally, but how do we distribute this logic? We wrapped the object lock acquisition logic in the `nile_ddl` extension in a function and then exported it as a function:
+This is simple enough when acquiring locks locally, but how do we distribute this logic? We wrapped the object lock acquisition logic in the `pg_karnak` extension in a function and then exported it as a function:
 
 ```c
 PGDLLEXPORT Datum nile_ddl_objectlock(PG_FUNCTION_ARGS);
@@ -217,7 +219,7 @@ locktag.locktag_field3 = object_name_hash;
 res = LockAcquire(&locktag,AccessExclusiveLock…);
 ```
 
-And just like we did for previous locks, we wrapped the code that acquires the user locks in a method that we then exposed as part of the `nile_ddl` extension. Before distributing `CREATE TABLE todos()` the transaction coordinator has to distribute `SELECT nile_ddl.nile_ddl_userlock(...)` which acquire the user locks which we hold for the table creation.
+And just like we did for previous locks, we wrapped the code that acquires the user locks in a method that we then exposed as part of the `pg_karnak` extension. Before distributing `CREATE TABLE todos()` the transaction coordinator has to distribute `SELECT nile_ddl.nile_ddl_userlock(...)` which acquire the user locks which we hold for the table creation.
 
 In order to avoid lock contention, long blocking and deadlock we take few safety precautions in addition to the early lock acquisition:
 - We acquire locks in the same order on all databases
@@ -252,7 +254,7 @@ During failure recovery, we collect the state from all these sources and reconci
 
 ### Recovering from database failure
 
-This is a case where the transaction coordinator lost contact with a database. The first order of business is to get back in touch. Unfortunately, Postgres does not have "database is back up" hook that we can use for a callback. Therefore both the coordinator and the `nile_ddl` extension periodically check the connection and attempt to reconnect if there is an issue. Once a connection is established, the transaction coordinator will check `pg_prepared_xact` and `distributed_transactions` tables on the recovering database. For every open transaction in the coordinator's in-memory state, the recovering DB can be in one of 3 states:
+This is a case where the transaction coordinator lost contact with a database. The first order of business is to get back in touch. Unfortunately, Postgres does not have "database is back up" hook that we can use for a callback. Therefore both the coordinator and the `pg_karnak` extension periodically check the connection and attempt to reconnect if there is an issue. Once a connection is established, the transaction coordinator will check `pg_prepared_xact` and `distributed_transactions` tables on the recovering database. For every open transaction in the coordinator's in-memory state, the recovering DB can be in one of 3 states:
 
 - Transaction committed successfuly. In this case, the coordinator just needs to update its in-memory state and the status tables in the metadata database. 
 - Transaction prepared successfully but did not commit. In this case the coordinator checks the results of the transaction vote in its in-memory state, adding a "yes" vote from the recovered database. Based on the overall vote, the coordinator then decides if the transaction should commit or roll-back and distributes commands accordingly. 
