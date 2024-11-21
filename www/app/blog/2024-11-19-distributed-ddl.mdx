@@ -29,7 +29,11 @@ Scale isn't the only reason to use the hybrid architecture. A more common reason
 
 Both hybrid and db-per-tenant architectures require a way to propagate the DDL changes to all the tenants instantaneously with great devex and high reliability.
 
-Nile's model aims to provide the simple developer experience of shared schema while maintaining the isolation and flexibility of a database-per-tenant model. In our system, tenants are separated into **"virtual tenant databases"**. These virtual tenant databases can be placed on shared compute (which may be sharded depending on the workload), or on dedicated compute. Regardless of how the tenenant databases are organized, developers can work as if everything were in a single shared schema. 
+Nile provides all the developer experience, operational simplicity and cost benefits of a single database while also achieving the isolation and per-tenant control benefits of a db per tenant architecture. 
+
+**The number of databases you need to build a multi-tenant app is one.**
+
+This one database contains many **"virtual tenant databases"** - one per tenant. These virtual tenant databases can be placed on multiple physical Postgres databases. Tenants can be placed on shared compute (which may be sharded depending on the workload), or on dedicated compute. Regardless of how the tenenant databases are organized, developers connect to one database and work as if everything were in a single shared schema.
 
 ![Nile virtual databases](/blog/2024-11-19-distributed-ddl/nile_virtual_databases.png)
 
