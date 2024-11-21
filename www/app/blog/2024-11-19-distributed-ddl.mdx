@@ -4,7 +4,7 @@ export const metadata = {
   authors: ["gwenshap"],
   image: "2024-11-19-distributed-ddl/cover4.png",
   sizzle:
-    "Dive deep into the architecture of pg_karnak, PostgreSQL extension, metadata stroe and transaction coordinator designed for reliable and scalable schema migrations across many tenants and Postgres instances. This post explores PostgreSQL internals, including extension hooks, transaction lifecycle, and locking mechanisms, offering insights into building scalable, reliable systems for distributed applications.",
+    "Dive deep into the architecture of pg_karnak, PostgreSQL extension, metadata store and transaction coordinator designed for reliable and scalable schema migrations across many tenants and Postgres instances. This post explores PostgreSQL internals, including extension hooks, transaction lifecycle, and locking mechanisms, offering insights into building scalable, reliable systems for distributed applications.",
   tags: ["database", "serverless", "postgres", "distributed systems"],
 };
 
@@ -36,7 +36,7 @@ Nile provides all the developer experience, operational simplicity and cost bene
 
 **The number of databases you need to build a multi-tenant app is one.**
 
-This one database contains many **"virtual tenant databases"** - one per tenant. These virtual tenant databases can be placed on multiple physical Postgres databases. Tenants can be placed on shared compute (which may be sharded depending on the workload), or on dedicated compute. Regardless of how the tenenant databases are organized, developers connect to one database and work as if everything were in a single shared schema.
+This one database contains many **"virtual tenant databases"** - one per tenant. These virtual tenant databases can be placed on multiple physical Postgres databases. Tenants can be placed on shared compute (which may be sharded depending on the workload), or on dedicated compute. Regardless of how the tenant databases are organized, developers connect to one database and work as if everything were in a single shared schema.
 
 ![Nile virtual databases](/blog/2024-11-19-distributed-ddl/nile_virtual_databases.png)
 
