@@ -2,7 +2,7 @@ export const metadata = {
   title:
     "Introducing pg_karnak: Transactional schema migration across tenant databases",
   authors: ["gwenshap"],
-  image: "2024-11-19-distributed-ddl/cover.webp",
+  image: "2024-11-19-distributed-ddl/cover4.png",
   sizzle: "TBD",
   tags: ["database", "serverless", "postgres", "distributed systems"],
 };
@@ -15,11 +15,13 @@ The first is **database per tenant** (or sometimes schema per tenant:
 
 ![Database per tenant architecture](/blog/2024-11-19-distributed-ddl/db_per_tenant.png)
 
-This architecture provides isolation and flexibility but requires more resources and effort to operate.
+This architecture provides isolation and flexibility but requires more resources and effort to operate. The other approach is to place all tenants in the same shared schema and add a tenant identifier to every table:
 
-The other approach is to place all tenants in the same shared schema and add a tenant identifier to every table:
-
-![Shared schema for all tenants](/blog/2024-11-19-distributed-ddl/shared_schema.png)
+<Image
+  src="/blog/2024-11-19-distributed-ddl/shared_schema.png"
+  width="400"
+  height="400"
+/>
 
 This approach is simple and cost-effective, which is why most new applications start here. However, over time, it can run into scalability issues and difficulties in adapting to individual customer needs and requirements.
 
@@ -75,7 +77,7 @@ This method checks if there are any extensions that want to process the utility 
 
 Once we finished processing the command, it is our responsibility to call `standard_ProcessUtility`, so that Postgres can continue its normal flow. A bit off-topic, but in case you're curious: `standard_ProcessUtility` method is essentially a gigantic switch statement that routes every one of the 60+ utility commands to their appropriate handler.
 
-![Process utility hook](/blog/2024-11-19-distributed-ddl/process_utility_hook.png)
+![Process utility hook](/blog/2024-11-19-distributed-ddl/process_utility_hook_w_metadata.png)
 
 So, our extension gets called with a utility command. What happens next? At this point, it needs to perform a few tasks:
 
@@ -97,7 +99,7 @@ Starting the transaction is straightforward: the coordinator maintains open conn
 
 Distributing the locks works similarly. The coordinator sends all databases the commands required to acquire the locks (more details in the section on locking). To avoid deadlocks, we ensure that locks are always acquired in the exact same order - both in terms of the sequence of databases and the order of locks within each database. This guarantees early failure in the event of conflicts and prevents situations where two concurrent transactions are each waiting for the other to release a lock on a different database.
 
-![Distributing locks](/blog/2024-11-19-distributed-ddl/distribute_locks.png)
+![Distributing locks](/blog/2024-11-19-distributed-ddl/distribute_locks_w_metadata.png)
 
 Once the locks are acquired, the `pg_karnak` extension instructs the coordinator to distribute the DDL itself. But first, it has to make sure the DDL is fully qualified. `CREATE TABLE todos (...)` can be ambigous - in which schema should Postgres create the table? This depends on the current `search_path` config and the existing schema, which can change on some databases while the DDL is distributed (for example, if there's a concurrect `CREATE SCHEMA` operation). To avoid an inconsistent result, `pg_karnak` modifies the DDL and makes sure all objects are fully qualified. Only then it sends the DDL to the transaction coordinator for distribution.
 
@@ -105,7 +107,7 @@ While the coordinator sends the DDL command to all other databases, the original
 
 Meanwhile, each remote database receives the DDL command. Since every database runs our extension, these DDL commands are intercepted by the extension on each database. It is crucial that the extension does not attempt to redistribute these DDLs, as doing so would lead to an infinite loop. Therefore, the extension has to recognize that these DDLs were sent by the transaction coordinator and can be passed directly to `standard_ProcessUtility`. To achieve this, we use a configuration (GUC) set when the transaction coordinator initializes the transaction. This configuration indicates to the extension that it doesn't need to reprocess the DDLs that follow, as they have already been validated by the originating extension and distributed by the coordinator.
 
-![Distributing DDL](/blog/2024-11-19-distributed-ddl/distribute_ddl.png)
+![Distributing DDL](/blog/2024-11-19-distributed-ddl/distribute_ddl_w_metadata.png)
 
 Once all the databases finished processing the DDL, the coordinator notifies the originating extension of successful completion. The extension, which has already finished processing the DDL locally, can return the response to the client. At this point, we have successfully executed a distributed DDL.
 
@@ -135,7 +137,7 @@ This process continues until `XactCallback` is triggered with `XACT_EVENT_PRE_CO
 
 The transaction coordinator then sends the `PREPARE TRANSACTION` command to all relevant databases.
 
-![Prepare transaction flow](/blog/2024-11-19-distributed-ddl/prepare_xact.png)
+![Prepare transaction flow](/blog/2024-11-19-distributed-ddl/prepare_xact_w_metadata.png)
 
 According to the [Postgres documentation](https://www.postgresql.org/docs/current/sql-prepare-transaction.html), the `PREPARE TRANSACTION` behaves as follows:
 
@@ -148,7 +150,7 @@ Barring this very rare scenario, `PREPARE TRANSACTION` has all the properties we
 
 Let's assume that all databases successfully prepared their transactions for commit (we'll cover the failure scenarios in the next section). This succesful preparation completes the first phase of the two-phase commit (2PC). The `XactCallback` on the originating database will then return successfully, allowing Postgres to proceed with the transaction commit. The `XactCallback` will be triggered once more, this time with `XACT_EVENT_COMMIT` event. During this phase, the first action the `pg_karnak` extension takes is to reset its state - such as cleaning up the transaction in progress - so that the next DDL command will begin a new transaction. This cleanup comes first to simplify error handling. Then the extension commits the transaction locally and instructs the transaction coordinator to send the `COMMIT PREPARED` command to all databases, which commits all the prepared transactions in the remote databases.
 
-![Commit prepared transaction flow](/blog/2024-11-19-distributed-ddl/prepare_xact.png)
+![Commit prepared transaction flow](/blog/2024-11-19-distributed-ddl/commit_xact_w_metadata.png)
 
 Once all the databases commit, the second phase of the 2PC is completed, and the distributed transaction is fully committed. We still need to discuss what happens if they don't commit successfully. But before diving into that, lets take a quick detour and look at how we handle locks.
 
