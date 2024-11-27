@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import SignoutButton from "../../SignoutButton";
 
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
@@ -39,7 +40,11 @@ export default async function Page({
   const tenant = await tenantNile.api.tenants.getTenant();
 
   if (tenant instanceof Response) {
-    throw new Error("unable to get tenant");
+    return (
+      <div>
+        Unable to retrieve tenant <SignoutButton />
+      </div>
+    );
   }
 
   if (!todos) {
