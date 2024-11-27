@@ -2,7 +2,6 @@
 // ^^^ This has to run on the server because it uses database operations and updates the cache
 
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { configureNile } from "@/lib/NileServer";
 
