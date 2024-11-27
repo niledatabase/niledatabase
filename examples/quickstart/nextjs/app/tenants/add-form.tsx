@@ -1,6 +1,5 @@
 "use client";
 import { useFormState } from "react-dom";
-import { useState } from "react";
 import { createTenant } from "@/app/tenants/tenant-actions";
 import {
   Dialog,
@@ -31,9 +30,13 @@ export function AddForm() {
             <div className="flex flex-col gap-6">
               <label htmlFor="tenantname">Name</label>
               <Input id="tenantname" name="tenantname" autoFocus required />
-              <p aria-live="polite" className="sr-only" role="status">
+              <div
+                aria-live="polite"
+                role="status"
+                className="bg-destructive text-white px-3 py-2 rounded-md"
+              >
                 {state?.message}
-              </p>
+              </div>
               <Button type="submit">Submit</Button>
             </div>
           </form>

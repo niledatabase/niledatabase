@@ -21,7 +21,7 @@ export async function createTenant(prevState: any, formData: FormData) {
     // The token is sent to Nile API and the tenant is created for the specific user
     const tenant = await nile.api.tenants.createTenant(tenantName);
     if (tenant instanceof Response) {
-      return { message: "no tenant" };
+      return { message: "Tenant creation failed." };
     }
     tenantID = tenant.id;
     console.log(
