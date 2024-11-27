@@ -30,13 +30,15 @@ export function AddForm() {
             <div className="flex flex-col gap-6">
               <label htmlFor="tenantname">Name</label>
               <Input id="tenantname" name="tenantname" autoFocus required />
-              <div
-                aria-live="polite"
-                role="status"
-                className="bg-destructive text-white px-3 py-2 rounded-md"
-              >
-                {state?.message}
-              </div>
+              {state?.message ? (
+                <div
+                  aria-live="polite"
+                  role="status"
+                  className="bg-destructive text-white px-3 py-2 rounded-md"
+                >
+                  {state?.message}
+                </div>
+              ) : null}
               <Button type="submit">Submit</Button>
             </div>
           </form>
