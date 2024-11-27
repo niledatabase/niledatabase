@@ -50,10 +50,19 @@ export default async function Page() {
     if (tenants.status === 401) {
       return redirect("/");
     }
-    throw Error(await tenants.text());
+    return (
+      <div>
+        Unable to list tenants
+        <SignoutButton />
+      </div>
+    );
   }
   if (me instanceof Response) {
-    throw Error(await me.text());
+    return (
+      <div>
+        Unable to authenticate <SignoutButton />
+      </div>
+    );
   }
 
   return (
