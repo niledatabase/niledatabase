@@ -38,7 +38,7 @@ export async function addTodo(
   let timeToFindSimilarTasks = 0;
   let timeToAiEstimate = 0;
   let embedding = null;
-  let estimate = "Can't generate estimate because AI is not configured"
+  let estimate: string | null  = "Can't generate estimate because AI is not configured"
   
   try {
     // if AI is configured, we generate embeddings and estimate for the task

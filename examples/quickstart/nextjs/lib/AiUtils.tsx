@@ -1,8 +1,8 @@
 import { Server } from "@niledatabase/server";
 import { OpenAI } from "openai";
 
-export function embeddingToSQL(embedding: number[]) {
-  return JSON.stringify(embedding);
+export function embeddingToSQL(embedding: number[] | null) {
+  return embedding ? JSON.stringify(embedding) : null;
 }
 
 export async function embedTask(title: string) {
