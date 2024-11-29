@@ -34,14 +34,20 @@ export async function addTodo(
     return { message: "Please enter a title" };
   }
 
+  let timeToEmbedTask = 0;
+  let timeToFindSimilarTasks = 0;
+  let timeToAiEstimate = 0;
+  let embedding = null;
+  let estimate = "Can't generate estimate because AI is not configured"
+  
   try {
     // if AI is configured, we generate embeddings and estimate for the task
     if (process.env.AI_API_KEY) {
       // We also want to try and embed the task for future AI processing
       startTime = performance.now();
-      const embedding = await embedTask(title.toString());
+      embedding = await embedTask(title.toString());
       endTime = performance.now();
-      let timeToEmbedTask = endTime - startTime;
+      timeToEmbedTask = endTime - startTime;
       // use embeddings to get some similar tasks, for reference
       startTime = performance.now();
       const similarTasks = await findSimilarTasks(
@@ -50,22 +56,16 @@ export async function addTodo(
         embedding
       );
       endTime = performance.now();
-      let timeToFindSimilarTasks = endTime - startTime;
+      timeToFindSimilarTasks = endTime - startTime;
       // for each todo, we want to try and generate an AI estimate.
       startTime = performance.now();
-      const estimate = await aiEstimate(
+      estimate = await aiEstimate(
         tenantNile,
         title.toString(),
         similarTasks
       );
       endTime = performance.now();
-      let timeToAiEstimate = endTime - startTime;
-    } else {
-      let timeToEmbedTask = 0;
-      let timeToFindSimilarTasks = 0;
-      let timeToAiEstimate = 0;
-      let embedding = null;
-      let estimate = "Can't generate estimate because AI is not configured"
+      timeToAiEstimate = endTime - startTime;
     }
 
     // need to set tenant ID because it is part of the primary key
