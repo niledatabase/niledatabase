@@ -85,7 +85,7 @@ client = boto3.client("bedrock-runtime", region_name="us-west-2")
 model_id = "amazon.titan-embed-text-v2:0" # you can try other models as well, once you request access
 ```
 
-Next, we'll set up the connection to the Nile database, register the pgvector client with the curson, and create a tenant who will own the todo items:
+Next, we'll set up the connection to the Nile database, register the pgvector client with the cursor, and create a tenant who will own the todo items:
 
 ```python
 conn = psycopg2.connect('postgresql://user:password@us-west-2.db.thenile.dev:5432/mydb')
