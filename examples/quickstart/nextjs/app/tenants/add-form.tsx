@@ -1,4 +1,5 @@
 "use client";
+// @ts-ignore
 import { useFormState } from "react-dom";
 import { createTenant } from "@/app/tenants/tenant-actions";
 import {
