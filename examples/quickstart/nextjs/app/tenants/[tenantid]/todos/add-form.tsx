@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useCallback, useRef } from "react";
 import { addTodo } from "./todo-actions";
-//@ts-expect-error
+// @ts-ignore
 import { useFormState } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
