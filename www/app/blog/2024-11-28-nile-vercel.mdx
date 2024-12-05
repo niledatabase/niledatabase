@@ -8,29 +8,28 @@ export const metadata = {
   tags: ["database", "serverless", "postgres", "vercel", "NextJS", "AI", "B2B"],
 };
 
-We are excited to announce that Nile databases are now available as first-party integration in Vercel. Starting today, when you deploy your apps in Vercel, you can also provision a Postgres database for them with a click, right from Vercel dashboard itself.
+We are excited to announce that Nile databases are now available as first-party integration in Vercel. Starting today, when you deploy your B2B apps on Vercel, you can also provision a Postgres database with a click, right from Vercel dashboard itself. You can natively manage the lifecycle of Nile database, monitor usage and pay bills right from the Vercel dashboard.
 
 ## What's included in the integration?
 
+- **Nile's multi-tenant features**. Tenant isolation for data and vectors, automatic scaling, flexible placement of tenants on shared or dedicated compute across regions, tenant insights and fully serverless developer experience.
 - **One click provisioning of Postgres databases**. Create a databases for your team right from Vercel's dashboard and connect it to any project.
 - **Automatic environment setup**. The database connection information and credentials are automatically added to the project's environment variables. No more wondering whether you copy-pasted correctly.
 - **Unlimited free databases**. Provision as many databases as you need - per project, per env or even per branch. Nile's free tier includes unlimited databases and unlimited tenants. You only pay for running queries and storing data beyond the tier limits.
-- **One stop shop for your app**. Manage databases, usage metrics and billing right from Vercel dashboard.
+- **Unified management and billing**. Manage databases, usage metrics and billing right from Vercel dashboard. Nile's usage costs will be included in your Vercel invoice. But no worries - prices are exactly the same whether you provision Nile databases through Vercel or directly from Nile.
 - **Query editor**. Need to quickly query your database? Click "Open in Nile" and start using our query editor to directly access your database.
-- **Nile's multi-tenant features**. Tenant isolation for data and vectors, automatic scaling, flexible placement of tenants on shared or dedicated compute across regions, tenant insights and fully serverless developer experience.
 
 ## Using Vercel and Nile together
 
-1. In Vercel workspace, click on the **storage** tab and then on **Create Database**. Select Nile, and choose region and pricing tier. Click **Create**.
-<Image src="/blog/2024-11-28-nile-vercel/create_database.png" width="400" height="400"/>
+1. In Vercel workspace, click on the **storage** tab and then on **Create Database**. Select Nile, and choose region and pricing tier. Click **Create**. <Image src="/blog/2024-11-28-nile-vercel/create_database.png" width="400" height="400" />
 2. You'll see the new database in the storage tab. You can now connect it to any project by clicking "Connect Project" and picking the project. This will populate the database connection in the project's environment. Alternatively, you can go into the storage tab of any project and pick an available database:
 ![Connect database to project](/blog/2024-11-28-nile-vercel/connect_project_to_db.png)
 3. Re-deploy the project in order to read the new environment variables. 
 
-Thats it. Its hard to imagine databases getting any easier.
+Thats it. Databases don't get any easier than this.
 
 ## Next steps
 
-Easiest way to get started is by deploying a [template](https://www.thenile.dev/templates). Try deploying Nile's [multi-tenant NextJS template](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%20and%20NextJS) with just a click: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs&project-name=nile-todo&repository-name=nile-todo&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22niledb%22%2C%22productSlug%22%3A%22niledb%22%7D%5D)
+Easiest way to get started is by deploying a [template](https://www.thenile.dev/templates). Try deploying Nile's [multi-tenant Next.js template](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%20and%20NextJS) with just a click: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs&project-name=nile-todo&repository-name=nile-todo&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22niledb%22%2C%22productSlug%22%3A%22niledb%22%7D%5D)
 If you want more detailed documentation about the integration, you can find it in our [docs](https://www.thenile.dev/docs/partners/vercel).
 
