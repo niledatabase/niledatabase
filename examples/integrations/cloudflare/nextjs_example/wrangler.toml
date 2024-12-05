@@ -1,0 +1,24 @@
+main = ".worker-next/index.mjs"
+name = "todo-nextjs"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+assets = { directory = ".worker-next/assets", binding = "ASSETS" }
+
+[vars]
+# Private env vars that should never show up in the browser
+# These are used by the server to connect to Nile database
+NILEDB_USER = 
+NILEDB_PASSWORD = 
+NILEDB_API_URL = 
+NILEDB_POSTGRES_URL = 
+NILEDB_NAME = 
+
+# Client (public) env vars
+
+# Uncomment if you want to try Google Auth
+# AUTH_TYPE=google
+
+# for AI estimates
+AI_API_KEY = 
+AI_BASE_URL = 
+AI_MODEL = 
