@@ -79,3 +79,18 @@ You can wait for the deployment to complete or you can cancel the deployment imm
 3. Re-deploy the project for the new configuration to take effect.
 
 You've now deployed a smart todo list app, written in Next.js, that uses Nile as the database and Vercel as the serverless compute platform.
+
+### Create a database from the CLI
+
+So far, you've explored two methods for creating Nile databases from Vercel: via the Project Storage tab and the Team Storage tab.
+If you prefer using the command line, you can create a Nile database with the following command: 
+```bash
+vc i niledb
+```
+Follow the prompts to select a region and tier. Once the database is created, use the command: 
+```bash
+vc env pull .env.local
+```  
+This pulls the environment variables, including the database connection details, directly into your local environment.
+
+
