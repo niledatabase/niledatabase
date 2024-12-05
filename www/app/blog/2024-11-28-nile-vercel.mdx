@@ -1,6 +1,5 @@
 export const metadata = {
-  title:
-    "Announcing Vercel-Nile partnership",
+  title: "Announcing Vercel-Nile partnership",
   authors: ["gwenshap"],
   image: "2024-11-28-nile-vercel/cover.png",
   sizzle:
@@ -21,10 +20,10 @@ We are excited to announce that Nile databases are now available as first-party 
 
 ## Using Vercel and Nile together
 
-1. In Vercel workspace, click on the **storage** tab and then on **Create Database**. Select Nile, and choose region and pricing tier. Click **Create**. <Image src="/blog/2024-11-28-nile-vercel/create_database.png" width="400" height="400" />
+1. In Vercel workspace, click on the **storage** tab and then on **Create Database**. Select Nile, and choose region and pricing tier. Click **Create**. <Image src="/blog/2024-11-28-nile-vercel/create_database.png" width="400" height="400" style={{ borderRadius: '12px' }} />
 2. You'll see the new database in the storage tab. You can now connect it to any project by clicking "Connect Project" and picking the project. This will populate the database connection in the project's environment. Alternatively, you can go into the storage tab of any project and pick an available database:
-![Connect database to project](/blog/2024-11-28-nile-vercel/connect_project_to_db.png)
-3. Re-deploy the project in order to read the new environment variables. 
+   ![Connect database to project](/blog/2024-11-28-nile-vercel/connect_project_to_db.png)
+3. Re-deploy the project in order to read the new environment variables.
 
 Thats it. Databases don't get any easier than this.
 
@@ -32,4 +31,3 @@ Thats it. Databases don't get any easier than this.
 
 Easiest way to get started is by deploying a [template](https://www.thenile.dev/templates). Try deploying Nile's [multi-tenant Next.js template](https://www.thenile.dev/templates/AI-Native%20multi-tenant%20SaaS%20with%20Nile%20and%20NextJS) with just a click: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs&project-name=nile-todo&repository-name=nile-todo&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22niledb%22%2C%22productSlug%22%3A%22niledb%22%7D%5D)
 If you want more detailed documentation about the integration, you can find it in our [docs](https://www.thenile.dev/docs/partners/vercel).
-
