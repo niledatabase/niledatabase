@@ -9,11 +9,13 @@
     "introspect": "drizzle-kit introspect --config=./drizzle.config.ts",
     "migrate": "node --loader ts-node/esm src/db/migrate.ts",
     "start": "node --loader ts-node/esm src/app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "hono": "^4.6.13",
     "dotenv": "^16.3.1",
     "drizzle-orm": "latest",
     "express": "^4.18.2",
@@ -24,7 +26,8 @@
     "postgres": "^3.4.1"
   },
   "devDependencies": {
-    "@flydotio/dockerfile": "^0.4.10",
+    "@cloudflare/workers-types": "^4.20241112.0",
+    "wrangler": "^3.88.0",
     "@types/express": "^4.17.20",
     "@types/pg": "^8.10.7",
     "drizzle-kit": "latest",
