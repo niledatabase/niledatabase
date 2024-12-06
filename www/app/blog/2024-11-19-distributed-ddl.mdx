@@ -287,12 +287,12 @@ There is a special case for database failure, which is the case where the databa
 
 ### Recovering from coordinator failure
 
-If the coordinator itself fails, the first priority is to reconstruct its in-memory state so it can resume managing ongoing transactions and complete them. The coordinator first uses the latest state from the status tables in the metadata database, then checks the state of individual databases. For each transaction, a database can have it in one of three states: committed, prepared or non-existant. This leads to the following scenarios:
+If the coordinator itself fails, the first priority is to reconstruct its in-memory state so it can resume managing ongoing transactions and complete them. The coordinator first uses the latest state from the status tables in the metadata database, then checks the state of individual databases. For each transaction, a database can have it in one of three states: committed, prepared or nonexistent. This leads to the following scenarios:
 
 - **Transaction is in a committed state in all databases:** In this case, the coordinator will update the in-memory state and the status tables in the metadata database to reflect the committed status.
 - **Transaction is in prepared state in some databases and committed in others:** This indicates that the commit vote was successful, but `COMMIT PREPARED` wasn't fully distributed. The coordinator will distribute `COMMIT PREPARED` to the databases still in prepared state and complete the transaction.
-- **Transaction is in prepared state in some databases and nonexistant in others:** This indicates a failed vote. Databases where the transaction does not exist have already rolled back the transaction. The coordinator will distribute `ROLLBACK PREPARED` to the remaining databases.
-- **Transaction is in committed state in some databases and nonexistant in others:** This should never ever happen. If some databases committed, it indicates a unanimous vote to commit, yet databases without the transaction voted "no" and rolled back. This inconsistency is theoretically impossible. After months of intensive testing and production use, we have never encountered this situation.
+- **Transaction is in prepared state in some databases and nonexistent in others:** This indicates a failed vote. Databases where the transaction does not exist have already rolled back the transaction. The coordinator will distribute `ROLLBACK PREPARED` to the remaining databases.
+- **Transaction is in committed state in some databases and nonexistent in others:** This should never ever happen. If some databases committed, it indicates a unanimous vote to commit, yet databases without the transaction voted "no" and rolled back. This inconsistency is theoretically impossible. After months of intensive testing and production use, we have never encountered this situation.
 
 And that's it—our distributed DDL system can now handle any failure scenario. You might be curious about how we tested all of this, but that's a topic for another blog post.
 
