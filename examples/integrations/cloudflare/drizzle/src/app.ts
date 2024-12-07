@@ -118,9 +118,16 @@ app.post('/api/tenants/:tenantId/todos', async (c) => {
     }
     const tenantId = c.req.param('tenantId')
 
-    const similarTasks = await findSimilarTasks(tenantDB, title)
-    const estimate = await aiEstimate(title, similarTasks)
-    const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT)
+    let estimate: string | null = null;
+    let embedding: number[] | null = null;
+
+    if (process.env.AI_API_KEY) {
+      const similarTasks = await findSimilarTasks(tenantDB, title)
+      estimate = await aiEstimate(title, similarTasks)
+      embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT)
+    } else {
+      estimate = "can't estimate because AI is not configured"
+    }
 
     const newTodo = await tenantDB(async (tx) => {
       return await tx

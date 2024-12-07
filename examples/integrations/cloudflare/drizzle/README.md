@@ -74,7 +74,7 @@ Now you can use `curl` to explore the APIs. Here are a few examples:
 
 ```bash
 # create a tenant
-curl --location --request POST 'localhost:3001/api/tenants' \
+curl --location --request POST 'https://nile_drizzle_example.gwen-f91.workers.dev/api/tenants' \
 --header 'Content-Type: application/json' \
 --data-raw '{"name":"my first customer", "id":"108124a5-2e34-418a-9735-b93082e9fbf2"}'
 
@@ -83,17 +83,17 @@ curl  -X GET 'http://localhost:3001/api/tenants'
 
 # create a todo (don't forget to use a read tenant-id in the URL)
 curl  -X POST \
-  'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' \
+  'https://nile_drizzle_example.gwen-f91.workers.dev/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' \
   --header 'Content-Type: application/json' \
   --data-raw '{"title": "feed the cat", "complete": false}'
 
-# list todos for tenant (don't forget to use a read tenant-id in the URL)
+# list todos for tenant (don't forget to use a real tenant-id in the URL)
 curl  -X GET \
-  'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
+  'https://nile_drizzle_example.gwen-f91.workers.dev/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
 
 # list todos for all tenants
 curl  -X GET \
-  'http://localhost:3001/insecure/all_todos'
+  'https://nile_drizzle_example.gwen-f91.workers.dev/insecure/all_todos'
 ```
 
 ### 6. Browse data
