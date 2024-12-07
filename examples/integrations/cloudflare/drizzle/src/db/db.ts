@@ -1,7 +1,4 @@
-import { NodePgDatabase, drizzle } from "drizzle-orm/node-postgres";
-// using the standard node-postgres library. You can use it with "Pool" too
-import pkg from "pg";
-const { Client } = pkg;
+import { drizzle } from 'drizzle-orm/postgres-js';
 import dotenv from "dotenv";
 import { sql } from "drizzle-orm";
 import { PgTransaction } from "drizzle-orm/pg-core";
@@ -10,20 +7,12 @@ import { AsyncLocalStorage } from "async_hooks";
 dotenv.config();
 
 // You can get the connection string with credentials from the Nile console
-export const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-});
-
-// Drizzle expects the connection to be open when using a client. Alternatively, you can use a pool
-await client.connect();
+const db = drizzle("postgres://01939840-ef4a-76d9-b78c-b0489190388f:b63b043d-c81b-45b8-bade-35ea02ebc480@us-west-2.db.dev.thenile.dev/niledb_indigo_house");
 
 // check the connection
-const res = await client.query("SELECT $1::text as message", [
-  "Client connected to Nile",
-]);
-console.log(res.rows[0].message);
+// const res = await db.execute("SELECT 'Client connected to Nile' as message");
+// console.log(res[0].message);
 
-export const db = drizzle(client, { logger: true });
 export const tenantContext = new AsyncLocalStorage<string | undefined>();
 
 export function tenantDB<T>(cb: (tx: any) => T | Promise<T>): Promise<T> {
