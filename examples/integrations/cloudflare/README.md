@@ -2,9 +2,8 @@
 
 This example shows how to use Nile with Drizzle ORM for an AI-native multi-tenant todo list application.
 
-- [Video guide](https://youtu.be/Qx0_99qebjo?feature=shared)
-- [Live demo](https://nile-drizzle-quickstart.vercel.app)
-- [Step by step guide](https://thenile.dev/docs/getting-started/languages/drizzle)
+- [Video guide](TBD)
+- [Step by step guide](TBD)
 
 ## Getting Started
 
@@ -35,10 +34,6 @@ If all went well, you'll see the new table in the panel on the left hand side of
 In the left-hand menu, click on "Settings" and then select "Connection".
 
 Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
-
-### 4. 3rd party credentials
-
-This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
 
 ### 5. Setting the environment
 
