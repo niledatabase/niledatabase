@@ -5,10 +5,6 @@ compatibility_flags = [ "nodejs_compat", "no_handle_cross_request_promise_resolu
 
 assets = { directory = "public" }
 
-
-[observability.logs]
-enabled = true
-
 [vars]
 # uncomment if you don't use hyperdrive, and note that you need to update the env variable in src/db/db.ts
 # DATABASE_URL = "postgres://user:password@us-west-2.db.thenile.dev/mydb"
