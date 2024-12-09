@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241112.0",
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.20",
     "drizzle-kit": "latest",
     "ts-node": "^10.9.1",

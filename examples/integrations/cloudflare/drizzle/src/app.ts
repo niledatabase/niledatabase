@@ -1,11 +1,9 @@
 import { Hono } from 'hono'
 import { basicAuth } from 'hono/basic-auth'
-import { tenantDB, tenantContext, db } from "./db/db"
+import { tenantDB, tenantContext} from "./db/db"
 import {
   tenants as tenantSchema,
   todos as todoSchema,
-  users as usersSchema,
-  tenant_users,
 } from "./db/schema"
 import {
   findSimilarTasks,
@@ -14,9 +12,6 @@ import {
   aiEstimate,
 } from "./AiUtils"
 import { eq } from "drizzle-orm"
-
-const PORT = process.env.PORT || 3001
-const REQUIRE_AUTH = process.env.REQUIRE_AUTH || false
 
 const app = new Hono()
 
@@ -32,27 +27,6 @@ app.use('/api/tenants/:tenantId/*', async (c, next) => {
   return tenantContext.run(tenantId, () => next())
 })
 
-// Basic auth middleware
-/*if (REQUIRE_AUTH) {
-  console.log("adding basic auth middleware")
-  app.use('/api/*', async (c, next) => {
-    const auth = basicAuth({
-      async username(username, password) {
-        if (!REQUIRE_AUTH) return true
-        
-        const users = await tenantDB(async (tx) => {
-          return await tx
-            .select()
-            .from(usersSchema)
-            .where(eq(usersSchema.id, username))
-        })
-        return users.length > 0
-      },
-    })
-    return auth(c, next)
-  })
-}*/
-
 // Routes
 app.post('/api/tenants', async (c) => {
   try {
@@ -61,23 +35,14 @@ app.post('/api/tenants', async (c) => {
     
     let tenants
     if (id) {
-      tenants = await tenantDB(async (tx) => {
+      tenants = await tenantDB(c, async (tx) => {
         return await tx.insert(tenantSchema).values({ name, id }).returning()
       })
     } else {
-      tenants = await tenantDB(async (tx) => {
+      tenants = await tenantDB(c, async (tx) => {
         return await tx.insert(tenantSchema).values({ name }).returning()
       })
     }
-
-    /*if (REQUIRE_AUTH) {
-      const auth = c.get('username') // Hono stores auth username here
-      await tenantDB(async (tx) => {
-        return await tx
-          .insert(tenant_users)
-          .values({ tenant_id: tenants[0].id, user_id: auth })
-      })
-    }*/
 
     return c.json(tenants)
   } catch (error: any) {
@@ -88,21 +53,9 @@ app.post('/api/tenants', async (c) => {
 
 app.get('/api/tenants', async (c) => {
   try {
-    let tenants
-    /*if (REQUIRE_AUTH) {
-      const auth = c.get('username')
-      tenants = await tenantDB(async (tx) => {
-        return db
-          .select()
-          .from(tenantSchema)
-          .innerJoin(tenant_users, eq(tenantSchema.id, tenant_users.tenant_id))
-          .where(eq(tenant_users.user_id, auth))
-      })
-    } else {*/
-      tenants = await tenantDB(async (tx) => {
+    let tenants = await tenantDB(c, async (tx) => {
         return await tx.select().from(tenantSchema)
       })
-    // }
     return c.json(tenants)
   } catch (error: any) {
     console.log("error listing tenants: " + error.message)
@@ -122,14 +75,14 @@ app.post('/api/tenants/:tenantId/todos', async (c) => {
     let embedding: number[] | null = null;
 
     if (process.env.AI_API_KEY) {
-      const similarTasks = await findSimilarTasks(tenantDB, title)
+      const similarTasks = await findSimilarTasks(tenantDB, c, title)
       estimate = await aiEstimate(title, similarTasks)
       embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT)
     } else {
       estimate = "can't estimate because AI is not configured"
     }
 
-    const newTodo = await tenantDB(async (tx) => {
+    const newTodo = await tenantDB(c, async (tx) => {
       return await tx
         .insert(todoSchema)
         .values({ tenantId, title, complete, estimate, embedding })
@@ -146,7 +99,7 @@ app.post('/api/tenants/:tenantId/todos', async (c) => {
 app.put('/api/tenants/:tenantId/todos', async (c) => {
   try {
     const { id, complete } = await c.req.json()
-    await tenantDB(async (tx) => {
+    await tenantDB(c, async (tx) => {
       return await tx
         .update(todoSchema)
         .set({ complete })
@@ -161,7 +114,7 @@ app.put('/api/tenants/:tenantId/todos', async (c) => {
 
 app.get('/api/tenants/:tenantId/todos', async (c) => {
   try {
-    const todos = await tenantDB(async (tx) => {
+    const todos = await tenantDB(c, async (tx) => {
       return await tx
         .select({
           id: todoSchema.id,
@@ -181,7 +134,7 @@ app.get('/api/tenants/:tenantId/todos', async (c) => {
 app.get('/insecure/all_todos', async (c) => {
   try {
     console.log("getting all todos")
-    const todos = await tenantDB(async (tx) => {
+    const todos = await tenantDB(c, async (tx) => {
       return await tx
         .select({
           id: todoSchema.id,

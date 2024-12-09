@@ -9,6 +9,7 @@ import {
   varchar,
   boolean,
   vector,
+  jsonb,
 } from "drizzle-orm/pg-core";
 
 export const usersSchema = pgSchema("users");
@@ -53,3 +54,12 @@ export const tenant_users = usersSchema.table("tenant_users", {
   tenant_id: uuid("tenant_id"),
   user_id: uuid("user_id"),
 });
+
+export const credentials = pgTable('credentials', {
+  userId: uuid('user_id').references(() => users.id),
+  method: text('method').notNull(),
+  payload: jsonb('payload').notNull(),
+});
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
