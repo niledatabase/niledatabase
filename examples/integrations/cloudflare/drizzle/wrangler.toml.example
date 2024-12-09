@@ -10,7 +10,13 @@ assets = { directory = "public" }
 enabled = true
 
 [vars]
-DATABASE_URL = "postgres://01939840-ef4a-76d9-b78c-b0489190388f:b63b043d-c81b-45b8-bade-35ea02ebc480@us-west-2.db.dev.thenile.dev/niledb_indigo_house"
+# uncomment if you don't use hyperdrive, and note that you need to update the env variable in src/db/db.ts
+# DATABASE_URL = "postgres://user:password@us-west-2.db.thenile.dev/mydb"
+
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+localConnectionString = "postgres://user:password@us-west-2.db.thenile.dev/mydb"
 
 # [[kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
