@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Directions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/index.js"></script>
+    <style>
+        .stack {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding: 1rem;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+        #intro {
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 1.125rem;
+            line-height: 1.5;
+            max-width: 65ch;
+            color: #374151;
+            padding: 2.5rem 3rem;
+            background-color: #e3effb;
+            border: 1px solid #e0e0e0;
+            border-radius: 0.5rem;
+            margin: 0 auto;
+            white-space: normal;
+            text-align: left;
+        }
+        .card-container {
+          display: flex;
+          flex-direction: row;
+          gap: 6rem;
+          padding: 1rem;
+          justify-content: center;
+        }
+  
+        .card {
+          border: 1px solid #e0e0e0;
+          background-color: #e3effb;
+          border-radius: 0.5rem;
+          padding: 1rem;
+          transition: all 0.2s ease;
+        }
+  
+        .card:hover {
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          border-color: #bdbdbd;
+        }
+  
+        .card-link {
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: black;
+        }
+  
+        .card-title {
+          font-size: 18px;
+        }
+  
+        .card-content {
+          margin-top: 1rem;
+          font-family: system-ui, -apple-system, sans-serif;
+        }
+    </style>
+</head>
+<body>
+  <div style="display: flex; flex-direction: column; width: 100%; background-color: #e7e7e7; padding: 0; margin: 0;">
+    <div class="description" style="margin: 0 auto; width: 100%; display: flex; justify-content: space-between; align-items: center;">
+      <div style="align-items: center; display: flex; padding-left: 1rem;">
+        <img
+          src="./cf_logo.svg"
+          alt="Cloudflare Logo"
+          class="logo"
+          width="120"
+          height="60"
+        />
+      </div>
+      <h2 style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700;">Yet Another Todo Application</h2>
+      <div style="align-items: center; display: flex; padding-right: 1rem;">
+        <a
+          href="https://thenile.dev"
+          target="_blank"
+          style="font-family: system-ui, -apple-system, sans-serif; text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;"
+        >
+          Created by
+          <img
+            src="./nile_logo.svg"
+            alt="Nile Logo"
+            class="logo"
+            height="24"
+            width="100"
+          />
+        </a>
+      </div>
+    </div>
+  </div>
+  <div></div>
+    <div class="stack">
+        <div id="intro"></div>
+        <pre><code class="language-bash" id="commands"></code></pre>
+    </div>
+
+    <script type="module">
+        import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
+        
+        const backendServer = window.location.origin;
+        
+        // Generate UUIDs
+        const tenantID = uuidv4();
+        const tenant2ID = uuidv4();
+
+        // Set intro text
+        const introText = `This demo shows a backend service for a Todo List application.
+You can experiment with it by running the following commands in your terminal:`;
+        document.getElementById('intro').textContent = introText;
+
+        // Set commands
+        const codeString = `
+  # Create a tenant:
+  curl --location --request POST '${backendServer}/api/tenants' \\
+  --header 'Content-Type: application/json' \\
+  --data-raw '{"id":"${tenantID}", "name":"my first customer"}'
+
+  # Create a todo item:
+  curl -X POST '${backendServer}/api/tenants/${tenantID}/todos' \\
+  --header 'Content-Type: application/json' \\
+  --data-raw '{"title": "feed the cat", "complete": false}'
+
+  # Create a second tenant and a todo item for that tenant:
+  curl --location --request POST '${backendServer}/api/tenants' \\
+  --header 'Content-Type: application/json' \\
+  --data-raw '{"id":"${tenant2ID}", "name":"a different customer"}'
+
+  curl -X POST '${backendServer}/api/tenants/${tenant2ID}/todos' \\
+  --header 'Content-Type: application/json' \\
+  --data-raw '{"title": "take out the trash", "complete": false}'
+
+  # List all todos for the first tenant:
+  # This endpoint uses Nile's tenant isolation feature to only show todos to the tenant in the URL path.
+  curl -X GET '${backendServer}/api/tenants/${tenantID}/todos'
+
+  # List your tenants:
+  curl -X GET '${backendServer}/api/tenants'
+
+  # This endpoint will show you all todos for all tenants
+  # For demo purposes, we excluded it from the tenant isolation.
+  curl -X GET '${backendServer}/insecure/all_todos'`;
+
+        document.getElementById('commands').textContent = codeString;
+        
+        // Initialize syntax highlighting
+        hljs.highlightAll();
+    </script>
+    <div class="card-container">
+      <div class="card">
+        <a href="https://www.thenile.dev/docs/getting-started/languages/drizzle" target="_blank" rel="noopener" class="card-link">
+          <img src="/cf_logo.svg" alt="Drizzle Logo" width="120" height="60" class="logo">
+        </a>
+        <div class="card-content">Getting started guide</div>
+      </div>
+
+      <div class="card">
+        <a href="https://thenile.dev" target="_blank" rel="noopener" class="card-link">
+          <img src="/nile_logo.svg" alt="Nile Logo" height="60" width="120" class="logo">
+        </a>
+        <div class="card-content">Sign up to Nile</div>
+      </div>
+
+      <div class="card">
+        <a href="https://www.thenile.dev/templates" target="_blank" rel="noopener" class="card-link">
+          <img src="/nile_logo.svg" alt="Nile Logo" height="60" width="120" class="logo">
+        </a>
+        <div class="card-content">Try additional templates</div>
+      </div>
+    </div>
+</body>
+</html>
