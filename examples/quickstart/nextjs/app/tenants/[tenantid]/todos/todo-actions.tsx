@@ -38,8 +38,9 @@ export async function addTodo(
   let timeToFindSimilarTasks = 0;
   let timeToAiEstimate = 0;
   let embedding = null;
-  let estimate: string | null  = "Can't generate estimate because AI is not configured"
-  
+  let estimate: string | null =
+    "Can't generate estimate because AI is not configured";
+
   try {
     // if AI is configured, we generate embeddings and estimate for the task
     if (process.env.AI_API_KEY) {
@@ -59,11 +60,7 @@ export async function addTodo(
       timeToFindSimilarTasks = endTime - startTime;
       // for each todo, we want to try and generate an AI estimate.
       startTime = performance.now();
-      estimate = await aiEstimate(
-        tenantNile,
-        title.toString(),
-        similarTasks
-      );
+      estimate = await aiEstimate(tenantNile, title.toString(), similarTasks);
       endTime = performance.now();
       timeToAiEstimate = endTime - startTime;
     }

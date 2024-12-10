@@ -55,10 +55,10 @@ export const tenant_users = usersSchema.table("tenant_users", {
   user_id: uuid("user_id"),
 });
 
-export const credentials = pgTable('credentials', {
-  userId: uuid('user_id').references(() => users.id),
-  method: text('method').notNull(),
-  payload: jsonb('payload').notNull(),
+export const credentials = pgTable("credentials", {
+  userId: uuid("user_id").references(() => users.id),
+  method: text("method").notNull(),
+  payload: jsonb("payload").notNull(),
 });
 
 export type User = typeof users.$inferSelect;

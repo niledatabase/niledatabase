@@ -90,7 +90,7 @@ To run the app locally:
 npm run dev
 ```
 
-It will start a local dev worker and suggest clicking `b` to open the app. Click `b` or just point your browser to `http://localhost:8787` and you'll see a welcome page with some `curl` commands - these allow you to interact with the worker you just deployed - create tenants, create tasks, list tasks, etc. 
+It will start a local dev worker and suggest clicking `b` to open the app. Click `b` or just point your browser to `http://localhost:8787` and you'll see a welcome page with some `curl` commands - these allow you to interact with the worker you just deployed - create tenants, create tasks, list tasks, etc.
 
 To deploy the app to Cloudflare:
 
