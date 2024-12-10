@@ -190,6 +190,21 @@ export const SalesInsights: Template = {
   },
 };
 
+export const BetterAuth: Template = {
+  name: "Better Auth with Nile",
+  description:
+    "Better-auth plugin for Nile by Aris. Including Email & Password. Organization | Teams. Passkeys. Multi Factor. Password Reset. Email Verification. Roles & Permissions. Rate Limiting. Session Management.",
+  author: "Aris",
+  demoUrl: "https://better-auth-nile.vercel.app/",
+  imageSrc: "/templates/BetterAuth.png",
+  readmeUrl: "https://github.com/aris-2/better-auth-nile/blob/main/README.md",
+  metadata: {
+    Framework: "BetterAuth, Nile, ",
+    "Use Case": "AI SaaS",
+    Publisher: "Aris",
+  },
+};
+
 /*
 export const placeholderTemplate: Template = {
   // A great name, preferably unique, name for the template
