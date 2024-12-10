@@ -3,11 +3,11 @@ export const metadata = {
   authors: ["gwenshap"],
   image: "2024-12-09-nile-cloudflare/cover.png",
   sizzle:
-    "Use Nile databases with Cloudflare Workers and Hyperdrive for hyper-fast experience - globally",
+    "Use Nile databases with Cloudflare Workers and Hyperdrive for hyper-fast experience - globally.",
   tags: ["database", "serverless", "postgres", "cloudflare", "B2B"],
 };
 
-We are excited to announce Nile's integration with [Cloudflare Workers](https://workers.cloudflare.com/) and [Cloudflare Hyperdrive](https://developers.cloudflare.com/hyperdrive/). 
+We are excited to announce Nile's integration with [Cloudflare Workers](https://workers.cloudflare.com/) and [Cloudflare Hyperdrive](https://developers.cloudflare.com/hyperdrive/).
 
 **Cloudflare Workers** enables you to deploy serverless functions or even entire application backends globally, drastically reducing latency between your application and users for a smoother experience. Meanwhile, **Cloudflare Hyperdrive** acts as a caching proxy, accelerating database access for Cloudflare Workers to deliver exceptional speed and performance.
 
@@ -15,40 +15,44 @@ With this integration, you can build B2B applications and effortlessly deploy th
 
 ## Why use Nile database with Cloudflare?
 
-* **Global Scale**  
-Deploy your B2B applications worldwide using Cloudflare Workers, while Nile ensures tenant isolation, auth-scaling and tenant insights.
+- **Global Scale**  
+  Deploy your B2B applications worldwide using Cloudflare Workers, while Nile ensures tenant isolation, auth-scaling and tenant insights.
 
-* **Accelerated Performance**  
-Leverage Cloudflare Hyperdrive to accelerate database queries, making interactions lightning-fast for your users.
+- **Accelerated Performance**  
+  Leverage Cloudflare Hyperdrive to accelerate database queries, making interactions lightning-fast for your users.
 
-* **Multi-Tenant Isolation**  
-Nile's tenant-aware architecture ensures that your customers' data is securely isolated, enabling you to build scalable and compliant apps effortlessly.
+- **Multi-Tenant Isolation**  
+  Nile's tenant-aware architecture ensures that your customers' data is securely isolated, enabling you to build scalable and compliant apps effortlessly.
 
-* **Simplified Deployment**  
-Combine Nile's serverless Postgres with Cloudflare's edge network to streamline the deployment of modern B2B applications with less operational overhead.
+- **Simplified Deployment**  
+  Combine Nile's serverless Postgres with Cloudflare's edge network to streamline the deployment of modern B2B applications with less operational overhead.
 
-* **Optimized for AI Workloads**  
-Build AI-driven, multi-tenant applications with Nile and deploy them globally with Cloudflare. This architecture will minimize latency while easily scaling to millions of embeddings.
+- **Optimized for AI Workloads**  
+  Build AI-driven, multi-tenant applications with Nile and deploy them globally with Cloudflare. This architecture will minimize latency while easily scaling to millions of embeddings.
 
 ## Using Nile and Cloudflare together
 
 **1. Create a database**  
-[Login to Nile](https://console.thenile.dev), create a database, create the tables you need and grab a connection string with credentials. 
+[Login to Nile](https://console.thenile.dev), create a database, create the tables you need and grab a connection string with credentials.
 
 **2. Create or clone a serverless app**  
 It is easy to start with an existing [example](https://github.com/niledatabase/niledatabase/tree/main/examples/integrations/cloudflare):
+
 ```bash
 git clone https://github.com/niledatabase/niledatabase
 cd niledatabase/examples/integrations/cloudflare/
 ```
+
 This example uses Hono, a lightweight web framework, and Drizzle, a lightweight ORM, to build a multi-tenant todo list app.
 
 **3. Create Hyperdrive configuration**  
-Configure Cloudflare Hyperdrive with the connection string you got from Nile:  
+Configure Cloudflare Hyperdrive with the connection string you got from Nile:
+
 ```bash
 npx wrangler hyperdrive create your_config_name \
 --connection-string="postgres://..."
-```  
+```
+
 Update `wrangler.toml` with the Hyperdrive ID that the command above returned.
 
 **4. Deploy**  
@@ -59,6 +63,3 @@ Thats it! You now have a globally accelerated multi-tenant application.
 ## Next steps
 
 Create [Nile](https://console.thenile.dev) and [Cloudflare](https://www.cloudflare.com/) accounts and start shipping. You can read more about the integration in [Cloudflare's documentation](https://developers.cloudflare.com/hyperdrive/examples/nile/).
-
-
-
