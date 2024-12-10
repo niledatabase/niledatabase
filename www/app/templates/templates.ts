@@ -197,8 +197,7 @@ export const BetterAuth: Template = {
   author: "Aris",
   demoUrl: "https://better-auth-nile.vercel.app/",
   imageSrc: "/templates/BetterAuth.png",
-  readmeUrl:
-    "https://github.com/aris-2/better-auth-nile/blob/main/README.md",
+  readmeUrl: "https://github.com/aris-2/better-auth-nile/blob/main/README.md",
   metadata: {
     Framework: "BetterAuth, Nile, ",
     "Use Case": "AI SaaS",
