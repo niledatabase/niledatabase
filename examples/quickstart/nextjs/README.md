@@ -8,7 +8,7 @@ This template shows how to use Nile with NextJS 13 for a multi-tenant AI-native 
 
 ## Deploy your own
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs&project-name=nile-todo&repository-name=nile-todo&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22niledb%22%2C%22productSlug%22%3A%22niledb%22%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs&project-name=nile-todo&repository-name=nile-todo&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22nile%22%2C%22productSlug%22%3A%22nile%22%7D%5D)
 
 ## Getting Started
 
