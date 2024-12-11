@@ -7,7 +7,7 @@ export const metadata = {
   tags: ["database", "serverless", "postgres", "cloudflare", "B2B"],
 };
 
-If you are building B2B apps, you know the first rule of multi-tenancy: "Thou shall never leak data between tenants". Implementing this requires not just tenant isolation, but also identity management, authentication and authorization features. It's one of those things that's critical to get right but isn't exactly fun to build from scratch. 
+If you are building B2B apps, you know the first rule of multi-tenancy: "Thou shall never leak data between tenants". Implementing this requires not just tenant isolation, but also identity management, authentication and authorization features. It's one of those things that's critical to get right but isn't exactly fun to build from scratch.
 
 That's why I'm excited to share this new integration between Better Auth and Nile - it solves a bunch of headaches we've all faced. The other reason I'm excited to share this integration is that it was contributed by [Ricardo Lujan (AKA Aris)](https://bento.me/ricardolujan) - a member of Nile community. ![Landing page of the plugin's example app](/blog/2024-12-10-better-auth-nile/BetterAuthLanding.png)
 
@@ -18,7 +18,7 @@ Better Auth is like the Swiss Army knife of authentication and authorization. It
 - **Database-centric**: Better-Auth assumes that you'll want to store user information in your main app database.
 - **Multi-tenant support**: Better-Auth provides methods for managing users as members of organizations.
 
-These are a natural fit with Nile because when you store these users in a Nile database and the organizations as Nile tenants, the database will automaticaly enforce access and isolate the data for each organization so you don't have to worry about things like cross-tenant leaks. This, in addition to other Nile features like tenant insights or placing tenants on dedicated or shared compute anywhere in the world. 
+These are a natural fit with Nile because when you store these users in a Nile database and the organizations as Nile tenants, the database will automaticaly enforce access and isolate the data for each organization so you don't have to worry about things like cross-tenant leaks. This, in addition to other Nile features like tenant insights or placing tenants on dedicated or shared compute anywhere in the world.
 
 This sounds great in theory. And it is now also great in practice.
 
@@ -48,16 +48,3 @@ These tweaks aren't just technical details — they make the whole system feel s
 ## Try It Out
 
 Check out the [plugin's README](https://github.com/aris-2/better-auth-nile) for all the details, and don't miss the [example app](https://better-auth-nile.vercel.app/) where you can explore how organizations in Better Auth translate into tenants in Nile. You'll see firsthand how these two tools play nicely together - with tenant isolation, tenant management and accout management.
-
-
-
-
-
-
-
-
-
-
-
-
-
