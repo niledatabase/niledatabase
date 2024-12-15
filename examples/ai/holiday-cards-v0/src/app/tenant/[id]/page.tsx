@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,7 +16,6 @@ interface TeamMember {
 }
 
 export default function TenantPage({ params }: { params: Promise<{ id: string }> }) {
-  const router = useRouter();
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [newMember, setNewMember] = useState({ name: '', email: '', description: '' });
   const { id } = use(params);

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../../../../auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { teamMembers } from '@/lib/schema';
 import OpenAI from 'openai';
@@ -10,16 +10,19 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export async function POST(request: Request, { params }: { params: { id: string, memberId: string } }) {
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ tenantId: string; memberId: string }> }
+) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-
+  const { tenantId, memberId } = await params;
   const member = await db.query.teamMembers.findFirst({
     where: (teamMembers, { eq, and }) => and(
-      eq(teamMembers.id, params.memberId),
-      eq(teamMembers.tenantId, params.id)
+      eq(teamMembers.id, memberId),
+      eq(teamMembers.tenantId, tenantId)
     ),
   });
 
@@ -58,8 +61,8 @@ export async function POST(request: Request, { params }: { params: { id: string,
     .set({ holidayWishes, imageUrl })
     .where(
       and(
-        eq(teamMembers.id, params.memberId),
-        eq(teamMembers.tenantId, params.id)
+        eq(teamMembers.id, memberId),
+        eq(teamMembers.tenantId, tenantId)
       )
     );
 

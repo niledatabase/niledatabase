@@ -55,7 +55,7 @@ export default function LoginPage() {
           </form>
         </CardContent>
         <CardFooter className="text-center">
-          <p className="text-sm text-gray-600">Don't have an account? <a href="/register" className="text-blue-600 hover:underline">Register</a></p>
+          <p className="text-sm text-gray-600">Don&apos;t have an account? <a href="/register" className="text-blue-600 hover:underline">Register</a></p>
         </CardFooter>
       </Card>
     </div>

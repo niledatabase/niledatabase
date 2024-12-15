@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { tenants, userTenants } from '@/lib/schema';
 import { sql } from 'drizzle-orm';
@@ -36,9 +36,7 @@ export async function POST(request: Request) {
   const result = await db.execute(
     sql`INSERT INTO tenants (name) VALUES (${name}) RETURNING *`
   );
-  console.log('Result:', result);
-  const newTenant = (result.rows as any)[0] as typeof tenants.$inferSelect;
-  console.log('New tenant:', newTenant);
+  const newTenant = result.rows[0] as typeof tenants.$inferSelect;
   await db.insert(userTenants).values({
     userId: session.user.id,
     tenantId: newTenant.id,
