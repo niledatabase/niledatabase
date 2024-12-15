@@ -12,13 +12,14 @@ const openai = new OpenAI({
 
 export async function POST(
   request: Request,
-  { params }: { params: Promise<{ tenantId: string; memberId: string }> }
+  { params }: { params: Promise<{ id: string; memberId: string }> }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  const { tenantId, memberId } = await params;
+  const tenantId = (await params).id;
+  const memberId = (await params).memberId;
   const member = await db.query.teamMembers.findFirst({
     where: (teamMembers, { eq, and }) => and(
       eq(teamMembers.id, memberId),
