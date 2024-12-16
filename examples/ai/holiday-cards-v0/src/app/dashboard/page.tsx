@@ -61,7 +61,7 @@ export default function DashboardPage() {
           <CardTitle className="text-2xl font-bold text-center text-red-600">Welcome, {session?.user?.name}!</CardTitle>
         </CardHeader>
         <CardContent>
-          <h2 className="text-xl font-semibold mb-4">Your Tenants</h2>
+          <h2 className="text-xl font-semibold mb-4">Your Teams</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             {tenants.map((tenant) => (
               <Button
@@ -76,12 +76,12 @@ export default function DashboardPage() {
           <form onSubmit={createTenant} className="flex gap-2">
             <Input
               type="text"
-              placeholder="New Tenant Name"
+              placeholder="New Team Name"
               value={newTenantName}
               onChange={(e) => setNewTenantName(e.target.value)}
               required
             />
-            <Button type="submit" className="bg-red-600 hover:bg-red-700">Create Tenant</Button>
+            <Button type="submit" className="bg-red-600 hover:bg-red-700">Create Team</Button>
           </form>
         </CardContent>
       </Card>

@@ -34,7 +34,10 @@ export default function LoginPage() {
           <CardTitle className="text-2xl font-bold text-center text-red-600">Holiday Wishes App</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="flex justify-center items-center" style={{ marginBottom: '1rem' }}>
+          <p className="text-sm text-gray-600"></p>
+        </div> 
+          <form onSubmit={handleSubmit} className="space-y-6">
             <Input
               type="email"
               placeholder="Email"
@@ -55,7 +58,9 @@ export default function LoginPage() {
           </form>
         </CardContent>
         <CardFooter className="text-center">
-          <p className="text-sm text-gray-600">Don&apos;t have an account? <a href="/register" className="text-blue-600 hover:underline">Register</a></p>
+          <p className="text-sm text-gray-600">Don&apos;t have an account? <a href="/register" className="text-blue-600 hover:underline">Register</a>
+          <br/><br/>Or skip registration and just login with <span className="font-bold text-green-600">demo@demo.com</span> and password <span className="font-bold text-green-600">demo</span>
+          </p>
         </CardFooter>
       </Card>
     </div>
