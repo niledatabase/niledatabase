@@ -33,7 +33,6 @@ export default function LandingPage() {
           <p className="text-sm text-gray-600">You can skip registration and just login with <span className="font-bold text-green-600">demo@demo.com</span> and password <span className="font-bold text-green-600">demo</span></p>
           </div> 
           <div className="flex justify-center space-x-4">
-
             <Button asChild className="bg-red-600 hover:bg-red-700">
               <Link href="/login">Login</Link>
             </Button>
