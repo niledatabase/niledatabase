@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 
 export function AuthButtons() {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
 
   return (
     <div className="space-x-4">

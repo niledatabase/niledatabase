@@ -19,6 +19,6 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    return new NextResponse('Failed to fetch image', { status: 500 });
+    return new NextResponse('Failed to fetch image ' + error, { status: 500 });
   }
 }
