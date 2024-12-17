@@ -4,7 +4,8 @@ import { useState, useEffect, use } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { useToast } from "@/hooks/use-toast"
 
 interface TeamMember {
   id: number;
@@ -16,9 +17,11 @@ interface TeamMember {
 }
 
 export default function TenantPage({ params }: { params: Promise<{ id: string }> }) {
+  const { toast } = useToast()
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [newMember, setNewMember] = useState({ name: '', email: '', description: '' });
   const { id } = use(params);
+  const [generatingFor, setGeneratingFor] = useState<number | null>(null);
 
   useEffect(() => {
     fetchTeamMembers();
@@ -44,11 +47,52 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
   };
 
   const generateHolidayWishes = async (memberId: number) => {
-    const response = await fetch(`/api/tenants/${id}/members/${memberId}/generate`, {
-      method: 'POST',
-    });
-    if (response.ok) {
-      fetchTeamMembers();
+    setGeneratingFor(memberId);
+    try {
+      const response = await fetch(`/api/tenants/${id}/members/${memberId}/generate`, {
+        method: 'POST',
+      });
+      if (response.ok) {
+        fetchTeamMembers();
+      }
+    } finally {
+      setGeneratingFor(null);
+    }
+  };
+
+  const copyToClipboard = async (member: TeamMember) => {
+    try {
+      if (member.imageUrl) {
+        // Proxy the image request through our backend to avoid CORS issues
+        const response = await fetch(`/api/proxy-image?url=${encodeURIComponent(member.imageUrl)}`);
+        const blob = await response.blob();
+        
+        // Create clipboard items for both text and image
+        const clipboardItems = [
+          new ClipboardItem({
+            'text/plain': new Blob([member.holidayWishes || ''], { type: 'text/plain' }),
+            'image/png': blob
+          })
+        ];
+        
+        await navigator.clipboard.write(clipboardItems);
+      } else {
+        await navigator.clipboard.writeText(member.holidayWishes || '');
+      }
+      
+      toast({
+        title: "Copied!",
+        description: "Holiday wishes copied to clipboard. You can paste it into an email or message.",
+        duration: 4000,
+      });
+    } catch (err) {
+      console.error('Failed to copy:', err);
+      toast({
+        title: "Error",
+        description: "Failed to copy to clipboard",
+        variant: "destructive",
+        duration: 2000,
+      });
     }
   };
 
@@ -56,7 +100,9 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
     <div className="min-h-screen bg-gradient-to-r from-red-100 to-green-100 p-8">
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-red-600">Team Members</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-red-600">Holiday Cards for the Team</CardTitle>
+          <CardDescription className="text-xl text-center text-gray-600">Enter team member info and generate beautiful greetings powered by AI</CardDescription>
+          <CardDescription className="text-md text-center text-gray-600">Member description is optional, but it helps the AI generate a more personalized message.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={addTeamMember} className="mb-6 space-y-4">
@@ -67,13 +113,14 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
               onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
               required
             />
+            {/* No email support at this time
             <Input
               type="email"
               placeholder="Email"
               value={newMember.email}
               onChange={(e) => setNewMember({ ...newMember, email: e.target.value })}
               required
-            />
+            /> */}
             <Textarea
               placeholder="Short description"
               value={newMember.description}
@@ -86,16 +133,33 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
             {teamMembers.map((member) => (
               <Card key={member.id} className="p-4 bg-white shadow-md">
                 <h3 className="text-lg font-semibold mb-2">{member.name}</h3>
-                <p className="text-sm text-gray-600 mb-2">{member.email}</p>
-                <p className="text-sm mb-4">{member.description}</p>
+                { member.holidayWishes ? 
+                                <Button
+                                onClick={() => copyToClipboard(member)}
+                                variant="outline"
+                                size="sm"
+                                className="ml-2 shrink-0"
+                              >
+                                📋 Copy to clipboard and send
+                        </Button> : <p/> 
+              }
                 {member.holidayWishes ? (
                   <div>
-                    <p className="text-sm italic mb-2">{member.holidayWishes}</p>
+                    <div className="flex justify-between items-start mb-2">
+                      <p className="text-sm italic">{member.holidayWishes}</p>
+                    </div>
                     {member.imageUrl && <img src={member.imageUrl} alt="Holiday Wish" className="w-full rounded-md" />}
                   </div>
                 ) : (
-                  <Button onClick={() => generateHolidayWishes(member.id)} className="w-full bg-red-600 hover:bg-red-700">
-                    Generate Holiday Wishes
+                  <Button 
+                    onClick={() => generateHolidayWishes(member.id)} 
+                    className="w-full bg-red-600 hover:bg-red-700"
+                    disabled={generatingFor === member.id}
+                  >
+                    {generatingFor === member.id ? 
+                      "Generating..." : 
+                      "Generate Holiday Wishes"
+                    }
                   </Button>
                 )}
               </Card>

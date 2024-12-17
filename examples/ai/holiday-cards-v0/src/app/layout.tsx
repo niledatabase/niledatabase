@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { AuthButtons } from '@/components/auth-buttons'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { Toaster } from "@/components/ui/toaster"
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -34,6 +35,7 @@ export default async function RootLayout({
           <main className="container mx-auto py-8">
             {children}
           </main>
+          <Toaster />
           <footer className="fixed bottom-0 w-full bg-white/80 backdrop-blur-sm p-4 shadow-md">
             <div className="container mx-auto flex items-center justify-center space-x-6">
               <div className="flex items-center space-x-2">
