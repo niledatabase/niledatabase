@@ -31,7 +31,7 @@ export const teamMembers = pgTable('team_members', {
   email: text('email').notNull(),
   description: text('description'),
   holidayWishes: text('holiday_wishes'),
-  imageUrl: text('image_url'),
+  imageData: text('image_url'),
   createdAt: timestamp('created_at').defaultNow(),
 }, (table) => ({
   pk: primaryKey({ columns: [table.id, table.tenantId] })

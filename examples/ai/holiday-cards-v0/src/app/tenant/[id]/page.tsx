@@ -63,19 +63,15 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
   const copyToClipboard = async (member: TeamMember) => {
     try {
       if (member.imageUrl) {
-        // Proxy the image request through our backend to avoid CORS issues
-        const response = await fetch(`/api/proxy-image?url=${encodeURIComponent(member.imageUrl)}`);
+        const response = await fetch(`/api/tenants/${id}/members/${member.id}/image`);
         const blob = await response.blob();
         
-        // Create clipboard items for both text and image
-        const clipboardItems = [
+        await navigator.clipboard.write([
           new ClipboardItem({
             'text/plain': new Blob([member.holidayWishes || ''], { type: 'text/plain' }),
             'image/png': blob
           })
-        ];
-        
-        await navigator.clipboard.write(clipboardItems);
+        ]);
       } else {
         await navigator.clipboard.writeText(member.holidayWishes || '');
       }
@@ -138,7 +134,7 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
                                 onClick={() => copyToClipboard(member)}
                                 variant="outline"
                                 size="sm"
-                                className="ml-2 shrink-0"
+                                className="mb-4 shrink-0"
                               >
                                 📋 Copy to clipboard and send
                         </Button> : <p/> 
@@ -148,7 +144,7 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
                     <div className="flex justify-between items-start mb-2">
                       <p className="text-sm italic">{member.holidayWishes}</p>
                     </div>
-                    {member.imageUrl && <img src={member.imageUrl} alt="Holiday Wish" className="w-full rounded-md" />}
+                    <img src={`/api/tenants/${id}/members/${member.id}/image`} alt="Holiday Wish" className="w-full rounded-md" />
                   </div>
                 ) : (
                   <Button 

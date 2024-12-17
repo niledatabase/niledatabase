@@ -55,18 +55,44 @@ export async function POST(
     size: "512x512",
   });
 
-  const imageUrl = image.data[0].url;
-
-  // Update member with holiday wishes and image URL
-  await db.update(teamMembers)
-    .set({ holidayWishes, imageUrl })
-    .where(
-      and(
-        eq(teamMembers.id, memberId),
-        eq(teamMembers.tenantId, tenantId)
-      )
+  if (!image.data?.[0]?.url) {
+    return NextResponse.json(
+      { error: 'Failed to generate image' },
+      { status: 500 }
     );
+  }
 
-  return NextResponse.json({ holidayWishes, imageUrl });
+  // Download the image and convert to base64
+  try {
+    const imageResponse = await fetch(image.data[0].url);
+    if (!imageResponse.ok) {
+      throw new Error(`Failed to fetch image: ${imageResponse.statusText}`);
+    }
+    
+    const imageBuffer = await imageResponse.arrayBuffer();
+    const base64Image = Buffer.from(imageBuffer).toString('base64');
+    const imageData = `data:image/png;base64,${base64Image}`;
+
+    // Update member with holiday wishes and image data
+    await db.update(teamMembers)
+      .set({ 
+        holidayWishes, 
+        imageData: imageData
+      })
+      .where(
+        and(
+          eq(teamMembers.id, memberId),
+          eq(teamMembers.tenantId, tenantId)
+        )
+      );
+
+    return NextResponse.json({ holidayWishes, imageUrl: imageData });
+  } catch (error) {
+    console.error('Error processing image:', error);
+    return NextResponse.json(
+      { error: 'Failed to process image' },
+      { status: 500 }
+    );
+  }
 }
 
