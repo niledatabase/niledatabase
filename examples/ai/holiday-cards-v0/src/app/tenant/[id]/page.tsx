@@ -1,11 +1,17 @@
-'use client';
+"use client";
 
-import { useState, useEffect, use } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
-import { useToast } from "@/hooks/use-toast"
+import { useState, useEffect, use } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 
 interface TeamMember {
   id: number;
@@ -16,10 +22,18 @@ interface TeamMember {
   imageUrl?: string;
 }
 
-export default function TenantPage({ params }: { params: Promise<{ id: string }> }) {
-  const { toast } = useToast()
+export default function TenantPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { toast } = useToast();
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
-  const [newMember, setNewMember] = useState({ name: '', email: '', description: '' });
+  const [newMember, setNewMember] = useState({
+    name: "",
+    email: "",
+    description: "",
+  });
   const { id } = use(params);
   const [generatingFor, setGeneratingFor] = useState<number | null>(null);
 
@@ -36,12 +50,12 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
   const addTeamMember = async (e: React.FormEvent) => {
     e.preventDefault();
     const response = await fetch(`/api/tenants/${id}/members`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newMember),
     });
     if (response.ok) {
-      setNewMember({ name: '', email: '', description: '' });
+      setNewMember({ name: "", email: "", description: "" });
       fetchTeamMembers();
     }
   };
@@ -49,9 +63,12 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
   const generateHolidayWishes = async (memberId: number) => {
     setGeneratingFor(memberId);
     try {
-      const response = await fetch(`/api/tenants/${id}/members/${memberId}/generate`, {
-        method: 'POST',
-      });
+      const response = await fetch(
+        `/api/tenants/${id}/members/${memberId}/generate`,
+        {
+          method: "POST",
+        }
+      );
       if (response.ok) {
         fetchTeamMembers();
       }
@@ -63,26 +80,31 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
   const copyToClipboard = async (member: TeamMember) => {
     try {
       if (member.imageUrl) {
-        const response = await fetch(`/api/tenants/${id}/members/${member.id}/image`);
+        const response = await fetch(
+          `/api/tenants/${id}/members/${member.id}/image`
+        );
         const blob = await response.blob();
-        
+
         await navigator.clipboard.write([
           new ClipboardItem({
-            'text/plain': new Blob([member.holidayWishes || ''], { type: 'text/plain' }),
-            'image/png': blob
-          })
+            "text/plain": new Blob([member.holidayWishes || ""], {
+              type: "text/plain",
+            }),
+            "image/png": blob,
+          }),
         ]);
       } else {
-        await navigator.clipboard.writeText(member.holidayWishes || '');
+        await navigator.clipboard.writeText(member.holidayWishes || "");
       }
-      
+
       toast({
         title: "Copied!",
-        description: "Holiday wishes copied to clipboard. You can paste it into an email or message.",
+        description:
+          "Holiday wishes copied to clipboard. You can paste it into an email or message.",
         duration: 4000,
       });
     } catch (err) {
-      console.error('Failed to copy:', err);
+      console.error("Failed to copy:", err);
       toast({
         title: "Error",
         description: "Failed to copy to clipboard",
@@ -96,9 +118,17 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
     <div className="min-h-screen bg-gradient-to-r from-red-100 to-green-100 p-8">
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-red-600">Holiday Cards for the Team</CardTitle>
-          <CardDescription className="text-xl text-center text-gray-600">Enter team member info and generate beautiful greetings powered by AI</CardDescription>
-          <CardDescription className="text-md text-center text-gray-600">Member description is optional, but it helps the AI generate a more personalized message.</CardDescription>
+          <CardTitle className="text-2xl font-bold text-center text-red-600">
+            Holiday Cards for the Team
+          </CardTitle>
+          <CardDescription className="text-xl text-center text-gray-600">
+            Enter team member info and generate beautiful greetings powered by
+            AI
+          </CardDescription>
+          <CardDescription className="text-md text-center text-gray-600">
+            Member description is optional, but it helps the AI generate a more
+            personalized message.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={addTeamMember} className="mb-6 space-y-4">
@@ -106,7 +136,9 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
               type="text"
               placeholder="Name"
               value={newMember.name}
-              onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
+              onChange={(e) =>
+                setNewMember({ ...newMember, name: e.target.value })
+              }
               required
             />
             {/* No email support at this time
@@ -120,42 +152,54 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
             <Textarea
               placeholder="Short description"
               value={newMember.description}
-              onChange={(e) => setNewMember({ ...newMember, description: e.target.value })}
+              onChange={(e) =>
+                setNewMember({ ...newMember, description: e.target.value })
+              }
               required
             />
-            <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">Add Team Member</Button>
+            <Button
+              type="submit"
+              className="w-full bg-green-600 hover:bg-green-700"
+            >
+              Add Team Member
+            </Button>
           </form>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {teamMembers.map((member) => (
               <Card key={member.id} className="p-4 bg-white shadow-md">
                 <h3 className="text-lg font-semibold mb-2">{member.name}</h3>
-                { member.holidayWishes ? 
-                                <Button
-                                onClick={() => copyToClipboard(member)}
-                                variant="outline"
-                                size="sm"
-                                className="mb-4 shrink-0"
-                              >
-                                📋 Copy to clipboard and send
-                        </Button> : <p/> 
-              }
+                {member.holidayWishes ? (
+                  <Button
+                    onClick={() => copyToClipboard(member)}
+                    variant="outline"
+                    size="sm"
+                    className="mb-4 shrink-0"
+                  >
+                    📋 Copy to clipboard and send
+                  </Button>
+                ) : (
+                  <p />
+                )}
                 {member.holidayWishes ? (
                   <div>
                     <div className="flex justify-between items-start mb-2">
                       <p className="text-sm italic">{member.holidayWishes}</p>
                     </div>
-                    <img src={`/api/tenants/${id}/members/${member.id}/image`} alt="Holiday Wish" className="w-full rounded-md" />
+                    <img
+                      src={`/api/tenants/${id}/members/${member.id}/image`}
+                      alt="Holiday Wish"
+                      className="w-full rounded-md"
+                    />
                   </div>
                 ) : (
-                  <Button 
-                    onClick={() => generateHolidayWishes(member.id)} 
+                  <Button
+                    onClick={() => generateHolidayWishes(member.id)}
                     className="w-full bg-red-600 hover:bg-red-700"
                     disabled={generatingFor === member.id}
                   >
-                    {generatingFor === member.id ? 
-                      "Generating..." : 
-                      "Generate Holiday Wishes"
-                    }
+                    {generatingFor === member.id
+                      ? "Generating..."
+                      : "Generate Holiday Wishes"}
                   </Button>
                 )}
               </Card>
@@ -166,4 +210,3 @@ export default function TenantPage({ params }: { params: Promise<{ id: string }>
     </div>
   );
 }
-

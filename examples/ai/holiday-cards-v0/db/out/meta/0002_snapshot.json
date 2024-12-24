@@ -65,12 +65,8 @@
           "name": "team_members_tenant_id_tenants_id_fk",
           "tableFrom": "team_members",
           "tableTo": "tenants",
-          "columnsFrom": [
-            "tenant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tenant_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -78,10 +74,7 @@
       "compositePrimaryKeys": {
         "team_members_id_tenant_id_pk": {
           "name": "team_members_id_tenant_id_pk",
-          "columns": [
-            "id",
-            "tenant_id"
-          ]
+          "columns": ["id", "tenant_id"]
         }
       },
       "uniqueConstraints": {},
@@ -152,12 +145,8 @@
           "tableFrom": "tenant_users",
           "tableTo": "users",
           "schemaTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -165,12 +154,8 @@
           "name": "tenant_users_tenant_id_tenants_id_fk",
           "tableFrom": "tenant_users",
           "tableTo": "tenants",
-          "columnsFrom": [
-            "tenant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tenant_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -225,9 +210,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
