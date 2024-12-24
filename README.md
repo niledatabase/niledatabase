@@ -33,4 +33,4 @@ Nile is in public preview. For documentation, you can check out https://www.then
 ## Community & Support
 
 - [Community Forum](https://github.com/orgs/niledatabase/discussions).
-- [Discord](https://discord.gg/s7hcR9Hxj3).
+- [Discord](https://discord.com/invite/8UuBB84tTy).

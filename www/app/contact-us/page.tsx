@@ -26,7 +26,10 @@ export default function ContactUs() {
                   Developers
                 </div>
                 <div>
-                  <a href="https://discord.gg/akRKRPKA" target="_blank">
+                  <a
+                    href="https://discord.com/invite/8UuBB84tTy"
+                    target="_blank"
+                  >
                     <button className="flex flex-row gap-2 text-[16px] gradientButton my-[24px] leading-[24px] after:rounded-[12px] px-1 w-full !justify-between">
                       <span>Join Community</span>
                       <Image

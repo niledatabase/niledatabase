@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
-import { db } from '@/lib/db';
-import { teamMembers } from '@/lib/schema';
-import OpenAI from 'openai';
-import { eq, and } from 'drizzle-orm';
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { teamMembers } from "@/lib/schema";
+import OpenAI from "openai";
+import { eq, and } from "drizzle-orm";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -16,19 +16,17 @@ export async function POST(
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const tenantId = (await params).id;
   const memberId = (await params).memberId;
   const member = await db.query.teamMembers.findFirst({
-    where: (teamMembers, { eq, and }) => and(
-      eq(teamMembers.id, memberId),
-      eq(teamMembers.tenantId, tenantId)
-    ),
+    where: (teamMembers, { eq, and }) =>
+      and(eq(teamMembers.id, memberId), eq(teamMembers.tenantId, tenantId)),
   });
 
   if (!member) {
-    return NextResponse.json({ error: 'Member not found' }, { status: 404 });
+    return NextResponse.json({ error: "Member not found" }, { status: 404 });
   }
 
   // Generate holiday wishes
@@ -37,12 +35,13 @@ export async function POST(
     messages: [
       {
         role: "system",
-        content: "You are a helpful assistant that generates personalized holiday wishes."
+        content:
+          "You are a helpful assistant that generates personalized holiday wishes.",
       },
       {
         role: "user",
-        content: `Generate a short, warm holiday wish for ${member.name}. Their description: ${member.description}`
-      }
+        content: `Generate a short, warm holiday wish for ${member.name}. Their description: ${member.description}`,
+      },
     ],
   });
 
@@ -57,7 +56,7 @@ export async function POST(
 
   if (!image.data?.[0]?.url) {
     return NextResponse.json(
-      { error: 'Failed to generate image' },
+      { error: "Failed to generate image" },
       { status: 500 }
     );
   }
@@ -68,31 +67,28 @@ export async function POST(
     if (!imageResponse.ok) {
       throw new Error(`Failed to fetch image: ${imageResponse.statusText}`);
     }
-    
+
     const imageBuffer = await imageResponse.arrayBuffer();
-    const base64Image = Buffer.from(imageBuffer).toString('base64');
+    const base64Image = Buffer.from(imageBuffer).toString("base64");
     const imageData = `data:image/png;base64,${base64Image}`;
 
     // Update member with holiday wishes and image data
-    await db.update(teamMembers)
-      .set({ 
-        holidayWishes, 
-        imageData: imageData
+    await db
+      .update(teamMembers)
+      .set({
+        holidayWishes,
+        imageData: imageData,
       })
       .where(
-        and(
-          eq(teamMembers.id, memberId),
-          eq(teamMembers.tenantId, tenantId)
-        )
+        and(eq(teamMembers.id, memberId), eq(teamMembers.tenantId, tenantId))
       );
 
     return NextResponse.json({ holidayWishes, imageUrl: imageData });
   } catch (error) {
-    console.error('Error processing image:', error);
+    console.error("Error processing image:", error);
     return NextResponse.json(
-      { error: 'Failed to process image' },
+      { error: "Failed to process image" },
       { status: 500 }
     );
   }
 }
-
