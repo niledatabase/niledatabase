@@ -8,16 +8,22 @@ import {
   varchar,
   boolean,
   vector,
+  timestamp,
 } from "drizzle-orm/pg-core";
 
 export const tenants = pgTable("tenants", {
-  id: uuid("id")
-    .default(sql`gen_random_uuid()`)
-    .primaryKey(),
-  name: text("name"),
-  created: timestamp("created"),
-  updated: timestamp("updated"),
-  deleted: timestamp("deleted"),
+  id: uuid()
+    .default(sql`public.uuid_generate_v7()`)
+    .primaryKey()
+    .notNull(),
+  name: text(),
+  created: timestamp({ mode: "string" })
+    .default(sql`LOCALTIMESTAMP`)
+    .notNull(),
+  updated: timestamp({ mode: "string" })
+    .default(sql`LOCALTIMESTAMP`)
+    .notNull(),
+  deleted: timestamp({ mode: "string" }),
 });
 
 export const todos = pgTable(

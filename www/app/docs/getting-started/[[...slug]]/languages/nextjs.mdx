@@ -121,10 +121,7 @@ tenants join todos on tenants.id=todos.tenant_id;
 There are a few moving pieces here, so let's break it down.
 
 This example uses NextJS `app router`, so the application landing page is in `app/page.tsx`.
-You can see the user authentication components `<GoogleButton />` and `<SignUpForm />` there.
-If you are interested in learning how to use Nile for authentication, check out the [authentication tutorials](/docs/user-authentication).
-
-This explanation will focus on creating tenants, selecting tenants and adding tasks.
+We'll start here and go over the code for creating tenants, selecting tenants and adding tasks.
 
 ### 6.1. Configuring Nile SDK
 
