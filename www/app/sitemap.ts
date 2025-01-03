@@ -23,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     console.log(path);
     const metadataRoute = {
-      url: `https://thenile.dev/${path}`,
+      url: `https://www.thenile.dev/${path}`,
       lastModified: file.mtime ? new Date(file.mtime) : new Date(),
       changeFrequency: "daily" as "daily",
       priority: 0.7,
@@ -33,43 +33,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...pages,
     {
-      url: "https://thenile.dev/",
+      url: "https://www.thenile.dev/",
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 1,
     },
     {
-      url: "https://thenile.dev/about-us",
+      url: "https://www.thenile.dev/about-us",
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.2,
     },
     {
-      url: "https://thenile.dev/community",
+      url: "https://www.thenile.dev/community",
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.2,
     },
     {
-      url: "https://thenile.dev/pricing",
+      url: "https://www.thenile.dev/pricing",
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.2,
     },
     {
-      url: "https://thenile.dev/blog",
+      url: "https://www.thenile.dev/blog",
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: "https://thenile.dev/docs",
+      url: "https://www.thenile.dev/docs",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: "https://thenile.dev/templates",
+      url: "https://www.thenile.dev/templates",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
