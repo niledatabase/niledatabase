@@ -96,7 +96,7 @@ export async function generateMetadata(
       images: [blog.metadata.image, ...previousImages],
     },
     alternates: {
-      canonical: `/blog/${props.params.slug.join('/')}`,
+      canonical: `/blog/${props.params.slug.join("/")}`,
     },
   };
 }
