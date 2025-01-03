@@ -95,5 +95,8 @@ export async function generateMetadata(
     openGraph: {
       images: [blog.metadata.image, ...previousImages],
     },
+    alternates: {
+      canonical: `/blog/${props.params.slug.join("/")}`,
+    },
   };
 }
