@@ -10,19 +10,25 @@ import { useEffect, useState } from "react";
 
 export default function Page() {
   const [isClient, setIsClient] = useState(false);
+  const [userID, setUserID] = useState("<user id>");
+
   useEffect(() => {
     setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/me')
+      .then(res => res.json())
+      .then(data => {
+        if (data.userID) {
+          setUserID(data.userID);
+        }
+      });
   }, []);
 
   const backendServer = String(
     process.env.NEXT_PUBLIC_BASE_PATH || "http://localhost:8080"
   );
-  const raw = Cookies.get("authData");
-  const authData = raw ? JSON.parse(decodeURIComponent(raw)) : null;
-  var userID = "<user id>";
-  if (authData) {
-    userID = authData.tokenData?.sub;
-  }
 
   // we'll generate a random UUIDs here instead of using the auto-gen one in Nile. Just to make it easier to follow the demo.
   const tenantID = uuidv4();
