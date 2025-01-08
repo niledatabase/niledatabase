@@ -17,9 +17,9 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    fetch('/api/me')
-      .then(res => res.json())
-      .then(data => {
+    fetch("/api/me")
+      .then((res) => res.json())
+      .then((data) => {
         if (data.userID) {
           setUserID(data.userID);
         }

@@ -1,8 +1,8 @@
-import { cookies } from 'next/headers';
+import { cookies } from "next/headers";
 import { nile } from "../[...nile]/nile";
 
 export async function GET() {
-   const nextCookies = cookies();
+  const nextCookies = cookies();
   nile.api.headers = new Headers({ cookie: nextCookies.toString() });
 
   const currentUser = await nile.api.users.me();
