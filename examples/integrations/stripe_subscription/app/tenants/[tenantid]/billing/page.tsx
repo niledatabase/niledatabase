@@ -43,6 +43,7 @@ export default async function Page({
   );
   // Get tenant name doesn't need any input parameters because it uses the tenant ID and user token from the context
   const tenant = await tenantNile.api.tenants.getTenant();
+  console.log("got tenant", tenant);
   if (tenant instanceof Response) {
     throw new Error("unable to get tenant");
   }
