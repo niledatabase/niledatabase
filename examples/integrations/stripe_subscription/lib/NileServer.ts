@@ -16,7 +16,9 @@ export async function configureNile(tenantId: string | void) {
     tenantId: String(tenantId),
     userId: user?.id,
     api: {
-      token: nextCookies.get("nile.session-token")?.value,
+      token: nextCookies.get(
+        `${process.env.VERCEL === "1" ? "__Secure-" : ""}nile.session-token`
+      )?.value,
     },
   });
 }
