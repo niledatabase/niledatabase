@@ -1,4 +1,3 @@
-import "server-only";
 import NileServer from "@niledatabase/server";
 const _nile = await NileServer({
   secureCookies: process.env.VERCEL === "1",
