@@ -63,15 +63,9 @@ export default function RootLayout({
                 href="https://www.thenile.dev/docs/getting-started/languages/nextjs"
                 target="_blank"
                 rel="noopener"
-                className="flex flex-col gap-5 justify-between h-full"
+                className="flex flex-col gap-5 items-start"
               >
-                <Image
-                  src="/next.svg"
-                  alt="Next.js Logo"
-                  className="relative"
-                  height={24}
-                  width={100}
-                />
+                <Logo fill="black" className="h-10" />
                 Getting started guide
               </Link>
             </Card>

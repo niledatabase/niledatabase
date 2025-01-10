@@ -23,6 +23,9 @@ export default function Home() {
               onSuccess={() => {
                 setSuccess(true);
               }}
+              onError={(err) => {
+                alert(err);
+              }}
             />
           </div>
         </div>

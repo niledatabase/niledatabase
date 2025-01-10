@@ -15,7 +15,6 @@ export default async function Success() {
       </div>
     );
   }
-  console.log(me);
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <div className="flex flex-col rounded-lg border border-slate-500 p-10 gap-2">
