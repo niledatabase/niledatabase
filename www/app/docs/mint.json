@@ -18,34 +18,35 @@
     "topbarLinks": [
       {
         "name": "Support",
-        "url": "mailto:hi@mintlify.com"
+        "url": "mailto:support@thenile.dev"
       }
     ],
     "topbarCtaButton": {
       "name": "Dashboard",
-      "url": "https://dashboard.mintlify.com"
+      "url": "https://console.thenile.dev/"
     },
     "tabs": [
       {
         "name": "API Reference",
         "url": "api-reference"
+        "openapi": "https://global.thenile.dev/openapi.yaml"
       }
     ],
     "anchors": [
       {
         "name": "Documentation",
         "icon": "book-open-cover",
-        "url": "https://mintlify.com/docs"
+        "url": "https://docs.thenile.dev/"
       },
       {
         "name": "Community",
-        "icon": "slack",
-        "url": "https://mintlify.com/community"
+        "icon": "discord",
+        "url": "https://www.thenile.dev/community"
       },
       {
         "name": "Blog",
         "icon": "newspaper",
-        "url": "https://mintlify.com/blog"
+        "url": "https://www.thenile.dev/blog"
       }
     ],
     "navigation": [
@@ -84,8 +85,8 @@
       }
     ],
     "footerSocials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/niledatabase",
+      "github": "https://github.com/niledatabase/niledatabase",
+      "linkedin": "https://www.linkedin.com/company/niledatabase"
     }
   }
