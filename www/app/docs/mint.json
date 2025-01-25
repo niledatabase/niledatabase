@@ -44,28 +44,21 @@
         "url": "https://discord.com/invite/8UuBB84tTy"
       }
     ],
-    "anchors": [
-      {
-        "name": "Documentation",
-        "icon": "book-open-cover",
-        "url": "https://thenile.dev/docs"
-      },
-      {
-        "name": "Community",
-        "icon": "discord",
-        "url": "https://www.thenile.dev/community"
-      },
-      {
-        "name": "Blog",
-        "icon": "newspaper",
-        "url": "https://www.thenile.dev/blog"
-      }
-    ],
     "navigation": [
       {
         "group": "Get Started",
         "pages": [
-            "getting-started/index"
+            "getting-started/index",
+          {
+            "group": "Languages",
+            "pages": [
+              "getting-started/languages/index",
+              {
+                "group": "SQL",
+                "pages": getting-started/languages/sql
+              }
+            ]
+          }
         ]
       },
       {
