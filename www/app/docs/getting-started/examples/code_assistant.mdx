@@ -5,11 +5,11 @@ export const metadata = {
   title: "Code Assistant",
 };
 
-![codeassistantsnapshot](/docs/codeassistant.png)
+![codeassistantsnapshot](/images/codeassistant.png)
 
-In this tutorial, you will learn how to use Nile's tenant virtualization, user management and [vector embedding](/docs/ai-embeddings/pg_vector) features to build a
+In this tutorial, you will learn how to use Nile's tenant virtualization, user management and [vector embedding](/images/ai-embeddings/pg_vector) features to build a
 SaaS application that helps browse and query new code-bases.
-It also uses LangChain SDK and OpenAI's APIs with Nile's SDK to implement a [RAG architecture](/docs/ai-embeddings/rag) where the input text is a question in english, the retrieved documents are relevant code snippets and the response includes both
+It also uses LangChain SDK and OpenAI's APIs with Nile's SDK to implement a [RAG architecture](/images/ai-embeddings/rag) where the input text is a question in english, the retrieved documents are relevant code snippets and the response includes both
 an answer and the code snippets.
 
 Embeddings for the code in each repository are generated with OpenAI's `text-embedding-3-large model` and stored in Nile. The code snippets are stored in a separate table in Nile.

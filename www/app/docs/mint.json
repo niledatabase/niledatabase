@@ -60,7 +60,7 @@
               "getting-started/languages/node"
             ]
           },
-          "getting-started/whatisnile",
+          "getting-started/what_is_nile",
           {
             "group": "Usecases",
             "pages": [
@@ -69,7 +69,7 @@
               "getting-started/usecases/feedback",
               "getting-started/usecases/health",
               "getting-started/usecases/hiring",
-              "getting-started/usecases/hr",
+              "getting-started/usecases/HR",
               "getting-started/usecases/issue-tracking",
               "getting-started/usecases/lead-management",
               "getting-started/usecases/legal",
