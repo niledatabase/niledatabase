@@ -10,7 +10,7 @@ Nile has built Postgres from the ground up with tenants/customers as a core buil
 
 **Tenant-aware Postgres pages**. A typical Postgres database comprises objects like tables and indexes, represented by 8KB pages. In Nile, tables are either tenant-specific or shared. Each page of a tenant table belongs exclusively to one tenant, with all records within a page associated with that tenant. This decoupled storage and tenant-dedicated page system allows for instantaneous tenant migration between different Postgres compute instances. Moving a tenant simply involves transferring tenant leadership from one compute instance to another while maintaining references to the same pages in the storage layer.
 
-![nilearchitecture](/docs/nile-arch.png)
+![nilearchitecture](/images/nile-arch.png)
 
 **Support for both serverless and provisioned compute.** The Postgres compute layer offers two types of compute. Serverless compute is built with true multitenancy, while provisioned compute is dedicated to a single Nile customer. Nile users can have any number of provisioned compute instances in the same database. Tenants can be placed on either serverless or provisioned compute.
 
