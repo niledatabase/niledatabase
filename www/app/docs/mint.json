@@ -54,7 +54,7 @@
             "pages": [
               "getting-started/languages/SQL",
               "getting-started/languages/nextjs",
-              "getting-started/languages/drizzle"
+              "getting-started/languages/drizzle",
               "getting-started/languages/prisma",
               "getting-started/languages/python",
               "getting-started/languages/node"
