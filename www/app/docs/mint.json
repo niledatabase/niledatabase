@@ -15,6 +15,10 @@
       "to": "#07C983"
     }
   },
+  "modeToggle": {
+    "default": "dark",
+    "isHidden": true
+  },
   "topbarLinks": [
     {
       "name": "Support",
@@ -193,5 +197,6 @@
     "x": "https://x.com/niledatabase",
     "github": "https://github.com/niledatabase/niledatabase",
     "linkedin": "https://www.linkedin.com/company/niledatabase"
-  }
+  },
+  "backgroundImage": "/images/nile-gradient.png"
 }
