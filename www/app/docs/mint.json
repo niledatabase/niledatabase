@@ -100,7 +100,7 @@
             "getting-started/schema_migrations/Drizzle",
             "getting-started/schema_migrations/Django",
             "getting-started/schema_migrations/Prisma",
-            "getting-started/schema_migrations/Sqlalchemy"
+            "getting-started/schema_migrations/SQLalchemy"
           ]
         },
         "getting-started/Architecture",
@@ -136,7 +136,7 @@
           ]
         },
         "ai-embeddings/streaming/Streaming",
-        "ai-embeddings/RAG_vs_Finetune"
+        "ai-embeddings/ragvsfinetune/RAG_vs_Finetune"
       ]
     },
     {
