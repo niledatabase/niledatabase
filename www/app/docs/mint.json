@@ -53,14 +53,8 @@
             "group": "Languages",
             "pages": [
               "getting-started/languages/index",
-              {
-                "group": "SQL",
-                "pages": ["getting-started/languages/sql"]
-              },
-              {
-                "group": "NextJS",
-                "pages": ["getting-started/languages/nextjs"]
-              }
+              "getting-started/languages/sql",
+              "getting-started/languages/nextjs"
             ]
           }
         ]
