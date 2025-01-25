@@ -15,6 +15,9 @@
       "to": "#07C983"
     }
   },
+  "background": {
+    "style": "gradient"
+  },
   "modeToggle": {
     "default": "dark",
     "isHidden": true
@@ -197,6 +200,5 @@
     "x": "https://x.com/niledatabase",
     "github": "https://github.com/niledatabase/niledatabase",
     "linkedin": "https://www.linkedin.com/company/niledatabase"
-  },
-  "backgroundImage": "/images/background.png"
+  }
 }
