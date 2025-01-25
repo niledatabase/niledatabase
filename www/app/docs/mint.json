@@ -93,7 +93,7 @@
               "getting-started/examples/task_genius"
             ]
           },
-          "getting-started/postgres_docker",
+          "getting-started/run_locally",
           {
             "group": "Schema Migrations",
             "pages": [
@@ -104,7 +104,7 @@
             ]
           },
           "getting-started/architecture",
-          "getting-started/postgres_testing"
+          "getting-started/testing"
         ]
       },
       {
