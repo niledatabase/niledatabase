@@ -50,7 +50,7 @@
         "pages": [
           "getting-started/introduction",
           {
-            "group": "Languages",
+            "group": "languages",
             "pages": [
               "getting-started/languages/SQL",
               "getting-started/languages/nextjs",
@@ -60,9 +60,9 @@
               "getting-started/languages/node"
             ]
           },
-          "getting-started/what_is_nile",
+          "getting-started/what_is_Nile",
           {
-            "group": "Usecases",
+            "group": "usecases",
             "pages": [
               "getting-started/usecases/accounts",
               "getting-started/usecases/expensify",
@@ -85,7 +85,7 @@
             ]
           },
           {
-            "group": "Examples",
+            "group": "examples",
             "pages": [
               "getting-started/examples/chat_with_pdf",
               "getting-started/examples/code_assistant",
@@ -95,7 +95,7 @@
           },
           "getting-started/run_locally",
           {
-            "group": "Schema Migrations",
+            "group": "schema migrations",
             "pages": [
               "getting-started/schema_migrations/drizzle",
               "getting-started/schema_migrations/django",
@@ -108,28 +108,68 @@
         ]
       },
       {
-        "group": "Tenant Virtualization",
+        "group": "tenant virtualization",
         "pages": [
-          "essentials/markdown",
-          "essentials/code",
-          "essentials/images",
-          "essentials/settings",
-          "essentials/navigation",
-          "essentials/reusable-snippets"
+          "tenant-virtualization/introduction",
+          "tenant-virtualization/tenant_isolation",
+          "tenant-virtualization/tenant_management",
+          "tenant-virtualization/tenant_placement",
+          "tenant-virtualization/tenant_sharing"
         ]
       },
       {
         "group": "Artificial Intelligence",
         "pages": [
-          "api-reference/introduction"
+          "ai-embeddings/introduction",
+          "ai-embeddings/vector_database/vector_database",
+          "ai-embeddings/pg_vector/pg_vector",
+          "ai-embeddings/rag/rag",
+          {
+            "group": "embedding models",
+            "pages": [
+              "embedding_models/cohere",
+              "embedding_models/deepinfra",
+              "embedding_models/fireworks",
+              "embedding_models/google",
+              "embedding_models/open_ai",
+              "embedding_models/voyage"
+            ]
+          },
+          "ai-embeddings/streaming/streaming",
+          "ai-embeddings/rag_vs_finetune"
         ]
       },
       {
-        "group": "Postgres Basics",
+        "group": "postgres basics",
         "pages": [
-          "api-reference/endpoint/get",
-          "api-reference/endpoint/create",
-          "api-reference/endpoint/delete"
+          "postgres/introduction",
+          "postgres/createtable",
+          {
+            "group": "data types",
+            "pages": [
+              "datatype/numeric",
+              "datatype/character",
+              "datatype/date",
+              "datatype/json",
+              "datatype/arrays"
+            ]
+          },
+          "postgres/indexes",
+          "postgres/joins",
+          "postgres/views",
+          {
+            "group": "tools",
+            "pages": [
+              "tools/dbeaver",
+              "tools/psql"
+            ]
+          },
+          {
+            "group": "postgres-compatibility",
+            "pages": [
+              "postgres-compatibility/postgres_compatibility"
+            ]
+          }
         ]
       },
       {
