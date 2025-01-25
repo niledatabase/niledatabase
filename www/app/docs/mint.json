@@ -65,13 +65,23 @@
       {
         "group": "Get Started",
         "pages": [
-          "introduction",
-          "quickstart",
-          "development"
+            "getting-started/[[...slug]]/index",
+            {
+                "group": "Languages",
+                "pages": [
+                  "getting-started/[[...slug]]/languages/index",
+                  {
+                    "group": "SQL",
+                    "pages": [
+                      "getting-started/[[...slug]]/sql"
+                    ]
+                  }
+                ]
+            }
         ]
       },
       {
-        "group": "Essentials",
+        "group": "Tenant Virtualization",
         "pages": [
           "essentials/markdown",
           "essentials/code",
@@ -82,13 +92,45 @@
         ]
       },
       {
-        "group": "API Documentation",
+        "group": "Artificial Intelligence",
         "pages": [
           "api-reference/introduction"
         ]
       },
       {
-        "group": "Endpoint Examples",
+        "group": "Postgres Basics",
+        "pages": [
+          "api-reference/endpoint/get",
+          "api-reference/endpoint/create",
+          "api-reference/endpoint/delete"
+        ]
+      },
+      {
+        "group": "Integrations",
+        "pages": [
+          "api-reference/endpoint/get",
+          "api-reference/endpoint/create",
+          "api-reference/endpoint/delete"
+        ]
+      },
+      {
+        "group": "Platform",
+        "pages": [
+          "api-reference/endpoint/get",
+          "api-reference/endpoint/create",
+          "api-reference/endpoint/delete"
+        ]
+      },
+      {
+        "group": "Support",
+        "pages": [
+          "api-reference/endpoint/get",
+          "api-reference/endpoint/create",
+          "api-reference/endpoint/delete"
+        ]
+      },
+      {
+        "group": "Reference",
         "pages": [
           "api-reference/endpoint/get",
           "api-reference/endpoint/create",
