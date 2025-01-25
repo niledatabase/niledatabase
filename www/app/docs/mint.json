@@ -27,16 +27,28 @@
     },
     "tabs": [
       {
+        "name": "Documentation",
+        "url": "getting-started"
+      },
+      {
         "name": "API Reference",
         "url": "api-reference",
         "openapi": "https://global.thenile.dev/openapi.yaml"
+      },
+      {
+        "name": "SDK Reference",
+        "url": "sdk-reference"
+      },
+      {
+        "name": "Discord",
+        "url": "https://discord.com/invite/8UuBB84tTy"
       }
     ],
     "anchors": [
       {
         "name": "Documentation",
         "icon": "book-open-cover",
-        "url": "https://docs.thenile.dev/"
+        "url": "https://thenile.dev/docs"
       },
       {
         "name": "Community",
