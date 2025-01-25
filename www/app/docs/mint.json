@@ -48,7 +48,7 @@
       {
         "group": "Get Started",
         "pages": [
-            "getting-started/introduction",
+          "getting-started/introduction",
           {
             "group": "Languages",
             "pages": [
@@ -59,7 +59,52 @@
               "getting-started/languages/python",
               "getting-started/languages/node"
             ]
-          }
+          },
+          "getting-started/whatisnile",
+          {
+            "group": "Usecases",
+            "pages": [
+              "getting-started/usecases/accounts",
+              "getting-started/usecases/expensify",
+              "getting-started/usecases/feedback",
+              "getting-started/usecases/health",
+              "getting-started/usecases/hiring",
+              "getting-started/usecases/hr",
+              "getting-started/usecases/issue-tracking",
+              "getting-started/usecases/lead-management",
+              "getting-started/usecases/legal",
+              "getting-started/usecases/marketing",
+              "getting-started/usecases/notion",
+              "getting-started/usecases/onboarding",
+              "getting-started/usecases/scheduler",
+              "getting-started/usecases/schoology",
+              "getting-started/usecases/slack",
+              "getting-started/usecases/supply",
+              "getting-started/usecases/support",
+              "getting-started/usecases/tripactions"
+            ]
+          },
+          {
+            "group": "Examples",
+            "pages": [
+              "getting-started/examples/chat_with_pdf",
+              "getting-started/examples/code_assistant",
+              "getting-started/examples/sales_insight",
+              "getting-started/examples/task_genius"
+            ]
+          },
+          "getting-started/postgres_docker",
+          {
+            "group": "Schema Migrations",
+            "pages": [
+              "getting-started/schema_migrations/drizzle",
+              "getting-started/schema_migrations/django",
+              "getting-started/schema_migrations/prisma",
+              "getting-started/schema_migrations/sqlalchemy"
+            ]
+          },
+          "getting-started/architecture",
+          "getting-started/postgres_testing"
         ]
       },
       {
