@@ -167,7 +167,7 @@
         {
           "group": "Postgres Compatibility",
           "pages": [
-            "postgres-compatibility/Postgres_Compatibility"
+            "postgres/postgres-compatibility/Postgres_Compatibility"
           ]
         }
       ]
