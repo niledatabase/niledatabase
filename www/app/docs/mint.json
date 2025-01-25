@@ -65,19 +65,7 @@
       {
         "group": "Get Started",
         "pages": [
-            "getting-started/[[...slug]]/index",
-            {
-                "group": "Languages",
-                "pages": [
-                  "getting-started/[[...slug]]/languages/index",
-                  {
-                    "group": "SQL",
-                    "pages": [
-                      "getting-started/[[...slug]]/sql"
-                    ]
-                  }
-                ]
-            }
+            "getting-started/[[...slug]]/index"
         ]
       },
       {
