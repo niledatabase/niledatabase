@@ -164,12 +164,7 @@
             "tools/PSQL"
           ]
         },
-        {
-          "group": "Postgres Compatibility",
-          "pages": [
-            "postgres/postgres-compatibility/Postgres_Compatibility"
-          ]
-        }
+        "postgres/postgres-compatibility/Postgres_Compatibility"
       ]
     },
     {
