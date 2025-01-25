@@ -87,7 +87,7 @@
           {
             "group": "Examples",
             "pages": [
-              "getting-started/examples/Chat_with_PDF",
+              "getting-started/examples/Chat_With_PDF",
               "getting-started/examples/Code_Assistant",
               "getting-started/examples/Sales_Insight",
               "getting-started/examples/Task_Genius"
@@ -175,9 +175,16 @@
       {
         "group": "Integrations",
         "pages": [
-          "api-reference/endpoint/get",
-          "api-reference/endpoint/create",
-          "api-reference/endpoint/delete"
+          "partners/AWS_Bedrock",
+          "partners/Cohere",
+          "partners/Confluent",
+          "partners/Llama_Index",
+          "partners/Modal",
+          "partners/Netlify",
+          "partners/Vercel",
+          "platform/integrations/Lambda",
+          "platform/integrations/NextAuth",
+          "platform/integrations/Stripe"
         ]
       },
       {
