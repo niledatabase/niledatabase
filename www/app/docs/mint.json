@@ -1,213 +1,202 @@
 {
-    "$schema": "https://mintlify.com/schema.json",
-    "name": "Nile Documentation",
-    "logo": {
-      "dark": "/images/nilemintlogo.svg",
-      "light": "/images/nilemintlogo.svg"
-    },
-    "favicon": "/images/icon.png",
-    "colors": {
-      "primary": "#FDC268",
-      "light": "#FDC268",
-      "dark": "#FDC268",
-      "anchors": {
-        "from": "#0D9373",
-        "to": "#07C983"
-      }
-    },
-    "topbarLinks": [
-      {
-        "name": "Support",
-        "url": "mailto:support@thenile.dev"
-      }
-    ],
-    "topbarCtaButton": {
-      "name": "Dashboard",
-      "url": "https://console.thenile.dev"
-    },
-    "tabs": [
-      {
-        "name": "Documentation",
-        "url": "Get Started"
-      },
-      {
-        "name": "API Reference",
-        "url": "api-reference",
-        "openapi": "https://global.thenile.dev/openapi.yaml"
-      },
-      {
-        "name": "SDK Reference",
-        "url": "reference/[[...slug]]/sdk-reference"
-      },
-      {
-        "name": "Discord",
-        "url": "https://discord.com/invite/8UuBB84tTy"
-      }
-    ],
-    "navigation": [
-      {
-        "group": "Get Started",
-        "pages": [
-          "getting-started/introduction",
-          {
-            "group": "languages",
-            "pages": [
-              "getting-started/languages/SQL",
-              "getting-started/languages/nextjs",
-              "getting-started/languages/drizzle",
-              "getting-started/languages/prisma",
-              "getting-started/languages/python",
-              "getting-started/languages/node"
-            ]
-          },
-          "getting-started/what_is_Nile",
-          {
-            "group": "usecases",
-            "pages": [
-              "getting-started/usecases/accounts",
-              "getting-started/usecases/expensify",
-              "getting-started/usecases/feedback",
-              "getting-started/usecases/health",
-              "getting-started/usecases/hiring",
-              "getting-started/usecases/HR",
-              "getting-started/usecases/issue-tracking",
-              "getting-started/usecases/lead-management",
-              "getting-started/usecases/legal",
-              "getting-started/usecases/marketing",
-              "getting-started/usecases/notion",
-              "getting-started/usecases/onboarding",
-              "getting-started/usecases/scheduler",
-              "getting-started/usecases/schoology",
-              "getting-started/usecases/slack",
-              "getting-started/usecases/supply",
-              "getting-started/usecases/support",
-              "getting-started/usecases/tripactions"
-            ]
-          },
-          {
-            "group": "examples",
-            "pages": [
-              "getting-started/examples/chat_with_pdf",
-              "getting-started/examples/code_assistant",
-              "getting-started/examples/sales_insight",
-              "getting-started/examples/task_genius"
-            ]
-          },
-          "getting-started/run_locally",
-          {
-            "group": "schema migrations",
-            "pages": [
-              "getting-started/schema_migrations/drizzle",
-              "getting-started/schema_migrations/django",
-              "getting-started/schema_migrations/prisma",
-              "getting-started/schema_migrations/sqlalchemy"
-            ]
-          },
-          "getting-started/architecture",
-          "getting-started/testing"
-        ]
-      },
-      {
-        "group": "tenant virtualization",
-        "pages": [
-          "tenant-virtualization/introduction",
-          "tenant-virtualization/tenant_isolation",
-          "tenant-virtualization/tenant_management",
-          "tenant-virtualization/tenant_placement",
-          "tenant-virtualization/tenant_sharing"
-        ]
-      },
-      {
-        "group": "Artificial Intelligence",
-        "pages": [
-          "ai-embeddings/introduction",
-          "ai-embeddings/vector_database/vector_database",
-          "ai-embeddings/pg_vector/pg_vector",
-          "ai-embeddings/rag/rag",
-          {
-            "group": "embedding models",
-            "pages": [
-              "embedding_models/cohere",
-              "embedding_models/deepinfra",
-              "embedding_models/fireworks",
-              "embedding_models/google",
-              "embedding_models/open_ai",
-              "embedding_models/voyage"
-            ]
-          },
-          "ai-embeddings/streaming/streaming",
-          "ai-embeddings/rag_vs_finetune"
-        ]
-      },
-      {
-        "group": "postgres basics",
-        "pages": [
-          "postgres/introduction",
-          "postgres/createtable",
-          {
-            "group": "data types",
-            "pages": [
-              "datatype/numeric",
-              "datatype/character",
-              "datatype/date",
-              "datatype/json",
-              "datatype/arrays"
-            ]
-          },
-          "postgres/indexes",
-          "postgres/joins",
-          "postgres/views",
-          {
-            "group": "tools",
-            "pages": [
-              "tools/dbeaver",
-              "tools/psql"
-            ]
-          },
-          {
-            "group": "postgres-compatibility",
-            "pages": [
-              "postgres-compatibility/postgres_compatibility"
-            ]
-          }
-        ]
-      },
-      {
-        "group": "Integrations",
-        "pages": [
-          "api-reference/endpoint/get",
-          "api-reference/endpoint/create",
-          "api-reference/endpoint/delete"
-        ]
-      },
-      {
-        "group": "Platform",
-        "pages": [
-          "api-reference/endpoint/get",
-          "api-reference/endpoint/create",
-          "api-reference/endpoint/delete"
-        ]
-      },
-      {
-        "group": "Support",
-        "pages": [
-          "api-reference/endpoint/get",
-          "api-reference/endpoint/create",
-          "api-reference/endpoint/delete"
-        ]
-      },
-      {
-        "group": "Reference",
-        "pages": [
-          "api-reference/endpoint/get",
-          "api-reference/endpoint/create",
-          "api-reference/endpoint/delete"
-        ]
-      }
-    ],
-    "footerSocials": {
-      "x": "https://x.com/niledatabase",
-      "github": "https://github.com/niledatabase/niledatabase",
-      "linkedin": "https://www.linkedin.com/company/niledatabase"
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Nile Documentation",
+  "logo": {
+    "dark": "/images/nilemintlogo.svg",
+    "light": "/images/nilemintlogo.svg"
+  },
+  "favicon": "/images/icon.png",
+  "colors": {
+    "primary": "#FDC268",
+    "light": "#FDC268",
+    "dark": "#FDC268",
+    "anchors": {
+      "from": "#0D9373",
+      "to": "#07C983"
     }
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:support@thenile.dev"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Dashboard",
+    "url": "https://console.thenile.dev"
+  },
+  "tabs": [
+    {
+      "name": "Documentation",
+      "url": "Get Started"
+    },
+    {
+      "name": "API Reference",
+      "url": "api-reference",
+      "openapi": "https://global.thenile.dev/openapi.yaml"
+    },
+    {
+      "name": "SDK Reference",
+      "url": "reference/[[...slug]]/sdk-reference"
+    },
+    {
+      "name": "Discord",
+      "url": "https://discord.com/invite/8UuBB84tTy"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": [
+        "getting-started/Introduction",
+        {
+          "group": "Languages",
+          "pages": [
+            "getting-started/languages/SQL",
+            "getting-started/languages/NextJS",
+            "getting-started/languages/Drizzle",
+            "getting-started/languages/Prisma",
+            "getting-started/languages/Python",
+            "getting-started/languages/Node"
+          ]
+        },
+        "getting-started/What_is_Nile",
+        {
+          "group": "Usecases",
+          "pages": [
+            "getting-started/usecases/Accounts",
+            "getting-started/usecases/Expensify",
+            "getting-started/usecases/Feedback",
+            "getting-started/usecases/Health",
+            "getting-started/usecases/Hiring",
+            "getting-started/usecases/HR",
+            "getting-started/usecases/Issue_Tracking",
+            "getting-started/usecases/Lead_Management",
+            "getting-started/usecases/Legal",
+            "getting-started/usecases/Marketing",
+            "getting-started/usecases/Notion",
+            "getting-started/usecases/Onboarding",
+            "getting-started/usecases/Scheduler",
+            "getting-started/usecases/Schoology",
+            "getting-started/usecases/Slack",
+            "getting-started/usecases/Supply",
+            "getting-started/usecases/Support",
+            "getting-started/usecases/Tripactions"
+          ]
+        },
+        {
+          "group": "Examples",
+          "pages": [
+            "getting-started/examples/Chat_With_PDF",
+            "getting-started/examples/Code_Assistant",
+            "getting-started/examples/Sales_Insight",
+            "getting-started/examples/Task_Genius"
+          ]
+        },
+        "getting-started/Run_Locally",
+        {
+          "group": "Schema Migrations",
+          "pages": [
+            "getting-started/schema_migrations/Drizzle",
+            "getting-started/schema_migrations/Django",
+            "getting-started/schema_migrations/Prisma",
+            "getting-started/schema_migrations/Sqlalchemy"
+          ]
+        },
+        "getting-started/Architecture",
+        "getting-started/Testing"
+      ]
+    },
+    {
+      "group": "Tenant Virtualization",
+      "pages": [
+        "tenant-virtualization/Introduction",
+        "tenant-virtualization/Tenant_Isolation",
+        "tenant-virtualization/Tenant_Management",
+        "tenant-virtualization/Tenant_Placement",
+        "tenant-virtualization/Tenant_Sharing"
+      ]
+    },
+    {
+      "group": "Artificial Intelligence",
+      "pages": [
+        "ai-embeddings/Introduction",
+        "ai-embeddings/vector_database/Vector_Database",
+        "ai-embeddings/pg_vector/PG_Vector",
+        "ai-embeddings/rag/RAG",
+        {
+          "group": "Embedding Models",
+          "pages": [
+            "ai-embeddings/embedding_models/Cohere",
+            "ai-embeddings/embedding_models/Deepinfra",
+            "ai-embeddings/embedding_models/Fireworks",
+            "ai-embeddings/embedding_models/Google",
+            "ai-embeddings/embedding_models/Open_AI",
+            "ai-embeddings/embedding_models/Voyage"
+          ]
+        },
+        "ai-embeddings/streaming/Streaming",
+        "ai-embeddings/RAG_vs_Finetune"
+      ]
+    },
+    {
+      "group": "Postgres",
+      "pages": [
+        "postgres/Introduction",
+        "postgres/Create_Table",
+        {
+          "group": "Data Types",
+          "pages": [
+            "postgres/datatype/Numeric",
+            "postgres/datatype/Character",
+            "postgres/datatype/Date",
+            "postgres/datatype/JSON",
+            "postgres/datatype/Arrays"
+          ]
+        },
+        "postgres/Indexes",
+        "postgres/Joins",
+        "postgres/Views",
+        {
+          "group": "Tools",
+          "pages": [
+            "tools/DBeaver",
+            "tools/PSQL"
+          ]
+        },
+        {
+          "group": "Postgres Compatibility",
+          "pages": [
+            "postgres-compatibility/Postgres_Compatibility"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "partners/AWS_Bedrock",
+        "partners/Cohere",
+        "partners/Confluent",
+        "partners/Llama_Index",
+        "partners/Modal",
+        "partners/Netlify",
+        "partners/Vercel",
+        "platform/integrations/Lambda",
+        "platform/integrations/NextAuth",
+        "platform/integrations/Stripe"
+      ]
+    },
+    {
+      "group": "Support",
+      "pages": [
+        "support/Support"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "x": "https://x.com/niledatabase",
+    "github": "https://github.com/niledatabase/niledatabase",
+    "linkedin": "https://www.linkedin.com/company/niledatabase"
   }
+}
