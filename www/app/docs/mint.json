@@ -37,7 +37,7 @@
       },
       {
         "name": "SDK Reference",
-        "url": "sdk-reference"
+        "url": "reference/[[...slug]]/sdk-reference"
       },
       {
         "name": "Discord",
