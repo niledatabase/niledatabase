@@ -52,7 +52,6 @@
           {
             "group": "Languages",
             "pages": [
-              "getting-started/languages/index",
               "getting-started/languages/sql",
               "getting-started/languages/nextjs"
             ]
