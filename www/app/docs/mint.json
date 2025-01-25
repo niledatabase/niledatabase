@@ -48,126 +48,126 @@
       {
         "group": "Get Started",
         "pages": [
-          "getting-started/introduction",
+          "getting-started/Introduction",
           {
-            "group": "languages",
+            "group": "Languages",
             "pages": [
               "getting-started/languages/SQL",
-              "getting-started/languages/nextjs",
-              "getting-started/languages/drizzle",
-              "getting-started/languages/prisma",
-              "getting-started/languages/python",
-              "getting-started/languages/node"
+              "getting-started/languages/NextJS",
+              "getting-started/languages/Drizzle",
+              "getting-started/languages/Prisma",
+              "getting-started/languages/Python",
+              "getting-started/languages/Node"
             ]
           },
-          "getting-started/what_is_Nile",
+          "getting-started/What_is_Nile",
           {
-            "group": "usecases",
+            "group": "Usecases",
             "pages": [
-              "getting-started/usecases/accounts",
-              "getting-started/usecases/expensify",
-              "getting-started/usecases/feedback",
-              "getting-started/usecases/health",
-              "getting-started/usecases/hiring",
+              "getting-started/usecases/Accounts",
+              "getting-started/usecases/Expensify",
+              "getting-started/usecases/Feedback",
+              "getting-started/usecases/Health",
+              "getting-started/usecases/Hiring",
               "getting-started/usecases/HR",
-              "getting-started/usecases/issue-tracking",
-              "getting-started/usecases/lead-management",
-              "getting-started/usecases/legal",
-              "getting-started/usecases/marketing",
-              "getting-started/usecases/notion",
-              "getting-started/usecases/onboarding",
-              "getting-started/usecases/scheduler",
-              "getting-started/usecases/schoology",
-              "getting-started/usecases/slack",
-              "getting-started/usecases/supply",
-              "getting-started/usecases/support",
-              "getting-started/usecases/tripactions"
+              "getting-started/usecases/Issue_Tracking",
+              "getting-started/usecases/Lead_Management",
+              "getting-started/usecases/Legal",
+              "getting-started/usecases/Marketing",
+              "getting-started/usecases/Notion",
+              "getting-started/usecases/Onboarding",
+              "getting-started/usecases/Scheduler",
+              "getting-started/usecases/Schoology",
+              "getting-started/usecases/Slack",
+              "getting-started/usecases/Supply",
+              "getting-started/usecases/Support",
+              "getting-started/usecases/Tripactions"
             ]
           },
           {
-            "group": "examples",
+            "group": "Examples",
             "pages": [
-              "getting-started/examples/chat_with_pdf",
-              "getting-started/examples/code_assistant",
-              "getting-started/examples/sales_insight",
-              "getting-started/examples/task_genius"
+              "getting-started/examples/Chat_with_PDF",
+              "getting-started/examples/Code_Assistant",
+              "getting-started/examples/Sales_Insight",
+              "getting-started/examples/Task_Genius"
             ]
           },
-          "getting-started/run_locally",
+          "getting-started/Run_Locally",
           {
-            "group": "schema migrations",
+            "group": "Schema Migrations",
             "pages": [
-              "getting-started/schema_migrations/drizzle",
-              "getting-started/schema_migrations/django",
-              "getting-started/schema_migrations/prisma",
-              "getting-started/schema_migrations/sqlalchemy"
+              "getting-started/schema_migrations/Drizzle",
+              "getting-started/schema_migrations/Django",
+              "getting-started/schema_migrations/Prisma",
+              "getting-started/schema_migrations/Sqlalchemy"
             ]
           },
-          "getting-started/architecture",
-          "getting-started/testing"
+          "getting-started/Architecture",
+          "getting-started/Testing"
         ]
       },
       {
-        "group": "tenant virtualization",
+        "group": "Tenant Virtualization",
         "pages": [
-          "tenant-virtualization/introduction",
-          "tenant-virtualization/tenant_isolation",
-          "tenant-virtualization/tenant_management",
-          "tenant-virtualization/tenant_placement",
-          "tenant-virtualization/tenant_sharing"
+          "tenant-virtualization/Introduction",
+          "tenant-virtualization/Tenant_Isolation",
+          "tenant-virtualization/Tenant_Management",
+          "tenant-virtualization/Tenant_Placement",
+          "tenant-virtualization/Tenant_Sharing"
         ]
       },
       {
         "group": "Artificial Intelligence",
         "pages": [
-          "ai-embeddings/introduction",
-          "ai-embeddings/vector_database/vector_database",
-          "ai-embeddings/pg_vector/pg_vector",
-          "ai-embeddings/rag/rag",
+          "ai-embeddings/Introduction",
+          "ai-embeddings/vector_database/Vector_Database",
+          "ai-embeddings/pg_vector/Pg_Vector",
+          "ai-embeddings/rag/RAG",
           {
-            "group": "embedding models",
+            "group": "Embedding Models",
             "pages": [
-              "embedding_models/cohere",
-              "embedding_models/deepinfra",
-              "embedding_models/fireworks",
-              "embedding_models/google",
-              "embedding_models/open_ai",
-              "embedding_models/voyage"
+              "embedding_models/Cohere",
+              "embedding_models/Deepinfra",
+              "embedding_models/Fireworks",
+              "embedding_models/Google",
+              "embedding_models/Open_AI",
+              "embedding_models/Voyage"
             ]
           },
-          "ai-embeddings/streaming/streaming",
-          "ai-embeddings/rag_vs_finetune"
+          "ai-embeddings/streaming/Streaming",
+          "ai-embeddings/RAG_vs_Finetune"
         ]
       },
       {
-        "group": "postgres basics",
+        "group": "Postgres",
         "pages": [
-          "postgres/introduction",
-          "postgres/createtable",
+          "postgres/Introduction",
+          "postgres/Create_Table",
           {
-            "group": "data types",
+            "group": "Data Types",
             "pages": [
-              "datatype/numeric",
-              "datatype/character",
-              "datatype/date",
-              "datatype/json",
-              "datatype/arrays"
+              "datatype/Numeric",
+              "datatype/Character",
+              "datatype/Date",
+              "datatype/JSON",
+              "datatype/Arrays"
             ]
           },
-          "postgres/indexes",
-          "postgres/joins",
-          "postgres/views",
+          "postgres/Indexes",
+          "postgres/Joins",
+          "postgres/Views",
           {
-            "group": "tools",
+            "group": "Tools",
             "pages": [
-              "tools/dbeaver",
-              "tools/psql"
+              "tools/DBeaver",
+              "tools/PSQL"
             ]
           },
           {
-            "group": "postgres-compatibility",
+            "group": "Postgres_Compatibility",
             "pages": [
-              "postgres-compatibility/postgres_compatibility"
+              "postgres-compatibility/Postgres_Compatibility"
             ]
           }
         ]
