@@ -2,8 +2,8 @@
     "$schema": "https://mintlify.com/schema.json",
     "name": "Nile Documentation",
     "logo": {
-      "dark": "/images/icon.png",
-      "light": "/images/icon.png"
+      "dark": "/images/nilemintlogo.svg",
+      "light": "/images/nilemintlogo.svg"
     },
     "favicon": "/images/icon.png",
     "colors": {
