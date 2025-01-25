@@ -55,7 +55,7 @@
               "getting-started/languages/index",
               {
                 "group": "SQL",
-                "pages": getting-started/languages/sql
+                "pages": "getting-started/languages/sql"
               }
             ]
           }
