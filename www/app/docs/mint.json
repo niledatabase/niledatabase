@@ -65,7 +65,7 @@
       {
         "group": "Get Started",
         "pages": [
-            "getting-started/[[...slug]]/index"
+            "getting-started/index"
         ]
       },
       {
