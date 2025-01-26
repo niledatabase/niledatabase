@@ -107,7 +107,7 @@
             "getting-started/examples/task-genius"
           ]
         },
-        "getting-started/postgres_docker",
+        "getting-started/postgres-docker",
         {
           "group": "Schema Migrations",
           "icon": "diagram-project",
@@ -119,7 +119,7 @@
           ]
         },
         "getting-started/architecture",
-        "getting-started/postgres_testing"
+        "getting-started/postgres-testing"
       ]
     },
     {
