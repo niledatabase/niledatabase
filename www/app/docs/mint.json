@@ -77,34 +77,34 @@
           "group": "Usecases",
           "icon": "folder",
           "pages": [
-            "getting-started/usecases/Accounts",
-            "getting-started/usecases/Expensify",
-            "getting-started/usecases/Feedback",
-            "getting-started/usecases/Health",
-            "getting-started/usecases/Hiring",
-            "getting-started/usecases/HR",
-            "getting-started/usecases/Issue_Tracking",
-            "getting-started/usecases/Lead_Management",
-            "getting-started/usecases/Legal",
-            "getting-started/usecases/Marketing",
-            "getting-started/usecases/Notion",
-            "getting-started/usecases/Onboarding",
-            "getting-started/usecases/Scheduler",
-            "getting-started/usecases/Schoology",
-            "getting-started/usecases/Slack",
-            "getting-started/usecases/Supply",
-            "getting-started/usecases/Support",
-            "getting-started/usecases/Tripactions"
+            "getting-started/usecases/accounts",
+            "getting-started/usecases/expensify",
+            "getting-started/usecases/feedback",
+            "getting-started/usecases/health",
+            "getting-started/usecases/hiring",
+            "getting-started/usecases/hr",
+            "getting-started/usecases/issue-tracking",
+            "getting-started/usecases/lead-management",
+            "getting-started/usecases/legal",
+            "getting-started/usecases/marketing",
+            "getting-started/usecases/notion",
+            "getting-started/usecases/onboarding",
+            "getting-started/usecases/scheduler",
+            "getting-started/usecases/schoology",
+            "getting-started/usecases/slack",
+            "getting-started/usecases/supply",
+            "getting-started/usecases/support",
+            "getting-started/usecases/tripactions"
           ]
         },
         {
           "group": "Examples",
           "icon": "lightbulb",
           "pages": [
-            "getting-started/examples/Chat_With_PDF",
-            "getting-started/examples/Code_Assistant",
-            "getting-started/examples/Sales_Insight",
-            "getting-started/examples/Task_Genius"
+            "getting-started/examples/chat-with-pdf",
+            "getting-started/examples/code-assistant",
+            "getting-started/examples/sales-insight",
+            "getting-started/examples/task-genius"
           ]
         },
         "getting-started/postgres_docker",
@@ -112,10 +112,10 @@
           "group": "Schema Migrations",
           "icon": "diagram-project",
           "pages": [
-            "getting-started/schema_migrations/Drizzle",
-            "getting-started/schema_migrations/Django",
-            "getting-started/schema_migrations/Prisma",
-            "getting-started/schema_migrations/SQLalchemy"
+            "getting-started/schema_migrations/drizzle",
+            "getting-started/schema_migrations/django",
+            "getting-started/schema_migrations/prisma",
+            "getting-started/schema_migrations/sqlalchemy"
           ]
         },
         "getting-started/architecture",
@@ -125,33 +125,34 @@
     {
       "group": "Tenant Virtualization",
       "pages": [
-        "tenant-virtualization/Introduction",
-        "tenant-virtualization/Tenant_Isolation",
-        "tenant-virtualization/Tenant_Management",
-        "tenant-virtualization/Tenant_Placement",
-        "tenant-virtualization/Tenant_Sharing"
+        "tenant-virtualization/introduction",
+        "tenant-virtualization/tenant-isolation",
+        "tenant-virtualization/tenant-management",
+        "tenant-virtualization/tenant-placement",
+        "tenant-virtualization/tenant-sharing"
       ]
     },
     {
       "group": "Artificial Intelligence",
       "pages": [
-        "ai-embeddings/Introduction",
-        "ai-embeddings/vector_database/Vector_Database",
-        "ai-embeddings/pg_vector/PG_Vector",
-        "ai-embeddings/rag/RAG",
+        "ai-embeddings/introduction",
+        "ai-embeddings/vector_database/vector-database",
+        "ai-embeddings/pg_vector/pg-vector",
+        "ai-embeddings/rag/rAG",
         {
           "group": "Embedding Models",
+          "icon": "microchip"
           "pages": [
-            "ai-embeddings/embedding_models/Cohere",
-            "ai-embeddings/embedding_models/Deepinfra",
-            "ai-embeddings/embedding_models/Fireworks",
-            "ai-embeddings/embedding_models/Google",
-            "ai-embeddings/embedding_models/Open_AI",
-            "ai-embeddings/embedding_models/Voyage"
+            "ai-embeddings/embedding_models/cohere",
+            "ai-embeddings/embedding_models/deepinfra",
+            "ai-embeddings/embedding_models/fireworks",
+            "ai-embeddings/embedding_models/google",
+            "ai-embeddings/embedding_models/open-ai",
+            "ai-embeddings/embedding_models/voyage"
           ]
         },
-        "ai-embeddings/streaming/Streaming",
-        "ai-embeddings/ragvsfinetune/RAG_vs_Finetune"
+        "ai-embeddings/streaming/streaming",
+        "ai-embeddings/ragvsfinetune/rag-vs-finetune"
       ]
     },
     {
