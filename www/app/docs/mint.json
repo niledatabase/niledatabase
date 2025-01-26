@@ -44,7 +44,11 @@
     },
     {
       "name": "SDK Reference",
-      "url": "reference/[[...slug]]/sdk-reference"
+      "url": "reference/sdk-reference/index"
+    },
+    {
+      "name": "Pricing",
+      "url": "https://www.thenile.dev/pricing"
     },
     {
       "name": "Discord",
