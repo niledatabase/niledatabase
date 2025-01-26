@@ -5,7 +5,7 @@
     "dark": "/images/nilemintlogo.svg",
     "light": "/images/nilemintlogo.svg"
   },
-  "favicon": "/images/icon.png",
+  "favicon": "/icons/nile.svg",
   "colors": {
     "primary": "#fdb768",
     "light": "#fdb768",
