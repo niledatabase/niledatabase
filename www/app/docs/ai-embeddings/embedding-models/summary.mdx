@@ -1,0 +1,35 @@
+# Embedding Models for RAG
+
+export const metadata = {
+  title: "Embedding models",
+  order: 4,
+};
+
+Embedding models are used to convert text into vector embeddings.
+These embeddings can be used to perform various tasks like similarity search, clustering, and classification.
+In the context of RAG, embedding models are used to convert the input text into embeddings that are used to retrieve relevant (similar)
+documents from the document store.
+
+| Vendor      | Model                                      | Dimensions         | Max Tokens | Cost                                     | MTEB Avg Score | Similarity Metric         |
+|-------------|-------------------------------------------|--------------------|------------|------------------------------------------|----------------|---------------------------|
+| [OpenAI](./embedding_models/open_ai)       | text-embedding-3-small                  | 1536 (scales down) | 8191       | $0.02 / 1M tokens                       | 62.3           | cosine, dot product, L2   |
+| [OpenAI](./embedding_models/open_ai)       | text-embedding-3-large                  | 3072 (scales down) | 8191       | $0.13 / 1M tokens                       | 64.6           | cosine, dot product, L2   |
+| [Google](./embedding_models/google)       | text-embedding-preview-0409 / text-embedding-0004 | 768 (scales down) | 2048       | $0.025 / 1M tokens in Vertex, free in Gemini | 66.31          | cosine, L2               |
+| [Fireworks](./embedding_models/fireworks) | thenlper/gte-large                       | 1024               | 512        | $0.016 / 1M tokens                      | 63.23          | cosine                    |
+| [Fireworks](./embedding_models/fireworks) | nomic-ai/nomic-embed-text-v1.5          | 768 (scales down)  | 8192       | $0.008 / 1M tokens                      | 62.28          | cosine                    |
+| [DeepInfra](./embedding_models/deepinfra) | gte-large                                | 1024               | 512        | $0.010 / 1M tokens                      | 63.23          | cosine                    |
+| [Cohere](embedding_models/cohere)         | embed-english-v3.0                       | 1024               | 512        | $0.10 / 1M Tokens                       | 64.5           | cosine                    |
+| [Voyage](embedding_models/voyage)         | voyage-large-2-instruct                  | 1024               | 16000      | $0.12 / 1M tokens                       | 68.28          | cosine, dot product, L2   |
+| [Voyage](embedding_models/voyage)         | voyage-2                                 | 1024               | 4000       | $0.1 / 1M tokens                        |                | cosine, dot product, L2   |
+| [Voyage](embedding_models/voyage)         | voyage-code-2                            | 1536               | 16000      | $0.12 / 1M tokens                       |                | cosine, dot product, L2   |
+| [Voyage](embedding_models/voyage)         | voyage-law-2                             | 1024               | 16000      | $0.12 / 1M tokens                       |                | cosine, dot product, L2   |
+
+## Explanation of columns
+
+- **Vendor(s)**: The vendor(s) that provide the model as a service.
+- **Model**: The name of the model.
+- **dimensions**: The number of dimensions in the vector embeddings that the model generates
+- **max tokens**: The maximum number of tokens that can be passed to the model in a single request
+- **cost**: The cost of using the model (based on vendor pricing page, where available)
+- **MTEB avg score**: The [Massive Text Embedding Benchmark (MTEB)](https://github.com/embeddings-benchmark/mteb) average score. MTEB is a benchmark for evaluating the quality of embeddings across a range of tasks. The higher the score, the better the embeddings.
+- **similarity metric**: The similarity metric recommended by the model authors to use with the embeddings. We only included the metrics supported by `pg_vector`, some of the models may support additional metrics.
