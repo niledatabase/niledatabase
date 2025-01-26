@@ -138,7 +138,7 @@
         "ai-embeddings/introduction",
         "ai-embeddings/vector_database/vector-database",
         "ai-embeddings/pg_vector/pg-vector",
-        "ai-embeddings/rag/rAG",
+        "ai-embeddings/rag/rag",
         {
           "group": "Embedding Models",
           "icon": "microchip",
