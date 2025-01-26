@@ -16,7 +16,7 @@
     }
   },
   "background": {
-    "style": "grid"
+    "style": "windows"
   },
   "modeToggle": {
     "default": "dark",
