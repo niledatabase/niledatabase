@@ -1,0 +1,248 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "Feedback360 AI",
+  order: 17,
+};
+
+# Feedback360 AI - 360-Degree Feedback, Perfected with AI
+
+![feedbacksnapshot](/images/feedbacksnapshot.png)
+
+The 360 employee feedback application allows employees to provide feedback about their peers, receive feedback, and manage their own performance and recognition. The application supports feedback from any employee to any other employee within the company and includes AI-powered features to analyze feedback patterns, draft feedback, and provide insights. Employees can also give kudos and badges to each other, with options for anonymous feedback. The HR team can manage and review all feedback, with notifications to ensure timely completion of feedback tasks.
+
+### Key Features
+
+1. **Feedback Management:**
+   - Employees can give feedback to any other employee.
+   - Feedback can be given anonymously if desired.
+   - Employees can view all feedback given to them.
+   - Self-feedback is allowed.
+2. **AI Features:**
+   - AI can summarize feedback and provide insights into feedback patterns for specific employees.
+   - AI can help draft feedback based on context or previous feedback.
+   - AI can analyze feedback trends to suggest improvements or recognize strengths.
+3. **Recognition:**
+   - Employees can give kudos and badges to each other.
+   - System tracks and manages all kudos and badges given.
+4. **Notifications:**
+   - Notifications for employees to provide pending feedback.
+   - Alerts for HR and employees regarding feedback deadlines.
+5. **HR Management:**
+   - HR can view and manage all feedback across the organization.
+   - HR can use AI to summarize and analyze overall feedback trends.
+
+### Postgres Schemas
+
+![feedbackschema](/images/feedbackschema.png)
+
+### 1. departments
+
+The `departments` table contains information about the different departments within an organization. Each department is uniquely identified by a `department_id` and is associated with a `tenant_id` to ensure it belongs to the correct organization. This table includes the department name.
+
+```sql
+CREATE TABLE departments (
+    tenant_id UUID,
+    department_id UUID,
+    name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (tenant_id, department_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(tenant_id)
+);
+```
+
+### 2. employees
+
+The `employees` table tracks employee information within an organization. Each employee is identified by a unique `employee_id` and is associated with a department (`department_id`). This table includes details such as job title and compensation. The table is linked to the `tenant_id` to ensure that employee records are specific to each organization.
+
+```sql
+CREATE TABLE employees (
+    tenant_id UUID,
+    employee_id UUID,
+    department_id UUID,
+    title VARCHAR(100),
+    compensation NUMERIC(15, 2),
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+```
+
+### 3. feedback
+
+The `feedback` table records feedback given by employees to other employees. It includes the `giver_id` (the employee giving the feedback) and `receiver_id` (the employee receiving the feedback), along with the feedback text. This table also tracks whether the feedback is anonymous and includes a `vector_embedding` for AI-based analysis. Each feedback entry is tied to a specific `tenant_id`. The embeddings can be used to help summarize and draft feedbacks.
+
+```sql
+CREATE TABLE feedback (
+    tenant_id UUID,
+    feedback_id UUID,
+    giver_id UUID,
+    receiver_id UUID,
+    feedback_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_anonymous BOOLEAN DEFAULT FALSE,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, feedback_id),
+    FOREIGN KEY (tenant_id, giver_id) REFERENCES employees(tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, receiver_id) REFERENCES employees(tenant_id, employee_id)
+);
+```
+
+### 4. self_feedback
+
+The `self_feedback` table allows employees to provide feedback about themselves. Each record includes a unique `self_feedback_id`, the `employee_id` who provided the feedback, and the text of the feedback. This table includes a `vector_embedding` for AI analysis and is associated with a specific `tenant_id`. The embeddings can be used to help summarize and draft feedbacks.
+
+```sql
+CREATE TABLE self_feedback (
+    tenant_id UUID,
+    self_feedback_id UUID,
+    employee_id UUID,
+    feedback_text TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, self_feedback_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
+);
+```
+
+### 5. kudos
+
+The `kudos` table tracks kudos given by employees to their peers. It includes a unique `kudos_id`, the `giver_id` (employee giving kudos), the `receiver_id` (employee receiving kudos), and the text of the kudos. A `vector_embedding` is included for AI analysis. The embeddings are used to help search past kudos by HR and understand correlation between feedback and kudos. Each entry is linked to a `tenant_id`.
+
+```sql
+CREATE TABLE kudos (
+    tenant_id UUID,
+    kudos_id UUID,
+    giver_id UUID,
+    receiver_id UUID,
+    kudos_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, kudos_id),
+    FOREIGN KEY (tenant_id, giver_id) REFERENCES employees(tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, receiver_id) REFERENCES employees(tenant_id, employee_id)
+);
+```
+
+### 6. badges
+
+The `badges` table records badges awarded to employees. Each badge has a unique `badge_id`, is linked to an `employee_id`, and includes the badge's name and the date it was issued. This table helps track employee achievements and is specific to each `tenant_id`.
+
+```sql
+CREATE TABLE badges (
+    tenant_id UUID,
+    badge_id UUID,
+    employee_id UUID,
+    badge_name VARCHAR(100),
+    issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, badge_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
+);
+```
+
+### 7. notifications
+
+The `notifications` table manages notifications sent to employees. Each notification includes a unique `notification_id`, the `employee_id` it is intended for, the text of the notification, and a timestamp for when it was created. The table also tracks whether the notification has been read. This table is linked to a specific `tenant_id`.
+
+```sql
+CREATE TABLE notifications (
+    tenant_id UUID,
+    notification_id UUID,
+    employee_id UUID,
+    notification_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (tenant_id, notification_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
+);
+```
+
+### Full Script
+
+```sql
+-- Departments Table
+CREATE TABLE departments (
+    tenant_id UUID,
+    department_id UUID,
+    name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (tenant_id, department_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Employees Table
+CREATE TABLE employees (
+    tenant_id UUID,
+    employee_id UUID,
+    department_id UUID,
+    title VARCHAR(100),
+    compensation NUMERIC(15, 2),
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES users.tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+
+-- Feedback Table
+CREATE TABLE feedback (
+    tenant_id UUID,
+    feedback_id UUID,
+    giver_id UUID,
+    receiver_id UUID,
+    feedback_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_anonymous BOOLEAN DEFAULT FALSE,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, feedback_id),
+    FOREIGN KEY (tenant_id, giver_id) REFERENCES employees(tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, receiver_id) REFERENCES employees(tenant_id, employee_id)
+);
+
+-- Self Feedback Table
+CREATE TABLE self_feedback (
+    tenant_id UUID,
+    self_feedback_id UUID,
+    employee_id UUID,
+    feedback_text TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, self_feedback_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
+);
+
+-- Kudos Table
+CREATE TABLE kudos (
+    tenant_id UUID,
+    kudos_id UUID,
+    giver_id UUID,
+    receiver_id UUID,
+    kudos_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, kudos_id),
+    FOREIGN KEY (tenant_id, giver_id) REFERENCES employees(tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, receiver_id) REFERENCES employees(tenant_id, employee_id)
+);
+
+-- Badges Table
+CREATE TABLE badges (
+    tenant_id UUID,
+    badge_id UUID,
+    employee_id UUID,
+    badge_name VARCHAR(100),
+    issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, badge_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
+);
+
+-- Notifications Table
+CREATE TABLE notifications (
+    tenant_id UUID,
+    notification_id UUID,
+    employee_id UUID,
+    notification_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (tenant_id, notification_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
+);
+
+```

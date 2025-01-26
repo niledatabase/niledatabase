@@ -1,0 +1,218 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "TaskPilot AI",
+  order: 1,
+};
+
+# TaskPilot AI - Your AI-Driven Guide to Seamless Task Management
+
+![taskssnapshot](/images/taskssnapshot.png)
+
+This application allows users to manage tasks, track status, search past tasks, and view task descriptions. It includes advanced AI features, such as a co-pilot that assists in adding tasks, asking questions about past tasks, and analyzing task execution speed. Users can also search for previous tasks. The application supports project management, with tasks organized under projects and a global roadmap for planning tasks across projects.
+
+### Detailed Requirements
+
+1. **Multitenancy:** Each tenant has its own isolated data, ensuring data security and segregation. The tenants can be placed close to the customer for better latency and needs to satisfy compliance requirements of the customers.
+2. **Task Management:** Ability to create, update, and delete tasks. Each task has a name, description, status, and due date.
+3. **Project Management:** Tasks are organized under projects. Each project can have multiple tasks.
+4. **Task Status Tracking:** History of status changes for each task is tracked.
+5. **Task Comments:** Users can add comments to tasks.
+6. **Global Planning:** A roadmap that includes tasks from across projects for global planning.
+7. **AI Features:**
+   - Co-pilot for task creation and querying past tasks.
+   - Insights on task execution speed and best practices for task management.
+8. **User Management:** Users can belong to multiple tenants, with roles assigned to users per tenant.
+9. **Search Functionality:** Ability to search for past tasks.
+
+### Postgres Schemas
+
+![tasks-schema-1](/images/tasksschema.png)
+
+### 1. projects
+
+Stores information about each project. The application can support multiple projects.
+
+```sql
+CREATE TABLE projects (
+    tenant_id UUID,
+    project_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    project_name VARCHAR(100) NOT NULL,
+    project_description TEXT,
+    start_date DATE,
+    end_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, project_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(tenant_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+```
+
+### 2. tasks
+
+Stores information about each task, linked to a project. Each project can have multiple tasks. For each task, we track vector embeddings of the description field. In a real world application, you may need to chunk the description of the tasks and have a table to track embeddings for each chunk. The model itself can be useful to figure the right way to chunk the description to ensure that the context is preserved.
+
+```sql
+CREATE TABLE tasks (
+    tenant_id UUID,
+    task_id UUID DEFAULT gen_random_uuid(),
+    project_id UUID,
+    user_id UUID,
+    task_name VARCHAR(100) NOT NULL,
+    task_description TEXT,
+    task_status VARCHAR(50) NOT NULL,
+    due_date DATE,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, task_id),
+    FOREIGN KEY (tenant_id, project_id) REFERENCES projects(tenant_id, project_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(tenant_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+```
+
+### 3. task_status_history
+
+Tracks the status changes for each task. The status of each task can also be converted to embeddings if they need to be searched using AI models.
+
+```sql
+CREATE TABLE task_status_history (
+    tenant_id UUID,
+    history_id UUID DEFAULT gen_random_uuid(),
+    task_id UUID,
+    old_status VARCHAR(50) NOT NULL,
+    new_status VARCHAR(50) NOT NULL,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changed_by UUID,
+    PRIMARY KEY (tenant_id, history_id),
+    FOREIGN KEY (tenant_id, task_id) REFERENCES tasks(tenant_id, task_id),
+    FOREIGN KEY (tenant_id, changed_by) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+```
+
+### 4. task_comments
+
+Stores comments added to each task. The embeddings are created for each comments. Typically, comments are going to be short under tasks and one embedding per comment should be a good chunking length.
+
+```sql
+CREATE TABLE task_comments (
+    tenant_id UUID,
+    comment_id UUID DEFAULT gen_random_uuid(),
+    task_id UUID,
+    user_id UUID,
+    comment_text TEXT NOT NULL,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, comment_id),
+    FOREIGN KEY (tenant_id, task_id) REFERENCES tasks(tenant_id, task_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+```
+
+### 5. roadmap
+
+Contains tasks from across projects for global planning.
+
+```sql
+CREATE TABLE roadmap (
+    tenant_id UUID,
+    roadmap_id UUID DEFAULT gen_random_uuid(),
+    task_id UUID,
+    user_id UUID,
+    milestone_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, roadmap_id),
+    FOREIGN KEY (tenant_id, task_id) REFERENCES tasks(tenant_id, task_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(tenant_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+```
+
+### Complete SQL Script
+
+```sql
+-- Create projects table
+CREATE TABLE projects (
+    tenant_id UUID,
+    project_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    project_name VARCHAR(100) NOT NULL,
+    project_description TEXT,
+    start_date DATE,
+    end_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, project_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create tasks table linked to projects
+CREATE TABLE tasks (
+    tenant_id UUID,
+    task_id UUID DEFAULT gen_random_uuid(),
+    project_id UUID,
+    user_id UUID,
+    task_name VARCHAR(100) NOT NULL,
+    task_description TEXT,
+    task_status VARCHAR(50) NOT NULL,
+    due_date DATE,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, task_id),
+    FOREIGN KEY (tenant_id, project_id) REFERENCES projects(tenant_id, project_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create task_status_history table
+CREATE TABLE task_status_history (
+    tenant_id UUID,
+    history_id UUID DEFAULT gen_random_uuid(),
+    task_id UUID,
+    old_status VARCHAR(50) NOT NULL,
+    new_status VARCHAR(50) NOT NULL,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changed_by UUID,
+    PRIMARY KEY (tenant_id, history_id),
+    FOREIGN KEY (tenant_id, task_id) REFERENCES tasks(tenant_id, task_id),
+    FOREIGN KEY (tenant_id, changed_by) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create task_comments table
+CREATE TABLE task_comments (
+    tenant_id UUID,
+    comment_id UUID DEFAULT gen_random_uuid(),
+    task_id UUID,
+    user_id UUID,
+    comment_text TEXT NOT NULL,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, comment_id),
+    FOREIGN KEY (tenant_id, task_id) REFERENCES tasks(tenant_id, task_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create roadmap table for global planning
+CREATE TABLE roadmap (
+    tenant_id UUID,
+    roadmap_id UUID DEFAULT gen_random_uuid(),
+    task_id UUID,
+    user_id UUID,
+    milestone_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, roadmap_id),
+    FOREIGN KEY (tenant_id, task_id) REFERENCES tasks(tenant_id, task_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+```
+
+This script sets up the necessary tables and relationships to support a robust and scalable multitenant task management application with advanced AI capabilities, including project management, task tracking, task status history, task comments, and global planning through a roadmap.

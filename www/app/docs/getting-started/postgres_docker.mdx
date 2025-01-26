@@ -1,0 +1,169 @@
+---
+title: "Getting started with Nile's Postgres platform locally with Docker"
+sidebarTitle: "Run Locally"
+icon: "docker"
+---
+
+## 
+
+Nile provides a cloud offering to help build multi-tenant apps. You can also get started with Nile's Docker image
+and try Nile locally. [Join our discord](https://discord.com/invite/8UuBB84tTy) to give feedback or ask questions about running Nile locally.
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/get-started)
+- Postgres client. We'll use `psql` in this guide.
+
+### Run the Docker Container
+
+```bash
+docker run -p 5432:5432 -ti ghcr.io/niledatabase/testingcontainer:v0.0.2
+```
+
+This will start a Postgres database with Nile extensions installed.
+If this is the first time you are running the container, it will also pull the latest image,create the `test` database
+and the `00000000-0000-0000-0000-000000000000` user.
+
+### Connecting to the Database
+
+You can use `psql` with the following connection string:
+
+```bash
+psql postgres://00000000-0000-0000-0000-000000000000:password@localhost:5432/test
+```
+
+Or, if you are using a different client, you use the following connection details:
+
+```
+Host: localhost
+Port: 5432
+Database: test
+Username: 00000000-0000-0000-0000-000000000000
+Password: password
+```
+
+## Using the local database
+
+From this point, you can use the local database just like you would use Nile service.
+All the examples in the documentation are also applicable to the local database.
+Below we'll go through the steps in the quickstart guide using the local database.
+
+### Create a tenant-aware table
+
+[Tenant-aware tables](https://thenile.dev/docs/tenant-virtualization/tenant-isolation) are tables that have
+a `tenant_id` column. All the rows in such tables belong to a specific tenant.
+
+Let us create our first table that has a tenant_id column and a vector column:
+
+```sql
+CREATE TABLE IF NOT EXISTS "todos" (
+  "id" uuid DEFAULT gen_random_uuid(),
+  "tenant_id" uuid,
+  "title" varchar(256),
+  "estimate" varchar(256),
+  "embedding" vector(3),
+  "complete" boolean,
+  CONSTRAINT todos_pkey PRIMARY KEY("tenant_id","id")
+);
+```
+
+If you are using `psql`, you can view the table schema by running `\d todos`.
+
+### Create tenants
+
+Nile ships with built-in tables, like `tenants` table. Lets create our first tenant by inserting a row into the `tenants` table:
+
+```sql
+-- Creating the first tenant
+insert into tenants (id, name)
+values ('d24419bf-6122-4879-afa5-1d9c1b051d72', 'my first customer');
+select * from tenants;
+```
+
+### Insert data into a tenant-aware table
+
+Now that we have a tenant, we can insert data into our tenant-aware table:
+
+```sql
+-- adding a todo item for this tenant
+
+insert into todos (tenant_id, title, estimate, embedding, complete)
+values ('d24419bf-6122-4879-afa5-1d9c1b051d72', 'feed my cat', '1h', '[1,2,3]', false);
+```
+
+and you can verify the data was inserted correctly by running:
+
+```sql
+select * from todos;
+```
+
+You can add another tenant and insert data for that tenant in a similar fashion. This will allow us to explore
+tenant isolation (in the next section).
+
+```sql
+-- creating my second tenant
+
+insert into tenants (id, name)
+values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'second customer');
+select * from tenants;
+
+insert into todos (tenant_id, title, estimate, embedding, complete)
+values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'take out the trash', '2h', '[0.8,0.2,0.6]', false);
+select * from todos;
+```
+
+### Tenant isolation
+
+Nile goes a step further and provides tenant isolation. You can set the session to a specific tenant, and every query that follows will only return data that belongs to this specific tenant.
+
+Think of it as querying a virtual database dedicated to this one specific tenant.
+
+```sql
+-- set context to isolate query to a specific tenant DB
+-- our example uses the second tenant here
+set nile.tenant_id = '7e93c45f-fe65-4f26-8ab6-922850fa4c7a';
+
+SELECT tenants.name, title, embedding, estimate, complete
+FROM todos join tenants on tenants.id = todos.tenant_id;
+```
+
+✏️ Note that the container uses ephemeral storage, so all the data will be lost when the container is stopped.
+This is intentional, as it simplifies the setup (and more importantly - the cleanup), while still allowing you to experiment and test your application.
+
+### Looking good! What's next?
+
+🏆 Tada! You have learned the key Nile concepts. And it only took 5 minutes.
+
+You can learn more about Nile's tenant virtualization features in the following tutorials:
+
+- [Tenant management](/docs/tenant-virtualization/tenant-management)
+- [Tenant isolation](/docs/tenant-virtualization/tenant-isolation)
+
+Next, you will probably want to learn how to use Nile for building an app in your favorite language.
+Check out our [Getting Started](/docs/getting-started) guides for more information.
+
+## Optional: Docker container configuration
+
+The docker container can be configured with the following environment variables:
+
+- `NILE_TESTING_DB_NAME`: The name of the database. Defaults to `test`.
+- `NILE_TESTING_DB_ID`: The ID of the database. Must be a UUID. Defaults to `00000000-0000-0000-0000-000000000000`.
+- `NILE_TESTING_DB_USER`: The username for the database user. Must be UUID. Defaults to `00000000-0000-0000-0000-000000000000`.
+- `NILE_TESTING_DB_PASSWORD`: The password of the database user. Defaults to `password`.
+
+If you need to change the default values, you can do so by setting the environment variables when running the container.
+
+```bash
+docker run -p 5432:5432 -ti \
+  -e NILE_TESTING_DB_NAME=mydatabase \
+  -e NILE_TESTING_DB_PASSWORD=mypassword \
+  ghcr.io/niledatabase/testingcontainer:v0.0.2
+```
+
+with this configuration, the connection string will be:
+
+```bash
+psql postgres://00000000-0000-0000-0000-000000000000:mypassword@127.0.0.1:5432/mydatabase
+```
+
+You can also change the port mappings in the docker run command, if you want Postgres to listen on a different port.
