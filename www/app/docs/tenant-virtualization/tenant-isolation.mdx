@@ -81,13 +81,13 @@ Nile has first class support for tenant isolation at for SQL and all our SDKs wh
 
 <CodeGroup>
 
-```sql
+```sql SQL
 -- set session context to the tenant you want to access.
 set nile.tenant_id = '018ade1a-7830-7981-b23f-f3a7f7b8f09f';
 select * from candidates;
 ```
 
-```typescript
+```typescript Typescript
 // get a connection to the virtual tenant DB you want to access.
 const tenantNile = configureNile(cookies().get("authData"), params.tenantid);
 const candidates = await tenantNile.db("candidates").select("*");
