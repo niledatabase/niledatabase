@@ -1,0 +1,28 @@
+---
+title: "What is Nile"
+sidebarTitle: "What is Nile"
+description: "Nile explained in 3 minutes"
+icon: "question"
+---
+
+**Nile is a Postgres platform that decouples storage from compute, virtualizes tenants, and supports vertical and horizontal scaling globally to ship B2B applications fast while being safe with limitless scale.** All B2B applications are multi-tenant. A tenant/customer is primarily a company, an organization, or a workspace in your product that contains a group of users. A B2B application provides services to multiple tenants. Tenant is the basic building block of all B2B applications.
+
+## Unlimited database and virtual tenant databases
+
+In Nile, a database is a logical concept. Our serverless compute allows us to offer a truly cost-effective, multi-tenant solution that provisions new databases rapidly. This enables Nile to provide unlimited databases, even for free tiers. Serverless compute is ideal for testing, prototyping, and supporting early customers. As customers become more active, you can seamlessly transition them to provisioned compute for enhanced security or scalability. Nile's efficiency is remarkable—a new database is provisioned in under a second. The accompanying video demonstrates a typical Nile database creation process and shows the execution of an initial use case.
+
+## Tenant placement on both serverless or provisioned compute with 10x compute cost savings
+
+Tenants can now be placed on different types of compute within the same database. The serverless compute is extremely cost-efficient, proving cheaper than provisioning a standard instance on RDS. Built with true multitenancy, it enables Nile to use resources more efficiently across its users. Meanwhile, highly active customers can be moved to provisioned compute. The best part? The capacity needed for this is significantly lower than for an entire database housing all customers.
+
+## Support billions of vector embeddings across customers with 10-20x storage savings
+
+The architecture supports vertical scaling for tenants and horizontal scaling across tenants. For vector embeddings, the total index size is divided into smaller chunks across multiple machines. Additionally, since the storage is in S3, Nile can swap a tenant’s embeddings entirely to S3 without maintaining a local cache. The indexes themselves are smaller, and multiple machines can be leveraged to build indexes in parallel. This approach provides lower latency and nearly 100% recall by reducing the search space per customer.
+
+## Secure isolation for customer’s data and embeddings
+
+Each tenant in this architecture functions as its own virtual database. The Postgres connections understand tenants and can route to a specific one. Tenant data isolation is enforced natively in Postgres, as it recognizes tenant boundaries without the need for Row-Level Security (RLS). Furthermore, the architecture allows tenants to be moved instantly between compute instances. Performance isolation between tenants can be achieved by relocating them to other compute instances with more capacity without any downtime.
+
+## Branching, backups, query insights, and read replicas by tenant/customer
+
+Since Postgres understands tenant boundaries, we can now maintain one database for all tenants while executing database operations at the tenant level. This allows us to reproduce customer issues by simply branching the specific customer's data and replaying their workload. If a customer accidentally deletes their data, backups can be restored instantly. We can create read replicas only for customers with higher workloads, saving both compute and storage resources. Moreover, we can now debug performance for specific tenants or customers, eliminating the need to treat the database as a black box.
