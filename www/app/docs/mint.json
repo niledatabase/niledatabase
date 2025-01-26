@@ -55,7 +55,7 @@
     {
       "group": "Get Started",
       "pages": [
-        "getting-started/Introduction",
+        "getting-started/getting-started",
         {
           "group": "Languages",
           "pages": [
