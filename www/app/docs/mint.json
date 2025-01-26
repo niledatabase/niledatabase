@@ -61,14 +61,14 @@
           "icon": "code",
           "pages": [
             "getting-started/languages/sql",
-            "getting-started/languages/NextJS",
-            "getting-started/languages/Drizzle",
-            "getting-started/languages/Prisma",
-            "getting-started/languages/Python",
-            "getting-started/languages/Node"
+            "getting-started/languages/nextjs",
+            "getting-started/languages/drizzle",
+            "getting-started/languages/prisma",
+            "getting-started/languages/python",
+            "getting-started/languages/node"
           ]
         },
-        "getting-started/What_is_Nile",
+        "getting-started/whatisnile",
         {
           "group": "Usecases",
           "pages": [
@@ -101,7 +101,7 @@
             "getting-started/examples/Task_Genius"
           ]
         },
-        "getting-started/Run_Locally",
+        "getting-started/postgres_docker",
         {
           "group": "Schema Migrations",
           "pages": [
@@ -111,8 +111,8 @@
             "getting-started/schema_migrations/SQLalchemy"
           ]
         },
-        "getting-started/Architecture",
-        "getting-started/Testing"
+        "getting-started/architecture",
+        "getting-started/postgres_testing"
       ]
     },
     {
