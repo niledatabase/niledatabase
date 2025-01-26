@@ -16,7 +16,7 @@
     }
   },
   "background": {
-    "style": "windows"
+    "style": "gradient"
   },
   "modeToggle": {
     "default": "dark",
