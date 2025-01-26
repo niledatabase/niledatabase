@@ -58,8 +58,9 @@
         "getting-started/getting-started",
         {
           "group": "Languages",
+          "icon": "code",
           "pages": [
-            "getting-started/languages/SQL",
+            "getting-started/languages/sql",
             "getting-started/languages/NextJS",
             "getting-started/languages/Drizzle",
             "getting-started/languages/Prisma",
