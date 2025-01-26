@@ -135,10 +135,7 @@
     {
       "group": "Artificial Intelligence",
       "pages": [
-        "ai-embeddings/introduction",
-        "ai-embeddings/vector-database/vector-database",
-        "ai-embeddings/pg-vector/pg-vector",
-        "ai-embeddings/rag/rag"
+        "ai-embeddings/introduction"
       ]
     },
     {
