@@ -71,6 +71,7 @@
         "getting-started/whatisnile",
         {
           "group": "Usecases",
+          "icon": "folder",
           "pages": [
             "getting-started/usecases/Accounts",
             "getting-started/usecases/Expensify",
@@ -94,6 +95,7 @@
         },
         {
           "group": "Examples",
+          "icon": "lightbulb",
           "pages": [
             "getting-started/examples/Chat_With_PDF",
             "getting-started/examples/Code_Assistant",
@@ -104,6 +106,7 @@
         "getting-started/postgres_docker",
         {
           "group": "Schema Migrations",
+          "icon": "diagram-project",
           "pages": [
             "getting-started/schema_migrations/Drizzle",
             "getting-started/schema_migrations/Django",
