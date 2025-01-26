@@ -16,7 +16,7 @@
     }
   },
   "background": {
-    "style": "gradient"
+    "style": "grid"
   },
   "modeToggle": {
     "default": "dark",
