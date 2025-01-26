@@ -135,7 +135,24 @@
     {
       "group": "Artificial Intelligence",
       "pages": [
-        "ai-embeddings/introduction"
+        "ai-embeddings/introduction",
+        "ai-embeddings/vector-database/vector-database",
+        "ai-embeddings/pg-vector/pg-vector",
+        "ai-embeddings/rag/rag",
+        {
+          "group": "Embedding Models",
+          "icon": "microchip",
+          "pages": [
+            "ai-embeddings/embedding-models/cohere",
+            "ai-embeddings/embedding-models/deepinfra",
+            "ai-embeddings/embedding-models/fireworks",
+            "ai-embeddings/embedding-models/google",
+            "ai-embeddings/embedding-models/open-ai",
+            "ai-embeddings/embedding-models/voyage"
+          ]
+        },
+        "ai-embeddings/streaming/streaming",
+        "ai-embeddings/ragvsfinetune/rag-vs-finetune"
       ]
     },
     {
