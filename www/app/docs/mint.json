@@ -1,91 +1,214 @@
 {
-    "$schema": "https://mintlify.com/schema.json",
-    "name": "Starter Kit",
-    "logo": {
-      "dark": "/logo/dark.svg",
-      "light": "/logo/light.svg"
-    },
-    "favicon": "/favicon.svg",
-    "colors": {
-      "primary": "#0D9373",
-      "light": "#07C983",
-      "dark": "#0D9373",
-      "anchors": {
-        "from": "#0D9373",
-        "to": "#07C983"
-      }
-    },
-    "topbarLinks": [
-      {
-        "name": "Support",
-        "url": "mailto:hi@mintlify.com"
-      }
-    ],
-    "topbarCtaButton": {
-      "name": "Dashboard",
-      "url": "https://dashboard.mintlify.com"
-    },
-    "tabs": [
-      {
-        "name": "API Reference",
-        "url": "api-reference"
-      }
-    ],
-    "anchors": [
-      {
-        "name": "Documentation",
-        "icon": "book-open-cover",
-        "url": "https://mintlify.com/docs"
-      },
-      {
-        "name": "Community",
-        "icon": "slack",
-        "url": "https://mintlify.com/community"
-      },
-      {
-        "name": "Blog",
-        "icon": "newspaper",
-        "url": "https://mintlify.com/blog"
-      }
-    ],
-    "navigation": [
-      {
-        "group": "Get Started",
-        "pages": [
-          "introduction",
-          "quickstart",
-          "development"
-        ]
-      },
-      {
-        "group": "Essentials",
-        "pages": [
-          "essentials/markdown",
-          "essentials/code",
-          "essentials/images",
-          "essentials/settings",
-          "essentials/navigation",
-          "essentials/reusable-snippets"
-        ]
-      },
-      {
-        "group": "API Documentation",
-        "pages": [
-          "api-reference/introduction"
-        ]
-      },
-      {
-        "group": "Endpoint Examples",
-        "pages": [
-          "api-reference/endpoint/get",
-          "api-reference/endpoint/create",
-          "api-reference/endpoint/delete"
-        ]
-      }
-    ],
-    "footerSocials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Nile Documentation",
+  "logo": {
+    "dark": "/images/nilemintlogo.svg",
+    "light": "/images/nilemintlogo.svg"
+  },
+  "favicon": "/icons/nile.svg",
+  "colors": {
+    "primary": "#fdb768",
+    "light": "#fdb768",
+    "dark": "#fdb768",
+    "anchors": {
+      "from": "#0D9373",
+      "to": "#07C983"
     }
+  },
+  "background": {
+    "style": "gradient"
+  },
+  "modeToggle": {
+    "default": "dark",
+    "isHidden": true
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:support@thenile.dev"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get Started",
+    "url": "https://console.thenile.dev"
+  },
+  "tabs": [
+    {
+      "name": "Documentation",
+      "url": "Get Started"
+    },
+    {
+      "name": "API Reference",
+      "url": "api-reference",
+      "openapi": "https://global.thenile.dev/openapi.yaml"
+    },
+    {
+      "name": "SDK Reference",
+      "url": "sdk-reference"
+    },
+    {
+      "name": "Pricing",
+      "url": "https://www.thenile.dev/pricing"
+    },
+    {
+      "name": "Discord",
+      "url": "https://discord.com/invite/8UuBB84tTy"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": [
+        "getting-started/getting-started",
+        {
+          "group": "Languages",
+          "icon": "code",
+          "pages": [
+            "getting-started/languages/sql",
+            "getting-started/languages/nextjs",
+            "getting-started/languages/drizzle",
+            "getting-started/languages/prisma",
+            "getting-started/languages/python",
+            "getting-started/languages/node"
+          ]
+        },
+        "getting-started/whatisnile",
+        {
+          "group": "Usecases",
+          "icon": "folder",
+          "pages": [
+            "getting-started/usecases/accounts",
+            "getting-started/usecases/expensify",
+            "getting-started/usecases/feedback",
+            "getting-started/usecases/health",
+            "getting-started/usecases/hiring",
+            "getting-started/usecases/hr",
+            "getting-started/usecases/issue-tracking",
+            "getting-started/usecases/lead-management",
+            "getting-started/usecases/legal",
+            "getting-started/usecases/marketing",
+            "getting-started/usecases/notion",
+            "getting-started/usecases/onboarding",
+            "getting-started/usecases/scheduler",
+            "getting-started/usecases/schoology",
+            "getting-started/usecases/slack",
+            "getting-started/usecases/supply",
+            "getting-started/usecases/support",
+            "getting-started/usecases/tripactions"
+          ]
+        },
+        {
+          "group": "Examples",
+          "icon": "lightbulb",
+          "pages": [
+            "getting-started/examples/chat-with-pdf",
+            "getting-started/examples/code-assistant",
+            "getting-started/examples/sales-insight",
+            "getting-started/examples/task-genius"
+          ]
+        },
+        "getting-started/postgres-docker",
+        {
+          "group": "Schema Migrations",
+          "icon": "diagram-project",
+          "pages": [
+            "getting-started/schema_migrations/drizzle",
+            "getting-started/schema_migrations/django",
+            "getting-started/schema_migrations/prisma",
+            "getting-started/schema_migrations/sqlalchemy"
+          ]
+        },
+        "getting-started/architecture",
+        "getting-started/postgres-testing"
+      ]
+    },
+    {
+      "group": "Tenant Virtualization",
+      "pages": [
+        "tenant-virtualization/introduction",
+        "tenant-virtualization/tenant-isolation",
+        "tenant-virtualization/tenant-management",
+        "tenant-virtualization/tenant-placement",
+        "tenant-virtualization/tenant-sharing"
+      ]
+    },
+    {
+      "group": "Artificial Intelligence",
+      "pages": [
+        "ai-embeddings/introduction",
+        "ai-embeddings/vector-database/vector-database",
+        "ai-embeddings/pg-vector/pg-vector",
+        "ai-embeddings/rag/rag",
+        {
+          "group": "Embedding Models",
+          "icon": "microchip",
+          "pages": [
+            "ai-embeddings/embedding-models/summary",
+            "ai-embeddings/embedding-models/cohere",
+            "ai-embeddings/embedding-models/deepinfra",
+            "ai-embeddings/embedding-models/fireworks",
+            "ai-embeddings/embedding-models/google",
+            "ai-embeddings/embedding-models/open-ai",
+            "ai-embeddings/embedding-models/voyage"
+          ]
+        },
+        "ai-embeddings/streaming/streaming",
+        "ai-embeddings/ragvsfinetune/rag-vs-finetune"
+      ]
+    },
+    {
+      "group": "Postgres",
+      "pages": [
+        "postgres/Introduction",
+        "postgres/Create_Table",
+        {
+          "group": "Data Types",
+          "pages": [
+            "postgres/datatype/Numeric",
+            "postgres/datatype/Character",
+            "postgres/datatype/Date",
+            "postgres/datatype/JSON",
+            "postgres/datatype/Arrays"
+          ]
+        },
+        "postgres/Indexes",
+        "postgres/Joins",
+        "postgres/Views",
+        {
+          "group": "Tools",
+          "pages": [
+            "tools/DBeaver",
+            "tools/PSQL"
+          ]
+        },
+        "postgres/postgres-compatibility/Postgres_Compatibility"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "partners/AWS_Bedrock",
+        "partners/Cohere",
+        "partners/Confluent",
+        "partners/Llama_Index",
+        "partners/Modal",
+        "partners/Netlify",
+        "partners/Vercel",
+        "platform/integrations/Lambda",
+        "platform/integrations/NextAuth",
+        "platform/integrations/Stripe"
+      ]
+    },
+    {
+      "group": "Support",
+      "pages": [
+        "support/Support"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "x": "https://x.com/niledatabase",
+    "github": "https://github.com/niledatabase/niledatabase",
+    "linkedin": "https://www.linkedin.com/company/niledatabase"
   }
+}

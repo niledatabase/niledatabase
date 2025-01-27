@@ -1,0 +1,39 @@
+---
+title: "Build AI-Native B2B application with Postgres and Drizzle ORM"
+sidebarTitle: "Drizzle"
+---
+
+In this tutorial, you will learn about Nile's tenant virtualization features, while building a backend service for a todo list application.
+We'll use Drizzle as the ORM to interact with the database, OpenAI client to interact with AI models, Express as the web framework and NodeJS as the runtime.
+
+We'll use Nile to provide us with virtual-tenant databases - isolating the tasks for each tenant, and we'll use the AI models to generate automated time estimates
+for each task in the todo list. The estimates will be based on the task title, and estimates of similar tasks in the tenant's history.
+This technique is known as [RAG architecture](https://www.thenile.dev/docs/ai-embeddings/rag).
+
+<iframe
+  width="480"
+  height="270"
+  src="https://www.youtube.com/embed/Qx0_99qebjo?si=np370EsZPJmM-1zA"
+  title="YouTube video player"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowFullScreen
+></iframe>
+
+
+## What's next?
+
+This example is a good starting point for building your own application with Nile.
+
+You have learned basic Nile, AI and RAG concepts and how to use them with Drizzle ORM.
+
+You can learn more about Nile's tenant virtualization features in the following tutorials:
+
+- [Tenant management](/docs/tenant-virtualization/tenant-management)
+- [Tenant isolation](/docs/tenant-virtualization/tenant-isolation)
+
+You can explore Nile's JS SDK in the [SDK reference](/docs/reference/sdk-reference).
+
+You can learn [More about AI in Nile](https://www.thenile.dev/docs/ai-embeddings), or try a more advanced example like:
+
+- [Chat with PDFs](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
+- [Code Assistnat](https://www.thenile.dev/docs/getting-started/examples/code_assistant)

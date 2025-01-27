@@ -1,0 +1,155 @@
+---
+title: "Postgres Create Table"
+sidebarTitle: "Create Table"
+icon: "table"
+---
+
+A PostgreSQL table is a structured storage object that organizes data into rows and columns. Each row represents a single record, while each column represents a specific attribute of the data. Tables use primary keys to identify rows uniquely and can establish relationships with other tables through foreign keys. They enforce data integrity and consistency using constraints.
+
+![TABLES-1](/docs/tables.png)
+
+Creating a table involves defining the table name and its columns with their respective data types.
+
+### Example:
+
+```sql
+CREATE TABLE employees (
+    employee_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email VARCHAR(100)
+);
+```
+
+### Detailed Explanation:
+
+- `CREATE TABLE employees`: This command tells PostgreSQL to create a new table named `employees`.
+- `employee_id SERIAL PRIMARY KEY`:
+  - `employee_id` is the name of the column.
+  - `SERIAL` is a special data type that automatically generates a unique identifier for each row (an auto-incrementing integer).
+  - `PRIMARY KEY` means this column uniquely identifies each row in the table.
+- `first_name VARCHAR(50)`:
+  - `first_name` is the name of the column.
+  - `VARCHAR(50)` specifies that this column can store up to 50 characters.
+- `last_name VARCHAR(50)` and `email VARCHAR(100)` follow the same pattern.
+
+## Adding Columns
+
+To add a new column to an existing table, you use the `ALTER TABLE` statement.
+
+### Example:
+
+```sql
+ALTER TABLE employees
+ADD COLUMN date_of_birth DATE;
+```
+
+### Detailed Explanation:
+
+- `ALTER TABLE employees`: This command specifies the table (`employees`) to be modified.
+- `ADD COLUMN date_of_birth DATE`:
+  - `ADD COLUMN` specifies that a new column is being added.
+  - `date_of_birth` is the name of the new column.
+  - `DATE` is the data type for the new column, which stores date values.
+
+## Defining Primary Keys
+
+A primary key is a column or a set of columns that uniquely identifies each row in a table. It ensures that each row has a unique identifier.
+
+### Adding a Primary Key During Table Creation:
+
+```sql
+CREATE TABLE employees (
+    employee_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email VARCHAR(100)
+);
+
+```
+
+### Adding a Primary Key to an Existing Table:
+
+If the table already exists without a primary key, you can add it using the `ALTER TABLE` statement:
+
+```sql
+ALTER TABLE employees
+ADD PRIMARY KEY (employee_id);
+```
+
+### Detailed Explanation:
+
+- `ADD PRIMARY KEY (employee_id)`:
+  - `ADD PRIMARY KEY` specifies the addition of a primary key.
+  - `(employee_id)` indicates that the `employee_id` column is being set as the primary key.
+
+## Defining Foreign Keys
+
+A foreign key is a column or a set of columns that establishes a link between the data in two tables. It ensures referential integrity by enforcing a relationship between the columns of two tables.
+
+### Example:
+
+First, create the `departments` table:
+
+```sql
+CREATE TABLE departments (
+    department_id SERIAL PRIMARY KEY,
+    department_name VARCHAR(50)
+);
+```
+
+### Adding a Foreign Key to the `employees` Table:
+
+1. Add the `department_id` column to the `employees` table:
+
+```sql
+ALTER TABLE employees
+ADD COLUMN department_id INTEGER;
+```
+
+1. Define the foreign key relationship:
+
+```sql
+ALTER TABLE employees
+ADD CONSTRAINT fk_department
+FOREIGN KEY (department_id) REFERENCES departments(department_id);
+```
+
+### Detailed Explanation:
+
+- `ALTER TABLE employees`: This command specifies the table (`employees`) to be modified.
+- `ADD COLUMN department_id INTEGER`:
+  - `ADD COLUMN` specifies that a new column is being added.
+  - `department_id` is the name of the new column.
+  - `INTEGER` is the data type for the new column, which stores integer values.
+- `ADD CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES departments(department_id)`:
+  - `ADD CONSTRAINT fk_department` names the new constraint `fk_department`.
+  - `FOREIGN KEY (department_id)` specifies that the `department_id` column in the `employees` table is a foreign key.
+  - `REFERENCES departments(department_id)` indicates that this foreign key references the `department_id` column in the `departments` table.
+
+### Full Example:
+
+Combining all the above concepts, here’s how to create both tables with the necessary columns and constraints:
+
+```sql
+-- Create departments table
+CREATE TABLE departments (
+    department_id SERIAL PRIMARY KEY,
+    department_name VARCHAR(50)
+);
+
+-- Create employees table
+CREATE TABLE employees (
+    employee_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email VARCHAR(100),
+    date_of_birth DATE,
+    department_id INTEGER,
+    CONSTRAINT fk_department
+        FOREIGN KEY (department_id)
+        REFERENCES departments(department_id)
+);
+```
+
+This script creates two tables: `departments` and `employees`, with the `employees` table having a foreign key that references the `departments` table. Each table and column is defined with appropriate data types and constraints to ensure data integrity and relationships.

@@ -1,0 +1,191 @@
+---
+title: "SalesLeadPilot - AI-Driven Guidance for Superior Lead Management"
+sidebarTitle: "SalesLeadPilot"
+---
+
+![leadssnapshot](/images/leadssnapshot.png)
+
+The Sales Lead Management application is designed to allow multiple organizations (tenants) to manage their sales leads efficiently. This application includes advanced AI features to assist in adding leads, querying past leads, and suggesting future actions to increase conversion rates. Key functionalities include lead management, status tracking, lead quality assessment, conversation tracking, note-taking, and comprehensive search capabilities.
+
+1. **Lead Management:** Create, update, and manage sales leads.
+2. **Status Tracking:** Track the status of each lead (e.g., new, contacted, qualified, unqualified, closed).
+3. **Lead Quality:** Mark the quality of leads (e.g., hot, warm, cold).
+4. **Search Leads:** Search for past leads based on various criteria.
+5. **Conversations and Notes:** Track conversations and take notes for each lead.
+6. **AI Co-Pilot:** Assist in adding leads, asking questions about past leads, and suggesting best steps to take for future conversions.
+7. **Search with AI:** Utilize AI to search previous leads and provide insights.
+
+### Postgres Schemas
+
+![leads-schema-1](/images/leadsschema.png)
+
+### 1. leads
+
+Stores information about each sales lead. A sales person finds the right lead for a company and adds them to the system. Each lead goes through a pipeline from email reach out, phone conversation to deal closing or disqualified.
+
+```sql
+CREATE TABLE leads (
+    tenant_id UUID,
+    lead_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    lead_name VARCHAR(100) NOT NULL,
+    lead_email VARCHAR(100) NOT NULL,
+    lead_phone VARCHAR(20),
+    lead_status VARCHAR(50) NOT NULL,
+    lead_quality VARCHAR(50),
+    deal_size DECIMAL(10, 2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+```
+
+### 2. lead_notes
+
+Stores notes related to each lead. These are notes taken by the sales rep as they go through the process of converting a lead to a potential customer. The embeddings of these notes are stored in the table to help RAG to the notes.
+
+```sql
+CREATE TABLE lead_notes (
+    tenant_id UUID,
+    note_id UUID DEFAULT gen_random_uuid(),
+    lead_id UUID,
+    user_id UUID,
+    note_content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, note_id),
+    FOREIGN KEY (tenant_id, lead_id) REFERENCES leads(tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+```
+
+### 3. lead_conversations
+
+Stores conversations related to each lead, with AI-generated summaries and vector embeddings for advanced search and analysis. There are multiple things to note here. The embeddings are stored per lead conversation here. These conversations can be long and having a single embedding may not be ideal. You may want to chunk them to get better contextual search.
+
+```sql
+CREATE TABLE lead_conversations (
+    tenant_id UUID,
+    conversation_id UUID DEFAULT gen_random_uuid(),
+    lead_id UUID,
+    user_id UUID,
+    conversation_content TEXT NOT NULL,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, conversation_id),
+    FOREIGN KEY (tenant_id, lead_id) REFERENCES leads(tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+```
+
+### 4. lead_status_history
+
+Tracks the status changes for each lead.
+
+```sql
+CREATE TABLE lead_status_history (
+    tenant_id UUID,
+    history_id UUID DEFAULT gen_random_uuid(),
+    lead_id UUID,
+    old_status VARCHAR(50) NOT NULL,
+    new_status VARCHAR(50) NOT NULL,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changed_by UUID,
+    PRIMARY KEY (tenant_id, history_id),
+    FOREIGN KEY (tenant_id, lead_id) REFERENCES leads(tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, changed_by) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+```
+
+### 5. global_companies
+
+Tracks the top 1500 companies in the world. This table is shared across all tenants. This is not a per tenant table. All the sales reps in all the tenants/customers can share this data.
+
+```sql
+CREATE TABLE global_companies (
+    company_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    company_name VARCHAR(100) NOT NULL,
+    industry VARCHAR(100),
+    country VARCHAR(50),
+    revenue DECIMAL(15, 2),
+    employees INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### Complete SQL Script
+
+```sql
+
+-- Create leads table
+CREATE TABLE leads (
+    tenant_id UUID,
+    lead_id UUID DEFAULT gen_random_uuid(),
+    user_id UUID,
+    lead_name VARCHAR(100) NOT NULL,
+    lead_email VARCHAR(100) NOT NULL,
+    lead_phone VARCHAR(20),
+    lead_status VARCHAR(50) NOT NULL,
+    lead_quality VARCHAR(50),
+    deal_size DECIMAL(10, 2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create lead_notes table
+CREATE TABLE lead_notes (
+    tenant_id UUID,
+    note_id UUID DEFAULT gen_random_uuid(),
+    lead_id UUID,
+    user_id UUID,
+    note_content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, note_id),
+    FOREIGN KEY (tenant_id, lead_id) REFERENCES leads(tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create lead_conversations table with AI-generated summaries and vector embeddings
+CREATE TABLE lead_conversations (
+    tenant_id UUID,
+    conversation_id UUID DEFAULT gen_random_uuid(),
+    lead_id UUID,
+    user_id UUID,
+    conversation_content TEXT NOT NULL,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, conversation_id),
+    FOREIGN KEY (tenant_id, lead_id) REFERENCES leads(tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create lead_status_history table
+CREATE TABLE lead_status_history (
+    tenant_id UUID,
+    history_id UUID DEFAULT gen_random_uuid(),
+    lead_id UUID,
+    old_status VARCHAR(50) NOT NULL,
+    new_status VARCHAR(50) NOT NULL,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changed_by UUID,
+    PRIMARY KEY (tenant_id, history_id),
+    FOREIGN KEY (tenant_id, lead_id) REFERENCES leads(tenant_id, lead_id),
+    FOREIGN KEY (tenant_id, changed_by) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create global_companies table
+CREATE TABLE global_companies (
+    company_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    company_name VARCHAR(100) NOT NULL,
+    industry VARCHAR(100),
+    country VARCHAR(50),
+    revenue DECIMAL(15, 2),
+    employees INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+This script sets up the necessary tables and relationships for a comprehensive multitenant sales lead management application with advanced AI capabilities.
