@@ -21,7 +21,7 @@ All SaaS applications provide service to multiple customers or tenants. Isolatin
 A SaaS application serves many tenants. The data for each tenant belongs to the tenant and should not be accessible to other tenants. The users who belong to a specific tenant can access the data they have access to for that tenant. This seems so obvious but yet so hard to achieve in practice.
 
 In Nile, you can think about it as a single Postgres that has many virtual tenant DBs. You can control where these virtual DBs should be placed. This can be on multitenant or dedicated instances. You get to decide while creating the tenant. This can also be in any region of the world. Nile enables isolation with a single line of code in your application. Nile also ensures user authorization is enforced within a tenant if you use our user management (more about this later)
-![Tenant Isolation](/docs/tenant-isolation.png)
+![Tenant Isolation](/images/tenant-isolation.png)
 
 ## Enforcing tenant data isolation
 
@@ -309,4 +309,4 @@ However, in practice, you would typically get random peak workloads from differe
 tenants. This makes it hard to plan for.{' '}
 
 There are different approaches to tackle this problem. You could either over provision for the worst case and waste resources or have the ability to instantly auto scale. Another thing with multitenant workloads is that as demand increases, the total workload tends to flatten out and becomes much more predictable to plan for. As scale increases, this gets easier. Another approach is to move tenants between machines to rebalance depending on workload distribution and infrastructure utilization. Nile employs all these approaches to ensure tenants never get impacted by the performance of other tenants. A future plan is to also allow users to specify the resource quota for each tenant which Nile can enforce. This would help to avoid spending too much resources for some of your tenants (example, your free tier customers can have more aggressive quotas).
-![Tenant Isolation](/docs/tenant-performance-isolation.png)
+![Tenant Isolation](/images/tenant-performance-isolation.png)

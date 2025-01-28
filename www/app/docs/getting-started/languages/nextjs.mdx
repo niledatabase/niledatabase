@@ -18,7 +18,7 @@ In this quick tutorial, you will learn about Nile's tenant virtualization featur
 
 1. Go to the [Nile console](https://console.thenile.dev) and create a workspace and database if you have not done so already.
 2. You should see a welcome message. Click on "Lets get started"
-   ![Nile welcome.](/docs/nile-welcome.png)
+   ![Nile welcome.](/images/nile-welcome.png)
 3. Give your workspace and database names, or you can accept the default auto-generated names.
 
 ## 2. Create a table
@@ -39,7 +39,7 @@ create table todos (
 You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
 
 See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
-![Creating a table in Nile's admin dashboard](/docs/gui-create-table.png)
+![Creating a table in Nile's admin dashboard](/images/gui-create-table.png)
 
 The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find semantically
 related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and using this data with text generation models is called [**RAG (Retrieval Augmented Generation)**](https://www.thenile.dev/docs/ai-embeddings/rag).

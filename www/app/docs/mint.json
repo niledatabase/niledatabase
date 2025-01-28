@@ -43,12 +43,12 @@
       "openapi": "https://global.thenile.dev/openapi.yaml"
     },
     {
-      "name": "SDK Reference",
-      "url": "sdk-reference"
-    },
-    {
       "name": "Pricing",
       "url": "https://www.thenile.dev/pricing"
+    },
+    {
+      "name": "Templates",
+      "url": "https://www.thenile.dev/templates"
     },
     {
       "name": "Discord",
@@ -152,7 +152,7 @@
           ]
         },
         "ai-embeddings/streaming/streaming",
-        "ai-embeddings/ragvsfinetune/rag-vs-finetune"
+        "ai-embeddings/rag-vs-finetune/rag-vs-finetune"
       ]
     },
     {
@@ -176,8 +176,8 @@
         {
           "group": "Tools",
           "pages": [
-            "tools/DBeaver",
-            "tools/PSQL"
+            "postgres/tools/DBeaver",
+            "postgres/tools/PSQL"
           ]
         },
         "postgres/postgres-compatibility/Postgres_Compatibility"
@@ -201,7 +201,7 @@
     {
       "group": "Support",
       "pages": [
-        "support/Support"
+        "support/support"
       ]
     }
   ],
