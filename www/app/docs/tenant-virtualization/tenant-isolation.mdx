@@ -25,7 +25,7 @@ In Nile, you can think about it as a single Postgres that has many virtual tenan
 
 ## Enforcing tenant data isolation
 
-Nile makes it really easy to enforce tenant data isolation. Let us take a recruiting SaaS product that helps a company to source, interview and hire candidates for different jobs open to be filled. A simplified version will have a ‘candidates’ table that tracks all the candidates in flight. The list of candidate is private to each company using the recruiting product. Given that the candidate information needs to be private to each company, let us create a tenant aware table in Nile’s Postgres.
+Nile makes it really easy to enforce tenant data isolation. Let us take a recruiting SaaS product that helps a company to source, interview and hire candidates for different jobs open to be filled. A simplified version will have a 'candidates' table that tracks all the candidates in flight. The list of candidate is private to each company using the recruiting product. Given that the candidate information needs to be private to each company, let us create a tenant aware table in Nile's Postgres.
 
 ```sql
 create table candidates (
@@ -73,66 +73,13 @@ Now we have a table of candidates for multiple customers populated.
 select * from candidates;
 ```
 
-<table>
-  <thead>
-    <tr>
-      <th>tenant_id</th>
-      <th>id</th>
-      <th>name</th>
-      <th>status</th>
-      <th>resume_url</th>
-      <th>job_applied</th>
-      <th>applied_date</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>018ade1a-7830-7981-b23f-f3a7f7b8f09f</td>
-      <td>1324</td>
-      <td>Candidate 1</td>
-      <td>New Application</td>
-      <td>http://myresume.com/index.html</td>
-      <td>software engineer</td>
-      <td>2023-08-22T19:10:25.000</td>
-    </tr>
-    <tr>
-      <td>018ade1a-7830-7981-b23f-f3a7f7b8f09f</td>
-      <td>2356</td>
-      <td>Candidate 2</td>
-      <td>Phone Interview</td>
-      <td>http://myprofile.com/index.html</td>
-      <td>senior software engineer</td>
-      <td>2023-07-12T18:09:15.000Z</td>
-    </tr>
-    <tr>
-      <td>018ade1a-7843-7e60-9686-714bab650998</td>
-      <td>2532</td>
-      <td>Candidate 1</td>
-      <td>Onsite</td>
-      <td>http://checkresume.com/index.html</td>
-      <td>Principal engineer</td>
-      <td>2023-07-20T12:08:14.000Z</td>
-    </tr>
-    <tr>
-      <td>018ade1a-7843-7e60-9686-714bab650998</td>
-      <td>7374</td>
-      <td>Candidate 2</td>
-      <td>Final round</td>
-      <td>http://forinterview.com/index.html</td>
-      <td>Product manager</td>
-      <td>2023-06-04T11:08:11.000Z</td>
-    </tr>
-    <tr>
-      <td>018ade1a-7843-7e60-9686-714bab650998</td>
-      <td>8345</td>
-      <td>Candidate 3</td>
-      <td>Recruiter screen</td>
-      <td>http://career.com/index.html</td>
-      <td>Sales engineer</td>
-      <td>2023-09-10T10:08:12.000Z</td>
-    </tr>
-  </tbody>
-</table>
+| tenant_id | id | name | status | resume_url | job_applied | applied_date |
+|-----------|-----|------|---------|------------|-------------|--------------|
+| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | 1324 | Candidate 1 | New Application | http://myresume.com/index.html | software engineer | 2023-08-22T19:10:25.000 |
+| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | 2356 | Candidate 2 | Phone Interview | http://myprofile.com/index.html | senior software engineer | 2023-07-12T18:09:15.000Z |
+| 018ade1a-7843-7e60-9686-714bab650998 | 2532 | Candidate 1 | Onsite | http://checkresume.com/index.html | Principal engineer | 2023-07-20T12:08:14.000Z |
+| 018ade1a-7843-7e60-9686-714bab650998 | 7374 | Candidate 2 | Final round | http://forinterview.com/index.html | Product manager | 2023-06-04T11:08:11.000Z |
+| 018ade1a-7843-7e60-9686-714bab650998 | 8345 | Candidate 3 | Recruiter screen | http://career.com/index.html | Sales engineer | 2023-09-10T10:08:12.000Z |
 
 In a typical SaaS application, you would want to access the data of a specific tenant when user accesses the application. You also want to make sure the data from another tenant is not seen. This is typically hard without implementing complex permissions at the application level or enforcing row level security policies in Postgres which is hard to maintain, debug and error prone.
 
@@ -154,39 +101,10 @@ const candidates = await tenantNile.db("candidates").select("*");
 
 </CodeGroups>
 
-<table>
-  <thead>
-    <tr>
-      <th>tenant_id</th>
-      <th>id</th>
-      <th>name</th>
-      <th>status</th>
-      <th>resume_url</th>
-      <th>job_applied</th>
-      <th>applied_date</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>018ade1a-7830-7981-b23f-f3a7f7b8f09f</td>
-      <td>1324</td>
-      <td>Candidate 1</td>
-      <td>New Application</td>
-      <td>http://myresume.com/index.html</td>
-      <td>software engineer</td>
-      <td>2023-08-22T19:10:25.000</td>
-    </tr>
-    <tr>
-      <td>018ade1a-7830-7981-b23f-f3a7f7b8f09f</td>
-      <td>2356</td>
-      <td>Candidate 2</td>
-      <td>Phone Interview</td>
-      <td>http://myprofile.com/index.html</td>
-      <td>senior software engineer</td>
-      <td>2023-07-12T18:09:15.000Z</td>
-    </tr>
-  </tbody>
-</table>
+| tenant_id | id | name | status | resume_url | job_applied | applied_date |
+|-----------|-----|------|---------|------------|-------------|--------------|
+| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | 1324 | Candidate 1 | New Application | http://myresume.com/index.html | software engineer | 2023-08-22T19:10:25.000 |
+| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | 2356 | Candidate 2 | Phone Interview | http://myprofile.com/index.html | senior software engineer | 2023-07-12T18:09:15.000Z |
 
 ## Querying across tenants
 
@@ -205,18 +123,10 @@ can access across all the tenant DBs irrespective of where the tenants are locat
 select count(*) as no_of_customers from tenants;
 ```
 
-<table>
-  <thead>
-    <tr>
-      <th>no_of_customers</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>5</td>
-    </tr>
-  </tbody>
-</table>
+| no_of_customers |
+|-----------------|
+| 5 |
+
 2. Querying the total no of candidates per customer
 
 ```sql
@@ -228,42 +138,11 @@ count(c1.id) as no_of_candidates from candidates c1
 right join tenants t1 on c1.tenant_id=t1.id group by t1.id,t1.name;
 ```
 
-<table>
-  <thead>
-    <tr>
-      <th>customer_id</th>
-      <th>customer_name</th>
-      <th>no_of_candidates</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>018ad859-3977-7c0d-8de1-7c6add417cdb</td>
-      <td>customer 1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <td>018ade1a-7830-7981-b23f-f3a7f7b8f09f</td>
-      <td>customer 2</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <td>018ade1a-7843-7e60-9686-714bab650998</td>
-      <td>customer 3</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>018ade1a-7854-7612-9126-7496dcbc7b62</td>
-      <td>customer 4</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>018ade1a-7891-76df-afb2-3ed96235c62c</td>
-      <td>customer 5</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
+| customer_id | customer_name | no_of_candidates |
+|-------------|---------------|------------------|
+| 018ad859-3977-7c0d-8de1-7c6add417cdb | customer 1 | 2 |
+| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | customer 2 | 3 |
+| 018ade1a-7843-7e60-9686-714bab650998 | customer 3 | 0 |
 
 3. Finding the number of customers that have atleast one candidate added in June:
 
@@ -272,18 +151,9 @@ select tenant_id from candidates
 where extract(month from applied_date)=6;
 ```
 
-<table>
-  <thead>
-    <tr>
-      <th>tenant_id</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>018ade1a-7843-7e60-9686-714bab650998</td>
-    </tr>
-  </tbody>
-</table>
+| tenant_id |
+|-----------|
+| 018ade1a-7843-7e60-9686-714bab650998 |
 
 ## What is tenant performance isolation?
 
@@ -301,7 +171,7 @@ use cases and customer needs.
 
 ## How does Nile achieve performance isolation between tenants?
 
-Nile’s Postgres by default places tenants in a multitenant model but provides
+Nile's Postgres by default places tenants in a multitenant model but provides
 the flexibility to also place some of the tenants in dedicated infrastructure (coming
 soon). The most ideal scenario is to receive predictable workload throughout the
 day from all tenants. You could then scale the infrastructure for that workload.

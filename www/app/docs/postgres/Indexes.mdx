@@ -12,7 +12,7 @@ Indexes in PostgreSQL enhance database performance by allowing faster retrieval 
 
 B-Tree indexes play a crucial role in enhancing database performance by allowing faster retrieval of specific rows. Imagine them as the index pages in a book, providing quick references to relevant data.
 
-![index1](/docs/btree.png)
+![index1](/images/btree.png)
 
 **1. Structure of B-Tree Indexes:**
 
@@ -29,7 +29,7 @@ B-Tree indexes play a crucial role in enhancing database performance by allowing
   - **Pattern Matching**: When anchored to the beginning of a string, they efficiently support pattern matching using `LIKE` or `~`.
 
 **3. Practical Examples:**
-Let’s create an example `employees` table and demonstrate B-tree index usage:
+Let's create an example `employees` table and demonstrate B-tree index usage:
 
 ```sql
 CREATE TABLE employees (
@@ -63,9 +63,9 @@ The output will be:
 
 ## Hash Index
 
-Hash indexes use a hash function to map indexed column values to 32-bit hash codes. These indexes are optimized for simple equality comparisons (using the `=` operator). Here’s how they work:
+Hash indexes use a hash function to map indexed column values to 32-bit hash codes. These indexes are optimized for simple equality comparisons (using the `=` operator). Here's how they work:
 
-![index2](/docs/hash.png)
+![index2](/images/hash.png)
 
 1. **Structure**:
    - Hash indexes store only the hash value of the data being indexed.
@@ -82,7 +82,7 @@ Hash indexes use a hash function to map indexed column values to 32-bit hash cod
 
 ## Example: Employees Table
 
-Let’s create an example `employees` table and demonstrate Hash index usage:
+Let's create an example `employees` table and demonstrate Hash index usage:
 
 ```sql
 CREATE TABLE employees (
@@ -124,11 +124,11 @@ GiST indexes are a versatile type of index that can handle complex data types, s
 
 ## Examples of GiST Indexes
 
-Let’s explore some examples using tables related to employees. We’ll create a sample table, insert data, and demonstrate how GiST indexes work.
+Let's explore some examples using tables related to employees. We'll create a sample table, insert data, and demonstrate how GiST indexes work.
 
 ### Example 1: Geometric Shapes
 
-Suppose we have an `employees` table with a `location` column representing the employees’ office locations (stored as geometric points). We want to efficiently query employees based on their proximity to a specific location.
+Suppose we have an `employees` table with a `location` column representing the employees' office locations (stored as geometric points). We want to efficiently query employees based on their proximity to a specific location.
 
 1. **Table Creation**:
 
@@ -187,11 +187,11 @@ SP-GiST (Spatial Generalized Search Tree) indexes are a versatile index type off
    - [**Text Search with Complex Pattern Matching**: For scenarios where you need to search for patterns within text data](https://www.postgresql.org/docs/current/spgist.html) [2](https://roadmap.sh/postgresql-dba/sql-optimization-techniques/indexes-usecases/sp-gist).
 3. **Performance Considerations**:
    - SP-GiST indexes are most useful for data that has a natural clustering element and is not an equally balanced tree.
-   - [They work well with data types that don’t fit neatly into rectangular shapes, like GIS (geospatial), multimedia, phone routing, and IP routing data 3](https://www.postgresqltutorial.com/postgresql-indexes/postgresql-index-types/).
+   - [They work well with data types that don't fit neatly into rectangular shapes, like GIS (geospatial), multimedia, phone routing, and IP routing data 3](https://www.postgresqltutorial.com/postgresql-indexes/postgresql-index-types/).
 
 ## Example: Employee Table
 
-Let’s create an example employee table and demonstrate how to use SP-GiST indexes.
+Let's create an example employee table and demonstrate how to use SP-GiST indexes.
 
 ### 1. Create the Employee Table
 
@@ -276,7 +276,7 @@ WHERE ip_range >> '192.168.1.42';
 
 ```
 
-This query finds devices whose IP range includes the address ‘192.168.1.42’.
+This query finds devices whose IP range includes the address '192.168.1.42'.
 
 ### Output:
 
@@ -300,7 +300,7 @@ A GIN index is designed for efficiently handling composite data values, such as 
    - [They efficiently handle queries that search for specific component values within composite items](https://www.postgresql.org/docs/current/gin-intro.html).
 3. **Example 1: Basic Query Using GIN Index**
 
-- Suppose we have an `employees` table with a column `skills` (an array of skills). Let’s create an `employees` table:
+- Suppose we have an `employees` table with a column `skills` (an array of skills). Let's create an `employees` table:
 
   ```sql
   CREATE TABLE employees (
@@ -365,7 +365,7 @@ A GIN index is designed for efficiently handling composite data values, such as 
 
 - **BRIN** stands for **Block Range Index**.
 - Designed for handling very large tables with columns that have natural correlation to their physical location within the table.
-- Works in terms of **block ranges** (or “page ranges”).
+- Works in terms of **block ranges** (or "page ranges").
 - Each block range groups physically adjacent pages in the table.
 - Summary information is stored by the index for each block range.
 - **Lossy**: BRIN indexes can satisfy queries via regular bitmap index scans but are lossy, meaning the query executor rechecks tuples and discards those not matching query conditions.
@@ -378,7 +378,7 @@ A GIN index is designed for efficiently handling composite data values, such as 
 
 ## Example: Employee Table
 
-Let’s create an employee table and demonstrate BRIN index usage.
+Let's create an employee table and demonstrate BRIN index usage.
 
 ### 1. Create Employee Table
 

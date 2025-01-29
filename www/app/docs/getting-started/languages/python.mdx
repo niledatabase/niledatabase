@@ -17,160 +17,180 @@ for each task in the todo list.
   allowFullScreen
 ></iframe>
 
-### 1. Create a database
+<Steps>
+  <Step title="Create a database">
+    1. Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already
+    2. You should see a welcome message. Click on "Lets get started"
+       ![Nile welcome.](/images/nile-welcome.png)
+    3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to "Use Token in Browser".
+  </Step>
 
-1. Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already
-2. You should see a welcome message. Click on "Lets get started"
-   ![Nile welcome.](/docs/nile-welcome.png)
-3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to “Use Token in Browser”.
+  <Step title="Create a table">
+    After you created a database, you will land in Nile's query editor.
+    For our todo list application, we'll need tables to store tenants, users and todos.
+    Tenants and users already exists in Nile, they are built-in tables and you can see them in the list on the left side of the screen.
+    We'll just need to create a table for todos.
 
-### 2. Create a table
+    ```sql
+    create table todos (
+        id uuid DEFAULT (gen_random_uuid()),
+        tenant_id uuid,
+        title varchar(256),
+        estimate varchar(256),
+        embedding vector(768),
+        complete boolean);
+    ```
 
-After you created a database, you will land in Nile's query editor.
-For our todo list application, we'll need tables to store tenants, users and todos.
-Tenants and users already exists in Nile, they are built-in tables and you can see them in the list on the left side of the screen.
-We'll just need to create a table for todos.
+    You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
 
-```sql
-create table todos (
-    id uuid DEFAULT (gen_random_uuid()),
-    tenant_id uuid,
-    title varchar(256),
-    estimate varchar(256),
-    embedding vector(768),
-    complete boolean);
-```
+    The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find
+    semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and
+    using this data with text generation models is called [RAG (Retrieval Augumented Generation)](https://www.thenile.dev/docs/ai-embeddings/rag).
 
-You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
+    See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
+    ![Creating a table in Nile's admin dashboard](/images/gui-create-table.png)
+  </Step>
 
-The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find
-semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and
-using this data with text generation models is called [RAG (Retrieval Augumented Generation)](https://www.thenile.dev/docs/ai-embeddings/rag).
+  <Step title="Get credentials">
+    In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
+  </Step>
 
-See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
-![Creating a table in Nile's admin dashboard](/docs/gui-create-table.png)
+  <Step title="Get third party credentials">
+    This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
+  </Step>
 
-### 3. Get credentials
+  <Step title="Set the environment">
+    Enough GUI for now. Let's get to some code.
 
-In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
+    If you haven't cloned this repository yet, now will be an excellent time to do so.
 
-### 4. 3rd party credentials
+    ```bash
+    git clone https://github.com/niledatabase/niledatabase
+    cd niledatabase/examples/quickstart/python
+    ```
 
-This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
+    Copy `.env.example` to `.env` and fill in the details of your Nile DB. The ones you copied and kept safe in step 3.
 
-### 5. Set the environment
+    It should look something like this:
 
-Enough GUI for now. Let's get to some code.
+    ```bash
+    DATABASE_URL=postgresql://user:password@db.thenile.dev:5432/mydb
+    LOG_LEVEL=DEBUG
+    SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+    ALGORITHM = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-If you haven't cloned this repository yet, now will be an excellent time to do so.
+    # for AI estimates
+    AI_API_KEY=your_api_key_for_openai_compatible_service
+    AI_BASE_URL=https://api.fireworks.ai/inference/v1
+    AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
+    EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
+    ```
 
-```bash
-git clone https://github.com/niledatabase/niledatabase
-cd niledatabase/examples/quickstart/python
-```
+    Optional, but recommended, step is to set up a virtual Python environment:
 
-Copy `.env.example` to `.env` and fill in the details of your Nile DB. The ones you copied and kept safe in step 3.
+    ```bash
+    python -m venv venv
+    source venv/bin/activate
+    ```
 
-It should look something like this:
+    Then, install dependencies:
 
-```bash
-DATABASE_URL=postgresql://user:password@db.thenile.dev:5432/mydb
-LOG_LEVEL=DEBUG
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+    ```bash
+    pip install -r requirements.txt
+    ```
+  </Step>
 
-# for AI estimates
-AI_API_KEY=your_api_key_for_openai_compatible_service
-AI_BASE_URL=https://api.fireworks.ai/inference/v1
-AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
-EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
-```
+  <Step title="Run the application">
+    If you'd like to use the app with the UI, you'll want to build the UI assets first:
 
-Optional, but recommended, step is to set up a virtual Python environment:
+    ```bash
+    cd ui
+    npm install
+    npm run build
+    ```
 
-```bash
-python -m venv venv
-source venv/bin/activate
-```
+    Then start the Python webapp:
 
-Then, install dependencies:
+    ```bash
+    uvicorn main:app --reload
+    ```
 
-```bash
-pip install -r requirements.txt
-```
+    Go to http://localhost:8000 in a browser to see the app.
 
-### 5. Run the application
+    You can try a few things in the app:
 
-If you'd like to use the app with the UI, you'll want to build the UI assets first:
+    - Sign up as a new user
+    - Create a tenant
+    - Create a todo task and see its time estimate. If you create more tasks, the estimates for new tasks will use the embeddings of the existing tasks to generate the estimates.
 
-```bash
-cd ui
-npm install
-npm run build
-```
+    You can also use the API directly:
 
-Then start the Python webapp:
+    ```bash
+    # login
+    curl -c cookies -X POST 'http://localhost:8000/api/login' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{"email":"test9@pytest.org","password":"foobar"}'
 
-```bash
-uvicorn main:app --reload
-```
+    # create tenant
+    curl -b cookies -X POST 'localhost:8000/api/tenants' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{"name":"my first customer"}'
 
-Go to http://localhost:8000 in a browser to see the app.
+    # list tenants
+    curl -b cookies -X GET 'http://localhost:8000/api/tenants'
 
-You can try a few things in the app:
+    # create todo for a tenant (make sure you replace the tenant ID with the one you got from the previous step)
+    curl -b cookies -X POST \
+      'http://localhost:8000/api/todos' \
+      --header 'Content-Type: application/json' \
+      --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
+      --data-raw '{"title": "feed the cat", "complete": false}'
 
-- Sign up as a new user
-- Create a tenant
-- Create a todo task and see its time estimate. If you create more tasks, the estimates for new tasks will use the embeddings of the existing tasks to generate the estimates.
+    # list todos for a tenant (make sure you replace the tenant ID with the one you got from the previous step)
+    curl  -b cookies -X GET \
+      --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
+      'http://localhost:8000/api/todos'
+    ```
+  </Step>
 
-You can also use the API directly:
+  <Step title="Check the data in Nile">
+    Go back to the Nile query editor and see the data you created from the app.
 
-```bash
-# login
-curl -c cookies -X POST 'http://localhost:8000/api/login' \
---header 'Content-Type: application/json' \
---data-raw '{"email":"test9@pytest.org","password":"foobar"}'
+    ```sql
+    SELECT tenants.name, title, estimate, complete
+    FROM todos join tenants on tenants.id = todos.tenant_id;
+    ```
 
-# create tenant
-curl -b cookies -X POST 'localhost:8000/api/tenants' \
---header 'Content-Type: application/json' \
---data-raw '{"name":"my first customer"}'
+    You should see all the todos you created, and the tenants they belong to.
+  </Step>
 
-# list tenants
-curl -b cookies -X GET 'http://localhost:8000/api/tenants'
+  <Step title="What's next?">
+    This example is a good starting point for building your own application with Nile.
 
-# create todo for a tenant (make sure you replace the tenant ID with the one you got from the previous step)
-curl -b cookies -X POST \
-  'http://localhost:8000/api/todos' \
-  --header 'Content-Type: application/json' \
-  --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
-  --data-raw '{"title": "feed the cat", "complete": false}'
+    You have learned basic Nile concepts and how to use them with Python, FastAPI, and SQLAlchemy.
 
-# list todos for a tenant (make sure you replace the tenant ID with the one you got from the previous step)
-curl  -b cookies -X GET \
-  --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
-  'http://localhost:8000/api/todos'
-```
+    You can learn more about Nile's tenant virtualization features in the following tutorials:
 
-### 6. Check the data in Nile
+    - [Tenant management](/docs/tenant-virtualization/tenant-management)
+    - [Tenant isolation](/docs/tenant-virtualization/tenant-isolation)
 
-Go back to the Nile query editor and see the data you created from the app.
+    You can explore Nile's Python SDK in the [SDK reference](/docs/reference/sdk-reference).
 
-```sql
-SELECT tenants.name, title, estimate, complete
-FROM todos join tenants on tenants.id = todos.tenant_id;
-```
+    You can learn [More about AI in Nile](https://www.thenile.dev/docs/ai-embeddings), or try a more advanced example like:
 
-You should see all the todos you created, and the tenants they belong to.
+    - [Chat with PDFs](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
+    - [Code Assistant](https://www.thenile.dev/docs/getting-started/examples/code_assistant)
+  </Step>
+</Steps>
 
-### 7. How does it work?
+## How does it work?
 
 The app uses FastAPI, a modern Python web framework, and SQLAlchemy, a popular ORM. The app is built with tenants in mind, and it uses Nile's tenant context to isolate data between tenants.
 
 `main.py` is the entry point of the app. It sets up the FastAPI app, registers the middleware and has all the routes.
 
-### 7.1 Using AI models for time estimates
+### Using AI models for time estimates
 
 This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. We handle the time estimates in
 the `create_todo` method which is the route handler for `@app.post("/api/todos")`. This handler executes when users add new tasks.
@@ -245,10 +265,11 @@ response = client.chat.completions.create(
 
 This estimate is then stored in the database along with the task and its vector embedding.
 
-### 7.2 Working with virtual tenant databases
+### Working with virtual tenant databases
 
 The first thing we do in the app is set up the tenant middleware. The `TenantAwareMiddleware` is defined in `middleware.py`,
-it is a simple middleware that reads the `X-Tenant-Id` header and sets the tenant context for the request. This is how we know which tenant the request is for.
+and it is responsible for extracting the tenant ID from the request headers and setting it in the database session.
+This ensures that all database operations are performed in the context of the current tenant.
 
 ```python
 app = FastAPI()

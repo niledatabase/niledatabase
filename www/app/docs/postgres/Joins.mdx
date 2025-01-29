@@ -37,7 +37,7 @@ VALUES (101, 'HR'), (102, 'Engineering'), (103, 'Finance');
 
 1. **Inner Join**:
 
-   ![InnerJoin](/docs/innerjoin.png)
+   ![InnerJoin](/images/innerjoin.png)
 
    - Returns records with matching values in both tables.
    - Example: Combining `employees` and `departments` tables based on matching department IDs.
@@ -62,11 +62,11 @@ VALUES (101, 'HR'), (102, 'Engineering'), (103, 'Finance');
 
 2. **Left Join (Left Outer Join)**:
 
-   ![LeftOuterJoin](/docs/leftjoin.png)
+   ![LeftOuterJoin](/images/leftjoin.png)
 
    - Includes all records from the left table and matched records from the right table.
    - If no match exists, NULL values are returned for right table columns.
-   - Example: Retrieving all employees along with their department names (even if they don’t belong to any department).
+   - Example: Retrieving all employees along with their department names (even if they don't belong to any department).
    - SQL:
 
      ```sql
@@ -89,7 +89,7 @@ VALUES (101, 'HR'), (102, 'Engineering'), (103, 'Finance');
 
 3. **Right Join (Right Outer Join)**:
 
-   ![RightJoin](/docs/rightjoin.png)
+   ![RightJoin](/images/rightjoin.png)
 
    - Similar to left join but prioritizes the right table.
    - Example: Retrieving all departments along with their employees (even if there are no employees in a department).
@@ -115,7 +115,7 @@ VALUES (101, 'HR'), (102, 'Engineering'), (103, 'Finance');
 
 4. **Full Outer Join**:
 
-   ![OuterJoin](/docs/outerjoin.png)
+   ![OuterJoin](/images/outerjoin.png)
 
    - Combines results from both left and right outer joins.
    - Includes unmatched records from both tables.

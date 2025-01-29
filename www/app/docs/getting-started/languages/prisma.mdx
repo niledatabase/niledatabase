@@ -19,126 +19,144 @@ This technique is known as [RAG architecture](https://www.thenile.dev/docs/ai-em
   allowFullScreen
 ></iframe>
 
-## 1. Create a database
+<Steps>
+  <Step title="Create a database">
+    1. Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already
+    2. You should see a welcome message. Click on "Lets get started"
+       ![Nile welcome.](/images/nile-welcome.png)
+    3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to "Use Token in Browser".
+  </Step>
 
-1. Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already
-2. You should see a welcome message. Click on "Lets get started"
-   ![Nile welcome.](/docs/nile-welcome.png)
-3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to “Use Token in Browser”.
+  <Step title="Create a table">
+    After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
 
-## 2. Create a table
+    ```sql
+    CREATE TABLE IF NOT EXISTS "todos" (
+      "id" uuid DEFAULT gen_random_uuid(),
+      "tenant_id" uuid,
+      "title" varchar(256),
+      "estimate" varchar(256),
+      "embedding" vector(768),
+      "complete" boolean,
+      CONSTRAINT todos_tenant_id_id PRIMARY KEY("tenant_id","id")
+    );
+    ```
 
-After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
+    You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
 
-```sql
-  CREATE TABLE IF NOT EXISTS "todos" (
-    "id" uuid DEFAULT gen_random_uuid(),
-    "tenant_id" uuid,
-    "title" varchar(256),
-    "estimate" varchar(256),
-    "embedding" vector(768),
-    "complete" boolean,
-    CONSTRAINT todos_tenant_id_id PRIMARY KEY("tenant_id","id")
-  );
-```
+    The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find
+    semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and
+    using this data with text generation models is a key part of [RAG (Retrieval Augumented Generation)](https://www.thenile.dev/docs/ai-embeddings/rag).
 
-You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
+    See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
+    ![Creating a table in Nile's admin dashboard](/images/gui-create-table.png)
+  </Step>
 
-The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find
-semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and
-using this data with text generation models is a key part of [RAG (Retrieval Augumented Generation)](https://www.thenile.dev/docs/ai-embeddings/rag).
+  <Step title="Get credentials">
+    In the left-hand menu, click on "Settings" and then select "Connection".
 
-See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
-![Creating a table in Nile's admin dashboard](/docs/gui-create-table.png)
+    Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
+  </Step>
 
-## 3. Get credentials
+  <Step title="Get third party credentials">
+    This example uses AI chat and embedding models to generate automated time estimates for each task in the todo
+    list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible
+    APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
+  </Step>
 
-In the left-hand menu, click on "Settings" and then select "Connection".
+  <Step title="Set the environment">
+    Enough GUI for now. Let's get to some code.
 
-Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
+    If you haven't cloned this repository yet, now will be an excellent time to do so.
 
-### 4. 3rd party credentials
+    ```bash
+    git clone https://github.com/niledatabase/niledatabase
+    cd niledatabase/examples/quickstart/prisma
+    ```
 
-This example uses AI chat and embedding models to generate automated time estimates for each task in the todo
-list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible
-APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
+    Rename `.env.example` to `.env`, and update it with the connection string you just copied from Nile Console and the configuration of your AI vendor and model.
+    Make sure you don't include the word "psql". It should look something like this:
 
-## 5. Set the environment
+    ```bash
+    DATABASE_URL=postgres://018b778a-30df-7cdd-b55c-2f9664db39f3:ff3fb983-683c-4616-bbbc-519d8ddbbce5@db.thenile.dev:5432/gwen_db
 
-Enough GUI for now. Let's get to some code.
+    # for AI estimates
+    AI_API_KEY=your_api_key_for_openai_compatible_service
+    AI_BASE_URL=https://api.fireworks.ai/inference/v1
+    AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
+    EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
+    ```
 
-If you haven't cloned this repository yet, now will be an excellent time to do so.
+    Install dependencies with `yarn install` or `npm install`.
 
-```bash
-git clone https://github.com/niledatabase/niledatabase
-cd niledatabase/examples/quickstart/prisma
-```
+    ```bash
+    npm install
+    ```
+  </Step>
 
-Rename `.env.example` to `.env`, and update it with the connection string you just copied from Nile Console and the configuration of your AI vendor and model.
-Make sure you don't include the word "psql". It should look something like this:
+  <Step title="Run the application">
+    Start the web service with `npm start` or `yarn start`.
+    Now you can use `curl` to explore the APIs. Here are a few examples:
 
-```bash
-DATABASE_URL=postgres://018b778a-30df-7cdd-b55c-2f9664db39f3:ff3fb983-683c-4616-bbbc-519d8ddbbce5@db.thenile.dev:5432/gwen_db
+    ```bash
+    # create a tenant
+    curl --location --request POST 'localhost:3001/api/tenants' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{"name":"my first customer", "id":"108124a5-2e34-418a-9735-b93082e9fbf2"}'
 
-# for AI estimates
-AI_API_KEY=your_api_key_for_openai_compatible_service
-AI_BASE_URL=https://api.fireworks.ai/inference/v1
-AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
-EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
-```
+    # get tenants
+    curl  -X GET 'http://localhost:3001/api/tenants'
 
-Install dependencies with `yarn install` or `npm install`.
+    # create a todo (don't forget to use a read tenant-id in the URL)
+    curl  -X POST \
+      'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' \
+      --header 'Content-Type: application/json' \
+      --data-raw '{"title": "feed the cat", "complete": false}'
 
-```bash
-npm install
-```
+    # list todos for tenant (don't forget to use a read tenant-id in the URL)
+    curl  -X GET \
+      'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
 
-## 6. Run the application
+    # list todos for all tenants
+    curl  -X GET \
+      'http://localhost:3001/insecure/all_todos'
+    ```
+  </Step>
 
-Start the web service with `npm start` or `yarn start`.
+  <Step title="Check the data in Nile">
+    Go back to the Nile query editor and see the data you created from the app.
+    ```sql
+    SELECT tenants.name, title, estimate, complete
+    FROM todos join tenants on tenants.id = todos.tenant_id;
+    ```
+    You should see all the todos you created, and the tenants they belong to.
+  </Step>
 
-Now you can use `curl` to explore the APIs. Here are a few examples:
+  <Step title="What's next?">
+    This example is a good starting point for building your own application with Nile.
 
-```bash
-# create a tenant
-curl --location --request POST 'localhost:3001/api/tenants' \
---header 'Content-Type: application/json' \
---data-raw '{"name":"my first customer", "id":"108124a5-2e34-418a-9735-b93082e9fbf2"}'
+    You have learned basic Nile, AI and RAG concepts and how to use them with Prisma.
 
-# get tenants
-curl  -X GET 'http://localhost:3001/api/tenants'
+    You can learn more about this example in detail below or you can learn more about 
+    Nile's tenant virtualization features in the following tutorials:
 
-# create a todo (don't forget to use a read tenant-id in the URL)
-curl  -X POST \
-  'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' \
-  --header 'Content-Type: application/json' \
-  --data-raw '{"title": "feed the cat", "complete": false}'
+    - [Tenant management](/docs/tenant-virtualization/tenant-management)
+    - [Tenant isolation](/docs/tenant-virtualization/tenant-isolation)
 
-# list todos for tenant (don't forget to use a read tenant-id in the URL)
-curl  -X GET \
-  'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
+    You can explore Nile's JS SDK in the [SDK reference](/docs/reference/sdk-reference).
 
-# list todos for all tenants
-curl  -X GET \
-  'http://localhost:3001/insecure/all_todos'
-```
+    You can learn [More about AI in Nile](https://www.thenile.dev/docs/ai-embeddings), or try a more advanced example like:
 
-## 6. Check the data in Nile
+    - [Chat with PDFs](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
+    - [Code Assistnat](https://www.thenile.dev/docs/getting-started/examples/code_assistant)
+  </Step>
+</Steps>
 
-Go back to the Nile query editor and see the data you created from the app.
+## How does it work?
 
-```sql
-SELECT tenants.name, title, estimate, complete
-FROM todos join tenants on tenants.id = todos.tenant_id;
-```
+Let's take a look at the code and understand how it works in detail.
 
-You should see all the todos you created, and the tenants they belong to.
-
-## 7. How does it work?
-
-Lets walk through key parts of the application, so you'll learn how it works and how to adopt the example to your use-cases.
-
-### 7.1 Working with Prisma data models
+### Working with Prisma data models
 
 This example uses Prisma as the ORM. Prisma, like most ORMs, works by mapping the relational model in the database to an object model in the application.
 When you cloned the example, you got a [Prisma schema file](https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/prisma/prisma/schema.prisma) that contains definitions for key tables (such as tenants and todos) and their relationships.
@@ -178,7 +196,7 @@ We then generated a Prisma client with:
     npx prisma generate
 ```
 
-### 7.2 Querying tenant databases
+### Querying tenant databases
 
 Once we have a Prisma client, we can use it to run queries. For example, lets look at how we queried the database for a list of todos for a specific tenant:
 
@@ -197,7 +215,7 @@ Because Prisma does not yet support the `vector` data type, we need to use Prism
 We'll show the example in the next section when we talk about the use of AI models to generate time estimates.
 After this small detour, we'll get back to the tenant context and how to use Prisma with virtual tenant databases.
 
-### 7.3 Using AI models to estimate time to complete tasks
+### Using AI models to estimate time to complete tasks
 
 This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. We handle the time estimates in
 the route handler for `app.post("/api/tenants/:tenantId/todos"`. This handler executes when users add new tasks.
@@ -299,7 +317,7 @@ const aiEstimate = await ai.chat.completions.create({
 
 As you've seen at the start of this section when we reviewed the route handler for `app.post("/api/tenants/:tenantId/todos"`, this estimate is then stored in the database along with the task and its vector embedding.
 
-### 7.4 Tenant context
+### Tenant context
 
 Tenant context uses `AsyncLocalStorage` to store a Prisma Client with additional tenant information.
 `AsyncLocalStorage` is a Node.js feature that allows you to store data in a context that is local to the current execution flow.
@@ -332,7 +350,7 @@ Since this is an Express middleware, the callback is the next middleware or requ
 
 The only last bit to understand is the initialization of the Prisma Client with `tenantDB`.
 
-### 7.5 Initializing the Prisma Client with tenant information
+### Initializing the Prisma Client with tenant information
 
 Lets take a look at the tenantDB object:
 
@@ -373,7 +391,7 @@ The extension is a function that takes the Prisma Client as an argument and retu
 
 In this case, the additional functionality is to run every operation, for every model in the database, in a transaction that sets the tenant ID in the database session.
 
-### 7.6 Tying it all together
+### Tying it all together
 
 Lets circle back to what happens when we call:
 
@@ -395,21 +413,3 @@ res.json(todos);
 ```
 
 Other request handlers in the application use the same pattern to insert or update new todos for each tenant.
-
-## 8. What's next?
-
-This example is a good starting point for building your own application with Nile.
-
-You have learned basic Nile, AI and RAG concepts and how to use them with Prisma.
-
-You can learn more about Nile's tenant virtualization features in the following tutorials:
-
-- [Tenant management](/docs/tenant-virtualization/tenant-management)
-- [Tenant isolation](/docs/tenant-virtualization/tenant-isolation)
-
-You can explore Nile's JS SDK in the [SDK reference](/docs/reference/sdk-reference).
-
-You can learn [More about AI in Nile](https://www.thenile.dev/docs/ai-embeddings), or try a more advanced example like:
-
-- [Chat with PDFs](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
-- [Code Assistnat](https://www.thenile.dev/docs/getting-started/examples/code_assistant)

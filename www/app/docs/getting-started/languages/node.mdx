@@ -17,113 +17,133 @@ This technique is known as [RAG architecture](https://www.thenile.dev/docs/ai-em
   allowFullScreen
 ></iframe>
 
-### 1. Create a database
+<Steps>
+  <Step title="Create a database">
+    1. Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already
+    2. You should see a welcome message. Click on "Lets get started"
+       ![Nile welcome.](/images/nile-welcome.png)
+    3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to "Use Token in Browser".
+  </Step>
 
-1. Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already
-2. You should see a welcome message. Click on "Lets get started"
-   ![Nile welcome.](/images/nile-welcome.png)
-3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to “Use Token in Browser”.
+  <Step title="Create a table">
+    After you created a database, you will land in Nile's query editor.
+    For our todo list application, we'll need tables to store tenants, users and todos. Tenants and users already exists in Nile, they are built-in tables. We'll just need to create a table for todos.
 
-### 2. Create a table
+    ```sql
+    create table todos (
+        id uuid DEFAULT (gen_random_uuid()),
+        tenant_id uuid,
+        title varchar(256),
+        estimate varchar(256),
+        embedding vector(768),
+        complete boolean);
+    ```
 
-After you created a database, you will land in Nile's query editor.
-For our todo list application, we'll need tables to store tenants, users and todos. Tenants and users already exists in Nile, they are built-in tables. We'll just need to create a table for todos.
+    You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
 
-```sql
-create table todos (
-    id uuid DEFAULT (gen_random_uuid()),
-    tenant_id uuid,
-    title varchar(256),
-    estimate varchar(256),
-    embedding vector(768),
-    complete boolean);
-```
+    The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find
+    semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and
+    using this data with text generation models is a key part of [RAG (Retrieval Augumented Generation)](https://www.thenile.dev/docs/ai-embeddings/rag).
 
-You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
+    See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
+    ![Creating a table in Nile's admin dashboard](/images/gui-create-table.png)
+  </Step>
 
-The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find
-semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and
-using this data with text generation models is a key part of [RAG (Retrieval Augumented Generation)](https://www.thenile.dev/docs/ai-embeddings/rag).
+  <Step title="Get credentials">
+    In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
+  </Step>
 
-See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
-![Creating a table in Nile's admin dashboard](/images/gui-create-table.png)
+  <Step title="Get third party credentials">
+    This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
+  </Step>
 
-### 3. Get credentials
+  <Step title="Set the environment">
+    Enough GUI for now. Let's get to some code.
 
-In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
+    If you haven't cloned this repository yet, now will be an excellent time to do so.
 
-### 4. 3rd party credentials
+    ```bash
+    git clone https://github.com/niledatabase/niledatabase
+    cd niledatabase/examples/quickstart/node_react
+    ```
 
-This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
+    Rename `.env.example` to `.env`
+    Update NILE_USER and NILE_PASSWORD with the credentials you picked up in the previous step. It should look something like this:
 
-### 5. Set the environment
+    ```bash
+    # Private env vars that should never show up in the browser
+    # These are used by the server to connect to Nile database
+    NILEDB_USER=018ad484-0d52-7274-8639-057814be60c3
+    NILEDB_PASSWORD=0d11b8e5-fbbc-4639-be44-8ab72947ec5b
+    # URL of the frontend, for the post-signup redirect
+    FE_URL = "http://localhost:3006"
+    NILEDB_API_URL=https://eu-central-1.api.dev.thenile.dev/databases/018ec979-2412-7062-9cda-35ae6fea7837
 
-Enough GUI for now. Let's get to some code.
+    # for AI estimates
+    AI_API_KEY=your_api_key_for_openai_compatible_service
+    AI_BASE_URL=https://api.fireworks.ai/inference/v1
+    AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
+    EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
+    ```
 
-If you haven't cloned this repository yet, now will be an excellent time to do so.
+    Install dependencies
 
-```bash
-git clone https://github.com/niledatabase/niledatabase
-cd niledatabase/examples/quickstart/node_react
-```
+    ```bash
+    npm install
+    ```
+  </Step>
 
-Rename `.env.example` to `.env`
-Update NILE_USER and NILE_PASSWORD with the credentials you picked up in the previous step. It should look something like this:
+  <Step title="Run the application">
+    Start both NodeJS api server and the React frontend
 
-```bash
-# Private env vars that should never show up in the browser
-# These are used by the server to connect to Nile database
-NILEDB_USER=018ad484-0d52-7274-8639-057814be60c3
-NILEDB_PASSWORD=0d11b8e5-fbbc-4639-be44-8ab72947ec5b
-# URL of the frontend, for the post-signup redirect
-FE_URL = "http://localhost:3006"
-NILEDB_API_URL=https://eu-central-1.api.dev.thenile.dev/databases/018ec979-2412-7062-9cda-35ae6fea7837
+    ```bash
+    npm start
+    ```
 
-# for AI estimates
-AI_API_KEY=your_api_key_for_openai_compatible_service
-AI_BASE_URL=https://api.fireworks.ai/inference/v1
-AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
-EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
-```
+    Go to http://localhost:3000 in a browser to see the app.
 
-Install dependencies
+    You can try a few things in the app:
 
-```bash
-npm install
-```
+    - Sign up as a new user
+    - Create a tenant
+    - Create a todo task and see its time estimate. If you create more tasks, the estimates for new tasks will use the embeddings of the existing tasks to generate the estimates.
+  </Step>
 
-### 6. Run the application
+  <Step title="Check the data in Nile">
+    Go back to the Nile query editor and see the data you created from the app.
 
-Start both NodeJS api server and the React frontend
+    ```sql
+    SELECT tenants.name, title, estimate, complete
+    FROM todos join tenants on tenants.id = todos.tenant_id;
+    ```
 
-```bash
-npm start
-```
+    You should see all the todos you created, and the tenants they belong to.
+  </Step>
 
-Go to http://localhost:3000 in a browser to see the app.
+  <Step title="What's next?">
+    This example is a good starting point for building your own application with Nile.
 
-You can try a few things in the app:
+    You have learned basic Nile concepts and how to use them with NodeJS and React.
 
-- Sign up as a new user
-- Create a tenant
-- Create a todo task and see its time estimate. If you create more tasks, the estimates for new tasks will use the embeddings of the existing tasks to generate the estimates.
+    You can learn more about Nile's tenant virtualization features in the following tutorials:
 
-### 7. Check the data in Nile
+    - [Tenant management](/docs/tenant-virtualization/tenant-management)
+    - [Tenant isolation](/docs/tenant-virtualization/tenant-isolation)
 
-Go back to the Nile query editor and see the data you created from the app.
+    You can explore Nile's JS SDK in the [SDK reference](/docs/reference/sdk-reference).
 
-```sql
-SELECT tenants.name, title, estimate, complete
-FROM todos join tenants on tenants.id = todos.tenant_id;
-```
+    You can learn [More about AI in Nile](https://www.thenile.dev/docs/ai-embeddings), or try a more advanced example like:
 
-You should see all the todos you created, and the tenants they belong to.
+    - [Chat with PDFs](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
+    - [Code Assistant](https://www.thenile.dev/docs/getting-started/examples/code_assistant)
+  </Step>
+</Steps>
 
-## 8. How does it work?
+## How does it work?
 
 The interesting part of this example is the NodeJS server. Lets take a look at [`/examples/quickstart/node_react/src/be/app.ts`](https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/node_react/src/be/app.ts).
 
-### 8.1 Using AI models to generate estimates
+### Using AI models to generate estimates
 
 This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. We handle the time estimates in
 the route handler for `app.post("/api/tenants/:tenantId/todos"`. This handler executes when users add new tasks.
@@ -207,7 +227,7 @@ const aiEstimate = await ai.chat.completions.create({
 
 This estimate is then stored in the database along with the task and its vector embedding.
 
-### 8.2 Working with virtual tenant databases
+### Working with virtual tenant databases
 
 The NodeJS server uses the [Nile JS client](https://github.com/niledatabase/nile-js) to connect to Nile.
 
@@ -252,42 +272,3 @@ app.post("/api/tenants", async (req, res) => {
   }
 });
 ```
-
-The example uses Nile's tenant isolation to guarantee that each tenant can only see their own data:
-
-```js
-app.post("/api/tenants/:tenantId/todos", async (req, res) => {
-  const { title, complete } = req.body;
-
-  const newTodo = await nile.db.query(
-    `INSERT INTO todos (title, complete, tenant_id)
-    VALUES ($1, $2, $3)
-    RETURNING *;`,
-    [
-      title,
-      complete || false,
-      nile.tenantId, // setting from context
-    ]
-  );
-
-  res.json(newTodo.rows);
-});
-```
-
-## 9. Looking good!
-
-🏆 Tada! You have learned the basic Nile, AI and RAG concepts.
-
-You now know enough to go ahead and build your own application with Nile.
-
-You can learn more about Nile's tenant virtualization features in the following tutorials:
-
-- [Tenant management](/docs/tenant-virtualization/tenant-management)
-- [Tenant isolation](/docs/tenant-virtualization/tenant-isolation)
-
-You can explore Nile's JS SDK in the [SDK reference](/docs/reference/sdk-reference).
-
-You can learn [More about AI in Nile](https://www.thenile.dev/docs/ai-embeddings), or try a more advanced example like:
-
-- [Chat with PDFs](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
-- [Code Assistnat](https://www.thenile.dev/docs/getting-started/examples/code_assistant)
