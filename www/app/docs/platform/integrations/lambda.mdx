@@ -1,0 +1,231 @@
+---
+title: "Serverless Multi-tenant Backend with AWS Lambda"
+sidebarTitle: "AWS Lambda"
+icon: "clock-eight"
+---
+
+In this tutorial, you will learn how to use Nile's tenant virtualization from a serverless application, using a todo list application example.
+We'll use Drizzle as the ORM to interact with the database, Express as the web framework, NodeJS as the runtime and Serverless Framework for deployment.
+
+<iframe
+  width="480"
+  height="270"
+  src="https://www.youtube.com/embed/tikEF_zCw8g?si=AAhUcVw0IY6zDvkw"
+  title="Serverless Backend for SaaS with Nile and AWS Lambda"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowFullScreen
+></iframe>
+
+## 1. Create a database
+
+1. Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already
+2. You should see a welcome message. Click on "Lets get started"
+   ![Nile welcome.](/images/nile-welcome.png)
+3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to "Use Token in Browser".
+
+## 2. Create a table
+
+After you created a database, you will land in Nile's query editor. Since our application requires a table for storing all the "todos" this is a good time to create one:
+
+```sql
+  CREATE TABLE IF NOT EXISTS "todos" (
+    "id" uuid DEFAULT gen_random_uuid(),
+    "tenant_id" uuid,
+    "title" varchar(256),
+    "complete" boolean,
+    CONSTRAINT todos_tenant_id_id PRIMARY KEY("tenant_id","id")
+  );
+```
+
+You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
+
+See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
+![Creating a table in Nile's admin dashboard](/images/gui-create-table.png)
+
+## 3. Get credentials
+
+In the left-hand menu, click on "Settings" and then select "Connection".
+
+Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
+
+## 4. Set the environment
+
+Enough GUI for now. Let's get to some code.
+
+If you haven't cloned this repository yet, now will be an excellent time to do so.
+
+```bash
+git clone https://github.com/niledatabase/niledatabase
+cd niledatabase/examples/serverless/lambda-drizzle
+```
+
+Rename `.env.example` to `.env`, and update it with the connection string you just copied from Nile Console. Make sure you don't include the word "psql". It should look something like this:
+
+```bash
+DATABASE_URL=postgres://018b778a-30df-7cdd-b55c-2f9664db39f3:ff3fb983-683c-4616-bbbc-519d8ddbbce5@db.thenile.dev:5432/gwen_db
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+**Optional:** You can select a region for deploying this example by editing `serverless.yml` and changing the `region` property.
+
+And if you haven't yet, install the Serverless Framework: `npm install -g serverless`
+
+## 5. Deployment
+
+In order to deploy the example, run the following command:
+
+```bash
+serverless deploy
+```
+
+After running deploy, you should see output similar to:
+
+```bash
+Deploying serverless-node-drizzle to stage dev (us-east-2)
+
+✔ Service deployed to stack serverless-node-drizzle-dev (93s)
+
+endpoint: ANY - https://z2fmc4ux34.execute-api.us-west-2.amazonaws.com
+functions:
+  api: serverless-node-drizzle-dev-api (424 kB)
+```
+
+Now you can use `curl` to explore the APIs. Here are a few examples:
+
+```bash
+# create a tenant
+curl --location --request POST 'localhost:3001/api/tenants' \
+--header 'Content-Type: application/json' \
+--data-raw '{"name":"my first customer", "id":"108124a5-2e34-418a-9735-b93082e9fbf2"}'
+
+# get tenants
+curl  -X GET 'http://localhost:3001/api/tenants'
+
+# create a todo (don't forget to use a read tenant-id in the URL)
+curl  -X POST \
+  'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{"title": "feed the cat", "complete": false}'
+
+# list todos for tenant (don't forget to use a read tenant-id in the URL)
+curl  -X GET \
+  'http://localhost:3001/api/tenants/108124a5-2e34-418a-9735-b93082e9fbf2/todos'
+
+# list todos for all tenants
+curl  -X GET \
+  'http://localhost:3001/insecure/all_todos'
+```
+
+## 6. Check the data in Nile
+
+Go back to the Nile query editor and see the data you created from the app.
+
+```sql
+SELECT tenants.name, title, complete
+FROM todos join tenants on tenants.id = todos.tenant_id;
+```
+
+You should see all the todos you created, and the tenants they belong to.
+
+## 7. How does it work?
+
+In this section we'll focus on the serverless aspects. If you want to learn more about how to use Nile with Drizzle,
+check out our [Drizzle getting started guide](https://www.thenile.dev/docs/getting-started/languages/drizzle).
+
+In order to deploy the backend to AWS Lambda, we use the [Serverless Framework](https://www.serverless.com/).
+The framework handles most of the configuration and deployment for us, and required minimal changes to the code.
+
+The changes we did make:
+
+- Wrapped the Express app with a Serverless handler.
+- Made sure the database connections is initialized outside the handler with no top level await
+- Added a `serverless.yml` file to the root of the project. This file contains the configuration for the Serverless Framework.
+
+Lets go over these one by one:
+
+### 7.1. Wrapping the Express app
+
+In the example, we used `serverless-http` NodeJS module, which wraps an Express app with a Serverless handler.
+
+Using it is very straightforward:
+
+```javascript
+import serverless from "serverless-http";
+
+const app = express();
+
+// all the application logic goes here - handlers, middleware, etc
+
+export const handler = serverless(app);
+```
+
+### 7.2. Initializing the database connection
+
+The `serverless-http` wrapping above is almost enough to get the application running on AWS Lambda.
+However, we need to make sure the database connection is initialized before the handler is called and remains intact between handler executions.
+
+We are initializing the connection in the `db.js` file, and exporting the connection object.
+
+```javascript
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+});
+
+export const db = drizzle(client.connect(), { logger: true });
+```
+
+This means that the connection is initialized when the file is imported, during the initial "cold start" of the serverless application,
+and remains initialized as long as the virtual machine is running. Since in AWS Lambda, the virtual machine is reused between executions,
+this minimizes the connection overhead for all practical appluications.
+
+### 7.3. The `serverless.yml` file
+
+Now we just need to configure the deployment and our serverless application is ready to go.
+The `serverless.yml` file contains the configuration for the Serverless Framework and it has 4 important sections.
+
+The first is the general configuration. We set the name of the service, the framework version, and most important - the use of `.env` file for environment variables.
+
+```yaml
+service: lambda-drizzle
+frameworkVersion: "3"
+useDotenv: true
+```
+
+Next, there's the provider section where we configure AWS itself.
+We set the runtime to NodeJS 18, the region to `us-west-2` and include the database connection string in the environment.
+
+The region is important - you want to run your serverless application in the same region as your database. In this case - `us-west-2`.
+
+```yaml
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-west-2
+  environment:
+    DATABASE_URL: ${env:DATABASE_URL}
+```
+
+The next section is the functions. Here we connect the API routing to the application handlers.
+In our case, it is pretty simple - all the routes are handled by the Express app, which then routes them to the correct handler.
+
+```yaml
+functions:
+  api:
+    handler: app.handler
+    events:
+      - httpApi: "*"
+```
+
+And last, Serverless Framework has a collection of plugins that extend its basic capabilities. In this case, because we are using
+Typescript with ES modules, we need to use the `serverless-esbuild` plugin.
+
+```yaml
+plugins:
+  - serverless-esbuild
+```

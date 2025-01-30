@@ -1,0 +1,100 @@
+---
+title: "Postgres Compatibility"
+sidebarTitle: "Compatibility"
+icon: "equals"
+---
+
+# Overview
+
+Nile's Postgres is built 100% on Postgres and is protocol and application-compatible with Postgres. However, given it is a serverless database, there are some restrictions that you should be aware of. Nile currently supports Postgres 15.
+
+# Current limitations
+
+The table below lists all the features in Postgres that are not yet supported in Nile's Postgres. We are continuing to work on features focused on SaaS use cases. If you have any feature need, we would love to hear from you. Please add your upvote to existing feature requests or add your own on our [Github discussion](https://github.com/orgs/niledatabase/discussions/categories/feature-requests) forum.
+
+<table>
+  <thead>
+    <tr>
+      <th>Statement</th>
+      <th>Description</th>
+      <th>What Nile Recommends</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CREATE FUNCTION</td>
+      <td>User defined functions are not supported yet</td>
+      <td>Push the logic to the application</td>
+    </tr>
+    <tr>
+      <td>CREATE TRIGGER</td>
+      <td>Triggers are not supported yet since UDF support is not tdere</td>
+      <td>We hope to support real time events soon</td>
+    </tr>
+    <tr>
+      <td>CREATE SEQUENCE</td>
+      <td>Not supported for tenant tables. Supported for shared tables</td>
+    </tr>
+    <tr>
+      <td>CREATE POLICY</td>
+      <td>
+        Nile will have the ability to define policies through a more powerful
+        permission system that is in progress
+      </td>
+      <td>
+        Would love to hear your use case for this in our github discussion forum
+      </td>
+    </tr>
+    <tr>
+      <td>CREATE ROLE</td>
+      <td>
+        Ability to define granular roles for developers using the database
+      </td>
+      <td>
+        Developer roles can be supported in Nile's console when we support it
+      </td>
+    </tr>
+    <tr>
+      <td>CREATE USER</td>
+      <td>Ability to create a new developer for a database</td>
+      <td>
+        Creating a new developer to use the database is supported in Nile's
+        console (and API/CLI in the future)
+      </td>
+    </tr>
+    <tr>
+      <td>CREATE DATABASE</td>
+      <td>Ability to create a new databasee</td>
+      <td>You can do this from Nile's console</td>
+    </tr>
+    <tr>
+      <td>Transactional writes between tenant and shared tables</td>
+      <td>Writes across a tenant and shared in the same transaction</td>
+      <td>
+        this is not common from the users we have spoken to. Usually shared
+        tables are loaded separately from an external source. Would love to hear
+        your use case for this in our github discussion forum
+      </td>
+    </tr>
+    <tr>
+      <td>Foreign keys from tenant table referencing shared table</td>
+      <td>Referencing a column from a tenant table to a shared table</td>
+      <td>
+        Would love to hear your use case for this in our github discussion forum
+      </td>
+    </tr>
+    <tr>
+      <td>Transactional writes across different tenants</td>
+      <td>Writes across two or more tenants in the same transaction</td>
+      <td>
+        this is not common from the users we have spoken to. Most usecases have
+        transactions with the same tenant. Would love to hear your use case for
+        this in our github discussion forum
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+# Additional help
+
+If you need additional help or have any questions, join the Nile community [Discord](https://discord.gg/8UuBB84tTy) or [Github discussion](https://github.com/orgs/niledatabase/discussions) forum, or send mail to support@thenile.dev.
