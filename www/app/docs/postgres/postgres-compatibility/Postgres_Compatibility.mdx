@@ -1,11 +1,8 @@
-# Postgres Compatibility
-
-export const metadata = {
-  title: "Compatibility",
-  order: 8,
-  description: "This is a placeholder component.",
-  order: 8,
-};
+---
+title: "Postgres Compatibility"
+sidebarTitle: "Compatibility"
+icon: "equals"
+---
 
 # Overview
 
@@ -36,8 +33,7 @@ The table below lists all the features in Postgres that are not yet supported in
     </tr>
     <tr>
       <td>CREATE SEQUENCE</td>
-      <td></td>
-      <td></td>
+      <td>Not supported for tenant tables. Supported for shared tables</td>
     </tr>
     <tr>
       <td>CREATE POLICY</td>

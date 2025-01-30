@@ -101,10 +101,10 @@
           "group": "Examples",
           "icon": "lightbulb",
           "pages": [
-            "getting-started/examples/chat-with-pdf",
-            "getting-started/examples/code-assistant",
-            "getting-started/examples/sales-insight",
-            "getting-started/examples/task-genius"
+            "getting-started/examples/chat_with_pdf",
+            "getting-started/examples/code_assistant",
+            "getting-started/examples/sales_insight",
+            "getting-started/examples/task_genius"
           ]
         },
         "getting-started/postgres-docker",
@@ -158,44 +158,46 @@
     {
       "group": "Postgres",
       "pages": [
-        "postgres/Introduction",
-        "postgres/Create_Table",
+        "postgres/introduction",
+        "postgres/create_table",
         {
           "group": "Data Types",
+          "icon": "comment-text",
           "pages": [
-            "postgres/datatype/Numeric",
-            "postgres/datatype/Character",
-            "postgres/datatype/Date",
-            "postgres/datatype/JSON",
-            "postgres/datatype/Arrays"
+            "postgres/datatype/numeric",
+            "postgres/datatype/character",
+            "postgres/datatype/date",
+            "postgres/datatype/json",
+            "postgres/datatype/arrays"
           ]
         },
-        "postgres/Indexes",
-        "postgres/Joins",
-        "postgres/Views",
+        "postgres/indexes",
+        "postgres/joins",
+        "postgres/views",
         {
           "group": "Tools",
+          "icon": "screwdriver-wrench",
           "pages": [
-            "postgres/tools/DBeaver",
-            "postgres/tools/PSQL"
+            "postgres/tools/dbeaver",
+            "postgres/tools/psql"
           ]
         },
-        "postgres/postgres-compatibility/Postgres_Compatibility"
+        "postgres/postgres-compatibility/postgres_compatibility"
       ]
     },
     {
       "group": "Integrations",
       "pages": [
-        "partners/AWS_Bedrock",
-        "partners/Cohere",
-        "partners/Confluent",
-        "partners/Llama_Index",
-        "partners/Modal",
-        "partners/Netlify",
-        "partners/Vercel",
-        "platform/integrations/Lambda",
-        "platform/integrations/NextAuth",
-        "platform/integrations/Stripe"
+        "partners/aws_bedrock",
+        "partners/cohere",
+        "partners/confluent",
+        "partners/llama_index",
+        "partners/modal",
+        "partners/netlify",
+        "partners/vercel",
+        "platform/integrations/lambda",
+        "platform/integrations/nextauth",
+        "platform/integrations/stripe"
       ]
     },
     {
