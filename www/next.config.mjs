@@ -30,20 +30,18 @@ const nextConfig = {
   
   // Exclude docs from the build
   webpack: (config, { isServer }) => {
-    // Find the MDX rule
-    const mdxRule = config.module.rules.find(
-      (rule) => rule.test?.toString().includes('mdx')
-    );
-
-    if (mdxRule) {
-      // Add docs directory to the exclude list
-      if (!mdxRule.exclude) mdxRule.exclude = [];
-      if (Array.isArray(mdxRule.exclude)) {
-        mdxRule.exclude.push(/app\/docs/);
-      } else {
-        mdxRule.exclude = [mdxRule.exclude, /app\/docs/].filter(Boolean);
+    // Ensure all rules that process MDX files exclude the docs directory
+    config.module.rules.forEach(rule => {
+      if (rule.test?.toString().includes('mdx')) {
+        // Add docs directory to the exclude list
+        if (!rule.exclude) rule.exclude = [];
+        if (Array.isArray(rule.exclude)) {
+          rule.exclude.push(/app\/docs/);
+        } else {
+          rule.exclude = [rule.exclude, /app\/docs/].filter(Boolean);
+        }
       }
-    }
+    });
 
     return config;
   },
