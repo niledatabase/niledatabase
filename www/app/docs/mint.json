@@ -3,7 +3,8 @@
   "name": "Nile Documentation",
   "logo": {
     "dark": "/images/nilemintlogo.svg",
-    "light": "/images/nilemintlogo.svg"
+    "light": "/images/nilemintlogo.svg",
+    "href": "https://www.thenile.dev"
   },
   "favicon": "/icons/nile.svg",
   "colors": {
@@ -24,13 +25,17 @@
   },
   "topbarLinks": [
     {
-      "name": "Support",
-      "url": "mailto:support@thenile.dev"
+      "name": "Community",
+      "url": "https://discord.com/invite/8UuBB84tTy"
     }
   ],
   "topbarCtaButton": {
     "name": "Get Started",
     "url": "https://console.thenile.dev"
+  },
+  "feedback": {
+    "thumbsRating": true,
+    "suggestEdit": true
   },
   "tabs": [
     {
@@ -207,9 +212,70 @@
       ]
     }
   ],
-  "footerSocials": {
-    "x": "https://x.com/niledatabase",
-    "github": "https://github.com/niledatabase/niledatabase",
-    "linkedin": "https://www.linkedin.com/company/niledatabase"
+  "footer": {
+    "socials": {
+      "x": "https://x.com/niledatabase",
+      "github": "https://github.com/niledatabase/niledatabase",
+      "linkedin": "https://www.linkedin.com/company/niledatabase",
+      "discord": "https://discord.com/invite/8UuBB84tTy"
+    },
+    "links": [
+      {
+        "title": "Resources",
+        "links": [
+          {
+            "label": "Blog",
+            "url": "https://www.thenile.dev/blog"
+          },
+          {
+            "label": "Pricing",
+            "url": "https://www.thenile.dev/pricing"
+          },
+          {
+            "label": "Templates",
+            "url": "https://www.thenile.dev/templates"
+          },
+          {
+            "label": "Community",
+            "url": "https://www.thenile.dev/community"
+          }
+        ]
+      },
+      {
+        "title": "Company",
+        "links": [
+          {
+            "label": "Careers",
+            "url": "https://www.thenile.dev/about-us"
+          },
+          {
+            "label": "About",
+            "url": "https://www.thenile.dev/about-us"
+          }
+        ]
+      },
+      {
+        "title": "Support",
+        "links": [
+          {
+            "label": "Contact Sales",
+            "url": "https://www.thenile.dev/contact-us"
+          },
+          {
+            "label": "Get Help",
+            "url": "https://www.thenile.dev/contact-us"
+          },
+          {
+            "label": "FAQ",
+            "url": "https://www.thenile.dev/pricing#faq"
+          }
+        ]
+      }
+    ]
+  },
+  "analytics": {
+    "ga4": {
+      "measurementId": "G-L97XFHEREV"
+    }
   }
 }
