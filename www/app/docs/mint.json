@@ -23,6 +23,9 @@
     "default": "dark",
     "isHidden": true
   },
+  "metadata": {
+    "og:image": "https://www.thenile.dev/images/nile-doc-banner-1.png"
+  },
   "topbarLinks": [
     {
       "name": "Community",
