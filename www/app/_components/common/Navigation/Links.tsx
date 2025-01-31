@@ -6,16 +6,15 @@ export function Links({ className: cn }: { className?: string }) {
   }`;
   return (
     <>
-      <Link href="/docs" className={className}>
+      <a href="https://nile.mintlify.app/docs" className={className}>
         Docs
-      </Link>
+      </a>
       <Link className={className} href="/pricing">
         Pricing
       </Link>
       <Link className={className} href="/templates">
         Templates
       </Link>
-
       <Link className={className} href="/blog">
         Blog
       </Link>

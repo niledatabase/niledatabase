@@ -15,14 +15,21 @@ if (process.env.LOCAL === "true") {
   dotenv.config({ path: envPath });
 }
 
-const client = algoliasearch(
-  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
-  process.env.ALGOLIA_ADMIN_KEY
-);
+const client = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID && process.env.ALGOLIA_ADMIN_KEY
+  ? algoliasearch(
+      process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
+      process.env.ALGOLIA_ADMIN_KEY
+    )
+  : null;
 
-const index = client.initIndex("blog");
+const index = client?.initIndex("blog");
 
 async function upload(output) {
+  if (!client || !index) {
+    console.log("Skipping Algolia indexing - no credentials provided");
+    return;
+  }
+  
   return new Promise((resolve) => {
     index
       .saveObjects(output)
@@ -39,6 +46,16 @@ async function run() {
   // remove the 1st for the search, since it will be handled separately
   files.shift();
   const out = [];
+
+  // Skip if no Algolia configuration
+  if (!client || !index) {
+    console.log("Skipping Algolia indexing - no credentials provided");
+    return;
+  }
+
+  // Clear existing objects
+  await index.clearObjects();
+
   for (const fileName of files) {
     const file = path.join(__dirname, "app/www/../../../", fileName);
     console.log(file);
@@ -48,15 +65,12 @@ async function run() {
     const output = renderToStaticMarkup(React.createElement(Content));
     const cleaned = output
       .toString()
-      .replace(/<.+><\/.+>/gm, "")
-      .replace(/\[.*?\]\(.*?\)/gm, "")
-      .replace(/[#\.,\*\?\-:'!]/gm, "")
-      .replace(/```.+```/gm, "")
-      .split(/\s/);
-    metadata.readLength = Math.floor(cleaned.length / 238);
+      .replace(/<[^>]*>/g, " ")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+    metadata.content = cleaned;
     out.push(metadata);
   }
-  await index.clearObjects();
   await upload(out);
 }
 run();

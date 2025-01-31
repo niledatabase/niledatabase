@@ -21,11 +21,13 @@ type Props = {
   image?: string;
 };
 
-const searchClient = algoliasearch(
-  String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
-  String(process.env.ALGOLIA_API_KEY)
-);
-const index = searchClient.initIndex("blog");
+const searchClient = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID && process.env.ALGOLIA_API_KEY
+  ? algoliasearch(
+      String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
+      String(process.env.ALGOLIA_API_KEY)
+    )
+  : null;
+const index = searchClient?.initIndex("blog");
 export const metadata = {
   title: "Blog | Nile Database",
   description: "All things database SaaS",
@@ -72,23 +74,34 @@ function HeroArticle(props: Props) {
 }
 
 export default async function Blog() {
-  const [mostRecent]: any = await glob("app/blog/**.mdx");
+  const blogFiles = await glob("app/blog/**.mdx");
+  const mostRecent = blogFiles[0];
   let hits: any[] = [];
 
-  //@ts-expect-error - this exists
-  await index.browseObjects({
-    batch: (batch: any) => {
-      hits = hits.concat(batch);
-    },
-  });
-
-  // const refinements: string[] = hits.reduce((accum, hit) => {
-  // return accum.concat(hit.tags);
-  // }, []);
-  // const refinementItems = uniq(refinements);
+  // Only try to get Algolia hits if search is configured
+  if (searchClient) {
+    //@ts-expect-error - this exists
+    await index?.browseObjects({
+      batch: (batch: any) => {
+        hits = hits.concat(batch);
+      },
+    });
+  } else {
+    // If no search client, get posts directly from filesystem
+    hits = await Promise.all(
+      blogFiles.slice(1).map(async (file) => {
+        const { metadata } = await import(`./${file.split("/").pop()}`);
+        return {
+          ...metadata,
+          objectID: file.split("/").pop(),
+        };
+      })
+    );
+  }
 
   const [localFile] = mostRecent.split("/").reverse();
   const { default: FirstArticle, metadata } = await import(`./${localFile}`);
+  
   return (
     <Container background={null}>
       <div className="container mx-auto">
@@ -99,10 +112,11 @@ export default async function Blog() {
             content={FirstArticle}
           />
           <Divider />
-          <div className="relative px-4 h-16">
-            {/* <RefinementList items={refinementItems} /> */}
-            <Search />
-          </div>
+          {searchClient ? (
+            <div className="relative px-4 h-16">
+              <Search />
+            </div>
+          ) : null}
           <Hits initialHits={hits} />
         </div>
       </div>
