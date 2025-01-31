@@ -48,7 +48,7 @@
     {
       "name": "API Reference",
       "url": "api-reference",
-      "openapi": "https://global.thenile.dev/openapi.yaml"
+      "openapi": ["https://global.thenile.dev/openapi.yaml", "https://api.thenile.dev/openapi.yaml"]
     },
     {
       "name": "Pricing",
@@ -167,7 +167,7 @@
       "group": "Postgres",
       "pages": [
         "postgres/introduction",
-        "postgres/create_table",
+        "postgres/createtable",
         {
           "group": "Data Types",
           "icon": "comment-text",
@@ -190,22 +190,22 @@
             "postgres/tools/psql"
           ]
         },
-        "postgres/postgres-compatibility/postgres_compatibility"
+        "postgres/postgres-compatibility"
       ]
     },
     {
       "group": "Integrations",
       "pages": [
-        "partners/aws_bedrock",
-        "partners/cohere",
-        "partners/confluent",
-        "partners/llama_index",
-        "partners/modal",
-        "partners/netlify",
-        "partners/vercel",
-        "platform/integrations/lambda",
-        "platform/integrations/nextauth",
-        "platform/integrations/stripe"
+        "integrations/aws_bedrock",
+        "integrations/cohere",
+        "integrations/confluent",
+        "integrations/llama_index",
+        "integrations/modal",
+        "integrations/netlify",
+        "integrations/vercel",
+        "integrations/lambda",
+        "integrations/nextauth",
+        "integrations/stripe"
       ]
     },
     {
