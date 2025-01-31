@@ -48,7 +48,7 @@
     {
       "name": "API Reference",
       "url": "api-reference",
-      "openapi": ["https://global.thenile.dev/openapi.yaml", "https://api.thenile.dev/openapi.yaml"]
+      "openapi": "https://global.thenile.dev/openapi.yaml"
     },
     {
       "name": "Pricing",
