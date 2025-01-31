@@ -25,19 +25,15 @@ const withMdx = nextMdx({
 });
 
 const nextConfig = {
-  // Configure page extensions to exclude docs
-  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'].map(ext => `((?!docs/).)*\\.${ext}$`),
+  // Configure page extensions
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
   
   // Exclude docs from the build
   webpack: (config, { isServer }) => {
-    // Exclude the entire docs directory from all rules
-    config.module.rules.forEach(rule => {
-      if (!rule.exclude) rule.exclude = [];
-      if (Array.isArray(rule.exclude)) {
-        rule.exclude.push(/app\/docs/);
-      } else {
-        rule.exclude = [rule.exclude, /app\/docs/].filter(Boolean);
-      }
+    // Add a rule to exclude the docs directory
+    config.module.rules.unshift({
+      test: /\.(js|jsx|ts|tsx|mdx)$/,
+      exclude: /app\/docs/,
     });
 
     return config;
