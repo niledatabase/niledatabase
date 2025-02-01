@@ -113,7 +113,6 @@ function Hit({ hit }: any) {
   );
 }
 
-
 function SearchBox() {
   const { query, refine } = useSearchBox();
   const [width, setWidth] = useState<"norm" | "max">("norm");
