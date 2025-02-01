@@ -23,11 +23,6 @@ const client = algoliasearch(
 const index = client.initIndex("blog");
 
 async function upload(output) {
-  if (!client || !index) {
-    console.log("Skipping Algolia indexing - no credentials provided");
-    return;
-  }
-  
   return new Promise((resolve) => {
     index
       .saveObjects(output)
