@@ -14,13 +14,10 @@ import { Metadata } from "../Metadata";
 import Coffee from "@/public/blog/coffee.webp";
 import SearchIcon from "@/public/icons/search.svg";
 
-const searchClient = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID && process.env.NEXT_PUBLIC_ALGOLIA_API_KEY
-  ? algoliasearch(
-      String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
-      String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY)
-    )
-  : null;
-
+const searchClient = algoliasearch(
+  String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
+  String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY)
+);
 function RefinementItem({
   item,
   refine,
@@ -75,6 +72,7 @@ function RefinementList() {
 }
 
 function Hit({ hit }: any) {
+  console.log(hit.objectID, "what is this?");
   const [, publishDate] = /.+(\d{4}-\d{2}-\d{2}).+/.exec(hit.objectID) ?? [];
   const cleaned = hit.objectID.replace(/\d{4}-\d{2}-\d{2}-/, "");
   const slug = cleaned.replace(".mdx", "");
@@ -115,36 +113,6 @@ function Hit({ hit }: any) {
   );
 }
 
-function SearchHits() {
-  const { hits } = useHits();
-  const { query } = useSearchBox();
-
-  useEffect(() => {
-    if (typeof document !== "undefined") {
-      const serverSide = document.querySelector(".server-side-hits");
-      if (query) {
-        serverSide?.setAttribute("style", "display:none");
-      } else {
-        serverSide?.setAttribute("style", "display:flex");
-      }
-    }
-  }, [query]);
-
-  if (!query) {
-    return null;
-  }
-
-  return (
-    <div className="flex flex-row flex-wrap justify-start">
-      {!hits.length && (
-        <div className="text-4xl">No blogs match your criteria.</div>
-      )}
-      {hits.map((hit) => {
-        return <Hit hit={hit} key={hit.objectID} />;
-      })}
-    </div>
-  );
-}
 
 function SearchBox() {
   const { query, refine } = useSearchBox();
@@ -200,20 +168,45 @@ function SearchBox() {
   );
 }
 
-export default function Search() {
-  if (!searchClient) {
-    return null;
+function Hits() {
+  const { hits } = useHits();
+  const { query } = useSearchBox();
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const serverSide = document.querySelector(".server-side-hits");
+      if (query) {
+        serverSide?.setAttribute("style", "display:none");
+      } else {
+        serverSide?.setAttribute("style", "display:flex");
+      }
+    }
+  }, [query]);
+
+  if (!query) {
+    return;
   }
 
   return (
-    <InstantSearch searchClient={searchClient} indexName="blog">
-      <div className="flex flex-col gap-4">
-        <SearchBox />
-        <div className="flex flex-col gap-8">
-          <RefinementList />
-          <SearchHits />
+    <div className="flex flex-row flex-wrap justify-start">
+      {!hits.length && (
+        <div className="text-4xl">No blogs match your criteria.</div>
+      )}
+      {hits.map((hit) => {
+        return <Hit hit={hit} key={hit.objectID} />;
+      })}
+    </div>
+  );
+}
+export default function Search() {
+  return (
+    <div className="flex flex-col gap-4 w-full">
+      <InstantSearch searchClient={searchClient} indexName="blog">
+        <div className="flex flex-col md:flex-row items-center gap-4 justify-between -mt-5 z-10 relative h-16">
+          <SearchBox />
         </div>
-      </div>
-    </InstantSearch>
+        <Hits />
+      </InstantSearch>
+    </div>
   );
 }
