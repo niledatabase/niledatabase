@@ -90,10 +90,12 @@ export default async function Blog() {
     // If no search client, get posts directly from filesystem
     hits = await Promise.all(
       blogFiles.slice(1).map(async (file) => {
-        const { metadata } = await import(`./${file.split("/").pop()}`);
+        // Get the relative path from the current directory
+        const relativePath = file.replace('app/blog/', '');
+        const { metadata } = await import(`./${relativePath}`);
         return {
           ...metadata,
-          objectID: file.split("/").pop(),
+          objectID: relativePath,
         };
       })
     );
