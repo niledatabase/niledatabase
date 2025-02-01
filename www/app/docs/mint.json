@@ -16,9 +16,6 @@
       "to": "#07C983"
     }
   },
-  "background": {
-    "style": "gradient"
-  },
   "modeToggle": {
     "default": "dark",
     "isHidden": true
