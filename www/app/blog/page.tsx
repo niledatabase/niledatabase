@@ -72,8 +72,7 @@ function HeroArticle(props: Props) {
 }
 
 export default async function Blog() {
-  const blogFiles = await glob("app/blog/**.mdx");
-  const mostRecent = blogFiles[0];
+  const [mostRecent]: any = await glob("app/blog/**.mdx");
   let hits: any[] = [];
 
   //@ts-expect-error - this exists
@@ -87,7 +86,6 @@ export default async function Blog() {
   // return accum.concat(hit.tags);
   // }, []);
   // const refinementItems = uniq(refinements);
-  
   const [localFile] = mostRecent.split("/").reverse();
   const { default: FirstArticle, metadata } = await import(`./${localFile}`);
   return (
