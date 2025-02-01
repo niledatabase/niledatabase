@@ -86,7 +86,7 @@ export default async function Blog() {
   // return accum.concat(hit.tags);
   // }, []);
   // const refinementItems = uniq(refinements);
-  
+
   const [localFile] = mostRecent.split("/").reverse();
   const { default: FirstArticle, metadata } = await import(`./${localFile}`);
   return (
