@@ -91,4 +91,4 @@ export default function CopyToClipboard({
       <pre>{children}</pre>
     </div>
   );
-} 
+}
