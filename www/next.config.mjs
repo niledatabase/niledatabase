@@ -24,6 +24,36 @@ const withMdx = nextMdx({
   },
 });
 
-const nextConfig = {};
+const nextConfig = {
+  // Configure page extensions
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
+  
+  // Exclude docs from the build
+  webpack: (config, { isServer }) => {
+    // Add a rule to exclude the docs directory
+    config.module.rules.unshift({
+      test: /\.(js|jsx|ts|tsx|mdx)$/,
+      exclude: /app\/docs/,
+    });
+
+    return config;
+  },
+
+  // Handle redirects for docs
+  async redirects() {
+    return [
+      {
+        source: '/docs',
+        destination: 'https://nile.mintlify.app/docs',
+        permanent: true,
+      },
+      {
+        source: '/docs/:path*',
+        destination: 'https://nile.mintlify.app/docs/:path*',
+        permanent: true,
+      },
+    ];
+  },
+};
 
 export default withMdx(nextConfig);

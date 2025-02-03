@@ -4,15 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build:docSearch && npm run build:blogSearch && npm run build:templates && npm run build:sidenav && next build",
+    "build": "npm run build:blogSearch && npm run build:templates && next build",
     "build:next": "next build",
     "start": "next start",
     "lint": "next lint",
     "build:templates": "node ./app/templates/_build/templates.mjs",
-    "build:sidenav": "node ./app/docs/_build/sidenav.mjs",
     "build:blogSearch": "node -r dotenv/config --experimental-loader=./scripts/loader.mjs ./scripts/buildBlogSearch.mjs",
-    "build:docSearch": "node -r dotenv/config --experimental-loader=./scripts/loader.mjs ./app/docs/_build/generateSearch.mjs",
-    "build:docSearchDev": "LOCAL=true npm run build:docSearch",
     "build:blogSearchDev": "LOCAL=true npm run build:blogSearch"
   },
   "overrides": {
