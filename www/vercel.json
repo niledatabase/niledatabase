@@ -8,5 +8,13 @@
       "source": "/docs/:match*",
       "destination": "https://nile.mintlify.dev/docs/:match*"
     }
+  ],
+  "headers": [
+    {
+      "source": "/docs/:match*",
+      "headers": [
+        { "key": "host", "value": "thenile.dev" }
+      ]
+    }
   ]
 }
