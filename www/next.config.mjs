@@ -38,22 +38,6 @@ const nextConfig = {
 
     return config;
   },
-
-  // Handle redirects for docs
-  async redirects() {
-    return [
-      {
-        source: '/docs',
-        destination: 'https://nile.mintlify.app/docs',
-        permanent: true,
-      },
-      {
-        source: '/docs/:path*',
-        destination: 'https://nile.mintlify.app/docs/:path*',
-        permanent: true,
-      },
-    ];
-  },
 };
 
 export default withMdx(nextConfig);
