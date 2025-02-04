@@ -13,7 +13,10 @@
     {
       "source": "/docs/:match*",
       "headers": [
-        { "key": "host", "value": "thenile.dev" }
+        {
+          "key": "host",
+          "value": "thenile.dev"
+        }
       ]
     }
   ]
