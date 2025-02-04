@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/docs",
-      "destination": "https://nile.mintlify.app/docs"
+      "destination": "https://nile.mintlify.dev/docs"
     },
     {
       "source": "/docs/:match*",
-      "destination": "https://nile.mintlify.app/docs/:match*"
+      "destination": "https://nile.mintlify.dev/docs/:match*"
     }
   ]
 }
