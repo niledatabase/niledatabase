@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/docs",
-      "destination": "https://nile.mintlify.dev/docs/"
+      "destination": "https://nile.mintlify.dev/docs"
     },
     {
       "source": "/docs/",
@@ -11,21 +11,6 @@
     {
       "source": "/docs/:match*",
       "destination": "https://nile.mintlify.dev/docs/:match*"
-    },
-    {
-      "source": "/docs/*",
-      "destination": "https://nile.mintlify.dev/docs/:match*"
-    },
-    {
-      "source": "/docs",
-      "destination": "https://nile.mintlify.dev/docs/",
-      "has": [
-        {
-          "type": "header",
-          "key": "host",
-          "value": "www.thenile.dev"
-        }
-      ]
     }
   ]
 }
