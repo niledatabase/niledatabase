@@ -5,6 +5,29 @@ import rehypeHighlight from "rehype-highlight";
 import scala from "highlight.js/lib/languages/scala";
 import sql from "highlight.js/lib/languages/sql";
 
+module.exports = {
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/docs',
+          destination: 'https://nile.mintlify.dev/docs',
+        },
+        {
+          source: '/docs/',
+          destination: 'https://nile.mintlify.dev/docs/',
+        },
+      ],
+      afterFiles: [
+        {
+          source: '/docs/:match*',
+          destination: 'https://nile.mintlify.dev/docs/:match*',
+        },
+      ],
+    };
+  },
+};
+
 const withMdx = nextMdx({
   extension: /.mdx?$/,
   options: {
