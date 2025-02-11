@@ -1,170 +1,136 @@
 import React from "react";
-import styles from "./css/page.module.css";
-import Card from "@mui/joy/Card";
-import Typography from "@mui/joy/Typography";
-import Button from "@mui/joy/Button";
-import CardContent from "@mui/joy/CardContent";
-import Divider from "@mui/joy/Divider";
-import Stack from "@mui/joy/Stack";
-import ModalDialog from "@mui/joy/ModalDialog";
-import Modal from "@mui/joy/Modal";
-import Add from "@mui/icons-material/Add";
-import FormControl from "@mui/joy/FormControl";
-import Input from "@mui/joy/Input";
-import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
-import ListItemButton from "@mui/joy/ListItemButton";
-import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
+import { Button } from "./components/ui/button";
+import {
+  DialogDescription,
+  DialogContent,
+  DialogTrigger,
+  Dialog,
+  DialogHeader,
+} from "./components/ui/dialog";
+import { Plus } from "lucide-react";
+import {
+  FormControl,
+  FormMessage,
+  FormItem,
+  Form,
+  FormField,
+  FormDescription,
+  FormLabel,
+} from "./components/ui/form";
+import { Input } from "./components/ui/input";
+import { SignOutButton } from "@niledatabase/react";
+import { useForm } from "react-hook-form";
 
-function getUserName() {
-  const raw = Cookies.get("authData");
-  const authData = raw ? JSON.parse(decodeURIComponent(raw)) : null;
-  if (authData) {
-    const bestName =
-      authData.tokenData?.name ||
-      authData.tokenData?.email ||
-      authData.tokenData?.given_name ||
-      authData.tokenData?.family_name;
-    return bestName;
-  } else {
+function ExistingTenants({ data }) {
+  if (data.length === 0) {
     return null;
   }
+  return (
+    <div className="flex flex-col gap-10">
+      <div className="flex flex-row gap-4 w-full items-center">
+        <div className="h-px bg-foreground/30 flex-1"></div>
+        or
+        <div className="h-px bg-foreground/30 flex-1 "></div>
+      </div>
+      <div>Use existing tenant</div>
+      <div className="flex flex-col gap-2 items-center">
+        {data.map((tenant) => {
+          return (
+            <Link key={tenant.id} to={`/tenants/${tenant.id}/todos`}>
+              <Button variant="outline">{tenant.name}</Button>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
-
-function Tenants() {
-  const [data, setData] = React.useState(null);
-  const [open, setOpen] = React.useState(false);
-  const [userName, setUserName] = React.useState(null);
+export default function Tenants() {
+  const [tenants, setTenants] = React.useState([]);
+  const [me, setMe] = React.useState(null);
 
   const navigate = useNavigate();
+  const form = useForm({
+    defaultValues: {
+      name: "",
+    },
+  });
 
   React.useEffect(() => {
     fetch("/api/tenants")
       .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
-
-  React.useEffect(() => {
-    setUserName(getUserName());
+      .then((data) => setTenants(data));
+    fetch("/api/me")
+      .then((res) => res.json())
+      .then((data) => setMe(data));
   }, []);
 
   return (
-    <div className={styles.center}>
-      <Card variant="outlined">
-        <CardContent>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              padding: "1rem",
-            }}
-          >
-            <div>
-              <Button
-                variant="solid"
-                size="md"
-                color="primary"
-                aria-label="add-tenant"
-                startDecorator={<Add />}
-                onClick={() => setOpen(true)}
-                sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
-              >
-                CREATE TENANT
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-        <Divider>or</Divider>
-        <CardContent>
-          <Typography level="title-md" textAlign="center" padding={2}>
-            Use Existing Tenant
-          </Typography>
-          <List variant="outlined">
-            {(() => {
-              if (!data) {
-                return (
-                  <Typography level="h2" textAlign={"center"}>
-                    {" "}
-                    Loading...
-                  </Typography>
-                );
-              } else if (!Array.isArray(data)) {
-                return (
-                  <Typography level="h2" textAlign={"center"}>
-                    {" "}
-                    Error: {data.message}
-                  </Typography>
-                );
-              } else {
-                return data.map((tenant) => (
-                  <ListItem key={tenant.id}>
-                    <ListItemButton
-                      component={Link}
-                      to={`/tenants/${tenant.id}/todos`}
-                    >
-                      {tenant.name}
-                    </ListItemButton>
-                  </ListItem>
-                ));
-              }
-            })()}
-          </List>
-        </CardContent>
-        <CardContent>
-          <Typography level="body-md" textAlign="center">
-            {" "}
-            You are logged in as {userName}{" "}
-          </Typography>
-        </CardContent>
-      </Card>
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <ModalDialog
-          aria-labelledby="basic-modal-dialog-title"
-          aria-describedby="basic-modal-dialog-description"
-          sx={{ maxWidth: 500 }}
-        >
-          <Typography id="basic-modal-dialog-title" level="h2">
-            Name
-          </Typography>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              const tenant = event.currentTarget.elements[0].value;
-              fetch("/api/tenants", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  name: tenant,
-                }),
-              })
-                .then((resp) => resp.json())
-                .then((datum) => {
-                  console.log(datum);
-                  data.push({ name: tenant, id: datum.id });
-                  setData(data);
-                  setOpen(false);
-                  navigate(`/tenants/${datum.id}/todos`);
+    <div className="flex flex-col items-center gap-10 border rounded-lg p-10 m-10">
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button className="flex flex-row gap-2 items-center">
+            <Plus size={14} /> CREATE TENANT
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>Add a new tenant</DialogHeader>
+          <DialogDescription>Create a tenant for yourself</DialogDescription>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit((data) => {
+                const { name: tenant } = data;
+                fetch("/api/tenants", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    name: tenant,
+                  }),
                 })
-                .catch((error) => {
-                  console.error(error);
-                  setOpen(false);
-                });
-            }}
-          >
-            <Stack spacing={2}>
-              <FormControl>
-                <Input autoFocus required />
-              </FormControl>
-              <Button type="submit">Submit</Button>
-            </Stack>
-          </form>
-        </ModalDialog>
-      </Modal>
+                  .then((resp) => resp.json())
+                  .then((datum) => {
+                    setTenants((t) => {
+                      return [...t, datum];
+                    });
+                    navigate(`/tenants/${datum.id}/todos`);
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                  });
+              })}
+              className="flex flex-col gap-2"
+            >
+              <FormField
+                name="name"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>Tenant name</FormLabel>
+                      <FormControl>
+                        <Input {...field} autoFocus />
+                      </FormControl>
+                      <FormDescription>
+                        The name of the you want to create
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+              <div>
+                <Button type="submit">Create tenant</Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      <ExistingTenants data={tenants} />
+      {me ? <div>You are logged in as {me.name ?? me.email}</div> : null}
+      <SignOutButton callbackUrl="/" />
     </div>
   );
 }
-
-export default Tenants;
