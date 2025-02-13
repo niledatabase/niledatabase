@@ -14,13 +14,11 @@ export async function configureNile(tenantId: string | void) {
     throw Error("user unavailable");
   }
 
-  return nile.getInstance({
+  const config = {
     tenantId: String(tenantId),
     userId: user?.id,
-    api: {
-      token: nextCookies.get(
-        `${process.env.VERCEL === "1" ? "__Secure-" : ""}nile.session-token`
-      )?.value,
-    },
-  });
+  }
+  // forward the browser headers on with the request
+  nile.api.headers = new Headers({ cookie: nextCookies.toString() });
+  return nile.getInstance(config);
 }
