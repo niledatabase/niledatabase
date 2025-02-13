@@ -18,8 +18,11 @@ export default function SignUp() {
         onSuccess={(response) => {
           if (response.ok) {
             push("/tenants");
-          }
-        }}
+          } else {
+            response.text().then((errorstr) => {
+            setError("an error has occurred: " + errorstr);
+          });
+        }}}
         onError={(e) => {
           setError("an error has occurred.");
         }}
