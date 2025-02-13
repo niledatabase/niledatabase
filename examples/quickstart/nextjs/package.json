@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@niledatabase/react": "^3.0.0-alpha.35",
-    "@niledatabase/server": "^3.0.0-alpha.35",
+    "@niledatabase/react": "^v3.0.0-alpha.45",
+    "@niledatabase/server": "^v3.0.0-alpha.45",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-toast": "^1.2.2",
