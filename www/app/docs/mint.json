@@ -183,10 +183,10 @@
           "group": "Schema Migrations",
           "icon": "diagram-project",
           "pages": [
-            "getting-started/schema_migrations/drizzle",
+            "getting-started/schema_migrations/alembic",
             "getting-started/schema_migrations/django",
-            "getting-started/schema_migrations/prisma",
-            "getting-started/schema_migrations/sqlalchemy"
+            "getting-started/schema_migrations/drizzle",
+            "getting-started/schema_migrations/prisma"
           ]
         },
         "getting-started/architecture",
