@@ -7,11 +7,9 @@ Drizzle is a TypeScript ORM that supports Postgres, MySQL, and SQLite. It also h
 This guide will show you how to use Drizzle Kit CLI to manage your schema migrations. We are going to assume that you already have a project set up with your
 favorite Typescript framework.
 
-## Start from example project
-
-You can start by cloning a small example project that we've set up [here](https://github.com/niledatabase/niledatabase/tree/main/examples/migrations/drizzle).
-
-Clone the repo and run `npm i` to install the dependencies:
+<Steps>
+<Step title="Start from example project">
+Clone our example project and install dependencies:
 
 ```bash
 git clone https://github.com/niledatabase/niledatabase.git
@@ -23,14 +21,16 @@ This will install `drizzle-kit`, `drizzle-orm`, `dotenv`, and `pg-node` - all of
 
 To run this example, you'll need a .env file with a DATABASE_URL environment variable set to a postgres database.
 You can copy the connection string from your Nile database home page.
+</Step>
 
-## Configure Drizzle
-
+<Step title="Configure Drizzle">
 Drizzle kit is configured via a `drizzle.config.ts` file, which you can find in the root of the example project.
 
-Here's an example `drizzle.config.ts` file. You'll need to set the `schema` field to the path to your schema file,
-and the `out` field to the path where you want to store your migrations. The `dialect` field is the database you're using, in our case it's `postgresql`, and
-the `dbCredentials` field is the credentials to your database. You typically want to use an environment variable for your database credentials.
+Here's an example `drizzle.config.ts` file. You'll need to set:
+- The `schema` field to the path to your schema file
+- The `out` field to the path where you want to store your migrations
+- The `dialect` field to `postgresql` for Nile databases
+- The `dbCredentials` field with your database credentials
 
 ```javascript
 import { defineConfig } from "drizzle-kit";
@@ -49,17 +49,12 @@ export default defineConfig({
   },
 });
 ```
+</Step>
 
-## Code-first Schema management
+<Step title="Define Your Schema">
+In code-first schema management, you define your schema as Typescript objects, and then use the Drizzle Kit CLI to generate migrations.
 
-In code-first schema management, you define your schema as Typescript objects, and then use the Drizzle Kit CLI to generate a migration that you can run against your database
-to update your database schema accordingly.
-
-### Example Schema Definition in Drizzle
-
-The scehma definitions for your application live in `src/db/schema.ts` (or if you choose a different location, you'll need to update the `drizzle.config.ts` file).
-Note that we include the built-in `tenants` table that Nile automatically provisions for you in your database. While the table is pre-provisioned, we want to create
-the Drizzle object for it so that we can interact with the table in our application - for example to create a new tenant.
+Create your schema in `src/db/schema.ts`. Note that we include the built-in `tenants` table that Nile automatically provisions:
 
 ```javascript
 import { sql } from "drizzle-orm";
@@ -101,20 +96,17 @@ export const todos = pgTable(
   }
 );
 ```
+</Step>
 
-### Generating a Migration
-
-Now that we have our schema defined, we can generate a migration using Drizzle Kit.
+<Step title="Generate and Run Migrations">
+Generate your first migration using Drizzle Kit:
 
 ```bash
 npx drizzle-kit generate
 ```
 
-If all goes well, you'll see something like this:
-
+You should see output like:
 ```bash
-➜  drizzle git:(drizzle_migrations) ✗ npx drizzle-kit generate
-...
 2 tables
 tenants 5 columns 0 indexes 0 fks
 todos 6 columns 0 indexes 0 fks
@@ -122,24 +114,51 @@ todos 6 columns 0 indexes 0 fks
 [✓] Your SQL migration file ➜ db/out/0000_absurd_captain_britain.sql 🚀
 ```
 
-You can open the generated file in the `db/out` directory and see the SQL that Drizzle will run against your database to make the changes specified in your schema.
-
-## Running Migrations
-
-To run the migration, you can use the Drizzle Kit CLI again.
+Then run the migration:
 
 ```bash
 npx drizzle-kit migrate
 ```
+</Step>
 
-If you don't see any errors, you've successfully run your migration.
+<Step title="Seed and Query Data">
+Now you can write code to insert and query data. Here's an example (`src/index.ts`):
 
-### Seeding and Querying Data
+```javascript
+import 'dotenv/config';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { todos, tenants } from './db/schema';
 
-Now that we have our schema defined, we can write some code to insert data into our database and query it.
+const db = drizzle(process.env.DATABASE_URL!);
+async function main() {
+  const tenant: typeof tenants.$inferInsert = {
+    name: 'My New Tenant',
+  };
 
-If you run the example with `npx tsx src/index.ts` you should see the following output:
+  const tenantId = await db.insert(tenants).values(tenant).returning({ id: tenants.id });
+  console.log('New tenant created!')
 
+  const todo: typeof todos.$inferInsert = {
+    title: 'My New Todo',
+    tenantId: tenantId[0].id,
+  };
+
+  await db.insert(todos).values(todo);
+  console.log('New todo created!')
+
+  const rows = await db.select().from(todos);
+  console.log('Getting all todos from the database: ', rows)
+}
+
+main();
+```
+
+Run the example:
+```bash
+npx tsx src/index.ts
+```
+
+You should see output showing the created tenant and todo:
 ```bash
 New tenant created!
 New todo created!
@@ -154,47 +173,10 @@ Getting all todos from the database:  [
   }
 ]
 ```
+</Step>
 
-The code that produces this output can be found in `src/index.ts`. As you can see, we initialize a connection to our database using the `drizzle` object
-and then use the schema objects that we defined in `src/db/schema.ts` to seed and query our database.
-
-```javascript
-import 'dotenv/config';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { todos, tenants } from './db/schema';
-
-const db = drizzle(process.env.DATABASE_URL!);
-async function main() {
-
-  const tenant: typeof tenants.$inferInsert = {
-    name: 'My New Tenant',
-  };
-
-  const tenantId = await db.insert(tenants).values(tenant).returning({ id: tenants.id });
-
-  console.log('New tenant created!')
-
-  const todo: typeof todos.$inferInsert = {
-    title: 'My New Todo',
-    tenantId: tenantId[0].id,
-  };
-
-  await db.insert(todos).values(todo);
-
-  console.log('New todo created!')
-
-  const rows = await db.select().from(todos);
-  console.log('Getting all todos from the database: ', rows)
-}
-
-main();
-```
-
-This will create a new tenant and a new todo, and then query for all the todos in the database.
-
-### Schema Changes
-
-Now lets say that you want to add a new column to the `todos` table. You would make the following change to your schema:
+<Step title="Make Schema Changes">
+To add new columns, update your schema file. For example, to add a due date:
 
 ```javascript
 // ...
@@ -203,21 +185,15 @@ Now lets say that you want to add a new column to the `todos` table. You would m
 // ...
 ```
 
-Now you can generate and run a new migration as follows:
-
+Generate and run a new migration:
 ```bash
 npx drizzle-kit generate
 npx drizzle-kit migrate
 ```
 
-This will generate a new migration file in the `db/out` directory, which will look something like this:
-
-```bash
+This will generate a migration file like:
+```sql
 ALTER TABLE "todos" ADD COLUMN "due_date" timestamp;
 ```
-
-And apply the changes to your database.
-
-## Database-first Schema management
-
-Coming soon.
+</Step>
+</Steps>
