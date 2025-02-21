@@ -42,7 +42,7 @@ and then you can run the following snippet:
 import { GenericContainer, Wait } from "testcontainers";
 import pg from "pg";
 
-const image = "ghcr.io/niledatabase/testingcontainer:v0.0.2";
+const image = "ghcr.io/niledatabase/testingcontainer:latest";
 const container = await new GenericContainer(image)
   .withExposedPorts(5432)
   .withWaitStrategy(
@@ -86,7 +86,7 @@ from testcontainers.core.waiting_utils import wait_for_logs
 import psycopg
 
 with PostgresContainer(
-    image="ghcr.io/niledatabase/testingcontainer:v0.0.2",
+    image="ghcr.io/niledatabase/testingcontainer:latest",
     port=5432,
     username="00000000-0000-0000-0000-000000000000",
     password="password",

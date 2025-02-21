@@ -17,7 +17,7 @@ and try Nile locally. [Join our discord](https://discord.com/invite/8UuBB84tTy) 
 ### Run the Docker Container
 
 ```bash
-docker run -p 5432:5432 -ti ghcr.io/niledatabase/testingcontainer:v0.0.2
+docker run -p 5432:5432 -ti ghcr.io/niledatabase/testingcontainer:latest
 ```
 
 This will start a Postgres database with Nile extensions installed.
@@ -167,3 +167,56 @@ psql postgres://00000000-0000-0000-0000-000000000000:mypassword@127.0.0.1:5432/m
 ```
 
 You can also change the port mappings in the docker run command, if you want Postgres to listen on a different port.
+
+## Troubleshooting
+
+If you are having trouble running the container, the first step is to check that you are using the latest version of the container.
+You can do this by first deleting existing images of `niledatabase/testingcontainer:latest` (since they may refer to older versions) and then running `docker pull ghcr.io/niledatabase/testingcontainer:latest`.
+
+Please check if any of the common issues and solutions below help solve your problem. If not, we welcome you to report the issue on either [GitHub](https://github.com/niledatabase/niledatabase) or [Discord](https://discord.com/invite/8UuBB84tTy)
+
+When reporting the issue, please include:
+- The docker container logs (`docker logs <container_id>`)
+- The exact error message you're encountering
+
+Here are some common issues you might encounter when running the docker container:
+
+### Server closed the connection unexpectedly
+
+It takes a bit of time for the container to start up. If you get the following error:
+
+```bash
+➜ psql postgres://00000000-0000-0000-0000-000000000000:password@localhost:5432/test
+psql: error: connection to server at "localhost" (::1), port 5432 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+```
+
+Wait for a few seconds, until the container logs indicate that the database is ready:
+
+```bash
+Database has been created and is ready
+```
+
+Then try connecting again.
+
+### Role does not exist
+
+If you get the following error:
+
+```bash
+➜  niledatabase_private git:(extension_groups) ✗ psql postgres://00000000-0000-0000-0000-000000000000:password@localhost:5432/test
+psql: error: connection to server at "localhost" (::1), port 5432 failed: FATAL:  role "00000000-0000-0000-0000-000000000000" does not exist
+```
+
+It is likely that you have another Postgres instance running on your machine that also uses port 5432. In this situation, `psql` will try to connect to the default Postgres instance, which fails because we are using a specific user that doesn't exist in the default Postgres instance.
+
+You can either:
+
+- Stop the other Postgres instance - the exact command depends on your operating system and Postgres installation method.
+- Change the port mapping when running the container. For example to port 5433, and then connect to the new port: 
+  ```bash
+  docker run -p 5433:5432 -ti ghcr.io/niledatabase/testingcontainer:latest
+  psql postgres://00000000-0000-0000-0000-000000000000:password@localhost:5433/test
+  ```
+
