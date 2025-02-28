@@ -1,4 +1,9 @@
+import { buildNavParams } from "../../_build/buildNavParams.mjs";
+import files from "../../_build/sidenav.json"; // generated from npm run build or npm run init:docs
+
 export default async function inspectDirectory() {
-  // Since docs are now handled by Mintlify, return empty array
-  return [];
+  if (process.env.VERCEL) {
+    return [...files];
+  }
+  return buildNavParams();
 }
