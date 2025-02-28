@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+/// This table has subclasses and requires additional setup for migrations. Visit https://pris.ly/d/table-inheritance for more info.
+model tenants {
+  id      String    @id @default(dbgenerated("public.uuid_generate_v7()")) @db.Uuid
+  name    String?
+  created DateTime  @default(dbgenerated("LOCALTIMESTAMP")) @db.Timestamp(6)
+  updated DateTime  @default(dbgenerated("LOCALTIMESTAMP")) @db.Timestamp(6)
+  deleted DateTime? @db.Timestamp(6)
+}
+
+model posts {
+  id        String  @default(dbgenerated("public.uuid_generate_v7()")) @db.Uuid
+  tenant_id String  @db.Uuid
+  title     String
+  content   String?
+  authorId  String
+  @@id([id, tenant_id])
+}
