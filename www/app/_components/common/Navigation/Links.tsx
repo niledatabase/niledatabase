@@ -15,6 +15,7 @@ export function Links({ className: cn }: { className?: string }) {
       <Link className={className} href="/templates">
         Templates
       </Link>
+
       <Link className={className} href="/blog">
         Blog
       </Link>

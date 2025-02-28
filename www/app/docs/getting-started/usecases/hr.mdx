@@ -1,0 +1,229 @@
+---
+title: "HRIntelli - Magically Simplifying HR with AI"
+sidebarTitle: "HRIntelli"
+---
+
+![hrsnapshot](/images/hrsnapshot.png)
+
+The HR management application will now include features to manage departments and employee benefits. Each department will have its own information and employees will be associated with a department. Additionally, employee benefits will be tracked.
+
+### Key Feature:
+
+1. **Employee Management**:
+   - Add new employees with their personal details, title, and compensation.
+   - Update employee details, including title changes, personal details, and compensation adjustments.
+   - Terminate employees and update their status.
+2. **Department Management**:
+   - Manage information about each department.
+   - Associate employees with departments.
+3. **Performance Management**:
+   - Track employee performance and status within the company.
+   - Managers can add performance feedback for employees who report to them.
+   - Employees can view their performance feedback and add personal feedback.
+4. **Compensation Management**:
+   - HR can update employee compensation and receive AI-driven recommendations.
+   - Track compensation history for each employee.
+5. **Benefits Management**:
+   - Track the benefits each employee receives.
+6. **AI Integration**:
+   - AI provides recommendations for compensation adjustments based on trends and employee performance.
+   - Co-pilot assistance for managers to generate personalized performance feedback.
+7. **Reporting and Summarization**:
+   - Summarize employee information, performance trends, and compensation data.
+   - Managers can view information about employees who report to them.
+
+### Postgres Schemas
+
+![hrschema](/images/hrschema.png)
+
+### 1. departments
+
+This table stores information about each department, including its name and description, and is linked to a specific tenant.
+
+```sql
+CREATE TABLE departments (
+    tenant_id UUID,
+    department_id UUID DEFAULT gen_random_uuid(),
+    department_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, department_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+```
+
+### 2. employees
+
+This table stores detailed information about employees, including their title, department, compensation, status, hire date, and termination date. It ensures each employee is associated with a specific tenant and department.
+
+```sql
+CREATE TABLE employees (
+    tenant_id UUID,
+    employee_id UUID DEFAULT gen_random_uuid(),
+    department_id UUID,
+    title VARCHAR(100),
+    compensation DECIMAL(10, 2),
+    status VARCHAR(50),
+    hire_date DATE,
+    termination_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES users.tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+```
+
+### 3. performance
+
+This table tracks performance feedback for employees, including feedback text, rating, and the manager who provided the feedback. It is linked to the employee and the manager providing the feedback. The vector embeddings are calculated for each performance of an employee. This helps HR and managers to search about the feedback and even retrieve employees with similar feedback and come up with a cohesive plan for improvement.
+
+```sql
+CREATE TABLE performance (
+    tenant_id UUID,
+    performance_id UUID DEFAULT gen_random_uuid(),
+    employee_id UUID,
+    manager_id UUID,
+    feedback TEXT,
+    rating INT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, manager_id) REFERENCES employees(tenant_id, employee_id)
+);
+```
+
+### 4. compensation_history
+
+This table records changes in employee compensation, including the old and new compensation amounts, the date of change, and the reason for the change. It helps track the history of compensation adjustments.
+
+```sql
+CREATE TABLE compensation_history (
+    tenant_id UUID,
+    compensation_id UUID DEFAULT gen_random_uuid(),
+    employee_id UUID,
+    old_compensation DECIMAL(10, 2),
+    new_compensation DECIMAL(10, 2),
+    change_date DATE,
+    reason TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
+);
+```
+
+### 5. employee_feedback
+
+This table stores personal feedback provided by employees. It ensures feedback is linked to the specific employee who provided it. The embeddings on all the feedback of an employee helps to track similar patterns across feedbacks. This can help managers to understand which is the top priority improvement for the employee.
+
+```sql
+CREATE TABLE employee_feedback (
+    tenant_id UUID,
+    feedback_id UUID DEFAULT gen_random_uuid(),
+    employee_id UUID,
+    feedback TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
+);
+```
+
+### 6. benefits
+
+This table tracks the benefits each employee receives, including the name and description of the benefit. The embeddings are useful on the benefit types. This helps to summarize the long documents that explain benefits to the employees.
+
+```sql
+CREATE TABLE benefits (
+    tenant_id UUID,
+    benefit_id UUID DEFAULT gen_random_uuid(),
+    employee_id UUID,
+    benefit_name VARCHAR(100),
+    benefit_description TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
+);
+```
+
+### Full Script
+
+This script includes all necessary tables for managing employees, performance, compensation history, feedback, departments, and benefits, following the multitenant rules with UUID types and primary and foreign keys defined appropriately.
+
+```sql
+CREATE TABLE departments (
+    tenant_id UUID,
+    department_id UUID DEFAULT gen_random_uuid(),
+    department_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, department_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+CREATE TABLE employees (
+    tenant_id UUID,
+    employee_id UUID DEFAULT gen_random_uuid(),
+    department_id UUID,
+    title VARCHAR(100),
+    compensation DECIMAL(10, 2),
+    status VARCHAR(50),
+    hire_date DATE,
+    termination_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES users.tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+
+CREATE TABLE performance (
+    tenant_id UUID,
+    performance_id UUID DEFAULT gen_random_uuid(),
+    employee_id UUID,
+    manager_id UUID,
+    feedback TEXT,
+    rating INT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, manager_id) REFERENCES employees(tenant_id, employee_id)
+);
+
+CREATE TABLE compensation_history (
+    tenant_id UUID,
+    compensation_id UUID DEFAULT gen_random_uuid(),
+    employee_id UUID,
+    old_compensation DECIMAL(10, 2),
+    new_compensation DECIMAL(10, 2),
+    change_date DATE,
+    reason TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
+);
+
+CREATE TABLE employee_feedback (
+    tenant_id UUID,
+    feedback_id UUID DEFAULT gen_random_uuid(),
+    employee_id UUID,
+    feedback TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
+);
+
+CREATE TABLE benefits (
+    tenant_id UUID,
+    benefit_id UUID DEFAULT gen_random_uuid(),
+    employee_id UUID,
+    benefit_name VARCHAR(100),
+    benefit_description TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES employees(tenant_id, employee_id)
+);
+```

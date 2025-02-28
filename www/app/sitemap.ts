@@ -5,7 +5,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const files = await glob(
     [
       "app/blog/**/*.mdx",
-      "app/docs/**/*.mdx",
       "app/careers/**/*.mdx",
       // do something about templates
     ],

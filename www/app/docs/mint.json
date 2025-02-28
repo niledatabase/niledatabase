@@ -1,85 +1,347 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Nile Documentation",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "dark": "/images/nilemintlogo.svg",
+    "light": "/images/nilemintlogo.svg",
+    "href": "https://www.thenile.dev"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/images/favicon.svg",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#fdb768",
+    "light": "#fdb768",
+    "dark": "#fdb768",
     "anchors": {
       "from": "#0D9373",
       "to": "#07C983"
     }
   },
+  "modeToggle": {
+    "default": "dark",
+    "isHidden": true
+  },
+  "redirects": [
+    {
+      "source": "/getting-started",
+      "destination": "/getting-started/getting-started"
+    },
+    {
+      "source": "/getting-started/languages",
+      "destination": "/getting-started/languages/sql"
+    },
+    {
+      "source": "/getting-started/usecases",
+      "destination": "/getting-started/usecases/accounts"
+    },
+    {
+      "source": "/getting-started/examples",
+      "destination": "/getting-started/examples/chat_with_pdf"
+    },
+    {
+      "source": "/getting-started/schema_migrations",
+      "destination": "/getting-started/schema_migrations/drizzle"
+    },
+    {
+      "source": "/tenant-virtualization",
+      "destination": "/tenant-virtualization/introduction"
+    },
+    {
+      "source": "/ai-embeddings",
+      "destination": "/ai-embeddings/introduction"
+    },
+    {
+      "source": "/postgres",
+      "destination": "/postgres/introduction"
+    },
+    {
+      "source": "/postgres/datatype",
+      "destination": "/postgres/datatype/numeric"
+    },
+    {
+      "source": "/postgres/tools",
+      "destination": "/postgres/tools/dbeaver"
+    },
+    {
+      "source": "/integrations",
+      "destination": "/integrations/aws_bedrock"
+    },
+    {
+      "source": "/partners/llamandex",
+      "destination": "/integrations/llama_index"
+    },
+    {
+      "source": "/platform/integrations/lambda",
+      "destination": "/integrations/lambda"
+    },
+    {
+      "source": "/platform/integrations/nextauth",
+      "destination": "/integrations/nextauth"
+    },
+    {
+      "source": "/platform/integrations/stripe",
+      "destination": "/integrations/stripe"
+    },
+    {
+      "source": "/reference/api-reference/index",
+      "destination": "/api-reference/databases/lists-credentials-for-a-database"
+    }
+  ],
+  "metadata": {
+    "og:image": "https://www.thenile.dev/opengraph/docs.jpg"
+  },
   "topbarLinks": [
     {
-      "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "name": "Community",
+      "url": "https://discord.com/invite/8UuBB84tTy"
     }
   ],
   "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "name": "Get Started",
+    "url": "https://console.thenile.dev"
+  },
+  "feedback": {
+    "thumbsRating": true,
+    "suggestEdit": true
   },
   "tabs": [
     {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
-  "anchors": [
-    {
       "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
+      "url": "Get Started"
     },
     {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
+      "name": "API Reference",
+      "url": "api-reference",
+      "openapi": "https://global.thenile.dev/openapi.yaml"
     },
     {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "name": "Pricing",
+      "url": "https://www.thenile.dev/pricing"
+    },
+    {
+      "name": "Templates",
+      "url": "https://www.thenile.dev/templates"
+    },
+    {
+      "name": "Discord",
+      "url": "https://discord.com/invite/8UuBB84tTy"
     }
   ],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart", "development"]
-    },
-    {
-      "group": "Essentials",
       "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
+        "getting-started/getting-started",
+        {
+          "group": "Languages",
+          "icon": "code",
+          "pages": [
+            "getting-started/languages/sql",
+            "getting-started/languages/nextjs",
+            "getting-started/languages/drizzle",
+            "getting-started/languages/prisma",
+            "getting-started/languages/python",
+            "getting-started/languages/node"
+          ]
+        },
+        "getting-started/whatisnile",
+        {
+          "group": "Usecases",
+          "icon": "folder",
+          "pages": [
+            "getting-started/usecases/accounts",
+            "getting-started/usecases/expensify",
+            "getting-started/usecases/feedback",
+            "getting-started/usecases/health",
+            "getting-started/usecases/hiring",
+            "getting-started/usecases/hr",
+            "getting-started/usecases/issue-tracking",
+            "getting-started/usecases/lead-management",
+            "getting-started/usecases/legal",
+            "getting-started/usecases/marketing",
+            "getting-started/usecases/notion",
+            "getting-started/usecases/onboarding",
+            "getting-started/usecases/scheduler",
+            "getting-started/usecases/schoology",
+            "getting-started/usecases/slack",
+            "getting-started/usecases/supply",
+            "getting-started/usecases/support",
+            "getting-started/usecases/tripactions"
+          ]
+        },
+        {
+          "group": "Examples",
+          "icon": "lightbulb",
+          "pages": [
+            "getting-started/examples/chat_with_pdf",
+            "getting-started/examples/code_assistant",
+            "getting-started/examples/sales_insight",
+            "getting-started/examples/task_genius"
+          ]
+        },
+        "getting-started/postgres_docker",
+        {
+          "group": "Schema Migrations",
+          "icon": "diagram-project",
+          "pages": [
+            "getting-started/schema_migrations/alembic",
+            "getting-started/schema_migrations/django",
+            "getting-started/schema_migrations/drizzle",
+            "getting-started/schema_migrations/prisma"
+          ]
+        },
+        "getting-started/architecture",
+        "getting-started/postgres_testing"
       ]
     },
     {
-      "group": "API Documentation",
-      "pages": ["api-reference/introduction"]
+      "group": "Tenant Virtualization",
+      "pages": [
+        "tenant-virtualization/introduction",
+        "tenant-virtualization/tenant-isolation",
+        "tenant-virtualization/tenant-management",
+        "tenant-virtualization/tenant-placement",
+        "tenant-virtualization/tenant-sharing"
+      ]
     },
     {
-      "group": "Endpoint Examples",
+      "group": "Artificial Intelligence",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "ai-embeddings/introduction",
+        "ai-embeddings/vector_database",
+        "ai-embeddings/pg_vector",
+        "ai-embeddings/rag",
+        {
+          "group": "Embedding Models",
+          "icon": "microchip",
+          "pages": [
+            "ai-embeddings/embedding_models/cohere",
+            "ai-embeddings/embedding_models/deepinfra",
+            "ai-embeddings/embedding_models/fireworks",
+            "ai-embeddings/embedding_models/google",
+            "ai-embeddings/embedding_models/open_ai",
+            "ai-embeddings/embedding_models/voyage"
+          ]
+        },
+        "ai-embeddings/streaming",
+        "ai-embeddings/rag_vs_finetune"
+      ]
+    },
+    {
+      "group": "Postgres",
+      "pages": [
+        "postgres/introduction",
+        "postgres/createtable",
+        {
+          "group": "Data Types",
+          "icon": "comment-text",
+          "pages": [
+            "postgres/datatype/numeric",
+            "postgres/datatype/character",
+            "postgres/datatype/date",
+            "postgres/datatype/json",
+            "postgres/datatype/arrays"
+          ]
+        },
+        "postgres/indexes",
+        "postgres/joins",
+        "postgres/views",
+        {
+          "group": "Tools",
+          "icon": "screwdriver-wrench",
+          "pages": [
+            "postgres/tools/dbeaver",
+            "postgres/tools/psql"
+          ]
+        },
+        "postgres/postgres-compatibility"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "integrations/aws_bedrock",
+        "integrations/cohere",
+        "integrations/confluent",
+        "integrations/llama_index",
+        "integrations/modal",
+        "integrations/netlify",
+        "integrations/vercel",
+        "integrations/lambda",
+        "integrations/nextauth",
+        "integrations/stripe"
+      ]
+    },
+    {
+      "group": "Support",
+      "pages": [
+        "support/support"
       ]
     }
   ],
-  "footerSocials": {
-    "x": "https://x.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://linkedin.com/company/mintlify"
+  "footer": {
+    "socials": {
+      "x": "https://x.com/niledatabase",
+      "github": "https://github.com/niledatabase/niledatabase",
+      "linkedin": "https://www.linkedin.com/company/niledatabase",
+      "discord": "https://discord.com/invite/8UuBB84tTy"
+    },
+    "links": [
+      {
+        "title": "Resources",
+        "links": [
+          {
+            "label": "Blog",
+            "url": "https://www.thenile.dev/blog"
+          },
+          {
+            "label": "Pricing",
+            "url": "https://www.thenile.dev/pricing"
+          },
+          {
+            "label": "Templates",
+            "url": "https://www.thenile.dev/templates"
+          },
+          {
+            "label": "Community",
+            "url": "https://www.thenile.dev/community"
+          }
+        ]
+      },
+      {
+        "title": "Company",
+        "links": [
+          {
+            "label": "Careers",
+            "url": "https://www.thenile.dev/about-us"
+          },
+          {
+            "label": "About",
+            "url": "https://www.thenile.dev/about-us"
+          }
+        ]
+      },
+      {
+        "title": "Support",
+        "links": [
+          {
+            "label": "Contact Sales",
+            "url": "https://www.thenile.dev/contact-us"
+          },
+          {
+            "label": "Get Help",
+            "url": "https://www.thenile.dev/contact-us"
+          },
+          {
+            "label": "FAQ",
+            "url": "https://www.thenile.dev/pricing#faq"
+          }
+        ]
+      }
+    ]
+  },
+  "analytics": {
+    "ga4": {
+      "measurementId": "G-KE7812B4ZF"
+    }
   }
 }

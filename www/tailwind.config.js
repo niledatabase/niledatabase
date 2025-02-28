@@ -84,7 +84,6 @@ module.exports = {
         footer: "url('/footer-bg.svg')",
         base: "url('/bg-pattern.webp')",
         community: "url('/hero-community.png')",
-        docs: "url('/hero-docs.png')",
         templates: "url('/hero-templates.png')",
         "console-video": "url('/hero-bg-video.png')",
         "video-bg": "url('/video-bg.webp')",

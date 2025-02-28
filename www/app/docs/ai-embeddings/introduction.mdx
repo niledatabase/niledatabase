@@ -1,0 +1,83 @@
+---
+title: "Generative AI & Embeddings"
+sidebarTitle: "Generative AI"
+icon: "head-side-gear"
+---
+
+Generative AI is truly transforming every industry and vertical in B2B. It significantly improves the experience of the product, the value the user receives and increases the overall productivity.
+
+For example,
+
+1. A corporate wiki (eg. Confluence, Notion) where the employees can perform semantic search on their companies data
+2. A chatbot for a CRM (eg. Salesforce, Hubspot) that sales reps can use to ask questions about past and future customer deals and can have a back and forth conversation
+3. An autopilot for developers in their code repository (Github, Gitlab) to improve productivity. The autopilot should run on the companies code as well apart from learning on public repositories.
+
+## Challenges with AI in B2B
+
+_Separate databases for vector embeddings and customer data_
+
+In recent years, numerous vector databases have emerged. This trend separates customers' core data and metadata from their embeddings, forcing companies to manage multiple databases. Such separation increases costs, significantly complicates application development and operation, and leads to inefficient resource utilization between vector embeddings and customer metadata. Moreover, keeping these databases synchronized with customer changes adds yet another layer of complexity.
+
+_Lack of isolation for customer workloads_
+
+AI workloads demand significantly more memory and compute than traditional SaaS workloads. Customer adoption and growth are much faster with AI, though some of this can be attributed to a hype cycle. Moreover, rebuilding indexes for embeddings requires additional resources and may impact production workloads. The ability to isolate customer data and their AI workloads has a significant impact on the customer's experience. Isolation is a key customer requirement (no one wants their data mixed with anyone else’s) and also critical to performance - 3 million embeddings is very large. 1000 tenants with 3000 embeddings each is very manageable - you get lower latency and 100% recall.
+
+_Scaling to billions of embeddings across customers_
+
+AI workloads scale to 50-100 million embeddings and in some cases even a billion embeddings. The biggest unlock with AI is the ability to search through unstructured data. All the data in different PDFs, Images, Wikis are now searchable. In addition, these unstructured data need to be chunked to do better contextual search. The explosion of vector embeddings requires a scalable database that can store billions of embeddings at a really low cost.
+
+_Connecting all the customer’s data to the OLTP_
+
+90% of AI use cases involve extracting data from customers' various SaaS services, making it accessible to LLMs, and allowing users to write prompts against this data. For instance, Glean, an AI-first company, aggregates data from issue trackers, wikis, and Salesforce, making it searchable in one central location using LLMs. Glean must offer a streamlined process for each customer to extract data from their SaaS APIs and transfer it to Glean's database. This data needs to be stored and managed on a per-customer basis. Vector embeddings must be computed during data ingestion. In the AI era, ETL pipelines from SaaS services to OLTP databases need to be reimagined for each customer.
+
+_Cost of computing, storing and querying customer vector embeddings_
+
+The sheer scale of vector embeddings and their associated workloads significantly increases the cost of managing AI infrastructure. The primary expenses stem from compute and storage, which typically align with customer activity. Ideally, you'd want to pay only for the exact resources a customer uses for compute. Similarly, you'd prefer cheaper storage options when embeddings aren't being accessed. By implementing per-customer cost management for their workloads, it should be possible to reduce expenses by 10 to 20 times.
+
+## What are embeddings?
+
+In generative AI development, embeddings refer to numerical representations of data that capture meaningful relationships, semantics, or context within the data. These representations are often used to convert high-dimensional, categorical, or unstructured data into lower-dimensional, continuous vectors that can be processed by machine learning models.
+
+1. **Word Embeddings**
+
+   Word embeddings are one of the most common types of embeddings. They represent words from a vocabulary as dense numerical vectors in a lower-dimensional space. Word embeddings capture semantic and syntactic relationships between words. For example, words with similar meanings will have similar embeddings, and word arithmetic can be performed using embeddings (e.g., "king" - "man" + "woman" ≈ "queen"). Well-known word embedding methods include Word2Vec, GloVe, FastText, and BERT.
+
+2. **Sentence and Document Embeddings**:
+
+   Instead of representing individual words, sentence and document embeddings represent entire sentences, paragraphs, or documents as numerical vectors.These embeddings aim to capture the overall meaning and context of the text. They are useful for applications like text summarization, document classification, and sentiment analysis. Models like BERT and the Universal Sentence Encoder can generate sentence and document embeddings.
+
+3. **Image Embeddings**:
+
+   In computer vision, image embeddings represent images as vectors in a lower-dimensional space. Image embeddings capture visual features, allowing generative AI models to understand and generate images or perform tasks like image search and object detection. Convolutional Neural Networks (CNNs) are commonly used to generate image embeddings.
+
+There are many ways to compare embeddings. L2 distance (Euclidean distance), inner product, and cosine distance are different similarity or dissimilarity measures used to compare vectors in multi-dimensional spaces.
+
+Let's use sentence embeddings to explain how embeddings help with finding the similarity between sentences:
+
+**Example Sentences**:
+
+**Sentence 1**: "The sun rises in the east every morning."
+
+**Sentence 2**: "The moon sets in the west at night."
+
+**Sentence 3**: "Bananas are a source of potassium."
+
+**Sentence Embeddings** (Hypothetical Values in a 4-dimensional space):
+
+- Sentence 1 Embedding: [2.2, 1.0, -0.8, 0.9]
+- Sentence 2 Embedding: [2.0, 1.3, 0.9, 1.1]
+- Sentence 3 Embedding: [0.6, 2.4, 2.1, 0.8]
+
+**Similarity Calculation**:
+
+We'll use cosine similarity to measure the similarity between sentence embeddings. The closer the cosine similarity value is to 1, the more similar the sentences are:
+
+- Cosine Similarity between Sentence 1 and Sentence 2 ≈ 0.979
+- Cosine Similarity between Sentence 1 and Sentence 3 ≈ 0.089
+- Cosine Similarity between Sentence 2 and Sentence 3 ≈ 0.083
+
+In this example, we used sentence embeddings to represent the entire sentences in a four-dimensional space. The cosine similarity between Sentence 1 and Sentence 2 is approximately 0.979, indicating high similarity because both sentences share a similar context related to celestial objects and directions. Sentence 3, which discusses a different topic, has lower similarity with both Sentence 1 and Sentence 2.
+
+## Support for embeddings in Nile - pg_vector
+
+Embeddings in Nile is enabled using pg_vector, the Postgres extension. This extension is enabled by default in Nile and is available to be used once you create a database. You can read more about how to use pg_vector and build a real world AI native B2B application in the pg_vector section.

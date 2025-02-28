@@ -1,0 +1,36 @@
+---
+title: "Connecting to Postgres using PSQL"
+sidebarTitle: "PSQL"
+---
+
+This guide will walk you through the steps to connect to Nile using PSQL.
+
+1. Create a Nile's Postgres database through the UI or use one of your existing databases to follow along.
+
+![PSQL-1](/images/psql-1.png)
+
+2. Once you are inside a specific database, click on the settings tab on the left and navigate to the connections screen
+
+![PSQL-2](/images/psql-2.png)
+
+3. Click on the Postgres icon to get the connection string
+
+![PSQL-3](/images/psql-3.png)
+
+4. Click "Generate credentials". Use this if you really want to simplify the access. If not, you can replace the username and password manually and use that through commandline.
+
+![PSQL-4](/images/psql-4.png)
+
+5. Copy the connection string and run it on the command line.
+
+![PSQL-5](/images/psql-5.png)
+
+6. You can now use the full power of psql with Nile. You can take a look at all the tables and schemas using \dt
+
+![PSQL-6](/images/psql-6.png)
+
+7. Execute any queries to interact with the tables. For example, if you want to see the rows in tenants table, execute a select query on it
+
+![PSQL-7](/images/psql-7.png)
+
+8. Have fun using PSQL!

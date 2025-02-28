@@ -11,10 +11,6 @@
       "cache": false,
       "persistent": true
     },
-    "build:docSearchDev": {
-      "cache": false,
-      "persistent": true
-    },
     "build:blogSearchDev": {
       "cache": false,
       "persistent": true

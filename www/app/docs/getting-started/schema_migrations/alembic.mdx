@@ -1,0 +1,94 @@
+---
+title: "Alembic"
+sidebarTitle: "Alembic"
+---
+
+Alembic is a migration tool for SQLAlchemy. It is a flexible tool for managing database migrations.
+Below, we'll walk through the process of setting up Alembic in a project and running your first migration.
+
+We'll start with an example project that has Alembic already set up, and you can 
+follow along with the steps below. Alternatively, you can run these steps in your own project.
+
+## Running an Example Migration
+
+<Steps>
+  <Step title="Clone the example project">
+
+```bash
+git clone https://github.com/niledatabase/niledatabase
+cd niledatabase/examples/migrations/alembic
+```
+  </Step>
+
+  <Step title="Set up the environment and install dependencies">
+
+```bash
+virtualenv .venv
+source .venv/bin/activate 
+# install alembic, sqlalchemy, psycopg2-binary and dotenv
+pip install -r requirements.txt
+# alembic init alembic # run this if you install alembic in your own project
+```
+  </Step>
+
+  <Step title="Create a Migration Script">
+
+In the example project, we have a migration script already created. 
+You can find it in the `./alembic/versions` directory.
+
+Here's how to create a new migration script:
+
+```bash
+alembic revision -m "create account table"
+```
+
+This will generate a new file: `./alembic/versions/13379be60997_create_account_table.py`. Now we want to edit the file and add the migration script to it:
+
+```py
+def upgrade():
+    op.create_table(
+        'account',
+        sa.Column('id', sa.Integer, primary_key=True),
+        sa.Column('name', sa.String(50), nullable=False),
+        sa.Column('description', sa.Unicode(200)),
+    )
+
+def downgrade():
+    op.drop_table('account')
+```
+  </Step>
+
+  <Step title="Connect to Database">
+
+To connect Alembic to the right database, edit `alembic.ini` and edit the following:
+
+```ini
+sqlalchemy.url = postgresql://user:password@host:5432/dbname
+```
+
+You can hard-code your connection string, but the example project also supports using an 
+environment variable. You can create a `.env` file and add the connection string there:
+
+```
+DATABASE_URL=postgresql://user:password@host:5432/dbname
+```
+
+You can get your connection string from the Nile database home page.
+
+  </Step>
+
+  <Step title="Run the Migration">
+
+```bash
+alembic upgrade head
+```
+
+Thats it! You can connect to your database and see the new table.
+
+  </Step>
+</Steps>
+
+## Next Steps
+
+This is the most basic use-case of Alembic. There is a lot more to it, which you can learn 
+from the official [Alembic documentation](https://alembic.sqlalchemy.org/en/latest/front.html).
