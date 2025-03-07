@@ -12,7 +12,7 @@ export default function SignOutButton({
     <Button
       variant="link"
       onClick={() => signOut({ callbackUrl: "/" })}
-      className="px-0"
+      className="px-0 text-white"
     >
       {text}
     </Button>
