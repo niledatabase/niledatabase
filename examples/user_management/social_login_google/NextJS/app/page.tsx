@@ -8,6 +8,7 @@ import {
   X,
   Google,
 } from "@niledatabase/react";
+import "@niledatabase/react/styles.css"
 
 export default function Home() {
   return (

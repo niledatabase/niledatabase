@@ -16,7 +16,8 @@ export default function DestroyUser() {
 
       {showForm ? (
         <div className="flex flex-col gap-2 mt-5 mx-auto max-w-96 items-start">
-          <div>{message}</div>
+          <div className="rounded-lg bg-destructive text-white p-2">This will clean delete the user from the build in tables. It will also <strong>remove all oidc logins from the credentials table</strong>, which means everyone will need to re-authenticate with the app.</div>
+          <div>This is for testing purposes only.</div>
           <Input
             onChange={(e) => {
               setEmail(e.target.value);
@@ -24,11 +25,12 @@ export default function DestroyUser() {
           />
           <div>
             <Button
+              disabled={!!message}
               onClick={async () => {
                 const result = await actuallyDeleteUser(email);
                 if (result.ok) {
                   setMessage(
-                    <div>
+                    <div className="flex flex-col gap-2">
                       Great work, the user was removed from the database. Now
                       you can try again.
                       <Link href="/">
@@ -43,6 +45,7 @@ export default function DestroyUser() {
             >
               Delete user
             </Button>
+          <div>{message}</div>
           </div>
         </div>
       ) : null}
