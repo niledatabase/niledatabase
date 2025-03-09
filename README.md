@@ -16,6 +16,7 @@
 - Autoscale to millions of tenants and billions of vector embeddings
 - Place tenants on serverless or provisioned compute - globally
 - Tenant-level branching, backups, schema migration, and insights
+- AI toolkit and massively scalable vector database
 
 We are in public preview currently. 
 
