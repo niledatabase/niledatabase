@@ -16,7 +16,12 @@ export default function DestroyUser() {
 
       {showForm ? (
         <div className="flex flex-col gap-2 mt-5 mx-auto max-w-96 items-start">
-          <div className="rounded-lg bg-destructive text-white p-2">This will clean delete the user from the build in tables. It will also <strong>remove all oidc logins from the credentials table</strong>, which means everyone will need to re-authenticate with the app.</div>
+          <div className="rounded-lg bg-destructive text-white p-2">
+            This will clean delete the user from the build in tables. It will
+            also{" "}
+            <strong>remove all oidc logins from the credentials table</strong>,
+            which means everyone will need to re-authenticate with the app.
+          </div>
           <div>This is for testing purposes only.</div>
           <Input
             onChange={(e) => {
@@ -45,7 +50,7 @@ export default function DestroyUser() {
             >
               Delete user
             </Button>
-          <div>{message}</div>
+            <div>{message}</div>
           </div>
         </div>
       ) : null}

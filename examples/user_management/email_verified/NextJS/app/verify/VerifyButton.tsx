@@ -2,6 +2,7 @@
 import { User } from "@niledatabase/server";
 
 import { EmailSignInButton } from "@niledatabase/react";
+import "@niledatabase/react/styles.css";
 import { useState } from "react";
 
 export default function VerifyButton({ me }: { me: User }) {

@@ -1,6 +1,7 @@
 import { headers as nextHeaders } from "next/headers";
 import { nile } from "../api/[...nile]/nile";
-import SignOut from "./signout";
+import { SignOutButton, UserInfo } from "@niledatabase/react";
+import "@niledatabase/react/styles.css";
 
 export default async function Success() {
   const headers = nextHeaders();
@@ -16,30 +17,9 @@ export default async function Success() {
     );
   }
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <div className="flex flex-col rounded-lg border border-slate-500 p-10 gap-2">
-        <div className="flex flex-row">
-          <div className="w-44 pr-3">email:</div>
-          {me.email}
-        </div>
-        <div className="flex flex-row">
-          <div className="w-44 pr-3">id:</div>
-          {me.id}
-        </div>
-        <div className="flex flex-row">
-          <div className="w-44 pr-3">created:</div>
-          {me.created}
-        </div>
-        <div className="flex flex-row">
-          <div className="w-44 pr-3">updated:</div>
-          {me.updated}
-        </div>
-        <div className="flex flex-row">
-          <div className="w-44 pr-3">verified:</div>
-          {me.emailVerified}
-        </div>
-      </div>
-      <SignOut />
+    <div className="flex flex-col gap-20">
+      <UserInfo />
+      <SignOutButton />
     </div>
   );
 }

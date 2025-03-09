@@ -3,11 +3,11 @@ import { nile } from "../api/[...nile]/nile";
 import { redirect } from "next/navigation";
 import VerifyButton from "./VerifyButton";
 export default async function Verify() {
-  const headers = nextHeaders();
+  const headers = await nextHeaders();
   const me = await nile.api.users.me(headers);
   if (me instanceof Response) {
     return (
-      <div className="flex flex-col w-screen h-screen items-center justify-center gap-4">
+      <div className="flex flex-col h-full w-full items-center justify-center gap-4">
         <div className="text-xl">Unauthorized</div>
         <a className="px-y py-2 hover:underline text-primary" href="/">
           Back to home

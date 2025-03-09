@@ -23,9 +23,8 @@ const router = createBrowserRouter([
     path: "tenants/:tenantId/todos",
     element: <Todos />,
   },
-  
 ]);
 
 export default function Routes() {
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 }

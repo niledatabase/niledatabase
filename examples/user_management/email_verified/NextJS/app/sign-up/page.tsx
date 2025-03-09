@@ -9,7 +9,7 @@ export default function SignUp() {
       <div className="text-sm">
         Already a user?{" "}
         <Link href="/" className="hover:underline">
-          <Button variant="link" className="pl-0">
+          <Button variant="link" className="pl-0 text-primary">
             Log in here
           </Button>
         </Link>

@@ -9,18 +9,18 @@ const rewrites = async () => {
   return {
     beforeFiles: [
       {
-        source: '/docs',
-        destination: 'https://nile.mintlify.dev/docs',
+        source: "/docs",
+        destination: "https://nile.mintlify.dev/docs",
       },
       {
-        source: '/docs/',
-        destination: 'https://nile.mintlify.dev/docs/',
+        source: "/docs/",
+        destination: "https://nile.mintlify.dev/docs/",
       },
     ],
     afterFiles: [
       {
-        source: '/docs/:match*',
-        destination: 'https://nile.mintlify.dev/docs/:match*',
+        source: "/docs/:match*",
+        destination: "https://nile.mintlify.dev/docs/:match*",
       },
     ],
   };
@@ -47,11 +47,11 @@ const withMdx = nextMdx({
 
 const nextConfig = {
   // Configure page extensions
-  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
-  
+  pageExtensions: ["js", "jsx", "ts", "tsx", "mdx"],
+
   // Add rewrites configuration
   rewrites,
-  
+
   // Exclude docs from the build
   webpack: (config, { isServer }) => {
     // Add a rule to exclude the docs directory

@@ -4,7 +4,7 @@
 
 ```bash
 virtualenv .venv
-source .venv/bin/activate 
+source .venv/bin/activate
 # install alembic, sqlalchemy, psycopg2-binary and dotenv
 pip install -r requirements.txt
 alembic init alembic

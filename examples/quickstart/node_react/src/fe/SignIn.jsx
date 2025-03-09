@@ -21,7 +21,7 @@ export default function Auth() {
 
   return (
     <div className="justify-center items-center flex flex-1 flex-col">
-      <SignInForm callbackUrl="/tenants"/>
+      <SignInForm callbackUrl="/tenants" />
       <p>
         Not a user yet?{" "}
         <Button variant="link" className={"pl-0"}>
