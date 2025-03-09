@@ -17,7 +17,7 @@ export async function configureNile(tenantId: string | void) {
   const config = {
     tenantId: String(tenantId),
     userId: user?.id,
-  }
+  };
   // forward the browser headers on with the request
   nile.api.headers = new Headers({ cookie: nextCookies.toString() });
   return nile.getInstance(config);

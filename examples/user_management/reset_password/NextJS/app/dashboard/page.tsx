@@ -5,7 +5,7 @@ import SignOutButton from "./SignOutButton";
 import { Tenant, ActiveSession, JWT } from "@niledatabase/server";
 import { Ban } from "lucide-react";
 import { TenantSelector, UserInfo } from "@niledatabase/react";
-import '@niledatabase/react/styles.css'
+import "@niledatabase/react/styles.css";
 
 function Carder({
   children,
@@ -44,17 +44,21 @@ export default async function Dashboard() {
 
   const requests: [ActiveSession, Tenant[]] = [
     nile.api.auth.getSession() as unknown as ActiveSession,
-    nile.api.tenants.listTenants() as unknown as Tenant[]
+    nile.api.tenants.listTenants() as unknown as Tenant[],
   ];
   const [session, tenants] = await Promise.all(requests);
 
   return (
     <div className="flex flex-col gap-4 mt-24">
-        <Card>
-          <TenantSelector className="p-10" tenants={tenants} activeTenant={tenants[0]?.id} />
-        </Card>
       <Card>
-        <UserInfo user={currentUser} className="p-4"/>
+        <TenantSelector
+          className="p-10"
+          tenants={tenants}
+          activeTenant={tenants[0]?.id}
+        />
+      </Card>
+      <Card>
+        <UserInfo user={currentUser} className="p-4" />
       </Card>
       <Card>
         <CardHeader>Token information</CardHeader>

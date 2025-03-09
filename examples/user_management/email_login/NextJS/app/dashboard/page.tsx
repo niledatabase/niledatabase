@@ -1,9 +1,10 @@
 import { cookies } from "next/headers";
 import { nile } from "../api/[...nile]/nile";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import SignOutButton from "./SignOutButton";
-import { Tenant, JWT } from "@niledatabase/server";
+import { Tenant, ActiveSession, JWT } from "@niledatabase/server";
 import { Ban } from "lucide-react";
+import { SignOutButton, TenantSelector, UserInfo } from "@niledatabase/react";
+import "@niledatabase/react/styles.css";
 
 function Carder({
   children,
@@ -34,43 +35,36 @@ export default async function Dashboard() {
           <div>Reason: {await currentUser.text()}</div>
         </div>
         <div>
-          <SignOutButton text="Back to Sign in" />
+          <SignOutButton buttonText="Back to Sign in" callbackUrl="/" />
         </div>
       </div>
     );
   }
 
-  const [session, tenant] = await Promise.all([
-    nile.api.auth.session() as unknown as JWT,
-    nile.api.tenants.getTenant(currentUser.tenants[0].id) as unknown as Tenant,
-  ]);
+  const requests: [ActiveSession, Tenant[]] = [
+    nile.api.auth.getSession() as unknown as ActiveSession,
+    nile.api.tenants.listTenants() as unknown as Tenant[],
+  ];
+  const [session, tenants] = await Promise.all(requests);
 
   return (
     <div className="flex flex-col gap-4 mt-24">
       <Card>
-        <CardHeader>Tenant information</CardHeader>
-        <CardContent>
-          <Carder>Tenant id {tenant.id}</Carder>
-          <Carder>Tenant name {tenant.name}</Carder>
-        </CardContent>
+        <TenantSelector
+          className="p-10"
+          tenants={tenants}
+          activeTenant={tenants[0]?.id}
+        />
       </Card>
       <Card>
-        <CardHeader>User information</CardHeader>
-        <CardContent>
-          <Carder>id {currentUser.id}</Carder>
-          <Carder>name {currentUser.givenName}</Carder>
-          <Carder>email {currentUser.email}</Carder>
-        </CardContent>
+        <UserInfo user={currentUser} className="p-4" />
       </Card>
       <Card>
         <CardHeader>Token information</CardHeader>
         <CardContent>
-          <Carder>email {session.email}</Carder>
-          <Carder>id {session.id}</Carder>
-          <Carder>Subject {session.sub}</Carder>
-          <Carder>Expiration {session.exp}</Carder>
-          <Carder>Issued at {session.iat}</Carder>
-          <Carder>JWT ID {session.jti}</Carder>
+          <Carder>email {session.user?.email}</Carder>
+          <Carder>id {session.user?.id}</Carder>
+          <Carder>expires {new Date(session.expires).toLocaleString()}</Carder>
         </CardContent>
       </Card>
       <SignOutButton />

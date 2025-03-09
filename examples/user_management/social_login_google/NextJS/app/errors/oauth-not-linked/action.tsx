@@ -13,11 +13,14 @@ export async function actuallyDeleteUser(email: string) {
     user.rows[0].id,
   ]);
 
-  await nile.db.query("delete from auth.credentials where payload->>'email' = $1", [
-    user.rows[0].email,
-  ]);
+  await nile.db.query(
+    "delete from auth.credentials where payload->>'email' = $1",
+    [user.rows[0].email]
+  );
 
-  await nile.db.query("delete from auth.credentials where method != 'EMAIL_PASSWORD'");
+  await nile.db.query(
+    "delete from auth.credentials where method != 'EMAIL_PASSWORD'"
+  );
 
   await nile.db.query("delete from auth.sessions where user_id = $1", [
     user.rows[0].id,

@@ -11,7 +11,9 @@ export default function SignUpPage() {
       <p>
         Already a user?{" "}
         <Button variant="link" className="pl-0">
-          <Link href="/">Sign in here</Link>
+          <Link href="/" className="text-primary">
+            Sign in here
+          </Link>
         </Button>
       </p>
       <Toaster />

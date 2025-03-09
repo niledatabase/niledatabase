@@ -1,6 +1,7 @@
 "use client";
 
 import { useSignUp } from "@niledatabase/react";
+import "@niledatabase/react/styles.css";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,7 +46,9 @@ function SignUp() {
                 <div>
                   Sign up successful! Go ahead and
                   <Button variant="link" className="pl-1">
-                    <Link href="/">log in as {user.email}</Link>
+                    <Link href="/" className="text-primary">
+                      log in as {user.email}
+                    </Link>
                   </Button>
                 </div>
               </div>
@@ -86,6 +89,7 @@ function SignUp() {
           render={({ field }) => {
             return (
               <FormItem>
+                {/* @ts-expect-error fix this later */}
                 <FormLabel>New tenant</FormLabel>
                 <FormControl>
                   <Input placeholder="New tenant name" {...field} />
