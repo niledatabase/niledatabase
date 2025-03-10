@@ -14,7 +14,7 @@ type Props = {
 
 // this is here to to remove the line if necessary
 const generateTableOfContents = (
-  Component: (props: MDXProps) => JSX.Element,
+  Component: (props: MDXProps) => JSX.Element
 ): { id: string; children: string }[] => {
   const { children } = Component({}).props;
   if (typeof children === "string") {

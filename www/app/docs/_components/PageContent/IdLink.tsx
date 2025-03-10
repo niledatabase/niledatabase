@@ -61,7 +61,7 @@ export const HoverManager = ({
 }) => {
   const defaultActive = items.findIndex(
     (item) =>
-      typeof window !== "undefined" && window.location.hash.includes(item.id),
+      typeof window !== "undefined" && window.location.hash.includes(item.id)
   );
   const [active, setActive] = useState<number>(defaultActive ?? -1);
   const [forceActive, setForceActive] = useState<number | null>(null);
@@ -77,7 +77,7 @@ export const HoverManager = ({
         setActive(order);
       }
     },
-    [active, forceActive, defaultActive],
+    [active, forceActive, defaultActive]
   );
   useEffect(() => {
     setActive(defaultActive);

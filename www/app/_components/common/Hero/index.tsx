@@ -85,7 +85,7 @@ export function HeroBottom({
               <div className="text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px] text-black font-semibold">
                 Ready to launch?
               </div>
-              <div className="text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px] text-black flex flex-row gap-1 lg:gap-2 items-center">
+              <div className="text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px] text-black flex gap-1 lg:gap-2 md:items-center flex-col md:flex-row">
                 <div className="whitespace-nowrap">Start building with</div>
                 {cta}
               </div>

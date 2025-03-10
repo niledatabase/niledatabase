@@ -134,7 +134,7 @@ type Props = {
   tenantApis?: boolean;
   emailSla?: boolean;
   designated?: boolean;
-  enterpriseSaml?: string | boolean;
+  enterpriseSaml?: boolean;
   mfa?: boolean;
 };
 export default function Column(props: Props) {
@@ -171,7 +171,7 @@ export default function Column(props: Props) {
     tenantApis = true,
     emailSla = false,
     designated = false,
-    enterpriseSaml = "$5 per tenant",
+    enterpriseSaml = true,
     mfa = true,
   } = props;
   return (
@@ -305,8 +305,11 @@ export default function Column(props: Props) {
         <Indicator value={true} header="Social auth" />
         <Indicator value={true} header="Magic auth" />
         <Indicator value={true} header="Email verification" />
-        <Indicator value={enterpriseSaml} header="Enterprise SAML" />
-        <Indicator value={mfa} header="MFA" />
+        <DoubleHeightIndicator
+          value={enterpriseSaml}
+          header="Enterprise SAML"
+        />
+        <DoubleHeightIndicator value={mfa} header="MFA" />
         <Indicator
           value={tenantOverrides}
           header="Tenant overrides"

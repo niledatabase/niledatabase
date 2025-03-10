@@ -20,7 +20,7 @@ async function getBlog(props: Props) {
   const [lastSlug] = slug.reverse();
   const files = await glob("app/blog/**.mdx");
   const file = files.find((file) => {
-    return file.includes(lastSlug);
+    return file.includes(`${lastSlug}.mdx`);
   });
 
   if (!file || !file[0]) {
@@ -84,7 +84,7 @@ export default async function BlogPage(props: Props) {
 
 export async function generateMetadata(
   props: Props,
-  parent: ResolvingMetadata,
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
   const blog = await getBlog(props);

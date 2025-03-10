@@ -333,7 +333,7 @@ export default function Auth() {
       </div>
       <HeroBottom
         cta={
-          <div className="bg-black rounded-xl text-white flex flex-row gap-2 px-4 py-1">
+          <div className="bg-black rounded-xl text-white flex flex-row gap-2 px-4 py-1 items-center w-fit">
             <div className="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
