@@ -41,7 +41,7 @@ export default async function Dashboard() {
   }
 
   const [session, tenant] = await Promise.all([
-    nile.api.auth.session() as unknown as JWT,
+    nile.api.auth.getSession() as unknown as JWT,
     nile.api.tenants.getTenant(currentUser.tenants[0].id) as unknown as Tenant,
   ]);
 

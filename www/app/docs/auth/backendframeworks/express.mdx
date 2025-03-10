@@ -180,7 +180,7 @@ app.get("/api/tenants/:tenantId/todos", async (req, res) => {
 </Step>
 
 <Step title="Protecting Routes">
-Routes can be protected by calling `nile.api.auth.session()`.
+Routes can be protected by calling `nile.api.auth.getSession()`.
 
 ```javascript
 export async function authenticatedUser(req, res, next) {

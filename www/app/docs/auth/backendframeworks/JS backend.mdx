@@ -44,7 +44,7 @@ In addition, you can use the SDK to directly access the Nile Auth API from your 
 
 ### 4. Session Creation
 - Via your service, nile auth provides a secure cookie.
-- The cookie includes basic user information, which can be accessed using the `nile.api.auth.session` or a full user profile via `nile.api.auth.me`
+- The cookie includes basic user information, which can be accessed using the `nile.api.auth.getSession` or a full user profile via `nile.api.auth.me`
 
 ### 5. Accessing the Session
 - A session is always within the context of a request. You can access session data using:
@@ -57,7 +57,7 @@ const nile = await Nile();
 
 const server = http.createServer(async (req, res) => {
   const session = nile.api.auth.getSession(req);
-  // or const session = nile.api.auth.session(new Headers('cookie', req.headers.cookie));
+  // or const session = nile.api.auth.getSession(new Headers('cookie', req.headers.cookie));
   if (session) {
     console.log("User is authenticated", session.user);
   });

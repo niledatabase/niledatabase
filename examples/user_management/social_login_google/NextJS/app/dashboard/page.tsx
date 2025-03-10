@@ -42,7 +42,7 @@ export default async function Dashboard() {
   }
 
   const requests: [JWT, TenantResponseType] = [
-    nile.api.auth.session() as unknown as JWT,
+    nile.api.auth.getSession() as unknown as JWT,
     undefined,
   ];
   if (currentUser.tenants.length) {
