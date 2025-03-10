@@ -46,6 +46,7 @@ Create a `.env` file in your project root:
 NILE_API_KEY=your_api_key_here
 NILE_WORKSPACE_SLUG=your_workspace_slug
 ```
+
 You can get the API key and workspace from [Nile console](https://console.thenile.dev/). Note the workspace name at the top and you can create an API key from the Security tab on the left.
 ![API Key Workspace](/images/apikeyworkspace.png)
 
@@ -236,6 +237,29 @@ curl -X POST http://localhost:3000/messages \
    - `your_workspace_slug` with your workspace slug
 
 5. On saving, Cline will ask for confirmation. Once confirmed, it should show nile-database MCP active with a green active status
+
+## Claude Code Setup
+
+1. Install Claude Code
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+2. Add the MCP Server to Claude Code (note that right now Claude Code only supports STDIO mode, not SSE):
+
+```bash
+claude mcp add nile_local_mcp node /path/to/your/nile-mcp-server/dist/index.js -e NILE_API_KEY=your_api_key_here -e NILE_WORKSPACE_SLUG=your_workspace_slug
+```
+
+3. You should see the following output:
+
+```bash
+Added stdio MCP server nile_local_mcp with command: node /path/to/your/nile-mcp-server/dist/index.js to project config
+```
+
+4. You can now use the MCP Server in Claude Code:
+
+![Claude Code MCP](/images/claude_code_w_nile_mcp.png)
 
 ## Example Usage
 
