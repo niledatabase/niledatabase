@@ -12,7 +12,7 @@
 - [Postgres re-engineered for multi-tenant apps](https://www.thenile.dev/docs/getting-started/languages/sql)
 - [Tenant virtualization](https://www.thenile.dev/docs/tenant-virtualization/introduction)
 - [Nile Auth - drop-in B2B auth with customer data in your Nile’s Postgres](https://www.thenile.dev/docs/auth/introduction)
-- [Artificial intelligence and vector database](https://www.thenile.dev/docs/ai-embeddings/introduction)
+- [AI toolkit and vector database](https://www.thenile.dev/docs/ai-embeddings/introduction)
   
 ## Features
 
