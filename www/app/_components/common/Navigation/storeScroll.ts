@@ -27,7 +27,7 @@ if (typeof document !== "undefined") {
   const storeScroll = () => {
     document.documentElement.style.setProperty(
       "--scroll",
-      String(document.documentElement.scrollTop),
+      String(document.documentElement.scrollTop)
     );
   };
 

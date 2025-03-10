@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       "app/careers/**/*.mdx",
       // do something about templates
     ],
-    { stat: true, withFileTypes: true },
+    { stat: true, withFileTypes: true }
   );
 
   const pages = [];

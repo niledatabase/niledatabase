@@ -15,7 +15,7 @@ const addItem = (item: any) => {
   const storage = getStorage();
   if (storage) {
     const index = storage.findIndex(
-      (existing: any) => existing.objectID === item.objectID,
+      (existing: any) => existing.objectID === item.objectID
     );
     if (index !== -1) {
       storage.splice(index + 1, 0, storage.splice(index, 1)[0]);
@@ -41,7 +41,7 @@ const getStorage = () => {
 
 const searchClient = algoliasearch(
   String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
-  String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY),
+  String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY)
 );
 
 function Portal({ children }: { children: any }) {
@@ -226,7 +226,7 @@ function Hits() {
       }
       return accum;
     },
-    {},
+    {}
   );
   return (
     <>

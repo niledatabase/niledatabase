@@ -18,7 +18,9 @@ function highlightCode(code: string): string {
   const lineNumbers = lines
     .map(
       (_, i) =>
-        `<span class="select-none text-[#636669] w-[40px] inline-block text-right pr-4">${i + 1}</span>`,
+        `<span class="select-none text-[#636669] w-[40px] inline-block text-right pr-4">${
+          i + 1
+        }</span>`
     )
     .join("\n");
 
@@ -31,27 +33,27 @@ function highlightCode(code: string): string {
         // Keywords
         .replace(
           /\b(const|let|var|return|export|default|async|await|function|import|from)\b/g,
-          '<span style="color: #E06C75">$1</span>',
+          '<span style="color: #E06C75">$1</span>'
         )
         // Built-in objects and types
         .replace(
           /\b(Promise|String|Number|Boolean|Object|Array|RegExp)\b/g,
-          '<span style="color: #E5C07B">$1</span>',
+          '<span style="color: #E5C07B">$1</span>'
         )
         // JSX Components and HTML tags
         .replace(
           /(&lt;\/?)([\w-]+)/g,
-          '$1<span style="color: #E06C75">$2</span>',
+          '$1<span style="color: #E06C75">$2</span>'
         )
         // JSX props
         .replace(
           /\b(\w+)=(&quot;|&#039;)/g,
-          '<span style="color: #D19A66">$1</span>=$2',
+          '<span style="color: #D19A66">$1</span>=$2'
         )
         // String literals
         .replace(
           /(&quot;.*?&quot;|&#039;.*?&#039;)/g,
-          '<span style="color: #98C379">$1</span>',
+          '<span style="color: #98C379">$1</span>'
         )
         // Imports and exports
         .replace(/({[^}]+})/g, '<span style="color: #61AFEF">$1</span>')
