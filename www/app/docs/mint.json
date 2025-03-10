@@ -109,9 +109,14 @@
       "url": "Get Started"
     },
     {
-      "name": "API Reference",
+      "name": "Management API",
       "url": "api-reference",
       "openapi": "https://global.thenile.dev/openapi.yaml"
+    },
+    {
+      "name": "Auth API",
+      "url": "auth/api-reference",
+      "openapi": "https://us-west-2.api.thenile.dev/v2/openapi"
     },
     {
       "name": "Pricing",
@@ -201,6 +206,114 @@
         "tenant-virtualization/tenant-management",
         "tenant-virtualization/tenant-placement",
         "tenant-virtualization/tenant-sharing"
+      ]
+    },
+    {
+      "group": "Auth",
+      "pages": [
+        "auth/introduction",
+        "auth/quickstart",
+        "auth/selfhosting",
+        {
+          "group": "Frontend Framework",
+          "icon": "bring-forward",
+          "pages": [
+            "auth/frontendframeworks/nextjs",
+            "auth/frontendframeworks/react",
+            "auth/frontendframeworks/remix"
+          ]
+        },
+        {
+          "group": "Backend Framework",
+          "icon": "send-backward",
+          "pages": [
+            "auth/backendframeworks/express",
+            "auth/backendframeworks/JS backend"
+          ]
+        },
+        {
+          "group": "Concepts",
+          "icon": "folder",
+          "pages": [
+            "auth/concepts/tenants",
+            "auth/concepts/users",
+            "auth/concepts/sessions",
+            "auth/concepts/jwt",
+            "auth/concepts/cookies",
+            "auth/concepts/oauth",
+            "auth/concepts/builtintables",
+            "auth/concepts/per-tenantoverrides"
+          ]
+        },
+        {
+          "group": "Email",
+          "icon": "envelope",
+          "pages": [
+            "auth/email/password",
+            "auth/email/templates",
+            "auth/email/verification",
+            "auth/email/customsmtp"
+          ]
+        },
+        {
+          "group": "Single Sign On",
+          "icon": "right-to-bracket",
+          "pages": [
+            "auth/singlesignon/google",
+            "auth/singlesignon/github",
+            "auth/singlesignon/discord",
+            "auth/singlesignon/linkedin",
+            "auth/singlesignon/microsoft",
+            "auth/singlesignon/hubspot",
+            "auth/singlesignon/x",
+            "auth/singlesignon/slack"
+          ]
+        },
+        {
+          "group": "Components",
+          "icon": "browser",
+          "pages": [
+            "auth/components/signin",
+            "auth/components/signup",
+            "auth/components/signout",
+            "auth/components/user",
+            "auth/components/organization",
+            "auth/components/customization"
+          ]
+        },
+        {
+          "group": "Dashboard",
+          "icon": "table-columns",
+          "pages": [
+            "auth/dashboard/managing-tenants",
+            "auth/dashboard/managing-users",
+            "auth/dashboard/configurations"
+          ]
+        },
+        {
+          "group": "Migration",
+          "icon": "truck-moving",
+          "pages": [
+            "auth/migration/fromnextauth",
+            "auth/migration/fromfirebase",
+            "auth/migration/fromauth0"
+          ]
+        },
+        {
+          "group": "Help",
+          "icon": "question",
+          "pages": ["auth/help/errors", "auth/help/faq", "auth/help/community"]
+        },
+        {
+          "group": "Contributing",
+          "icon": "hand-holding-hand",
+          "pages": [
+            "auth/contributing/develop",
+            "auth/contributing/testing",
+            "auth/contributing/report"
+          ]
+        },
+        "auth/roadmap"
       ]
     },
     {
