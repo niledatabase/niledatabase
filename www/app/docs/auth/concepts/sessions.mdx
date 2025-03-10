@@ -37,7 +37,7 @@ import { Nile } from "@niledatabase/server";
 const nile = await Nile();
 
 app.get("/some-path", async (req, res) => {
-  const session = await nile.api.auth.session(req);
+  const session = await nile.api.auth.getSession(req);
   if (!session) {
     res.status(401).json({
       message: "Unauthorized",

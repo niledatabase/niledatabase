@@ -56,7 +56,7 @@ import { Nile } from "@niledatabase/server";
 const nile = await Nile();
 
 const server = http.createServer(async (req, res) => {
-  const session = nile.api.auth.session(req);
+  const session = nile.api.auth.getSession(req);
   // or const session = nile.api.auth.session(new Headers('cookie', req.headers.cookie));
   if (session) {
     console.log("User is authenticated", session.user);
@@ -175,7 +175,7 @@ To authenticate API requests, you can use the session token:
 ```typescript
 const server = http.createServer(async (req, res) => {
   // Verify the session from the request
-  const session = nile.api.auth.session(req);
+  const session = nile.api.auth.getSession(req);
   if (!session) {
     res.writeHead(401);
     res.end('Unauthorized');

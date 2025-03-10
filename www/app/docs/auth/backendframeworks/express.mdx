@@ -184,7 +184,7 @@ Routes can be protected by calling `nile.api.auth.session()`.
 
 ```javascript
 export async function authenticatedUser(req, res, next) {
-  const session = await nile.api.auth.session(req);
+  const session = await nile.api.auth.getSession(req);
   if (!session?.user) {
     res.redirect("/login")
   } else {
