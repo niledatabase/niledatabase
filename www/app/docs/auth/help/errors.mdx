@@ -1,0 +1,87 @@
+---
+title: 'Errors'
+description: 'Common errors and their solutions in Nile Auth'
+---
+
+# Error Reference
+
+A comprehensive guide to common errors in Nile Auth and how to resolve them.
+
+## Authentication Errors
+
+Authentication errors are errors that occur when a user attempts to authenticate with Nile Auth and something goes wrong.
+In order to get the most information about the error, we recommend:
+
+**Implement error handlers when using Nile Auth components**:
+
+All errors caused by user input are returned as `200`, so you need to handle them in the `onSuccess` callback by checking if `res.ok` is `false`.
+The error itself will be in the `res.text()` property. You can choose to display the error to the user, or silently handle it and log to the console. 
+Check the [component guides](/auth/components/) for examples.
+
+**Enable debug mode when instantiating Nile Server SDK**:
+
+This will log everything that happens in the Nile Auth SDK, including detailed error messages.
+
+```js
+const nile = new Nile({
+  debug: true,
+});
+```
+
+Without debug logging, authentication errors will show as `400` errors in your server logs.
+
+### Invalid Credentials
+
+This typically happens when the user has entered an incorrect email or password. 
+Use the error handler callback to display an error message to the user and implement a [password reset flow](/auth/email/password).
+
+### User already exists
+
+This happens when the user tries to sign up with an email that is already in use. They may have forgotten that they already have an account.
+Use the error handler callback to display an error message to the user and direct them to sign in or reset their password.
+
+### Invalid email
+
+This happens when the user tries to sign up with an email that is not valid.
+Use the error handler callback to display an error message to the user and direct them to sign up with a valid email.
+
+## Configuration Errors
+
+### Misconfigured environment variables
+
+If you are missing any of the environment variables, you will get an error message in your server logs:
+```
+Error: User is required. Set NILEDB_USER as an environment variable or set `user` in the config options
+```
+
+Make sure you have set all the required environment variables:
+
+```
+NILEDB_USER=
+NILEDB_PASSWORD=
+NILEDB_API_URL=
+NILEDB_POSTGRES_URL=
+```
+Review the [quickstart guide](/auth/quickstart) for more information on how to set them up.
+
+### Missing Social Provider Configuration
+
+If you are missing the social provider configuration, but trying to use a social provider to sign in, 
+you will be redirected to a fallback page with plain email and password sign in.
+
+In order to use a social provider, you need to configure it in the [Nile Console](https://console.thenile.dev).
+You can read more about the social providers in the [single sign-on guide](/auth/singlesignon/google).
+
+### Invalid Social Provider Configuration
+
+If you have incorrectly configured the social provider configuration, the user will see an error message from the provider 
+which has some details about the error.
+
+Review the error, the provider configuration in Nile Console and the configuration in the provider's developer console. 
+Typically the issue is that the redirect URL in the SignOn component does not match the redirect URL in the provider's developer console.
+
+## Getting Help
+
+- [Join our Discord Community](/auth/help/community)
+- [Check our FAQ](/auth/help/faq)
+- [Contact Support](https://www.thenile.dev/contact-us) 

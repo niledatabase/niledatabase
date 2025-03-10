@@ -1,0 +1,40 @@
+---
+title: 'HubSpot'
+icon: 'hubspot'
+description: 'Integrate HubSpot Single Sign-On with Nile Auth'
+---
+
+<Steps>
+<Step title="Setup HubSpot Developer Portal">
+1. Create a [HubSpot Developer](https://developers.hubspot.com/) account
+2. Follow the documentation for [creating an application](https://developers.hubspot.com/docs/guides/apps/public-apps/overview) in HubSpot.
+3. Obtain a **Client ID** and **Client Secret** from [HubSpot OAuth](https://developers.hubspot.com/docs/guides/apps/authentication/working-with-oauth). Be sure to set the redirect URL to your application handling the Nile Auth requests.
+</Step>
+
+<Step title="Save Client ID and Client Secret in Nile">
+Save them to your database at `console.thenile.dev` under HubSpot in **Tenants & Users -> Configuration**
+![Hubspot configuration on console.thenile.dev](/images/singlesignon/hubspot.png)
+</Step>
+
+<Step title="Add the `HubSpot` button to your login page">
+The button will redirect the user to HubSpot for authentication. Upon successful authentication, the user will be redirected back to your application.
+```jsx
+import { HubSpot } from '@niledatabase/react';
+
+function App() {
+  return (
+    <div>
+      <HubSpotSignInButton callbackUrl="/" />
+    </div>
+  );
+}
+
+```
+</Step>
+</Steps>
+
+## Related Topics
+
+- [OAuth Concepts](/auth/concepts/oauth)
+- [User Management](/auth/concepts/users)
+- [Other SSO Providers](/auth/singlesignon/google) 

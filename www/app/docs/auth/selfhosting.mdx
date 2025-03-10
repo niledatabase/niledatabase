@@ -1,0 +1,103 @@
+---
+title: 'Self Host Nile Auth'
+description: 'Learn how to self-host Nile Auth in your own infrastructure'
+icon: 'server'
+---
+<Steps>
+
+<Step title="Prerequisites">
+Ensure you have the following installed:
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/) (if needed)
+</Step>
+
+<Step title="Building the Docker Image">
+To build the `nile-auth-server` Docker image, navigate to the project root where the `Dockerfile` is located and run:
+
+```sh
+git clone https://github.com/niledatabase/nile-auth.git
+cd nile-auth
+
+# Build the Docker image
+docker build -t nile-auth-server -f ./apps/server/Dockerfile .
+```
+</Step>
+
+<Step title="Running the Container">
+Run the container with environment variables and port mapping:
+
+```sh
+docker run -d \
+  --name nile-auth-server \
+  -p 3001:3001 \
+  -e NODE_ENV=production \
+  -e NEXT_TELEMETRY_DISABLED=1 \
+  -e NILEDB_HOST=<your-niledb-host> \
+  -e NILEDB_USER=<your-niledb-user> \
+  -e NILEDB_PASSWORD=<your-niledb-password> \
+  nile-auth-server
+```
+</Step>
+
+<Step title="Running with Docker Compose">
+If using Docker Compose, there is a `compose.yml` in the repo that needs to be modified to include database connection information.
+
+```yaml
+version: '3.8'
+services:
+  nile-auth-server:
+    container_name: nile-auth-server
+    build:
+      context: .
+      dockerfile: ./apps/server/Dockerfile
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: 1
+      NILEDB_HOST: <your-niledb-host>
+      NILEDB_USER: <your-niledb-user>
+      NILEDB_PASSWORD: <your-niledb-password>
+    ports:
+      - "3001:3001"
+```
+
+API routes inside the container differ from the Nile-hosted version. Because the credentials are specific to a given database, the database *name* needs to be used as the path to make requests.
+
+For example, in the hosted version, the URLs are accessed via `https://localhost:3001/v2/databases/<uuid>`. For a stand-alone setup, it would be `https://localhost:3001/v2/databases/<database_name>`.
+
+Run the container with:
+
+```sh
+docker-compose up -d
+```
+</Step>
+
+<Step title="Stopping and Removing Containers">
+To stop the running container:
+
+```sh
+docker stop nile-auth-server
+```
+
+To remove the container:
+
+```sh
+docker rm nile-auth-server
+```
+</Step>
+
+<Step title="Logs and Debugging">
+View logs:
+
+```sh
+docker logs -f nile-auth-server
+```
+
+Access the running container:
+
+```sh
+docker exec -it nile-auth-server sh
+```
+</Step>
+
+</Steps>
+

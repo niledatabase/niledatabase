@@ -1,0 +1,125 @@
+---
+title: 'JavaScript'
+description: 'Integrate Nile Auth with any JavaScript backend'
+---
+
+# JavaScript Backend Integration
+
+Learn how to integrate Nile Auth with any JavaScript backend framework.
+
+<Tip>It is important to note that the Auth service is designed to work with actions a **user** would take, it is not an exhaustive list of actions a developer or super user could take.</Tip>
+## Overview
+
+This guide covers the general principles of integrating Nile Auth with any JavaScript backend framework.
+
+## Installation
+
+```bash
+npm install @niledatabase/server
+```
+
+## Core Concepts
+
+### Nile Instance
+
+A configured Nile instance handles proxying requests to the Nile Auth API. Your client connects to your server, which then formats and ensures the requests can be handled by the Nile Auth API.
+
+The SDK is designed to make clients talking through your server to the Nile auth service as transparent as possible.
+
+
+## Authentication Flow
+
+### 1. User Initiates Authentication
+- The user clicks a "Sign in" button.
+- This action triggers a `signIn` method with the chosen provider. Your server handles all requests, which in most cases is simply forwarding them on to the Nile auth service with some additional information to help identify the client.
+
+### 2. Redirect to Provider (OAuth Flow)
+- If an OAuth provider (e.g., Google, GitHub) is used, the user is redirected to the provider's authentication page. This works by Nile auth returning redirects to your application, which the SDK handles in order to send the user to the provider. 
+- The user enters their credentials and grants permission to the application. Because your server is handling the requests, the user is redirected back to your application.
+
+### 3. Provider Callback & Token Exchange
+- After successful authentication, the provider redirects the user back to your application, which proxies the request to the Nile auth service. 
+- Nile auth exchanges the authorization code for an access token and forwards the authorization information to your server, which in turn would just pass that on to the client.
+
+### 4. Session Creation
+- Via your service, nile auth provides a secure cookie.
+- The cookie includes basic user information, which can be accessed using the `nile.api.auth.session` or a full user profile via `nile.api.auth.me`
+
+### 5. Accessing the Session
+- A session is always within the context of a request. You can access session data using:
+
+```typescript
+import http from "http";
+import { Nile } from "@niledatabase/server";
+
+const nile = await Nile();
+
+const server = http.createServer(async (req, res) => {
+  const session = nile.api.auth.session(req);
+  // or const session = nile.api.auth.session(new Headers('cookie', req.headers.cookie));
+  if (session) {
+    console.log("User is authenticated", session.user);
+  });
+)}
+
+  ```
+
+
+A Nile auth application server must respond to API requests. To see a full list of available API routes, check out the [API Reference](/api-reference).
+
+### Token Handling
+
+```javascript
+// Placeholder token handling code
+```
+
+### User Management
+
+```javascript
+// Placeholder user management code
+```
+
+## Integration Patterns
+
+### REST API Integration
+
+```javascript
+// Placeholder REST API integration code
+```
+
+### GraphQL Integration
+
+```javascript
+// Placeholder GraphQL integration code
+```
+
+## Security Considerations
+
+- [Placeholder security consideration 1]
+- [Placeholder security consideration 2]
+- [Placeholder security consideration 3]
+
+## Common Use Cases
+
+### API Authentication
+
+[Placeholder for API authentication details]
+
+### Webhook Authentication
+
+[Placeholder for webhook authentication details]
+
+## Framework-Specific Guides
+
+- [Express.js Integration](/auth/backendframeworks/express)
+- [Next.js API Routes](/auth/frontendframeworks/nextjs)
+
+## Best Practices
+
+- [Placeholder best practice 1]
+- [Placeholder best practice 2]
+- [Placeholder best practice 3]
+
+## Troubleshooting
+
+[Placeholder for troubleshooting common issues] 

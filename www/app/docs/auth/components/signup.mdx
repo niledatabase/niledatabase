@@ -1,0 +1,209 @@
+---
+title: 'Sign Up'
+description: 'Learn how to use the Nile Auth Sign Up component'
+---
+
+## Email + password
+
+The `<SignUpForm />` will create a new user in your database and create a session for them. Uses simple `<Email />` and `<Password />` fields, along with the `useSignUp()` hook. In most cases, you want to supply a `callbackUrl`, which is where the user will be redirected upon successful sign up and sign in.
+
+<Tabs>
+<Tab title="Preview">
+  <iframe src="https://storybook.thenile.dev/iframe.html?globals=&args=&id=sign-up-form--sign-up-form" width="100%" height="400px" className="rounded-xl"/>
+</Tab>
+<Tab title="Component">
+```jsx 
+import { SignUpForm } from "@niledatabase/react";
+
+export default function SignUpPage() {
+  return <SignUpForm callbackUrl="/dashboard" />
+}
+```
+</Tab>
+</Tabs>
+
+#### Error handling 
+In the case of errors from the API, or you want to do something more custom with the response, a `Response` object will come back from the `onSuccess` function. This is true even for HTTP error status codes such as 4XX and 5XX. The API will return text informing you of the error, so simply use `response.text()` to obtain your error, or `response.json()` in the event that the API returned an `ok` response.
+
+```jsx
+export default function SignUpPage() {
+  const [error, setError] = error('')
+  return (
+    <SignUpForm 
+      beforeMutate={() => {
+        setError('')
+      }}
+      onSuccess={async (res) => {
+        if (res.ok) {
+          // something good happened
+        } else {
+          const error = await res.text();
+          setError(error);
+        }
+      }}
+      onError={(e)=> {
+        console.error('Catastrophic failure 😭', e)
+      }}
+    />
+  )
+}
+```
+
+#### Custom sign up form
+<Tabs>
+<Tab title="Preview">
+  <iframe src="https://storybook.thenile.dev/iframe.html?globals=&args=&id=sign-up-form--custom-sign-up-form" width="100%" height="400px" className="rounded-xl"/>
+</Tab>
+<Tab title="Component">
+```jsx 
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import {
+  Email,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Password,
+} from '../../components/ui/form';
+
+import { useSignUp } from '@niledatabase/react';
+
+
+function SignUpCustom() {
+  const signUp = useSignUp({
+    onSuccess: () => {
+      // nothing to do here
+    },
+  });
+  const form = useForm({
+    defaultValues: {
+      givenName: '',
+      name: '',
+      familyName: '',
+      picture: '',
+      email: '',
+      password: '',
+      newTenantName: '',
+    },
+  });
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit((formData) => signUp(formData))}
+        className="space-y-8"
+      >
+        <Email />
+        <Password />
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormLabel>New tenant name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Name" {...field} />
+                </FormControl>
+                <FormDescription>The name of the user</FormDescription>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
+        />
+        <FormField
+          control={form.control}
+          name="familyName"
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormLabel>Family name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Family name" {...field} />
+                </FormControl>
+                <FormDescription>The family name of the user</FormDescription>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
+        />
+        <FormField
+          control={form.control}
+          name="givenName"
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormLabel>Given name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Given name" {...field} />
+                </FormControl>
+                <FormDescription>The given name of the user</FormDescription>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
+        />
+        <FormField
+          control={form.control}
+          name="picture"
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormLabel>Picture</FormLabel>
+                <FormControl>
+                  <Input placeholder="Picture" {...field} />
+                </FormControl>
+                <FormDescription>A picture of the user</FormDescription>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
+        />
+        <FormField
+          control={form.control}
+          name="newTenantName"
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormLabel>New tenant name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Tenant name" {...field} />
+                </FormControl>
+                <FormDescription>
+                  The name of the tenant for the user to join
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
+        />
+        <Button>Sign up</Button>
+      </form>
+    </Form>
+  );
+}
+const queryClient = new QueryClient();
+export function CustomSignUpForm() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <SignUpCustom />
+    </QueryClientProvider>
+  );
+}
+
+```
+</Tab>
+</Tabs>
+
+## Related Components
+
+- [Sign In](/auth/components/signin)
+- [Sign Out](/auth/components/signout)
+- [User Profile](/auth/components/user) 

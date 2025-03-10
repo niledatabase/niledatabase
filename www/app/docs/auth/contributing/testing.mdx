@@ -1,0 +1,166 @@
+---
+title: 'Testing'
+description: 'Learn how to test your contributions to Nile Auth'
+---
+## Overview
+
+### Types of Tests
+
+- Unit Tests
+- Integration Tests
+- End-to-End Tests
+- Performance Tests
+
+## Unit Testing
+
+### Writing Unit Tests
+
+```typescript
+// Example unit test
+import { describe, it, expect } from 'vitest';
+import { validateEmail } from '../utils/validation';
+
+describe('validateEmail', () => {
+  it('should validate correct email format', () => {
+    expect(validateEmail('test@example.com')).toBe(true);
+  });
+});
+```
+
+### Test Coverage
+
+- Aim for 80% or higher coverage
+- Focus on critical paths
+- Test edge cases
+
+## Integration Testing
+
+### Setting Up Integration Tests
+
+```typescript
+// Example integration test
+import { describe, it, expect } from 'vitest';
+import { AuthClient } from '../client';
+
+describe('AuthClient', () => {
+  it('should authenticate user', async () => {
+    // Placeholder test implementation
+  });
+});
+```
+
+### Test Environment
+
+1. Configure test database
+2. Mock external services
+3. Set up test fixtures
+
+## End-to-End Testing
+
+### E2E Test Setup
+
+```typescript
+// Example E2E test
+import { test, expect } from '@playwright/test';
+
+test('user can sign in', async ({ page }) => {
+  // Placeholder E2E test
+});
+```
+
+### Running E2E Tests
+
+1. Start test environment
+2. Execute test suite
+3. Generate reports
+
+## Performance Testing
+
+### Load Testing
+
+```typescript
+// Example load test
+import { check } from 'k6';
+import http from 'k6/http';
+
+export default function() {
+  // Placeholder load test
+}
+```
+
+### Benchmarking
+
+- Response times
+- Concurrent users
+- Resource usage
+
+## Test Best Practices
+
+### Writing Tests
+
+- Keep tests focused and simple
+- Use descriptive test names
+- Follow AAA pattern (Arrange, Act, Assert)
+- Mock external dependencies
+
+### Test Organization
+
+```
+tests/
+├── unit/
+├── integration/
+├── e2e/
+└── performance/
+```
+
+## Continuous Integration
+
+### CI Pipeline
+
+1. Run linting
+2. Execute unit tests
+3. Run integration tests
+4. Perform E2E tests
+5. Check coverage
+
+### Test Automation
+
+```yaml
+# Example GitHub Actions workflow
+name: Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Placeholder CI steps
+```
+
+## Debugging Tests
+
+### Common Issues
+
+- Async timing problems
+- Test isolation
+- Environment setup
+- Flaky tests
+
+### Tools and Techniques
+
+- Test debugger
+- Logging
+- Snapshot testing
+- Test runners
+
+## Best Practices
+
+- Write tests before code (TDD)
+- Keep tests maintainable
+- Use test fixtures
+- Document test requirements
+
+## Related Topics
+
+- [Development Guide](/auth/contributing/develop)
+- [Issue Reporting](/auth/contributing/report)
+- [Contributing Overview](/auth/contributing/develop) 

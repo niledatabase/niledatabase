@@ -1,0 +1,203 @@
+---
+title: 'Express.js'
+description: 'Integrate Nile Auth with Express.js applications'
+---
+
+import DbCreds from '/snippets/dbcreds.mdx'
+
+# Express.js Integration
+
+Learn how to integrate Nile Auth with your Express.js application. The integration allows the application to interact with Nile's APIs and databases, providing tenant-aware data management.
+
+<Tip>It is important to note that the Auth service is designed to work with actions a **user** would take, it is not an exhaustive list of actions a developer or super user could take.</Tip>
+
+import InstallNile from '/snippets/installnile.mdx'
+
+
+<Steps>
+
+<Step title="Create a new app">
+```bash
+npm init
+```
+</Step>
+<Step title="Install Dependencies">
+```bash
+npm install @niledatabase/server @niledatabase/react express dotenv --save
+```
+</Step>
+
+<DbCreds />
+
+<Step title="Implement server">
+
+`server.mjs`
+```javascript
+import "dotenv/config";
+import express from "express";
+import { Nile } from "@niledatabase/server";
+import { NileExpressHandler } from "@niledatabase/server/express";
+
+const startServer = async () => {
+    try {
+        const app = express();
+        const nile = await Nile();
+        const { paths, handler } = await NileExpressHandler(nile);
+        
+
+        app.use(express.json());
+        app.use(express.urlencoded({ extended: true }));
+
+        app.get(paths.get, handler);
+        app.post(paths.post, handler);
+        app.put(paths.put, handler);
+        app.delete(paths.delete, handler);
+
+        const PORT = process.env.PORT || 3040;
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Error starting server:", error);
+        process.exit(1);
+    }
+};
+
+startServer();
+```
+</Step>
+
+<Step title="Obtain user credentials">
+Nile auth uses cookies to store session information. To obtain them via cURL, create the following file
+
+`get_cookies.sh`
+```bash
+#!/bin/bash
+
+# Ensure EMAIL and PASSWORD are provided
+if [ $# -lt 2 ]; then
+  echo "Usage: $0 <EMAIL> <PASSWORD> [API_URL]"
+  exit 1
+fi
+
+EMAIL="$1"
+PASSWORD="$2"
+API_URL="${3:-http://localhost:3040}"  # Default to localhost if not provided
+
+# Define cookie file names
+csrf_cookie_file="csrf_cookies.txt"
+login_cookie_file="login_cookies.txt"
+
+# Define API endpoints
+CSRF_URL="$API_URL/api/auth/csrf"
+LOGIN_URL="$API_URL/api/signup"
+
+# Fetch CSRF token and store cookies
+csrf_token=$(curl -s -X GET "$CSRF_URL" -c "$csrf_cookie_file" | jq -r '.csrfToken')
+
+# Exit if CSRF token is missing
+[ -z "$csrf_token" ] || [ "$csrf_token" == "null" ] && { echo "Failed to retrieve CSRF token"; exit 1; }
+
+# Perform login request using CSRF token and cookies
+curl -s -X POST "$LOGIN_URL" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -b "$csrf_cookie_file" \
+  --cookie-jar "$login_cookie_file" \
+  --data-urlencode "csrfToken=$csrf_token" \
+  --data-urlencode "email=$EMAIL" \
+  --data-urlencode "password=$PASSWORD" >/dev/null
+
+# Output login cookie file info
+echo "Login successful. Use $login_cookie_file for authenticated requests:"
+echo "curl \"$API_URL/api/me\" -b $login_cookie_file"
+
+```
+
+Set the permissions to be executable
+
+```bash
+chmod +x get_cookies.sh
+```
+
+Run the command with the required params
+```bash
+./get_cookies.sh spongebob@squarepants.com no-this-is-patrick
+```
+
+You can then curl the API with the cookies
+```bash
+curl "http://localhost:3040/api/me" -b login_cookies.txt
+```
+
+</Step>
+</Steps>
+
+## Advanced usage
+Store the tenant ID as a param in your URL so it is easily accessible. You are then able to set your tenant ID for the request any time the param is present.
+
+`server.mjs`
+```javascript
+app.param("tenantId", (req, res, next, tenantId) => {
+  nile.tenantId = tenantId;
+  next();
+});
+```
+
+## Custom endpoints
+Define the API endpoints for managing tasks. These endpoints use Nile's tenant-aware context to interact with the database.
+
+<Steps>
+<Step title="Create Tenant-Aware Todos Table">
+
+```sql
+CREATE TABLE IF NOT EXISTS todos (
+    id uuid DEFAULT (gen_random_uuid()),
+    tenant_id uuid,
+    title varchar(256),
+    estimate varchar(256),
+    embedding vector(768),
+    complete boolean
+);
+```
+</Step>
+
+<Step title="Add route">
+Add a route that takes a tenant Id and queries the database. if `app.param` is set, the query will automatically be tenant-aware.
+`server.mjs`
+```javascript
+// Get all tasks for tenant
+app.get("/api/tenants/:tenantId/todos", async (req, res) => {
+  try {
+    // the nile.tenantId is set in the previous `app.param`
+    const todos = await nile.db.query(`SELECT * FROM todos ORDER BY title`);
+    res.json(todos.rows);
+  } catch (error: any) {
+    console.log("error listing tasks: " + error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+```
+</Step>
+
+<Step title="Protecting Routes">
+Routes can be protected by calling `nile.api.auth.session()`.
+
+```javascript
+export async function authenticatedUser(req, res, next) {
+  const session = await nile.api.auth.session(req);
+  if (!session?.user) {
+    res.redirect("/login")
+  } else {
+    next()
+  }
+}
+```
+</Step>
+
+</Steps>
+
+
+## Related Topics
+
+- [JWT Concepts](/auth/concepts/jwt)
+- [Sessions](/auth/concepts/sessions) 

@@ -1,0 +1,194 @@
+---
+title: 'Remix'
+description: 'Integrate Nile Auth with Remix applications'
+---
+
+import DbCreds from '/snippets/dbcreds.mdx'
+
+# Remix API Integration with Nile Database
+
+This guide explains how to integrate **Nile Database** with **Remix** and set up routes for handling various HTTP requests (`GET`, `POST`, `PUT`, `DELETE`). Additionally, you'll see how to include **client-side components** for user authentication and interaction using **Nile's React SDK**.
+
+---
+
+<Steps>
+<Step title="Create a new Remix project">
+
+Run the following command in your terminal to create a new Remix project:
+
+```bash
+npx create-remix@latest
+```
+
+Follow the prompts and select the following options:
+- **TypeScript** for the language.
+- **Express** for the server.
+- **Install dependencies with npm** for ease of use.
+
+After creating the project, navigate into the newly created project directory:
+
+```bash
+cd <your-project-name>
+```
+Upgrade react and react-dom to be on v19 and `@niledatabase/server` and `@niledatabase/react`, as they have it as a dependency.
+
+```bash
+npm install react@19.0.0 react-dom@19.0.0 @niledatabase/server @niledatabase/react
+```
+</Step>
+
+<DbCreds />
+
+
+
+<Step title="Update the Server to Handle API Routes">
+
+
+Create the API route file at `app/routes/api.$.ts`. This file will handle different HTTP methods (GET, POST, PUT, DELETE) using the **Nile SDK**.
+
+
+```ts
+import type { LoaderFunction, ActionFunction } from "@remix-run/node";
+import { Nile } from "@niledatabase/server";
+
+const nile = await Nile();
+const { GET, POST, PUT, DELETE } = nile.api.handlers;
+
+export const loader: LoaderFunction = async ({ request }) => {
+  switch (request.method.toUpperCase()) {
+    case "GET":
+      return GET(request); 
+    case "POST":
+      return POST(request); 
+    case "PUT":
+      return PUT(request); 
+    case "DELETE":
+      return DELETE(request); 
+    default:
+      return new Response("Method Not Allowed", { status: 405 });
+  }
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  switch (request.method.toUpperCase()) {
+    case "POST":
+      return POST(request); 
+    case "PUT":
+      return PUT(request);
+    case "DELETE":
+      return DELETE(request); 
+    default:
+      return new Response("Method Not Allowed", { status: 405 });
+  }
+};
+```
+
+This code handles different HTTP methods (`GET`, `POST`, `PUT`, `DELETE`) for the `/api/*` route and delegates the logic to Nile Database.
+</Step>
+
+<Step title="Add Client-Side Code for Authentication">
+
+
+You can use the components from `@niledatabase/react` to handle authentication. Replace the boilerplate of the main `_index.tsx` file with the following:
+
+`app/routes/_index.tsx`
+```tsx
+import { SignedIn, SignedOut, SignUpForm, UserInfo } from "@niledatabase/react";
+import "@niledatabase/react/styles.css";
+
+export default function Auth () {
+  return (
+    <div>
+      <SignedIn>
+        <UserInfo /> 
+      </SignedIn>
+      <SignedOut>
+        <SignUpForm /> 
+      </SignedOut>
+    </div>
+  );
+};
+
+```
+
+This component will render:
+- **User info** if the user is signed in.
+- **Sign-up form** if the user is not signed in.
+
+</Step>
+<Step title="Running the Project">
+
+
+To run your project, execute the following:
+
+```bash
+npm run dev
+```
+
+This will start the development server at `http://localhost:3000`, and you can test your API endpoints and authentication components.
+</Step>
+
+</Steps>
+
+## Summary
+
+Now you can interact with your Nile Database through Remix API routes and manage authentication in your app!
+
+## Creating a loader
+
+In some cases, you may want to create specific action and loader around the API, to do that, use the server side functions in the sdk in your loader. This code loads and updates a user&apos;s profile.
+
+```typescript
+
+import { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { Nile } from "@niledatabase/server";
+import { json, redirect } from "@remix-run/node";
+import { z } from "zod"; // Using Zod for validation
+
+const nile = await Nile();
+
+const userSchema = z.object({
+  name: z.string().min(1, "Name is required")
+});
+
+export const loader: LoaderFunction = async ({ request }) => {
+  try {
+    const user = await nile.api.users.me(); 
+    if (user) {
+      // If the user is authenticated, we can return their info or pass it to the UI
+      return json({ user });
+    } else {
+      // If the user is not authenticated, redirect to the index page
+      return redirect("/");
+    }
+  } catch (error) {
+    return json({ error: error.message }, { status: 500 });
+  }
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  const formData = new URLSearchParams(await request.text());
+  const name = formData.get("name");
+
+  // Validate the form data using Zod schema
+  const parsed = userSchema.safeParse({ name });
+
+  if (!parsed.success) {
+    return json({ error: parsed.error.format() }, { status: 400 });
+  }
+
+  try {
+    // Update the user's data
+    const updatedUser = await nile.api.users.updateMe(parsed.data);
+    return json({ user: updatedUser }, { status: 200 });
+  } catch (error) {
+    return json({ error: error.message }, { status: 500 });
+  }
+};
+
+```
+
+## Related Topics
+
+- [React Integration](/auth/frontendframeworks/react)
+- [Components](/auth/components/signin) 

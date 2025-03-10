@@ -1,0 +1,72 @@
+---
+title: 'Sign Out'
+description: 'Learn how to use the Nile Auth Sign Out component'
+---
+import Theming from '/snippets/theming.mdx'
+
+## Overview
+
+The `SignOutButton` component provides an interactive button for signing users out of your application. It supports optional redirect behavior, a custom callback URL, and configurable button text.
+
+## Installation
+
+```sh
+npm install @niledatabase/react
+```
+
+## Usage
+
+
+<Tabs>
+<Tab title="Preview">
+<iframe src="https://storybook.thenile.dev/iframe.html?globals=&args=&id=sign-out-button--sign-out-button" width="100%" height="130px" className="rounded-xl"/>
+</Tab>
+<Tab title="Component">
+```jsx 
+import { SignOutButton } from "@niledatabase/react";
+
+const MyComponent = () => {
+  return <SignOutButton callbackUrl="/sign-in" buttonText="Logout" />;
+};
+```
+</Tab>
+</Tabs>
+
+### `SignOutButton` Props
+
+| Name          | Type                      | Default       | Description |
+|--------------|---------------------------|---------------|-------------|
+| `redirect`   | `boolean`                  | `true`        | Determines whether the user should be redirected after signing out. |
+| `callbackUrl` | `string`                   | `window.location.href` | The URL to redirect to after signing out. |
+| `buttonText`  | `string`                   | `'Sign out'`  | Custom text for the sign-out button. |
+
+## Example with No Redirect
+
+```tsx
+<SignOutButton redirect={false} buttonText="Log Out" />
+```
+
+## Internal Functionality
+
+The `SignOutButton` component utilizes the `signOut` function to trigger a sign-out request.
+
+```tsx
+signOut({ callbackUrl: '/sign-in' }); // Redirects user to the sign-in page
+signOut({ redirect: false }); // Logs out without redirecting
+```
+
+### `signOut` Function
+
+The `signOut` function makes a `POST` request to the sign-out endpoint, optionally taking:
+
+- `callbackUrl`: A URL to redirect the user after logging out.
+- `redirect`: A boolean indicating whether to reload the page post-logout.
+
+
+<Theming component="<SignOut />"/>
+
+## Related Components
+
+- [Sign In](/auth/components/signin)
+- [Sign Up](/auth/components/signup)
+- [User Profile](/auth/components/user) 

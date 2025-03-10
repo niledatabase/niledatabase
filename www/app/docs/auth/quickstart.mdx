@@ -1,0 +1,94 @@
+---
+title: 'Get Started'
+description: 'Get started with Nile Auth in minutes'
+icon: 'rocket'
+mode: "wide"
+---
+
+import InstallNile from '/snippets/installnile.mdx'
+import CreateNextApp from '/snippets/createnextapp.mdx'
+import DbCreds from '/snippets/dbcreds.mdx'
+
+This guide will help you get started with Nile Auth by walking you through the steps required to configure and integrate authentication in your application using the provided SDK components. By the end of this guide, you will have implemented email + signup authentication (enabled by default for all databases), user profile, and organization management in your application.
+
+<Steps>
+<CreateNextApp/>
+<DbCreds />
+<InstallNile/>
+<Step title="Use SDK Components">
+
+Your application will interact with above authentication routes using SDK components. Replace the boilerplate `app/page.tsx` with the following:
+
+`/app/page.jsx`
+```jsx
+import {
+  SignOutButton,
+  SignUpForm,
+  SignedIn,
+  SignedOut,
+  TenantSelector,
+  UserInfo,
+} from "@niledatabase/react";
+import "@niledatabase/react/styles.css";
+
+export default function SignUpPage() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <SignedIn className="flex flex-col gap-4">
+        <UserInfo />
+        <TenantSelector className="py-6 mb-10" />
+        <SignOutButton />
+      </SignedIn>
+      <SignedOut>
+        <SignUpForm createTenant />
+      </SignedOut>
+    </div>
+  );
+}
+
+```
+</Step>
+<Step title="Run and Log in to your application">
+
+```bash
+npm run dev
+```
+
+Navigate to localhost to see the page. You should see a signup form that looks like this:
+
+<img height="500" width="500" src="/images/auth/quickstart_signup.png" alt="Signup Form" />
+
+Enter a dummy email and password into the `<SignUpForm />`. 
+
+If all went well, you will be logged in automatically and see the user profile and an organization switcher that allows you to create new organizations and switch between them:
+
+<img height="500" width="500" src="/images/auth/quickstart_authenticated.png" alt="User profile and organization switcher" />
+</Step>
+<Step title="Bonus: Explore in Nile Console">
+
+You can explore the database and the tenant management dashboard in the [Nile console](https://console.thenile.dev). 
+
+You should see a new organization and new user created in the "Tenants and Users" section.
+You can also navigate the the query editor and view the user and tenats in the database tables directly by running:
+
+```sql
+SELECT * FROM users;
+SELECT * FROM tenants;
+```
+
+If you are feeling adventurous, you can try to replace the default user photo in their profile by running:
+
+```sql
+UPDATE users 
+SET picture= 'https://www.publicdomainpictures.net/pictures/360000/velka/katze-katzchen-niedlich-vintage-1595638359oOf.jpg' 
+WHERE email='your-dummy-email@example.com';
+```
+
+You should see the user photo updated in the user profile in your application.
+</Step>
+</Steps>
+
+## Next Steps
+
+- [Explore Frontend Frameworks](/auth/frontendframeworks/nextjs)
+- [Learn About Backend Integration](/auth/backendframeworks/express) 

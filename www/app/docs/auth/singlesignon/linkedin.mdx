@@ -1,0 +1,39 @@
+---
+title: 'LinkedIn'
+icon: 'linkedin'
+description: 'Integrate LinkedIn Single Sign-On with Nile Auth'
+---
+<Steps>
+<Step title="Setup LinkedIn Developer Portal"> 
+1. Create a [LinkedIn Developer](https://www.linkedin.com/developers/) account.
+2. Navigate to the **My Apps** section and create a new application.
+3. Obtain a **Client ID** and **Client Secret** from the [LinkedIn OAuth settings](https://www.linkedin.com/developers/apps/). Be sure to set the redirect URL to your application handling the Nile Auth requests.
+</Step>
+
+<Step title="Save Client ID and Client Secret in Nile">
+Save the **Client ID** and **Client Secret** to your database at `console.thenile.dev` under LinkedIn in **Tenants & Users -> Configuration**  
+![LinkedIn configuration on console.thenile.dev](/images/singlesignon/linkedin.png)
+</Step>
+<Step title="Add the LinkedIn button to your login page">
+The button will redirect the user to LinkedIn for authentication. Upon successful authentication, the user will be redirected back to your application.
+
+```jsx
+import { LinkedIn } from '@niledatabase/react';
+
+function App() {
+  return (
+    <div>
+      <LinkedIn callbackUrl="/" />
+    </div>
+  );
+}
+```
+</Step>
+</Steps>
+
+
+## Related Topics
+
+- [OAuth Concepts](/auth/concepts/oauth)
+- [User Management](/auth/concepts/users)
+- [Other SSO Providers](/auth/singlesignon/github) 

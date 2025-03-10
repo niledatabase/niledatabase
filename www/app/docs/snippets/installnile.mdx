@@ -1,0 +1,28 @@
+import NileAsDeps from '/snippets/nileasdeps.mdx'
+
+<NileAsDeps />
+
+<Step>
+Your application must expose API routes to handle authentication operations.
+
+First, create a folder called `api` under the `app` folder and a folder called `[...nile]` under it:
+
+```bash
+mkdir -p app/api/\[...nile\]
+```
+
+Create following files handle the calls to your server, as well as expose the `nile` instance to your application:
+
+`/api/[...nile]/nile.ts`
+```typescript
+import { Nile } from "@niledatabase/server";
+export const nile = await Nile();
+export const { handlers } = nile.api;
+```
+
+`/api/[...nile]/route.ts`
+```typescript
+import { handlers } from "./nile";
+export const { POST, GET, DELETE, PUT } = handlers;
+```
+</Step>

@@ -1,0 +1,22 @@
+---
+title: 'Templates'
+description: 'Customize email templates in Nile Auth'
+---
+## Available Templates
+
+### Email invitation
+
+Sent when a user is invited to join a tenant, or uses their email address as the sign in provider.
+
+### Reset password
+
+Sent when a user requests a password reset. This is automatically triggered with a `POST` request to `/api/auth/reset-password`
+
+The `callbackURL` sent to the endpoint will be modified with the token in the **api_url** variable, or it will fall back to the `niledb-origin` header, which is automatically set via the JS SDK
+
+
+## Related Topics
+
+- [Email Verification](/auth/email/verification)
+- [Custom SMTP](/auth/email/customsmtp)
+- [Per-tenant Overrides](/auth/concepts/per-tenantoverrides) 

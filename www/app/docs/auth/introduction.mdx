@@ -1,0 +1,53 @@
+---
+title: 'Introduction'
+description: 'Learn about Nile Auth and its core features'
+icon: 'user'
+---
+
+Welcome to Nile Auth documentation. This section provides an overview of Nile's authentication and authorization capabilities.
+
+The Multi-Tenant Authentication Service provides authentication and authorization features for multi-tenant applications. This service ensures secure, scalable authentication while maintaining tenant isolation. All B2B applications are multi-tenanted, and they all have concepts of tenants, users and data. Nile Auth brings these together in a single service - authenticating users, managing tenants and access to their data. 
+
+## Purpose-built for multi-tenant apps
+
+Nile Auth is purpose-built for multi-tenant apps. Users belong to one or more tenants, and each tenant has its own data. Authenticated users can access data from any tenant they have access to - this access control is enforced at all layers - from the browser to the authentication service to the database itself. All authentication features can be enabled at the application level, or disabled for a specific tenant. 
+
+## User data stored in your DB
+
+Keep full control of your user data by storing it directly in your own database. At Nile we believe that user information, just like tenant information, is deeply integrated with your application data and best stored in the same database. This provides security, performance and consistency across your entire stack.
+
+## Unlimited active users
+
+Scale your application with confidence, supporting unlimited active users at no additional cost. Some authentication services pricing depends on the number of active users, but at Nile we believe that the number of active users does not accurately reflect the value of the service. We believe that a better metric is database usage (cpu, memory, storage) and the number of **enterprise tenants** you have (as those are high value customers). Therefore we do not limit the number of active users at any pricing tier, and instead focus on aligning our pricing with your database usage and enterprise adoption.
+
+## Comprehensive auth features
+Access a full suite of authentication features to secure your application thoroughly. Here are some of the features you get out of the box:
+
+- Organization management
+- User profiles
+- Dashboard for managing users and organizations
+- Tenant over-rides - manage authentication for each tenant individually
+- Multi-framework support - NextJS, Express, React, etc.
+- Wide range of authentication methods - email/password, social login, magic link, etc.
+- UI components for embedding in your application - simple, beautiful and flexible
+- Cookie-Based Authentication: Secure session management using HTTP-only cookies.
+- JWT and Session Support: Uses cookies to maintain user sessions and optionally issues JWTs for client-side validation.
+- Single Sign-On (SSO) Support: Optional integration with external identity providers.
+
+<Tip>
+Nile Auth service, SDK and React components are designed to work with actions a **user** would take - authenticate, reset password their own password, create organizations, view user profiles, etc. 
+
+Developer or super user actions are supported in Nile console under the "Tenants and Users" section. They can also be performed by a developer [directly in the database](/auth/concepts/builtintables).
+</Tip>
+
+## Self-host or let Nile manage it
+Choose between [self-hosting](/auth/selfhosting) for complete control or let Nile handle the management for you. And most importantly, Nile-Auth is 100% open source and will work with any PostgreSQL database. You are in control of your own user data and never have to worry about vendor lock-in.
+
+## Drop-in Auth UI modules
+Easily integrate pre-built authentication UI modules into your application with minimal effort. Nile's open source SDK includes a beautiful and flexible React components that can be embedded in your application and customized to your liking. This includes signup, login, organization switcher, user profile, social login buttons and more.
+
+## Next Steps
+
+- [Quickstart Guide](/auth/quickstart)
+- [Self Hosting](/auth/selfhosting)
+- [Concepts](/auth/concepts/tenants) 
