@@ -337,7 +337,8 @@
           ]
         },
         "ai-embeddings/streaming",
-        "ai-embeddings/rag_vs_finetune"
+        "ai-embeddings/rag_vs_finetune",
+        "ai-embeddings/model_context_protocol"
       ]
     },
     {
