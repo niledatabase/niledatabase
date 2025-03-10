@@ -36,7 +36,7 @@ import { nile } from "@/lib/nile";
 
 export default async function SignUpPage() {
   nile.api.headers = req.headers; // from the incoming request
-  const session = await nile.api.auth.session(); 
+  const session = await nile.api.auth.getSession(); 
 
   if (session.status === 'unauthenticated') {
     return <div>No soup for you!</div>
