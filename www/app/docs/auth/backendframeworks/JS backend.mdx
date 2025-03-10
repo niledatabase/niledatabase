@@ -26,6 +26,7 @@ A configured Nile instance handles proxying requests to the Nile Auth API. Your 
 
 The SDK is designed to make clients talking through your server to the Nile auth service as transparent as possible.
 
+In addition, you can use the SDK to directly access the Nile Auth API from your server.
 
 ## Authentication Flow
 
@@ -61,65 +62,185 @@ const server = http.createServer(async (req, res) => {
     console.log("User is authenticated", session.user);
   });
 )}
-
-  ```
-
+```
 
 A Nile auth application server must respond to API requests. To see a full list of available API routes, check out the [API Reference](/api-reference).
 
-### Token Handling
+## User Management
 
-```javascript
-// Placeholder token handling code
+While user signup, authentication and even user profile UI is handled automatically by the built-in routes and UI components, you can use the SDK to directly call user management APIs in Nile Auth.
+
+For example, to login a user with email and password, you can use the following code:
+
+```javascript login
+try {
+    const loginBody = {
+        email: 'test@test.com',
+        password: 'password'
+    }
+    debug(`logging in using ${loginBody.email} ${loginBody.password}`);
+    await nile.api.login(loginBody);
+  } catch (err) {
+    console.error("Failed to login", err);
+    return err;
+  }
 ```
 
-### User Management
+This will set `nile.token` to the user's session token, which you can use to make authenticated requests to the Nile Auth API.
 
-```javascript
-// Placeholder user management code
+You can get the user's profile information by calling the `me` API:
+
+```javascript me
+const user = await nile.api.users.me();
+console.log(user);
 ```
 
-## Integration Patterns
+You can also create a new user by calling the `create` API:
 
-### REST API Integration
-
-```javascript
-// Placeholder REST API integration code
+```javascript create
+const user = await nile.api.users.create({
+    email: 'test@test.com',
+    password: 'password'
+});
 ```
 
-### GraphQL Integration
+Or create a user in a specific tenant by setting `tenantId` before creating the user:
 
-```javascript
-// Placeholder GraphQL integration code
+```javascript create-tenant
+nile.tenantId = '8fa00d5e-ffa3-4662-96b0-bb8499b1cb68';
+const user = await nile.api.users.createTenantUser({
+    email: 'test@test.com',
+    password: 'password'
+});
+```
+You can also update a user's profile information by calling the `update` API:
+
+```javascript update
+   const update = {
+      name: 'updatedName',
+    };
+    const updatedUser = await nile.api.users.updateMe(update);
+    console.log(updatedFirstUser);
+```
+## Tenant Management
+
+Nile Auth supports multi-tenancy out of the box and includes tenant management APIs. You can create a new tenant by calling the `createTenant` API:
+
+```javascript create-tenant
+const tenant = await nile.api.tenants.create({
+    name: 'tenantName'
+});
+```
+
+You rename a tenant by calling the `updateTenant` API after setting the `tenantId` to the tenant you want to update:
+
+```javascript update-tenant
+nile.tenantId = '8fa00d5e-ffa3-4662-96b0-bb8499b1cb68';
+const tenant = await nile.api.tenants.updateTenant({
+    name: 'newTenantName'
+});
+```
+
+You can list the users in a tenant by calling the `listUsers` API after setting the `tenantId` to the tenant you want to list users from:
+
+```javascript list-users
+nile.tenantId = '8fa00d5e-ffa3-4662-96b0-bb8499b1cb68';
+const users = await nile.api.tenants.listUsers();
+console.log(users);
+```
+
+You can mark a tenant as deleted by calling the `deleteTenant` API after setting the `tenantId` to the tenant you want to delete:
+
+```javascript delete-tenant
+nile.tenantId = '8fa00d5e-ffa3-4662-96b0-bb8499b1cb68';
+await nile.api.tenants.deleteTenant();
+```
+
+You can add users to a tenant and remove them by calling `linkUser` and `unlinkUser` APIs:  
+
+```javascript link-user
+nile.tenantId = '8fa00d5e-ffa3-4662-96b0-bb8499b1cb68';
+await nile.api.tenants.linkUser({
+    userId: '123'
+});
+await nile.api.tenants.unlinkUser({
+    userId: '123'
+});
+```
+
+## API Authentication
+
+To authenticate API requests, you can use the session token:
+
+```typescript
+const server = http.createServer(async (req, res) => {
+  // Verify the session from the request
+  const session = nile.api.auth.session(req);
+  if (!session) {
+    res.writeHead(401);
+    res.end('Unauthorized');
+    return;
+  }
+  
+  // Process authenticated request
+  // ...
+});
 ```
 
 ## Security Considerations
-
-- [Placeholder security consideration 1]
-- [Placeholder security consideration 2]
-- [Placeholder security consideration 3]
-
-## Common Use Cases
-
-### API Authentication
-
-[Placeholder for API authentication details]
-
-### Webhook Authentication
-
-[Placeholder for webhook authentication details]
+- Never log or otherwise store user passwords in plain text
+- Never log or store authentication tokens or session information
+- Always validate and sanitize user input before passing it to Nile Auth APIs
+- Avoid exposing detailed error messages to clients that might reveal system information
+- Implement rate limiting for authentication attempts to prevent brute force attacks
+- Log authentication failures and suspicious activities for monitoring
+- Implement appropriate error responses that don't leak sensitive information
+- Keep your Nile SDK and dependencies up to date
 
 ## Framework-Specific Guides
 
 - [Express.js Integration](/auth/backendframeworks/express)
 - [Next.js API Routes](/auth/frontendframeworks/nextjs)
+- [Remix](/auth/frontendframeworks/remix)
 
 ## Best Practices
 
-- [Placeholder best practice 1]
-- [Placeholder best practice 2]
-- [Placeholder best practice 3]
+1. **Error Handling**
+   Implement comprehensive error handling for all authentication flows. Return user-friendly error messages while logging detailed errors server-side. Use try-catch blocks around all authentication operations.
+
+2. **Session Management**
+   Regularly validate sessions. Implement proper session cleanup on logout. Use secure session storage methods.
+
+3. **Code Organization**
+   Separate authentication logic into dedicated middleware. Create reusable authentication utilities. Keep configuration in environment variables.
+
+4. **Testing**
+   Test authentication flows thoroughly. Include both success and failure scenarios. Mock external authentication providers in tests.
 
 ## Troubleshooting
 
-[Placeholder for troubleshooting common issues] 
+### Common Issues
+
+1. **Invalid Session Token**
+   Verify that user authentication was successful. Verify the token is being properly passed in requests. Check if the session has expired. Ensure the token format is correct.
+
+2. **CORS Issues**
+   Ensure your server is configured to accept requests from your client domain. Check that necessary CORS headers are being set.
+
+3. **User Creation Failures**
+   Make sure you properly handle common user mistakes: Validate email format before submission and check for duplicate email address error that may be returned.
+
+### Debug Tips
+
+1. Enable debug logging:
+```typescript
+const nile = new Nile({
+  debug: true  // Enable detailed logging
+});
+```
+
+2. Monitor network requests in your browser's developer tools
+3. Check server logs for detailed error messages
+4. Verify environment variables are properly set
+
+For additional support, visit our [Discord community](https://discord.gg/niledatabase) or [GitHub discussions](https://github.com/niledatabase/nile/discussions). 
