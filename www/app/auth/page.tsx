@@ -26,7 +26,7 @@ export default function Auth() {
                   <span className="bg-clip-text text-transparent bg-gradient-text subpixel-antialiased bg-black overflow-hidden whitespace-nowrap leading-[48px] lg:leading-[120px] font-bold">
                     B2B
                   </span>
-                  <span className="ml-2">apps</span>
+                  <span className="ml-4 pt-3.5">apps</span>
                 </div>
               </h1>
               <h2 className="text-[16px] leading-[16px] xl:text-[20px] xl:leading-[20px] w-full">
@@ -83,7 +83,7 @@ export default function Auth() {
                       </div>
                       <Link
                         className="text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
-                        href="http://thenile.dev/auth/concepts/tenants"
+                        href="http://thenile.dev/docs/auth/concepts/tenants"
                       >
                         <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
                           Learn more
@@ -171,7 +171,7 @@ export default function Auth() {
                       </div>
                       <Link
                         className="text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
-                        href="http://thenile.dev/auth/concepts/builtintables"
+                        href="http://thenile.dev/docs/auth/concepts/builtintables"
                       >
                         <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
                           Learn more
@@ -215,7 +215,7 @@ export default function Auth() {
                       </div>
                       <Link
                         className="text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
-                        href="http://thenile.dev/auth/introduction#comprehensive-auth-features"
+                        href="http://thenile.dev/docs/auth/introduction#comprehensive-auth-features"
                       >
                         <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
                           Learn more
@@ -259,7 +259,7 @@ export default function Auth() {
                       </div>
                       <Link
                         className="text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
-                        href="http://thenile.dev/auth/quickstart"
+                        href="http://thenile.dev/docs/auth/quickstart"
                       >
                         <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
                           Learn more
@@ -303,7 +303,7 @@ export default function Auth() {
                       </div>
                       <Link
                         className="text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
-                        href="http://thenile.dev/auth/singlesignon/google"
+                        href="http://thenile.dev/docs/auth/singlesignon/google"
                       >
                         <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
                           Learn more
