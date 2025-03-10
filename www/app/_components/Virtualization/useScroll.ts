@@ -7,12 +7,12 @@ export default function useScroll(
   config?: {
     allowScroll?: boolean;
     scrollJacking?: boolean;
-  }
+  },
 ) {
   const { allowScroll = true, scrollJacking = false } = config ?? {};
   const scrollerRef = useRef<(event: WheelEvent) => void>(() => null);
   const [prevScrollPosition, setPrevScrollPosition] = useState(
-    typeof window !== "undefined" ? window.scrollY : 0
+    typeof window !== "undefined" ? window.scrollY : 0,
   );
   const scroller = useCallback(
     (event: WheelEvent) => {
@@ -35,7 +35,7 @@ export default function useScroll(
         handleScroll && handleScroll(scrollPosition);
       }
     },
-    [speedFactor, allowScroll, prevScrollPosition]
+    [speedFactor, allowScroll, prevScrollPosition],
   );
 
   useEffect(() => {

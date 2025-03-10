@@ -17,5 +17,5 @@ export default async function Page(props: Props) {
 }
 
 export const generateMetadata = makeMetadata(
-  NavigationRoots.TenantVirtualization
+  NavigationRoots.TenantVirtualization,
 );

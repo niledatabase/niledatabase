@@ -27,7 +27,7 @@ export default function BgHoverer(props: Props) {
         });
       }
     },
-    []
+    [],
   );
 
   return (

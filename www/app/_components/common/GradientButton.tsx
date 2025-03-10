@@ -28,7 +28,7 @@ export default function GradientButton({
         onClick();
       }
     },
-    [href, onClick, push]
+    [href, onClick, push],
   );
   const subClasses = useMemo(() => {
     if (variant === "soft") {

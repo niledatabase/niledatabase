@@ -23,7 +23,7 @@ type Props = {
 
 const searchClient = algoliasearch(
   String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
-  String(process.env.ALGOLIA_API_KEY)
+  String(process.env.ALGOLIA_API_KEY),
 );
 const index = searchClient.initIndex("blog");
 export const metadata = {

@@ -25,7 +25,7 @@ export default async function TemplateDetail(pageProps: PageProps) {
   const paramTemplate = String(params?.template);
 
   const template = templates.find(
-    (template) => template.name === decodeURIComponent(paramTemplate)
+    (template) => template.name === decodeURIComponent(paramTemplate),
   );
 
   if (!template) {
@@ -49,7 +49,7 @@ export default async function TemplateDetail(pageProps: PageProps) {
         .split(".")
         .join("/")}README.md`;
       const location = path.resolve(
-        path.join(__dirname, "../../../../../../", localFile)
+        path.join(__dirname, "../../../../../../", localFile),
       );
       console.log("attempting to locate", location);
 

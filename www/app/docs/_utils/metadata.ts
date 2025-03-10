@@ -17,7 +17,7 @@ type Props = { params: Param };
 export const buildMetadata = (
   metadata: FileMetadata & Metadata,
   root: NavigationRoots,
-  props: Props
+  props: Props,
 ): Metadata => {
   return {
     ...metadata,
@@ -34,7 +34,7 @@ export const buildMetadata = (
 export const makeMetadata = (root: NavigationRoots) =>
   async function generateMetadata(
     props: Props,
-    parent: ResolvingMetadata
+    parent: ResolvingMetadata,
   ): Promise<Metadata> {
     const { metadata } = await findDocFile({
       ...props,

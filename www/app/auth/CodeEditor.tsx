@@ -7,34 +7,52 @@ type TabName = "nile.ts" | "route.ts" | "page.jsx";
 function highlightCode(code: string): string {
   const escapeHtml = (str: string) => {
     return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   };
 
-  const lines = code.split('\n');
+  const lines = code.split("\n");
   const lineNumbers = lines
-    .map((_, i) => `<span class="select-none text-[#636669] w-[40px] inline-block text-right pr-4">${i + 1}</span>`)
-    .join('\n');
+    .map(
+      (_, i) =>
+        `<span class="select-none text-[#636669] w-[40px] inline-block text-right pr-4">${i + 1}</span>`,
+    )
+    .join("\n");
 
   const highlightedCode = lines
-    .map(line => {
+    .map((line) => {
       let highlighted = escapeHtml(line);
-      
+
       // Apply syntax highlighting
       highlighted = highlighted
         // Keywords
-        .replace(/\b(const|let|var|return|export|default|async|await|function|import|from)\b/g, '<span style="color: #E06C75">$1</span>')
+        .replace(
+          /\b(const|let|var|return|export|default|async|await|function|import|from)\b/g,
+          '<span style="color: #E06C75">$1</span>',
+        )
         // Built-in objects and types
-        .replace(/\b(Promise|String|Number|Boolean|Object|Array|RegExp)\b/g, '<span style="color: #E5C07B">$1</span>')
+        .replace(
+          /\b(Promise|String|Number|Boolean|Object|Array|RegExp)\b/g,
+          '<span style="color: #E5C07B">$1</span>',
+        )
         // JSX Components and HTML tags
-        .replace(/(&lt;\/?)([\w-]+)/g, '$1<span style="color: #E06C75">$2</span>')
+        .replace(
+          /(&lt;\/?)([\w-]+)/g,
+          '$1<span style="color: #E06C75">$2</span>',
+        )
         // JSX props
-        .replace(/\b(\w+)=(&quot;|&#039;)/g, '<span style="color: #D19A66">$1</span>=$2')
+        .replace(
+          /\b(\w+)=(&quot;|&#039;)/g,
+          '<span style="color: #D19A66">$1</span>=$2',
+        )
         // String literals
-        .replace(/(&quot;.*?&quot;|&#039;.*?&#039;)/g, '<span style="color: #98C379">$1</span>')
+        .replace(
+          /(&quot;.*?&quot;|&#039;.*?&#039;)/g,
+          '<span style="color: #98C379">$1</span>',
+        )
         // Imports and exports
         .replace(/({[^}]+})/g, '<span style="color: #61AFEF">$1</span>')
         // Function calls
@@ -44,7 +62,7 @@ function highlightCode(code: string): string {
 
       return highlighted;
     })
-    .join('\n');
+    .join("\n");
 
   return `<div class="flex">\n<div class="line-numbers">${lineNumbers}</div>\n<div class="code-content">${highlightedCode}</div>\n</div>`;
 }
@@ -82,7 +100,7 @@ export default function SignUpPage() {
       </SignedOut>
     </div>
   );
-}`
+}`,
 };
 
 export default function CodeEditor() {
@@ -95,7 +113,7 @@ export default function CodeEditor() {
       setTimeout(() => setCopied(false), 2000);
     });
   };
-  
+
   return (
     <div className="lg:w-1/2">
       <div className="bg-[#1a1a1a] rounded-xl overflow-hidden border border-[#2a2a2a]">
@@ -131,24 +149,44 @@ export default function CodeEditor() {
             title="Copy to clipboard"
           >
             {copied ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
               </svg>
             )}
           </button>
-          <pre 
+          <pre
             className="text-[#e4e4e4] leading-6 w-[600px] overflow-x-auto"
-            dangerouslySetInnerHTML={{ 
-              __html: highlightCode(codeExamples[activeTab])
+            dangerouslySetInnerHTML={{
+              __html: highlightCode(codeExamples[activeTab]),
             }}
           />
         </div>
       </div>
     </div>
   );
-} 
+}

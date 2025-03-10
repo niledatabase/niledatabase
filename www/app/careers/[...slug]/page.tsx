@@ -37,7 +37,7 @@ export default async function CareerPost(props: Props) {
 
 export async function generateMetadata(
   props: Props,
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   // read route params
   const career = await getPosting(props);

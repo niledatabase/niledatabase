@@ -167,7 +167,7 @@ const MOBILE_FULL_ITEM_WIDTH = 329 + 12;
 function tweenScrollLeft(
   element: HTMLElement,
   targetPosition: number,
-  duration: number
+  duration: number,
 ) {
   const startPosition = element.scrollLeft;
   const distance = targetPosition - startPosition;
@@ -212,12 +212,12 @@ export default function BuiltOnNile() {
 
   const AMOUNT_TO_MOVE = useMemo(
     () => itemWidth * toMove + extra,
-    [itemWidth, toMove, extra]
+    [itemWidth, toMove, extra],
   );
 
   const maxPosition = useMemo(
     () => items.length * itemWidth + extra,
-    [items.length, itemWidth, extra]
+    [items.length, itemWidth, extra],
   );
 
   const forward = useCallback(() => {
@@ -234,7 +234,7 @@ export default function BuiltOnNile() {
       tweenScrollLeft(
         scrollWatcher.current,
         scrollWatcher.current.scrollLeft - AMOUNT_TO_MOVE,
-        400
+        400,
       );
       setX(Math.max(scrollWatcher.current.scrollLeft - AMOUNT_TO_MOVE, 0));
     }

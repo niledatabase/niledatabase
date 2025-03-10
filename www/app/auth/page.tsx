@@ -4,7 +4,13 @@ import arrow from "@/public/icons/arrow.svg";
 import Image from "next/image";
 import Logo from "@/public/githubLogo.svg";
 import Link from "next/link";
-import MultiTenantCodeEditor, { setupCodeExamples, socialLoginExamples, databaseExamples, selfHostExamples, authExamples } from "./MultiTenantCodeEditor";
+import MultiTenantCodeEditor, {
+  setupCodeExamples,
+  socialLoginExamples,
+  databaseExamples,
+  selfHostExamples,
+  authExamples,
+} from "./MultiTenantCodeEditor";
 import VideoEmbed from "./VideoEmbed";
 
 export default function Auth() {
@@ -18,32 +24,36 @@ export default function Auth() {
                 <span>Auth for</span>
                 <div className="flex flex-row">
                   <span className="bg-clip-text text-transparent bg-gradient-text subpixel-antialiased bg-black overflow-hidden whitespace-nowrap leading-[48px] lg:leading-[120px] font-bold">
-                B2B
-              </span>
+                    B2B
+                  </span>
                   <span className="ml-2">apps</span>
                 </div>
-            </h1>
+              </h1>
               <h2 className="text-[16px] leading-[16px] xl:text-[20px] xl:leading-[20px] w-full">
-              Multi-tenant, open source, unlimited active users, customer data in your Postgres, drop-in customizable UI modules
-            </h2>
-            <div className="flex flex-row gap-4 items-center">
-              <Link href="https://console.thenile.dev/" target="_blank">
-              <button className="bg-blue text-black transition-colors px-4 py-2 rounded-[10px] flex flex-row gap-2 items-center text-[16px] leading-[20px] h-11">
-                Build for free
-                <Image
-                  className="-ml-1 invert"
-                  src={arrow}
-                  alt="arrow"
-                  width={16}
-                  height={16}
-                />
-              </button>
-              </Link>
-              <ViewOnGithub />
+                Multi-tenant, open source, unlimited active users, customer data
+                in your Postgres, drop-in customizable UI modules
+              </h2>
+              <div className="flex flex-row gap-4 items-center">
+                <Link href="https://console.thenile.dev/" target="_blank">
+                  <button className="bg-blue text-black transition-colors px-4 py-2 rounded-[10px] flex flex-row gap-2 items-center text-[16px] leading-[20px] h-11">
+                    Build for free
+                    <Image
+                      className="-ml-1 invert"
+                      src={arrow}
+                      alt="arrow"
+                      width={16}
+                      height={16}
+                    />
+                  </button>
+                </Link>
+                <ViewOnGithub />
               </div>
             </div>
             <div className="lg:w-1/2">
-              <MultiTenantCodeEditor tabs={setupCodeExamples} defaultTab="nile.ts" />
+              <MultiTenantCodeEditor
+                tabs={setupCodeExamples}
+                defaultTab="nile.ts"
+              />
             </div>
           </div>
         </div>
@@ -77,7 +87,12 @@ export default function Auth() {
                       >
                         <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
                           Learn more
-                          <Image src={arrow} alt="arrow" width={24} height={24} />
+                          <Image
+                            src={arrow}
+                            alt="arrow"
+                            width={24}
+                            height={24}
+                          />
                         </div>
                       </Link>
                     </div>
@@ -87,7 +102,7 @@ export default function Auth() {
                   <MultiTenantCodeEditor />
                 </div>
               </div>
-              
+
               <div className="w-full h-[1px] bg-[#333333]" />
 
               {/* Second row */}
@@ -113,7 +128,12 @@ export default function Auth() {
                       >
                         <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
                           Learn more
-                          <Image src={arrow} alt="arrow" width={24} height={24} />
+                          <Image
+                            src={arrow}
+                            alt="arrow"
+                            width={24}
+                            height={24}
+                          />
                         </div>
                       </Link>
                     </div>
@@ -155,14 +175,22 @@ export default function Auth() {
                       >
                         <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
                           Learn more
-                          <Image src={arrow} alt="arrow" width={24} height={24} />
+                          <Image
+                            src={arrow}
+                            alt="arrow"
+                            width={24}
+                            height={24}
+                          />
                         </div>
                       </Link>
                     </div>
                   </div>
                 </div>
                 <div className="lg:w-1/2">
-                  <MultiTenantCodeEditor tabs={databaseExamples} defaultTab="tenants" />
+                  <MultiTenantCodeEditor
+                    tabs={databaseExamples}
+                    defaultTab="tenants"
+                  />
                 </div>
               </div>
 
@@ -191,14 +219,22 @@ export default function Auth() {
                       >
                         <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
                           Learn more
-                          <Image src={arrow} alt="arrow" width={24} height={24} />
+                          <Image
+                            src={arrow}
+                            alt="arrow"
+                            width={24}
+                            height={24}
+                          />
                         </div>
                       </Link>
                     </div>
                   </div>
                 </div>
                 <div className="lg:w-1/2">
-                  <MultiTenantCodeEditor tabs={authExamples} defaultTab="users" />
+                  <MultiTenantCodeEditor
+                    tabs={authExamples}
+                    defaultTab="users"
+                  />
                 </div>
               </div>
 
@@ -227,14 +263,22 @@ export default function Auth() {
                       >
                         <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
                           Learn more
-                          <Image src={arrow} alt="arrow" width={24} height={24} />
+                          <Image
+                            src={arrow}
+                            alt="arrow"
+                            width={24}
+                            height={24}
+                          />
                         </div>
                       </Link>
                     </div>
                   </div>
                 </div>
                 <div className="lg:w-1/2">
-                  <MultiTenantCodeEditor tabs={selfHostExamples} defaultTab="managed" />
+                  <MultiTenantCodeEditor
+                    tabs={selfHostExamples}
+                    defaultTab="managed"
+                  />
                 </div>
               </div>
 
@@ -263,14 +307,22 @@ export default function Auth() {
                       >
                         <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
                           Learn more
-                          <Image src={arrow} alt="arrow" width={24} height={24} />
+                          <Image
+                            src={arrow}
+                            alt="arrow"
+                            width={24}
+                            height={24}
+                          />
                         </div>
                       </Link>
                     </div>
                   </div>
                 </div>
                 <div className="lg:w-1/2">
-                  <MultiTenantCodeEditor tabs={socialLoginExamples} defaultTab="google" />
+                  <MultiTenantCodeEditor
+                    tabs={socialLoginExamples}
+                    defaultTab="google"
+                  />
                 </div>
               </div>
 

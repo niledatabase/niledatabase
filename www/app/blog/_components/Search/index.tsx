@@ -16,7 +16,7 @@ import SearchIcon from "@/public/icons/search.svg";
 
 const searchClient = algoliasearch(
   String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
-  String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY)
+  String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY),
 );
 function RefinementItem({
   item,
@@ -54,7 +54,7 @@ function RefinementList() {
   const { items, refine } = useRefinementList({ attribute: "tags" });
   const sortedItems = useMemo(
     () => items.sort((a, b) => a.value.localeCompare(b.value, "en")),
-    [items]
+    [items],
   );
   useEffect(() => {
     if (items.length && typeof document !== "undefined") {

@@ -5,15 +5,15 @@ import { useState } from "react";
 type CodeEditorProps = {
   tabs?: Record<string, string>;
   defaultTab?: string;
-}
+};
 
 const defaultCodeExamples: Record<string, string> = {
-  "component": `import TenantSelector from '@niledatabase/react';
+  component: `import TenantSelector from '@niledatabase/react';
 export default function App() {
   return <TenantSelector />;
 }`,
 
-  "api": `const tenant = await nile.api.tenants.createTenant(tenantName);
+  api: `const tenant = await nile.api.tenants.createTenant(tenantName);
 if (tenant instanceof Response) {
   console.log("ERROR creating tenant: ", tenant);
   return { message: "no tenant" };
@@ -21,13 +21,13 @@ if (tenant instanceof Response) {
 tenantID = tenant.id;
 console.log("created tenant with tenantID: ", tenantID);`,
 
-  "sql": `select id,name from tenants;
+  sql: `select id,name from tenants;
 
 id                                     name
 --------------------------------------|-----------------
 018ade1a-7843-7e60-9686-714bab650998 | Acme Corporation
 018ade1b-9152-7cde-b789-123def456abc | TechStart Inc.
-018ade1c-4567-8abc-def0-987654321fed | CloudScale Ltd.`
+018ade1c-4567-8abc-def0-987654321fed | CloudScale Ltd.`,
 };
 
 export const setupCodeExamples: Record<string, string> = {
@@ -61,11 +61,11 @@ export default function SignUpPage() {
       </SignedOut>
     </div>
   );
-}`
+}`,
 };
 
 export const socialLoginExamples = {
-  "google": `import { Google } from '@niledatabase/react';
+  google: `import { Google } from '@niledatabase/react';
 
 function App() {
   return (
@@ -74,7 +74,7 @@ function App() {
     </div>
   );
 }`,
-  "github": `import { GitHub } from '@niledatabase/react';
+  github: `import { GitHub } from '@niledatabase/react';
 
 function App() {
   return (
@@ -83,7 +83,7 @@ function App() {
     </div>
   );
 }`,
-  "discord": `import { DiscordSignInButton } from '@niledatabase/react';
+  discord: `import { DiscordSignInButton } from '@niledatabase/react';
 
 function App() {
   return (
@@ -92,7 +92,7 @@ function App() {
     </div>
   );
 }`,
-  "linkedin": `import { LinkedIn } from '@niledatabase/react';
+  linkedin: `import { LinkedIn } from '@niledatabase/react';
 
 function App() {
   return (
@@ -101,7 +101,7 @@ function App() {
     </div>
   );
 }`,
-  "hubspot": `import { HubSpot } from '@niledatabase/react';
+  hubspot: `import { HubSpot } from '@niledatabase/react';
 
 function App() {
   return (
@@ -110,7 +110,7 @@ function App() {
     </div>
   );
 }`,
-  "microsoft": `import { AzureSignInButton } from '@niledatabase/react';
+  microsoft: `import { AzureSignInButton } from '@niledatabase/react';
 
 function App() {
   return (
@@ -118,16 +118,16 @@ function App() {
       <AzureSignInButton callbackUrl="/" tenantId="YOUR_TENANT_ID" />
     </div>
   );
-}`
+}`,
 };
 
 export const authExamples: Record<string, string> = {
-  "users": `const user1 = await nile.api.users.createUser({ email: 'user1@example.com', password: 'user1', newTenant: 'myTenant' });
+  users: `const user1 = await nile.api.users.createUser({ email: 'user1@example.com', password: 'user1', newTenant: 'myTenant' });
 const user2 = await nile.api.users.createUser({ email: 'user2@example.com', password: 'user2' });
 // make user1 and user2 part of the same tenant
 const updated2 = await nile.api.users.linkUser(user2.id);`,
 
-  "sessions": `import { Nile } from "@niledatabase/server";
+  sessions: `import { Nile } from "@niledatabase/server";
 
 const nile = await Nile();
 
@@ -154,11 +154,11 @@ const MyComponent = () => {
   defaultValues={{ email: "user@example.com" }}
   onSuccess={() => console.log("Password updated successfully")}
   onError={(error) => console.error("Update failed", error)}
-/>`
+/>`,
 };
 
 export const databaseExamples: Record<string, string> = {
-  "tenants": `select id, name from "tenants";
+  tenants: `select id, name from "tenants";
 
 id                                     | name
 ---------------------------------------|------------------
@@ -166,7 +166,7 @@ id                                     | name
 018ade1b-9152-7cde-b789-123def456abc  | TechStart Inc.
 018ade1c-4567-8abc-def0-987654321fed  | CloudScale Ltd.`,
 
-  "users": `select id, name, email, email_verified from "users"."users";
+  users: `select id, name, email, email_verified from "users"."users";
 
 id                                     | name           | email                     | email_verified
 ---------------------------------------|----------------|---------------------------|-------------------------
@@ -174,17 +174,17 @@ id                                     | name           | email                 
 018ade2b-2345-6789-abcd-ef0123456789  | Sarah Johnson  | sarah@techstart.com      | 2024-03-14 15:45:00 UTC
 018ade2c-3456-7890-bcde-f01234567890  | Mike Brown     | mike@cloudscale.com      | 2024-03-13 09:20:00 UTC`,
 
-  "tenant_users": `select tenant_id, user_id, email from "users"."tenant_users";
+  tenant_users: `select tenant_id, user_id, email from "users"."tenant_users";
 
 tenant_id                              | user_id                                | email
 ---------------------------------------|----------------------------------------|-------------------------
 018ade1a-7843-7e60-9686-714bab650998  | 018ade2a-1234-5678-9abc-def012345678  | john@example.com
 018ade1b-9152-7cde-b789-123def456abc  | 018ade2b-2345-6789-abcd-ef0123456789  | sarah@techstart.com
-018ade1c-4567-8abc-def0-987654321fed  | 018ade2c-3456-7890-bcde-f01234567890  | mike@cloudscale.com`
+018ade1c-4567-8abc-def0-987654321fed  | 018ade2c-3456-7890-bcde-f01234567890  | mike@cloudscale.com`,
 };
 
 export const selfHostExamples: Record<string, string> = {
-  "managed": `NILEDB_USER=niledb_user
+  managed: `NILEDB_USER=niledb_user
 NILEDB_PASSWORD=niledb_password
 NILEDB_API_URL=https://us-west-2.api.thenile.dev/v2/databases/<database_id>
 NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/<database_name>`,
@@ -196,42 +196,60 @@ NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/<database_name>`,
   -e NILEDB_HOST=<your-niledb-host> \\
   -e NILEDB_USER=<your-niledb-user> \\
   -e NILEDB_PASSWORD=<your-niledb-password> \\
-  nile-auth-server`
+  nile-auth-server`,
 };
 
 function highlightCode(code: string): string {
-  if (!code) return '';  // Add safety check for undefined or empty code
-  
+  if (!code) return ""; // Add safety check for undefined or empty code
+
   const escapeHtml = (str: string) => {
     return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   };
 
-  const lines = code.split('\n');
+  const lines = code.split("\n");
   const lineNumbers = lines
-    .map((_, i) => `<span class="select-none text-[#636669] w-[40px] inline-block text-right pr-4">${i + 1}</span>`)
-    .join('\n');
+    .map(
+      (_, i) =>
+        `<span class="select-none text-[#636669] w-[40px] inline-block text-right pr-4">${i + 1}</span>`,
+    )
+    .join("\n");
 
   const highlightedCode = lines
-    .map(line => {
+    .map((line) => {
       let highlighted = escapeHtml(line);
-      
+
       // Apply syntax highlighting
       highlighted = highlighted
         // Keywords
-        .replace(/\b(const|let|var|return|export|default|async|await|function|import|from|if)\b/g, '<span style="color: #E06C75">$1</span>')
+        .replace(
+          /\b(const|let|var|return|export|default|async|await|function|import|from|if)\b/g,
+          '<span style="color: #E06C75">$1</span>',
+        )
         // Built-in objects and types
-        .replace(/\b(Response|console)\b/g, '<span style="color: #E5C07B">$1</span>')
+        .replace(
+          /\b(Response|console)\b/g,
+          '<span style="color: #E5C07B">$1</span>',
+        )
         // JSX Components and HTML tags
-        .replace(/(&lt;\/?)([\w-]+)/g, '$1<span style="color: #E06C75">$2</span>')
+        .replace(
+          /(&lt;\/?)([\w-]+)/g,
+          '$1<span style="color: #E06C75">$2</span>',
+        )
         // SQL Keywords
-        .replace(/\b(select|from)\b/gi, '<span style="color: #E06C75">$1</span>')
+        .replace(
+          /\b(select|from)\b/gi,
+          '<span style="color: #E06C75">$1</span>',
+        )
         // String literals
-        .replace(/(&quot;.*?&quot;|&#039;.*?&#039;)/g, '<span style="color: #98C379">$1</span>')
+        .replace(
+          /(&quot;.*?&quot;|&#039;.*?&#039;)/g,
+          '<span style="color: #98C379">$1</span>',
+        )
         // Imports and exports
         .replace(/({[^}]+})/g, '<span style="color: #61AFEF">$1</span>')
         // Function calls
@@ -241,14 +259,19 @@ function highlightCode(code: string): string {
 
       return highlighted;
     })
-    .join('\n');
+    .join("\n");
 
   return `<div class="flex">\n<div class="line-numbers">${lineNumbers}</div>\n<div class="code-content">${highlightedCode}</div>\n</div>`;
 }
 
-export default function MultiTenantCodeEditor({ tabs = defaultCodeExamples, defaultTab }: CodeEditorProps) {
-  const [activeTab, setActiveTab] = useState<string>(defaultTab || Object.keys(tabs)[0]);
-  
+export default function MultiTenantCodeEditor({
+  tabs = defaultCodeExamples,
+  defaultTab,
+}: CodeEditorProps) {
+  const [activeTab, setActiveTab] = useState<string>(
+    defaultTab || Object.keys(tabs)[0],
+  );
+
   return (
     <div className="bg-[#000000] rounded-xl overflow-hidden border border-[#2a2a2a]">
       <div className="bg-[#000000] px-4 py-2 flex items-center">
@@ -275,14 +298,14 @@ export default function MultiTenantCodeEditor({ tabs = defaultCodeExamples, defa
       </div>
       <div className="p-6 font-mono text-sm">
         <div className="w-full lg:w-[600px]">
-          <pre 
+          <pre
             className="text-[#e4e4e4] leading-6 whitespace-pre overflow-x-auto"
-            dangerouslySetInnerHTML={{ 
-              __html: highlightCode(tabs[activeTab])
+            dangerouslySetInnerHTML={{
+              __html: highlightCode(tabs[activeTab]),
             }}
           />
         </div>
       </div>
     </div>
   );
-} 
+}

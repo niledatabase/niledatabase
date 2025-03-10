@@ -18,7 +18,7 @@ export default async function Page(props: Props) {
 
 export async function generateMetadata(
   props: Props,
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { metadata } = await findDocFile({
     ...props,

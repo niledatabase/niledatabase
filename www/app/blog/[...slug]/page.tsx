@@ -84,7 +84,7 @@ export default async function BlogPage(props: Props) {
 
 export async function generateMetadata(
   props: Props,
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   // read route params
   const blog = await getBlog(props);

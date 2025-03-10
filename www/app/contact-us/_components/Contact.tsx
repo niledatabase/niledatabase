@@ -51,7 +51,7 @@ export function ContactForm({
       debounce(() => {
         clear();
       }, 3200),
-    []
+    [],
   );
 
   useEffect(() => {
