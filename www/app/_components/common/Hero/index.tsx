@@ -2,7 +2,6 @@ import Image from "next/image";
 import arrow from "@/public/icons/arrow.svg";
 import postgresBlack from "@/public/postgres-black.png";
 import AnimatedGradient from "../../AnimatedGradient";
-import GradientButton from "../GradientButton";
 import TextTyper from "./TextTyper";
 
 export function HeroText() {
@@ -57,7 +56,26 @@ export function HeroText() {
   );
 }
 
-export function HeroBottom() {
+export function HeroBottom({
+  cta = (
+    <>
+      <div className="flex items-center">
+        <Image
+          src={postgresBlack}
+          alt="black postgres logo"
+          className="w-7 lg:w-auto"
+          height={40}
+          width={40}
+        />
+      </div>
+      <div className="text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px] text-black flex flex-row shrink-0">
+        Postgres.
+      </div>
+    </>
+  ),
+}: {
+  cta?: React.ReactNode;
+}) {
   return (
     <div className="container mx-auto">
       <div className="w-full mt-20">
@@ -67,20 +85,9 @@ export function HeroBottom() {
               <div className="text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px] text-black font-semibold">
                 Ready to launch?
               </div>
-              <div className="text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px] text-black flex flex-row gap-1 lg:gap-2">
+              <div className="text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px] text-black flex flex-row gap-1 lg:gap-2 items-center">
                 <div className="whitespace-nowrap">Start building with</div>
-                <div className="flex items-center">
-                  <Image
-                    src={postgresBlack}
-                    alt="black postgres logo"
-                    className="w-7 lg:w-auto"
-                    height={40}
-                    width={40}
-                  />
-                </div>
-                <div className="text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px] text-black flex flex-row shrink-0">
-                  Postgres.
-                </div>
+                {cta}
               </div>
             </div>
             <div className="flex gap-4 items-center justify-start">

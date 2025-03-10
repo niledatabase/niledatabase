@@ -19,6 +19,9 @@ export default function Free() {
       branches="One branch"
       globalplacement="One region"
       tenantInsights="1 day retention"
+      tenantOverrides={true}
+      enterpriseSaml={false}
+      mfa={false}
       startButton={
         <Link
           href="https://console.thenile.dev"

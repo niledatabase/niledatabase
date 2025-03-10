@@ -134,6 +134,8 @@ type Props = {
   tenantApis?: boolean;
   emailSla?: boolean;
   designated?: boolean;
+  enterpriseSaml?: string | boolean;
+  mfa?: boolean;
 };
 export default function Column(props: Props) {
   const {
@@ -169,6 +171,8 @@ export default function Column(props: Props) {
     tenantApis = true,
     emailSla = false,
     designated = false,
+    enterpriseSaml = "$5 per tenant",
+    mfa = true,
   } = props;
   return (
     <div className="p-5 w-full">
@@ -291,10 +295,27 @@ export default function Column(props: Props) {
             </div>
           }
         />
+
+        <TableDivider mobile="usermanagement">
+          <div className="hidden lg:flex bg-divider-bold h-px my-6 mb-8" />
+        </TableDivider>
+        <Line text="Unlimited" header="Number of active users" />
+        <Line text="Unlimited" header="Number of active tenants" />
+        <Line text="Unlimited" header="MAUs per tenant" />
+        <Indicator value={true} header="Social auth" />
+        <Indicator value={true} header="Magic auth" />
+        <Indicator value={true} header="Email verification" />
+        <Indicator value={enterpriseSaml} header="Enterprise SAML" />
+        <Indicator value={mfa} header="MFA" />
+        <Indicator
+          value={tenantOverrides}
+          header="Tenant overrides"
+          hideDivider
+        />
         <TableDivider mobile="console">
           <div className="hidden lg:flex bg-divider-bold h-px my-6 mb-8" />
         </TableDivider>
-        <Indicator value={tenantOverrides} header="Tenant overrides" />
+        <Indicator value={true} header="Tenant overrides" />
         <Line text={tenantInsights} header="Tenant insights" />
         <Indicator
           value={tenantAdministration}

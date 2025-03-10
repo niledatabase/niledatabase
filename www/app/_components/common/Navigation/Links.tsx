@@ -6,6 +6,10 @@ export function Links({ className: cn }: { className?: string }) {
   }`;
   return (
     <>
+      <Link href="/auth" className={className}>
+        Auth
+      </Link>
+
       <Link href="/docs" className={className}>
         Docs
       </Link>
