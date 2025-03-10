@@ -8,6 +8,12 @@
 
 **Nile is a Postgres platform that decouples storage from compute, virtualizes tenants, and supports vertical and horizontal scaling globally to ship B2B applications fast while being safe with limitless scale.** All B2B applications are multi-tenant. A tenant/customer is primarily a company, an organization, or a workspace in your product that contains a group of users. A B2B application provides services to multiple tenants. Tenant is the basic building block of all B2B applications.
 
+## Components
+- [Postgres re-engineered for multi-tenant apps](https://www.thenile.dev/docs/getting-started/languages/sql)
+- [Tenant virtualization](https://www.thenile.dev/docs/tenant-virtualization/introduction)
+- [Nile Auth - drop-in B2B auth with customer data in your Nile’s Postgres](https://www.thenile.dev/docs/auth/introduction)
+- [AI toolkit and vector database](https://www.thenile.dev/docs/ai-embeddings/introduction)
+  
 ## Features
 
 - Unlimited Postgres databases, Unlimited virtual tenant databases
