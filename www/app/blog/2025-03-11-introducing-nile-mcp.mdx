@@ -1,0 +1,337 @@
+export const metadata={
+
+title: "Introducing Nile MCP Server",
+sizzle: "A powerful model context protocol server for managing Nile databases, tenants, and authentication with ease",
+date: "2025-03-11",
+tags:
+[
+"postgres",
+"cli",
+"claude",
+"mcp",
+"authentication",
+"multi-tenant",
+"docker",
+],
+authors: ["ram"],
+image: "2025-03-11-introducing-nile-mcp/nilemcp.png",
+}
+
+We are excited to announce the launch of [Nile MCP (Model Context Protocol) Server.](https://github.com/niledatabase/nile-mcp-server) The Model Context Protocol (MCP) is an open protocol that enables seamless integration between LLM applications and external data sources and tools. The Nile MCP supports an extensive set of tools, and we have many plans for the future. The MCP server works with Claude Desktop, Cursor, Cline, and Windsurf and can be invoked in a standalone mode. It supports both the STDIO and SSE modes of transport. [Try out the Nile MCP server](https://www.thenile.dev/docs/ai-embeddings/model_context_protocol) today. We would love your feedback.
+
+## How to think about MCP?
+
+I've encountered many questions about what an MCP is and whether it is useful. One way to understand MCPs is to compare them to the USB port on your laptop. Your laptop can access all the data on its internal storage, but it cannot access data from external devices unless they are connected. When you plug in an external device via the USB port, your laptop can access the data on that device as if it were always a part of its system.
+
+The relationship between a Large Language Model (LLM) and MCPs is quite similar. The LLM has access to the data it was trained on but lacks access to data silos in SaaS services or enterprise databases. MCPs provide a standard way to expose this external data to the LLM. Once the LLM has access to the MCPs, it can utilize them like an extended data source to answer queries, seamlessly integrating the information.
+
+<Image
+  src="/blog/2025-03-12-introducing-nile-mcp/manyusbs.webp"
+  width="800"
+  height="800"
+  style={{ borderRadius: "12px" }}
+/>
+
+The benefit of standardizing the protocol is to build the MCP once and make it available to every tool in the LLM ecosystem. The standardization also helps build an ecosystem around MCPs, including packaging, discovery, deployment, communication, etc. Without a standard protocol, we will have many bespoke solutions and repeated implementations.
+
+## **Installation and Configuration**
+
+Install the stable version:
+
+```bash
+npm install @niledatabase/nile-mcp-server
+```
+
+For the latest alpha/preview version:
+
+```bash
+npm install @niledatabase/nile-mcp-server@alpha
+```
+
+**Configuration**
+
+Create a `.env` file in the root directory with your Nile credentials. If you are setting up Claude Desktop or Cursor, you will pass this in the configuration file.
+
+```bash
+NILE_API_KEY=your_api_key_here
+NILE_WORKSPACE_SLUG=your_workspace_slug
+```
+
+To create a Nile API key, log in to your [Nile account](https://console.thenile.dev/), click Workspaces in the top-left, select your workspace, and navigate to the Security section in the left menu.
+
+## Using with Cursor, Claude Desktop, Winsurf or Cline
+
+### Setting up Cursor
+
+1. Go to Preferences > Cursor Settings (⌘,) > MCP
+2. Click "Add New MCP Server"
+3. Configure the server:
+- Name: `nile-database` (or any name you prefer)
+- Type: Command
+- Command to run
+
+  ```bash
+  env NILE_API_KEY=your_key NILE_WORKSPACE_SLUG=your_workspace 
+  node /absolute/path/to/nile-mcp-server/dist/index.js
+  ```
+
+     - `your_key` with your Nile API key
+     - `your_workspace` with your Nile workspace slug
+     - `/absolute/path/to` with the actual path to your project
+
+4. Click "Save"
+5. You should see a green indicator showing that the MCP server is connected
+6. Restart Cursor for the changes to take effect
+
+Once you have setup Cursor, you should be able to open the chat in agent mode and start asking questions to any database in the Nile workspace.
+
+<Video src="/blog/2025-03-12-introducing-nile-mcp/mcpcursor.mp4" />
+
+### Setting up Claude Desktop
+
+1. Open Claude Desktop
+2. Go to Settings > MCP Servers
+3. Click "Add Server"
+4. Add the following configuration:
+
+```json
+{
+  "mcpServers": {
+    "nile-database": {
+      "command": "node",
+      "args": ["/path/to/your/nile-mcp-server/dist/index.js"],
+      "env": {
+        "NILE_API_KEY": "your_api_key_here",
+        "NILE_WORKSPACE_SLUG": "your_workspace_slug"
+      }
+    }
+  }
+}
+```
+
+Replace:
+
+- `/path/to/your/nile-mcp-server` with the absolute path to your project directory
+- `your_api_key_here` with your Nile API key
+- `your_workspace_slug` with your Nile workspace slug
+
+You can look at the [docs](https://www.thenile.dev/docs/ai-embeddings/model_context_protocol) to configure other IDEs like Windsurf or Cline to setup the MCP server.
+
+## **Server Transport Modes**
+
+The server supports two operational modes:
+
+### STDIO Mode (Default)
+
+The default mode uses standard input/output for communication, making it compatible with Claude Desktop and Cursor integrations. The examples of Cursor and Claude above shows this mode. The STDIO. mode is the most popular option today.
+
+### SSE Mode
+
+MCP also supports Server-Sent Events (SSE) mode that enables real-time, event-driven communication over HTTP. Nile MCP server supports this.
+
+To enable SSE mode:
+
+1. Set `MCP_SERVER_MODE=sse` in your `.env` file
+2. The server will start an HTTP server (default port 3000)
+3. Connect to the SSE endpoint: `http://localhost:3000/sse`
+4. Send commands to: `http://localhost:3000/messages`
+
+Example SSE usage with curl:
+
+In terminal 1 - Listen for events
+```bash
+curl -N http://localhost:3000/sse
+```
+
+In terminal 2 - Send commands
+
+```bash
+curl -X POST http://localhost:3000/messages \
+ -H "Content-Type: application/json" \
+ -d '{
+"type": "function",
+"name": "list-databases",
+"parameters": {}
+}'
+```
+
+## Example Prompts
+
+After setting up the MCP server in Cursor, you can use natural language to interact with Nile databases. Here are some example prompts:
+
+**Database Management**
+
+```
+Create a new database named "my_app" in AWS_US_WEST_2 region
+
+List all my databases
+
+Get details for database "my_app"
+
+Delete database "test_db"
+
+```
+
+**Creating Tables**
+
+```sql
+Create a users table in my_app database with columns:
+- tenant_id (UUID, references tenants)
+- id (INTEGER)
+- email (VARCHAR, unique per tenant)
+- name (VARCHAR)
+- created_at (TIMESTAMP)
+
+Create a products table in my_app database with columns:
+- tenant_id (UUID, references tenants)
+- id (INTEGER)
+- name (VARCHAR)
+- price (DECIMAL)
+- description (TEXT)
+- created_at (TIMESTAMP)
+
+```
+
+**Querying Data**
+
+```sql
+Execute this query on my_app database:
+SELECT * FROM users WHERE tenant_id = 'your-tenant-id' LIMIT 5
+
+Run this query on my_app:
+INSERT INTO users (tenant_id, id, email, name)
+VALUES ('tenant-id', 1, 'user@example.com', 'John Doe')
+
+Show me all products in my_app database with price > 100
+
+```
+
+**Schema Management**
+
+```
+Show me the schema for the users table in my_app database
+
+Add a new column 'status' to the users table in my_app database
+
+Create an index on the email column of the users table in my_app
+
+```
+
+## Tools
+
+The server provides the following tools for interacting with Nile databases:
+
+**Database Management**
+
+1. **create-database**
+   - Creates a new Nile database
+   - Parameters:
+     - `name` (string): Name of the database
+     - `region` (string): Either `AWS_US_WEST_2` (Oregon) or `AWS_EU_CENTRAL_1` (Frankfurt)
+   - Returns: Database details including ID, name, region, and status
+   - Example: "Create a database named 'my-app' in AWS_US_WEST_2"
+2. **list-databases**
+   - Lists all databases in your workspace
+   - No parameters required
+   - Returns: List of databases with their IDs, names, regions, and status
+   - Example: "List all my databases"
+3. **get-database**
+   - Gets detailed information about a specific database
+   - Parameters:
+     - `name` (string): Name of the database
+   - Returns: Detailed database information including API host and DB host
+   - Example: "Get details for database 'my-app'"
+4. **delete-database**
+   - Deletes a database
+   - Parameters:
+     - `name` (string): Name of the database to delete
+   - Returns: Confirmation message
+   - Example: "Delete database 'my-app'"
+
+**Credential Management**
+
+1. **list-credentials**
+   - Lists all credentials for a database
+   - Parameters:
+     - `databaseName` (string): Name of the database
+   - Returns: List of credentials with IDs, usernames, and creation dates
+   - Example: "List credentials for database 'my-app'"
+2. **create-credential**
+   - Creates new credentials for a database
+   - Parameters:
+     - `databaseName` (string): Name of the database
+   - Returns: New credential details including username and one-time password
+   - Example: "Create new credentials for database 'my-app'"
+   - Note: Save the password when it's displayed, as it won't be shown again
+
+**Region Management**
+
+1. **list-regions**
+   - Lists all available regions for creating databases
+   - No parameters required
+   - Returns: List of available AWS regions
+   - Example: "What regions are available for creating databases?"
+
+**SQL Query Execution**
+
+1. **execute-sql**
+   - Executes SQL queries on a Nile database
+   - Parameters:
+     - `databaseName` (string): Name of the database to query
+     - `query` (string): SQL query to execute
+     - `connectionString` (string, optional): Pre-existing connection string to use for the query
+   - Returns: Query results formatted as a markdown table with column headers and row count
+   - Features:
+     - Automatic credential management (creates new if not specified)
+     - Secure SSL connection to database
+     - Results formatted as markdown tables
+     - Detailed error messages with hints
+     - Support for using existing connection strings
+   - Example: "Execute SELECT \* FROM users LIMIT 5 on database 'my-app'"
+
+**Resource Management**
+
+1. **read-resource**
+   - Reads schema information for database resources (tables, views, etc.)
+   - Parameters:
+     - `databaseName` (string): Name of the database
+     - `resourceName` (string): Name of the resource (table/view)
+   - Returns: Detailed schema information including:
+     - Column names and types
+     - Primary keys and indexes
+     - Foreign key relationships
+     - Column descriptions and constraints
+   - Example: "Show me the schema for the users table in my-app"
+2. **list-resources**
+   - Lists all resources (tables, views) in a database
+   - Parameters:
+     - `databaseName` (string): Name of the database
+   - Returns: List of all resources with their types
+   - Example: "List all tables in my-app database"
+
+**Tenant Management**
+
+1. **list-tenants**
+   - Lists all tenants in a database
+   - Parameters:
+     - `databaseName` (string): Name of the database
+   - Returns: List of tenants with their IDs and metadata
+   - Example: "Show all tenants in my-app database"
+2. **create-tenant**
+   - Creates a new tenant in a database
+   - Parameters:
+     - `databaseName` (string): Name of the database
+     - `tenantName` (string): Name for the new tenant
+   - Returns: New tenant details including ID
+   - Example: "Create a tenant named 'acme-corp' in my-app"
+3. **delete-tenant**
+   - Deletes tenants in the database
+   - Parameters:
+     - `databaseName` (string): Name of the database
+     - `tenantName` (string): Name for the tenant
+   - Returns: Success if the tenant is deleted
+   - Example: "Delete tenant named 'acme-corp' in my-app"
+
+Nile MCP server is just the start in introducing more AI driven use cases in Nile. We think it should be possible to support many future use cases with the MCP including agentic workflows.
+
+We're excited to see what you'll build with Nile MCP! Share your experiences, feedback, and questions with us on [Discord](https://discord.gg/nile) or [GitHub](https://github.com/niledatabase/cli).
