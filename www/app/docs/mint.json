@@ -372,6 +372,20 @@
       ]
     },
     {
+      "group": "CLI",
+      "pages": [
+        "cli/introduction",
+        "cli/connect_nile",
+        "cli/interacting_db",
+        "cli/managing_workspaces",
+        "cli/managing_tenants",
+        "cli/using_auth",
+        "cli/setting_configs",
+        "cli/local_development",
+        "cli/global-flags"
+      ]
+    },
+    {
       "group": "Integrations",
       "pages": [
         "integrations/aws_bedrock",
