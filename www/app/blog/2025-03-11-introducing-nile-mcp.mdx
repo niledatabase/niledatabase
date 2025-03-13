@@ -66,18 +66,19 @@ To create a Nile API key, log in to your [Nile account](https://console.thenile
 1. Go to Preferences > Cursor Settings (⌘,) > MCP
 2. Click "Add New MCP Server"
 3. Configure the server:
+
 - Name: `nile-database` (or any name you prefer)
 - Type: Command
 - Command to run
 
   ```bash
-  env NILE_API_KEY=your_key NILE_WORKSPACE_SLUG=your_workspace 
+  env NILE_API_KEY=your_key NILE_WORKSPACE_SLUG=your_workspace
   node /absolute/path/to/nile-mcp-server/dist/index.js
   ```
 
-     - `your_key` with your Nile API key
-     - `your_workspace` with your Nile workspace slug
-     - `/absolute/path/to` with the actual path to your project
+  - `your_key` with your Nile API key
+  - `your_workspace` with your Nile workspace slug
+  - `/absolute/path/to` with the actual path to your project
 
 4. Click "Save"
 5. You should see a green indicator showing that the MCP server is connected
@@ -139,6 +140,7 @@ To enable SSE mode:
 Example SSE usage with curl:
 
 In terminal 1 - Listen for events
+
 ```bash
 curl -N http://localhost:3000/sse
 ```
