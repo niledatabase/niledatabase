@@ -1,0 +1,139 @@
+export const metadata = {
+  title: "Announcing Nile Management APIs",
+  authors: ["gwenshap"],
+  image: "2025-03-13-announcing-nile-apis/cover.png",
+  sizzle:
+    "Welcome to automated database management. Our new Management API lets you create and manage databases quickly and effortlessly. Whether you're testing applications, rotating credentials, or building with agents, this API has you covered. Get started with API keys or OAuth2 and take your automation to the next level.",
+  tags: ["database", "serverless", "postgres", "api", "devops"],
+};
+
+We're excited to announce the launch of Nile's Management APIs. 
+These APIs give you full control over your databases, allowing you to create, manage, and monitor them programmatically. 
+Whether you're testing applications, rotating credentials, or building with agents, these APIs have you 
+covered.
+
+## What's in the Nile Management API?
+
+The Nile Management API is a RESTful API that allows you to create and manage your databases. With the API, you can programmatically:
+
+- Spin up databases faster than you can say "infrastructure as code"
+- Check who has access to your databases
+- Generate and manage credentials
+- Delete databases when you're done
+
+What makes these APIs particularly powerful is how they leverage Nile's unique serverless capabilities: 
+
+- Create as many databases as you need - there are no artificial limits.
+![Unlimited databases visualization](/blog/2025-03-13-announcing-nile-apis/unlimited_dbs.png)
+
+- Each database provisions in milliseconds, not minutes or weeks like traditional databases. 
+Here's a chart of the P99 database provisioning latency, straight from our production monitoring system:
+![P99 database provisioning latency](/blog/2025-03-13-announcing-nile-apis/provisioning_dbs.png)
+
+These capabilities make the Management APIs especially valuable for testing, CI/CD, and building with AI agents.
+
+## Getting Started
+
+**1. Getting an API key**
+
+To get started with the Nile Management APIs, you'll need to create an API key:
+
+1. Log in to [Nile Console](https://console.thenile.dev).
+2. Navigate to the Workspace Dashboard by clicking on the workspace name in the upper left corner.
+3. Go to the Security page (shield icon) to generate your API key.
+
+![API keys page](/blog/2025-03-13-announcing-nile-apis/get_api_keys.png)
+
+Once you copied your API key, we recommend storing it and your workspace in an environment variable:
+
+```bash
+export NILE_API_KEY="your_api_key_here"
+export NILE_WORKSPACE="your_workspace_here"
+```
+
+We'll use these environment variables in the following examples.
+
+**2. Creating a database**
+
+Now that you have an API key, you can create a database:
+
+```bash
+curl -X POST https://global.thenile.dev/workspaces/$NILE_WORKSPACE/databases \
+  -H "Authorization: Bearer $NILE_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "databaseName": "my_spectacular_db",
+    "region": "AWS_US_WEST_2"
+    }'
+```
+In order to access the database, you'll want to create credentials:
+
+```bash
+curl -X POST \
+  https://global.thenile.dev/workspaces/$NILE_WORKSPACE/databases/my_spectacular_db/credentials \
+  -H "Authorization: Bearer $NILE_API_KEY"
+```
+
+Now that we have credentials, we can connect to the database. The "id" field is the username for the database, and the "password" field is the password.
+
+If you happen to have `jq` installed, you can use it to parse the response and generate a connection string:
+
+```bash
+read -r user_id password db_name < <(curl -X POST \
+  https://global.thenile.dev/workspaces/$NILE_WORKSPACE/databases/my_spectacular_db/credentials \
+  -H "Authorization: Bearer $NILE_API_KEY" \
+  | jq -r '[.id, .password, .database.name] | @tsv') \
+  && echo "postgres://$user_id:$password@us-west-2.db.thenile.dev:5432/$db_name"
+```
+
+## Building with the Nile Management API
+
+These `curl` commands are great for testing, and give you an idea of what's possible with the Nile Management API. 
+But you can also use the Nile Management API in your own automation scripts and CI/CD pipelines.
+
+Our [API documentation](https://thenile.dev/docs/api-reference/) includes examples in `curl`, `Python`, `JavaScript`, `Go`, `PHP` and `Java`.
+Plus, you can take your API key and use it to try the APIs right from the documentation pages.
+This is the easiest way to get started with the Nile Management API.
+
+![API docs in action](/blog/2025-03-13-announcing-nile-apis/api_docs_in_action.png)
+
+[Nile CLI](https://thenile.dev/docs/cli/introduction) is an open-source tool that makes it easy to manage your databases and credentials. 
+It's available on GitHub and in addition to being a great CLI for Nile, 
+it is also a great example of how to use the Nile Management API from a TypeScript application. 
+You can look at the [source code](https://github.com/niledatabase/cli/blob/alpha/src/lib/api.ts) to see how we use the APIs.
+
+## What can you build with the Nile Management API?
+
+Here are some fun use cases:
+
+🤖 **Build with AI agents**
+
+Imagine an AI agent that can create a new database for you, complete with credentials 
+and a connection string, all in milliseconds. This means that your vibe coding agent can now iterate on your database schema and test its code against a real production-ready database.
+And if things don't work out, the agent can just delete the database and try again.
+
+Now, stop imagining, check out [Nile's MCP Service](https://thenile.dev/docs/ai-embeddings/model_context_protocol) 
+and start vibe coding with AI agents.
+
+🏗️ **DevOps Supercharger**
+
+Integrate our API into your CI/CD pipelines to spin up test environments automatically, 
+quickly and without limits. Nile APIs can be used to create reproducible infrastructure 
+setups in milliseconds - much faster than using Docker. 
+
+You can also use the API with slackbots to help developers create databases on-demand right from Slack. Or perhaps you can even use an AI agent to help developers create schema for their apps, or automatically clean up databases when they're done.
+For a creative devops team, the options are endless.
+
+🏭 **Startup Prototyping**
+
+Nile's ultra-fast database creation, together with Nile's free unlimited databases, makes it a great fit for fast-moving startups 
+(and fast-moving startups are the only kind of startups that matter). 
+With the Nile Management API, you can spin up a new database in seconds, rapidly prototype and iterate, safely build multi-tenant apps,
+and implement flexible, scalable architectures.
+
+## Next Steps
+
+Ready to start automating your database workflows? Start by [creating a Nile account](https://console.thenile.dev).
+Check out the [documentation](https://thenile.dev/docs/api-reference/) and start building.
+
+If you create something cool, Join our [Discord community](https://discord.gg/8UuBB84tTy) and let us know! 🚀
