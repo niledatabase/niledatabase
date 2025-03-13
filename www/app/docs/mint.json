@@ -372,6 +372,71 @@
       ]
     },
     {
+      "group": "Extensions",
+      "pages": [
+        "extensions/introduction",
+        "extensions/vector",
+        "extensions/postgis",
+        "extensions/uuid-ossp",
+        "extensions/pgcrypto",
+        {
+          "group": "Search and Indexing",
+          "icon": "magnifying-glass",
+          "pages": [
+            "extensions/bloom",
+            "extensions/btree_gin",
+            "extensions/btree_gist",
+            "extensions/citext",
+            "extensions/fuzzystrmatch",
+            "extensions/pg_bigm",
+            "extensions/pg_similarity",
+            "extensions/pg_trgm",
+            "extensions/prefix"
+          ]
+        },
+        {
+          "group": "Statistical and Analytical",
+          "icon": "chart-line",
+          "pages": [
+            "extensions/cube",
+            "extensions/earthdistance",
+            "extensions/financial",
+            "extensions/hll",
+            "extensions/intagg",
+            "extensions/intarray",
+            "extensions/quantile",
+            "extensions/random",
+            "extensions/tablefunc",
+            "extensions/xicor"
+          ]
+        },
+        {
+          "group": "Data Types and Storage",
+          "icon": "comment-text",
+          "pages": [
+            "extensions/emailaddr",
+            "extensions/hstore",
+            "extensions/ip4r",
+            "extensions/isn",
+            "extensions/ltree",
+            "extensions/rdkit",
+            "extensions/seg",
+            "extensions/unit"
+          ]
+        },
+        {
+          "group": "Geospatial",
+          "icon": "map",
+          "pages": [
+            "extensions/h3",
+            "extensions/h3_postgis",
+            "extensions/pgrouting",
+            "extensions/postgis_raster"
+          ]
+        }
+      ]
+    },
+    {
       "group": "CLI",
       "pages": [
         "cli/introduction",
