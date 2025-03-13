@@ -1,0 +1,154 @@
+---
+title: 'pg_similarity'
+description: 'Text similarity measures in PostgreSQL'
+---
+
+The `pg_similarity` extension provides a collection of similarity measures for comparing text strings in PostgreSQL databases. 
+It includes a comprehensive collection of search algorithms, which you can find listed toward the end of this document. 
+Your Nile database arrives with this extension already enabled.
+
+## Usage Examples
+
+Lets show how to use the `pg_similarity` extension to find similar products in our database.
+
+### Creating a Table for Text Comparison
+
+```sql
+CREATE TABLE products (
+  tenant_id uuid,
+  id integer,
+  name text,
+  description text,
+  PRIMARY KEY (tenant_id, id)
+);
+```
+
+### Inserting Sample Data
+
+```sql
+-- Create a tenant first
+INSERT INTO tenants (id, name) VALUES
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 'Tenant 1');
+
+INSERT INTO products (tenant_id, id, name, description) VALUES
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, 'Laptop Computer', 'High-performance laptop'),
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, 'Laptop Computr', 'High-performance notebook'),
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 3, 'Desktop Computer', 'Powerful desktop workstation');
+```
+
+### Finding Similar Names
+
+```sql
+-- Using Levenshtein for typo detection
+SELECT name, 
+       lev(name, 'Laptop Computer') as similarity
+FROM products
+ORDER BY similarity DESC;
+
+-- Using operator syntax
+SELECT name
+FROM products
+WHERE name ~== 'Laptop Computer';
+
+-- Using threshold to show only more similar results
+SET pg_similarity.levenshtein_threshold = 0.8;
+
+SELECT name
+FROM products
+WHERE name ~== 'Laptop Computer';
+```
+
+### Finding Similar Content
+
+```sql
+-- Using Cosine for content matching
+SELECT name, 
+       cosine(description, 'high performance notebook') as similarity
+FROM products
+WHERE cosine(description, 'high performance notebook') > 0.5
+ORDER BY similarity DESC;
+
+-- Using operator syntax
+-- This will return nothing because the threshold is 0.7
+SELECT name
+FROM products
+WHERE description ~## 'high performance notebook';
+
+-- Set threshold for specific algorithm
+SET pg_similarity.cosine_threshold = 0.3;
+
+-- Now this will return the results
+SELECT name
+FROM products
+WHERE description ~## 'high performance notebook';
+```
+
+## Configuration
+
+Each similarity measure has two or three configuration options:
+
+- `threshold`: The threshold for the similarity measure.
+- `is_normalized`: Whether the similarity measure is normalized (between 0 and 1) or not.
+- `tokenizer`: The tokenizer to use for the similarity measure ( Default is alnum, and other options are gram, word, and camelcase). Note that not every algorithm supports the tokenizer option.
+
+To use a specific configuration, you can use `SET pg_similarity.<algorithm_name>_<config_name> = value`.
+
+For example, to use the `cosine` similarity measure with a threshold of 0.3, you can use:
+
+```sql
+SET pg_similarity.cosine_threshold = 0.3;
+```
+
+To reset the threshold to the default value, you can use:
+
+```sql
+RESET pg_similarity.cosine_threshold;
+```
+
+## Common Use Cases
+
+- Finding duplicate records with slight variations
+- Implementing spell checking and typo-tolerant search
+- Matching similar names or addresses
+- Finding similar content
+- Phonetic matching (e.g., "Smith" vs "Smyth")
+- Record linkage across databases
+
+## Complete Algorithm Reference
+
+The extension includes the following similarity algorithms:
+
+| Algorithm | Function | Operator |
+|-----------|----------|----------|
+| Block | `block(text, text)` | `~++` |
+| Cosine | `cosine(text, text)` | `~##` |
+| Dice | `dice(text, text)` | `~-~` |
+| Euclidean | `euclidean(text, text)` | ~!! |
+| Hamming | `hamming(text, text)` | ~@~ |
+| Jaccard | `jaccard(text, text)` | `~??` |
+| Jaro | `jaro(text, text)` | `~%%` |
+| Jaro-Winkler | `jarowinkler(text, text)` | `~@@` |
+| Levenshtein | `lev(text, text)` | `~==` |
+| Matching | `matching(text, text)` | ~^^ |
+| Monge-Elkan | `mongeelkan(text, text)` | ~|| |
+| Needleman-Wunsch | `needlemanwunch(text, text)` | ~#~ |
+| Overlap | `overlap(text, text)` | `~**` |
+| Q-Gram | `qgram(text, text)` | `~~~` |
+| Smith-Waterman | `smithwaterman(text, text)` | ~=~ |
+| Smith-Waterman-Gotoh | `smithwatermangotoh(text, text)` | ~!~ |
+| Soundex | `soundex(text, text)` | `~*~` |
+
+Each algorithm is best suited for a different use case. 
+For example, `jaro` is better for name matching, while `levenshtein` is better for typo detection.
+
+## Limitations
+
+- Some algorithms may be computationally expensive
+- Not all measures are suitable for all languages
+- Memory usage can be high for large strings
+- Some algorithms may not work well with very short strings
+
+## Additional Resources
+
+- [pg_similarity repository with more complete documentation](https://github.com/eulerto/pg_similarity)
+- [String Similarity Algorithms Overview](https://www.postgresql.org/docs/current/textsearch-intro.html)

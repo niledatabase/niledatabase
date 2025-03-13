@@ -1,0 +1,129 @@
+---
+title: 'ISN'
+description: 'International Standard Number data types'
+---
+
+The `isn` extension provides data types for international product and publication numbering standards, including ISBN (books), ISMN (music), ISSN (serials), EAN13 (products), and UPC (products). It handles validation, formatting, and conversion between different standards.
+
+Your Nile database arrives with the `isn` extension already enabled.
+
+## Data Types
+
+The extension provides several data types:
+
+- `isbn` - International Standard Book Number (ISBN-13 and ISBN-10)
+- `ismn` - International Standard Music Number
+- `issn` - International Standard Serial Number
+- `ean13` - European Article Number (includes UPC)
+- `upc` - Universal Product Code
+
+## Basic Usage
+
+Here's how to use the ISN types with a product catalog:
+
+```sql
+CREATE TABLE products (
+    tenant_id uuid NOT NULL,
+    id integer NOT NULL,
+    title text,
+    isbn isbn,          -- For books
+    ean13 ean13,       -- For general products
+    upc upc,           -- For North American products
+    PRIMARY KEY(tenant_id, id)
+);
+
+CREATE TABLE publications (
+    tenant_id uuid NOT NULL,
+    id integer NOT NULL,
+    title text,
+    issn issn,         -- For magazines/journals
+    ismn ismn,         -- For music publications
+    PRIMARY KEY(tenant_id, id)
+);
+
+-- Insert sample book data
+INSERT INTO products (tenant_id, id, title, isbn) VALUES
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, 'Sample Book 1', '978-0-7475-3269-9'),  -- ISBN-13
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, 'Sample Book 2', '0-7475-3269-9');      -- ISBN-10
+
+-- Insert sample product data
+INSERT INTO products (tenant_id, id, title, ean13) VALUES
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 3, 'Sample Product 1', '4006381333931'),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 4, 'Sample Product 2', '0012345678905');
+
+-- Insert sample publication data
+INSERT INTO publications (tenant_id, id, title, issn, ismn) VALUES
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, 'Science Journal', '0317-8471', null),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, 'Music Score', null, 'M-2306-7118-7');
+```
+
+## Number Validation and Formatting
+
+The ISN types automatically validate check digits and can handle various input formats:
+
+```sql
+-- ISBN validation and formatting
+SELECT 
+    '978-0-7475-3269-9'::isbn as valid_isbn,  -- Works
+    '978-0-7475-3269-X'::isbn as invalid_isbn; -- Fails check digit
+
+-- Format conversion (ISBN-10 to ISBN-13)
+SELECT 
+    isbn13('0-7475-3269-9'::isbn) as isbn13,
+    isbn('978-0-7475-3269-9'::isbn) as isbn10;
+
+-- EAN13/UPC validation
+SELECT 
+    '4006381333931'::ean13 as valid_ean,      -- Works
+    '4006381333932'::ean13 as invalid_ean;    -- Fails check digit
+```
+
+## Common Use Cases
+
+### Product Lookup
+
+```sql
+-- Look up a book by ISBN
+SELECT title, isbn 
+FROM products 
+WHERE isbn = '978-0-7475-3269-9'::isbn;
+```
+
+### ISBN Range Management
+
+```sql
+-- Find books in a specific ISBN publisher range
+SELECT title, isbn
+FROM products
+WHERE 
+    isbn IS NOT NULL 
+    AND isbn13(isbn)::text LIKE '978-0-7475-%';
+
+-- Group books by publisher prefix
+SELECT 
+    substring(isbn13(isbn)::text, 1, 8) as publisher_prefix,
+    count(*) as book_count
+FROM products
+WHERE isbn IS NOT NULL
+GROUP BY publisher_prefix;
+```
+
+## Performance Considerations
+
+- ISN types are stored efficiently as 64-bit integers internally
+- Validation and check digit calculation is performed on input
+- Indexes work efficiently with all ISN types
+- Conversion between formats (e.g., ISBN-10/13) is fast
+
+## Best Practices
+
+1. Always use the appropriate type for each standard
+2. Handle input format variations in your application
+3. Use the built-in conversion functions rather than implementing your own
+4. Consider indexing frequently searched ISN columns
+
+For more details, refer to the [PostgreSQL ISN documentation](https://www.postgresql.org/docs/current/isn.html) and the relevant standards:
+- [ISBN](https://www.isbn-international.org/)
+- [ISSN](https://www.issn.org/)
+- [ISMN](https://www.ismn-international.org/)
+- [EAN](https://www.gs1.org/standards/barcodes/ean-upc)

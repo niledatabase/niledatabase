@@ -1,0 +1,126 @@
+---
+title: 'Crypto'
+description: 'Cryptographic functions for PostgreSQL'
+icon: 'lock'
+---
+
+The `pgcrypto` extension provides cryptographic functions for PostgreSQL, including hashing, encryption, and random data generation.
+Your Nile database arrives with the pgcrypto extension already enabled.
+
+## Overview
+
+The pgcrypto extension provides functions for:
+- Password hashing
+- General-purpose hashing
+- Encryption (symmetric and asymmetric)
+- Random data generation
+- Message signing and verification
+
+## Password Hashing
+
+### Using crypt()
+
+The `crypt()` function is recommended for password hashing:
+
+```sql
+-- Create a users table with hashed passwords
+CREATE TABLE password_hashes (
+    tenant_id uuid,
+    user_id uuid DEFAULT uuid_generate_v4(),
+    email text,
+    password_hash text,
+    PRIMARY KEY (tenant_id, user_id)
+);
+
+-- Insert a user with a hashed password (using blowfish)
+INSERT INTO password_hashes (tenant_id, email, password_hash) VALUES
+    ('11111111-1111-1111-1111-111111111111',
+     'user@example.com',
+     public.crypt('user_password', public.gen_salt('bf')));
+
+-- Verify password
+SELECT user_id 
+FROM password_hashes 
+WHERE email = 'user@example.com' 
+  AND password_hash = public.crypt('user_password', password_hash);
+```
+
+### Symmetric Encryption
+
+```sql
+-- Create a table with encrypted data
+CREATE TABLE sensitive_data (
+    tenant_id uuid,
+    record_id uuid DEFAULT uuid_generate_v4(),
+    description text,
+    encrypted_data bytea,
+    PRIMARY KEY (tenant_id, record_id)
+);
+
+-- Insert encrypted data (AES-128-CBC)
+INSERT INTO sensitive_data (tenant_id, description, encrypted_data) VALUES
+    ('11111111-1111-1111-1111-111111111111',
+     'Credit Card',
+     public.encrypt(
+         '4111111111111111'::bytea,
+         'encryption_key',
+         'aes'
+     ));
+
+-- Decrypt data
+SELECT description,
+           convert_from(
+                public.decrypt(
+                   encrypted_data,
+                   'encryption_key',
+                   'aes'
+               ),
+               'utf-8'
+           ) as decrypted_data
+FROM sensitive_data;
+```
+
+## Random Data Generation
+
+```sql
+-- Generate random bytes
+SELECT public.gen_random_bytes(16);            -- 16 random bytes
+
+-- Generate random UUID (alternative to uuid-ossp)
+SELECT public.gen_random_uuid();               -- Random UUID
+```
+
+## Dos and Don'ts
+
+### Password Storage
+
+✅ Use crypt() with Blowfish: 
+`password_hash = public.crypt(password, public.gen_salt('bf', 8))`
+
+❌ Don't store plain MD5 (unsafe!): 
+`password_hash = public.md5(password)`
+
+### Encryption Key Management
+✅ Store keys securely outside the database: `encrypted_data = public.encrypt(data, current_setting('app.encryption_key'), 'aes')`
+
+❌ Don't store keys in the database
+
+❌ Don't hardcode keys in application code
+
+### Salt Generation
+✅ Generate a new salt for each password: `SELECT public.gen_salt('bf', 8);`
+
+❌ Don't reuse salts
+
+❌ Don't use static salts
+
+## Performance Considerations
+
+1. Hashing and encryption are CPU-intensive operations. Consider caching results when appropriate.
+2. Encrypted columns cannot be effectively indexed. Consider indexing non-sensitive fields instead.
+
+## Additional Resources
+
+- [PostgreSQL pgcrypto Documentation](https://www.postgresql.org/docs/current/pgcrypto.html)
+- [OpenPGP Message Format](https://www.rfc-editor.org/rfc/rfc4880)
+- [Password Hashing Best Practices](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)

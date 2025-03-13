@@ -1,0 +1,74 @@
+---
+title: "Citext"
+description: "Provides a case-insensitive text type."
+---
+
+The [citext](https://www.postgresql.org/docs/current/citext.html) extension in PostgreSQL provides a case-insensitive text type. It behaves just like the standard `TEXT` data type but treats values as case-insensitive when comparing or indexing, making it useful for case-insensitive searches and unique constraints.
+Your Nile database arrives with `citext` extension already enabled, so there's no need to run `create extension`.
+
+## Creating and Populating a Sample Table
+Before creating the index, let's create a sample table and populate it with data:
+
+```sql
+CREATE TABLE my_table (
+    id SERIAL PRIMARY KEY,
+    column1 CITEXT,
+    column2 INT
+);
+
+INSERT INTO my_table (column1, column2) VALUES
+    ('Apple', 10),
+    ('banana', 20),
+    ('GRAPE', 15),
+    ('Orange', 25),
+    ('Lemon', 30);
+```
+
+## Benefits of Using citext
+- Allows case-insensitive text comparisons without using `LOWER()`.
+- Simplifies case-insensitive unique constraints and indexes.
+- Reduces errors when working with user-provided text data like emails or usernames.
+
+## Creating an Index on citext Columns
+A B-tree index can be created on a `CITEXT` column just like a `TEXT` column:
+
+```sql
+CREATE INDEX citext_idx ON my_table (column1);
+```
+
+This index will allow efficient case-insensitive lookups.
+
+## Enforcing Unique Constraints with citext
+A `UNIQUE` constraint on a `CITEXT` column ensures case-insensitive uniqueness:
+
+```sql
+ALTER TABLE my_table ADD CONSTRAINT unique_column1 UNIQUE (column1);
+```
+
+Now, inserting values like `'APPLE'` or `'apple'` would result in a constraint violation.
+
+## Querying with citext
+Once the `citext` extension is enabled, queries automatically become case-insensitive:
+
+```sql
+SELECT * FROM my_table WHERE column1 = 'aPpLe';
+```
+
+This will return the same result as searching for `'Apple'`, `'APPLE'`, or `'apple'`.
+
+## Limitations
+- `CITEXT` is slightly **slower** than `TEXT` due to case normalization.
+- It does **not support LIKE queries** efficiently unless you create a functional index using `LOWER(column1)`.
+- Collation-sensitive operations may not always behave as expected.
+
+## Removing a citext Index
+If you need to remove an index:
+
+```sql
+DROP INDEX citext_idx;
+```
+
+## Conclusion
+The `citext` extension in PostgreSQL simplifies case-insensitive text handling, making it ideal for usernames, emails, and other text fields where case differences should be ignored.
+
+For more details, refer to the [PostgreSQL documentation](https://www.postgresql.org/docs/current/citext.html).
