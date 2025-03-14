@@ -374,7 +374,7 @@
         ]
       },
       {
-        "tab": "API",
+        "tab": "ManagementAPI",
         "openapi": {
           "source": "https://global.thenile.dev/openapi.yaml",
           "directory": "api-reference"
