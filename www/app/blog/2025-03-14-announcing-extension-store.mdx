@@ -46,7 +46,7 @@ By combining Pgvector for vector similarity search, Pg_trgm for trigram-based te
 and Pg_bigm for full-text search, developers can build intelligent search engines for e-commerce platforms and 
 provide personalized product recommendations, auto-complete search, and context-aware filtering to enhance user experience.
 
-For example, here's how to create a tenant-aware product recommendation system:
+For example, here's how to create a multi-tenant product search with smart ranking:
 
 ```sql
 -- Create a tenant-aware products table with vector embeddings
@@ -258,110 +258,6 @@ SELECT
 FROM accounts
 WHERE tenant_id = '123e4567-e89b-12d3-a456-426614174000';
 ```
-
-### Financial Analysis
-
-Extensions like HLL, Quantile, Xicor and Financial empower applications that process large-scale financial transactions, 
-real-time risk analysis, and portfolio optimizations.   
-
-For example, here's how to analyze trading data with statistical measures:
-
-```sql
--- Create a table for storing trading data
-CREATE TABLE trading_data (
-    id UUID DEFAULT gen_random_uuid(),
-    tenant_id UUID NOT NULL,
-    symbol TEXT,
-    price DECIMAL(10,2),
-    volume INTEGER,
-    timestamp TIMESTAMPTZ DEFAULT now(),
-    PRIMARY KEY (tenant_id, id)
-);
-
--- Insert sample trading data
-INSERT INTO trading_data (tenant_id, symbol, price, volume, timestamp) VALUES
-(
-    '123e4567-e89b-12d3-a456-426614174000',
-    'STOCK_A',
-    105.50,
-    500,
-    '2024-03-14 09:30:00'
-),
-(
-    '123e4567-e89b-12d3-a456-426614174000',
-    'STOCK_A',
-    106.75,
-    750,
-    '2024-03-14 10:00:00'
-),
-(
-    '123e4567-e89b-12d3-a456-426614174000',
-    'STOCK_A',
-    104.25,
-    1000,
-    '2024-03-14 10:30:00'
-),
-(
-    '123e4567-e89b-12d3-a456-426614174000',
-    'STOCK_A',
-    107.00,
-    850,
-    '2024-03-14 11:00:00'
-),
-(
-    '123e4567-e89b-12d3-a456-426614174000',
-    'STOCK_A',
-    106.25,
-    600,
-    '2024-03-14 11:30:00'
-);
-
--- Analyze trading patterns using various statistical measures
-SELECT 
-    symbol,
-    count(*) as num_trades,
-    avg(price) as avg_price,
-    percentile_cont(0.5) WITHIN GROUP (ORDER BY price) as median_price,
-    percentile_cont(0.95) WITHIN GROUP (ORDER BY volume) as volume_95th_percentile,
-    xicor(price, volume) as price_volume_correlation,  -- Correlation between price and volume
-    hll_cardinality(hll_add_agg(hll_hash_integer(volume))) as approximate_unique_volumes  -- HLL distinct count
-FROM trading_data
-WHERE 
-    tenant_id = '123e4567-e89b-12d3-a456-426614174000'
-GROUP BY symbol;
-
--- Calculate moving averages and volatility
-WITH price_stats AS (
-    SELECT 
-        symbol,
-        timestamp,
-        price,
-        avg(price) OVER (
-            ORDER BY timestamp
-            ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
-        ) as moving_avg_3,
-        stddev(price) OVER (
-            ORDER BY timestamp
-            ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
-        ) as volatility_3
-    FROM trading_data
-    WHERE tenant_id = '123e4567-e89b-12d3-a456-426614174000'
-)
-SELECT 
-    symbol,
-    timestamp,
-    price,
-    moving_avg_3,
-    volatility_3,
-    CASE 
-        WHEN price > moving_avg_3 THEN 'ABOVE_MA'
-        WHEN price < moving_avg_3 THEN 'BELOW_MA'
-        ELSE 'AT_MA'
-    END as price_position
-FROM price_stats
-ORDER BY timestamp DESC;
-```
-
 ## Build Smarter with Nile
 
 By adding support for these 35 PostgreSQL extensions, we're making it easier for developers to build 
