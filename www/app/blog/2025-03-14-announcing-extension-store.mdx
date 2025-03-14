@@ -7,16 +7,16 @@ export const metadata = {
   tags: ["database", "serverless", "postgres", "extensions", "devops"],
 };
 
-At Nile, we want developers to build B2B applications faster on PostgreSQL. 
-Since the fastest and most reliable code is the code you don't have to write, we've expanded 
-our support for PostgreSQL extensions, enabling new use cases and providing greater flexibility for 
+At Nile, we want developers to build B2B applications faster on PostgreSQL.
+Since the fastest and most reliable code is the code you don't have to write, we've expanded
+our support for PostgreSQL extensions, enabling new use cases and providing greater flexibility for
 multi-tenant applications. This includes:
 
 - 35 extensions (and counting)
 - No need to build or install them, available out of the box for all Nile customers
 - Friendly UI for exploring and trying out extensions in the Nile console
 
-These extensions cover a wide range of capabilities, from AI-powered vector search to geospatial analysis, full-text search, advanced indexing, 
+These extensions cover a wide range of capabilities, from AI-powered vector search to geospatial analysis, full-text search, advanced indexing,
 and specialized data types.
 
 <Video
@@ -26,25 +26,24 @@ and specialized data types.
 
 ## The Power of PostgreSQL Extension Ecosystem
 
-One of the reasons PostgreSQL has remained a top choice for developers is its modular architecture. 
-Unlike monolithic databases, PostgreSQL was designed from the ground up to be extensible. 
-It allows developers to add custom functions, data types, index methods and even hook into core functionality such as query planning. 
-This extensibility has fostered a thriving ecosystem of extensions that enable specialized functionality for various industries, 
+One of the reasons PostgreSQL has remained a top choice for developers is its modular architecture.
+Unlike monolithic databases, PostgreSQL was designed from the ground up to be extensible.
+It allows developers to add custom functions, data types, index methods and even hook into core functionality such as query planning.
+This extensibility has fostered a thriving ecosystem of extensions that enable specialized functionality for various industries,
 from AI and machine learning to geospatial processing and financial analytics.
 
-With extensions, developers can get advanced functionality out of the box and accelerate their development cycles while maintaining 
+With extensions, developers can get advanced functionality out of the box and accelerate their development cycles while maintaining
 the reliability and ACID compliance that PostgreSQL is known for.
-
 
 ## Example Applications Built with the Extensions in Nile's Extension Store
 
-The power of PostgreSQL extensions unlocks countless possibilities for developers. Here are five example applications that leverage 
+The power of PostgreSQL extensions unlocks countless possibilities for developers. Here are five example applications that leverage
 the extensions in Nile's Extension Store:
 
 ### AI-Driven E-Commerce Search & Recommendations
 
-By combining Pgvector for vector similarity search, Pg_trgm for trigram-based text matching, Fuzzystrmatch for approximate string comparison, 
-and Pg_bigm for full-text search, developers can build intelligent search engines for e-commerce platforms and 
+By combining Pgvector for vector similarity search, Pg_trgm for trigram-based text matching, Fuzzystrmatch for approximate string comparison,
+and Pg_bigm for full-text search, developers can build intelligent search engines for e-commerce platforms and
 provide personalized product recommendations, auto-complete search, and context-aware filtering to enhance user experience.
 
 For example, here's how to create a multi-tenant product search with smart ranking:
@@ -138,8 +137,8 @@ LIMIT 10;
 
 ### Real-Time Location-Based Services
 
-PostGIS, H3, and PgRouting enable applications like real-time ride-sharing, logistics optimization, and geospatial analytics, 
-allowing businesses to make smarter location-based decisions. Combined with IP4r, developers can also build location-based recommendation 
+PostGIS, H3, and PgRouting enable applications like real-time ride-sharing, logistics optimization, and geospatial analytics,
+allowing businesses to make smarter location-based decisions. Combined with IP4r, developers can also build location-based recommendation
 systems that use IP addresses to determine the location of users and provide personalized recommendations based on their location.
 
 For example, here's how to create a ip-based store lookup system:
@@ -184,13 +183,13 @@ INSERT INTO ip_locations (tenant_id, ip_range, city, location) VALUES
 
 -- Find nearest stores for a given IP address
 WITH user_location AS (
-    SELECT location 
-    FROM ip_locations 
-    WHERE 
+    SELECT location
+    FROM ip_locations
+    WHERE
         tenant_id = '123e4567-e89b-12d3-a456-426614174000'
         AND ip_range >> '192.168.1.100'::ip4
 )
-SELECT 
+SELECT
     s.name,
     ST_Distance(
         ST_Transform(s.location::geometry, 3857),
@@ -198,21 +197,21 @@ SELECT
     ) / 1000 as distance_km,
     ST_AsGeoJSON(s.location) as location_json
 FROM stores s
-WHERE 
+WHERE
     s.tenant_id = '123e4567-e89b-12d3-a456-426614174000'
     AND ST_DWithin(
         s.location::geometry,
         (SELECT location FROM user_location),
         5000  -- 5km radius
     )
-ORDER BY 
+ORDER BY
     s.location::geometry <-> (SELECT location FROM user_location)
 LIMIT 5;
 ```
 
 ### Secure Identity Management System
 
-With Pgcrypto and Uuid-ossp, developers can ensure strong encryption, secure authentication, and safe user data storage, 
+With Pgcrypto and Uuid-ossp, developers can ensure strong encryption, secure authentication, and safe user data storage,
 critical for fintech and enterprise applications.
 
 For example, here's how to create a secure accounts table with encrypted sensitive data:
@@ -245,7 +244,7 @@ INSERT INTO accounts (
 );
 
 -- Example: Verify password for authentication
-SELECT id 
+SELECT id
 FROM accounts
 WHERE tenant_id = '123e4567-e89b-12d3-a456-426614174000'
     AND email = 'jane.doe@example.com'
@@ -253,17 +252,18 @@ WHERE tenant_id = '123e4567-e89b-12d3-a456-426614174000'
     AND password_hash = public.crypt('secure_password123', password_hash);
 
 -- Example: Decrypt SSN when needed (with proper authorization)
-SELECT 
+SELECT
     email,
     public.pgp_sym_decrypt(ssn::bytea, 'your-encryption-key') as decrypted_ssn
 FROM accounts
 WHERE tenant_id = '123e4567-e89b-12d3-a456-426614174000';
 ```
+
 ## Build Smarter with Nile
 
-By adding support for these 35 PostgreSQL extensions, we're making it easier for developers to build 
-feature-rich, reliable and scalable applications without managing complex database infrastructure. 
-Whether you're working with AI, geospatial data, financial analytics, or custom search solutions, 
+By adding support for these 35 PostgreSQL extensions, we're making it easier for developers to build
+feature-rich, reliable and scalable applications without managing complex database infrastructure.
+Whether you're working with AI, geospatial data, financial analytics, or custom search solutions,
 we are sure these extensions will help you build better applications faster.
 
 Ready to get started? [Try Nile today](https://console.thenile.dev).
