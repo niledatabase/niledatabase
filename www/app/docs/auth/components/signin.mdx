@@ -5,9 +5,6 @@ description: 'Learn how to use the Nile Auth Sign In component'
 
 import Theming from '/snippets/theming.mdx'
 
-<Warning>We recommend using Single Sign On for production applications, [which you can learn more about here](../singlesignon)</Warning>
-
-
 Users can sign up and be entered into the database via email + password.  A JWT is used (which has a default expiry in 30 days). For Single Sign On, sessions are kept in the database in the `auth.session` table.
 `@tanstack/react-query` and `react-hook-form` are used to do much of the heavy lifting in the component. The component is styled via tailwind.
 
