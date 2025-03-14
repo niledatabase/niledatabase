@@ -1,0 +1,209 @@
+---
+title: 'PostGIS Raster'
+description: 'Raster Data Support for PostGIS'
+---
+
+The `postgis_raster` extension adds support for raster (grid-based) spatial data to PostGIS. It enables you to store, analyze, and process raster data such as satellite imagery, elevation models, and other gridded datasets directly in your PostgreSQL database.
+Your Nile database arrives with the `postgis_raster` extension and its dependency `postgis` already enabled.
+
+## Understanding Raster Data
+
+A raster consists of a matrix of cells (pixels) organized into rows and columns where each cell contains a value representing information such as:
+- Elevation data (DEM - Digital Elevation Model)
+- Satellite imagery
+- Temperature maps
+- Land use classification
+- Any other grid-based spatial data
+
+A raster can store multiple layers of data, each layer is called a band. For example a band can 
+represent elevation data, another band can represent temperature data. In satellite imagery, each band 
+typically represents a different wavelength of light (Red, Green, Blue).
+
+## Quick Start
+
+Let's walk through some common operations with raster data.
+
+### Creating a Raster Table
+
+```sql
+-- Create a table for storing elevation data
+CREATE TABLE elevation_data (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(100),
+    acquisition_date DATE,
+    -- Raster column with spatial reference system EPSG:4326
+    rast raster
+);
+```
+
+### Loading Raster Data
+
+```sql
+
+-- Insert a simple 3x3 raster representing elevation data
+INSERT INTO elevation_data (id, name, acquisition_date, rast)
+SELECT 
+    1,
+    'Sample DEM',
+    '2024-01-01',
+    ST_AddBand(
+        ST_MakeEmptyRaster(3, 3, -74.0, 41.0, 0.01, -0.01, 0, 0, 4326),
+        '32BF'::text,  -- 32-bit float
+        1.0, 0.0       -- pixel value 1.0, nodata value 0.0
+    );
+
+-- Update raster values (example elevation data in meters)
+UPDATE elevation_data
+SET rast = ST_SetValues(
+    rast,
+    1,                -- band number
+    1, 1,            -- starting pixel
+    ARRAY[
+        [100.0, 120.0, 130.0],
+        [110.0, 125.0, 135.0],
+        [105.0, 115.0, 140.0]
+    ]::double precision[][]
+)
+WHERE id = 1;
+```
+
+### Basic Raster Operations
+
+Query pixel values at a specific point:
+```sql
+-- Get elevation at a specific coordinate
+SELECT ST_Value(rast, 1, ST_SetSRID(ST_MakePoint(-74.0, 41.0), 4326))
+FROM elevation_data
+WHERE id = 1;
+```
+
+Calculate statistics for a raster:
+```sql
+-- Get summary statistics for the raster
+SELECT 
+    ST_SummaryStats(rast) AS stats,
+    (ST_SummaryStats(rast)).min AS min_elevation,
+    (ST_SummaryStats(rast)).max AS max_elevation,
+    (ST_SummaryStats(rast)).mean AS mean_elevation
+FROM elevation_data
+WHERE id = 1;
+```
+
+Resample a raster to different resolution:
+```sql
+-- Resample to 50% of original resolution
+SELECT ST_Resample(
+    rast,
+    scalex := 0.02,    -- New pixel width
+    scaley := -0.02,   -- New pixel height
+    algorithm := 'NearestNeighbor'  -- Resampling algorithm
+)
+FROM elevation_data
+WHERE id = 1;
+```
+
+### Raster Analysis
+
+Calculate slope from elevation data:
+```sql
+-- Generate slope (in degrees) from elevation raster
+-- Returns a new raster where pixel values represent slope angles
+-- Use ST_SummaryStats() to view actual degree values
+
+SELECT ST_Slope(
+    rast,
+    1,        -- Band number
+    '32BF',   -- Pixel type
+    'DEGREE'  -- Output units
+)
+FROM elevation_data
+WHERE id = 1;
+```
+
+Generate contour lines from elevation data
+
+```sql
+-- Generate contour lines from elevation data
+-- Returns a MultiLineString geometry where each line represents locations of equal elevation
+-- Interval of 10 meters means lines will be drawn at 100m, 110m, 120m elevation etc.
+
+SELECT ST_Contour(
+    rast,
+    1,        -- Band number
+    10.0      -- Contour interval
+)
+FROM elevation_data
+WHERE id = 1;
+```
+
+### Raster Properties
+
+```sql
+-- Get raster metadata
+SELECT 
+    ST_Width(rast) AS width,
+    ST_Height(rast) AS height,
+    ST_NumBands(rast) AS num_bands,
+    ST_PixelWidth(rast) AS pixel_width,
+    ST_PixelHeight(rast) AS pixel_height,
+    ST_SRID(rast) AS srid
+FROM elevation_data
+WHERE id = 1;
+```
+
+### Raster Manipulation
+
+```sql
+-- Clip raster to polygon
+SELECT ST_Clip(
+    rast,
+    ST_GeomFromText('POLYGON((-74.01 41.01, -73.99 41.01, -73.99 40.99, -74.01 40.99, -74.01 41.01))', 4326)
+)
+FROM elevation_data
+WHERE id = 1;
+
+-- Reproject raster to different coordinate system
+SELECT ST_Transform(rast, 3857)
+FROM elevation_data
+WHERE id = 1;
+```
+
+## Best Practices
+
+1. **Storage and Indexing**:
+   - Use appropriate pixel types for your data
+   - Create spatial indexes on raster columns
+   - Consider tiling large rasters
+
+2. **Performance**:
+   - Use appropriate chunk sizes for large rasters
+   - Optimize raster resolution for your use case
+   - Consider using out-db raster storage for very large datasets
+
+3. **Data Quality**:
+   - Validate raster data before loading
+   - Handle NODATA values appropriately
+   - Use appropriate resampling methods
+
+## Common Use Cases
+
+- Digital Elevation Models (DEM)
+- Satellite imagery analysis
+- Land use/land cover mapping
+- Temperature and climate modeling
+- Watershed analysis
+- Viewshed analysis
+- Terrain analysis
+- Environmental monitoring
+
+## Limitations
+
+- Large raster datasets can consume significant storage
+- Processing time increases with raster size
+- Memory usage can be high for large raster operations
+
+## Additional Resources
+- [Introduction to Rasters in PostGIS](https://postgis.net/workshops/de/postgis-intro/rasters.html)
+- [PostGIS Raster Reference](https://postgis.net/docs/RT_reference.html)
+
+

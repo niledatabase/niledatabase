@@ -1,0 +1,185 @@
+---
+title: 'pg_trgm'
+description: 'Similarity search in PostgreSQL using trigrams'
+---
+
+The `pg_trgm` extension provides trigram matching capabilities for fast text similarity search and fuzzy string matching in PostgreSQL. A trigram is a group of three consecutive characters taken from a string. This extension is particularly useful for implementing features like fuzzy search, spell checking, and finding similar strings.
+Your Nile database arrives with the `pg_trgm` extension already enabled.
+
+## Understanding Trigrams
+
+A trigram is created by taking three consecutive characters from a text string. For example, the word "hello" contains these trigrams: " h" (with two spaces), "he", "hel", "ell", "llo", "lo " (with two spaces). The spaces at the beginning and end are important for matching word boundaries.
+
+Similarity between strings is calculated by counting how many trigrams they share in common. 
+For example, "hello" and "helo" share most of their trigrams (like " h", "hel", "lo "), 
+resulting in a high similarity score. This makes trigrams excellent for fuzzy matching and finding similar strings even when they contain typos.
+
+## Usage Examples
+
+Let's explore how to use pg_trgm with a practical example using a products database.
+
+### Creating a Table with Text Search
+
+```sql
+CREATE TABLE products (
+  tenant_id uuid,
+  id integer,
+  name text,
+  description text,
+  PRIMARY KEY (tenant_id, id)
+);
+
+-- Create a GiST index for faster similarity searches
+CREATE INDEX trgm_idx_products_name ON products USING gist (name gist_trgm_ops);
+-- Or create a GIN index (faster searches, slower updates, more space)
+CREATE INDEX trgm_gin_idx_products_name ON products USING gin (name gin_trgm_ops);
+```
+
+### Inserting Sample Data
+
+```sql
+-- Create a tenant first
+INSERT INTO tenants (id, name) VALUES
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 'Tenant 1');
+
+INSERT INTO products (tenant_id, id, name, description) VALUES
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, 'iPhone 13 Pro', 'Latest Apple smartphone'),
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, 'iPhne 13', 'Budget Apple smartphone'),
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 3, 'Samsung Galaxy S21', 'Android flagship phone');
+```
+
+### Basic Similarity Queries
+
+```sql
+-- Find similarity between two strings (returns a number between 0 and 1)
+SELECT similarity('iPhone', 'iPhne');
+
+-- Find all products with names similar to 'iPhone' (overall similarity)
+SELECT name, similarity(name, 'iPhone') AS sim
+FROM products
+WHERE name % 'iPhone'  -- Uses similarity threshold
+ORDER BY sim DESC;
+
+-- Find products that contain something similar to 'phone' (substring matching)
+SELECT name, similarity(name, 'iPhone') AS sim
+FROM products
+WHERE name %> 'phone';  -- Better for substring/pattern matching
+```
+
+### Show Trigrams
+
+```sql
+-- Show trigrams in a string
+SELECT show_trgm('iPhone');
+```
+
+### Setting Similarity Threshold
+
+```sql
+-- Set the similarity threshold (default is 0.3)
+SET pg_trgm.similarity_threshold = 0.3;
+
+-- Query using the new threshold
+SELECT name
+FROM products
+WHERE name % 'iPhone';
+```
+
+### Word Similarity
+
+```sql
+-- Find word similarity (better for matching whole words)
+SELECT name, word_similarity('iPhone', name) as sim
+FROM products
+ORDER BY sim DESC;
+
+-- Using strict word similarity
+SELECT name, strict_word_similarity('iPhone', name) as sim
+FROM products
+ORDER BY sim DESC;
+```
+
+## Functions and Operators
+
+### Main Functions
+
+- `similarity(text, text)`: Returns similarity between two strings (0 to 1)
+- `show_trgm(text)`: Shows trigrams in a string
+- `word_similarity(text, text)`: Returns word-based similarity
+- `strict_word_similarity(text, text)`: Returns strict word-based similarity
+- `show_limit()`: Shows current similarity threshold
+
+### Operators
+
+- `%`: Returns true if strings are similar (uses similarity threshold)
+- `<%`: Returns true if first string is less similar than second
+- `%>`: Returns true if first string is more similar than second
+- `<->`: Returns distance between strings (1 - similarity)
+- `<<->`: Returns word-based distance
+- `<->>`: Returns strict word-based distance
+
+## Index Types
+
+pg_trgm supports two types of indexes:
+
+### GiST Index
+```sql
+CREATE INDEX trgm_gist_idx ON table_name USING gist (column_name gist_trgm_ops);
+```
+- Balanced performance between search and update
+- Smaller index size
+- Good for dynamic data
+
+### GIN Index
+```sql
+CREATE INDEX trgm_gin_idx ON table_name USING gin (column_name gin_trgm_ops);
+```
+- Faster searches
+- Slower updates
+- Larger index size
+- Better for static data
+
+## Best Practices
+
+1. **Index Selection**:
+   - Use GIN for mostly-read data
+   - Use GiST for frequently updated data
+   - Consider creating indexes only on frequently searched columns
+
+2. **Threshold Tuning**:
+   - Lower threshold (e.g., 0.2) for more matches
+   - Higher threshold (e.g., 0.5) for stricter matching
+   - Test with your data to find the optimal value
+
+3. **Performance Optimization**:
+   - Use word_similarity() for whole word matching
+   - Create indexes on specific columns rather than all text columns
+   - Monitor index size and rebuild when necessary
+
+## Common Use Cases
+
+- Fuzzy search functionality
+- Spell-check suggestions
+- Auto-complete features
+- Finding similar product names
+- Matching addresses with typos
+- Search with tolerance for misspellings
+
+## Performance Considerations
+
+- GIN indexes provide faster search but slower updates
+- Index size can be large for text columns with many unique values
+- Consider partial indexes for large tables
+- Monitor and adjust similarity threshold based on false positive/negative rates
+
+## Limitations
+
+- Not suitable for very short strings (less than 3 characters)
+- May produce false positives
+- Index size can be large for big text columns
+- Not ideal for exact matching (use standard indexes instead)
+
+## Additional Resources
+
+- [PostgreSQL pg_trgm Documentation](https://www.postgresql.org/docs/current/pgtrgm.html)
+- [Text Search in PostgreSQL](https://www.postgresql.org/docs/current/textsearch-indexes.html)

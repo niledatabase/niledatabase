@@ -1,0 +1,144 @@
+---
+title: 'Intarray'
+description: 'Additional functions and operators for integer arrays'
+---
+
+The `intarray` extension provides additional functions and operators for working with arrays of integers. It's particularly useful when you need to perform operations like unions, intersections, or searches on integer arrays without writing complex SQL queries.
+
+Your Nile database arrives with the `intarray` extension already enabled.
+
+## Operators
+
+The extension provides several operators for array manipulation:
+
+- `&&` - overlap (have elements in common)
+- `@>` - contains
+- `<@` - is contained by
+- `=` - equal
+- `+` - union
+- `&` - intersection
+- `-` - difference
+
+## Basic Array Operations
+
+Here's how to use the basic array operations:
+
+```sql
+CREATE TABLE product_categories (
+    tenant_id uuid NOT NULL,
+    product_id integer,
+    category_ids integer[],
+    PRIMARY KEY(tenant_id, product_id)
+);
+
+-- Insert sample data
+INSERT INTO product_categories (tenant_id, product_id, category_ids) VALUES
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, '{1,2,3}'),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, '{2,4}'),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 3, '{1,3,4}');
+
+-- Find products that have categories in common with product_id 1
+SELECT product_id, category_ids
+FROM product_categories
+WHERE category_ids && (
+    SELECT category_ids 
+    FROM product_categories 
+    WHERE product_id = 1
+)
+AND product_id != 1;
+
+-- Find products that contain all categories of product_id 2
+SELECT product_id, category_ids
+FROM product_categories
+WHERE category_ids @> (
+    SELECT category_ids 
+    FROM product_categories 
+    WHERE product_id = 2
+);
+```
+
+## Array Set Operations
+
+The extension provides set operations for combining arrays:
+
+```sql
+-- Union of two category sets
+SELECT 
+    '{1,2,3}'::int[] + '{3,4,5}'::int[] as union_result,
+    '{1,2,3}'::int[] & '{3,4,5}'::int[] as intersection_result,
+    '{1,2,3,4}'::int[] - '{3,4}'::int[] as difference_result;
+
+-- Practical example: Find common categories between products
+SELECT 
+    p1.product_id as product1,
+    p2.product_id as product2,
+    p1.category_ids & p2.category_ids as common_categories
+FROM product_categories p1
+CROSS JOIN product_categories p2
+WHERE p1.product_id < p2.product_id;
+```
+
+## Array Manipulation Functions
+
+The extension includes several useful functions:
+
+```sql
+-- Sort and remove duplicates
+SELECT uniq(sort(category_ids))
+FROM product_categories
+WHERE product_id = 1;
+
+-- Find the index of an element (1-based)
+SELECT idx(category_ids, 3)
+FROM product_categories
+WHERE product_id = 1;
+
+-- Add/remove elements
+SELECT 
+    category_ids || 5 as added_element,    -- Standard array concatenation
+    category_ids || '{5,6}'::int[] as added_array
+FROM product_categories
+WHERE product_id = 1;
+```
+
+## Query Optimization
+
+The extension supports GiST and GIN indexes for efficient array operations:
+
+```sql
+-- Create GiST index
+CREATE INDEX idx_category_gist ON product_categories USING gist (category_ids gist__int_ops);
+
+-- Create GIN index (usually better for exact searches)
+CREATE INDEX idx_category_gin ON product_categories USING gin (category_ids gin__int_ops);
+```
+
+These indexes can significantly improve performance for the following types of queries:
+- Overlap (`&&`)
+- Contains (`@>`)
+- Contained by (`<@`)
+- Equal (`=`)
+
+## Performance Considerations
+
+- GIN indexes are typically better for exact matches and contained-by queries
+- GiST indexes are better for overlap queries but may be less precise
+- Array operations are performed in memory, so be cautious with very large arrays
+- Sorting and uniqueness operations (`sort`, `uniq`) create new arrays
+
+## Limitations
+
+- Works only with integer arrays
+- No support for multi-dimensional arrays
+- Array size is limited by available memory
+- Some operations create copies of arrays, which can impact memory usage
+
+## Alternative Approaches
+
+For some use cases, you might want to consider:
+
+1. Using junction tables for many-to-many relationships
+2. Using native PostgreSQL array functions
+3. Using JSONB arrays for more flexible data types
+
+For more details, refer to the [PostgreSQL documentation on arrays](https://www.postgresql.org/docs/current/arrays.html) and the [intarray extension documentation](https://www.postgresql.org/docs/current/intarray.html).

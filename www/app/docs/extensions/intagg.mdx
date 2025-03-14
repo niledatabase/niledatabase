@@ -1,0 +1,89 @@
+---
+title: 'Intagg'
+description: 'Integer aggregator and enumerator functions'
+---
+
+The `intagg` extension provides integer aggregation and enumeration functions, which are useful for working with integer arrays and creating sequences. This extension is particularly helpful when you need to aggregate integer values or generate enumerated lists.
+
+Your Nile database arrives with the `intagg` extension already enabled.
+
+## Available Functions
+
+The extension provides two main functions:
+
+1. `int_array_aggregate(integer)` - Aggregates integers into an array
+2. `int_array_enum(integer[])` - Creates a set of integers from an array
+
+## Integer Array Aggregation
+
+Here's how to use the integer aggregation function:
+
+```sql
+-- Create a table to store student scores
+CREATE TABLE scores (
+    tenant_id uuid NOT NULL,
+    student_id integer,
+    subject text,
+    score integer,
+    PRIMARY KEY(tenant_id, student_id, subject)
+);
+
+INSERT INTO scores (tenant_id, student_id, subject, score) VALUES
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, 'Math', 95),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, 'Science', 88),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, 'Math', 78),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, 'Science', 92);
+
+-- Aggregate values into an array
+SELECT int_array_aggregate(score) FROM scores;
+-- Result: {95,88,78,92}
+
+-- Get array of scores per student
+SELECT student_id, int_array_aggregate(score) as scores
+FROM scores
+GROUP BY student_id;
+```
+
+## Integer Array Enumeration
+
+The `int_array_enum` function unnesting aggregated arrays into rows. It is the opposite of `int_array_aggregate`.
+
+```sql
+-- Convert array to rows
+SELECT * FROM int_array_enum(ARRAY[1,2,3,4,5]);
+
+-- Practical example: unnest aggregated scores
+-- Pretend that scores are stored as an array of results per student, and we want to unnest them into rows
+WITH aggregated_scores AS (
+    SELECT student_id, int_array_aggregate(score) as scores
+    FROM scores
+    GROUP BY student_id
+) 
+SELECT student_id, unnested_score
+FROM aggregated_scores,
+     int_array_enum(scores) as unnested_score;
+```
+
+## Performance Considerations
+
+- The aggregation function is efficient for moderate-sized datasets
+- For very large datasets, consider using native PostgreSQL array_agg() function
+- The enumeration function is useful for small to medium-sized arrays
+
+## Limitations
+
+- Works only with integer values
+- Not suitable for very large arrays due to memory constraints
+- The enumerated output maintains the order of the input array
+
+## Alternative Approaches
+
+For some use cases, you might want to consider these PostgreSQL native alternatives:
+
+1. `array_agg()` for general-purpose array aggregation
+2. `generate_series()` for generating sequences
+3. `unnest()` for array expansion
+
+For more details, refer to the [PostgreSQL documentation on aggregate functions](https://www.postgresql.org/docs/current/functions-aggregate.html).
+The official documentation for the `intagg` extension is [here](https://www.postgresql.org/docs/current/intagg.html) and includes a nice example of
+ using the `intagg` functions to denormalize data and still be able to query it in a normalized way.

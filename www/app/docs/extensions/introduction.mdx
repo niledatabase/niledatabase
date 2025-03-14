@@ -1,0 +1,167 @@
+---
+title: 'Introduction'
+description: 'PostgreSQL Extension Store in Nile'
+icon: 'plug-circle-plus'
+---
+
+PostgreSQL extensions are powerful add-ons that enhance PostgreSQL's functionality beyond its core features. They introduce new data types, functions, and operators to the database - usually to support a specific use case.
+
+This rich ecosystem of extensions is available to you out of the box in Nile. No need to install or even run `CREATE EXTENSION` commands. Just use the extension in your queries. 
+You can experiment with the extensions and try them out in the [Nile console](https://console.thenile.dev), by navigating to 
+the `Extensions` tab on the left.
+
+<video 
+  src="/images/extensions_console.webm"
+  autoPlay
+  loop
+  muted
+  className="rounded-lg"
+>
+  <source src="/images/extensions_console.webm" type="video/webm" />
+  Your browser does not support the video tag.
+</video>
+
+Don't see an extension you need? Let us know by creating a GitHub issue.
+
+<button
+  className="px-4 text-sm font-semibold text-white bg-primary dark:bg-primary-light rounded-full hover:opacity-80"
+  onClick={() => window.open('https://github.com/niledatabase/niledatabase/issues/new?assignees=&labels=extension-request&template=extension_request.md&title=%5BExtension+Request%5D', '_blank')}
+>
+<div className="flex items-center justify-between">
+  Request New Extension
+  <svg width="3" height="24" viewBox="0 -9 3 24" class="h-5 rotate-0 overflow-visible text-white/90 ml-2">
+    <path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+  </svg>
+</div>
+
+  </button>
+
+## Featured Extensions
+
+<CardGroup>
+  <Card title="Pgvector" href="./pgvector" icon="vector-square">
+    Perform vector similarity search and build AI-powered features
+  </Card>
+  <Card title="PostGIS" href="./postgis" icon="earth-americas">
+    Add support for geographic objects, allowing you to run location queries in SQL
+  </Card>
+  <Card title='Pgcrypto' href='./pgcrypto' icon='lock'>
+    Encryption functions and hashing algorithms
+  </Card>
+  <Card title='Uuid-ossp' href='./uuid-ossp' icon='fingerprint'>
+    UUID generation functions
+  </Card>
+</CardGroup>
+
+## Search and Indexing
+
+<CardGroup cols={3}>
+  <Card title="Bloom" href="./bloom" icon="filter">
+    Probabilistic index that can be useful for columns with many distinct values
+  </Card>
+  <Card title="Btree_Gin" href="./btree_gin" icon="martini-glass-citrus">
+    GIN index support for B-tree indexable data types.
+  </Card>
+  <Card title="Btree_Gist" href="./btree_gist" icon="tree">
+    GiST index support for B-tree indexable data types.
+  </Card>
+  <Card title="Citext" href="./citext" icon="font-case">
+    Case-insensitive text type
+  </Card>
+    <Card title="Fuzzystrmatch" href="./fuzzystrmatch" icon="puzzle-piece">
+    Functions for fuzzy string matching
+  </Card>
+  <Card title='Pg_bigm' href='./pg_bigm' icon='magnifying-glass'>
+    Full-text search using bigrams
+  </Card>
+  <Card title='Pg_similarity' href='./pg_similarity' icon='wave-sine'>
+    Text similarity measures in PostgreSQL
+  </Card>
+  <Card title='Pg_trgm' href='./pg_trgm' icon='triangle'>
+    Similarity search in PostgreSQL using trigrams
+  </Card>
+   <Card title='Prefix' href='./prefix' icon='phone'>
+    Prefix search functionality
+  </Card>
+</CardGroup>
+
+## Statistical and Analytical
+
+<CardGroup cols={3}>
+  <Card title="Cube" href="./cube" icon="cube">
+    Data type for multi-dimensional cubes
+  </Card>
+  <Card title="Financial" href="./financial" icon="coins">
+    Specialized function for computing the Irregular Internal Rate of Return (XIRR)
+  </Card>
+  <Card title="Hll" href="./hll" icon="cabin">
+    HyperLogLog++ algorithm for estimating the number of unique elements in a set
+  </Card>
+  <Card title="Intagg" href="./intagg" icon="hashtag">
+    Integer aggregator and enumerator functions
+  </Card>
+  <Card title="Intarray" href="./intarray" icon="brackets-curly">
+    Functions and operators for integer arrays
+  </Card>
+  <Card title='Quantile' href='./quantile' icon='chart-line'>
+    Efficient quantile and percentile calculations
+  </Card>
+  <Card title='Random' href='./random' icon='dice'>
+    Random data generator extension with wide range of data types
+  </Card>
+  <Card title='Tablefunc' href='./tablefunc' icon='table'>
+    Cross tabulation and pivot operations
+  </Card>
+    <Card title='Xicor' href='./xicor' icon='maximize'>
+    Incremental correlation calculations in PostgreSQL
+  </Card>
+</CardGroup>
+
+## Geospatial
+
+<CardGroup cols={3}>
+  <Card title="Earthdistance" href="./earthdistance" icon="globe">
+    Functions for calculating great-circle distances between points on Earth.
+  </Card>
+  <Card title="H3" href="./h3" icon="hexagon">
+    Spatial indexing system developed by Uber
+  </Card>
+  <Card title="H3_PostGIS" href="./h3_postgis" icon="hexagon-image">
+    Extends H3 functionality with PostGIS integration
+  </Card>
+  <Card title="Pgrouting" href="./pgrouting" icon="route">
+    Geospatial routing extension for PostgreSQL
+  </Card>
+  <Card title='Postgis_raster' href='./postgis_raster' icon='table-cells'>
+    Raster Data Support for PostGIS
+  </Card>
+</CardGroup>
+
+## Data Types and Storage
+
+<CardGroup cols={3}>
+  <Card title="Emailaddr" href="./emailaddr" icon="envelope">
+    specialized data type for storing and validating email addresses
+  </Card>
+  <Card title="Hstore" href="./hstore" icon="key">
+    Store key-value pairs within a single PostgreSQL value
+  </Card>
+  <Card title="Ip4r" href="./ip4r" icon="network-wired">
+    IPv4 and IPv6 types and range operations
+  </Card>
+  <Card title="Isn" href="./isn" icon="barcode">
+    International Standard Number data types
+  </Card>
+  <Card title="Ltree" href="./ltree" icon="folder-tree">
+    Hierarchical tree-like structures in PostgreSQL databases
+  </Card>
+  <Card title='Rdkit' href='./rdkit' icon='flask'>
+    Chemical structure types and functions
+  </Card>
+  <Card title='Seg' href='./seg' icon='ruler'>
+    Line segment and floating-point interval data type
+  </Card>
+  <Card title='Unit' href='./unit' icon='ruler-combined'>
+    SI unit conversion and dimensional analysis
+  </Card>
+</CardGroup>
