@@ -1,0 +1,372 @@
+export const metadata = {
+  title: "Announcing: PostgreSQL Extension Store",
+  authors: ["gwenshap"],
+  image: "2025-03-14-announcing-extension-store/extensions_in_console.png",
+  sizzle:
+    "Nile now supports 35 PostgreSQL extensions in a user-friendly store. These extensions cover a wide range of capabilities, from AI-powered vector search to geospatial analysis, full-text search, advanced indexing, and specialized data types. PostgreSQL Extension Ecosystem now available in Nile with no need to build or install them.",
+  tags: ["database", "serverless", "postgres", "extensions", "devops"],
+};
+
+PostgreSQL is more than just a database; it is a robust and extensible platform on which developers can build powerful applications.
+At Nile, we've expanded our support for PostgreSQL extensions, enabling new use cases and providing greater flexibility 
+for multi-tenant applications. This includes:
+
+- 35 extensions (and counting)
+- No need to build or install them, available out of the box for all Nile customers
+- Friendly UI for exploring and trying out extensions in the Nile console
+
+These extensions cover a wide range of capabilities, from AI-powered vector search to geospatial analysis, full-text search, advanced indexing, 
+and specialized data types.
+
+<Video
+  src="/blog/2025-03-14-announcing-extension-store/extensions_console.webm"
+  poster="/blog/2025-03-14-announcing-extension-store/extensions_in_console.png"
+/>
+
+## The Power of PostgreSQL Extension Ecosystem
+
+One of the reasons PostgreSQL has remained a top choice for developers is its modular architecture. 
+Unlike monolithic databases, PostgreSQL was designed from the ground up to be extensible. 
+It allows developers to add custom functions, data types, index methods and even hook into core functionality such as query planning. 
+This extensibility has fostered a thriving ecosystem of extensions that enable specialized functionality for various industries, 
+from AI and machine learning to geospatial processing and financial analytics.
+
+With extensions, developers can get advanced functionality out of the box and accelerate their development cycles while maintaining 
+the reliability and ACID compliance that PostgreSQL is known for.
+
+
+## Example Applications Built with the Extensions in Nile's Extension Store
+
+The power of PostgreSQL extensions unlocks countless possibilities for developers. Here are five example applications that leverage 
+the extensions in Nile's Extension Store:
+
+### AI-Driven E-Commerce Search & Recommendations
+
+By combining Pgvector for vector similarity search, Pg_trgm for trigram-based text matching, Fuzzystrmatch for approximate string comparison, 
+and Pg_bigm for full-text search, developers can build intelligent search engines for e-commerce platforms and 
+provide personalized product recommendations, auto-complete search, and context-aware filtering to enhance user experience.
+
+For example, here's how to create a tenant-aware product recommendation system:
+
+```sql
+-- Create a tenant-aware products table with vector embeddings
+CREATE TABLE products (
+    id UUID DEFAULT gen_random_uuid(),
+    tenant_id UUID NOT NULL,
+    name TEXT,
+    description TEXT,
+    embedding vector(5), -- for example purposes, we use a smaller vector size
+    price DECIMAL(10,2),
+    created_at TIMESTAMPTZ DEFAULT now(),
+    PRIMARY KEY (tenant_id, id)
+);
+
+-- Create a tenant for the example
+
+INSERT INTO tenants (id, name) VALUES
+('123e4567-e89b-12d3-a456-426614174000', 'Example Tenant');
+
+-- First, let's insert some sample products
+INSERT INTO products (tenant_id, name, description, embedding, price) VALUES
+(
+    '123e4567-e89b-12d3-a456-426614174000',
+    'Classic Blue Jeans',
+    'Comfortable straight-leg blue jeans made from premium denim. Perfect for everyday wear.',
+    '[0.12, 0.45, 0.82, 0.31, -0.15]'::vector,
+    79.99
+),
+(
+    '123e4567-e89b-12d3-a456-426614174000',
+    'Vintage Blue Denim Jacket',
+    'Retro-style blue jean jacket with brass buttons and classic collar design.',
+    '[0.15, 0.41, 0.75, 0.28, -0.22]'::vector,
+    129.99
+),
+(
+    '123e4567-e89b-12d3-a456-426614174000',
+    'Slim Fit Dark Blue Jeans',
+    'Modern slim-fit jeans in deep indigo wash with stretch comfort.',
+    '[0.11, 0.48, 0.79, 0.35, -0.18]'::vector,
+    89.99
+),
+(
+    '123e4567-e89b-12d3-a456-426614174000',
+    'Blue Jean Shorts',
+    'Casual summer denim shorts with distressed details and rolled cuffs.',
+    '[0.09, 0.38, 0.71, 0.25, -0.20]'::vector,
+    49.99
+),
+(
+    '123e4567-e89b-12d3-a456-426614174000',
+    'Black Leather Jacket',
+    'Premium leather motorcycle jacket with silver hardware.',
+    '[0.52, -0.15, 0.22, 0.18, 0.65]'::vector,
+    299.99
+);
+
+-- Example multi-faceted search query
+WITH combined_search AS (
+    SELECT
+        p.id,
+        p.name,
+        p.description,
+        (
+            -- Combine different similarity metrics
+            (1.0 - (p.embedding <=> '[0.12, 0.45, 0.82, 0.31, -0.15]'::vector)) * 0.4 + -- Vector similarity
+            similarity(p.name, 'blue jeans') * 0.3 +                     -- Fuzzy text matching
+            word_similarity(p.description, 'blue jeans') * 0.3           -- Word similarity
+        ) as total_score
+    FROM products p
+    WHERE
+        p.tenant_id = '123e4567-e89b-12d3-a456-426614174000'::UUID
+        AND (
+            p.name % 'blue jeans'  -- Trigram matching for typos
+            OR to_tsvector('english', p.description) @@ plainto_tsquery('english', 'blue jeans')
+        )
+)
+SELECT
+    id,
+    name,
+    description,
+    total_score as score
+FROM combined_search
+WHERE total_score > 0.3
+ORDER BY total_score DESC
+LIMIT 10;
+```
+
+### Real-Time Location-Based Services
+
+PostGIS, H3, and PgRouting enable applications like real-time ride-sharing, logistics optimization, and geospatial analytics, 
+allowing businesses to make smarter location-based decisions. Combined with IP4r, developers can also build location-based recommendation 
+systems that use IP addresses to determine the location of users and provide personalized recommendations based on their location.
+
+For example, here's how to create a ip-based store lookup system:
+
+```sql
+-- Create tables for stores and delivery zones
+CREATE TABLE stores (
+    id UUID DEFAULT gen_random_uuid(),
+    tenant_id UUID NOT NULL,
+    name TEXT,
+    location GEOMETRY(Point, 4326),
+    delivery_zone GEOMETRY(Polygon, 4326),
+    h3_index H3Index,  -- H3 cell for efficient proximity searches
+    PRIMARY KEY (tenant_id, id)
+);
+
+-- Table for IP ranges and their locations
+CREATE TABLE ip_locations (
+    tenant_id UUID NOT NULL,
+    ip_range ip4r,
+    city TEXT,
+    location GEOMETRY(Point, 4326),
+    PRIMARY KEY (tenant_id, ip_range)
+);
+
+-- Insert sample data
+INSERT INTO stores (tenant_id, name, location, h3_index) VALUES
+(
+    '123e4567-e89b-12d3-a456-426614174000',
+    'Downtown Store',
+    ST_SetSRID(ST_MakePoint(-122.4194, 37.7749), 4326),  -- San Francisco
+    h3_lat_lng_to_cell(POINT(37.7749, -122.4194), 9)  -- Resolution 9 H3 index
+);
+
+INSERT INTO ip_locations (tenant_id, ip_range, city, location) VALUES
+(
+    '123e4567-e89b-12d3-a456-426614174000',
+    '192.168.1.0/24',
+    'San Francisco',
+    ST_SetSRID(ST_MakePoint(-122.4194, 37.7749), 4326)
+);
+
+-- Find nearest stores for a given IP address
+WITH user_location AS (
+    SELECT location 
+    FROM ip_locations 
+    WHERE 
+        tenant_id = '123e4567-e89b-12d3-a456-426614174000'
+        AND ip_range >> '192.168.1.100'::ip4
+)
+SELECT 
+    s.name,
+    ST_Distance(
+        ST_Transform(s.location::geometry, 3857),
+        ST_Transform((SELECT location FROM user_location), 3857)
+    ) / 1000 as distance_km,
+    ST_AsGeoJSON(s.location) as location_json
+FROM stores s
+WHERE 
+    s.tenant_id = '123e4567-e89b-12d3-a456-426614174000'
+    AND ST_DWithin(
+        s.location::geometry,
+        (SELECT location FROM user_location),
+        5000  -- 5km radius
+    )
+ORDER BY 
+    s.location::geometry <-> (SELECT location FROM user_location)
+LIMIT 5;
+```
+
+### Secure Identity Management System
+
+With Pgcrypto and Uuid-ossp, developers can ensure strong encryption, secure authentication, and safe user data storage, 
+critical for fintech and enterprise applications.
+
+For example, here's how to create a secure accounts table with encrypted sensitive data:
+
+```sql
+-- Create a secure accounts table with encrypted sensitive data
+CREATE TABLE accounts (
+    id UUID DEFAULT uuid_generate_v4(),
+    tenant_id UUID NOT NULL,
+    email TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    ssn TEXT,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    PRIMARY KEY (tenant_id, id)
+);
+
+-- Example: Insert a new account with encrypted data
+INSERT INTO accounts (
+    tenant_id,
+    email,
+    password_hash,
+    ssn
+) VALUES (
+    '123e4567-e89b-12d3-a456-426614174000',
+    'jane.doe@example.com',
+    -- Hash password with a random salt using blowfish
+    public.crypt('secure_password123', public.gen_salt('bf')),
+    -- Encrypt SSN with AES-256
+    public.pgp_sym_encrypt('123-45-6789', 'your-encryption-key')
+);
+
+-- Example: Verify password for authentication
+SELECT id 
+FROM accounts
+WHERE tenant_id = '123e4567-e89b-12d3-a456-426614174000'
+    AND email = 'jane.doe@example.com'
+    -- Compare password against stored hash
+    AND password_hash = public.crypt('secure_password123', password_hash);
+
+-- Example: Decrypt SSN when needed (with proper authorization)
+SELECT 
+    email,
+    public.pgp_sym_decrypt(ssn::bytea, 'your-encryption-key') as decrypted_ssn
+FROM accounts
+WHERE tenant_id = '123e4567-e89b-12d3-a456-426614174000';
+```
+
+### Financial Analysis
+
+Extensions like HLL, Quantile, Xicor and Financial empower applications that process large-scale financial transactions, 
+real-time risk analysis, and portfolio optimizations.   
+
+For example, here's how to analyze trading data with statistical measures:
+
+```sql
+-- Create a table for storing trading data
+CREATE TABLE trading_data (
+    id UUID DEFAULT gen_random_uuid(),
+    tenant_id UUID NOT NULL,
+    symbol TEXT,
+    price DECIMAL(10,2),
+    volume INTEGER,
+    timestamp TIMESTAMPTZ DEFAULT now(),
+    PRIMARY KEY (tenant_id, id)
+);
+
+-- Insert sample trading data
+INSERT INTO trading_data (tenant_id, symbol, price, volume, timestamp) VALUES
+(
+    '123e4567-e89b-12d3-a456-426614174000',
+    'STOCK_A',
+    105.50,
+    500,
+    '2024-03-14 09:30:00'
+),
+(
+    '123e4567-e89b-12d3-a456-426614174000',
+    'STOCK_A',
+    106.75,
+    750,
+    '2024-03-14 10:00:00'
+),
+(
+    '123e4567-e89b-12d3-a456-426614174000',
+    'STOCK_A',
+    104.25,
+    1000,
+    '2024-03-14 10:30:00'
+),
+(
+    '123e4567-e89b-12d3-a456-426614174000',
+    'STOCK_A',
+    107.00,
+    850,
+    '2024-03-14 11:00:00'
+),
+(
+    '123e4567-e89b-12d3-a456-426614174000',
+    'STOCK_A',
+    106.25,
+    600,
+    '2024-03-14 11:30:00'
+);
+
+-- Analyze trading patterns using various statistical measures
+SELECT 
+    symbol,
+    count(*) as num_trades,
+    avg(price) as avg_price,
+    percentile_cont(0.5) WITHIN GROUP (ORDER BY price) as median_price,
+    percentile_cont(0.95) WITHIN GROUP (ORDER BY volume) as volume_95th_percentile,
+    xicor(price, volume) as price_volume_correlation,  -- Correlation between price and volume
+    hll_cardinality(hll_add_agg(hll_hash_integer(volume))) as approximate_unique_volumes  -- HLL distinct count
+FROM trading_data
+WHERE 
+    tenant_id = '123e4567-e89b-12d3-a456-426614174000'
+GROUP BY symbol;
+
+-- Calculate moving averages and volatility
+WITH price_stats AS (
+    SELECT 
+        symbol,
+        timestamp,
+        price,
+        avg(price) OVER (
+            ORDER BY timestamp
+            ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+        ) as moving_avg_3,
+        stddev(price) OVER (
+            ORDER BY timestamp
+            ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+        ) as volatility_3
+    FROM trading_data
+    WHERE tenant_id = '123e4567-e89b-12d3-a456-426614174000'
+)
+SELECT 
+    symbol,
+    timestamp,
+    price,
+    moving_avg_3,
+    volatility_3,
+    CASE 
+        WHEN price > moving_avg_3 THEN 'ABOVE_MA'
+        WHEN price < moving_avg_3 THEN 'BELOW_MA'
+        ELSE 'AT_MA'
+    END as price_position
+FROM price_stats
+ORDER BY timestamp DESC;
+```
+
+## Build Smarter with Nile
+
+By adding support for these 35 PostgreSQL extensions, we're making it easier for developers to build 
+feature-rich, reliable and scalable applications without managing complex database infrastructure. 
+Whether you're working with AI, geospatial data, financial analytics, or custom search solutions, 
+we are sure these extensions will help you build better applications faster.
+
+Ready to get started? [Try Nile today](https://console.thenile.dev).
