@@ -5,7 +5,7 @@ import { Metadata } from "../Metadata";
 import Coffee from "@/public/blog/coffee.webp";
 
 export default function Hit({ hit }: any) {
-  const [, publishDate] = /.+(\d{4}-\d{2}-\d{2}).+/.exec(hit.objectID) ?? [];
+  const [publishDate] = /\d{4}-\d{2}-\d{2}/.exec(hit.objectID) ?? "";
   const cleaned = hit.objectID.replace(/\d{4}-\d{2}-\d{2}-/, "");
   const slug = cleaned.replace(".mdx", "");
   return (
@@ -18,6 +18,7 @@ export default function Hit({ hit }: any) {
                 className="aspect-video w-full"
                 priority
                 alt={hit.image}
+                data-image-zoom-disabled
                 width={416}
                 height={242}
                 src={`/blog/${hit.image}`}
@@ -26,6 +27,7 @@ export default function Hit({ hit }: any) {
               <Image
                 alt="coffee"
                 className="aspect-video w-full"
+                data-image-zoom-disabled
                 width={416}
                 height={216}
                 src={Coffee}

@@ -1,0 +1,1 @@
+This directory is a bit of a hack, allowing us to show images in the README of the templates.

@@ -61,7 +61,7 @@ export default function RootLayout({
             </Stack>
           </div>
           {children}
-          <div className={styles.grid}>
+          <div className="flex flex-row gap-8 p-4">
             <Card
               variant="outlined"
               sx={{
@@ -71,10 +71,9 @@ export default function RootLayout({
                 },
               }}
             >
-              {/* TODO: fix link to docs */}
               <Link
                 overlay
-                href="https://www.thenile.dev/docs/getting-started/"
+                href="https://www.thenile.dev/docs/platform/integrations/stripe"
                 target="_blank"
                 rel="noopener"
               >

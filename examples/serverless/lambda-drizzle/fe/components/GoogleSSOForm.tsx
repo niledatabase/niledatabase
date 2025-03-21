@@ -1,31 +1,27 @@
 "use client";
-// ^^^ this is the reason we need this wrapper component around GoogleLoginButton
 
+import { Google } from "@niledatabase/react";
 import React from "react";
-import Stack from "@mui/joy/Stack";
 import Cookies from "js-cookie";
-import { useSearchParams } from "next/navigation";
-
-import { GoogleLoginButton, NileProvider } from "@niledatabase/react";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function GoogleAuthPanel() {
-  // handle logouts here
-  const searchParams = useSearchParams();
-  if (searchParams.has("logout")) {
-    Cookies.remove("authData");
-  }
+  const router = useRouter();
+  const pathname = usePathname();
 
-  {
-    /* Note that in this case we tell the client-side component to talk to Nile directly, not the local API. 
-        This is specific for Google SSO */
-  }
+  React.useEffect(() => {
+    // Check if the current URL includes ?logout
+    if (window.location.search.includes("logout")) {
+      Cookies.remove("authData");
+      // Optionally, redirect to clean URL
+      router.replace(pathname);
+    }
+  }, [pathname, router]);
+
   return (
-    <NileProvider apiUrl={process.env.NEXT_PUBLIC_NILEDB_API_URL}>
-      <div style={{ maxWidth: "20rem", margin: "0 auto" }}>
-        <Stack gap={2} justifyContent="center" alignItems="center">
-          <GoogleLoginButton />
-        </Stack>
-      </div>
-    </NileProvider>
+    <Google
+      className="bg-[#4285f4] hover:bg-[#4285f4] pl-[3px] text-white gap-4"
+      callbackUrl="/directions"
+    />
   );
 }

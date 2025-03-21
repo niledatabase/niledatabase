@@ -1,47 +1,75 @@
-import styles from "../page.module.css";
-
 import { cookies } from "next/headers";
-import AuthCookieData from "@/app/model/AuthCookieData";
-import Typography from "@mui/joy/Typography";
-import MUILink from "@mui/joy/Link";
-import NextLink from "next/link";
-import AuthDataPanel from "@/app/dashboard/AuthDataPanel";
+import { nile } from "../api/[...nile]/nile";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import SignOutButton from "./SignOutButton";
+import { Tenant, ActiveSession } from "@niledatabase/server";
+import { Ban } from "lucide-react";
+import { TenantSelector, UserInfo } from "@niledatabase/react";
+import "@niledatabase/react/styles.css";
 
-export default function Dashboard() {
-  const authCookie = cookies().get("authData");
-  const authData = authCookie
-    ? (JSON.parse(authCookie.value) as AuthCookieData)
-    : null;
+function Carder({
+  children,
+}: {
+  children: Array<JSX.Element | string | undefined | number | null>;
+}) {
+  return (
+    <div className="flex flex-row gap-4 justify-between">
+      <div className="min-w-24">{children[0]}</div>
+      <div className="text-left flex-1">{children[1]}</div>
+    </div>
+  );
+}
+export default async function Dashboard() {
+  const nextCookies = cookies();
+  nile.api.headers = new Headers({ cookie: nextCookies.toString() });
 
-  // Bail out early if the user is not authenticated
-  if (!authData) {
+  const currentUser = await nile.api.users.me();
+
+  if (currentUser instanceof Response) {
     return (
-      <div>
-        <Typography>No authentication data found in cookies.</Typography>
-        <Typography>
-          {" "}
-          <MUILink component={NextLink} href="/">
-            {" "}
-            Try logging in first{" "}
-          </MUILink>{" "}
-        </Typography>
+      <div className="mt-24 flex flex-col gap-5">
+        <div className="flex flex-col gap-3">
+          <div className="text-4xl flex flex-row gap-2 items-center">
+            <Ban className="stroke-red-600" size={40} /> Unable to get user
+            information
+          </div>
+          <div>Reason: {await currentUser.text()}</div>
+        </div>
+        <div>
+          <SignOutButton text="Back to Sign in" />
+        </div>
       </div>
     );
   }
 
-  // we get tenant ID a bit differently on sign up vs login events
-  // we'll normalize it a bit here so the downstream code doesn't have to worry about it
-  if (authData.event === "LOGIN") {
-    const allAud = authData.tokenData?.aud; // the audiences may include a tenant ID
-    if (Array.isArray(allAud)) {
-      // the audience includes 'nile', 'database:xxxxx' (where xxxxx is the database id), and
-      // 'tenant:xxxxx' (where xxxxx is the tenant ID)
-      const tenant = allAud.find((claim) => claim.startsWith("tenant:"));
-      authData.tenantId = tenant?.split(":")[1] || "";
-    }
-  }
+  const requests: [ActiveSession, Tenant[]] = [
+    // could be a JWT, but in this case we're using sso
+    nile.api.auth.getSession() as unknown as ActiveSession,
+    nile.api.tenants.listTenants() as unknown as Tenant[],
+  ];
+  const [session, tenants] = await Promise.all(requests);
 
-  // if we are here, we have auth data and likely have a tenant ID too
-  // regardless, lets show what we have
-  return <AuthDataPanel authData={authData} />;
+  return (
+    <div className="flex flex-col gap-4 mt-24">
+      <Card>
+        <TenantSelector
+          className="p-10"
+          tenants={tenants}
+          activeTenant={tenants[0].id}
+        />
+      </Card>
+      <Card>
+        <UserInfo user={currentUser} className="p-4" />
+      </Card>
+      <Card>
+        <CardHeader>Token information</CardHeader>
+        <CardContent>
+          <Carder>email {session.user?.email}</Carder>
+          <Carder>id {session.user?.id}</Carder>
+          <Carder>expires {new Date(session.expires).toLocaleString()}</Carder>
+        </CardContent>
+      </Card>
+      <SignOutButton />
+    </div>
+  );
 }

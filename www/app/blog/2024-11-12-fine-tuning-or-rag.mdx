@@ -1,0 +1,109 @@
+export const metadata = {
+  title: "RAG vs. Fine-Tuning: Choosing the Right Approach",
+  authors: ["gwenshap"],
+  image: "2024-11-12-fine-tuning-or-rag/cover.webp",
+  sizzle:
+    "Discover the key differences between Retrieval-Augmented Generation (RAG) and fine-tuning AI models. Learn when to use each approach to optimize performance, reduce costs, and solve complex business challenges.",
+  tags: ["database", "serverless", "postgres", "RAG", "AI", "B2B"],
+};
+
+Couple of weeks ago, Bram from Meta posted the following rule of thumb on how to add information to an LLM:
+
+> when it comes to adding data to an LLM, i tend to follow this token count rule  
+> one comma: put it in the prompt  
+> two commas: use RAG  
+> three commas: finetune  
+> four commas: pretrain (i'll be honest i've never actually hit this one 😜)
+
+![Social media post from Bram, making the claim above](/blog/2024-11-12-fine-tuning-or-rag/social_screenshot.png)
+
+While I appreciate a good rule of thumb as much as the next engineer, I think this rule will not work for most organizations. Comparing RAG (Retrieval Augumented Generation) to fine-tuning is a bit like comparing apples to turkeys. Yes, they are both foods and can be used when you are hungry.
+But they are different in many ways - how they are grown, packages, cooked, served, and eaten. And also in their health benefits.
+
+Because of these differences, the number of tokens isn't sufficient input to decide on RAG vs fine tuning. To make the right choice, you need to understand the best
+use-cases and common pitfalls for each technology - so you can use it for its strength and avoid the pitfalls.
+
+## When to use RAG
+
+**RAG is a form of prompt engineering.** It is a collection of techniques in which applications retrieve relevant documents and then include them in
+the prompt to the generative model.
+
+The goal of RAG is to provide the model with relevant information at the time a question is asked. This allows using LLM with
+information that was not available during training (because it is private or new), reminds it of relevant facts and reduces hallucinations.
+
+### Example problems where RAG is a good fit:
+
+- **Customer support:** Automate customer support by providing answers to common questions. The source material can be product documentation and previous support tickets.
+- **Sales enablement:** Generate custom responses based on a vast repository of sales documents, case studies, and product specifications.
+- **Legal:** Quickly find relevant legal documents, case law, and statutes to answer legal questions.
+
+### Challenges with RAG
+
+RAG's effectiveness depends on the quality of the knowledge base and the retrieval strategy.
+In many cases, the knowledge base does not exist and has to be created by painstakingly collecting and structuring data from various sources across a company.
+Getting high quality data in a place where it can be easily retrieved isn't a new challenge - it existed, under different names and disciplines
+for decades. Many companies have entire data engineering or data platform teams dedicated to this task.
+The fact that we have LLMs now helps, but it's not a silver bullet.
+
+The main areas of challenge are:
+
+- Preparing the data for storage and retrieval: Cleaning and structuring the data, chunking large texts,
+  enriching it with additional information, indexing it for fast retrieval, etc.
+- Retrieval strategy: How to retrieve the most relevant documents for a given prompt.
+  Techniques include semantic similarity using vector embedings, keyword matching, use of relation graphs, and combinations of these.
+  And of course each technique has variety of algorithms and models with different strengths and different usage patterns.
+
+## When to fine-tune a model
+
+**Fine-tuning a model is a form of training.** It is the process of taking a pre-trained model and training it further on a specific dataset. The goal of the training isn't to get the model to
+memorize new data, but rather to learn how to generalize better on a specific task. Because of the generalization process, a fine-tuned model can perform
+well on a new task when there isn't a lot of data available or when the relevant data is challenging to retrieve.
+
+### Example problems where fine-tuning is a good fit:
+
+- **Code generation**: If a model wasn't trained on a specific language or framework, it won't perform well in that language, even if you provide examples using RAG.
+  Code generation doesn't generalize well from a small number of examples, even when they are relevant.
+- **Asking customers clarifying questions**. Customers rarely share all available information when they open a support ticket. But most language models are "reluctant" to ask clarifying questions and weren't trained to do so.
+  RAG isn't useful here because the model isn't missing the data, it is missing a behavior. A large set of example scenarios and which questions are appropriate can train the model with this new behavior.
+- **Writing in the style of a specific person**. With enough examples of a specific writing style, a model will generalize and learn to write in that style.
+  While you could provide examples using RAG, a few examples in the prompt can be costly and hard to generalize from.
+- **Generating audio in a specific voice**. An audio generating model can be trained to mimic specific voices.
+
+### Challenges with fine-tuning
+
+Since fine-tuning is a form of training, most of the challenges result from the training process:
+
+- Training requires a large and high quality data set that was prepared specifically for traning the model - separated into "good" and "bad" examples, and covering many variations of the type of tasks the model will perform.
+  Large number of examples and high variaty is important for generalization (to avoid overfitting). Creating these data sets is time consuming and expensive.
+  For some use-cases there are public datasets available, which helps. Also worth mentioning that some companies use AI models to generate synthetic data for training.
+  This is controversial, since it can lead to degredation of the model's performance on real data, however using AI to add variations to real data
+  can be a good way to create a larger data set and avoid overfitting.
+- Training requires a lot of compute power and time. Since we are talking about GPUs, these don't come cheap.
+- Training require not just GPUs, but also use of machine learning tools, languages and libraries. And expertise in using these.
+- Training requires expertise beyond just the tools. There are many techniques for training and many hyperparameters to tune. Some techniques are specifically designed for efficiency and can be used even with a single consumer-grade GPU.
+  These are known as PEFT (Parameter Efficient Model Fine-Tuning), and the most famous of these is called [LORA](https://arxiv.org/pdf/2106.09685).
+  PEFT only trains a small number of parameters, and if the task requires deeper training, less efficient techniques like full or partial parameter fine-tuning are used.
+- Training requires a good process. Knowing how to train a model, how to evaluate it, managing various versions, etc.
+- Training can go very wrong very fast. There are a lot of cases where a model performs significantly worse after fine-tuning, and
+  the training must be restarted from an older version of the model. This behavior is sometimes called "catasrophic forgetting" and is a well-known problem in
+  machine learning, and this is just one example of how models can quickly and unexpectedly degrade in performance.
+- To use a fine-tuned model, you need to deploy it (although some vendors, like OpenAI, allow you to fine-tune on their platform). This is a whole other set of challenges, including how to serve the model, how to monitor it, how to update it.
+  All this, on top of the GPU costs of serving the model.
+
+## Conclusion
+
+In many cases, choosing between RAG and fine-tuning is trivial. Some problems clearly require just relevant data or clearly require training in new tasks.
+However, there are cases where the choice isn't obvious. For example, if you look at online resources for generating SQL from text,
+you'll see many who advocate for each one of these approaches.
+
+Generally speaking, RAG is simpler to implement and maintain. Many software engineers already have the skills required or can learn them quickly with some experimentation.
+If you get the results you need with RAG, you should use it. If you don't, or if you have the expertise and resources to fine-tune a model, you should consider it.
+This investment in fine-tuning could become your competitive edge, as many companies avoid fine-tuning or lack the skills to do it well.
+
+Note that there are also quite a few cases where you could combine both approaches.
+For example, in customer support scenario you can use RAG to retrieve relevant documents and use a model that was fine-tuned to ask customers clarifying questions.
+Or you can fine-tune a model to generate embeddings for your specific domain, and then use this model in RAG architecture.
+
+In either case, there will be a lot of iterations and experimentation with various models, data sets, and techniques.
+Quite handy that Nile's free tier includes 50 million free compute tokens for these experiments. [Try it out](https://console.thenile.dev)
+and [let us know](https://discord.com/invite/8UuBB84tTy) which method you picked for your AI application.

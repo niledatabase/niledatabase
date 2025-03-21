@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Postgres rengineered for multitenant and AI apps",
     short_name: "Nile Postgres",
     description:
-      "Postgres reengineered for multitenant apps. Build secure, scalable and AI-native multi-tenant applications with world-class developer experience.",
+      "Postgres re-engineered for multitenant apps. Build secure, scalable and AI-native multi-tenant applications with world-class developer experience.",
     start_url: "/",
     display: "standalone",
     background_color: "#000",

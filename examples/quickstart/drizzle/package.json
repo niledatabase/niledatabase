@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "generate-migration": "drizzle-kit generate:pg --out ./src/db/migrations --schema ./src/db/schema.ts",
+    "generate-migration": "drizzle-kit generate --dialect=postgresql --schema=./src/db/schema.ts --out=./src/db/migrations",
+    "introspect": "drizzle-kit introspect --config=./drizzle.config.ts",
+    "migrate": "node --loader ts-node/esm src/db/migrate.ts",
     "start": "node --loader ts-node/esm src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
