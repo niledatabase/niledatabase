@@ -167,11 +167,8 @@ In addition to accessing the database and requesting data server side, there are
 The route file `api/[...nile]/route.ts` intercepts routes from the client and responds accordingly. There is a single file that is used to export the nile instance into the routes, which is then used to export the various handlers.
 
 ```typescript
-import NileServer from "@niledatabase/server";
-const _nile = await NileServer();
-
-export const { handlers } = _nile.api;
-export const nile = _nile;
+import { Server } from "@niledatabase/server";
+export const nile = await Server();
 ```
 
 ### Listing tenants

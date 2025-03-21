@@ -111,10 +111,7 @@
               {
                 "group": "Tools",
                 "icon": "screwdriver-wrench",
-                "pages": [
-                  "postgres/tools/dbeaver",
-                  "postgres/tools/psql"
-                ]
+                "pages": ["postgres/tools/dbeaver", "postgres/tools/psql"]
               },
               "postgres/postgres-compatibility"
             ]
@@ -209,7 +206,8 @@
                 "icon": "send-backward",
                 "pages": [
                   "auth/backendframeworks/express",
-                  "auth/backendframeworks/JS backend"
+                  "auth/backendframeworks/JS backend",
+                  "auth/backendframeworks/customize-routes"
                 ]
               },
               {
@@ -333,7 +331,7 @@
           }
         ]
       },
-      { 
+      {
         "tab": "Platform",
         "pages": [
           {
@@ -367,9 +365,7 @@
           },
           {
             "group": "Support",
-            "pages": [
-              "support/support"
-            ]
+            "pages": ["support/support"]
           }
         ]
       },

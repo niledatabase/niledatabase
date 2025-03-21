@@ -1,0 +1,151 @@
+# Overriding Routes in Nile API
+
+## Overview
+Nile API allows you to override default API routes to better match your application's structure. This is done by configuring the `routes` object in `ServerConfig` and setting a custom `routePrefix`.
+
+## Default Routes
+By default, Nile provides the following API routes, prefixed by `ServerConfig.api.routePrefix` (default: `/api`):
+
+```typescript
+export const appRoutes = {
+  SIGNIN: '/api/auth/signin',
+  PROVIDERS: '/api/auth/providers',
+  SESSION: '/api/auth/session',
+  CSRF: '/api/auth/csrf',
+  CALLBACK: '/api/auth/callback',
+  SIGNOUT: '/api/auth/signout',
+  ERROR: '/api/auth/error',
+  VERIFY_REQUEST: '/api/auth/verify-request',
+  PASSWORD_RESET: '/api/auth/reset-password',
+  ME: '/api/me',
+  USERS: '/api/users',
+  TENANTS: '/api/tenants',
+  TENANT: '/api/tenants/{tenantId}',
+  TENANT_USER: '/api/tenants/{tenantId}/users/{userId}',
+  TENANT_USERS: '/api/tenants/{tenantId}/users',
+  SIGNUP: '/api/signup',
+  LOG: '/api/auth/_log',
+};
+```
+
+## Customizing Routes
+You can override specific routes by passing a `routes` object when initializing the `Server` instance. The `routePrefix` can also be customized to change the default API path structure.
+
+### Custom Route Prefix
+
+```typescript
+import { Nile } from "@niledatabase/server";
+
+export const nile = await Nile({
+  api: {
+    routePrefix: '/nile/api',
+  },
+});
+
+export const { handlers } = nile.api;
+
+```
+This sets all default routes under `/nile/api` instead of `/api`, for example:
+- `SIGNIN` will be `/nile/api/auth/signin`
+- `ME` will be `/nile/api/me`
+
+<Info>For splat routes, be sure that your `nile` instance is located in the correct file. For example, in this case it would be in `/nile/api/[...nile]/route.ts` in NextJS. For more complicated setups, you may need to import nile from multiple locations.</Info>
+
+### Overriding Specific Routes
+```typescript
+import { Nile } from "@niledatabase/server";
+
+export const nile = await Nile({
+  api: {
+    routes: {
+      ME: '/profile',
+      TENANT_USERS: '/custom/tenants/:tenantId/users',
+    },
+  },
+});
+export const { handlers } = nile.api;
+```
+This changes:
+- `ME` from `/api/me` to `/profile`
+- `TENANT_USERS` from `/api/tenants/:tenantId/users` to `/custom/tenants/:tenantId/users`
+
+### Combining Custom Prefix and Routes
+
+`app/nile.ts`
+
+```typescript
+import { Nile } from "@niledatabase/server";
+
+export const nile = await Nile({
+  api: {
+    routePrefix: '/nile/api',
+    routes: {
+      SIGNIN: '/login',
+      SIGNOUT: '/logout',
+    },
+  },
+});
+export const { handlers } = nile.api;
+```
+Now:
+- `SIGNIN` is `/login`
+- `SIGNOUT` is `/logout`
+- Other routes follow the `/nile/api` prefix unless overridden
+
+`app/login/route.ts`
+```ts
+import { handlers } from "@/app/nile";
+export const { POST } = handlers;
+```
+
+`app/logout/route.ts`
+```ts
+import { handlers } from "@/app/nile";
+export const { POST } = handlers;
+```
+
+`app/nile/api/[...nile]/route.ts`
+```
+import { handlers } from "@/app/nile";
+export const { POST, GET, DELETE, PUT } = handlers;
+```
+
+## Customizing SignIn Component
+If you override the `SIGNIN` route, you should also update the `fetchUrl` prop in your `SigningIn` component:
+
+```typescript
+import {
+  SignOutButton,
+  SignUpForm,
+  SignedIn,
+  SignedOut,
+  TenantSelector,
+  UserInfo,
+} from "@niledatabase/react";
+import "@niledatabase/react/styles.css";
+
+export default function SignUpPage() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <SignedIn className="flex flex-col gap-4" basePath="/nile/api">
+        <UserInfo />
+        <TenantSelector className="py-6 mb-10" />
+        <SignOutButton fetchUrl="/logout" />
+      </SignedIn>
+      <SignedOut basePath="/nile/api">
+        <SignUpForm createTenant />
+      </SignedOut>
+    </div>
+  );
+}
+
+```
+Now, the `fetchUrl` in the `SignInForm` component correctly maps to the updated `SIGNIN` route (`/login` in this case).
+
+## Notes
+- **Only specified routes are overridden** – others keep their defaults.
+- **Placeholders (`:tenantId`, `{userId}`)** in routes work as expected.
+- **Routes cannot be changed at runtime** - they must be set in `ServerConfig` at initialization.
+
+By leveraging route overrides, you can align Nile API endpoints with your application's needs while maintaining flexibility.
+
