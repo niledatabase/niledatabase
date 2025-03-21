@@ -1,43 +1,67 @@
 "use client";
-
-import IconButton from "@mui/joy/IconButton";
-import Add from "@mui/icons-material/Add";
-import Input from "@mui/joy/Input";
-import ListItermDecorator from "@mui/joy/ListItemDecorator";
-import Box from "@mui/joy/Box";
-// @ts-expect-error -- useFormState is new and lacks type definitions
-import { experimental_useFormState as useFormState } from "react-dom";
+import { useEffect, useCallback, useRef } from "react";
 import { addTodo } from "./todo-actions";
+// @ts-ignore
+import { useFormState } from "react-dom";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/hooks/use-toast";
 
 const initialState = {
-  message: null,
+  message: "",
 };
 
 export function AddForm({ tenantid }: { tenantid: string }) {
   const addTodoWithTenant = addTodo.bind(null, tenantid);
   const [state, formAction] = useFormState(addTodoWithTenant, initialState);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const { toast } = useToast();
+
+  const handleSubmit = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      formAction(formData);
+      if (formRef.current) formRef.current.reset();
+    },
+    [formAction]
+  );
+
+  useEffect(() => {
+    if (state.message !== null) {
+      const msg = Object.entries(state)
+        .map(([key, value]) => {
+          return `${key}:${value}`;
+        })
+        .filter(Boolean);
+      toast({
+        title: (
+          <div className="flex flex-col gap-3">
+            {msg.map((m) => (
+              <div key={m}>{m}</div>
+            ))}
+          </div>
+        ),
+      });
+    }
+  }, [state, toast]);
 
   return (
-    <form
-      name="newtodo"
-      id="newtodo"
-      action={formAction}
-      style={{ display: "flex", flexWrap: "nowrap", width: "100%" }}
-    >
-      <IconButton type="submit">
-        {" "}
-        <Add />{" "}
-      </IconButton>
-      <Input
-        placeholder="Add task"
-        variant="outlined"
-        id="todo"
-        name="todo"
-        sx={{ width: "95%" }}
-      ></Input>
-      <p aria-live="polite" className="sr-only" role="status">
-        {state?.message}
-      </p>
-    </form>
+    <>
+      <form
+        ref={formRef}
+        name="newtodo"
+        id="newtodo"
+        onSubmit={handleSubmit}
+        className="flex flex-row gap-2"
+      >
+        <Button type="submit">
+          <Plus />
+        </Button>
+        <Input placeholder="Add task" id="todo" name="todo" />
+      </form>
+    </>
   );
 }

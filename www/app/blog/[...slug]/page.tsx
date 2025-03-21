@@ -10,6 +10,7 @@ import { Metadata, ResolvingMetadata } from "next";
 import Coffee from "@/public/blog/coffee.webp";
 import BlogImageZoom from "./ImageZoom";
 
+export const dynamic = "force-dynamic";
 type Props = { params: { slug: string[] } };
 
 async function getBlog(props: Props) {
@@ -19,7 +20,7 @@ async function getBlog(props: Props) {
   const [lastSlug] = slug.reverse();
   const files = await glob("app/blog/**.mdx");
   const file = files.find((file) => {
-    return file.includes(lastSlug);
+    return file.includes(`${lastSlug}.mdx`);
   });
 
   if (!file || !file[0]) {
@@ -35,7 +36,7 @@ export default async function BlogPage(props: Props) {
   return (
     <Container background={null}>
       <BlogImageZoom />
-      <div className="container mx-auto prose prose-invert">
+      <div className="container mx-auto prose prose-invert mt-56">
         <div className="bg-[#2D2D2D] rounded-xl aspect-video w-full overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex relative border border-[#1c1c1c]">
           {metadata?.image ? (
             <Image
@@ -93,6 +94,9 @@ export async function generateMetadata(
     description: blog.metadata.sizzle,
     openGraph: {
       images: [blog.metadata.image, ...previousImages],
+    },
+    alternates: {
+      canonical: `/blog/${props.params.slug.join("/")}`,
     },
   };
 }

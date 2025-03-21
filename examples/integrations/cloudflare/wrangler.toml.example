@@ -1,0 +1,35 @@
+name = "nile_drizzle_example"
+main = "src/app.ts"
+compatibility_date = "2024-12-06"
+compatibility_flags = [ "nodejs_compat", "no_handle_cross_request_promise_resolution"]
+
+assets = { directory = "public" }
+
+[vars]
+# uncomment if you don't use hyperdrive, and note that you need to update the env variable in src/db/db.ts
+# DATABASE_URL = "postgres://user:password@us-west-2.db.thenile.dev/mydb"
+
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+localConnectionString = "postgres://user:password@us-west-2.db.thenile.dev/mydb"
+
+# [[kv_namespaces]]
+# binding = "MY_KV_NAMESPACE"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# [[r2_buckets]]
+# binding = "MY_BUCKET"
+# bucket_name = "my-bucket"
+
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "my-database"
+# database_id = ""
+
+# [ai]
+# binding = "AI"
+
+# [observability]
+# enabled = true
+# head_sampling_rate = 1

@@ -78,17 +78,17 @@ const integrations = [
   {
     name: "Stripe",
     icon: "Stripe.svg",
-    path: "docs/integrations/stripe",
+    path: "docs/platform/integrations/stripe",
   },
   {
     name: "NextAuth",
     icon: "nextauth.webp",
-    path: "docs/integrations/nextauth",
+    path: "docs/platform/integrations/nextauth",
   },
   {
     name: "Lambda",
     icon: "lambda.svg",
-    path: "docs/integrations/lambda",
+    path: "docs/platform/integrations/lambda",
   },
 ];
 export default async function Home() {

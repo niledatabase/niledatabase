@@ -10,7 +10,7 @@ import { AsyncLocalStorage } from "async_hooks";
 dotenv.config();
 
 // You can get the connection string with credentials from the Nile console
-const client = new Client({
+export const client = new Client({
   connectionString: process.env.DATABASE_URL,
 });
 
@@ -30,11 +30,9 @@ export function tenantDB<T>(cb: (tx: any) => T | Promise<T>): Promise<T> {
   return db.transaction(async (tx) => {
     const tenantId = tenantContext.getStore();
     console.log("executing query with tenant: " + tenantId);
-    // if there's a tenant ID, set it in the context, otherwise clean old context
+    // if there's a tenant ID, set it in the transaction context
     if (tenantId) {
-      await tx.execute(sql`set nile.tenant_id = '${sql.raw(tenantId)}'`);
-    } else {
-      await tx.execute(sql`reset nile.tenant_id`);
+      await tx.execute(sql`set local nile.tenant_id = '${sql.raw(tenantId)}'`);
     }
 
     return cb(tx);
