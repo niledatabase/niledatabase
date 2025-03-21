@@ -1,7 +1,7 @@
-import Cookies from "../../node_modules/@types/js-cookie";
 import { useSearchParams } from "react-router-dom";
 import BasicLoginForm from "../components/BasicLoginForm";
 import Layout from "../layout";
+import Cookies from 'js-cookie';
 
 export default function Auth() {
   // handle logouts here

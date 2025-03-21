@@ -13,7 +13,7 @@ import Input from "@mui/joy/Input";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
-import Cookies from "../../node_modules/@types/js-cookie";
+import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../assets/page.module.css";
 import Layout from "../layout";
