@@ -40,6 +40,7 @@ function HeroArticle(props: Props) {
           {image ? (
             <Image
               className="aspect-video w-full"
+              data-image-zoom-disabled
               alt={image}
               width={550}
               height={347}
@@ -48,6 +49,7 @@ function HeroArticle(props: Props) {
           ) : (
             <Image
               className="aspect-video w-full"
+              data-image-zoom-disabled
               alt="coffee"
               width={550}
               height={347}
@@ -75,18 +77,18 @@ export default async function Blog() {
 
   //@ts-expect-error - this exists
   await index.browseObjects({
-    query: "",
     batch: (batch: any) => {
       hits = hits.concat(batch);
     },
   });
 
-  const refinements: string[] = hits.reduce((accum, hit) => {
-    return accum.concat(hit.tags);
-  }, []);
-  const refinementItems = uniq(refinements);
+  // const refinements: string[] = hits.reduce((accum, hit) => {
+  // return accum.concat(hit.tags);
+  // }, []);
+  // const refinementItems = uniq(refinements);
 
-  const { default: FirstArticle, metadata } = await import(`${mostRecent}`);
+  const [localFile] = mostRecent.split("/").reverse();
+  const { default: FirstArticle, metadata } = await import(`./${localFile}`);
   return (
     <Container background={null}>
       <div className="container mx-auto">
@@ -97,8 +99,8 @@ export default async function Blog() {
             content={FirstArticle}
           />
           <Divider />
-          <div className="relative px-4">
-            <RefinementList items={refinementItems} />
+          <div className="relative px-4 h-16">
+            {/* <RefinementList items={refinementItems} /> */}
             <Search />
           </div>
           <Hits initialHits={hits} />
@@ -110,7 +112,7 @@ export default async function Blog() {
 
 function Hits({ initialHits }: { initialHits: any[] }) {
   return (
-    <div className="flex flex-row flex-wrap justify-start server-side-hits">
+    <div className="flex flex-row flex-wrap justify-start server-side-hits pt-4">
       {initialHits.map((hit) => {
         return <Hit hit={hit} key={hit.objectID} />;
       })}

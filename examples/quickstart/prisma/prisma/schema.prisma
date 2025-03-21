@@ -60,6 +60,7 @@ model users {
   given_name  String?
   email       String?
   picture     String?
+  email_verified DateTime? @db.Timestamp(6)
 
   @@schema("users")
 }

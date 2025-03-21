@@ -3,8 +3,9 @@ import { Alert } from "@mui/joy";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 
-export default function ErrorBox() {
-  const errorCookie = cookies().get("errorData");
+export default async function ErrorBox() {
+  const cookieStore = await cookies();
+  const errorCookie = cookieStore.get("errorData");
   const errorData = errorCookie ? JSON.parse(errorCookie.value) : null;
 
   return errorData ? (

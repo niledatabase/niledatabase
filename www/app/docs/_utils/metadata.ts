@@ -24,7 +24,9 @@ export const buildMetadata = (
     title: metadataText(metadata?.title),
     description: metadata?.description,
     alternates: {
-      canonical: `/docs/${root}/${props.params.slug?.join("/")}`,
+      canonical: `/docs/${root}${
+        props.params.slug ? `/${props.params.slug.join("/")}` : ""
+      }`,
     },
   };
 };

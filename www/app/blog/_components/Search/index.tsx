@@ -72,6 +72,7 @@ function RefinementList() {
 }
 
 function Hit({ hit }: any) {
+  console.log(hit.objectID, "what is this?");
   const [, publishDate] = /.+(\d{4}-\d{2}-\d{2}).+/.exec(hit.objectID) ?? [];
   const cleaned = hit.objectID.replace(/\d{4}-\d{2}-\d{2}-/, "");
   const slug = cleaned.replace(".mdx", "");
@@ -130,7 +131,7 @@ function SearchBox() {
     <div
       className={`transition-[left] duration-[500ms] md:absolute right-0 ${widths[width]} p-1 bg-black rounded-xl`}
     >
-      <div className="hidden md:block absolute w-[86px] h-[60px] bg-horizontal-fade -left-[76px] -top-[1px]"></div>
+      <div className="hidden absolute w-[86px] h-[60px] bg-horizontal-fade -left-[76px] -top-[1px]"></div>
       <div
         className={`py-1 w-full flex flex-row relative z-10 px-2 border border-[#242627] bg-black rounded-[12px] items-center gap-[10px]`}
       >
@@ -200,8 +201,7 @@ export default function Search() {
   return (
     <div className="flex flex-col gap-4 w-full">
       <InstantSearch searchClient={searchClient} indexName="blog">
-        <div className="flex flex-col md:flex-row items-center gap-4 justify-between -mt-5 z-10 relative">
-          <RefinementList />
+        <div className="flex flex-col md:flex-row items-center gap-4 justify-between -mt-5 z-10 relative h-16">
           <SearchBox />
         </div>
         <Hits />

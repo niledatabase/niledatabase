@@ -6,6 +6,10 @@ This template shows how to use Nile with NextJS 13 for a multi-tenant AI-native 
 - [Video guide](https://www.youtube.com/watch?v=Eo0dDROnJGg)
 - [Step by step guide](https://thenile.dev/docs/getting-started/languages/nextjs)
 
+## Deploy your own
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/niledatabase/niledatabase/tree/main/examples/quickstart/nextjs&project-name=nile-todo&repository-name=nile-todo&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22nile%22%2C%22productSlug%22%3A%22nile%22%7D%5D)
+
 ## Getting Started
 
 ### 1. Create a new database
@@ -59,7 +63,6 @@ NILE_PASSWORD = "73d32231-1d21-4990-a4f4-g6447507c271"
 NEXT_PUBLIC_APP_URL=http://localhost:3000/api
 
 # Uncomment if you want to try Google Auth
-# NEXT_PUBLIC_NILEDB_API_URL=
 # AUTH_TYPE=google
 
 AI_API_KEY=your-ai-vendor-api-key

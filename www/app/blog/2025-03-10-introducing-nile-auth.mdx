@@ -1,0 +1,212 @@
+export const metadata  = {
+
+title: "Introducing Nile Auth for B2B apps",
+description: "Auth for B2B apps - multi-tenant, comprehensive, drop-in, unlimited active users, open source, customer data in your Nile's Postgres",
+date: "2025-03-10",
+tags: ["postgres", "authentication", "multi-tenant", "drop-in"],
+authors: ["ram"],
+image: "2025-03-10-introducing-nile-auth/authcover.png"
+}
+
+Today, we are excited to introduce [Nile Auth](https://github.com/niledatabase/nile-auth), a comprehensive B2B authentication solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile’s Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize our cloud version.
+
+Integrating authentication into your B2B application on the front and back end takes just a few minutes with Nile Auth’s B2B authentication features and customizable UI components. If you choose the hosted version, you can enjoy unlimited active users for authentication at no additional cost; you only pay for the database.
+
+[Try it out today](https://console.thenile.dev/) and effortlessly [add authentication](http://thenile.dev/docs/auth/introduction) to your B2B app in just a few minutes!
+
+## Adding B2B Auth to your app in 2 minutes
+
+Before I explain the principles behind Nile Auth, let's examine how easy it is to integrate it into your B2B app.
+Install the Nile SDK that will handle the authentication logic for you.
+
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/sdkinstall.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>
+We will create a NextJS app with an app router and integrate Nile Auth.
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/createapp.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>
+Create two files{" "}
+
+- 'nile.ts' will expose the nile instance to the rest of the app.
+- 'route.ts' handles the calls to Nile on the server side.
+
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/routeauth.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>{" "}
+
+Your application will interact with the above authentication routes using SDK components. Replace the boilerplate app/page.tsx with the following code that adds signup, sign-post out, tenant selector, and user info components to your app.
+
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/componentauth.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/startauth.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>{" "}
+
+With just these lines of code, you have a fully functional authentication system for your B2B app.
+
+<Video src="/blog/2025-03-10-introducing-nile-auth/nileauthdemo.mp4" />
+
+## Why Nile Auth?
+
+### Purpose-built for multi-tenant apps
+
+Nile re-engineers Postgres to make it easy to build and scale B2B apps. Our Auth product is also designed from the ground up to support multi-tenant applications on top of Nile's Postgres.
+
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/tenantselector.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>{" "}
+
+Auth solutions usually don’t support B2B apps, or the focus is not full-time. In Nile’s Auth case, we have designed the product for only B2B apps. Nile Auth will support the entire tenant lifecycle, including managing tenants, inviting users to tenants, overriding tenant-specific settings, tenant domains, and more.
+
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/tenantapi.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>
+Authenticated users can access data from any tenant they have access to - this access
+control is enforced at all layers - from the browser to the authentication service
+to the database itself. All authentication features can be enabled at the application
+level or disabled for a specific tenant.
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/tenantsql.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>
+### Unlimited active users
+
+One of our key focuses in developing Nile Auth was to offer the ability to support unlimited active users. Traditionally, authentication providers set a fixed limit on the number of active users, often requiring additional payments as you scale up. However, with Nile Auth, there are no extra charges for active users. You will only pay for the PostgreSQL database, allowing you to store and scale to an unlimited number of active users without incurring additional costs.
+
+<Video src="/blog/2025-03-10-introducing-nile-auth/counterforblog.mp4" />
+
+### Customer and user data stored in your DB
+
+One of the challenges we have faced with third-party auth providers is that user and customer data are locked in behind third-party APIs. There are a few issues with this approach
+
+- Referencing and joining user data with other tables in your database. It gets hard to refer to the user data using foreign key constraints or SQL joins to query across user and other business tables.
+- The synchronization process is async and poses consistency challenges. You could synchronize using a webhook or capture events into a changelog and apply them to the primary DB. Both approaches eventually create consistency problems. If other tables reference your application's customer or user data, users will face weird delays or could even lose data.
+
+While Nile Postgres will integrate with third-party auth providers as well, we believe the ideal approach is to just have the Auth solution store the data in the primary DB.
+
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/tabletenants.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>
+There are also other benefits of building Nile Auth on Nile’s Postgres. Tenant management
+is not just an Auth problem. It is a data problem. Nile’s Postgres has taken a first
+principles approach to solving multi-tenant problems by Isolating tenant data, addressing
+noisy neighbor problems, providing usage and cost insights by tenants, placing tenants
+on different compute types and regions, and supporting all the DB operations at the
+tenant level. Using Nile Auth and Nile’s Postgres provides a truly end to end solution
+to building and scaling B2B apps.
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/tableusers.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/tabletenantusers.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>
+### Comprehensive B2B auth features
+
+Access a full suite of authentication features to secure your application thoroughly. Here are some of the features you get out of the box:
+
+- Organization management
+- User profiles
+- Dashboard for managing users and organizations
+- Tenant over-rides - manage authentication for each tenant individually.
+- Multi-framework support - NextJS, Express, React, etc.
+- Wide range of authentication methods - email/password, social login, magic link, etc.
+- UI components for embedding in your application - simple, beautiful, and flexible
+- Cookie-Based Authentication: Secure session management using HTTP-only cookies.
+- JWT and Session Support: Uses cookies to maintain user sessions and optionally issues JWTs for client-side validation.
+- Single Sign-On (SSO) Support: Optional integration with external identity providers.
+
+Auth services really have to be comprehensive. Unlike other parts of the app where mixing and matching libraries and services is normal, mixing and matching two auth solutions is very challenging from a security POV - you need to keep them in sync, you need to make sure you correctly handle responses from two services, juggle multiple cookies and tokens (possibly with different expirations). Much safer to find one auth service that does everything you need and use that.
+
+There is more on the roadmap, and our goal is to support a comprehensive list of features for B2B apps. We would [love to know](https://github.com/orgs/niledatabase/discussions?discussions_q=is%3Aopen+label%3Aauth) if you need any specific features not currently available. We also welcome community contributions.
+
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/sessionauth.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>
+### **Self-host or let Nile manage it**
+
+One of our design goals was to make it easy to self-host Nile Auth. We believe we have made it easy for developers to use our managed solution or self-host the auth service. The auth service will still use hosted Nile’s Postgres, but one can get the benefit of running core security logic within their account in the cloud. For development purposes, the entire Nile stack, including Postgres and Nile Auth, is available as a [docker image](https://www.thenile.dev/docs/getting-started/postgres_testing). Developers can test locally and use the hosted offering when deploying to production.
+
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/selfhost.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>
+### Drop-in fully customizable auth UI modules
+
+Easily integrate pre-built authentication UI modules into your application in five minutes. Add support for Google, GitHub, and more and override per-tenant. Nile’s open-source SDK includes beautiful and flexible React components that can be embedded in your application and customized to your liking. This includes the signup, login, organization switcher, user profile, social login buttons, and more.
+
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/googleauth.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>
+<Image
+  src="/blog/2025-03-10-introducing-nile-auth/discordauth.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "4px" }}
+/>
+## Other design principles of Nile Auth
+
+### Support multiple languages
+
+To truly democratize B2B authentication, we wanted to build a solution that can be leveraged with as many languages as possible. We currently support the Typescript/Javascript ecosystem but plan to support more languages. We have published our [public Auth APIs](http://thenile.dev/auth/api-reference/auth/sign-in-to-the-application) and hope to provide more language coverage. We would also love the community to build and contribute SDKs for their favorite language.
+
+### Auth as a service vs a library
+
+Auth solutions have been tackled as a service and as a library. Based on our experience, a service-first approach is the most secure solution for B2B Authentication for several reasons.
+
+1. Libraries are convenient till the new CISO in a B2B company mandates that auth has to be moved to a service for security reasons. Having the auth logic across many services is usually not what CISOs want. Security teams prefer to control the authentication logic centrally.
+2. Security hotfixes are a nightmare with thick clients. When a security hole is identified, it becomes critical for B2B companies to deploy the fix immediately. It is much easier to hotfix the central service vs upgrading the library in multiple services.
+3. In most cases, B2B Companies need to support multiple languages from the start. For example, companies build their data plane with Typescript but their control plane using Go. Users will authenticate against both the control plane and the data plane.
+
+We have invested in making it easy to launch and operate the Nile Auth service.
+
+### Server side authentication
+
+Server-side authentication is a core design principle of Nile Auth, ensuring flexibility, security, and broad applicability. By focusing on server-side APIs and auto-generated routes, developers can build their own UI without being locked into a specific framework. This approach also enables authentication for API-only services, ensuring secure endpoint protection. Additionally, Nile Auth is built on strong security primitives, including Secure, HttpOnly cookies to prevent XSS, CSRF protection, and session-backed authentication instead of relying solely on JWTs. This aligns with best security practices, addressing concerns like those raised by CISOs who prioritize moving authentication logic to the backend for consistency and security across web, API, and CLI environment
+
+### Open source
+
+We have spent years doing open-source and believe this is the right path for Nile Auth. Open source will help build trust and make Nile Auth extremely secure. It raises the bar to build a world-class service and enables the community to contribute. We want to build a developer-first community around Nile Auth and make it easy to contribute. You can look at our [contributing guidelines](https://github.com/niledatabase/nile-auth/blob/main/CONTRIBUTING.md) if you are interested in adding features or fixing issues.
+
+Try out [Nile Auth today](https://console.thenile.dev/) and let us know what you think! You can also [join our community](https://discord.com/invite/8UuBB84tTy) to discuss Nile Auth and give us feedback. We are looking forward to collaborating with the community to make this successful.

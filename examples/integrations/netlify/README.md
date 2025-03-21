@@ -3,8 +3,8 @@
 This template shows how to use Nile in a serverless function deployed with Netlify. We use Express as the web framework and drizzle as the ORM.
 
 - [Video guide]()
-- [Live demo]()
-- [Step by step guide]()
+- [Live demo](https://nile-netlify-todo.netlify.app/)
+- [Step by step guide](https://www.thenile.dev/docs/partners/netlify)
 
 ## Getting Started
 
@@ -57,7 +57,9 @@ Install dependencies with `npm install`.
 
 In order to deploy the example to Netlify, start by signing up for an account on [Netlify](https://www.netlify.com/) and connect your GitHub account.
 
-You'll also want to make sure you have the [Netlify CLI](https://www.netlify.com/products/dev/), which you can install with `npm install -g netlify-cli`.
+Note that this README walks you through deploying an Express function to Netlify using the Netlify CLI. If you're looking to deploy a Next.js app and/or use the Netlify UI to deploy the app, you can follow the instructions [here](https://www.thenile.dev/docs/partners/netlify).
+
+For the CLI deployment, make sure you have the [Netlify CLI](https://www.netlify.com/products/dev/), which you can install with `npm install -g netlify-cli`.
 
 Once you've done that, initialize the project with Netlify:
 

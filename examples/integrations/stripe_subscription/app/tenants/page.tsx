@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
 import styles from "../page.module.css";
-import { getUserName } from "@/lib/AuthUtils";
 import NextLink from "next/link";
 import MUILink from "@mui/joy/Link";
 import Card from "@mui/joy/Card";
@@ -11,7 +10,8 @@ import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
 import { AddForm } from "@/app/tenants/add-form";
-import { configureNile } from "@/lib/NileServer";
+import { nile } from "../api/[...nile]/nile";
+import { redirect } from "next/navigation";
 
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
@@ -23,19 +23,23 @@ export const fetchCache = "force-no-store";
 export default async function Page() {
   // This is the tenant selector, so we use Nile with just the current user and reset tenant_id if already set
   // if Nile is already configured for this user, it will reuse the existing Nile instance
-  const nile = configureNile(cookies().get("authData"), undefined);
   console.log("showing tenants page for user: " + nile.userId);
-  let tenants: any = [];
 
-  if (nile.userId) {
-    // TODO: Replace with API call to get tenants for user when the SDK supports this
-    tenants = await nile.db.query(
-      `SELECT tenants.id, tenants.name
-       FROM tenants
-       JOIN users.tenant_users ON tenants.id = tenant_users.tenant_id
-       WHERE tenant_users.user_id = $1`,
-      [nile.userId]
-    );
+  const headers = new Headers({ cookie: cookies().toString() });
+  const [tenants, me] = await Promise.all([
+    nile.api.tenants.listTenants(headers),
+    nile.api.users.me(headers),
+  ]);
+
+  if (tenants instanceof Response) {
+    // signed out
+    if (tenants.status === 401) {
+      return redirect("/");
+    }
+    throw Error(await tenants.text());
+  }
+  if (me instanceof Response) {
+    throw Error(await me.text());
   }
 
   return (
@@ -61,7 +65,7 @@ export default async function Page() {
             Use Existing Tenant
           </Typography>
           <List variant="outlined">
-            {tenants.rows.map((tenant: any) => (
+            {tenants.map((tenant: any) => (
               <ListItem key={tenant.id}>
                 <ListItemButton
                   component={NextLink}
@@ -76,7 +80,7 @@ export default async function Page() {
         <CardContent>
           <Typography level="body-md" textAlign="center">
             {" "}
-            You are logged in as {getUserName(cookies().get("authData"))}{" "}
+            You are logged in as {me.email}{" "}
             <MUILink href="api/logout" component={NextLink}>
               (Logout)
             </MUILink>
