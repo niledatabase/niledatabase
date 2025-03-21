@@ -142,7 +142,7 @@ toml==0.10.2
 torch==2.4.0
 torchaudio==2.4.0
 tqdm==4.66.5
-transformers==4.40.2
+transformers==4.48.0
 typeguard==4.3.0
 typer==0.12.5
 types-certifi==2021.10.8.3
