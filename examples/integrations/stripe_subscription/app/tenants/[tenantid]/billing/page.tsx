@@ -30,7 +30,7 @@ export default async function Page({
 }) {
   // Here we are getting a connection to a specific tenant database for the current usr
   // if we already got such connection earlier, it will reuse the existing one
-  const tenantNile = configureNile(cookies().get("authData"), params.tenantid);
+  const tenantNile = await configureNile(params.tenantid);
   const tenantTier = await tenantNile.db.query(
     `SELECT tenant_tier FROM tenants`
   );
@@ -42,8 +42,10 @@ export default async function Page({
       tenantNile.tenantId
   );
   // Get tenant name doesn't need any input parameters because it uses the tenant ID and user token from the context
-  const resp = await tenantNile.api.tenants.getTenant();
-  const tenant = await resp.json();
+  const tenant = await tenantNile.api.tenants.getTenant();
+  if (tenant instanceof Response) {
+    throw new Error("unable to get tenant");
+  }
   return (
     <div className={styles.center}>
       <Stack>
@@ -161,7 +163,7 @@ export default async function Page({
                 </Typography>
               </CardContent>
               <CardActions buttonFlex="0 1 120px">
-                {tenantTier[0].tenant_tier === "enterprise" ? (
+                {tenantTier.rows[0].tenant_tier === "enterprise" ? (
                   <Button id="checkout-and-portal-button" variant="outlined">
                     Current Plan
                   </Button>

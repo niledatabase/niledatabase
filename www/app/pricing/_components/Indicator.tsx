@@ -8,10 +8,24 @@ export default function Indicator({
   hideDivider,
   header,
 }: {
-  value: boolean;
+  value: boolean | string;
   hideDivider?: boolean;
   header?: string;
 }) {
+  if (typeof value === "string") {
+    return (
+      <>
+        <div className="flex align-center justify-between lg:justify-center">
+          <div className="opacity-70 lg:hidden">{header}</div>
+          {value}
+        </div>
+        <div
+          className={"h-px  bg-white"}
+          style={{ opacity: hideDivider ? 0 : 0.3 }}
+        />
+      </>
+    );
+  }
   return (
     <>
       <div className="flex align-center justify-between lg:justify-center">

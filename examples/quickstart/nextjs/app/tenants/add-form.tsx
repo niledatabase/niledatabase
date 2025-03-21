@@ -1,59 +1,50 @@
 "use client";
-// @ts-expect-error -- useFormState is new and lacks type definitions
-import { experimental_useFormState as useFormState } from "react-dom";
-import { useState } from "react";
-import Button from "@mui/joy/Button";
-import Typography from "@mui/joy/Typography";
-import ModalDialog from "@mui/joy/ModalDialog";
-import Modal from "@mui/joy/Modal";
-import Stack from "@mui/joy/Stack";
-import Input from "@mui/joy/Input";
-import styles from "../page.module.css";
+// @ts-ignore
+import { useFormState } from "react-dom";
 import { createTenant } from "@/app/tenants/tenant-actions";
-// ^^^ the actual actions are in a server component because they are database operations
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const initialState = {
-  message: null,
+  message: "",
 };
 
 export function AddForm() {
   const [state, formAction] = useFormState(createTenant, initialState);
-  const [open, setOpen] = useState(false);
 
   return (
     <div>
-      <Button
-        variant="solid"
-        size="md"
-        color="primary"
-        aria-label="add-tenant"
-        onClick={() => setOpen(true)}
-        sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
-      >
-        CREATE TENANT
-      </Button>
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <ModalDialog
-          aria-labelledby="basic-modal-dialog-title"
-          aria-describedby="basic-modal-dialog-description"
-          sx={{ maxWidth: 500 }}
-        >
-          {/* can't use MUI form here, it interferes with NextJS form magic. Will need to do some styling */}
+      <Dialog>
+        <DialogTrigger className="h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+          Create tenant
+        </DialogTrigger>
+        <DialogContent>
+          <DialogTitle>Create tenant</DialogTitle>
 
           <form name="newtenant" id="newtenant" action={formAction}>
-            <Stack spacing={3}>
-              <Typography>Name</Typography>
+            <div className="flex flex-col gap-6">
+              <label htmlFor="tenantname">Name</label>
               <Input id="tenantname" name="tenantname" autoFocus required />
-              <p aria-live="polite" className="sr-only" role="status">
-                {state?.message}
-              </p>
-              <Button type="submit" variant="solid">
-                Submit
-              </Button>
-            </Stack>
+              {state?.message ? (
+                <div
+                  aria-live="polite"
+                  role="status"
+                  className="bg-destructive text-white px-3 py-2 rounded-md"
+                >
+                  {state?.message}
+                </div>
+              ) : null}
+              <Button type="submit">Submit</Button>
+            </div>
           </form>
-        </ModalDialog>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

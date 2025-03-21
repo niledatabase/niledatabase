@@ -13,7 +13,13 @@ export function GithubCta() {
         <button className="border border-[#1c1c1c] bg-[#000] hover:bg-[#1c1c1c] rounded-[10px]">
           <div className="flex flex-row py-3 px-4 items-center gap-[10px]">
             <span className="whitespace-nowrap">Star us on</span>
-            <Image src={Logo} alt="Github Logo" width={20} height={20} />
+            <Image
+              src={Logo}
+              alt="Github Logo"
+              width={20}
+              height={20}
+              data-image-zoom-disabled
+            />
           </div>
         </button>
       </Link>

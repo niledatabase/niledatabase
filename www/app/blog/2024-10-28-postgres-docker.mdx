@@ -1,0 +1,148 @@
+export const metadata = {
+  title: "Introducing Nile Docker for local development",
+  authors: ["ram"],
+  image: "2024-10-28-postgres-docker/cover.png",
+  sizzle:
+    "Get started with Postgres to build multi-tenant apps using Nile's docker image",
+  tags: [
+    "database",
+    "serverless",
+    "postgres",
+    "docker",
+    "AI",
+    "B2B",
+    "testing",
+    "multi-tenant",
+  ],
+};
+
+We launched Nile to the public a month ago, and since then, we have been iterating and improving the product based on user feedback. For those who are unfamiliar, Nile is Postgres re-engineered for multi-tenant applications. It is purpose-built from the ground up to help build multi-tenant apps fast that are secure and cost-effective with effortless scale. You can try out Nile and build B2B and AI apps with our free tier offering with unlimited databases. While our hosted solution is ideal for running applications in production, many users have expressed the need for the ability to quickly iterate locally. Today, we are excited to announce that the entire Nile stack is now available for download through our official Docker repository.
+
+```bash
+docker run -p 5432:5432 -ti ghcr.io/niledatabase/testingcontainer:v0.0.2
+```
+
+The Docker image includes:
+
+- 3 Postgres instances, to emulate a distributed production-like setup
+- Each Postgres instance has all the Nile extensions and services installed. It also includes pg_vector pre-installed.
+- All functionalities documented in our docs work with the image
+- At this point, the UI console is not included in the image
+
+We want to make the entire development lifecycle of using a multi-tenant database seamless. The docker image with the full Nile stack is the first step towards a long set of features we hope to release to simplify local development.
+
+## Getting started with Nile using Docker
+
+Once Nile’s docker is setup to run, you can use the local database just like you would use Nile’s hosted service. The image setup starts a database with default user and credentials which can be overriden. You can use any tool with the local db. We will use psql to show some of Nile’s get started queries.
+
+```bash
+psql postgres://00000000-0000-0000-0000-000000000000:password@localhost:5432/test
+```
+
+### Create a tenant-aware table
+
+[**Tenant-aware tables**](https://thenile.dev/docs/tenant-virtualization/tenant-isolation) are tables that have a **`tenant_id`** column. All the rows in such tables belong to a specific tenant.
+
+Let us create our first table that has a tenant_id column and a vector column:
+
+```sql
+CREATE TABLE IF NOT EXISTS "todos" (
+  "id" uuid DEFAULT gen_random_uuid(),
+  "tenant_id" uuid,
+  "title" varchar(256),
+  "estimate" varchar(256),
+  "embedding" vector(3),
+  "complete" boolean,
+  CONSTRAINT todos_pkey PRIMARY KEY("tenant_id","id")
+);
+```
+
+If you are using **`psql`**, you can view the table schema by running **`\d todos`**. Graphical clients like DBeaver will also show the table schema, typically in the left panel.
+
+### Insert data into a tenant-aware table
+
+Now that we have a tenant, we can insert data into our tenant-aware table:
+
+```sql
+-- adding a todo item for this tenant
+
+insert into todos (tenant_id, title, estimate, embedding, complete)
+values ('d24419bf-6122-4879-afa5-1d9c1b051d72', 'feed my cat', '1h', '[1,2,3]', false);
+```
+
+and you can verify the data was inserted correctly by running:
+
+```sql
+select * from todos;
+```
+
+You can add another tenant and insert data for that tenant in a similar fashion. This will allow us to explore tenant isolation (in the next section).
+
+```sql
+-- creating my second tenant
+insert into tenants (id, name)
+values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'second customer');
+select * from tenants;
+
+insert into todos (tenant_id, title, estimate, embedding, complete)
+values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'take out trash', '2h', '[0.8,0.2,0.6]', false);
+select * from todos;
+```
+
+### Tenant isolation
+
+Nile goes a step further and provides tenant isolation. You can set the session to a specific tenant, and every query that follows will only return data that belongs to this specific tenant.
+
+Think of it as querying a virtual database dedicated to this one specific tenant.
+
+```sql
+-- set context to isolate query to a specific tenant DB
+-- our example uses the second tenant here
+set nile.tenant_id = '7e93c45f-fe65-4f26-8ab6-922850fa4c7a';
+
+SELECT tenants.name, title, embedding, estimate, complete
+FROM todos join tenants on tenants.id = todos.tenant_id;
+```
+
+This will get you started with Nile locally and understand how Nile helps to build multi-tenant apps.
+
+## Integration testing with Nile's Postgres platform using Docker
+
+While trying out Nile using PSQL is great, actual development requires writing code and testing against the database. While Nile’s hosted offering does provide unlimited databases and can provision a new database in 200ms, introducing network uncertainty may not be preferred for quick iterations of the code. In such cases, it is ideal to simply have the database start within the process and run the tests against it. It is generally hard to have local development, pre production and production to be exactly the same but you can bring them as close as possible. With Nile’s docker image, free tier and unlimited databases, you can pretty much have very similar database environment for local development, pre production and production.
+
+Here is an example of how it looks like to do integration testing in Node.js
+
+A common way to automate integration tests is using [**TestContainers**](https://testcontainers.org/).. The example exposes a Postgres port and uses **`waitForLog`** strategy to wait until the container is ready. Then it connects to the database and runs a simple query.
+
+```bash
+import { GenericContainer, Wait } from "testcontainers";
+import pg from "pg";
+
+const image = "ghcr.io/niledatabase/testingcontainer:v0.0.1";
+const container = await new GenericContainer(image)
+  .withExposedPorts(5432)
+  .withWaitStrategy(
+    Wait.forLogMessage("Database has been created and is ready")
+  )
+  .start();
+
+const client = new pg.Client({
+  host: container.getHost(),
+  port: container.getMappedPort(5432),
+  user: "00000000-0000-0000-0000-000000000000",
+  password: "password",
+  database: "test",
+});
+await client.connect();
+const res = await client.query("SELECT version()");
+console.log(res.rows[0]);
+await client.end();
+```
+
+We have more examples in our documentation for other languages. Take a spin and let us know what you think.
+
+## The Nile developer journey
+
+We are just getting started and hope to launch features that make the entire developer lifecycle really easy to build multi-tenant apps on Postgres. We plan to invest in features for seeding data, branching the database, schema migrations etc over the course of next few months.
+
+We are excited to launch a full local option for Nile. [**Try out Nile**](https://console.thenile.dev/) and build your AI B2B apps with a Postgres platform purpose built for it. We are looking forward to all the feedback!

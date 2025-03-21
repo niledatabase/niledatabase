@@ -1,6 +1,4 @@
 "use client";
-// @ts-expect-error -- useFormState is new and lacks type definitions
-import { experimental_useFormState as useFormState } from "react-dom";
 import { useState } from "react";
 import Button from "@mui/joy/Button";
 import Typography from "@mui/joy/Typography";
@@ -8,17 +6,17 @@ import ModalDialog from "@mui/joy/ModalDialog";
 import Modal from "@mui/joy/Modal";
 import Stack from "@mui/joy/Stack";
 import Input from "@mui/joy/Input";
-import styles from "../page.module.css";
 import { createTenant } from "@/app/tenants/tenant-actions";
 // ^^^ the actual actions are in a server component because they are database operations
 
-const initialState = {
-  message: null,
-};
-
 export function AddForm() {
-  const [state, formAction] = useFormState(createTenant, initialState);
   const [open, setOpen] = useState(false);
+  const [state, setState] = useState<{ message?: string }>({});
+
+  async function clientAction(formData: FormData) {
+    const result = await createTenant(formData);
+    setState(result || {});
+  }
 
   return (
     <div>
@@ -40,7 +38,7 @@ export function AddForm() {
         >
           {/* can't use MUI form here, it interferes with NextJS form magic. Will need to do some styling */}
 
-          <form name="newtenant" id="newtenant" action={formAction}>
+          <form name="newtenant" id="newtenant" action={clientAction}>
             <Stack spacing={3}>
               <Typography>Name</Typography>
               <Input id="tenantname" name="tenantname" autoFocus required />

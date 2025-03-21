@@ -5,7 +5,12 @@ import PageHeader from "../_components/common/PageHeader";
 import FAQ from "./_components/FAQ";
 import Divider from "../_components/common/Divider";
 import TokenCost, { TableRow } from "./_components/TokenCost";
-import { SupportRow, ConsoleRow, DatabaseRow } from "./_components/Rows";
+import {
+  SupportRow,
+  ConsoleRow,
+  DatabaseRow,
+  UserManagementRow,
+} from "./_components/Rows";
 import Pro from "./_components/Pro";
 import Scale from "./_components/Scale";
 import Free from "./_components/Free";
@@ -129,6 +134,24 @@ export default function Pricing() {
                           Coming soon
                         </div>
                       </Line>
+                      <UserManagementRow />
+                      <Line text="Number of active users" />
+                      <Line text="Number of active tenants" />
+                      <Line text="MAUs per tenant" />
+                      <Line text="Social auth" />
+                      <Line text="Magic auth" />
+                      <Line text="Email verification" />
+                      <Line text="Enterprise SAML">
+                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
+                          Coming soon
+                        </div>
+                      </Line>
+                      <Line text="MFA">
+                        <div className="w-fit bg-gradient-white bg-clip-text text-transparent subpixel-antialiased border border-zinc-700 px-1.5 rounded-md text-[12px] mt-1">
+                          Coming soon
+                        </div>
+                      </Line>
+                      <Line text="Tenant overrides" hideDivider />
                       <ConsoleRow />
                       <Line text="Tenant overrides" />
                       <Line text="Tenant insights" />

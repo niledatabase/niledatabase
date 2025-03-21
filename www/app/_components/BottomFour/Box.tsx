@@ -36,8 +36,13 @@ export default function Box(props: Props) {
                   key={bullet}
                   className="flex flex-row gap-4 items-start w-5/6"
                 >
-                  <div className="shrink-0 mt-1">
-                    <Image alt="check mark" src={check}></Image>
+                  <div className="shrink-0">
+                    <Image
+                      alt="check mark"
+                      className="invert"
+                      width="24"
+                      src={check}
+                    ></Image>
                   </div>
                   <div className="font-medium text-[18px] leading-[20px] xl:text-[20px] xl:leading-[24px]">
                     {bullet}

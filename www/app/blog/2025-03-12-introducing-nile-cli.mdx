@@ -1,0 +1,187 @@
+export const metadata  = {
+
+title: "Introducing Nile CLI",
+description: "A powerful command-line interface for managing Nile databases, tenants, and authentication with ease",
+date: "2025-03-12",
+tags: ["postgres", "cli", "authentication", "multi-tenant", "docker"],
+authors: ["ram"],
+image: "2025-03-12-introducing-nile-cli/clicover.png"
+}
+
+Today, we're excited to announce the launch of [Nile CLI](https://github.com/niledatabase/cli), a powerful open-source command-line interface that makes managing Postgres databases, tenant management, user management, and local development a breeze. The CLI supports an extensive set of features, and we have many plans for the future. Our UI console is excellent at managing and using the Nile platform. However, there are use cases where the CLI is ideal, like scripting, local development, or for just CLI lovers! [Try out the CLI](https://www.thenile.dev/docs/cli/introduction) today and we would love to hear your feedback.
+
+```bash
+npm install -g niledatabase
+```
+
+## Connecting the CLI
+
+Once installed, you can connect using the browser flow or use the API keys from Nile console.
+
+```bash
+# Login to Nile (opens browser for authentication)
+nile connect login
+```
+
+<Video src="/blog/2025-03-12-introducing-nile-cli/authcli.mp4" />
+
+Alternatively, you can set the API key in the config (you can get one from the console) or in the environment variable and should be ready to use the CLI.
+
+```bash
+nile config --api-key YOUR_API_KEY
+```
+
+## Using the CLI for workspace and database management
+
+<Image
+  src="/blog/2025-03-12-introducing-nile-cli/usingnileforworkspace.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "12px" }}
+/>
+
+We will look at a few operations you could do. We recommend playing with the CLI more to understand all the functionalities. Let us set the config to a particular workspace, database and the api key for the workspace. Setting the config will make all the future commands really simple to use.
+
+```bash
+nile config --api-key <key> --workspace <name> --db <name>
+```
+
+We can start by listing out all the workspaces you have access to
+
+```bash
+nile workspace list
+```
+
+<Image
+  src="/blog/2025-03-12-introducing-nile-cli/workspacelist.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "12px" }}
+/>
+
+We can then list all the databases in a particular workspace. Assume we set the workspace to a specific one and then listed the database in it. You should see all the databases and their status in the selected workspace.
+
+```bash
+nile db list
+```
+
+<Image
+  src="/blog/2025-03-12-introducing-nile-cli/dblist.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "12px" }}
+/>
+
+###
+
+We can create a database in one of the available regions. Nile creates databases instantaneously and you should see the database ready status in a second.
+
+```bash
+nile db create --name myapp_db --region AWS_US_WEST_2
+```
+
+<Image
+  src="/blog/2025-03-12-introducing-nile-cli/createdb.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "12px" }}
+/>
+
+Finally, don’t forget that you can connect to PSQL directly from the CLI to execute your SQL commands.
+
+```bash
+nile db psql
+```
+
+## Using the CLI for tenant and auth management
+
+The CLI also let’s you manage customers/tenants and user authentication.
+
+```bash
+# List all tenants
+nile tenants list
+```
+
+<Image
+  src="/blog/2025-03-12-introducing-nile-cli/tenantlist.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "12px" }}
+/>
+
+```bash
+# Create a new tenant
+nile tenants create --name "Acme Corp"
+```
+
+<Image
+  src="/blog/2025-03-12-introducing-nile-cli/tenantcreated.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "12px" }}
+/>
+
+```bash
+# Update tenant details
+nile tenants update --id tenant_123 --new_name "Acme Corporation"
+```
+
+<Image
+  src="/blog/2025-03-12-introducing-nile-cli/tenantupdate.png"
+  width="800"
+  height="800"
+  style={{ borderRadius: "12px" }}
+/>
+
+You can also obtain the env variables required for authentication setup and copy it into a .env file. Also, you can run the entire auth quickstart with a single command!
+
+```bash
+nile auth env --output .env.local
+```
+
+```bash
+NILEDB_USER=your_database_user
+NILEDB_PASSWORD=your_database_password
+NILEDB_API_URL=https://us-west-2.api.thenile.dev/v2/databases/your_database_id
+NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/your_database
+```
+
+Try the auth quickstart command for a nice surprise
+
+```bash
+nile auth quickstart --nextjs
+```
+
+## Using CLI for Local Development
+
+You can use the CLI to spin up the entire Nile platform in a local Docker and do all your application development against it before deciding to push the code to pre-production. To make this easy, the CLI pulls the docker, sets it up and starts all the Nile services for you.
+
+```bash
+# Start local environment
+nile local start
+```
+
+##
+
+```bash
+✓ Latest Nile testing container pulled successfully
+✓ Database is ready
+✓ Local development environment started successfully
+
+Connection Information:
+Host:     localhost
+Port:     5432
+Database: test
+Username: 00000000-0000-0000-0000-000000000000
+Password: password
+
+Would you like to connect using psql? (y/N)
+```
+
+You can stop local development anytime and get information about it using the CLI. We have many plans to add features to support local development in the next few weeks.
+
+## Conclusion
+
+Nile CLI represents a significant step in enabling Nile platform to be managed and controlled using CLI, API and the UI console. We hope to invest heavily into the CLI and provide workflows that would make it really easy to use Postgres and Nile Auth for building B2B apps.
+
+We're excited to see what you'll build with Nile CLI! Share your experiences, feedback, and questions with us on [Discord](https://discord.com/invite/8UuBB84tTy) or [GitHub](https://github.com/orgs/niledatabase/discussions).
