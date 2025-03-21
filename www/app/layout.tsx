@@ -2,14 +2,20 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Nile Database — Serverless Postgres for modern SaaS",
+  title: "Postgres re-engineered for B2B apps",
   description:
-    "Serverless Postgres build with multi-tenacy at it's core. Fault tolerant, globally distributed, with user and tenant management built in.",
-  applicationName: "Nile database",
+    "Postgres re-engineered for multi-tenant apps. Build secure, scalable and AI-native multi-tenant applications with world-class developer experience.",
+  applicationName: "Nile postgres",
   metadataBase: new URL("https://www.thenile.dev/"),
   manifest: new URL("https://www.thenile.dev/manifest.json"),
-  keywords: ["serverless", "postgres", "tenant aware", "multi tenant database"],
-  colorScheme: "dark",
+  keywords: [
+    "serverless",
+    "postgres",
+    "ai-native",
+    "b2b",
+    "saas",
+    "multi-tenant",
+  ],
   creator: "Nile database",
   publisher: "Nile database",
   icons: [
@@ -31,10 +37,10 @@ export const metadata: Metadata = {
     type: "website",
     url: new URL("https://www.thenile.dev/"),
     images: "https://www.thenile.dev/opengraph/nile.jpg",
-    title: "Nile Database — Serverless Postgres for modern SaaS",
-    siteName: "Nile Database — Serverless Postgres for modern SaaS",
+    title: "Nile Postgres — Built for B2B and AI companies",
+    siteName: "Nile Postgres — Built for B2B and AI companies",
     description:
-      "Serverless Postgres build with multi-tenacy at it's core. Fault tolerant, globally distributed, with user and tenant management built in.",
+      "Postgres re-engineered for multi-tenant apps. Build secure, scalable and AI-native multi-tenant applications with world-class developer experience.",
   },
   twitter: {
     card: "summary_large_image",
@@ -51,3 +57,7 @@ export default function RootLayout({
 }) {
   return <html lang="en">{children}</html>;
 }
+
+export const viewport = {
+  colorScheme: "dark",
+};

@@ -1,0 +1,35 @@
+Sales Rep: Good afternoon! This is Alex from Verity Capital. How are you today?
+
+Customer: Hi, Alex. I'm doing well, thanks. How about you?
+
+Sales Rep: I'm great, thank you. I'm reaching out because I noticed you've recently expressed interest in our financial planning services. I wanted to see if you had any questions or if there’s anything specific you're looking to achieve financially.
+
+Customer: Yeah, I have a few questions. My main concern right now is managing debt. I find it difficult to balance paying off my loans while also trying to save for the future.
+
+Sales Rep: I totally understand. Debt management is a common challenge. At Verity Capital, we specialize in creating customized plans that help you pay off debt while also meeting your savings and investment goals. Can you tell me a bit more about your current financial situation?
+
+Customer: Sure. I have some student loans, credit card debt, and a mortgage. It's overwhelming trying to figure out where to put my money each month.
+
+Sales Rep: That does sound challenging. One approach we recommend is prioritizing high-interest debt first while maintaining essential savings. Have you ever worked with a professional financial advisor before?
+
+Customer: No, this would be my first time. I'm a bit skeptical about paying for advice when I already feel like money is tight.
+
+Sales Rep: That’s a completely valid concern. How about this: We offer a complimentary initial consultation where we can assess your situation and provide you with a snapshot of what a tailored plan would look like. No obligation to move forward unless you're completely satisfied. Would that be helpful?
+
+Customer: I guess it wouldn’t hurt to see what you have to offer. What does the consultation involve?
+
+Sales Rep: During the consultation, we'll review your current debts, income, and financial goals. We'll then provide you with a personalized strategy to tackle your debt and outline steps to start building your savings and investments. Usually, it takes about an hour.
+
+Customer: Alright, that sounds reasonable. How do we set this up?
+
+Sales Rep: Great! I can schedule it for you right now. What day and time work best for you this week?
+
+Customer: I’m available Thursday after 3 PM.
+
+Sales Rep: Perfect. I have a slot open at 3:30 PM on Thursday. I’ll go ahead and book that for you. You’ll receive a confirmation email with all the details shortly.
+
+Customer: Thank you, Alex. I look forward to it.
+
+Sales Rep: My pleasure! If you have any other questions before our meeting, feel free to reach out. Have a great day!
+
+Customer: You too, thanks.

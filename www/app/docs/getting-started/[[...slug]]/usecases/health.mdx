@@ -1,0 +1,236 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "HealthPilot",
+  order: 13,
+};
+
+# HealthPilot - Enhancing Patient Care with Intelligent Assistance
+
+![healthsnapshot](/docs/healthsnapshot.png)
+
+The Healthcare Patient Management Application is designed to facilitate the efficient management of patient information within a healthcare setting. It provides functionality for adding new patients, tracking their personal information, medical history, current appointment notes, scheduling future appointments, and managing test results. Additionally, the application leverages AI to assist doctors by summarizing patient medical states, diagnosing potential conditions, and analyzing test result trends.
+
+### Key Features
+
+1. **Patient Management:**
+   - **Add New Patients:** Capture and store detailed patient personal information.
+   - **View Patient Details:** Access comprehensive patient profiles, including personal details and medical history.
+   - **Edit Patient Information:** Update patient records as needed.
+2. **Medical Records:**
+   - **Track Medical History:** Store and retrieve past medical records.
+   - **Appointment Notes:** Document notes from current and past appointments.
+   - **Schedule Appointments:** Track upcoming appointments and notify patients.
+   - **Test Results:** Store and retrieve test results associated with medical records.
+3. **Department Management:**
+   - **Track Departments:** Manage information about various departments within the healthcare organization.
+   - **Assign Doctors to Departments:** Ensure each doctor is associated with a specific department.
+4. **AI Assistance:**
+   - **Summarize Medical State:** Summarize patient medical information based on past records.
+   - **Diagnosis Assistance:** Provide possible diagnoses based on symptoms and medical history.
+   - **Search and Analyze:** Search through test results and analyze trends in patient data.
+5. **Security and Compliance:**
+   - **Data Privacy:** Ensure patient data is stored securely and complies with relevant healthcare regulations.
+   - **Access Control:** Restrict access to sensitive information based on user roles.
+
+### Postgres Schemas
+
+![healthschema](/docs/healthschema.png)
+
+### 1. patients
+
+Stores patient information, including personal details and medical history. The medical history consist of any known issues that the patient has provided. This information is useful when diagnosing issues. The vector embeddings are calculated on the medical history to use it to ask AI about the patients, diagnose problems given specific symptoms and even identify tests that needs to be done.
+
+```sql
+CREATE TABLE patients (
+    tenant_id UUID,
+    patient_id UUID DEFAULT gen_random_uuid(),
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    gender VARCHAR(10),
+    contact_info JSONB,
+    medical_history TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, patient_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+```
+
+### 2. departments
+
+Stores information about departments within the healthcare organization.
+
+```sql
+CREATE TABLE departments (
+    tenant_id UUID,
+    department_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    department_name VARCHAR(100),
+    description TEXT,
+    FOREIGN KEY (tenant_id) REFERENCES tenants(tenant_id)
+);
+```
+
+### 3. doctors
+
+Stores information about doctors, including their specializations and contact details. A doctor will mostly belong to a s pecific department.
+
+```sql
+CREATE TABLE doctors (
+    tenant_id UUID,
+    doctor_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    specialization VARCHAR(100),
+    contact_info JSONB,
+    department_id UUID,
+    FOREIGN KEY (tenant_id, doctor_id) REFERENCES tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+```
+
+### 4. medical_records
+
+Stores detailed medical records for each patient. There is one medical record for each health problem the patient comes to visit the doctor. The medical records also contains a list of tests taken, results and any other notes. The embeddings are calculated on the medical record data to be able to help with proposed treatments, searching past records and even correlate issues across patients using AI (given permission).
+
+```sql
+CREATE TABLE medical_records (
+    tenant_id UUID,
+    record_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    patient_id UUID,
+    record_date TIMESTAMP,
+    description TEXT,
+    record_data JSONB,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    FOREIGN KEY (tenant_id, patient_id) REFERENCES patients(tenant_id, patient_id)
+);
+```
+
+### 5. test_results
+
+Stores test results associated with medical records. The test results are also stored as embeddings to use it with an AI model to identify correlation of results with symptoms, propose treatments and show trends.
+
+```sql
+CREATE TABLE test_results (
+    tenant_id UUID,
+    test_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    record_id UUID,
+    test_name VARCHAR(100),
+    test_date TIMESTAMP,
+    results JSONB,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    FOREIGN KEY (tenant_id, record_id) REFERENCES medical_records(tenant_id, record_id)
+);
+```
+
+### 6. appointments
+
+Tracks appointments for patients, including notes and status.
+
+```sql
+CREATE TABLE appointments (
+    tenant_id UUID,
+    appointment_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    patient_id UUID,
+    appointment_date TIMESTAMP,
+    doctor_id UUID,
+    notes TEXT,
+    status VARCHAR(50),
+    FOREIGN KEY (tenant_id, patient_id) REFERENCES patients(tenant_id, patient_id),
+    FOREIGN KEY (tenant_id, doctor_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+```
+
+### Full Script
+
+```sql
+-- Patients Table
+-- Description: Stores patient information, including personal details and medical history.
+CREATE TABLE patients (
+    tenant_id UUID,
+    patient_id UUID DEFAULT gen_random_uuid(),
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    gender VARCHAR(10),
+    contact_info JSONB,
+    medical_history TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, patient_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Departments Table
+-- Description: Stores information about departments within the healthcare organization.
+CREATE TABLE departments (
+    tenant_id UUID,
+    department_id UUID DEFAULT gen_random_uuid(),
+    department_name VARCHAR(100),
+    description TEXT,
+    PRIMARY KEY (tenant_id, department_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Doctors Table
+-- Description: Stores information about doctors, including their specializations and contact details.
+CREATE TABLE doctors (
+    tenant_id UUID,
+    doctor_id UUID DEFAULT gen_random_uuid(),
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    specialization VARCHAR(100),
+    contact_info JSONB,
+    department_id UUID,
+    PRIMARY KEY (tenant_id, doctor_id),
+    FOREIGN KEY (tenant_id, doctor_id) REFERENCES users.tenant_users(tenant_id, user_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+
+-- Medical Records Table
+-- Description: Stores detailed medical records for each patient.
+CREATE TABLE medical_records (
+    tenant_id UUID,
+    record_id UUID DEFAULT gen_random_uuid(),
+    patient_id UUID,
+    record_date TIMESTAMP,
+    description TEXT,
+    record_data JSONB,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, record_id),
+    FOREIGN KEY (tenant_id, patient_id) REFERENCES patients(tenant_id, patient_id)
+);
+
+-- Test Results Table
+-- Description: Stores test results associated with medical records.
+CREATE TABLE test_results (
+    tenant_id UUID,
+    test_id UUID DEFAULT gen_random_uuid(),
+    record_id UUID,
+    test_name VARCHAR(100),
+    test_date TIMESTAMP,
+    results JSONB,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, test_id),
+    FOREIGN KEY (tenant_id, record_id) REFERENCES medical_records(tenant_id, record_id)
+);
+
+-- Appointments Table
+-- Description: Tracks appointments for patients, including notes and status.
+CREATE TABLE appointments (
+    tenant_id UUID,
+    appointment_id UUID DEFAULT gen_random_uuid(),
+    patient_id UUID,
+    appointment_date TIMESTAMP,
+    doctor_id UUID,
+    notes TEXT,
+    status VARCHAR(50),
+    PRIMARY KEY (tenant_id, appointment_id),
+    FOREIGN KEY (tenant_id, patient_id) REFERENCES patients(tenant_id, patient_id),
+    FOREIGN KEY (tenant_id, doctor_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+```

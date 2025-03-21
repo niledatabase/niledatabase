@@ -14,7 +14,8 @@
     "examples/quickstart/prisma/fe",
     "examples/serverless/lambda-drizzle/fe",
     "examples/integrations/stripe_subscription",
-    "examples/ai/ai_pdf"
+    "examples/ai/ai_pdf",
+    "examples/ai/code_assist"
   ],
   "scripts": {
     "dev": "turbo run dev",
@@ -44,5 +45,6 @@
   "devDependencies": {
     "prettier": "^2.8.8",
     "turbo": "^1.10.13"
-  }
+  },
+  "packageManager": "npm@10.8.3"
 }

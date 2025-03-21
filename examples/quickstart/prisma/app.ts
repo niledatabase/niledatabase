@@ -2,9 +2,17 @@ import express from "express";
 import { match } from "path-to-regexp";
 import { Prisma, PrismaClient } from "@prisma/client";
 import expressBasicAuth from "express-basic-auth";
+import { v4 as uuidv4, parse } from "uuid";
 import { tenantContext } from "./storage";
 import { dbAuthorizer, getUnauthorizedResponse } from "./basicauth";
 import type { tenants } from "@prisma/client";
+import {
+  findSimilarTasks,
+  aiEstimate,
+  embedTask,
+  EmbeddingTasks,
+  embeddingToSQL,
+} from "./AiUtils.js";
 
 const PORT = process.env.PORT || 3001;
 const REQUIRE_AUTH = process.env.REQUIRE_AUTH || false;
@@ -80,13 +88,15 @@ app.use((req, res, next) => {
 
 // add basic auth middleware if required
 // we are doing this after setting the tenant context, so we'll have an appropriate connection to the DB
-app.use(
-  expressBasicAuth({
-    authorizer: dbAuthorizer,
-    authorizeAsync: true,
-    unauthorizedResponse: getUnauthorizedResponse,
-  })
-);
+if (REQUIRE_AUTH) {
+  app.use(
+    expressBasicAuth({
+      authorizer: dbAuthorizer,
+      authorizeAsync: true,
+      unauthorizedResponse: getUnauthorizedResponse,
+    })
+  );
+}
 
 // endpoint to create new tenants
 app.post("/api/tenants", async (req, res) => {
@@ -152,24 +162,42 @@ app.get("/api/tenants", async (req, res) => {
   }
 });
 
-// add new task for tenant
+// add new task for tenant, with AI-based estimate
 app.post("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
     const tenantDB = tenantContext.getStore();
+    if (!tenantDB) {
+      throw new Error("No tenant DB found");
+    }
+
     const { title, complete } = req.body;
     const tenantId = req.params.tenantId;
-    const newTodo = await tenantDB?.todos.create({
-      data: {
-        title: title,
-        complete: complete,
-        tenant_id: tenantId,
-      },
-    });
+    // We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
+    const similarTasks = await findSimilarTasks(tenantDB, title);
+    console.log("found similar tasks: " + JSON.stringify(similarTasks));
+
+    const estimate = await aiEstimate(title, similarTasks);
+    console.log("estimated time: " + estimate);
+
+    // get the embedding for the task, so we can find it in future similarity searches
+    const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
+    console.log("tenant_id: " + tenantId);
+    // This is safe because Nile validates the tenant ID and protects against SQL injection
+    const newTodo = await tenantDB.$queryRawUnsafe(
+      `INSERT INTO todos (tenant_id, title, complete, estimate, embedding) VALUES ('${tenantId}', $1, $2, $3, $4::vector) 
+      RETURNING id, title, complete, estimate`,
+      title,
+      complete,
+      estimate,
+      embeddingToSQL(embedding)
+    );
+
     res.json(newTodo);
   } catch (error: any) {
     console.log("error adding task: " + error.message);
+    console.log(error);
     res.status(500).json({
-      message: "Internal Server Error",
+      message: "Internal Server Error: " + error.message,
     });
   }
 });

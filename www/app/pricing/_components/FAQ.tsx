@@ -42,9 +42,9 @@ const ExpandItem = (props: {
         height: `${Math.max(62, 48 * rows)}px`,
       }}
     >
-      <div className="flex flex-row w-full justify-between">
+      <div className="flex flex-row w-full justify-between items-center">
         <span
-          className="text-[20px]"
+          className="text-[16px] leading-[16px] lg:leading-[20px] lg:text-[20px]"
           ref={(node) => {
             if (node) {
               setHeader(header as unknown as Element);
@@ -74,13 +74,17 @@ const ExpandItem = (props: {
 export default function FAQ() {
   const ref = useGoToHash({ hash: "#faq" });
   return (
-    <div className="mt-24">
-      <Heading text="Frequently Asked Questions" />
-      <a href="#faq" ref={ref}></a>
-      <div className="flex gap-4 flex-col mt-10">
-        {faqs.map(({ header, content }) => {
-          return <ExpandItem key={header} header={header} content={content} />;
-        })}
+    <div className="mt-24 container mx-auto">
+      <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
+        <Heading text="Frequently Asked Questions" />
+        <a href="#faq" ref={ref}></a>
+        <div className="flex gap-4 flex-col mt-10">
+          {faqs.map(({ header, content }) => {
+            return (
+              <ExpandItem key={header} header={header} content={content} />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

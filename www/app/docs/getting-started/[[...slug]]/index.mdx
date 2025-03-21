@@ -5,6 +5,25 @@ export const metadata = {
   title: "Getting started",
 };
 
+Nile re-engineers PostgreSQL for multi-tenant apps, enabling to launch and scale quickly, securely, and in the most cost-effective manner. Nile can be used as a fully integrated solution or only in parts.
+
+Nile's architecture includes storage/compute decoupling, page-level tenant isolation, global routing gateway and a database clustering technology to provide the following key benefits -
+
+1. Built-in tenant virtualization in Postgres for better data and vector embedding isolation and performance isolation without any RLS or complex permission logic in the application across customers.
+2. Vector embedding with RAG support for all model providers, cost-effective and auto-scales to billions of embeddings across customers
+3. Use one database in your application but get tenant-level backups, customer/tenant insights, and schema management across tenants managed by Nile
+4. Seamlessly autoscales as your customer's usage increases and scales to zero with no cold start time
+5. Place some tenants/customers on dedicated compute in the same database and some in other regions. Nile lets you customize for cost, security, compliance, and latency for each tenant in your AI-native application without having to manage separate databases for each tenant
+6. You can scale to millions of customers and billions of vector embeddings effortlessly as Nile horizontally scales
+
+You can read more about Nile, its architecture and concepts in the [What is Nile](https://website-git-fixlanding-niledatabase.vercel.app/docs/getting-started/whatisnile) section.
+
+Choose your starting point to explore and try out Nile
+
+## Languages
+
+Nile is just Postgres. It works with all the tools and Postgres ecosystem. The quickstarts below covers the Javascript and Python ecosystem. You can also pick plain SQL if that is preferred.
+
 <Cards>
   <Card file="./languages/sql.mdx" root="getting-started" icon="sql.svg" />
   <Card
@@ -13,7 +32,6 @@ export const metadata = {
     icon="nextjs.svg"
   />
   <Card file="./languages/node.mdx" root="getting-started" icon="node.svg" />
-  <Card file="./languages/java.mdx" root="getting-started" icon="java.svg" />
   <Card
     file="./languages/drizzle.mdx"
     root="getting-started"
@@ -28,5 +46,167 @@ export const metadata = {
     file="./languages/python.mdx"
     root="getting-started"
     icon="python.svg"
+  />
+</Cards>
+
+## Examples
+
+These are end to end examples that are fully functional applications to show how easily you can build AI-native B2B applications with Nile. Feel free to fork the examples to learn more or play around with the hosted live demo.
+
+<Cards>
+  <Card
+    file="./examples/chat_with_pdf.mdx"
+    root="getting-started"
+    icon="chat.svg"
+  />
+  <Card
+    file="./examples/code_assistant.mdx"
+    root="getting-started"
+    icon="vector.png"
+  />
+  <Card
+    file="./examples/task_genius.mdx"
+    root="getting-started"
+    icon="taskgenius2.png"
+  />
+  <Card
+    file="./examples/sales_insight.mdx"
+    root="getting-started"
+    icon="lead.svg"
+  />
+</Cards>
+
+## AI models
+
+Nile integrates with all the popular embedding models. Pick one and follow along to build an AI-native experience for your B2B application. Learn how you can build AI applications that are secure, performant and cost effective for each of your customers.
+
+<Cards>
+  <Card
+    file="./embedding_models/cohere.mdx"
+    root="ai-embeddings"
+    icon="cohere.svg"
+  />
+  <Card
+    file="./embedding_models/open_ai.mdx"
+    root="ai-embeddings"
+    icon="open_ai.svg"
+  />
+  <Card
+    file="./embedding_models/fireworks.mdx"
+    root="ai-embeddings"
+    icon="fireworks.svg"
+  />
+  <Card
+    file="./embedding_models/google.mdx"
+    root="ai-embeddings"
+    icon="google_ai.svg"
+  />
+  <Card
+    file="./embedding_models/deepinfra.mdx"
+    root="ai-embeddings"
+    icon="deepinfra.svg"
+  />
+  <Card
+    file="./embedding_models/voyage.mdx"
+    root="ai-embeddings"
+    icon="voyage.svg"
+  />
+</Cards>
+
+## Use cases
+
+Numerous AI-native B2B use cases can be built on Nile. These use cases cover a lot of different B2B verticals. They are not full end to end examples but covers the requirements, schemas and seed data needed to get started.
+
+<Cards>
+  <Card
+    file="./usecases/lead-management.mdx"
+    root="getting-started"
+    icon="lead.svg"
+  />
+  <Card
+    file="./usecases/issue-tracking.mdx"
+    root="getting-started"
+    icon="issue.svg"
+  />
+  <Card file="./usecases/slack.mdx" root="getting-started" icon="slack.webp" />
+  <Card
+    file="./usecases/expensify.mdx"
+    root="getting-started"
+    icon="expensify.svg"
+  />
+  <Card
+    file="./usecases/tripactions.mdx"
+    root="getting-started"
+    icon="tripactions.png"
+  />
+  <Card
+    file="./usecases/schoology.mdx"
+    root="getting-started"
+    icon="schoology.png"
+  />
+  <Card
+    file="./usecases/legal.mdx"
+    root="getting-started"
+    icon="legalicon.svg"
+  />
+  <Card
+    file="./usecases/support.mdx"
+    root="getting-started"
+    icon="supporticon.svg"
+  />
+  <Card file="./usecases/hiring.mdx" root="getting-started" icon="hiring.svg" />
+  <Card
+    file="./usecases/marketing.mdx"
+    root="getting-started"
+    icon="marketing.svg"
+  />
+  <Card file="./usecases/hr.mdx" root="getting-started" icon="hr.svg" />
+  <Card file="./usecases/notion.mdx" root="getting-started" icon="notion.svg" />
+  <Card file="./usecases/health.mdx" root="getting-started" icon="health.svg" />
+  <Card
+    file="./usecases/scheduler.mdx"
+    root="getting-started"
+    icon="scheduler.svg"
+  />
+  <Card
+    file="./usecases/accounts.mdx"
+    root="getting-started"
+    icon="accounts.svg"
+  />
+  <Card file="./usecases/supply.mdx" root="getting-started" icon="supply.svg" />
+  <Card
+    file="./usecases/feedback.mdx"
+    root="getting-started"
+    icon="feedback.svg"
+  />
+  <Card
+    file="./usecases/onboarding.mdx"
+    root="getting-started"
+    icon="onboarding.svg"
+  />
+</Cards>
+
+## Schema Migrations
+
+<Cards>
+  <Card
+    file="./schema_migrations/drizzle.mdx"
+    root="getting-started"
+    icon="drizzle.svg"
+  />
+  <Card
+    file="./schema_migrations/prisma.mdx"
+    root="getting-started"
+    icon="prisma.svg"
+  />
+  <Card
+    file="./schema_migrations/sqlalchemy.mdx"
+    root="getting-started"
+    icon="python.svg"
+  />
+  <Card
+    file="./schema_migrations/django.mdx"
+    root="getting-started"
+    icon="django_white.svg"
   />
 </Cards>

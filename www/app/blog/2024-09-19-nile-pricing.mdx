@@ -1,0 +1,72 @@
+export const metadata = {
+  title: "Pricing a database product for our customer’s customer",
+  authors: ["ram"],
+  image: "nile-pricing-banner.png",
+  sizzle: "I am excited to introduce Nile’s pricing!",
+  tags: ["database", "serverless", "postgres", "AI", "B2B"],
+};
+
+Today, I am excited to introduce Nile’s pricing. Nile is a Postgres platform that decouples storage from compute, virtualizes tenants, and supports both vertical and horizontal scaling globally to ship multi-tenant AI applications fast while being safe and allowing limitless scale. Our pricing model allows unlimited databases, unbounded virtual tenant databases in a single Postgres database, and supports billions of vector embeddings across B2B customers. We [announced](https://www.thenile.dev/blog/app/blog/nile-public-launch) public preview yesterday. You can [sign up](https://console.thenile.dev/) to Nile today and follow one of our [getting started](https://website-git-formatfix-niledatabase.vercel.app/docs/getting-started/languages) guides.
+
+# Our pricing principle
+
+We want pricing to be transparent and fair. We also wanted it to be 10x better than anything out there, given the future of AI, which is going to 100x the number of databases. At the same time, pricing is complex, and these principles are based on how we think about pricing today. We will continue to iterate on pricing and be transparent and honest about it. We have three core values on which our pricing has been built.
+
+**Value vs Usage**
+
+<span className="-mt-6">
+  Users pay for additional value when upgrading to higher tiers. However, they
+  can remain on their current tier indefinitely if they only need increased
+  usage without extra features.
+</span>
+
+**Pay for utilization vs Pay for usage**
+
+<span className="-mt-6">
+  Pay for only queries on serverless and capacity on provisioned compute.
+</span>
+
+**Democratizing databases and virtual tenant databases for AI**
+
+<span className="-mt-6">
+  Every developer in an organization should have access to a database with
+  limitless virtual tenant databases and billions of vector embeddings.
+</span>
+
+## Value vs Usage
+
+Most pricing models want to encourage customers to move to a higher tier and pay some monthly subscription fee to increase usage. This approach has pros and cons. The tier bump comes with a step function increase in usage and a subscription fee. It is helpful to encourage this if the customer knows how their application will grow. In most cases, the application growth is still being determined. You might have a few weeks of increased usage, and things could taper out, or you only need 10-20% of the usage provided by the next higher tier.
+
+Nile allows our customers to remain on a specific tier indefinitely and only pay for additional usage beyond the set limits. We want our customers to advance to the next tier only if they benefit from our value. This might result in a lower average revenue per customer in the short term, but in the long run, our goal is to provide more value to each customer. If we continue to enhance our value, satisfied users will willingly upgrade to higher tiers.
+
+This principle applies to all of our tiers, including the free tier. You can remain on the free tier and, once usage limits have been reached, pay for additional usage by entering payment information. This could be significantly more cost-effective than upgrading to a higher tier and paying a monthly subscription fee based on your use case.
+![“Value Usage"](/blog/valueusage.png)
+
+## Pay for Utilization vs Pay for usage
+
+Nile offers the flexibility to allocate B2B customers/tenants to serverless or provisioned compute (coming soon) based on their security, performance, and cost requirements. Initially, tenants can be placed on serverless and later transitioned to provisioned compute as they expand. With serverless, you only pay for the exact CPU and memory usage when a query is executed, eliminating costs for underutilized resources. Additionally, inactive tenants transitioning to active mode incur zero cold start time. Provisioned compute follows the conventional payment model based on VCPUs but now allows for smaller sizes tailored to specific tenant needs. This aids in better aligning business revenue with the cost of infrastructure per customer (COGS).
+
+A typical B2B workload is mostly predictable but continues to grow at a steady rate with some step function growth from time to time due to product changes or new distribution channels. The compute utilization will continue to increase gradually over the period of growth. For a compute requirement shown below, you would typically need to opt for a 4 VCPU instance on RDS when you hit the 2 VCPU limit.
+![“Utilization Graph"](/blog/utilizationgraph.png)
+
+The utilization of the 4VCPU will be only 50% of the total capacity for more than six months while you end up paying for the full 4VCPU capacity. While this approach has its pros and cons, it is important to understand that pay for usage is really not pay for utilization! We call the pay by utilization as serverless and pay by capacity as provisioned compute. Nile is designed to support both models in the same Postgres database. Users can place tenants (their customers) on any of these options and even distribute between them while keeping a single database experience for the application.
+![“Node Utilization"](/blog/nodeutilization.png)
+
+A rough napkin math to compare RDS for a 4 VCPU instance vs a serverless option where you pay for utilization shows that the serverless option can be 25-30% lower cost. The gap between the cost for serverless vs provisioned compute shows the range of pricing you could possibly have between the two options. While serverless pricing is attractive, a common problem is that it could suddenly spike the billing if usage drastically increased. This can be avoided by providing price cap and throttling usage when the bill goes above the limit set.
+![“Napkin Math"](/blog/napkinmath.png)
+
+## Democratizing databases and virtual tenant databases for AI
+
+The influence of AI is expected to lead to a significant rise in the number of B2B applications being developed. These applications will all be multi-tenant and AI-focused, making use of LLMs and vector embeddings. This transformation necessitates a more suitable pricing model to foster innovation. By offering unlimited databases, virtual tenant databases, and vector embeddings, B2B developers and generative AI platforms can generate millions of B2B applications and only pay for the ones that succeed.
+
+We designed Nile from the start to have the design goals of supporting unrestrained limits to ensure anyone can create and share databases. We also ensure that there is no limit to the number of customers or tenants that can be created in one Postgres database. We are going to see an explosion of the number of databases driven by AI and Nile would like to be at the forefront of this.
+![“Democratize Databases"](/blog/democratize.png)
+
+## Aligning your business to the cost of infrastructure
+
+I have been in the business of building SaaS for over a decade now, and very often, we found ourselves justifying the cost of our infrastructure. The COGS (cost of infrastructure and goods) plays a massive role in determining the gross margins of a business. There are a few ways to improve your gross margins - increase price per customer by providing more value or reduce the cost per customer. In B2B companies, the database contributes a significant cost to the COGS.
+
+An excellent way to rationalize the cost is to calculate the gross margin per customer and understand where and how the cost is spread. Nile’s virtual tenant databases and the ability to place tenants between serverless or provisioned compute provides a pretty good control on this number. It is easy to understand the exact cost at the database level per tenant and optimize it. One possible strategy for a company is to place the customers on their free tier and lower tiers with lesser utilization on serverless and only place the security-conscious customers on provisioned compute. It is also possible to move tenants from one deployment to another as they grow without any application changes. Remember, these customers are represented in Nile’s Postgres as tenants and are still in one single database
+![“Cogs"](/blog/cogs.png)
+
+We described our current approach to pricing. We would love to get feedback and continue to improve. We have modelled and designed the system with the intent to make our users successful and have a stronger alignment to ensure Nile only succeeds if our customers and their customers succeed. [Try out Nile](https://console.thenile.dev/) today and let us know.

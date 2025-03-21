@@ -2,10 +2,10 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Nile Database — Serverless Postgres for modern SaaS",
-    short_name: "Nile database",
+    name: "Postgres rengineered for multitenant and AI apps",
+    short_name: "Nile Postgres",
     description:
-      "Serverless Postgres build with multi-tenacy at it's core. Fault tolerant, globally distributed, with user and tenant management built in.",
+      "Postgres re-engineered for multitenant apps. Build secure, scalable and AI-native multi-tenant applications with world-class developer experience.",
     start_url: "/",
     display: "standalone",
     background_color: "#000",

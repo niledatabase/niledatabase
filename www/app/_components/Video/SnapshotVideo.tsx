@@ -38,13 +38,14 @@ export default function SnapshotVideo(props: {
 
   return (
     <video
-      className={className}
+      className={`${className ? className : ""} object-cover w-full h-auto`}
+      style={{ transform: "translateZ(0)" }}
       muted
       ref={videoRef}
       loop
       playsInline
       poster={poster ? `${_baseSrc}${poster}` : "/video/earth.webp"}
-      preload="none"
+      preload="metadata"
     >
       <source src={src} type="video/mp4" />
     </video>

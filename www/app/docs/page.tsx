@@ -25,11 +25,6 @@ const languages = [
     path: "/docs/getting-started/languages/node",
   },
   {
-    name: "Java",
-    icon: "java.svg",
-    path: "/docs/getting-started/languages/java",
-  },
-  {
     name: "Drizzle",
     icon: "drizzle.svg",
     path: "/docs/getting-started/languages/drizzle",
@@ -46,21 +41,54 @@ const languages = [
   },
 ];
 
+const usecases = [
+  {
+    name: "Slack++",
+    icon: "slack.webp",
+    path: "/docs/getting-started/usecases/slack",
+  },
+  {
+    name: "AITravelMate",
+    icon: "tripactions.png",
+    path: "/docs/getting-started/usecases/tripactions",
+  },
+  {
+    name: "SmartSpend AI",
+    icon: "expensify.svg",
+    path: "/docs/getting-started/usecases/expensify",
+  },
+  {
+    name: "TaskPilot AI",
+    icon: "issue.svg",
+    path: "/docs/getting-started/usecases/issue-tracking",
+  },
+  {
+    name: "SalesLeadPilot",
+    icon: "lead.svg",
+    path: "/docs/getting-started/usecases/lead-management",
+  },
+  {
+    name: "SmartLearn",
+    icon: "schoology.png",
+    path: "/docs/getting-started/usecases/schoology",
+  },
+];
+
 const integrations = [
   {
     name: "Stripe",
     icon: "Stripe.svg",
-    path: "docs/integrations/stripe",
+    path: "docs/platform/integrations/stripe",
   },
   {
     name: "NextAuth",
     icon: "nextauth.webp",
-    path: "docs/integrations/nextauth",
+    path: "docs/platform/integrations/nextauth",
   },
   {
     name: "Lambda",
     icon: "lambda.svg",
-    path: "docs/integrations/lambda",
+    path: "docs/platform/integrations/lambda",
   },
 ];
 export default async function Home() {
@@ -70,7 +98,7 @@ export default async function Home() {
       <SideNavigation page={`/docs`} />
       <div className="flex flex-col px-2 max-w-6xl">
         <div className="container mx-auto">
-          <div className="flex flex-row items-start gap-2 mx-auto mt-20">
+          <div className="flex flex-row items-start gap-2 mx-auto mt-20 justify-center">
             <Image
               className="mt-2 hidden lg:block"
               src={NileBgMark}
@@ -80,7 +108,7 @@ export default async function Home() {
             />
             <PageHeader
               title="Nile Documentation"
-              subtitle="Serverless Postgres for modern SaaS"
+              subtitle="A Postgres platform to ship multi-tenant B2B applications - fast, safe, and limitless"
             />
           </div>
         </div>
@@ -89,7 +117,7 @@ export default async function Home() {
           <div className="text-3xl mb-10 lg:text-left text-center">
             Languages and frameworks
           </div>
-          <div className="flex flex-wrap flex-row gap-6 max-w-[936px] mx-auto justify-center">
+          <div className="flex flex-wrap flex-row gap-6 max-w-[852px] mx-auto justify-center">
             {languages.map(({ name, icon, path }) => {
               return (
                 <Link
@@ -109,6 +137,71 @@ export default async function Home() {
                 </Link>
               );
             })}
+          </div>
+          <Divider />
+          <div className="container mx-auto">
+            <div className="flex flex-col">
+              <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
+                <div className="text-3xl mb-10 lg:text-left text-center">
+                  Use cases
+                </div>
+                <div className="hidden lg:block">
+                  <GradientButton
+                    href="/docs/getting-started/usecases"
+                    variant="soft"
+                  >
+                    <Image
+                      alt="book cover"
+                      src={Templates}
+                      width={24}
+                      height={24}
+                    />
+                    <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                      More use cases
+                    </span>
+                  </GradientButton>
+                </div>
+              </div>
+              <div className="flex flex-wrap flex-row gap-6 max-w-[852px] mx-auto justify-center">
+                {usecases.map(({ name, icon, path }) => {
+                  return (
+                    <Link
+                      key={path}
+                      href={path}
+                      className="flex flex-col lg:min-w-[216px] items-center"
+                    >
+                      <div className="icon rounded-[20px] flex justify-center">
+                        <Image
+                          src={`/icons/${icon}`}
+                          alt="book cover"
+                          width={24}
+                          height={24}
+                        />
+                      </div>
+                      <div className="text=[18px]">{name}</div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="lg:hidden flex justify-center">
+              <div>
+                <GradientButton
+                  href="/docs/getting-started/usecases"
+                  variant="soft"
+                >
+                  <Image
+                    src={Templates}
+                    alt="book cover"
+                    width={24}
+                    height={24}
+                  />
+                  <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
+                    More tutorials
+                  </span>
+                </GradientButton>
+              </div>
+            </div>
           </div>
           <Divider />
           <div className="container mx-auto">
@@ -186,7 +279,10 @@ export default async function Home() {
             <div className="flex lg:flex-row flex-col justify-between items-center mb-10 gap-4">
               <div className="text-3xl">Learn from our tutorials</div>
               <div className="hidden lg:block">
-                <GradientButton href="/templates" variant="soft">
+                <GradientButton
+                  href="https://www.youtube.com/@niledatabase"
+                  variant="soft"
+                >
                   <Image
                     src={Templates}
                     alt="book cover"
@@ -202,7 +298,10 @@ export default async function Home() {
             <TutorialList />
             <div className="lg:hidden flex justify-center">
               <div>
-                <GradientButton href="/templates" variant="soft">
+                <GradientButton
+                  href="https://www.youtube.com/@niledatabase"
+                  variant="soft"
+                >
                   <Image
                     src={Templates}
                     alt="book cover"
@@ -230,8 +329,10 @@ export default async function Home() {
 }
 
 export const metadata = {
-  title: "Documentation Database",
-  description: "Serverless Postgres for modern SaaS",
+  title:
+    "Documentation for Nile - The Postgres platform for AI-native B2B companies",
+  description:
+    "Build secure, performant, and scalable multi-tenant AI applications with world-class developer experience.",
   openGraph: {
     images: "opengraph/docs.jpg",
   },

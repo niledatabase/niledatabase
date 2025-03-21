@@ -1,0 +1,37 @@
+Sales Rep: Thank you for calling ModaMart. This is Alex. How can I help you today?
+
+Customer: Hi Alex. I’m Lisa. I’ve been looking at your website, but I’m not sure about the sizes for a few items. They seem to vary a lot.
+
+Sales Rep: I understand, Lisa. Sizes can be tricky. Are there specific items you’re concerned about?
+
+Customer: Yes, the summer dresses. I’m usually a medium, but sometimes a small fits better. It’s confusing.
+
+Sales Rep: Got it. We actually have a detailed size chart for each product. Have you had a chance to look at those?
+
+Customer: I saw the size chart but I’ve had problems with online size charts before. They don't always match up with the actual fit.
+
+Sales Rep: That's a common issue. One thing we offer is a virtual stylist service. Would you be interested in setting up a quick consultation to get the best fit recommendations?
+
+Customer: That sounds helpful, but I’m also worried about the return policy if things don’t fit. Is it easy to return items?
+
+Sales Rep: Absolutely. You have a 30-day window to return items for a full refund. We also offer free return shipping for all online purchases.
+
+Customer: That sounds good. But I'm also hesitant because I’ve had bad experiences with slow shipping.
+
+Sales Rep: We hear you, Lisa. At ModaMart, we prioritize fast and reliable shipping. Most of our orders arrive within 5 business days. Plus, we offer expedited shipping if you need your items sooner.
+
+Customer: Alright, that’s reassuring. How do I set up the virtual stylist consultation?
+
+Sales Rep: You can easily schedule it on our website or I can set it up for you right now. What’s your preferred time and date?
+
+Customer: I’m free tomorrow afternoon. Maybe around 2 PM?
+
+Sales Rep: Perfect. I’ve scheduled your virtual stylist consultation for tomorrow at 2 PM. You’ll receive a confirmation email shortly. Is there anything else I can assist you with?
+
+Customer: No, that’s all for now. Thanks, Alex.
+
+Sales Rep: My pleasure, Lisa. Have a great day and we’ll talk to you tomorrow.
+
+Customer: Thanks, bye!
+
+Sales Rep: Goodbye!

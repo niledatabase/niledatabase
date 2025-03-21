@@ -10,6 +10,10 @@ primary_region = "sjc"
 
 [env]
   REQUIRE_AUTH=true
+  AI_BASE_URL="https://api.fireworks.ai/inference/v1"
+  AI_MODEL="accounts/fireworks/models/llama-v3p1-405b-instruct"
+  EMBEDDING_MODEL="nomic-ai/nomic-embed-text-v1.5"
+
 
 [http_service]
   internal_port = 3001
@@ -18,5 +22,3 @@ primary_region = "sjc"
   auto_start_machines = true
   min_machines_running = 0
   processes = ["app"]
-
-  

@@ -1,0 +1,33 @@
+**Sales Rep**: Hi, this is Alex from Nexiv Solutions. Am I speaking with Jamie?
+
+**Customer**: Yes, this is Jamie. How can I help you?
+
+**Sales Rep**: Great to speak with you, Jamie. I wanted to introduce you to some of the solutions Nexiv offers. We're helping companies like yours streamline their operations with our integrated software suite. Could I ask, what are some of the challenges you're facing with your current tech setup?
+
+**Customer**: Honestly, we're struggling with data consolidation. We have different systems for inventory, sales, and customer management, and it's a hassle to get a clear view of everything.
+
+**Sales Rep**: I hear that a lot. Data fragmentation can be a real headache. How much time would you say your team spends on manual data reconciliation each week?
+
+**Customer**: Probably around ten hours or more. It's really inefficient.
+
+**Sales Rep**: That sounds frustrating. Our platform offers a unified dashboard that brings all your data into one place, reducing the need for manual efforts. Could that help reduce those ten hours for your team?
+
+**Customer**: It sounds promising, but we’ve tried new systems before, and the transition is always difficult. We're worried about the downtime and the learning curve.
+
+**Sales Rep**: I understand your concern. Rolling out new software can be challenging. At Nexiv, we provide dedicated onboarding and training support to ensure a smooth transition. Plus, our customer success team is always on hand to assist with any issues. Would that help alleviate some of your concerns?
+
+**Customer**: It might, but we're also cautious about the cost. Budget is a big factor for us right now.
+
+**Sales Rep**: Absolutely, cost is a key consideration. Our solutions are scalable, and we can tailor a package that fits both your needs and your budget. More often than not, our customers find that the efficiencies they gain actually save them money in the long run. How does that sound?
+
+**Customer**: It's worth exploring. What would be the next steps if we were interested in finding out more?
+
+**Sales Rep**: Great to hear! We can set up a demo tailored to your specific processes and pain points. From there, we would scope out a custom plan and provide a detailed quote. Could we schedule a time for the demo this week?
+
+**Customer**: Sure, I have some availability on Thursday afternoon.
+
+**Sales Rep**: Perfect. I'll send over a calendar invite for Thursday at 2 PM. Looking forward to showing you how Nexiv Solutions can make a difference for your team. Thanks for your time, Jamie.
+
+**Customer**: Thank you, Alex. Speak to you soon.
+
+**Sales Rep**: Talk soon! Have a great day.

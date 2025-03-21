@@ -1,0 +1,36 @@
+---
+**Sales Rep:** Good afternoon! Thank you for calling TerraVista Properties. My name is Sarah. How can I assist you today?
+
+**Customer:** Hi Sarah, this is Mark. I was looking at some properties on your website and I have a few questions.
+
+**Sales Rep:** Absolutely, Mark. I'd be happy to help. Which properties were you looking at?
+
+**Customer:** There's a house on Elm Street that caught my eye, but I'm worried about its proximity to the main road. It's important for me to have a quiet home environment.
+
+**Sales Rep:** I understand your concern. That property is indeed close to the main road. However, it has double-glazed windows which significantly reduce noise. Have you visited the property yet?
+
+**Customer:** Not yet. I'm also curious about the property prices in that area. They seem a bit high compared to others I've looked at.
+
+**Sales Rep:** That's a valid point. Elm Street is part of an up-and-coming neighborhood with excellent schools and community amenities, which has driven up the prices slightly. But it’s also a solid investment with potential for appreciation. Would you be open to discussing other quieter properties within your budget?
+
+**Customer:** That could work. I'm also stressed about the mortgage rates. I feel like they’re going to be too high for what I can afford monthly.
+
+**Sales Rep:** I hear you, Mark. Mortgage rates can be daunting. We have a trusted mortgage advisor on our team that can explore various financing options based on your financial situation. Would you like me to set up a meeting with them?
+
+**Customer:** Yeah, I think that would be helpful. 
+
+**Sales Rep:** Great! I’ll arrange for the mortgage advisor to contact you tomorrow. In the meantime, how about we schedule a visit to Elm Street and maybe a couple of other properties that meet your criteria?
+
+**Customer:** Sure, this Saturday works for me.
+
+**Sales Rep:** Perfect. I’ll send you an email with the details and the list of properties we’ll visit. Is there anything else you’d like to address?
+
+**Customer:** No, I think that covers it for now. Thanks, Sarah.
+
+**Sales Rep:** You're welcome, Mark. We’ll touch base soon. Have a great day!
+
+**Customer:** You too. Bye.
+
+**Sales Rep:** Goodbye.
+
+---

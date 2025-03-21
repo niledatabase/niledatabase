@@ -2,10 +2,8 @@
 
 import "./globals.css";
 import styles from "./page.module.css";
-import type { Metadata } from "next";
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import Stack from "@mui/joy/Stack";
 import Link from "@mui/joy/Link";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
@@ -74,7 +72,7 @@ export default function RootLayout({
           </div>
           <div></div>
           {children}
-          <div className={styles.grid}>
+          <div className="flex flex-row gap-8 p-4">
             <Card
               variant="outlined"
               sx={{

@@ -30,14 +30,14 @@ export function ContactForm({
   const [success, setSuccess] = useState<boolean>(false);
 
   useEffect(() => {
-    if (show) {
-      document.body.style.overflowY = "hidden";
-    } else {
-      document.body.style.overflowY = "scroll";
-    }
-    return () => {
-      document.body.style.overflowY = "scroll";
-    };
+    // if (show) {
+    // document.body.style.overflowY = "hidden";
+    // } else {
+    // document.body.style.overflowY = "scroll";
+    // }
+    // return () => {
+    // document.body.style.overflowY = "scroll";
+    // };
   }, [show]);
 
   const clear = useCallback(() => {

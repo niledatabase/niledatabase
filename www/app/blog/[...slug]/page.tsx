@@ -6,12 +6,11 @@ import { parseMetadata } from "../_components/parseMetadata";
 import { Authors } from "../_components/Authors";
 import Heading from "@/app/_components/common/Heading";
 import Image from "next/image";
-import Footer from "../_components/Footer";
-import Divider from "@/app/_components/common/Divider";
 import { Metadata, ResolvingMetadata } from "next";
 import Coffee from "@/public/blog/coffee.webp";
 import BlogImageZoom from "./ImageZoom";
 
+export const dynamic = "force-dynamic";
 type Props = { params: { slug: string[] } };
 
 async function getBlog(props: Props) {
@@ -21,7 +20,7 @@ async function getBlog(props: Props) {
   const [lastSlug] = slug.reverse();
   const files = await glob("app/blog/**.mdx");
   const file = files.find((file) => {
-    return file.includes(lastSlug);
+    return file.includes(`${lastSlug}.mdx`);
   });
 
   if (!file || !file[0]) {
@@ -37,33 +36,33 @@ export default async function BlogPage(props: Props) {
   return (
     <Container background={null}>
       <BlogImageZoom />
-      <div className="container mx-auto prose prose-invert">
+      <div className="container mx-auto prose prose-invert mt-56">
+        <div className="bg-[#2D2D2D] rounded-xl aspect-video w-full overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex relative border border-[#1c1c1c]">
+          {metadata?.image ? (
+            <Image
+              className="object-cover object-center h-full w-full absolute"
+              data-image-zoom-disabled
+              alt={metadata.image}
+              width={800}
+              height={505}
+              sizes="50vw"
+              src={`/blog/${metadata.image}`}
+              style={{
+                width: "100%",
+              }}
+            />
+          ) : (
+            <Image
+              className="object-cover object-center h-full w-full absolute"
+              data-image-zoom-disabled
+              alt="coffee"
+              width={800}
+              height={505}
+              src={Coffee}
+            />
+          )}
+        </div>
         <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
-          <div className="bg-[#2D2D2D] rounded-xl aspect-video w-[390px] xl:w-[800px] overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex relative">
-            {metadata?.image ? (
-              <Image
-                className="object-cover object-center h-full w-full absolute"
-                data-image-zoom-disabled
-                alt={metadata.image}
-                width={800}
-                height={505}
-                sizes="50vw"
-                src={`/blog/${metadata.image}`}
-                style={{
-                  width: "100%",
-                }}
-              />
-            ) : (
-              <Image
-                className="object-cover object-center h-full w-full absolute"
-                data-image-zoom-disabled
-                alt="coffee"
-                width={800}
-                height={505}
-                src={Coffee}
-              />
-            )}
-          </div>
           <div className="flex flex-col md:flex-row gap-3 items-center mb-5 w-full justify-center">
             <div className="flex flex-row justify-center items-center gap-3">
               <div className="opacity-60">{publishDate}</div>
@@ -79,8 +78,6 @@ export default async function BlogPage(props: Props) {
           </div>
         </div>
       </div>
-      <Divider />
-      <Footer />
     </Container>
   );
 }
@@ -97,6 +94,9 @@ export async function generateMetadata(
     description: blog.metadata.sizzle,
     openGraph: {
       images: [blog.metadata.image, ...previousImages],
+    },
+    alternates: {
+      canonical: `/blog/${props.params.slug.join("/")}`,
     },
   };
 }

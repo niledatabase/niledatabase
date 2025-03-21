@@ -1,0 +1,41 @@
+**Sales Rep:** Good afternoon! This is Alex from Verity Capital. Am I speaking with Mr. Johnson?
+
+**Customer:** Yes, this is Mark Johnson speaking. How can I help you?
+
+**Sales Rep:** Hi Mark, thanks for taking my call. I understand you're currently exploring financial planning options and might be looking for some guidance. Is that correct?
+
+**Customer:** Yes, that's right. I've been looking into different investment strategies and retirement planning.
+
+**Sales Rep:** Great! At Verity Capital, we specialize in personalized financial planning and investment advice. Can you share a bit about your current situation, so I can better understand your needs?
+
+**Customer:** Well, I'm in my early 50s, and I have some savings and a 401(k). But I'm concerned that I'm not doing enough to ensure a comfortable retirement. I'm not sure if my current strategy is the best.
+
+**Sales Rep:** I see, Mark. It's great that you're thinking ahead about retirement. Many of our clients have had similar concerns. Could you tell me what specifically worries you about your current strategy?
+
+**Customer:** Mainly, I'm worried about market volatility and whether my investments are too risky. Also, I'm not confident that I'll meet my retirement goals with my current plan.
+
+**Sales Rep:** Those are valid concerns. Market volatility can be unsettling, especially when you're nearing retirement. At Verity Capital, we focus on creating diversified portfolios to mitigate risk and ensure steady growth. Have you considered working with a financial advisor before?
+
+**Customer:** I have, but I'm also worried about the fees involved. I don’t want to erode my savings with high advisory fees.
+
+**Sales Rep:** That's a common concern. Our fee structure is designed to be transparent and competitive. We believe in delivering value that outweighs the cost. Our advisors work closely with you to develop a plan that aligns with your goals and comfort level with risk. Would you be open to discussing how our fee structure compares to your projected returns?
+
+**Customer:** Sure, I'd like to know more about that.
+
+**Sales Rep:** Excellent. I’d be happy to send you some more information on our services and set up a meeting with one of our senior advisors. They can provide a detailed comparison and tailor a strategy specifically for you. How does that sound?
+
+**Customer:** That sounds good. I’d be interested in reviewing the information and setting up a meeting.
+
+**Sales Rep:** Perfect, Mark. I'll send you an email with the details and a proposed time for our meeting. What would be a good time for you next week?
+
+**Customer:** I’m available on Wednesday afternoon.
+
+**Sales Rep:** Great, I'll schedule our senior advisor to meet with you on Wednesday at 2 PM. Thank you for your time today, Mark. Looking forward to helping you plan for a secure future.
+
+**Customer:** Thank you, Alex. I appreciate your help.
+
+**Sales Rep:** My pleasure, Mark. Have a wonderful day!
+
+**Customer:** You too. Goodbye!
+
+**Sales Rep:** Goodbye!

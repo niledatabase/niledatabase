@@ -1,12 +1,11 @@
-# Multi-tenant AI PDF Chat - built with Nile, OpenAI, UploadThing and NextJS 13
+# KnowledgeAI - Multi-tenant PDF search assistant. Built with Nile, OpenAI, UploadThing and NextJS 13
 
-This template shows how to use Nile as a multi-tenant vector embeddings store, to build an application that allow tenants to upload documents and discuss them with a language model. The files are stored on UploadThing, with URIs, embeddings and chat history stored in Nile.
+This template shows how to use Nile to implement multitenancy, user management and vector embeddings, to build an application that allow tenants to upload documents and have a conversation with them using a language model. The files are stored on UploadThing, with URIs, embeddings and chat history stored in Nile.
 
 This example was contributed by Shreyas Chaliha aka Trace. The original version can be found in his [github account](https://github.com/trace2798/nile_ai_pdf).
 
 - [Live demo](https://ai-pdf-tau.vercel.app/)
-- [Video guide - TBD]()
-- [Step by step guide - TBD]()
+- [Step by step guide](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
 
 ## Getting Started
 
@@ -90,7 +89,7 @@ In the left-hand menu, click on "Settings" and then select "Credentials". Genera
 
 ### 4. Setting up Google Authentication
 
-This demo uses Google authentication for signup. You will need to configure this in both Google and Nile, following the instructions in [Nile documentation](https://www.thenile.dev/docs/user-authentication/social-login/google).
+This demo uses Google authentication for signup. You will need to configure this in both Google and Nile, following the instructions [in the example](https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/social_login_google/NextJS/README.md).
 
 ### 4. Setting up 3rd Party SaaS
 
@@ -143,7 +142,7 @@ You can see the files, the embeddings and the conversation by querying `file`, `
 To learn more about how this example works and how to use Nile:
 
 - [In depth explanation of this example](https://www.thenile.dev/docs/getting-started/languages/nextjs)
-- [More about tenants in Nile](https://www.thenile.dev//docs/tenant-management)
+- [More about tenants in Nile](https://www.thenile.dev/docs/tenant-virtualization/tenant-management)
 - [More on user authentication with Nile](https://www.thenile.dev/docs/user-authentication)
 - [Nile's Javascript SDK reference](https://www.thenile.dev/docs/reference/sdk-reference)
 

@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Arrow from "@/public/icons/arrow.svg";
@@ -135,7 +134,7 @@ function RenderItem({
 
   if (!item.header && indexed) {
     return (
-      <Fragment>
+      <>
         <BaseListItem
           item={indexed}
           page={page}
@@ -156,7 +155,7 @@ function RenderItem({
             />
           )}
         </ul>
-      </Fragment>
+      </>
     );
   }
 
@@ -173,7 +172,7 @@ function RenderItem({
       );
     }
     return (
-      <Fragment>
+      <>
         <BaseListItem
           item={item}
           page={page}
@@ -189,7 +188,7 @@ function RenderItem({
             />
           )}
         </ul>
-      </Fragment>
+      </>
     );
   }
 }

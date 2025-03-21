@@ -36,16 +36,16 @@ export async function GET(req: NextRequest) {
     return respond("/"); // TODO: Better error handling
   }
 
-  // Here we are getting a connection to a specific tenant database
-  const tenantNile = configureNile(cookies().get("authData"), tenantId);
+  const nile = await configureNile();
 
   // Store the Stripe customer ID  and subscription in the database
-  await tenantNile.db.query(
+  await nile.db.query(
     `UPDATE tenants 
      SET stripe_customer_id = $1,
          stripe_subscription_id = $2,
-         tenant_tier = $3`,
-    [checkoutSession.customer, checkoutSession.subscription, "basic"]
+         tenant_tier = $3
+     WHERE id = $4`,
+    [checkoutSession.customer, checkoutSession.subscription, "basic", tenantId]
   );
 
   revalidatePath("/tenants");

@@ -15,12 +15,14 @@ export function Authors({ authors: _authors }: { authors: string[] }) {
                   alt={`${author} profile pic`}
                   width={32}
                   height={32}
+                  data-image-zoom-disabled
                   src={`/authors/${author}.png`}
                 />
               ) : (
                 <Image
                   alt={`Dr. John A. Zoidberg, DFA`}
                   width={32}
+                  data-image-zoom-disabled
                   height={32}
                   src={Zoidberg}
                 />

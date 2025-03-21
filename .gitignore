@@ -43,3 +43,8 @@ yarn.lock
 
 # fly
 fly.toml
+
+# Local Netlify folder
+.netlify
+
+certificates

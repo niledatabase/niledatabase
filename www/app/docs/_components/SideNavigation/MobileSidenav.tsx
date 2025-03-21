@@ -28,16 +28,16 @@ export default function MobileSidenav({ navBar, page }: Props) {
     setOpen(!open);
   }, [open]);
 
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflowY = "hidden";
-    } else {
-      document.body.style.overflowY = "scroll";
-    }
-    return () => {
-      document.body.style.overflowY = "scroll";
-    };
-  }, [open]);
+  // useEffect(() => {
+  // if (open) {
+  // document.body.style.overflowY = "hidden";
+  // } else {
+  // document.body.style.overflowY = "scroll";
+  // }
+  // return () => {
+  // document.body.style.overflowY = "scroll";
+  // };
+  // }, [open]);
 
   const activeCallback = useCallback((page: string, thing: any) => {
     const item = document?.querySelectorAll(`a[href="${page}"]`);

@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:20
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -17,4 +17,4 @@ COPY . .
 
 # Assuming port 3006 for now. Will get the port management working here later.
 EXPOSE 3006
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]

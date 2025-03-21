@@ -6,6 +6,12 @@ import {
   users as usersSchema,
   tenant_users,
 } from "./db/schema";
+import {
+  findSimilarTasks,
+  embedTask,
+  EmbeddingTasks,
+  aiEstimate,
+} from "./AiUtils";
 import { eq } from "drizzle-orm";
 import { match } from "path-to-regexp";
 import expressBasicAuth from "express-basic-auth";
@@ -33,13 +39,17 @@ app.use((req, res, next) => {
 
 // add basic auth middleware if required
 // we are doing this after setting the tenant context, so we'll have an appropriate connection to the DB
-app.use(
-  expressBasicAuth({
-    authorizer: dbAuthorizer,
-    authorizeAsync: true,
-    unauthorizedResponse: getUnauthorizedResponse,
-  })
-);
+console.log("REQUIRE_AUTH: " + REQUIRE_AUTH);
+if (REQUIRE_AUTH) {
+  console.log("adding basic auth middleware");
+  app.use(
+    expressBasicAuth({
+      authorizer: dbAuthorizer,
+      authorizeAsync: true,
+      unauthorizedResponse: getUnauthorizedResponse,
+    })
+  );
+}
 
 async function dbAuthorizer(
   username: string,
@@ -92,6 +102,7 @@ app.post("/api/tenants", async (req, res) => {
         // @ts-ignore
         return await tx
           .insert(tenant_users)
+          // @ts-ignore
           .values({ tenant_id: tenants[0].id, user_id: req.auth.user });
       });
     }
@@ -141,16 +152,34 @@ app.get("/api/tenants", async (req, res) => {
 app.post("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
     const { title, complete } = req.body;
+    if (!title) {
+      res.status(400).json({
+        message: "No task title provided",
+      });
+    }
     const tenantId = req.params.tenantId;
+
+    // We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
+    const similarTasks = await findSimilarTasks(tenantDB, title);
+    console.log("found similar tasks: " + JSON.stringify(similarTasks));
+
+    const estimate = await aiEstimate(title, similarTasks);
+    console.log("estimated time: " + estimate);
+
+    // get the embedding for the task, so we can find it in future similarity searches
+    const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
+
     const newTodo = await tenantDB(async (tx) => {
       return await tx
         .insert(todoSchema)
-        .values({ tenantId, title, complete })
+        .values({ tenantId, title, complete, estimate, embedding })
         .returning();
     });
-    res.json(newTodo);
+    // return without the embedding vector, since it is huge and useless
+    res.json(newTodo.map((t: any) => ({ ...t, embedding: "<omitted>" })));
   } catch (error: any) {
     console.log("error adding task: " + error.message);
+    console.log(error);
     res.status(500).json({
       message: "Internal Server Error",
     });
@@ -182,7 +211,14 @@ app.get("/api/tenants/:tenantId/todos", async (req, res) => {
   try {
     // No need for a "where" clause here because we are setting the tenant ID in the context
     const todos = await tenantDB(async (tx) => {
-      return await tx.select().from(todoSchema);
+      return await tx
+        .select({
+          id: todoSchema.id,
+          tenant_id: todoSchema.tenantId,
+          title: todoSchema.title,
+          estimate: todoSchema.estimate,
+        })
+        .from(todoSchema);
     });
     res.json(todos);
   } catch (error: any) {
@@ -198,7 +234,14 @@ app.get("/insecure/all_todos", async (req, res) => {
   try {
     console.log("getting all todos");
     const todos = await tenantDB(async (tx) => {
-      return await tx.select().from(todoSchema);
+      return await tx
+        .select({
+          id: todoSchema.id,
+          tenant_id: todoSchema.tenantId,
+          title: todoSchema.title,
+          estimate: todoSchema.estimate,
+        })
+        .from(todoSchema);
     });
     console.log("returning all todos: " + JSON.stringify(todos));
     res.json(todos);

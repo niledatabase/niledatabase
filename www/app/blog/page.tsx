@@ -4,10 +4,9 @@ import Link from "next/link";
 import { glob } from "glob";
 import Divider from "../_components/common/Divider";
 import { Authors } from "./_components/Authors";
-import { Metadata } from "./_components/Metadata";
+import { Metadata as Meta } from "./_components/Metadata";
 import { parseMetadata } from "./_components/parseMetadata";
 import algoliasearch from "algoliasearch/lite";
-import Footer from "./_components/Footer";
 import Search from "./_components/Search";
 import Hit from "./_components/Search/Hit";
 import Coffee from "@/public/blog/coffee.webp";
@@ -28,7 +27,7 @@ const searchClient = algoliasearch(
 );
 const index = searchClient.initIndex("blog");
 export const metadata = {
-  title: "niledatabase Blog",
+  title: "Blog | Nile Database",
   description: "All things database SaaS",
 };
 function HeroArticle(props: Props) {
@@ -41,6 +40,7 @@ function HeroArticle(props: Props) {
           {image ? (
             <Image
               className="aspect-video w-full"
+              data-image-zoom-disabled
               alt={image}
               width={550}
               height={347}
@@ -49,6 +49,7 @@ function HeroArticle(props: Props) {
           ) : (
             <Image
               className="aspect-video w-full"
+              data-image-zoom-disabled
               alt="coffee"
               width={550}
               height={347}
@@ -57,7 +58,7 @@ function HeroArticle(props: Props) {
           )}
         </div>
         <div className="flex justify-center flex-col">
-          <Metadata
+          <Meta
             publishDate={publishDate}
             readLength={readLength}
             title={title}
@@ -74,37 +75,35 @@ export default async function Blog() {
   const [mostRecent]: any = await glob("app/blog/**.mdx");
   let hits: any[] = [];
 
-  // @ts-expect-error - this exists.
+  //@ts-expect-error - this exists
   await index.browseObjects({
-    query: "",
     batch: (batch: any) => {
       hits = hits.concat(batch);
     },
   });
 
-  const refinements: string[] = hits.reduce((accum, hit) => {
-    return accum.concat(hit.tags);
-  }, []);
-  const refinementItems = uniq(refinements);
+  // const refinements: string[] = hits.reduce((accum, hit) => {
+  // return accum.concat(hit.tags);
+  // }, []);
+  // const refinementItems = uniq(refinements);
 
-  const { default: FirstArticle, metadata } = await import(`${mostRecent}`);
+  const [localFile] = mostRecent.split("/").reverse();
+  const { default: FirstArticle, metadata } = await import(`./${localFile}`);
   return (
     <Container background={null}>
       <div className="container mx-auto">
-        <div className="px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
+        <div className="px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4  mt-32">
           <HeroArticle
             fileName={mostRecent}
             {...metadata}
             content={FirstArticle}
           />
           <Divider />
-          <div className="relative px-4">
-            <RefinementList items={refinementItems} />
+          <div className="relative px-4 h-16">
+            {/* <RefinementList items={refinementItems} /> */}
             <Search />
           </div>
           <Hits initialHits={hits} />
-          <Divider />
-          <Footer />
         </div>
       </div>
     </Container>
@@ -113,7 +112,7 @@ export default async function Blog() {
 
 function Hits({ initialHits }: { initialHits: any[] }) {
   return (
-    <div className="flex flex-row flex-wrap justify-start server-side-hits">
+    <div className="flex flex-row flex-wrap justify-start server-side-hits pt-4">
       {initialHits.map((hit) => {
         return <Hit hit={hit} key={hit.objectID} />;
       })}

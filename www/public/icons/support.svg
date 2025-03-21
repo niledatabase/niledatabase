@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="25"
+   viewBox="0 0 24 25"
+   fill="none"
+   version="1.1"
+   id="svg240"
+   sodipodi:docname="database.svg"
+   inkscape:version="1.2 (dc2aeda, 2022-05-15)"
+   inkscape:export-filename="support.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview242"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     showguides="true"
+     inkscape:zoom="30.212627"
+     inkscape:cx="14.795139"
+     inkscape:cy="12.031393"
+     inkscape:window-width="1730"
+     inkscape:window-height="1105"
+     inkscape:window-x="2869"
+     inkscape:window-y="173"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg240" />
+  <defs
+     id="defs238">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient2006">
+      <stop
+         style="stop-color:#f4c587;stop-opacity:1;"
+         offset="0"
+         id="stop2002" />
+      <stop
+         style="stop-color:#d6d3e9;stop-opacity:1;"
+         offset="0.5"
+         id="stop4188" />
+      <stop
+         style="stop-color:#99d2ec;stop-opacity:1;"
+         offset="1"
+         id="stop2004" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2006"
+       id="linearGradient2008"
+       x1="4.4966593"
+       y1="12"
+       x2="18.919746"
+       y2="13.288843"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2006"
+       id="linearGradient11778"
+       x1="2.0578327"
+       y1="12.562984"
+       x2="20.828079"
+       y2="12.585557"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(1.4586669,-2.1072951)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2006"
+       id="linearGradient11786"
+       x1="2.1614947"
+       y1="12.45503"
+       x2="22.180859"
+       y2="12.45503"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <path
+     id="path1837-2"
+     style="display:none;fill:none;fill-opacity:1;stroke:url(#linearGradient2008);stroke-width:1.00157;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+     d="m 6.4283723,17.226027 c 0,0 1.3536378,0.73191 3.7070597,0.897404 M 6.4283723,11.121178 c 0,0 1.3536378,0.731909 3.7070597,0.897403 m 9.361227,6.847703 c 0,0 0,3.097641 -7.474599,3.097641 -7.5254005,0 -7.5254005,-3.130625 -7.5254005,-3.130625 V 12.5 M 11.996959,3 c 7.5002,0 7.5002,3.16667 7.5002,3.16667 0,0 0,3.16666 -7.5002,3.16666 -7.5002995,0 -7.5002995,-3.16666 -7.5002995,-3.16666 0,0 0,-3.16667 7.5002995,-3.16667 z M 4.4966595,6 v 6 c 0,0 0,3 7.5000005,3 7.518838,0 6.97528,-2.416576 7.50668,-2.455576 M 19.496659,6 v 12.866284" />
+  <circle
+     style="fill:none;fill-opacity:1;stroke:url(#linearGradient11786);stroke-width:1.15808;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+     id="path11531"
+     cx="12.171177"
+     cy="12.45503"
+     r="9.4306421" />
+  <text
+     xml:space="preserve"
+     style="font-weight:bold;font-size:10.6667px;font-family:Comfortaa;-inkscape-font-specification:'Comfortaa Bold';fill:url(#linearGradient11778);fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+     x="9.0826664"
+     y="16.750668"
+     id="text11587"
+     inkscape:export-filename="support.svg"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96"><tspan
+       sodipodi:role="line"
+       id="tspan11585"
+       x="9.0826664"
+       y="16.750668"
+       style="font-size:10.6667px;fill:url(#linearGradient11778);fill-opacity:1;stroke:none">?</tspan></text>
+</svg>

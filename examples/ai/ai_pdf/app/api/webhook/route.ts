@@ -26,7 +26,10 @@ export async function POST(req: Request) {
   if (!session?.metadata?.orgId) {
     return new NextResponse("Org ID is required", { status: 400 });
   }
-  const nile = configureNile(cookies().get("authData"), session.metadata.orgId);
+  const nile = await configureNile(
+    cookies().get("authData"),
+    session.metadata.orgId
+  );
 
   if (event.type === "checkout.session.completed") {
     const subscription = await stripe.subscriptions.retrieve(

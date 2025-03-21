@@ -1,0 +1,26 @@
+{
+  "name": "lambda-drizzle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ts",
+  "type": "module",
+  "dependencies": {
+    "@netlify/functions": "^2.8.1",
+    "dotenv": "^16.3.1",
+    "drizzle-orm": "^0.28.6",
+    "express": "^4.21.0",
+    "express-basic-auth": "^1.2.1",
+    "path-to-regexp": "^6.2.1",
+    "pg": "^8.11.3",
+    "postgres": "^3.4.1",
+    "serverless-http": "^3.2.0"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.10",
+    "@types/express": "^4.17.21",
+    "@types/pg": "^8.10.7",
+    "drizzle-kit": "^0.19.13",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}

@@ -1,0 +1,41 @@
+**Sales Rep:** Hi, this is Alex from Verity Capital. Am I speaking with Jane?
+
+**Customer:** Yes, this is Jane.
+
+**Sales Rep:** Hi, Jane. Thanks for taking my call. How are you doing today?
+
+**Customer:** I'm doing alright, thanks. How can I help you?
+
+**Sales Rep:** I wanted to talk about how Verity Capital can assist you with your financial planning and investment goals. Do you have a few minutes to chat?
+
+**Customer:** Sure, but I’ve already got some investments in place. What makes Verity Capital different?
+
+**Sales Rep:** That’s a great question. We offer personalized financial planning which is tailored specifically to your needs and long-term goals. Can you tell me a bit about your current investment strategy and any concerns you might have?
+
+**Customer:** I've been mostly doing it myself through an online brokerage. But lately, I've been worried about market volatility and whether I’m diversified enough.
+
+**Sales Rep:** That's a common concern, Jane. Market fluctuations can be stressful to navigate on your own. At Verity Capital, we provide a diversified portfolio that’s managed by our experienced advisors. This can help mitigate those risks and give you more peace of mind. Have you ever worked with a financial advisor before?
+
+**Customer:** No, I haven’t. I worry about the fees and whether it’s worth the cost.
+
+**Sales Rep:** I understand where you're coming from. While there are fees involved, our clients often find that the benefits—such as personalized advice, a tailored investment strategy, and regular portfolio reviews—outweigh the costs. In fact, our goal is to generate higher returns and lower risks, which in the long run can compensate for those fees. How does that align with your goals?
+
+**Customer:** It sounds good in theory, but I'm still skeptical. I need to know that I can trust someone with my money.
+
+**Sales Rep:** Trust is absolutely crucial, and it’s something we take very seriously. We have a transparent process and keep you informed every step of the way. I’d be happy to share some testimonials from long-term clients who've had positive experiences. How about we set up a meeting for a more detailed discussion?
+
+**Customer:** I suppose a meeting could help clear up some questions.
+
+**Sales Rep:** Fantastic! How about next Tuesday at 11 AM or Thursday at 3 PM? Which works better for you?
+
+**Customer:** Thursday at 3 PM works for me.
+
+**Sales Rep:** Great, I’ll schedule us for Thursday at 3 PM. I’ll send you a calendar invite shortly. What’s your preferred email address?
+
+**Customer:** It’s jane.doe@example.com.
+
+**Sales Rep:** Perfect. You should see the invite in your inbox soon. I look forward to speaking with you further, Jane. Have a wonderful day!
+
+**Customer:** Thanks, Alex. You too.
+
+**Sales Rep:** Thank you. Talk to you soon!

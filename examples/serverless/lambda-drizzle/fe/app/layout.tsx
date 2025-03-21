@@ -72,7 +72,7 @@ export default function RootLayout({
           </div>
           <div></div>
           {children}
-          <div className={styles.grid}>
+          <div className="flex flex-row gap-8 p-4">
             <Card
               variant="outlined"
               sx={{

@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
-import GradientButton from "@/app/_components/common/GradientButton";
 import { ContactForm } from "@/app/contact-us/_components/Contact";
 import { useCallback, useState } from "react";
 import Arrow from "@/public/icons/arrow.svg";
+import GradientButton from "@/app/_components/common/GradientButton";
 
 export default function ContactUs() {
   const [show, setShow] = useState(false);
@@ -12,14 +12,17 @@ export default function ContactUs() {
     setShow(!show);
   }, [show]);
   return (
-    <div className="py-[25px]">
+    <div>
       <ContactForm show={show} setShow={setShow} />
-      <GradientButton className="w-full" onClick={showModal}>
-        <div className="w-full flex flex-row justify-between items-center">
-          <span className="text-[white]">Contact Us</span>
+      <button
+        className="gradientBorderButton before:opacity-100 w-content flex flex-row px-8 before:rounded-xl"
+        onClick={showModal}
+      >
+        <div className="flex flex-row justify-between items-center">
+          <span className="text-[white] leading-10">Contact Sales</span>
           <Image src={Arrow} alt="arrow" width={25} height={30} priority />
         </div>
-      </GradientButton>
+      </button>
     </div>
   );
 }

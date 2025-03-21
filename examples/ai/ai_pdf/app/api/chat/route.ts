@@ -12,7 +12,10 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log("Chat request body:", body);
 
-    const tenantNile = configureNile(cookies().get("authData"), body.tenant_id);
+    const tenantNile = await configureNile(
+      cookies().get("authData"),
+      body.tenant_id
+    );
 
     const question = body.messages[body.messages.length - 1].content;
 

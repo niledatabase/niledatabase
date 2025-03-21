@@ -11,11 +11,12 @@ import { redirect } from "next/navigation";
 
 export const Navbar = async () => {
   const userData = cookies().get("authData");
+  let nile = null;
   if (userData) {
-    const nile = configureNile(userData, null);
+    nile = await configureNile(userData, null);
     console.log("showing navbar for user: " + nile.userId);
   }
-  if (!userData || !nile.userId) {
+  if (!userData || !nile || !nile.userId) {
     return (
       <>
         <div className="fixed top-0 w-full h-14 px-4 border-b shadow-sm flex items-center">

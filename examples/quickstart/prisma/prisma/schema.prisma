@@ -26,6 +26,9 @@ model todos {
   id        String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   tenant_id String   @db.Uuid
   title     String?  @db.VarChar(256)
+  estimate  String?  @db.VarChar(256)
+  // Prisma doesn't support vector types yet: https://github.com/prisma/prisma/issues/18442
+  embedding Unsupported("vector(768)")? 
   complete  Boolean?
 
   @@id([tenant_id, id], map: "todos_tenant_id_id")
@@ -57,6 +60,7 @@ model users {
   given_name  String?
   email       String?
   picture     String?
+  email_verified DateTime? @db.Timestamp(6)
 
   @@schema("users")
 }

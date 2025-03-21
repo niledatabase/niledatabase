@@ -1,0 +1,216 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "SmartBooks AI",
+  order: 15,
+};
+
+## SmartBooks AI - Your Intelligent Accounting Partner
+
+![accountssnapshot](/docs/accountssnapshot.png)
+
+The accounting management application is designed to help organizations track their financial activities, including revenue and expenses. The application leverages AI to provide insights and suggestions for efficiency gains, trends analysis, and financial optimization. The system ensures compliance and security by associating all data with specific tenants, ensuring data isolation and integrity.
+
+### Key Features:
+
+1. **Revenue and Expense Tracking**:
+   - Track total revenue and expenses for each organization.
+   - Break down expenses by department.
+2. **Document Upload and Parsing**:
+   - Upload invoices and receipts.
+   - Automatically parse documents to update revenue or expenses.
+3. **AI-Powered Insights**:
+   - Analyze financial trends.
+   - Provide suggestions to fix increasing expenses or dropping revenue.
+   - Suggest efficiency gains by analyzing internal data and third-party vendor information.
+4. **Reports and Analytics**:
+   - Generate detailed financial reports.
+   - View statistics and trends over time.
+5. **User Management**:
+   - Support multiple roles including administrators, accountants, and auditors.
+   - Ensure secure access to financial data.
+
+### Postgres Schemas
+
+![accountsschema](/docs/accountsschema.png)
+
+### 1. departments
+
+Stores information about various departments within a tenant. This helps to report revenue and expenses by department.
+
+```sql
+CREATE TABLE departments (
+    department_id UUID DEFAULT gen_random_uuid(),
+    tenant_id UUID,
+    department_name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (tenant_id, department_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+```
+
+### 2. revenue
+
+Tracks revenue entries with amounts, dates, and descriptions. AI can automatically populate these fields with uploaded invoices, contracts and receipts.
+
+```sql
+CREATE TABLE revenue (
+    tenant_id UUID,
+    revenue_id UUID DEFAULT gen_random_uuid(),
+    department_id UUID,
+    amount NUMERIC(15, 2) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    description TEXT,
+    PRIMARY KEY (tenant_id, revenue_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+```
+
+### 3. expenses
+
+Tracks expense entries with amounts, dates, and descriptions. AI can automatically populate these fields with uploaded invoices, contracts and receipts.
+
+```sql
+CREATE TABLE expenses (
+    tenant_id UUID,
+    expense_id UUID DEFAULT gen_random_uuid(),
+    department_id UUID,
+    amount NUMERIC(15, 2) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    description TEXT,
+    PRIMARY KEY (tenant_id, expense_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+```
+
+### 4. invoices
+
+Stores uploaded invoices, including file paths and associated amounts.The invoice itself is stored where the file_path is referencing but the embeddings are generated for them and stored in the table. In a real world application, these invoices will be chunked and embeddings will be generated for each chunk.
+
+```sql
+CREATE TABLE invoices (
+    tenant_id UUID,
+    invoice_id UUID DEFAULT gen_random_uuid(),
+    department_id UUID,
+    file_path TEXT NOT NULL,
+    amount NUMERIC(15, 2) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    description TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, invoice_id),
+    FORE
+```
+
+### 5. receipts
+
+Stores uploaded receipts, including file paths and associated amounts. The receipt itself is stored where the file_path is referencing but the embeddings are generated for them and stored in the table. In a real world application, these receipts will be chunked and embeddings will be generated for each chunk.
+
+```sql
+CREATE TABLE receipts (
+    tenant_id UUID,
+    receipt_id UUID DEFAULT gen_random_uuid(),
+    department_id UUID,
+    file_path TEXT NOT NULL,
+    amount NUMERIC(15, 2) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    description TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, receipt_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+```
+
+### 6. financial_reports
+
+Stores generated financial reports, including type and data in JSON format.These financial report are also pushed to the AI model to help with answering questions about the reports.
+
+```sql
+CREATE TABLE financial_reports (
+    tenant_id UUID,
+    report_id UUID DEFAULT gen_random_uuid(),
+    report_type VARCHAR(50), -- e.g., "monthly", "quarterly", "annual"
+    generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data JSONB,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, report_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+```
+
+### Full Script
+
+```sql
+-- Create Departments Table
+CREATE TABLE departments (
+    department_id UUID DEFAULT gen_random_uuid(),
+    tenant_id UUID,
+    department_name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (tenant_id, department_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Create Revenue Table
+CREATE TABLE revenue (
+    tenant_id UUID,
+    revenue_id UUID DEFAULT gen_random_uuid(),
+    department_id UUID,
+    amount NUMERIC(15, 2) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    description TEXT,
+    PRIMARY KEY (tenant_id, revenue_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+
+-- Create Expenses Table
+CREATE TABLE expenses (
+    tenant_id UUID,
+    expense_id UUID DEFAULT gen_random_uuid(),
+    department_id UUID,
+    amount NUMERIC(15, 2) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    description TEXT,
+    PRIMARY KEY (tenant_id, expense_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+
+-- Create Invoices Table
+CREATE TABLE invoices (
+    tenant_id UUID,
+    invoice_id UUID DEFAULT gen_random_uuid(),
+    department_id UUID,
+    file_path TEXT NOT NULL,
+    amount NUMERIC(15, 2) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    description TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, invoice_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+
+-- Create Receipts Table
+CREATE TABLE receipts (
+    tenant_id UUID,
+    receipt_id UUID DEFAULT gen_random_uuid(),
+    department_id UUID,
+    file_path TEXT NOT NULL,
+    amount NUMERIC(15, 2) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    description TEXT,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, receipt_id),
+    FOREIGN KEY (tenant_id, department_id) REFERENCES departments(tenant_id, department_id)
+);
+
+-- Create Financial Reports Table
+CREATE TABLE financial_reports (
+    tenant_id UUID,
+    report_id UUID DEFAULT gen_random_uuid(),
+    report_type VARCHAR(50), -- e.g., "monthly", "quarterly", "annual"
+    generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data JSONB,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, report_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+```

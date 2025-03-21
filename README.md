@@ -1,37 +1,43 @@
 <p align="center">
-<img width="1356" alt="Screen Shot 2023-06-21 at 7 35 32 PM" src="https://github.com/niledatabase/niledatabase/assets/2977624/ab6c0f96-510c-4f87-b53d-02179a71d376">
+  <img width="1434" alt="Screen Shot 2024-09-18 at 9 20 04 AM" src="https://github.com/user-attachments/assets/20585883-5cdc-4f15-93d3-dc150e87bc11">
 </p>
 
 ---
 
 # Nile
 
-**Nile is serverless Postgres built for modern SaaS applications.** All B2B SaaS applications and most B2C SaaS are multi-tenant. A tenant is primarily a company, an organization, or a workspace in your product that contains a group of users. A SaaS application provides services to multiple tenants. Tenant is the basic building block of all SaaS applications.
+**Nile is a Postgres platform that decouples storage from compute, virtualizes tenants, and supports vertical and horizontal scaling globally to ship B2B applications fast while being safe with limitless scale.** All B2B applications are multi-tenant. A tenant/customer is primarily a company, an organization, or a workspace in your product that contains a group of users. A B2B application provides services to multiple tenants. Tenant is the basic building block of all B2B applications.
 
-**Nile virtualizes tenants/customers/organizations into Postgres to enable native tenant data isolation, performance isolation between tenants, per-tenant backups, and tenant placement on shared or dedicated compute globally for latency or compliance. You can do all this with the experience of a single Postgres! You don’t have to manage multiple databases, build complex permissions for isolation, or write buggy scripts to read specific tenant data from backups. On top of the tenant model, we provide opt-in user management capabilities, customer-specific vector embeddings, and instant tenant admin dashboards. Moreover, Nile's Postgres is built for the cloud, enabling effortless scaling and a true serverless experience.**
-
-We are in private beta currently. You can get an invite by signing up at https://www.thenile.dev/
-
-This is a great resource to read more about Nile in 3 minutes https://www.thenile.dev/docs/nile-in-3-minutes
-
+## Components
+- [Postgres re-engineered for multi-tenant apps](https://www.thenile.dev/docs/getting-started/languages/sql)
+- [Tenant virtualization](https://www.thenile.dev/docs/tenant-virtualization/introduction)
+- [Nile Auth - drop-in B2B auth with customer data in your Nile’s Postgres](https://www.thenile.dev/docs/auth/introduction)
+- [AI toolkit and vector database](https://www.thenile.dev/docs/ai-embeddings/introduction)
+  
 ## Features
 
-- Built-in tenant virtualization
-- Drop-in tenant and user management
-- Onboard tenants once and place them globally - any region, edge or infrastructure
-- Instant customer dashboards
-- Domain and tenant specific AI embeddings
-- Effortlessly elastic
-- Fully integrated ready to use UI components
-- Extensive support for popular Postgres extensions
+- Unlimited Postgres databases, Unlimited virtual tenant databases
+- Secure isolation for customer's data and vector embeddings
+- Customer-specific vector embeddings at 10x lower cost
+- Autoscale to millions of tenants and billions of vector embeddings
+- Place tenants on serverless or provisioned compute - globally
+- Tenant-level branching, backups, schema migration, and insights
+- AI toolkit and massively scalable vector database
 
-<img width="1437" alt="Screen Shot 2023-10-15 at 5 52 35 PM" src="https://github.com/niledatabase/niledatabase/assets/2977624/42668baf-0067-4b94-a3b5-65bfa33a5aeb">
+We are in public preview currently. 
+
+To get started with Nile, you can sign up to Nile at https://console.thenile.dev/ or try locally using our docker image https://www.thenile.dev/docs/getting-started/postgres_docker
+
+This is a great resource to read more about Nile in 3 minutes [https://www.thenile.dev/docs/nile-in-3-minutes](https://www.thenile.dev/docs/getting-started/whatisnile)
+
+<img width="1434" alt="Screen Shot 2024-09-18 at 9 20 04 AM" src="https://github.com/user-attachments/assets/a78a2181-c00a-47e8-aa17-3d8b99cbe70d">
+
 
 ## Documentation
 
-Nile is in private beta. For documentation, you can check out https://www.thenile.dev/docs. You can get an invite by signing up at https://www.thenile.dev/.
+Nile is in public preview. For documentation, you can check out https://www.thenile.dev/docs. You can sign up to Nile at https://console.thenile.dev/.
 
 ## Community & Support
 
 - [Community Forum](https://github.com/orgs/niledatabase/discussions).
-- [Discord](https://discord.gg/s7hcR9Hxj3).
+- [Discord](https://discord.com/invite/8UuBB84tTy).

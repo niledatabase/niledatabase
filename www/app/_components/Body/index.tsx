@@ -8,6 +8,11 @@ const aeonik = localFont({
   display: "swap",
   variable: "--font-aeonik",
 });
+const aeonikMedium = localFont({
+  src: "../../../public/fonts/Aeonik-Medium.woff2",
+  display: "swap",
+  variable: "--font-aeonik-medium",
+});
 const variants = {
   base: "bg-no-repeat bg-top lg:bg-[size:105%] bg-[size:200%] bg-base",
   community:
@@ -31,13 +36,13 @@ export default function Body({
 }) {
   return (
     <body
-      className={`${aeonik.variable} ${inter.variable} ${
-        background ? variants[background] : null
-      }`}
+      className={`${aeonikMedium.variable} ${aeonik.variable} ${
+        inter.variable
+      } ${background ? variants[background] : null}`}
     >
       <GTag />
       {background === "circular" && (
-        <div className="w-screen absolute pointer-events-none -z-10 top-0 bg-circular opacity-[0.15] h-[60%]" />
+        <div className="w-full absolute pointer-events-none -z-10 top-0 bg-circular opacity-[0.15] h-[60%]" />
       )}
       {children}
     </body>

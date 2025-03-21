@@ -1,122 +1,73 @@
 import React from "react";
 import "@fontsource/inter";
-import Stack from "@mui/joy/Stack";
-import Link from "@mui/joy/Link";
-import Card from "@mui/joy/Card";
-import CardContent from "@mui/joy/CardContent";
-import Typography from "@mui/joy/Typography";
 import "./css/globals.css";
-import styles from "./css/page.module.css";
-import { ReactComponent as NileLogo } from "./images/nile_logo.svg";
+import "./css/output.css";
 import { ReactComponent as NodeLogoRight } from "./images/node_logo_r.svg";
 import { ReactComponent as NodeLogoBottom } from "./images/node_logo_b.svg";
+import Logo from "./components/ui/logo";
+import { Card } from "./components/ui/card";
 
 export default function Layout({ children }) {
-  console.log(window.location.pathname);
   return (
-    <main className={styles.main} fontFamily="Inter">
-      <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-        <div className={styles.description}>
-          <div>
-            <NodeLogoRight width="133.5px" height="82px" />
-          </div>
-          <div>
-            <a
-              href="https://thenile.dev"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Created by{"    "}
-              <NileLogo
-                width="100px"
-                height="37px"
-                style={{ marginLeft: "15px" }}
-              />
-            </a>
-          </div>
+    <main className="h-screen flex items-center flex-col">
+      <div className="bg-black border-b-px flex flex-row justify-between w-full items-center px-6 py-4">
+        <NodeLogoRight width="133.5px" height="82px" />
+        <div className="text-3xl p-10 text-white">
+          TaskGenius - Task manager with ai-based estimates
         </div>
+
+        <a
+          href="https://thenile.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white"
+        >
+          Created by
+          <Logo width="100px" height="37px" style={{ marginLeft: "15px" }} />
+        </a>
         {window.location.pathname === "/" ? null : (
-          <div className={styles.logout}>
-            <Link href="/?logout" style={{ color: "black" }}>
-              [ Logout ]
-            </Link>
+          <div>
+            <span>[</span>
+            <a href="/?logout" style={{ color: "black" }}>
+              Logout
+            </a>
+            <span>]</span>
           </div>
         )}
       </div>
 
-      <div>
-        <Stack>
-          <Typography level="h2">Yet Another Todo Application</Typography>
-        </Stack>
-      </div>
-      {children}
-      <div className={styles.grid}>
-        <Card
-          variant="outlined"
-          sx={{
-            "--card-padding": "1rem",
-            "&:hover": {
-              boxShadow: "md",
-              borderColor: "neutral.outlinedHoverBorder",
-            },
-          }}
-        >
-          <Link
-            overlay
+      <div className="container mx-auto">{children}</div>
+      <div className="flex flex-row justify-between p-8 gap-8">
+        <Card>
+          <a
             href="https://www.thenile.dev/docs/getting-started/languages/node"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
           >
-            <NodeLogoBottom width="115.6px" height="70.8px" />
-          </Link>
-          <CardContent>
-            <Typography>Getting started guide</Typography>
-          </CardContent>
+            <NodeLogoBottom className="h-10" />
+          </a>
+          Getting started guide
         </Card>
-        <Card
-          variant="outlined"
-          sx={{
-            "--card-padding": "1rem",
-            "&:hover": {
-              boxShadow: "md",
-              borderColor: "neutral.outlinedHoverBorder",
-            },
-          }}
-        >
-          <Link
-            overlay
-            href="https://thenile.dev"
+        <Card>
+          <a
+            href="https://console.thenile.dev"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
           >
-            <NileLogo width="120px" height="44.4px" />
-          </Link>
-          <CardContent>
-            <Typography>Sign up to Nile</Typography>
-          </CardContent>
+            <Logo fill="black" className="h-10" />
+          </a>
+          <div>Sign up to Nile</div>
         </Card>
 
-        <Card
-          variant="outlined"
-          sx={{
-            "--card-padding": "1rem",
-            "&:hover": {
-              boxShadow: "md",
-              borderColor: "neutral.outlinedHoverBorder",
-            },
-          }}
-        >
-          <Link
-            overlay
+        <Card>
+          <a
             href="https://www.thenile.dev/templates"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
           >
-            <NileLogo width="120px" height="44.4px" />
-          </Link>
-          <CardContent>
-            <Typography>Try additional templates</Typography>
-          </CardContent>
+            <Logo fill="black" className="h-10" />
+          </a>
+          <div>Try additional templates</div>
         </Card>
       </div>
     </main>

@@ -1,83 +1,31 @@
 import { Template } from "./types";
 
 export const NextJSQuickstart: Template = {
-  name: "NextJS multi-tenant application with Nile",
+  name: "AI-Native multi-tenant SaaS with Nile and NextJS",
   description:
-    "Learn about Nile concepts from a Todo multi-tenant app in NextJS",
+    "Learn about Nile and AI concepts from a multi-tenant Todo app in NextJS. We go over tenant isolation, RAG architectures and integration with AI models",
   author: "Nile",
-  imageSrc: "/templates/NextJSTodoApp.png",
+  imageSrc: "/templates/AINextJSTodoApp.png",
   demoUrl: "https://nextjs-quickstart-omega.vercel.app/",
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/nextjs/README.md",
-  // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
-    Framework: "NextJS 13",
-    "Use Case": "Building SaaS",
-    Publisher: "Nile",
-  },
-};
-
-export const EmailLogin: Template = {
-  name: "Email Login Example for multi-tenant application",
-  description:
-    "Learn about simple Authentication for multi-tenant application with Nile",
-  author: "Nile",
-  imageSrc: "/templates/EmailLogin.png",
-  demoUrl: "https://email-authn.vercel.app/",
-  readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/email_login/NextJS/README.md",
-  // A key/value string/string. What is put here will show up on the site exactly
-  metadata: {
-    Framework: "NextJS 13",
-    "Use Case": "SaaS Authentication",
-    Publisher: "Nile",
-  },
-};
-
-export const SocialLoginGoogle: Template = {
-  name: "Social Login for multi-tenant application with Google",
-  description:
-    "Build social login for multi-tenant application with Google and Nile",
-  author: "Nile",
-  imageSrc: "/templates/GoogleSocialLogin.png",
-  demoUrl: "https://niledatabase-google-sso.vercel.app",
-  readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/social_login_google/NextJS/README.md",
-  // A key/value string/string. What is put here will show up on the site exactly
-  metadata: {
-    Framework: "NextJS 13",
-    "Use Case": "SaaS Authentication, Social Login",
-    Publisher: "Nile",
-  },
-};
-
-export const OktaSSOLogin: Template = {
-  name: "SSO Login for multi-tenant application with Okta",
-  description:
-    "Build multi-tenant application using enterprise SSO login with Okta and Nile",
-  author: "Nile",
-  imageSrc: "/templates/OktaSSOLogin.png",
-  demoUrl: "https://login-okta-demo.vercel.app/",
-  readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/sso_login_okta/NextJS/README.md",
-  // A key/value string/string. What is put here will show up on the site exactly
-  metadata: {
-    Framework: "NextJS 13",
-    "Use Case": "SaaS Authentication, Enterprise SSO",
+    Framework: "NextJS, OpenAI, pg_vector",
+    "Use Case": "Building AI Native SaaS",
     Publisher: "Nile",
   },
 };
 
 export const NodeJSQuickstart: Template = {
   // A great name, preferably unique, name for the template
-  name: "NodeJS multi-tenant application with Nile",
+  name: "AI-Native multi-tenant SaaS with Nile, NodeJS and React",
   // what the template does
   description:
-    "Learn about Nile concepts from a multi-tenant Todo List app in NodeJS",
+    "Learn about Nile and AI concepts from an AI-native multi-tenant Todo List app in NodeJS and React",
   // who made it
   author: "Nile",
   // the location of the thumbnail. could be in /public/templates, or a CDN
-  imageSrc: "/templates/NodeTodoApp.png",
+  imageSrc: "/templates/AINodeJSTodoApp.png",
   demoUrl: "https://demo-todo-node.fly.dev",
   // the readmeURL should be publicly accessible.
   // It should also be the real github url, not the raw readme
@@ -85,41 +33,18 @@ export const NodeJSQuickstart: Template = {
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/node_react/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
-    Framework: "NodeJS",
-    "Use Case": "Building SaaS",
-    Publisher: "Nile",
-  },
-};
-
-export const JavaQuickstart: Template = {
-  // A great name, preferably unique, name for the template
-  name: "Java multi-tenant application with Nile",
-  // what the template does
-  description:
-    "Learn about Nile concepts from a multi-tenant Todo List app in Java",
-  // who made it
-  author: "Nile",
-  demoUrl: "https://java-quickstart-demo.vercel.app/",
-  // the location of the thumbnail. could be in /public/templates, or a CDN
-  imageSrc: "/templates/JavaTodoApp.png",
-  // the readmeURL should be publicly accessible.
-  // It should also be the real github url, not the raw readme
-  readmeUrl:
-    "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/java/README.md",
-  // A key/value string/string. What is put here will show up on the site exactly
-  metadata: {
-    Framework: "Java, Spring Boot 3, Hibernate",
-    "Use Case": "Building SaaS",
+    Framework: "NodeJS, React, OpenAI, pg_vector",
+    "Use Case": "Building AI Native SaaS",
     Publisher: "Nile",
   },
 };
 
 export const DrizzleQuickstart: Template = {
   // A great name, preferably unique, name for the template
-  name: "Drizzle multi-tenant application with Nile",
+  name: "AI-Native multi-tenant SaaS with Nile and Drizzle ORM",
   // what the template does
   description:
-    "Learn about Nile concepts from a multi-tenant Todo List app in Drizzle",
+    "Learn about Nile and AI concepts from an AI-native multi-tenant Todo List app with NodeJS and DrizzleORM",
   // who made it
   author: "Nile",
   demoUrl: "https://nile-drizzle-quickstart.vercel.app/",
@@ -131,8 +56,8 @@ export const DrizzleQuickstart: Template = {
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/drizzle/README.md",
   // A key/value string/string. What is put here will show up on the site exactly
   metadata: {
-    Framework: "NodeJS, Drizzle ORM, Express",
-    "Use Case": "Building SaaS",
+    Framework: "NodeJS, Drizzle ORM, OpenAI, pg_vector, Express",
+    "Use Case": "Building AI Native SaaS",
     Publisher: "Nile",
   },
 };
@@ -154,17 +79,17 @@ export const LambdaQuickstart: Template = {
 };
 
 export const PrismaQuickstart: Template = {
-  name: "Todo List application backend with Nile and Prisma ORM",
+  name: "AI-Native multi-tenant SaaS with Nile and Prisma ORM",
   description:
-    "Learn how to use Nile with Prisma ORM to build a multi-tenant app",
+    "Learn about Nile and AI concepts from an AI-native multi-tenant Todo List app with NodeJS and Prisma ORM",
   author: "Nile",
   demoUrl: "https://todo-prisma-ten.vercel.app/",
   imageSrc: "/templates/PrismaTodoApp.png",
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/prisma/README.md",
   metadata: {
-    Framework: "NodeJS, Prisma ORM, Express",
-    "Use Case": "Building SaaS",
+    Framework: "NodeJS, Prisma ORM, OpenAI, pg_vector, Express",
+    "Use Case": "Building AI Native SaaS",
     Publisher: "Nile",
   },
 };
@@ -202,25 +127,25 @@ export const StripeSubscriptionsIntegration: Template = {
 };
 
 export const PythonQuickstart: Template = {
-  name: "Multi-tenant Todo List application with Python and Nile",
+  name: "AI-Native SaaS with Nile and Python",
   description:
-    "Learn how to use Nile with Python, FastAPI, SQLAlchemy, React, Vite and Nile's Serverless Postgres to build a multi-tenant app",
+    "Learn how to use Nile with Python, FastAPI, SQLAlchemy, and OpenAI client to build an AI-Native multi-tenant application",
   author: "Nile",
   demoUrl: "https://nile-python-quickstart.fly.dev/",
-  imageSrc: "/templates/PythonQuickstart.png",
+  imageSrc: "/templates/AIPythonTodoApp.png",
   readmeUrl:
     "https://github.com/niledatabase/niledatabase/blob/main/examples/quickstart/python/README.md",
   metadata: {
-    Framework: "Python, FastAPI, SQLAlchemy, React, Vite",
-    "Use Case": "Building SaaS",
+    Framework: "Python, FastAPI, SQLAlchemy, React, Vite, OpenAI, pg_vector",
+    "Use Case": "Building AI-Native SaaS",
     Publisher: "Nile",
   },
 };
 
 export const AIChatWithPDF: Template = {
-  name: "Multi-tenant chat with PDF application using Nile, pg_vector and OpenAI",
+  name: "KnowledgeAI - PDF search assistant for your organization",
   description:
-    "Learn how to use Nile as a multi-tenant vector database with OpenAI to build a chat with PDF application",
+    "Learn how to use Nile to build multi-tenant SaaS to build a PDF search assistant for your organization",
   author: "Nile",
   demoUrl: "https://ai-pdf-tau.vercel.app/",
   imageSrc: "/templates/ChatWithPDF.png",
@@ -230,6 +155,53 @@ export const AIChatWithPDF: Template = {
     Framework: "OpenAI, pg_vector, UploadThing, NextJS",
     "Use Case": "AI SaaS",
     Publisher: "Shreyas Chaliha aka Trace",
+  },
+};
+
+export const CodeAssist: Template = {
+  name: "Autonomous Code Assistant - Code more, type less",
+  description:
+    "Learn how to use Nile to build multi-tenant SaaS that helps browse and query new code-bases",
+  author: "Nile",
+  demoUrl: "https://code-assist-nile.vercel.app/",
+  imageSrc: "/templates/CodeAssist.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/ai/code_assist/README.md",
+  metadata: {
+    Framework: "OpenAI, pg_vector, LangChain, NextJS",
+    "Use Case": "AI SaaS",
+    Publisher: "Nile",
+  },
+};
+
+export const SalesInsights: Template = {
+  name: "Sales Insights - AI-Native Sales Assistant",
+  description:
+    "Learn how to use Nile and Modal to build a serverless multi-tenant app that helps analyze sales conversations",
+  author: "Nile",
+  demoUrl: "https://gwenshap--sales-insight-web-fastapi-app.modal.run/",
+  imageSrc: "/templates/SalesInsights.png",
+  readmeUrl:
+    "https://github.com/niledatabase/niledatabase/blob/main/examples/ai/sales_insight/README.md",
+  metadata: {
+    Framework: "Modal, Nile, FastAPI, pgvector, Llama 3.1, Vite",
+    "Use Case": "AI SaaS",
+    Publisher: "Nile",
+  },
+};
+
+export const BetterAuth: Template = {
+  name: "Better Auth with Nile",
+  description:
+    "Better-auth plugin for Nile by Aris. Including Email & Password. Organization | Teams. Passkeys. Multi Factor. Password Reset. Email Verification. Roles & Permissions. Rate Limiting. Session Management.",
+  author: "Ricardo Lujan",
+  demoUrl: "https://better-auth-nile.vercel.app/",
+  imageSrc: "/templates/BetterAuth.png",
+  readmeUrl: "https://github.com/aris-2/better-auth-nile/blob/main/README.md",
+  metadata: {
+    Framework: "BetterAuth, Nile, ",
+    "Use Case": "Multi-tenant authentication",
+    Publisher: "Ricardo Lujan",
   },
 };
 

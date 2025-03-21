@@ -1,0 +1,19 @@
+export const metadata = {
+  title: "Architecture",
+  order: 7,
+  description: "Explains Nile's architecture",
+};
+
+Nile has built Postgres from the ground up with tenants/customers as a core building block. The key highlights of our design are:
+
+**Decoupled storage and compute**. The compute layer is essentially Postgres, modified to store each tenant's data in separate pages. The storage layer consists of a fleet of machines that house these pages. An external machine stores the log, while both the log and pages are archived in S3 for long-term storage.
+
+**Tenant-aware Postgres pages**. A typical Postgres database comprises objects like tables and indexes, represented by 8KB pages. In Nile, tables are either tenant-specific or shared. Each page of a tenant table belongs exclusively to one tenant, with all records within a page associated with that tenant. This decoupled storage and tenant-dedicated page system allows for instantaneous tenant migration between different Postgres compute instances. Moving a tenant simply involves transferring tenant leadership from one compute instance to another while maintaining references to the same pages in the storage layer.
+
+![nilearchitecture](/docs/nile-arch.png)
+
+**Support for both serverless and provisioned compute.** The Postgres compute layer offers two types of compute. Serverless compute is built with true multitenancy, while provisioned compute is dedicated to a single Nile customer. Nile users can have any number of provisioned compute instances in the same database. Tenants can be placed on either serverless or provisioned compute.
+
+**Distributed querying across tenants and a central schema store.** The distributed query layer operates across tenants and functions between serverless and provisioned compute instances. A central schema store employs distributed transactions to apply schemas to every tenant during DDL execution. This ensures correct schema application and enables schema recovery for tenants during failures.
+
+**A global gateway for tenant routing, inter-region communication, and connection pooling.** The gateway uses the Postgres protocol to route requests to different tenants. It can communicate with gateways in other regions and serves as a connection pooling layer, eliminating the need for a separate pooler.

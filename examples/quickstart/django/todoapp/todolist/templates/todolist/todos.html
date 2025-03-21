@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <div>
+        <div class="mt-10 mb-5 px-5">
+            <h2 class="text-3xl text-center">{{ tenant.name | upper }}'S TODOS</h2>
+            <div class="flex justify-center">
+                <a href="{% url 'index' %}" class="text-indigo-400 hover:text-indigo-300 text-center">(Back to tenant selection)</a>
+            </div>
+        </div>
+        <div>
+            <div class="flex flex-col mt-2 mb-5 divide-y divide-gray-400 ">
+                <div class="mb-5">
+                    <form id="todoForm" method="post" action="{% url 'todos' tenant.id %}" novalidate>
+                        {% csrf_token %}
+                        <button type="submit" class="ml-2 bg-white text-gray-900 text-3xl px-4 py-2 rounded">+</button>
+                    <input type="text" name="title" id="title" class="w-5/6 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                    placeholder="Add task">
+                    </form>
+                </div>
+                <div >
+                    <ul class="mt-5">
+                        {% for todo in todoitems %}
+                        <li>
+                            <div class="ml-3 inline-flex items-center">
+                                <label class="relative flex items-center p-3 rounded-full cursor-pointer" htmlFor="check">
+                                  <input type="checkbox"
+                                    class="h-5 w-5 cursor-pointer appearance-none rounded-md "
+                                    data-id="{{ todo.id }}" {% if todo.completed %}checked{% endif %}/>
+                                </label>
+                                <label class="mt-px text-gray-900 cursor-pointer select-none ml-3" htmlFor="check">
+                                  {{todo.title}}
+                                </label>
+                              </div> 
+                        </li>
+                        {% empty %}
+                        <p>There are no to-do items in this list.</p>
+                        {% endfor %}
+                    </ul>
+                    </div>
+            </div>
+          </div>
+
+    </div>
+</div>
+
+<!-- Script for submitting forms -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('todoForm');
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const csrfToken = formData.get('csrfmiddlewaretoken');
+
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'accept': 'application/json',
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                location.reload();
+            } else {
+                const errors = await response.json();
+                displayErrors(errors);
+            }
+        });
+
+        function displayErrors(errors) {
+            for (let field in errors) {
+                const errorDiv = document.querySelector(`[name=${field}]`).nextElementSibling;
+                if (errorDiv) {
+                    errorDiv.textContent = errors[field].join(' ');
+                    errorDiv.classList.add('text-red-500');
+                }
+            }
+        }
+
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', async function() {
+                    const todoId = this.getAttribute('data-id');
+                    const completed = this.checked;
+
+                    const response = await fetch(`{% url 'todos' tenant.id %}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'accept': 'application/json',
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            'todo_id': todoId,
+                            'completed': completed
+                        })
+                    });
+
+                    if (!response.ok) {
+                        console.error('Failed to update todo item.');
+                    }
+                });
+            });
+    });
+</script>
+{% endblock %}

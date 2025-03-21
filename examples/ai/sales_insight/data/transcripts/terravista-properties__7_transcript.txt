@@ -1,0 +1,45 @@
+Sales Rep: Hi, this is John from TerraVista Properties. Am I speaking with Mary?
+
+Customer: Yes, this is Mary.
+
+Sales Rep: Hi Mary! I appreciate you taking the time to chat today. How are you doing?
+
+Customer: I'm doing well, thank you. How about you?
+
+Sales Rep: I'm great, thank you. I see you've been looking at some properties on our website. Is there a specific type of home you're interested in?
+
+Customer: Yes, I'm looking for a three-bedroom home, preferably with a decent backyard. We have two kids, so space is important.
+
+Sales Rep: That makes sense. Is there a particular area you're looking at?
+
+Customer: Ideally in the Lakeside neighborhood because the schools there are really good, but I've seen that prices are pretty high.
+
+Sales Rep: Lakeside is a wonderful area, and I understand the concern about pricing. Have you set a budget for your new home?
+
+Customer: We’re looking to stay under $500,000 if possible, but everything in Lakeside seems to be above that.
+
+Sales Rep: I can see how that would be frustrating. One thing we can do is look at homes that might need a little updating. They can sometimes be priced more affordably.
+
+Customer: Hmm, I hadn't considered that. But isn't that risky? I don't want to end up with huge renovation costs.
+
+Sales Rep: That's a valid concern. At TerraVista, we have trusted inspectors and contractors who can give you a realistic estimate of what any necessary work might cost, so you can make an informed decision.
+
+Customer: That does help a bit. I just want to make sure we're making a good investment.
+
+Sales Rep: Absolutely, and we're here to help with that. How soon are you looking to move?
+
+Customer: Ideally within the next three to six months.
+
+Sales Rep: Great, that gives us some time to find the right place for you. I’ll start by sending you some listings that match your criteria but might be slightly outside the Lakeside area or in need of minor updates. Does that sound good?
+
+Customer: Yes, that sounds like a good plan. 
+
+Sales Rep: Perfect, I’ll get those over to you by tomorrow. If you have any questions or if there's anything specific you want to see, just let me know.
+
+Customer: Will do. Thanks for your help, John.
+
+Sales Rep: My pleasure, Mary. Looking forward to finding the perfect home for you and your family. Have a great day!
+
+Customer: You too, bye!
+
+Sales Rep: Bye!

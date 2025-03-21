@@ -1,20 +1,23 @@
 import logging
 import os
-from fastapi.encoders import jsonable_encoder
 from dotenv import load_dotenv
 load_dotenv()
 
 from fastapi import Depends, FastAPI, HTTPException, Body, status, Response, Request
 from fastapi.staticfiles import StaticFiles
+from fastapi.encoders import jsonable_encoder
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.inspection import inspect
 from typing import Annotated
 from uuid import UUID
-from sqlmodel import text
+from sqlmodel import text, select
 from passlib.hash import bcrypt
 
 from db import get_tenant_session, get_global_session
 from models import Tenant, Todo, User, Token, TenantUsers
 from tenant_middleware import TenantAwareMiddleware, get_tenant_id, get_user_id
 from auth import authenticated_user, create_access_token
+from ai_utils import get_embedding, EmbeddingTasks, ai_estimate, get_similar_tasks
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
@@ -73,16 +76,26 @@ async def create_todo(todo:Todo, session = Depends(get_tenant_session)):
     logger.debug(f"Tenant ID: {get_tenant_id()}")
     # Nile won't automatically set the tenant_id for you, so we get it from the context
     todo.tenant_id = get_tenant_id(); 
+    embedding = get_embedding(todo.title, EmbeddingTasks.SEARCH_DOCUMENT)
+    todo.embedding = embedding
+    similar_tasks = get_similar_tasks(session, todo.title)
+    logger.info(f"Generating estimate based on similar tasks: {similar_tasks}")
+    estimate = ai_estimate(todo.title, similar_tasks)
+    todo.estimate = estimate
     session.add(todo)
     session.commit()
-    return todo
+    short_todo = Todo(id=todo.id, tenant_id=todo.tenant_id, title=todo.title, estimate=todo.estimate, complete=todo.complete)
+    return short_todo
 
 # Note the lack of where clause here. 
 # We are using the tenant_id context variable to connect to the tenant DB 
 # and only see the todos for that tenant.
 @app.get("/api/todos")
 async def get_todos(session = Depends(get_tenant_session)):
-    todos = session.query(Todo).all()
+    results = session.exec(select(Todo.id, Todo.tenant_id,Todo.title, Todo.estimate, Todo.complete)).all()
+    # Convert the results into Todo instances (needed, because I'm returning a subset of the columns)
+    # There has to be a better way to do this, but I haven't found it yet
+    todos = [Todo(id=row.id, tenant_id=row.tenant_id, title=row.title, estimate=row.estimate, complete=row.complete) for row in results]
     return todos
 
 # Note that this endpoint is identical to the previous one
@@ -103,8 +116,18 @@ async def get_todos_insecure(session = Depends(get_global_session)):
 @app.post("/api/sign-up")
 async def sign_up(email: Annotated[str, Body()], password: Annotated[str, Body()], response: Response, session = Depends(get_global_session)):
     user = User(email=email)
-    session.add(user) 
-    session.commit()
+    try:
+        session.add(user) 
+        session.commit()
+    except SQLAlchemyError as e:
+        logger.error(f"Error: {e}")
+        error = str(e.__dict__['orig'])
+        if "duplicate key value violates unique constraint" in error:
+            response.status_code = status.HTTP_409_CONFLICT
+            return f'User already exists with email: {email}'
+        else:
+            response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            return "Internal server error"
     logger.debug(f"User: {user}")
     # Using raw SQL here due to combination of jsonb and crypt functions
     query = '''
@@ -112,9 +135,15 @@ async def sign_up(email: Annotated[str, Body()], password: Annotated[str, Body()
                                        ('{}', 'PASSWORD',
                                        jsonb_build_object('crypt', 'crypt-bf/8', 'hash', public.crypt('{}', public.gen_salt('bf', 8))));
     '''.format(user.id, password)
-    credentials = session.execute(text(query))
-    session.commit()
     
+    try:
+        credentials = session.execute(text(query))
+        session.commit()
+    except SQLAlchemyError as e:
+        logger.error(f"Error: {e}")
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        return "Internal server error"
+
     access_token = create_access_token(user)
     response.set_cookie(key="access_token", value=access_token)
     response.set_cookie(key="user_data", value=jsonable_encoder(user))

@@ -1,0 +1,41 @@
+Sales Rep: Hi, thank you for calling ModaMart. This is Jamie, how can I assist you today?
+
+Customer: Hi Jamie, I’ve been having some issues with an order I recently placed.
+
+Sales Rep: I’m sorry to hear that. Could you provide me with your order number so I can look into it?
+
+Customer: Sure, it’s 56789.
+
+Sales Rep: Alright, let me pull that up. While I'm doing that, can you tell me exactly what's been going wrong?
+
+Customer: The main thing is that the dress I received is a different color than what was shown online. Also, it doesn’t fit as expected.
+
+Sales Rep: I see. I apologize for that inconvenience. Let me first address the color issue. Can you describe the discrepancy between the color you saw online and the one you received?
+
+Customer: The dress was supposed to be a light blue, but what I got is more of a teal.
+
+Sales Rep: Thank you for pointing that out. Sometimes colors can appear differently due to screen settings. We can certainly look into that for you. Regarding the fit, did you use our sizing guide when you placed the order?
+
+Customer: Yes, I did, but it’s still too tight around the waist.
+
+Sales Rep: I'm really sorry to hear that. We do our best to create accurate sizing guides, but it sounds like this one didn't match up for you. We can process an exchange for a different size or even a return if you prefer.
+
+Customer: I think I’d rather return it. But what about the return shipping, do I have to pay for that?
+
+Sales Rep: For cases where the item is not as described or doesn't fit as expected despite following our sizing guide, we cover the return shipping costs. I'll email you a prepaid return label and instructions on how to send it back.
+
+Customer: Okay, that sounds good. What’s the next step after I send it back?
+
+Sales Rep: Once we receive the returned dress, we’ll process your refund within 3-5 business days and send you a confirmation email. Is there anything else I can help you with today?
+
+Customer: Actually, I was looking at another dress on your website. Can you tell me about your exchange policy?
+
+Sales Rep: Certainly! If you decide on another dress and it ends up not being right, you have a 30-day window to return or exchange it. Just keep the tags on and bring the original receipt.
+
+Customer: Alright, that covers everything. Thanks for your help.
+
+Sales Rep: You’re welcome! I'll send that return label shortly. Have a great day, and feel free to contact us if you have any more questions.
+
+Customer: Will do, thanks.
+
+Sales Rep: Thank you for choosing ModaMart. Goodbye!

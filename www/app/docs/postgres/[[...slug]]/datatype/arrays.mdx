@@ -1,0 +1,99 @@
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+
+export const metadata = {
+  title: "Arrays",
+  order: 4,
+};
+
+# Using Array Types in Postgres
+
+An array in PostgreSQL is a collection of elements with the same data type. It’s like a flexible container that can hold multiple values. Arrays can be one-dimensional or multi-dimensional, allowing you to represent complex data structures within a single column.
+
+## Declaration of Array Types
+
+To create an array column in a table, use the following syntax:
+
+```sql
+CREATE TABLE sal_emp (
+    name            text,
+    pay_by_quarter  integer[],
+    schedule        text[][]
+);
+
+```
+
+In this example:
+
+- `name` is a regular text column.
+- `pay_by_quarter` is a one-dimensional array of integers, representing an employee’s salary by quarter.
+- `schedule` is a two-dimensional array of text, representing an employee’s weekly schedule.
+
+You can also use the `ARRAY` keyword for one-dimensional arrays:
+
+```sql
+CREATE TABLE tictactoe (
+    squares integer[3][3]
+);
+
+```
+
+Note that the array data type is named by appending square brackets (`[]`) to the data type name of the array elements. [The declared size or number of dimensions doesn’t affect runtime behavior; it’s mainly for documentation purposes1](https://www.postgresql.org/docs/current/arrays.html).
+
+## Array Value Input
+
+To write an array value as a literal constant, enclose the element values within curly braces and separate them by commas:
+
+```sql
+-- Creating an array of integers
+SELECT '{10, 20, 30}'::integer[];
+
+-- Creating an array of text
+SELECT '{"Monday", "Tuesday", "Wednesday"}'::text[];
+
+```
+
+## Accessing Array Elements
+
+You can access individual elements of an array using the `[index]` syntax. The first element has an index of one:
+
+```sql
+-- Accessing the second element of an integer array
+SELECT pay_by_quarter[2] FROM sal_emp;
+
+```
+
+## Modifying Arrays
+
+Arrays are mutable. Use the `ARRAY[...]` constructor to create or modify arrays:
+
+```sql
+-- Adding a new value to an existing integer array
+UPDATE sal_emp
+SET pay_by_quarter = pay_by_quarter || ARRAY[40]
+WHERE name = 'John Doe';
+
+```
+
+## Searching in Arrays
+
+You can search for specific values within an array using operators like `ANY` or `ALL`:
+
+```sql
+-- Finding employees with a salary greater than 30 in any quarter
+SELECT name
+FROM sal_emp
+WHERE 30 < ANY (pay_by_quarter);
+
+```
+
+## Array Functions and Operators
+
+PostgreSQL provides a rich set of functions and operators for working with arrays. Some useful ones include:
+
+- `array_length(arr, dim)`: Returns the length of the array along the specified dimension.
+- `unnest(arr)`: Expands an array into a set of rows.
+- `array_agg(expr)`: Aggregates values into an array.
+- `@>` and `<@`: Tests if an array contains another array or value.
+
+For more detailed information, consult the official [PostgreSQL documentation](https://www.postgresql.org/docs/current/arrays.html). If you have further questions, feel free to ask us on our [Discord](https://discord.gg/8UuBB84tTy)!

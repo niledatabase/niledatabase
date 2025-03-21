@@ -1,0 +1,79 @@
+<!-- todo_list/todo_app/templates/base.html -->
+<!-- Base template -->
+<!doctype html>
+{% load static %}
+<html lang="en" class="h-full bg-white">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Django To-do Lists</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/output.css' %}" type="text/css"> 
+    <link rel="stylesheet" href="{% static 'todolist/globals.css' %}" type="text/css"> 
+    <link rel="stylesheet" href="{% static 'todolist/page.module.css' %}" type="text/css"> 
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+</head>
+<div class="main">
+    <div style="display:flex; flex-direction:column; width:100%">
+        <div class="description">
+          <div>
+            <a
+            href="https://www.djangoproject.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <image height="50" width="150" src="{% static 'imgs/django-logo-positive.svg' %}">
+            </a>
+          </div> 
+          <div>
+            <a
+              href="https://thenile.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Created by
+              <image height="37" width="100" src="{% static 'imgs/nile_logo.svg' %}">
+            </a>
+          </div>
+        </div>
+    </div>
+    <div class="flex flex-col py-12 items-center justify-between">
+        <div class="container mx-auto items-center justify-center px-4"> <!-- container that takes the entire page height-->
+            <div class="space-y-2 text-center">
+                <h1 class="text-5xl font-bold" onclick="location.href='{% url "index" %}">Awesome Todo List</h1>
+                <p class="text-gray-500 dark:text-gray-400">Organize your tasks with ease.</p>
+            </div>
+            {% block content %}
+            This content will be replaced by different html code for each page.
+            {% endblock %}
+        </div>
+    </div>
+    <div class=" p-4 sticky bottom-0 w-5/6 p-6">
+        <div class="flex justify-between">
+            <a href="https://www.thenile.dev/docs/getting-started/languages/python"
+            target="_blank"
+            rel="noopener" class="bg-gray-100 border border-gray-300 p-6 rounded-lg shadow-lg text-center">
+                <image height="50" width="150" src="{% static 'imgs/django-logo-positive.svg' %}" class="mb-2">
+                <p>Getting started guide</p>
+            </a>
+            <a href="https://www.thenile.dev/" target="_blank"
+            rel="noopener" class="bg-gray-100 border border-gray-300 p-6 rounded-lg shadow-lg text-center ">
+                <image height="37" width="100" src="{% static 'imgs/nile_logo.svg' %}" class="mb-2">
+                <p>Sign up for Nile</p>
+            </a>
+            <a href="https://www.thenile.dev/templates" target="_blank"
+            rel="noopener" class="bg-gray-100 border border-gray-300 p-6 rounded-lg shadow-lg text-center">
+                <image height="37" width="100" src="{% static 'imgs/nile_logo.svg' %}" class="mb-2">
+                <p>Try additional templates</p>
+            </a>
+        </div>
+    </div>
+    </div>
+
+
+
+
+
+</html>
