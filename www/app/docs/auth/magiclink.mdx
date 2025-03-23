@@ -27,6 +27,10 @@ Ensure you have configured your email settings in the Nile Dashboard. You'll nee
 [SMTP provider](/auth/email/customsmtp) configured to send emails from your 
 application, and [email templates](/auth/email/templates) configured for the magic link.
 </Step>
+<Step title="Enable Passwordless Login">
+Click on Providers tab under Configure. Under Email, enable passwordless login.
+<img height="500" width="500" src="/images/auth/enable_passwordless.png" alt="Passwordless Login" />
+</Step>
 <CreateNextApp />
 <InstallNile />
 <Step title="Frontend Implementation">
@@ -45,8 +49,8 @@ The `<EmailSignIn />` component is used to send a magic link to the user's email
     return <EmailSignIn callbackUrl="/dashboard" />
     }
     ```
-    </Tab>
-    </Tabs>
+</Tab>
+</Tabs>
 </Step>
 </Steps>
 
