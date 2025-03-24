@@ -8,6 +8,7 @@ mode: "wide"
 import InstallNile from '/snippets/installnile.mdx'
 import CreateNextApp from '/snippets/createnextapp.mdx'
 import DbCreds from '/snippets/dbcreds.mdx'
+import UsingAuthComponent from '/snippets/usingauthcomponent.mdx'
 
 This guide will help you get started with Nile Auth by walking you through the steps required to configure and integrate authentication in your application using the provided SDK components. By the end of this guide, you will have implemented email + signup authentication (enabled by default for all databases), user profile, and organization management in your application.
 
@@ -15,55 +16,7 @@ This guide will help you get started with Nile Auth by walking you through the s
 <CreateNextApp/>
 <DbCreds />
 <InstallNile/>
-<Step title="Use SDK Components">
-
-Your application will interact with above authentication routes using SDK components. Replace the boilerplate `app/page.tsx` with the following:
-
-`/app/page.jsx`
-```jsx
-import {
-  SignOutButton,
-  SignUpForm,
-  SignedIn,
-  SignedOut,
-  TenantSelector,
-  UserInfo,
-} from "@niledatabase/react";
-import "@niledatabase/react/styles.css";
-
-export default function SignUpPage() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <SignedIn className="flex flex-col gap-4">
-        <UserInfo />
-        <TenantSelector className="py-6 mb-10" />
-        <SignOutButton />
-      </SignedIn>
-      <SignedOut>
-        <SignUpForm createTenant />
-      </SignedOut>
-    </div>
-  );
-}
-
-```
-</Step>
-<Step title="Run and Log in to your application">
-
-```bash
-npm run dev
-```
-
-Navigate to localhost to see the page. You should see a signup form that looks like this:
-
-<img height="500" width="500" src="/images/auth/quickstart_signup.png" alt="Signup Form" />
-
-Enter a dummy email and password into the `<SignUpForm />`. 
-
-If all went well, you will be logged in automatically and see the user profile and an organization switcher that allows you to create new organizations and switch between them:
-
-<img height="500" width="500" src="/images/auth/quickstart_authenticated.png" alt="User profile and organization switcher" />
-</Step>
+<UsingAuthComponent/>
 <Step title="Bonus: Explore in Nile Console">
 
 You can explore the database and the tenant management dashboard in the [Nile console](https://console.thenile.dev). 
