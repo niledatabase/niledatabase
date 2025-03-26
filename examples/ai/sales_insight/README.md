@@ -24,6 +24,16 @@ create table call_chunks (
 );
 ```
 
+### 2. Setup the local environment
+
+Set up a virtual Python environment and install dependencies:
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
 ### 3. Load data
 
 We do this locally and not in Modal. No real reason, just ended up that way. Contributions welcome.

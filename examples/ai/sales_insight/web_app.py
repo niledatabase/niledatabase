@@ -41,15 +41,16 @@ mount = modal.Mount.from_local_dir(web_ui_dir, remote_path="/")
 # Install dependencies and copy web ui assets into the image
 image = modal.Image.debian_slim(python_version="3.10").pip_install(
     "passlib==1.7.4",
-    "python-jose==3.3.0",
+    "python-jose==3.4.0",
     "sqlmodel==0.0.21",
     "pgvector==0.3.2",
     "pydantic==2.8.2",
-    "fastapi==0.112.2",
+    "fastapi==0.115.12",
     "python-dotenv==1.0.1",
     "psycopg2-binary==2.9.9",
     "sqlalchemy==2.0.32",
-    "openai==1.42.0"
+    "openai==1.42.0",
+    "httpx==0.27.2"
 ).copy_mount(mount, remote_path="/root/ui/dist")
 
 app = modal.App(name=app_name+"-web", image=image)
