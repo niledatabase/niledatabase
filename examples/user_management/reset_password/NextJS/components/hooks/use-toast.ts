@@ -15,6 +15,8 @@ type ToasterToast = PropsToaster & {
   title?: JSX.Element;
   description?: React.ReactNode;
   action?: ToastActionElement;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 const actionTypes = {
