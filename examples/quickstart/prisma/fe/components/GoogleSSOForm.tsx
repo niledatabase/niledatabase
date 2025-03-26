@@ -4,6 +4,7 @@ import { Google } from "@niledatabase/react";
 import React from "react";
 import Cookies from "js-cookie";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 export default function GoogleAuthPanel() {
   // handle logouts here
@@ -13,9 +14,11 @@ export default function GoogleAuthPanel() {
   }
 
   return (
-    <Google
-      className="bg-[#4285f4] hover:bg-[#4285f4] pl-[3px] text-white gap-4"
-      callbackUrl="/directions"
-    />
+    <Suspense fallback={<div>Loading...</div>}>
+      <Google
+        className="bg-[#4285f4] hover:bg-[#4285f4] pl-[3px] text-white gap-4"
+        callbackUrl="/directions"
+      />
+    </Suspense>
   );
 }
