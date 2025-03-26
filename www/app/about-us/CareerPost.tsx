@@ -8,7 +8,7 @@ export default function CareerPost(props: OpenPositionMetadata) {
         <div className="text-xl">{props.header}</div>
         <div className="flex flex-row opacity-60 gap-1">
           <div>{props.location}</div>/<div>{props.office}</div>/
-          <div>{props.fullTime ? "Full time" : "Part time"}</div>
+          <div>{"Full time"}</div>
         </div>
       </div>
     </Link>
