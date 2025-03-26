@@ -22,7 +22,7 @@
     "express": "^4.21.1",
     "express-basic-auth": "^1.2.1",
     "openai": "^4.53.2",
-    "path-to-regexp": "^6.3.0",
+    "path-to-regexp": "^8.2.0",
     "pg": "^8.11.3",
     "postgres": "^3.4.1",
     "ts-node": "^10.9.1",

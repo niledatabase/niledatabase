@@ -21,7 +21,7 @@
     "express-basic-auth": "^1.2.1",
     "hono": "^4.6.13",
     "openai": "^4.53.2",
-    "path-to-regexp": "^6.2.1",
+    "path-to-regexp": "^8.2.0",
     "postgres": "^3.4.5"
   },
   "devDependencies": {
