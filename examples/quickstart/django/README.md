@@ -98,7 +98,10 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-Then, whether you have a virtual environment or not, install dependencies with `pip install -r requirements.txt`
+Then, whether you have a virtual environment or not, install dependencies with:
+```bash
+pip install -r requirements.txt
+```
 
 ### 5. Running the app
 
