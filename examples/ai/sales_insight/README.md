@@ -29,7 +29,8 @@ create table call_chunks (
 We do this locally and not in Modal. No real reason, just ended up that way. Contributions welcome.
 
 ```bash
- python -m ingest.load_embeddings
+pip install dotenv python-slugify psycopg2-binary pandas
+python -m ingest.load_embeddings
 ```
 
 ### 4. Deploy the app
@@ -37,6 +38,8 @@ We do this locally and not in Modal. No real reason, just ended up that way. Con
 To deploy in development mode run:
 
 ```bash
+pip install modal
+modal setup
 modal serve web_app.py
 ```
 
