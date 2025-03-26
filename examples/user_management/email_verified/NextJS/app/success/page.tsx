@@ -4,7 +4,7 @@ import { SignOutButton, UserInfo } from "@niledatabase/react";
 import "@niledatabase/react/styles.css";
 
 export default async function Success() {
-  const headers = nextHeaders();
+  const headers = await nextHeaders();
   const me = await nile.api.users.me(headers);
   if (me instanceof Response) {
     return (
