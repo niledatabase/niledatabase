@@ -6,19 +6,26 @@ import Cookies from "js-cookie";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
-export default function GoogleAuthPanel() {
-  // handle logouts here
+// Create a separate client component for the search params logic
+function GoogleAuthContent() {
   const searchParams = useSearchParams();
   if (searchParams.has("logout")) {
     Cookies.remove("authData");
   }
 
   return (
+    <Google
+      className="bg-[#4285f4] hover:bg-[#4285f4] pl-[3px] text-white gap-4"
+      callbackUrl="/directions"
+    />
+  );
+}
+
+// Main component with Suspense boundary
+export default function GoogleAuthPanel() {
+  return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Google
-        className="bg-[#4285f4] hover:bg-[#4285f4] pl-[3px] text-white gap-4"
-        callbackUrl="/directions"
-      />
+      <GoogleAuthContent />
     </Suspense>
   );
 }
