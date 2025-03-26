@@ -46,7 +46,7 @@ export async function POST(req: Request) {
   const project_id = body.project_id;
 
   /* Using inner product to find the most similar files. Based on suggestions from the OpenAI FAQ:
-    We recommend cosine similarity. The choice of distance function typically doesn’t matter much.
+    We recommend cosine similarity. The choice of distance function typically doesn't matter much.
     OpenAI embeddings are normalized to length 1, which means that:
     Cosine similarity can be computed slightly faster using just a dot product
     Cosine similarity and Euclidean distance will result in the identical rankings
@@ -100,14 +100,18 @@ export async function POST(req: Request) {
     });
 
     const respStream = await model.stream([
-      new SystemMessage(`You are a principal software engineer, answering questions about code projects to other software engineers. 
+      {
+        role: "system",
+        content: `You are a principal software engineer, answering questions about code projects to other software engineers. 
                     Use the following snippets of retrieved code to answer the question. 
                   They represent code snippets from the files most similar to the question.
                   Include code snippets from the provided context in your answer when relevant.
-                  Context: ${allContent.join("\n")}`),
-      new HumanMessage(
-        `Please answer this question: ${body.question}. Helpful Answer:`
-      ),
+                  Context: ${allContent.join("\n")}`
+      },
+      {
+        role: "user",
+        content: `Please answer this question: ${body.question}. Helpful Answer:`
+      }
     ]);
 
     const stream = iteratorToStream(respStream, JSON.stringify(response));

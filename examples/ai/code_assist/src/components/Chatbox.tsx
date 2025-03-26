@@ -14,7 +14,7 @@ import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vs as Theme } from "react-syntax-highlighter/dist/cjs/styles/prism";
+const Theme = (await import('../syntax-themes/vs.js')).default;
 
 const cannedQuestions = [
   "Which frameworks does this example use?",
