@@ -366,7 +366,7 @@
           },
           {
             "group": "Support",
-            "pages": ["support/support"]
+            "pages": ["support/support", "support/backup_restore"]
           }
         ]
       },
