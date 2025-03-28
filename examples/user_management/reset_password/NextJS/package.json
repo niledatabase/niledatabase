@@ -9,10 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@niledatabase/react": "^3.0.0",
-    "@niledatabase/server": "^3.0.0",
+    "@niledatabase/react": "../../../../../nile-js/packages/react",
+    "@niledatabase/server": "../../../../../nile-js/packages/server",
     "@tanstack/react-query": "^5.65.1",
-    "next": "15.1.6",
+    "next": "^15.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2"

@@ -4,7 +4,7 @@ import Link from "next/link";
 export default async function Signup() {
   return (
     <div className="flex flex-col gap-4 items-center">
-      <SignUpForm />
+      <SignUpForm callbackUrl="/dashboard" />
       <div>
         <span>
           Have an email already?{" "}
