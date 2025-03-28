@@ -167,6 +167,45 @@ await nile.api.tenants.unlinkUser({
     userId: '123'
 });
 ```
+}
+
+
+## Auth Management
+
+Methods for using auth on the server side. For most applications, much of this would be handled with components and APIs, but we understand that maybe there are other use cases that need supported.
+
+Server-side sign-out for Nile Auth. It follows a two-step process similar to how sign-out works in the browser, ensuring CSRF protection and API consistency.
+
+- The CSRF token is extracted and passed along with the request.
+- The request is made with the appropriate headers, including the user's cookies.
+- The callback-url cookie is introspected and used as the origin, ensuring Nile Auth correctly handles the redirect after logout.
+
+```javascript signOut
+nile.api.headers = new Headers(req.headers);
+const res = await nile.api.auth.signOut();
+if (res.url) {
+  console.log('Redirect to:', res.url);
+}
+```
+
+Obtains the CSRF token needed for `POST` requests to the API
+```javascript getCsrf
+nile.api.headers = new Headers(req.headers);
+const res = await nile.api.auth.getCsrf();
+if (res.csrfToken) {
+  console.log('token to pass:', res.csrfToken);
+}
+```
+
+Lists out the providers that are enabled for the database. 
+
+```javascript listProviders
+nile.api.headers = new Headers(req.headers);
+const providers = await nile.api.auth.listProviders();
+if (res.csrfToken) {
+  console.log('providers enabled in the DB:', providers);
+}
+```
 
 ## API Authentication
 
