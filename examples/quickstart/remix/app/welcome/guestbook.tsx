@@ -32,6 +32,7 @@ export default function GuestBook({
           });
         }}
       >
+        <input type="hidden" name="action" value="guestbook" />
         <Input name="name" placeholder="Name" required />
         <Input
           name="email"
