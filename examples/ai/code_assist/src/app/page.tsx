@@ -1,25 +1,27 @@
-import Image from "next/image";
 import styles from "./page.module.css";
-import Typography from "@mui/joy/Typography";
-import Stack from "@mui/joy/Stack";
-import GoogleAuthPanel from "../components/GoogleSSOForm";
-import BasicLoginForm from "../components/BasicLoginForm";
 import ErrorBox from "../components/ErrorBox";
+import { Google } from "@niledatabase/react";
+import BasicSignInForm from "@/components/BasicSignInForm";
 
-export default function Home() {
+export default async function Home() {
   // This demo supports both Google and email/password auth.
   // If this is the first time trying Nile, email/password will be simpler.
   // set AUTH_TYPE="google" to use Google auth
   const authType = process.env.AUTH_TYPE;
+
   return (
     <div>
       <div className={styles.center}>
-        <Stack gap={5} sx={{ maxWidth: "40rem" }} alignItems={"center"}>
+        <div className="flex flex-col gap-4 w-56 items-center">
           <ErrorBox />
           {/* These components are simple wrappers around Nile's React components. 
            It is needed because Nile's React components are client-side only. */}
-          {authType === "google" ? <GoogleAuthPanel /> : <BasicLoginForm />}
-        </Stack>
+          {authType === "google" ? (
+            <Google callbackUrl="/tenants" />
+          ) : (
+            <BasicSignInForm />
+          )}
+        </div>
       </div>
     </div>
   );
