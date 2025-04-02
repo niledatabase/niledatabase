@@ -7,6 +7,7 @@ const config = {
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
+    "./node_modules/@niledatabase/react/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {

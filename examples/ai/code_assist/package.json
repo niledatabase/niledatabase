@@ -46,6 +46,10 @@
     "tw-animate-css": "^1.2.5",
     "uuid": "^10.0.0"
   },
+  "optionalDependencies": {
+    "@tailwindcss/oxide-linux-x64-gnu": "^4.0.1",
+    "lightningcss-linux-x64-gnu": "^1.29.1"
+  },
   "devDependencies": {
     "@types/expand-tilde": "^2.0.2",
     "@types/node": "^20",
