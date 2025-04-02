@@ -1,9 +1,5 @@
 import { Nile } from "@niledatabase/server";
 
-type Data = {
-  files: string[];
-};
-
 // TODO: Need to set nile user ID from cookie for security
 export async function POST(req: Request) {
   try {
