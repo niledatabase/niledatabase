@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 function Card({ children }: { children: JSX.Element }) {
   return (
-    <div className="p-4 hover:shadow-lg hover:border-gray-700 border border-gray-600 rounded-lg w-60 transition-all">
+    <div className="p-4 hover:shadow-lg hover:border-gray-700 border border-gray-600 rounded-lg w-full sm:w-60 transition-all">
       {children}
     </div>
   );
@@ -28,8 +28,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="h-screen flex items-center flex-col">
-          <div className="bg-black border-b-px flex flex-row justify-between w-full items-center px-6 py-4">
+        <main className="min-h-screen flex flex-col">
+          <div className="bg-black border-b-px flex flex-row justify-between w-full items-center px-4 sm:px-6 py-3 sm:py-4">
             <div>
               <Image
                 src={NextJS}
@@ -45,25 +45,25 @@ export default function RootLayout({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className="text-white flex flex-row gap-3 items-center">
-                  Created by <Logo className="h-10" />
+                <div className="text-white flex flex-row gap-2 sm:gap-3 items-center">
+                  <span className="hidden sm:inline">Created by</span> <Logo className="h-8 sm:h-10" />
                 </div>
               </a>
             </div>
           </div>
-          <div className="flex flex-col flex-1 max-w-3xl">
-            <div className="text-4xl mb-10 mt-20">
+          <div className="flex flex-col flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6">
+            <div className="text-3xl sm:text-4xl mb-6 sm:mb-10 mt-10 sm:mt-20">
               AI-native Todo Application
             </div>
             {children}
           </div>
-          <div className="flex flex-row justify-between p-8 gap-8">
+          <div className="flex flex-col sm:flex-row justify-between p-4 sm:p-8 gap-4 sm:gap-8">
             <Card>
               <Link
                 href="https://www.thenile.dev/docs/getting-started/languages/nextjs"
                 target="_blank"
                 rel="noopener"
-                className="flex flex-col gap-5 justify-between h-full"
+                className="flex flex-col gap-3 sm:gap-5 justify-between h-full"
               >
                 <Image
                   src="/next.svg"
@@ -81,9 +81,9 @@ export default function RootLayout({
                 href="https://thenile.dev"
                 target="_blank"
                 rel="noopener"
-                className="flex flex-col gap-5 items-start"
+                className="flex flex-col gap-3 sm:gap-5 items-start"
               >
-                <Logo fill="black" className="h-10" />
+                <Logo fill="black" className="h-8 sm:h-10" />
                 Sign up to Nile
               </Link>
             </Card>
@@ -93,9 +93,9 @@ export default function RootLayout({
                 href="https://www.thenile.dev/templates"
                 target="_blank"
                 rel="noopener"
-                className="flex flex-col gap-5 items-start"
+                className="flex flex-col gap-3 sm:gap-5 items-start"
               >
-                <Logo fill="black" className="h-10" />
+                <Logo fill="black" className="h-8 sm:h-10" />
                 Try additional templates
               </Link>
             </Card>
