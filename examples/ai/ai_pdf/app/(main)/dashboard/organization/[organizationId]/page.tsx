@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Separator } from "@/components/ui/separator";
 import {
   Card,
@@ -16,6 +16,7 @@ import { Info } from "./_components/info";
 import { BoardList } from "./_components/board-list";
 import UploadButton from "@/components/upload-button";
 import { checkSubscription } from "@/lib/subscription";
+import { Tenant } from "@niledatabase/server";
 
 export const dynamic = "force-dynamic";
 export const dynamicParams = true;
@@ -25,12 +26,10 @@ export const fetchCache = "force-no-store";
 const OrganizationIdPage = async ({
   params,
 }: {
-  params: { organizationId: string };
+  params: Promise<{ organizationId: string }>;
 }) => {
-  const tenantNile = await configureNile(
-    cookies().get("authData"),
-    params.organizationId
-  );
+  const { organizationId } = await params;
+  const tenantNile = await configureNile(organizationId);
 
   console.log(
     "showing boards for user " +
@@ -38,14 +37,12 @@ const OrganizationIdPage = async ({
       " for tenant " +
       tenantNile.tenantId
   );
-  const resp = await tenantNile.api.tenants.getTenant();
-  const tenant = await resp.json();
   const currentFileCount = await tenantNile.db.query(
-    "select count(*) from file"
+    "select COUNT(*) from file"
   );
+  const tenant: Tenant = await tenantNile.api.tenants.getTenant();
 
-  console.log("Current file count:", currentFileCount);
-  const isPro = await checkSubscription(params.organizationId);
+  const isPro = await checkSubscription(organizationId);
 
   return (
     <div className="w-full mb-20">
@@ -54,8 +51,8 @@ const OrganizationIdPage = async ({
       <div className="px-2 md:px-4">
         <Suspense>
           <UploadButton
-            org_id={params.organizationId}
-            count={Number(currentFileCount.rows[0].count)}
+            org_id={organizationId}
+            count={Number(currentFileCount.rowCount)}
             isPro={isPro}
           />
           <Card style={{ marginBottom: 24 }}>
@@ -118,7 +115,7 @@ const OrganizationIdPage = async ({
               </p>
             </CardContent>
           </Card>
-          <BoardList organizationId={params.organizationId} />
+          <BoardList organizationId={organizationId} />
         </Suspense>
       </div>
     </div>

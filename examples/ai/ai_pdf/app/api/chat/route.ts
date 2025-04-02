@@ -1,8 +1,7 @@
 import { configureNile } from "@/lib/NileServer";
+import { OpenAIEmbeddings } from "@langchain/openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
-import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import OpenAI from "openai";
 
 export const maxDuration = 60;
@@ -12,10 +11,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log("Chat request body:", body);
 
-    const tenantNile = await configureNile(
-      cookies().get("authData"),
-      body.tenant_id
-    );
+    const tenantNile = await configureNile(body.tenant_id);
 
     const question = body.messages[body.messages.length - 1].content;
 
@@ -71,7 +67,7 @@ export async function POST(req: Request) {
       );
 
       let result;
-      if (prevMessages.rowCount ?? 0 < 6) {
+      if ((prevMessages.rowCount ?? 0) < 6) {
         result = await openAI.chat.completions.create({
           model: process.env.OPENAI_CHAT_MODEL_NAME || "gpt-3.5-turbo",
           temperature: 0.1,
@@ -105,28 +101,56 @@ export async function POST(req: Request) {
               content: `Use the provided context: ${concatenatedPageContent} to answer the user's question: ${question}. Answers should be in markdown format. If unsure, simply say you don't know.
       \n----------------\n
       PREVIOUS CONVERSATION:
-     ${formattedPrevMessages}
+      ${prevMessages.rows
+        .map((msg: any) => `${msg.role}: ${msg.text}`)
+        .join("\n")}
       \n----------------\n
       Helpful Answer:`,
             },
           ],
         });
       }
-      console.log("Chat result: ", result);
 
-      const stream = OpenAIStream(result, {
-        async onCompletion(completion: any) {
-          console.log(completion, "completion");
-          await tenantNile.db.query(
-            `INSERT INTO message 
-            (text, "fileId", user_id, "isUserMessage", tenant_id) 
-            VALUES 
-            ($1, $2, $3, $4, $5)`,
-            [completion, body.fileId, body.user_id, false, body.tenant_id]
-          );
+      console.log("Chat result:", result);
+
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream({
+        async start(controller) {
+          try {
+            for await (const chunk of result) {
+              const text = chunk.choices[0]?.delta?.content || "";
+              if (text) {
+                controller.enqueue(encoder.encode(text));
+              }
+            }
+            controller.close();
+          } catch (error) {
+            controller.error(error);
+          }
         },
       });
-      return new StreamingTextResponse(stream);
+
+      // **Insert the completion result into the database**
+      (async () => {
+        let completionText = "";
+        for await (const chunk of result) {
+          completionText += chunk.choices[0]?.delta?.content || "";
+        }
+        await tenantNile.db.query(
+          `INSERT INTO message 
+      (text, "fileId", user_id, "isUserMessage", tenant_id) 
+      VALUES 
+      ($1, $2, $3, $4, $5)`,
+          [completionText, body.fileId, body.user_id, false, body.tenant_id]
+        );
+      })();
+
+      return new Response(stream, {
+        status: 200,
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+        },
+      });
     } else {
       console.log("There are no matches.");
       return new NextResponse("No Matches", { status: 200 });

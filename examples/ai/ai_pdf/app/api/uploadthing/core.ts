@@ -1,11 +1,11 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 
-import { PDFLoader } from "langchain/document_loaders/fs/pdf";
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 
-import { configureNile } from "@/lib/NileServer";
+import nile, { configureNile } from "@/lib/NileServer";
 import { getUserToken, getUserId, getUserName } from "@/lib/AuthUtils";
-import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { OpenAIEmbeddings } from "@langchain/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { cookies } from "next/headers";
 import { checkSubscription } from "@/lib/subscription";
@@ -17,6 +17,7 @@ import {
 } from "@/constants/limits";
 import { revalidatePath } from "next/cache";
 import { currentTenantId } from "@/lib/tenent-id";
+import { User } from "@niledatabase/server";
 
 export const maxDuration = 60;
 
@@ -24,15 +25,13 @@ const f = createUploadthing();
 
 //@ts-ignore
 const middleware = async ({ req, files }) => {
-  const user = cookies().get("authData");
-  console.log("user in middleware:", JSON.stringify(user));
-  console.log("req in middleware:", JSON.stringify(req));
-  console.log("req.nextUrl in middleware:", JSON.stringify(req.nextUrl));
-  if (!getUserToken(user)) throw new Error("Unauthorized");
+  nile.api.headers = new Headers({ cookie: (await cookies()).toString() });
+  const user = await nile.api.users.me();
+  if (!user || user instanceof Request) throw new Error("Unauthorized");
   const orgId = await currentTenantId(); // extracting tenant id from the "referer" header. the alternative is to introduce tenant-id cookie
   const isPro = await checkSubscription(orgId);
-  console.log("isPro: ", isPro, " orgId: ", orgId);
-  return { userInfo: user, orgId, isPro };
+  console.log("isPro: ", isPro, " orgId: ", orgId, user);
+  return { userInfo: user as User, orgId, isPro };
 };
 
 function checkTime(startTime: [number, number]) {
@@ -55,27 +54,36 @@ const onUploadComplete = async ({
   };
 }) => {
   console.log("metadata in onUploadComplete:", JSON.stringify(metadata));
-  const tenantNile = await configureNile(metadata.userInfo, metadata.orgId);
+  const tenantNile = await configureNile(metadata.orgId);
   console.log("1: On upload complete. Trying to get file: ", file.key);
   console.log("file url", file.url);
 
   const startTime = process.hrtime();
   try {
     const response = await fetch(`${file.url}`);
-    console.log("on upload complete: ", response.status);
+    console.log("on upload complete: ", response.status, response.ok);
     if (!response.ok) {
       return "FAILED TO GET FILE";
     }
     const blob = await response.blob();
 
+    console.log(blob.size);
     const loader = new PDFLoader(blob) || new TextLoader(blob);
 
-    const pageLevelDocs = await loader.load();
+    console.log("attempting to load", loader);
+    const pageLevelDocs = await loader.load().catch((e) => {
+      console.log(e, "did this fail");
+    });
+    if (!pageLevelDocs) {
+      console.log("failed to load file");
+      return "FAILED TO LOAD FILE";
+    }
 
     // Check if the pages amount exceeds the limit for the subscription plan
     const maxPageLimit = metadata.isPro ? MAX_PRO_PAGES : MAX_FREE_PAGES;
     const pagesAmt = pageLevelDocs.length;
 
+    console.log("parsing", pagesAmt, pageLevelDocs);
     if (pagesAmt === 0) {
       return "PARSE FAILED";
     }
@@ -108,8 +116,8 @@ const onUploadComplete = async ({
           metadata.orgId,
           `${file.url}`,
           file.key,
-          getUserId(metadata.userInfo),
-          getUserName(metadata.userInfo),
+          metadata.userInfo.id,
+          metadata.userInfo.name,
           false,
           file.name,
           pagesAmt,

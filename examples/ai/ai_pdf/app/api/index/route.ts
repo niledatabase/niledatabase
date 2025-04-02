@@ -1,7 +1,7 @@
 import { configureNile } from "@/lib/NileServer";
-import { PDFLoader } from "langchain/document_loaders/fs/pdf";
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { TextLoader } from "langchain/document_loaders/fs/text";
-import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { OpenAIEmbeddings } from "@langchain/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
@@ -13,10 +13,7 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     console.log("Index route uploading and embedding:" + JSON.stringify(data));
-    const tenantNile = await configureNile(
-      cookies().get("authData"),
-      data.file.tenant_id
-    );
+    const tenantNile = await configureNile(data.file.tenant_id);
     try {
       const response = await fetch(`${data.file.url}`);
       console.log("Index api getting file: " + response.status);
