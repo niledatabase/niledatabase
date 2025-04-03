@@ -197,13 +197,6 @@ export default function Pricing() {
           </div>
         </div>
       </div>
-      <>
-        <Divider />
-        <div className="container mx-auto">
-          <PricingCalculator />
-        </div>
-        <Divider />
-      </>
       <div className="container mx-auto">
         <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
           <div className="flex flex-col lg:flex-row justify-center gap-2 items-start 2xl:px-24 mb-24">
