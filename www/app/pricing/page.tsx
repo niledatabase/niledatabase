@@ -18,9 +18,6 @@ import Enterprise from "./_components/Enterprise";
 import PlanPicker from "./_components/PlanPicker";
 import PricingCalculator from "./_components/PricingCalculator";
 
-// Feature flag for pricing calculator
-const SHOW_PRICING_CALCULATOR = true
-
 const Line = ({
   text,
   children,
@@ -201,17 +198,11 @@ export default function Pricing() {
         </div>
       </div>
       <>
-        {SHOW_PRICING_CALCULATOR ? (
-          <>
-            <Divider />
-            <div className="container mx-auto">
-              <PricingCalculator isEnabled={SHOW_PRICING_CALCULATOR} />
-            </div>
-            <Divider />
-          </>
-        ) : (
-          <Divider />
-        )}
+        <Divider />
+        <div className="container mx-auto">
+          <PricingCalculator />
+        </div>
+        <Divider />
       </>
       <div className="container mx-auto">
         <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">

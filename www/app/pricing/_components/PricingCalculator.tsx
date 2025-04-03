@@ -1,30 +1,47 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import React, { useState, useEffect, Fragment } from "react"
 import { Slider } from "@/components/ui/slider"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import React from "react"
 
 // Slot machine digit component
 const SlotMachineDigit = ({ digit, isAnimating }: { digit: string, isAnimating: boolean }) => {
   const [displayDigit, setDisplayDigit] = useState(digit)
+  console.log(`Digit component: ${digit}, Display: ${displayDigit}, Animating: ${isAnimating}`)
   
   useEffect(() => {
-    if (isAnimating && digit !== displayDigit) {
-      let frame = 0
-      const frames = 10
-      const interval = setInterval(() => {
-        frame++
-        setDisplayDigit(Math.floor(Math.random() * 10).toString())
-        if (frame >= frames) {
+    // Always update display digit when the target digit changes, even if not animating
+    if (digit !== displayDigit) {
+      console.log(`Digit changed from ${displayDigit} to ${digit}`)
+      if (!isAnimating) {
+        console.log(`Direct update to ${digit} (no animation)`)
+        setDisplayDigit(digit)
+      } else {
+        console.log(`Starting digit animation from ${displayDigit} to ${digit}`)
+        let frame = 0
+        const frames = 10
+        const interval = setInterval(() => {
+          frame++
+          if (frame >= frames) {
+            clearInterval(interval)
+            console.log(`Animation complete, setting final digit: ${digit}`)
+            setDisplayDigit(digit)
+          } else {
+            const randomDigit = Math.floor(Math.random() * 10).toString()
+            console.log(`Animation frame ${frame}: ${randomDigit}`)
+            setDisplayDigit(randomDigit)
+          }
+        }, 50)
+        return () => {
+          console.log(`Cleaning up animation for ${displayDigit} -> ${digit}`)
           clearInterval(interval)
+          // Ensure we end up at the correct digit if animation is interrupted
           setDisplayDigit(digit)
         }
-      }, 50)
-      return () => clearInterval(interval)
+      }
     }
-  }, [digit, isAnimating])
+  }, [digit, isAnimating, displayDigit])
 
   return (
     <div className="relative w-4 h-6 bg-zinc-800/50 rounded-sm overflow-hidden mx-[1px] flex items-center justify-center">
@@ -37,19 +54,38 @@ const SlotMachineDigit = ({ digit, isAnimating }: { digit: string, isAnimating: 
 
 // Slot machine price component
 const SlotMachinePrice = ({ value, prefix = "$", suffix = "" }: { value: number, prefix?: string, suffix?: string }) => {
+  console.log('\nSlotMachinePrice Component Render:')
+  console.log('Input value:', value)
+  console.log('Type of value:', typeof value)
+  
   const [prevValue, setPrevValue] = useState(value)
+  console.log('Previous value from state:', prevValue)
+  
   const [isAnimating, setIsAnimating] = useState(false)
+  console.log('Is animating:', isAnimating)
+  
   const formattedValue = value.toFixed(2)
+  console.log('Formatted value (after toFixed):', formattedValue)
+  
   const digits = formattedValue.replace(".", "").split("")
+  console.log('Digits array:', digits)
   
   useEffect(() => {
+    console.log('\nSlotMachinePrice useEffect:')
+    console.log('Current value:', value)
+    console.log('Previous value:', prevValue)
     if (value !== prevValue) {
+      console.log('Value changed, starting animation')
       setIsAnimating(true)
       const timeout = setTimeout(() => {
+        console.log('Animation timeout completed')
         setIsAnimating(false)
         setPrevValue(value)
       }, 500)
-      return () => clearTimeout(timeout)
+      return () => {
+        console.log('Cleaning up animation timeout')
+        clearTimeout(timeout)
+      }
     }
   }, [value, prevValue])
 
@@ -58,12 +94,12 @@ const SlotMachinePrice = ({ value, prefix = "$", suffix = "" }: { value: number,
       {prefix && <span className="text-sm text-white mr-1">{prefix}</span>}
       <div className="flex">
         {digits.map((digit, index) => (
-          <React.Fragment key={index}>
+          <Fragment key={index}>
             {index === digits.length - 2 && (
               <div className="text-sm text-white mx-[1px] self-end mb-1">.</div>
             )}
             <SlotMachineDigit digit={digit} isAnimating={isAnimating} />
-          </React.Fragment>
+          </Fragment>
         ))}
       </div>
       {suffix && <span className="text-sm text-zinc-400 ml-1">{suffix}</span>}
@@ -71,12 +107,7 @@ const SlotMachinePrice = ({ value, prefix = "$", suffix = "" }: { value: number,
   )
 }
 
-export default function PricingCalculator({ isEnabled = false }: { isEnabled?: boolean }) {
-  // Return early if calculator is disabled
-  if (!isEnabled) {
-    return null
-  }
-
+export default function PricingCalculator() {
   // Plan selection
   const [plan, setPlan] = useState("pro")
 
@@ -108,7 +139,8 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
     const maxp = 100
     const minv = Math.log(0.1)
     const maxv = Math.log(1000)
-    return Math.exp(minv + (maxv - minv) * (value - minp) / (maxp - minp))
+    const scale = Math.exp(minv + (maxv - minv) * (value - minp) / (maxp - minp))
+    return Math.max(0, Math.min(1000, scale)) // Ensure value is between 0 and 1000
   }
 
   // Function to convert logarithmic value back to linear scale for slider
@@ -117,16 +149,18 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
     const maxp = 100
     const minv = Math.log(0.1)
     const maxv = Math.log(1000)
-    return (maxp - minp) * (Math.log(value) - minv) / (maxv - minv) + minp
+    const scale = (maxp - minp) * (Math.log(Math.max(0.1, value)) - minv) / (maxv - minv) + minp
+    return Math.max(0, Math.min(100, scale)) // Ensure value is between 0 and 100
   }
 
   // Function to format storage value
   const formatStorageValue = (value: number) => {
-    if (value === 0) return "0GB"
-    if (value >= 1000) {
-      return `${Math.floor(value / 1000)}TB`
+    const flooredValue = Math.floor(value)
+    if (flooredValue === 0) return "0GB"
+    if (flooredValue >= 1000) {
+      return `${Math.floor(flooredValue / 1000)}TB`
     }
-    return `${Math.floor(value)}GB`
+    return `${flooredValue}GB`
   }
 
   // Compute states
@@ -140,7 +174,7 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
     hourlyRate: number
   }
 
-  // Dedicated compute instances
+  // Provisioned compute instances
   const [computeInstances, setComputeInstances] = useState<ComputeSize[]>([]) // Start with no instances
 
   // Add state for expanded compute options
@@ -206,59 +240,145 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
   const [storageCost, setStorageCost] = useState(0)
   const [writesCost, setWritesCost] = useState(0)
   const [readsCost, setReadsCost] = useState(0)
-  const [dedicatedComputeCost, setDedicatedComputeCost] = useState(0)
+  const [provisionedComputeCost, setProvisionedComputeCost] = useState(0)
   const [totalCost, setTotalCost] = useState(0)
 
   // Calculate storage cost
   const calculateStorageCost = (gb: number) => {
+    // First 5GB included for pro, 50GB for scale
     const includedGB = plan === "pro" ? 5 : 50
     const pricePerGB = plan === "pro" ? 1.0 : 0.75
-    if (gb <= includedGB) return 0
-    return (gb - includedGB) * pricePerGB
+    
+    console.log('Storage Cost Calculation:')
+    console.log('Current Plan:', plan)
+    console.log('Storage Amount:', gb, 'GB')
+    console.log('Included Storage:', includedGB, 'GB')
+    console.log('Price per GB:', pricePerGB)
+    
+    // Return 0 if usage is within included amount
+    if (gb <= includedGB) {
+      console.log('Storage within included amount, cost = $0')
+      return 0
+    }
+    
+    // Only charge for storage above the included amount
+    const excessStorage = gb - includedGB
+    const cost = excessStorage * pricePerGB
+    console.log('Excess Storage:', excessStorage, 'GB')
+    console.log('Final Storage Cost:', cost)
+    return cost
   }
 
   // Calculate compute costs
   const calculateWritesCost = (monthlyWrites: number) => {
-    // Calculate CPU ms: 200ms per write
-    const totalCpuMs = monthlyWrites * 200
-    // First 150M CPU ms included for pro, 500M for scale
-    const includedCpuMs = plan === "pro" ? 150000000 : 500000000
-    const pricePerMillionCpuMs = plan === "pro" ? 0.05 : 0.04
-    if (totalCpuMs <= includedCpuMs) return 0
-    return ((totalCpuMs - includedCpuMs) / 1000000) * pricePerMillionCpuMs
+    // Calculate tokens: 200 tokens per write
+    return monthlyWrites * 200
   }
 
   const calculateReadsCost = (monthlyReads: number) => {
-    // Calculate CPU ms: 50ms per read
-    const totalCpuMs = monthlyReads * 50
-    // $0.05 per million CPU ms for pro, $0.04 for scale
-    const pricePerMillionCpuMs = plan === "pro" ? 0.05 : 0.04
-    return (totalCpuMs / 1000000) * pricePerMillionCpuMs
+    // Calculate tokens: 50 tokens per read
+    return monthlyReads * 50
   }
 
-  // Calculate dedicated compute cost
-  const calculateDedicatedComputeCost = (instances: ComputeSize[]) => {
+  // Calculate total serverless compute cost
+  const calculateServerlessComputeCost = (totalTokens: number) => {
+    // First 150M tokens included for pro, 500M for scale
+    const includedTokens = plan === "pro" ? 150000000 : 500000000
+    const pricePerMillionTokens = plan === "pro" ? 0.05 : 0.04
+    
+    console.log('Serverless Compute Cost Calculation:')
+    console.log('Current Plan:', plan)
+    console.log('Total Tokens:', totalTokens)
+    console.log('Included Tokens:', includedTokens)
+    console.log('Price per Million Tokens:', pricePerMillionTokens)
+    
+    // Return 0 if usage is within included amount
+    if (totalTokens <= includedTokens) {
+      console.log('Tokens within included amount, cost = $0')
+      return 0
+    }
+    
+    // Only charge for tokens above the included amount
+    const excessTokens = totalTokens - includedTokens
+    const cost = (excessTokens / 1000000) * pricePerMillionTokens
+    console.log('Excess Tokens:', excessTokens)
+    console.log('Final Compute Cost:', cost)
+    return cost
+  }
+
+  // Calculate provisioned compute cost
+  const calculateProvisionedComputeCost = (instances: ComputeSize[]) => {
     if (!instances || instances.length === 0) return 0
     return instances.reduce((total, instance) => {
       return total + (instance.hourlyRate * 24 * 31) // Convert hourly rate to monthly
     }, 0)
   }
 
+  // Handle slider value change
+  const handleSliderChange = (newValue: number[]) => {
+    console.log('\nStorage Slider Changed:')
+    console.log('Raw slider value:', newValue[0])
+    const scaledValue = [Math.floor(toLogScale(newValue[0]))]
+    console.log('Scaled and floored value:', scaledValue[0], 'GB')
+    setStorageValue(scaledValue)
+  }
+
+  // Handle writes slider change
+  const handleWritesSliderChange = (newValue: number[]) => {
+    console.log('\nWrites Slider Changed:')
+    console.log('Raw slider value:', newValue[0])
+    const scaledValue = [toLogScaleWrites(newValue[0])]
+    console.log('Scaled value:', scaledValue[0], 'writes')
+    setWriteQpsValue(scaledValue)
+  }
+
+  // Handle reads slider change
+  const handleReadsSliderChange = (newValue: number[]) => {
+    console.log('\nReads Slider Changed:')
+    console.log('Raw slider value:', newValue[0])
+    const scaledValue = [toLogScaleReads(newValue[0])]
+    console.log('Scaled value:', scaledValue[0], 'reads')
+    setReadQpsValue(scaledValue)
+  }
+
   // Update costs when values change
   useEffect(() => {
-    const newStorageCost = calculateStorageCost(storageValue[0])
-    const newWritesCost = calculateWritesCost(writeQpsValue[0])
-    const newReadsCost = calculateReadsCost(readQpsValue[0])
-    const newDedicatedComputeCost = calculateDedicatedComputeCost(computeInstances)
+    console.log('\nRecalculating Total Cost from useEffect:')
+    console.log('Current Plan:', plan)
+    console.log('Raw Storage Value:', storageValue[0])
+    const flooredStorage = Math.floor(storageValue[0])
+    console.log('Floored Storage Value:', flooredStorage)
+    
+    const newStorageCost = calculateStorageCost(flooredStorage)
+    
+    // Calculate total tokens from reads and writes
+    const writeTokens = calculateWritesCost(writeQpsValue[0])
+    const readTokens = calculateReadsCost(readQpsValue[0])
+    const totalTokens = writeTokens + readTokens
+    console.log('Write Tokens:', writeTokens)
+    console.log('Read Tokens:', readTokens)
+    console.log('Total Tokens:', totalTokens)
+    
+    // Calculate serverless compute cost based on total tokens
+    const newServerlessComputeCost = calculateServerlessComputeCost(totalTokens)
+    const newProvisionedComputeCost = calculateProvisionedComputeCost(computeInstances)
     
     setStorageCost(newStorageCost)
-    setWritesCost(newWritesCost)
-    setReadsCost(newReadsCost)
-    setDedicatedComputeCost(newDedicatedComputeCost)
+    setWritesCost(0) // We'll only use the combined cost now
+    setReadsCost(newServerlessComputeCost) // Store the combined cost in readsCost
+    setProvisionedComputeCost(newProvisionedComputeCost)
     
     // Add base price based on plan
     const basePlanPrice = plan === "pro" ? 15 : 350
-    setTotalCost(newStorageCost + newWritesCost + newReadsCost + newDedicatedComputeCost + basePlanPrice)
+    console.log('\nCost Components:')
+    console.log('Storage Cost:', newStorageCost)
+    console.log('Serverless Compute Cost:', newServerlessComputeCost)
+    console.log('Provisioned Compute Cost:', newProvisionedComputeCost)
+    console.log('Base Plan Price:', basePlanPrice)
+    
+    const finalTotal = newStorageCost + newServerlessComputeCost + newProvisionedComputeCost + basePlanPrice
+    console.log('Total Cost:', finalTotal)
+    setTotalCost(finalTotal)
   }, [storageValue[0], writeQpsValue[0], readQpsValue[0], computeInstances, plan])
 
   // Handle plan changes and remove instances that exceed VCPU limit
@@ -339,15 +459,47 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
     return `${value.toFixed(0)} reads`
   }
 
+  // Add effect to log storage cost changes
+  useEffect(() => {
+    console.log('Storage SlotMachinePrice value:', storageCost)
+  }, [storageCost])
+
   return (
     <div className="w-full max-w-5xl mx-auto p-6 bg-black/50 rounded-xl border border-zinc-700/50 backdrop-blur-xl">
       <h2 className="text-xl font-semibold mb-6 bg-gradient-text bg-clip-text text-transparent">Build your DB cluster and estimate cost</h2>
 
       <div className="space-y-6">
         {/* Plan Selection */}
-        <div className="flex items-center justify-center space-x-2 rounded-lg bg-zinc-900/50 p-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2 rounded-lg bg-zinc-900/50 p-2">
           <button
-            onClick={() => setPlan("pro")}
+            onClick={() => {
+              console.log('\nSwitching to Pro Plan:')
+              setPlan("pro")
+              // Force recalculation of all costs
+              const flooredStorage = Math.floor(storageValue[0])
+              console.log('Current Storage Value:', flooredStorage, 'GB')
+              
+              const newStorageCost = calculateStorageCost(flooredStorage)
+              const newWritesCost = calculateWritesCost(writeQpsValue[0])
+              const newReadsCost = calculateReadsCost(readQpsValue[0])
+              const newProvisionedComputeCost = calculateProvisionedComputeCost(computeInstances)
+              
+              console.log('\nCost Components after switching to Pro:')
+              console.log('Storage Cost:', newStorageCost)
+              console.log('Writes Cost:', newWritesCost)
+              console.log('Reads Cost:', newReadsCost)
+              console.log('Provisioned Compute Cost:', newProvisionedComputeCost)
+              console.log('Base Plan Price:', 15)
+              
+              setStorageCost(newStorageCost)
+              setWritesCost(newWritesCost)
+              setReadsCost(newReadsCost)
+              setProvisionedComputeCost(newProvisionedComputeCost)
+              
+              const totalCost = newStorageCost + newWritesCost + newReadsCost + newProvisionedComputeCost + 15
+              console.log('Total Cost:', totalCost)
+              setTotalCost(totalCost)
+            }}
             className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-all ${
               plan === "pro"
                 ? "bg-zinc-800 text-white shadow-lg"
@@ -360,7 +512,34 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
             <div className="text-xs text-zinc-500">$15/month</div>
           </button>
           <button
-            onClick={() => setPlan("scale")}
+            onClick={() => {
+              console.log('\nSwitching to Scale Plan:')
+              setPlan("scale")
+              // Force recalculation of all costs
+              const flooredStorage = Math.floor(storageValue[0])
+              console.log('Current Storage Value:', flooredStorage, 'GB')
+              
+              const newStorageCost = calculateStorageCost(flooredStorage)
+              const newWritesCost = calculateWritesCost(writeQpsValue[0])
+              const newReadsCost = calculateReadsCost(readQpsValue[0])
+              const newProvisionedComputeCost = calculateProvisionedComputeCost(computeInstances)
+              
+              console.log('\nCost Components after switching to Scale:')
+              console.log('Storage Cost:', newStorageCost)
+              console.log('Writes Cost:', newWritesCost)
+              console.log('Reads Cost:', newReadsCost)
+              console.log('Provisioned Compute Cost:', newProvisionedComputeCost)
+              console.log('Base Plan Price:', 350)
+              
+              setStorageCost(newStorageCost)
+              setWritesCost(newWritesCost)
+              setReadsCost(newReadsCost)
+              setProvisionedComputeCost(newProvisionedComputeCost)
+              
+              const totalCost = newStorageCost + newWritesCost + newReadsCost + newProvisionedComputeCost + 350
+              console.log('Total Cost:', totalCost)
+              setTotalCost(totalCost)
+            }}
             className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-all ${
               plan === "scale"
                 ? "bg-zinc-800 text-white shadow-lg"
@@ -386,7 +565,7 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
         </div>
 
         {/* Resource Selection */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Storage Section */}
           <Card className="bg-zinc-900/50">
             <CardContent className="p-6 flex flex-col h-full">
@@ -399,11 +578,13 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
                       <span className="text-[10px] text-zinc-500 ml-1">per GB</span>
                     </div>
                     <p className="text-[10px] text-zinc-500">
-                      {plan === "pro" ? "First 5GB included in plan" : "First 50GB included in plan"}
+                      {plan === "pro" ? "First 5GB included" : "First 50GB included"}
                     </p>
                   </div>
                   <div className="text-right">
-                    <SlotMachinePrice value={calculateStorageCost(storageValue[0])} />
+                    {/* Add logging just before rendering storage cost */}
+                    {console.log('Storage SlotMachinePrice value:', storageCost)}
+                    <SlotMachinePrice value={storageCost} />
                     <div className="text-[10px] text-zinc-500">per month</div>
                   </div>
                 </div>
@@ -411,7 +592,7 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
 
               <div className="h-[120px] relative flex flex-col justify-center mt-16">
                 {/* Current Value Tooltip */}
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-black/80 text-white px-3 py-1 rounded-md border border-zinc-700/50 backdrop-blur-sm whitespace-nowrap">
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-black/80 text-white px-3 py-1 rounded-md border border-zinc-700/50 backdrop-blur-sm whitespace-nowrap z-10">
                   <span className="text-xs">
                     {formatStorageValue(storageValue[0])}
                   </span>
@@ -425,10 +606,10 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
 
                 <Slider
                   value={[fromLogScale(storageValue[0])]}
-                  onValueChange={(newValue) => setStorageValue([toLogScale(newValue[0])])}
+                  onValueChange={handleSliderChange}
                   min={0}
                   max={100}
-                  step={0.1}
+                  step={1}
                   className="w-full"
                 />
               </div>
@@ -444,10 +625,10 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
                     <h3 className="text-sm font-medium text-white">Serverless Compute</h3>
                     <div className="flex items-baseline">
                       <span className="text-xs font-medium text-zinc-400">${plan === "pro" ? "0.05" : "0.04"}</span>
-                      <span className="text-[10px] text-zinc-500 ml-1">per million CPU ms</span>
+                      <span className="text-[10px] text-zinc-500 ml-1">per million query tokens</span>
                     </div>
                     <p className="text-[10px] text-zinc-500">
-                      {plan === "pro" ? "First 150M CPU ms included in plan" : "First 500M CPU ms included in plan"}
+                      {plan === "pro" ? "First 150M query tokens included" : "First 500M query tokens included"}
                     </p>
                   </div>
                   <div className="text-right">
@@ -465,7 +646,7 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
                   </div>
                   <div className="relative">
                     <div className="absolute -top-8 left-0 bg-black/80 text-white text-xs px-2 py-0.5 rounded-md border border-zinc-700/50 backdrop-blur-sm">
-                      {formatWritesValue(writeQpsValue[0])} (~{formatCpuMs(Math.floor(writeQpsValue[0]) * 200)} CPU ms)
+                      {formatWritesValue(writeQpsValue[0])} (~{formatCpuMs(Math.floor(writeQpsValue[0]) * 200)} query tokens)
                     </div>
 
                     <div className="flex justify-between mb-2">
@@ -475,7 +656,7 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
 
                     <Slider
                       value={[fromLogScaleWrites(writeQpsValue[0])]}
-                      onValueChange={(newValue) => setWriteQpsValue([toLogScaleWrites(newValue[0])])}
+                      onValueChange={handleWritesSliderChange}
                       min={0}
                       max={100}
                       step={0.1}
@@ -491,7 +672,7 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
                   </div>
                   <div className="relative">
                     <div className="absolute -top-8 left-0 bg-black/80 text-white text-xs px-2 py-0.5 rounded-md border border-zinc-700/50 backdrop-blur-sm">
-                      {formatReadsValue(readQpsValue[0])} (~{formatCpuMs(Math.floor(readQpsValue[0]) * 50)} CPU ms)
+                      {formatReadsValue(readQpsValue[0])} (~{formatCpuMs(Math.floor(readQpsValue[0]) * 50)} query tokens)
                     </div>
 
                     <div className="flex justify-between mb-2">
@@ -501,7 +682,7 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
 
                     <Slider
                       value={[fromLogScaleReads(readQpsValue[0])]}
-                      onValueChange={(newValue) => setReadQpsValue([toLogScaleReads(newValue[0])])}
+                      onValueChange={handleReadsSliderChange}
                       min={0}
                       max={100}
                       step={0.1}
@@ -513,16 +694,17 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
             </CardContent>
           </Card>
 
-          {/* Dedicated Compute Section */}
+          {/* Provisioned Compute Section */}
           <Card className="bg-zinc-900/50">
             <CardContent className="p-6 flex flex-col h-full">
               <div>
                 <div className="flex items-baseline justify-between">
-                  <div className="flex items-baseline gap-2">
-                    <h3 className="text-sm font-medium text-white">Dedicated Compute</h3>
+                  <div className="flex flex-col gap-1">
+                    <h3 className="text-sm font-medium text-white">Provisioned Compute</h3>
+                    <span className="text-[10px] text-brightOrange">Coming Soon</span>
                   </div>
                   <div className="text-right">
-                    <SlotMachinePrice value={dedicatedComputeCost} />
+                    <SlotMachinePrice value={provisionedComputeCost} />
                     <div className="text-[10px] text-zinc-500">per month</div>
                   </div>
                 </div>
@@ -562,7 +744,8 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
                 {/* Add Compute Button */}
                 <button 
                   onClick={() => setShowComputeOptions(!showComputeOptions)}
-                  className="w-full bg-zinc-800/30 text-white rounded-md flex flex-row px-4 py-2 justify-center hover:bg-zinc-800/50 transition-all duration-200"
+                  disabled
+                  className="w-full bg-zinc-800/30 text-white rounded-md flex flex-row px-4 py-2 justify-center hover:bg-zinc-800/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <div className="flex flex-row items-center justify-center font-medium text-sm">
                     {showComputeOptions ? 'Hide Options' : '+ Add Compute'}
@@ -602,7 +785,7 @@ export default function PricingCalculator({ isEnabled = false }: { isEnabled?: b
       </div>
 
       {/* Total Cost */}
-      <div className="flex justify-between items-baseline border-t border-zinc-700/50 pt-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline border-t border-zinc-700/50 pt-4 gap-2 sm:gap-0">
         <div>
           <p className="font-medium text-white text-lg">Estimated cost</p>
           <p className="text-[10px] text-zinc-500 mt-0.5">
