@@ -2,7 +2,7 @@
   "name": "fe-for-drizzle-todo-app",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "npm@10.6.0",
+  "packageManager": "npm@10.8.3",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

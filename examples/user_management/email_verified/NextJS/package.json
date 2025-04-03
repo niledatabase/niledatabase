@@ -23,5 +23,5 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },
-  "packageManager": "npm@10.6.0"
+  "packageManager": "npm@10.8.3"
 }
