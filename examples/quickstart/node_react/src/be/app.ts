@@ -12,7 +12,9 @@ import { Nile } from "@niledatabase/server";
 import { NileExpressHandler } from "@niledatabase/server/express";
 
 const nile = await Nile({
-  secureCookies: process.env.VERCEL === "1",
+  api: {
+    secureCookies: process.env.VERCEL === "1",
+  },
 });
 
 const fe_url = process.env.FE_URL || "http://localhost:3006";
