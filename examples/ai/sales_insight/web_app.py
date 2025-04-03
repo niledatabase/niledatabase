@@ -182,6 +182,7 @@ async def sign_up(login_data: LoginData, response: Response, session = Depends(g
             response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
             return "Internal server error"
     logger.debug(f"User: {user}")
+    user_id = user.id
     # Using raw SQL here due to combination of jsonb and crypt functions
     query = '''
     INSERT INTO auth.credentials(user_id, method, payload) VALUES 
@@ -204,11 +205,20 @@ async def sign_up(login_data: LoginData, response: Response, session = Depends(g
     # Due to the nature of the example, we are going to add the user to existing tenants. 
     # You'll probably never want to do this in production.
     try:
-        for tenant in session.query(Tenant).all():
-            tenant_user = TenantUsers(tenant_id=tenant.id, user_id=user.id)
-            session.add(tenant_user)
-            # We can't insert all tenant_users in one transaction because each lives in its own virtual tenant database
-            session.commit()
+        tenants = session.query(Tenant).all()
+        tenant_ids = [tenant.id for tenant in tenants]  # Create array of tenant IDs
+        session.commit() # must commit here so Nile won't think its a cross-tenant operation
+        for tenant_id in tenant_ids:
+            insert_query = """
+            INSERT INTO tenant_users (tenant_id, user_id) 
+            VALUES (:tenant_id, :user_id);
+            COMMIT;
+            """
+            session.execute(
+                text(insert_query),
+                {"tenant_id": tenant_id, "user_id": user_id}
+            )
+
         
     except SQLAlchemyError as e:
         logger.error(f"Error adding user to tenants : {e}")
