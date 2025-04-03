@@ -13,7 +13,9 @@
     "build:blogSearchDev": "LOCAL=true npm run build:blogSearch"
   },
   "overrides": {
-    "graceful-fs": "4.2.11"
+    "graceful-fs": "4.2.11",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "dependencies": {
     "@mailchimp/mailchimp_marketing": "^3.0.80",
