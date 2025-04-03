@@ -30,6 +30,7 @@ export const metadata = {
   title: "Blog | Nile Database",
   description: "All things database SaaS",
 };
+export const dynamic = "force-dynamic";
 function HeroArticle(props: Props) {
   const { fileName, title, authors: _authors, content, sizzle, image } = props;
   const { publishDate, slug, readLength } = parseMetadata(fileName, content);
