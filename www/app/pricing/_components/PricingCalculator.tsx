@@ -94,12 +94,12 @@ const SlotMachinePrice = ({ value, prefix = "$", suffix = "" }: { value: number,
       {prefix && <span className="text-sm text-white mr-1">{prefix}</span>}
       <div className="flex">
         {digits.map((digit, index) => (
-          <Fragment key={index}>
+          <div key={index} className="contents">
             {index === digits.length - 2 && (
               <div className="text-sm text-white mx-[1px] self-end mb-1">.</div>
             )}
             <SlotMachineDigit digit={digit} isAnimating={isAnimating} />
-          </Fragment>
+          </div>
         ))}
       </div>
       {suffix && <span className="text-sm text-zinc-400 ml-1">{suffix}</span>}
@@ -459,11 +459,6 @@ export default function PricingCalculator() {
     return `${value.toFixed(0)} reads`
   }
 
-  // Add effect to log storage cost changes
-  useEffect(() => {
-    console.log('Storage SlotMachinePrice value:', storageCost)
-  }, [storageCost])
-
   return (
     <div className="w-full max-w-5xl mx-auto p-6 bg-black/50 rounded-xl border border-zinc-700/50 backdrop-blur-xl">
       <h2 className="text-xl font-semibold mb-6 bg-gradient-text bg-clip-text text-transparent">Build your DB cluster and estimate cost</h2>
@@ -582,8 +577,6 @@ export default function PricingCalculator() {
                     </p>
                   </div>
                   <div className="text-right">
-                    {/* Add logging just before rendering storage cost */}
-                    {console.log('Storage SlotMachinePrice value:', storageCost)}
                     <SlotMachinePrice value={storageCost} />
                     <div className="text-[10px] text-zinc-500">per month</div>
                   </div>
