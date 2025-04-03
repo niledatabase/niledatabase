@@ -232,62 +232,7 @@ export default function Pricing() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-12">
-            <div>
-              <TokenCost header="Reading rows from a tenant" />
-              <TableRow
-                col1="Reading one row of 64 bytes"
-                col2="640K"
-                col3="$0.030"
-              />
-              <TableRow
-                col1="Reading one row of 256 bytes"
-                col2="650K"
-                col3="$0.032"
-              />
-              <TableRow
-                col1="Reading one row of 1024 bytes"
-                col2="680K"
-                col3="$0.034"
-              />
-            </div>
-            <div>
-              <TokenCost header="Writing rows to a tenant" />
-              <TableRow
-                col1="Writing one row of 64 bytes"
-                col2="1.4M"
-                col3="$0.07"
-              />
-              <TableRow
-                col1="Writing one row of 256 bytes"
-                col2="1.45M"
-                col3="$0.073"
-              />
-              <TableRow
-                col1="Writing one row of 1024 bytes"
-                col2="1.46M"
-                col3="$0.074"
-              />
-            </div>
-            <div>
-              <TokenCost header="Scanning rows of a tenant" />
-              <TableRow
-                col1="Scanning 1000 rows of 64 bytes, return 1"
-                col2="8.5M"
-                col3="$0.42"
-              />
-              <TableRow
-                col1="Scanning 1000 rows of 256 bytes, return 1"
-                col2="8.8M"
-                col3="$0.44"
-              />
-              <TableRow
-                col1="Scanning 1000 rows of 1024 bytes, return 1"
-                col2="9M"
-                col3="$0.45"
-              />
-            </div>
-          </div>
+          <PricingCalculator />
         </div>
       </div>
       <Divider />
