@@ -10,11 +10,10 @@ import {
   Autocomplete,
 } from "@mui/joy";
 import Markdown from "react-markdown";
-import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-const Theme = (await import('../syntax-themes/vs.js')).default;
+import SyntaxHighlighter from "react-syntax-highlighter";
+import Theme from "../syntax-themes/vs.js";
 
 const cannedQuestions = [
   "Which frameworks does this example use?",
@@ -154,7 +153,6 @@ const Chatbox: React.FC<ChatboxProps> = ({
     <Box>
       <Card
         sx={{
-          padding: 2,
           minHeight: "60vh",
           maxHeight: "60vh",
           overflow: "auto",

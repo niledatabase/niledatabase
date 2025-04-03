@@ -7,7 +7,7 @@ export const getAvailableFileCount = async ({
 }: {
   tenant_id: string;
 }) => {
-  const tenantNile = await configureNile(cookies().get("authData"), tenant_id);
+  const tenantNile = await configureNile(tenant_id);
   if (!tenantNile.userId) {
     return new NextResponse("Unauthorized");
   }

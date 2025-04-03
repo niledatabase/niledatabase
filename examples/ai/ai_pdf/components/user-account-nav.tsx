@@ -14,11 +14,12 @@ import {
 
 interface UserAccountNavProps {
   email: string | undefined;
-  name: string;
-  imageUrl: string;
+  name: string | undefined | null;
+  imageUrl: string | undefined | null;
 }
 
 const UserAccountNav = ({ email, imageUrl, name }: UserAccountNavProps) => {
+  console.log(imageUrl);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="overflow-visible">

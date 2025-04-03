@@ -18,28 +18,12 @@ export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 const page: FC<pageProps> = async ({}) => {
-  const nile = await configureNile(cookies().get("authData"), null);
+  const nile = await configureNile();
   console.log("showing tenants page for user: " + nile.userId);
-  if (!nile.userId) {
+  const tenants = await nile.api.tenants.listTenants();
+  if (!nile.userId || !Array.isArray(tenants)) {
     redirect("/login");
   }
-  let tenants: any = [];
-  if (nile.userId) {
-    // TODO: Replace with API call to get tenants for user when the SDK supports this
-    const res = await nile.db.query(
-      `select id, name from tenants join users.tenant_users on tenants.id = tenant_users.tenant_id
-      where tenant_users.user_id = $1`,
-      [nile.userId]
-    );
-    tenants = res.rows;
-  }
-  console.log(
-    "user in dashboard: ",
-    nile.userId,
-    " has ",
-    tenants.length,
-    " tenants"
-  );
 
   return (
     <>

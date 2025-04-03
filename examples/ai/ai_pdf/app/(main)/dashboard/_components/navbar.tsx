@@ -1,10 +1,10 @@
 import { Logo } from "@/components/logo";
 import { ModeToggle } from "@/components/mode-toggle";
 import UserAccountNav from "@/components/user-account-nav";
-import { configureNile } from "@/lib/NileServer";
-import { cookies } from "next/headers";
+import { getNile } from "@/lib/NileServer";
 import { redirect } from "next/navigation";
 import { MobileSidebar } from "./mobile-sidebar";
+import { User } from "@niledatabase/server";
 
 export const dynamic = "force-dynamic";
 export const dynamicParams = true;
@@ -12,28 +12,20 @@ export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 export const Navbar = async () => {
-  const nile = await configureNile(cookies().get("authData"), null);
-  if (!nile.userId) {
-    redirect("/");
+  const nile = await getNile();
+
+  const [userInfo, tenants] = await Promise.all([
+    nile.api.users.me as unknown as User,
+    nile.api.tenants.listTenants,
+  ]);
+
+  if (userInfo instanceof Response || tenants instanceof Response) {
+    return redirect("/");
   }
-  let tenants: any = [];
-  if (nile.userId) {
-    // TODO: Replace with API call to get tenants for user when the SDK supports this
-    const res = await nile.db.query(
-      `select id, name from tenants join users.tenant_users on tenants.id = tenant_users.tenant_id
-      where tenant_users.user_id = $1`,
-      [nile.userId]
-    );
-    tenants = res.rows;
-  }
-  const userInfo = await nile.db.query(
-    "select * from users.users where id=$1",
-    [nile.userId]
-  );
-  console.log(userInfo);
-  const email = userInfo.rows[0].email;
-  const picture = userInfo.rows[0].picture;
-  const name = userInfo.rows[0].name;
+
+  const email = userInfo.email;
+  const picture = userInfo.picture;
+  const name = userInfo.name;
   return (
     <nav className="fixed z-50 top-0 px-4 w-full h-14 border-b shadow-sm flex items-center backdrop-blur-lg">
       <MobileSidebar />
