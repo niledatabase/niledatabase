@@ -99,6 +99,7 @@ source venv/bin/activate
 ```
 
 Then, whether you have a virtual environment or not, install dependencies with:
+
 ```bash
 pip install -r requirements.txt
 ```

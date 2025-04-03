@@ -106,12 +106,12 @@ export async function POST(req: Request) {
                     Use the following snippets of retrieved code to answer the question. 
                   They represent code snippets from the files most similar to the question.
                   Include code snippets from the provided context in your answer when relevant.
-                  Context: ${allContent.join("\n")}`
+                  Context: ${allContent.join("\n")}`,
       },
       {
         role: "user",
-        content: `Please answer this question: ${body.question}. Helpful Answer:`
-      }
+        content: `Please answer this question: ${body.question}. Helpful Answer:`,
+      },
     ]);
 
     const stream = iteratorToStream(respStream, JSON.stringify(response));

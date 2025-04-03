@@ -1,7 +1,7 @@
 import { Nile } from "@niledatabase/server";
 
 export const nile = await Nile({
-//  debug: true,
+  //  debug: true,
 });
 
 export const { handlers } = nile.api;
