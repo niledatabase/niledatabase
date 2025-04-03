@@ -99,6 +99,7 @@ export default function Search() {
       </div>
       {showSearch && (
         <InstantSearch searchClient={searchClient} indexName="docs">
+          {/* @ts-expect-error Portal is actually valid here */}
           <Portal>
             <div
               className="fixed top-0 left-0 w-screen h-screen backdrop-blur-md p-[12vh] z-50 bg-[#0e0e0e1f]"

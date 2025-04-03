@@ -8,7 +8,6 @@ export default function Markdown({
   contents: string;
 }): JSX.Element {
   return (
-    //@ts-expect-error - what is this
     <Remark
       remarkToRehypeOptions={{ allowDangerousHtml: true }}
       //@ts-expect-error - what is this
