@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import { UseChatHelpers } from "ai/react";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
-import Typewriter from "typewriter-effect";
 
 const exampleMessages = [
   {
@@ -15,35 +14,13 @@ const exampleMessages = [
     heading: "Key concepts",
     message: "Can you tell me about the key concepts from this document?",
   },
-  //   {
-  //     heading: "Outerbase implementation",
-  //     message: "How is outerbase being used in this application?",
-  //   },
 ];
 
 export function EmptyStateAI({ setInput }: Pick<UseChatHelpers, "setInput">) {
-  const [isTypingDone, setIsTypingDone] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsTypingDone(true);
-    }, 14500);
-
-    return () => clearTimeout(timer); // This will clear the timeout if the component unmounts before the timeout finishes
-  }, []);
   return (
     <>
-      {!isTypingDone && (
-        <div className="text-2xl font-ranadeRegular">
-          <Typewriter
-            options={{
-              strings: ["Welcome", "Ask a question related to this document"],
-              autoStart: true,
-              loop: true,
-            }}
-          />
-        </div>
-      )}
+      <div className="text-2xl font-ranadeRegular"> Welcome! Ask a question related to this document.  </div>
       {isTypingDone && (
         <Card className="p-5 bg-muted font-ranadeLight">
           <div className="flex flex-col items-center w-full justify-center">
