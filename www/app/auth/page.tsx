@@ -608,16 +608,16 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "PostgreSQL Authentication for Multi-Tenant Apps | Secure & Scalable Auth",
+    "Auth for B2B Apps | Multi-tenant, unlimited active users, open source",
   description:
-    "Discover a purpose-built PostgreSQL authentication solution for multi-tenant applications. Scalable, secure, and open-source with unlimited active users.",
+    "Nile Auth is a comprehensive B2B auth solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile’s Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize the cloud version.",
   keywords:
-    "PostgreSQL authentication, multi-tenant authentication, secure user authentication, scalable auth, open-source auth, user data in PostgreSQL, enterprise auth solution",
+    "PostgreSQL, Multi-tenant, open source, unlimited active users, customer data in your Postgres, drop-in customizable UI modules",
   openGraph: {
     title:
-      "PostgreSQL Authentication for Multi-Tenant Apps | Secure & Scalable Auth",
+      "Auth for B2B Apps | Multi-tenant, unlimited active users, open source",
     description:
-      "Leverage secure, scalable, and open-source PostgreSQL authentication solutions for multi-tenant applications.",
+      "Nile Auth is a comprehensive B2B auth solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile’s Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize our cloud version.",
     url: "https://thenile.dev/auth",
     images: "https://thenile.dev/opengraph/auth.jpg",
     type: "website",
@@ -625,9 +625,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title:
-      "PostgreSQL Authentication for Multi-Tenant Apps | Secure & Scalable Auth",
+      "Auth for B2B Apps | Multi-tenant, unlimited active users, open source",
     description:
-      "Build secure, scalable PostgreSQL authentication for multi-tenant applications with unlimited active users. Open-source and highly efficient.",
+      "Nile Auth is a comprehensive B2B auth solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile’s Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize our cloud version.",
     images: "https://thenile.dev/opengraph/auth.jpg",
   },
 };
