@@ -9,8 +9,8 @@ export default function TextTyper({ words }: { words: string[] }) {
   const [displayedText, setDisplayedText] = useState("");
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  let timer = useRef<NodeJS.Timeout>();
-  let nextWordTimer = useRef<NodeJS.Timeout>();
+  let timer = useRef<NodeJS.Timeout>(undefined);
+  let nextWordTimer = useRef<NodeJS.Timeout>(undefined);
   useEffect(() => {
     setActiveWord(words[activeIndex]);
   }, [activeIndex]);

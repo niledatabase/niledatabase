@@ -1,5 +1,5 @@
 import Body from "@/app/_components/Body";
-import Quickstart from "../../getting-started/[[...slug]]/languages/sql.mdx";
+import Quickstart from "./sql.mdx";
 export default async function Page() {
   return (
     <Body background={null}>

@@ -52,7 +52,13 @@ export default function TemplateSearch({
     <div className="templateSearch flex flex-col gap-[24px] w-full">
       {searchEnabled && (
         <div className="flex flex-row gap-2 flex-1 w-full -mt-16 relative z-10 lg:px-8 md:px-24 px-6">
-          <Image alt="looking glass" src={Search} width={24} height={24} />
+          <Image
+            alt="looking glass"
+            src={Search}
+            width={24}
+            height={24}
+            data-image-zoom-disabled
+          />
           <input
             onChange={(e) => setSearchText(e.target.value)}
             placeholder="Search all templates"
@@ -63,7 +69,13 @@ export default function TemplateSearch({
       {showButton && (
         <div className="self-end">
           <GradientButton href="/templates" variant="soft">
-            <Image src={Plus} alt="orange plus sign" width={24} height={24} />
+            <Image
+              src={Plus}
+              alt="orange plus sign"
+              width={24}
+              height={24}
+              data-image-zoom-disabled
+            />
             <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
               Add Your Template
             </span>

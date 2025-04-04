@@ -11,12 +11,12 @@ import Coffee from "@/public/blog/coffee.webp";
 import BlogImageZoom from "./ImageZoom";
 
 export const dynamic = "force-dynamic";
-type Props = { params: { slug: string[] } };
+type Props = { params: Promise<{ slug: string[] }> };
 
 async function getBlog(props: Props) {
-  const {
-    params: { slug },
-  } = props;
+  const params = await props.params;
+  const { slug } = params;
+
   const [lastSlug] = slug.reverse();
   const files = await glob("app/blog/**.mdx");
   const file = files.find((file) => {
@@ -89,6 +89,7 @@ export async function generateMetadata(
   // read route params
   const blog = await getBlog(props);
   const previousImages = (await parent).openGraph?.images || [];
+  const params = await props.params;
   return {
     ...blog.metadata,
     description: blog.metadata.sizzle,
@@ -96,7 +97,7 @@ export async function generateMetadata(
       images: [blog.metadata.image, ...previousImages],
     },
     alternates: {
-      canonical: `/blog/${props.params.slug.join("/")}`,
+      canonical: `/blog/${params.slug.join("/")}`,
     },
   };
 }

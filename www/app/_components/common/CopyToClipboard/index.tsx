@@ -7,7 +7,7 @@ export default function CopyToClipboard({
   children: JSX.Element;
 }) {
   const textInput = useRef<HTMLDivElement>(null);
-  const timer = useRef<NodeJS.Timer>();
+  const timer = useRef<NodeJS.Timer>(undefined);
   const [copied, setCopied] = useState(false);
 
   const onCopy = useCallback(async () => {
