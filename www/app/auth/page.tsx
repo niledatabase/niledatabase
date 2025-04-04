@@ -12,6 +12,7 @@ import MultiTenantCodeEditor, {
   authExamples,
 } from "./MultiTenantCodeEditor";
 import VideoEmbed from "./VideoEmbed";
+import AuthPricingCalculator from "./_components/AuthPricingCalculator";
 
 export default function Auth() {
   return (
@@ -331,6 +332,7 @@ export default function Auth() {
           </div>
         </div>
       </div>
+      <AuthPricingCalculator />
       <HeroBottom
         cta={
           <div className="bg-black rounded-xl text-white flex flex-row gap-2 px-4 py-1 items-center w-fit">
