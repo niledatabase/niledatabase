@@ -12,8 +12,8 @@
   "proxy": "http://localhost:3000",
   "dependencies": {
     "@fontsource/inter": "^5.0.13",
-    "@niledatabase/react": "^3.0.0-alpha.44",
-    "@niledatabase/server": "^3.0.0-alpha.44",
+    "@niledatabase/react": "^4.0.0-alpha.16",
+    "@niledatabase/server": "^4.0.0-alpha.16",
     "@radix-ui/react-checkbox": "^1.1.4",
     "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-label": "^2.1.2",
@@ -38,6 +38,7 @@
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.1"
   },
+  "packageManager": "npm@10.8.3",
   "devDependencies": {
     "@tailwindcss/cli": "^4.0.6",
     "@types/cookie-parser": "^1.4.4",

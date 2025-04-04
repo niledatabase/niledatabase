@@ -27,7 +27,7 @@ export default function Page() {
   }, []);
 
   const backendServer = String(
-    process.env.NEXT_PUBLIC_BASE_PATH || "http://localhost:8080"
+    process.env.NEXT_PUBLIC_BASE_PATH || "http://localhost:3001"
   );
 
   // we'll generate a random UUIDs here instead of using the auto-gen one in Nile. Just to make it easier to follow the demo.

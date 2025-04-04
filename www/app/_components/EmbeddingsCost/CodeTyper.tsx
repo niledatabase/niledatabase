@@ -17,7 +17,7 @@ export default function CodeTyper({ lines, allowTyping }: Props) {
     lastLine.length - 1,
     lastLetter,
   ]);
-  let timer = useRef<NodeJS.Timeout>();
+  let timer = useRef<NodeJS.Timeout>(undefined);
 
   const lineNumber = useMemo(() => {
     return position[0];

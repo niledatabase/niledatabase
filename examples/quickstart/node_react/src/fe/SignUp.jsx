@@ -4,7 +4,6 @@ import { SignUpForm } from "@niledatabase/react";
 import { Button } from "./components/ui/button";
 
 export default function SignUp() {
-  console.log("wtf");
   return (
     <div className="justify-center items-center flex flex-1 flex-col">
       <SignUpForm callbackUrl="/tenants" />

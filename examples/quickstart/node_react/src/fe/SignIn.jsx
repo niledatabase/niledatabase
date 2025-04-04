@@ -1,26 +1,11 @@
 import React from "react";
-import Cookies from "js-cookie";
-import { useSearchParams, Link } from "react-router-dom";
-import { Google, SignInForm } from "@niledatabase/react";
+import { Link } from "react-router-dom";
+import { SignInForm } from "@niledatabase/react";
 import { Button } from "./components/ui/button";
 
 export default function Auth() {
-  // handle logouts here
-  const [searchParams] = useSearchParams();
-  if (searchParams.has("logout")) {
-    Cookies.remove("authData");
-  }
-
-  if (process.env.REACT_APP_AUTH_TYPE === "google") {
-    return (
-      <div className="justify-center items-center flex flex-1">
-        <Google />
-      </div>
-    );
-  }
-
   return (
-    <div className="justify-center items-center flex flex-1 flex-col">
+    <div className="justify-center items-center flex flex-1 flex-col gap-4 mt-30">
       <SignInForm callbackUrl="/tenants" />
       <p>
         Not a user yet?{" "}

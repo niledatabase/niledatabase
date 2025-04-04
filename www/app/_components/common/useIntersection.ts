@@ -2,7 +2,7 @@
 import { RefObject, useEffect, useState } from "react";
 
 export default function useIntersection(
-  element: RefObject<HTMLElement>,
+  element: RefObject<HTMLElement | null>,
   config?: { rootMargin?: string; threshold?: number }
 ) {
   const [isVisible, setState] = useState(false);

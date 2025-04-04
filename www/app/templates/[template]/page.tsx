@@ -14,13 +14,13 @@ import cleanTemplateReadme from "../_build/cleanTemplateReadme.mjs";
 import Heading from "@/app/_components/common/Heading";
 
 type PageProps = {
-  params?: {
+  params?: Promise<{
     template?: string;
-  };
+  }>;
 };
 
 export default async function TemplateDetail(pageProps: PageProps) {
-  const { params } = pageProps;
+  const params = await pageProps.params;
   const templates = await loadTemplates();
   const paramTemplate = String(params?.template);
 

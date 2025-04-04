@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "packageManager": "npm@10.6.0",
+  "packageManager": "npm@10.8.3",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -18,6 +18,7 @@
     "@mui/material": "^5.14.18",
     "@niledatabase/react": "^4.0.0-alpha.14",
     "@niledatabase/server": "^4.0.0-alpha.14",
+    "@radix-ui/react-slot": "^1.1.2",
     "@tailwindcss/postcss": "^4.0.17",
     "@xenova/transformers": "^2.17.2",
     "ai": "4.2.6",

@@ -30,6 +30,7 @@ export default async function Home() {
                     alt="orange 8-bit heart"
                     width={98}
                     height={98}
+                    data-image-zoom-disabled
                   />
                   Developers
                 </div>
@@ -58,6 +59,7 @@ export default async function Home() {
                   width={122}
                   height={34}
                   className="z-10 relative"
+                  data-image-zoom-disabled
                 />
                 <div className="bg-gradient-white bg-clip-text text-transparent text-center text-[20px] z-10 relative max-w-[320px] leading-[32px]">
                   Join Github discussions for roadmap and issues
@@ -72,6 +74,7 @@ export default async function Home() {
                   width={191}
                   height={52}
                   className="z-10 relative"
+                  data-image-zoom-disabled
                 />
                 <div className="bg-gradient-white bg-clip-text text-transparent text-center text-[20px] z-10 relative max-w-[320px] leading-[32px]">
                   Participate in online conversations and forums
@@ -86,6 +89,7 @@ export default async function Home() {
                   width={47}
                   height={44}
                   className="z-10 relative"
+                  data-image-zoom-disabled
                 />
                 <div className="bg-gradient-white bg-clip-text text-transparent text-center text-[20px] z-10 relative max-w-[280px] leading-[32px]">
                   Follow us on X to learn and network
@@ -113,6 +117,7 @@ export default async function Home() {
                     alt="book cover"
                     width={24}
                     height={24}
+                    data-image-zoom-disabled
                   />
                   <span className="pl-2 bg-gradient-white bg-clip-text text-transparent subpixel-antialiased text-[16px]">
                     Browse more templates

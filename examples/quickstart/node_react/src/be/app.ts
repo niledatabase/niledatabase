@@ -11,17 +11,23 @@ import {
 import { Nile } from "@niledatabase/server";
 import { NileExpressHandler } from "@niledatabase/server/express";
 
-const nile = await Nile({
-  secureCookies: process.env.VERCEL === "1",
-});
-
 const fe_url = process.env.FE_URL || "http://localhost:3006";
+
+const nile = await Nile({
+  api: {
+    secureCookies: process.env.VERCEL === "1",
+    origin: fe_url,
+  },
+  debug: true,
+});
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const { paths, handler } = await NileExpressHandler(nile);
+const { paths, handler } = await NileExpressHandler(nile, {
+  muteResponse: true,
+});
 app.get(paths.get, handleRoutes);
 app.post(paths.post, handleRoutes);
 app.put(paths.put, handleRoutes);

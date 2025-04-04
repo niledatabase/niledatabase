@@ -2,7 +2,7 @@
   "name": "fe-for-drizzle-todo-app",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "npm@10.6.0",
+  "packageManager": "npm@10.8.3",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -15,7 +15,9 @@
     "@niledatabase/server": "^3.0.0",
     "ai": "4.2.6",
     "class-variance-authority": "^0.7.1",
-    "highlight.js": "^11.9.0",
+    "fault": "^1.0.4",
+    "format": "^0.2.2",
+    "highlight.js": "^11.11.1",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^3.1.2",
@@ -23,7 +25,7 @@
     "next": "14.2.25",
     "react": "^18",
     "react-dom": "^18",
-    "react-syntax-highlighter": "^5.8.0",
+    "react-syntax-highlighter": "^15.6.1",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.1"

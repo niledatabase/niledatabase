@@ -19,6 +19,7 @@ export default function TemplateCard(props: Template) {
               width={382}
               height={218}
               sizes={sizes}
+              data-image-zoom-disabled
             />
           </div>
           <div className="flex flex-col gap-3 px-8 py-4 justify-between flex-1">

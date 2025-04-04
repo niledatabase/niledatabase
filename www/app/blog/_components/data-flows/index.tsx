@@ -7,8 +7,9 @@ import "reactflow/dist/style.css";
 import { PrismTheme } from "prism-react-renderer";
 
 const code = `  
-import { ReactFlowProvider } from "reactflow";
+// import ReactFlow from "reactflow";
 // import "reactflow/dist/style.css";
+
 
 function App() {
   const [nodes, setNodes] = React.useState([]);
