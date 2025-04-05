@@ -222,7 +222,8 @@
                   "auth/concepts/cookies",
                   "auth/concepts/oauth",
                   "auth/concepts/builtintables",
-                  "auth/concepts/per-tenantoverrides"
+                  "auth/concepts/per-tenantoverrides",
+                  "auth/concepts/acclinking"
                 ]
               },
               {

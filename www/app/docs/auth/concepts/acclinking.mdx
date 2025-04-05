@@ -1,0 +1,61 @@
+---
+title: 'Account Linking'
+description: 'Understanding account linking in Nile Auth'
+---
+
+## Overview
+
+Account linking allows users to authenticate with multiple SSO providers to the same user.
+This is automatically enabled in Nile Auth, and will be used if you have multiple SSO providers configured 
+or if you choose to support both email/password and SSO authentication.
+
+<Tip> Combining SSO and email/password authentication requires the email address to be verified.
+You can set up [email provider and templates](/auth/email) in Nile console.</Tip>
+
+## How it works
+
+When a user first signs up, no matter what authentication method they use, they are assigned a unique user ID that is linked to their email address. 
+You can see this in the `users.users` table:
+
+```sql
+SELECT * FROM users.users;
+```
+
+If the user then signs in with a different SSO provider, and the email address is the same, the new authentication method will be linked to the same user ID.
+You can see that the user ID has multiple credentials in the `users.credentials` table:
+
+```sql
+SELECT * FROM users.credentials where user_id = '...';
+```
+
+## Understanding Account Linking Scenarios
+
+There are three scenarios that can occur when a user signs up with multiple authentication methods, and in order to maintain the security of the system, 
+the behavior is slightly different for each scenario:
+
+### User signs up with multiple SSO providers
+
+If you have multiple SSO providers configured, and a user has the same email address across all of them, 
+the user will be linked to the same user ID. This is the simplest and most secure scenario. 
+
+### User signs up with email/password and then signs in with SSO
+
+If a user signs up with email/password and then signs in with a SSO provider, the SSO provider will be linked to the same user ID.
+However, unless the email address is **validated** in Nile Auth, the user will not be able to sign in to their email/password account after linking.
+
+Why? Because the email address is not verified, it is possible that a malicious actor created the same email address, and could potentially 
+hijack the account. In order to prevent this, we require the email address to be verified before the user can sign in to their email/password account 
+after linking. For this reason, we strongly recommend that you verify email addresses in your production application. 
+We support unverified email addresses, but we recommend limiting this to development environments.
+
+### User signs up with SSO and then signs in with email/password
+
+If a user signs up with a SSO provider and then wants to add email/password authentication to their account, they can do this by first signing in 
+with their SSO provider, and then use the reset-password form to add email/password authentication to their account. 
+This will create a new email/password credential for the user, and link it to the same user ID.
+
+
+
+
+
+
