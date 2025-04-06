@@ -28,6 +28,10 @@ You can see that the user ID has multiple credentials in the `users.credentials`
 SELECT * FROM users.credentials where user_id = '...';
 ```
 
+The user details in the `users.users` table are not affected by account linking. This means that the user will still have the same user ID, 
+the same email address, and the same user details such as `first_name`, `last_name`, and `picture`. The only thing that changes is the addition of 
+the new authentication method in the `users.credentials` table.
+
 ## Understanding Account Linking Scenarios
 
 There are three scenarios that can occur when a user signs up with multiple authentication methods, and in order to maintain the security of the system, 
