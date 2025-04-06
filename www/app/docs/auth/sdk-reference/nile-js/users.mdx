@@ -1,0 +1,130 @@
+---
+title: 'Nile-JS Users Module'
+description: 'Managing users'
+---
+
+The Users module is used to manage users. It provides a number of methods for creating, updating, and deleting users.
+
+## Create User
+
+The `nile.api.users.createUser` method is used to create a new user.
+
+### Parameters
+
+- `email`: The email of the user to create.
+- `password`: The password of the user to create.
+- `preferredName`: Optional. The preferred name of the user to create.
+- `newTenant`: Optional. Name of a new tenant to create for the user.
+
+### Returns
+
+When successful, a promise that resolves to a `User` object. 
+
+```ts
+interface User {
+  id: string;
+  email: string;
+  name?: string | null;
+  familyName?: string | null;
+  givenName?: string | null;
+  picture?: string | null;
+  created: string;
+  updated?: string;
+  emailVerified?: string | null;
+  tenants: { id: string }[];
+}
+```
+
+When the user already exists, a promise that resolves to a Response object with 404 status code and text body `Not Found`.
+
+### Examples
+
+Here are some examples of how to use the `nile.api.users.createUser` method and the expected responses:
+
+<CodeGroup>
+```ts createUser
+const user = await nile.api.users.createUser({
+  email: 'test@example.com',
+  password: 'password',
+});
+
+if (user instanceof Response) {
+    console.log("User creation failed:", { status: user.status, body: await user.text() });
+} else {
+    console.log("User creation successful");
+    console.log(user);
+}
+/* 
+Example response:
+{
+  id: '019609a8-ef6e-7df8-a50e-418a703d3cc1',
+  email: 'test@example.com',
+  name: null,
+  familyName: null,
+  givenName: null,
+  picture: null,
+  created: '2025-04-06T05:53:08.461Z',
+  updated: '2025-04-06T05:53:08.461Z',
+  tenants: []
+}
+*/
+```
+
+```ts createUser with preferred name
+const user = await nile.api.users.createUser({
+  email: 'test2@example.com',
+  password: 'password',
+  preferredName: 'Test User',
+});
+
+if (user instanceof Response) {
+    console.log("User creation failed:", { status: user.status, body: await user.text() });
+} else {
+    console.log("User creation successful");
+    console.log(user);
+}
+/* 
+Example response:
+{
+  id: '019609ab-0a3f-782a-a32e-ed22d994891a',
+  email: 'test2@example.com',
+  name: null,
+  familyName: null,
+  givenName: null,
+  picture: null,
+  created: '2025-04-06T05:55:26.399Z',
+  updated: '2025-04-06T05:55:26.399Z',
+  tenants: []
+}
+*/
+```
+
+```ts createUser with new tenant
+const user = await nile.api.users.createUser({
+  email: 'test3@example.com',
+  password: 'password',
+  newTenant: 'Test Tenant',
+});
+
+if (user instanceof Response) {
+    console.log("User creation failed:", { status: user.status, body: await user.text() });
+} else {
+    console.log("User creation successful");
+    console.log(user);
+}
+/* 
+    Example response:
+    {
+        id: '019609ba-e939-7774-81c2-990173617154',
+        email: 'test3@example.com',
+        name: null,
+        familyName: null,
+        givenName: null,
+        picture: null,
+        created: '2025-04-06T06:12:46.521Z',
+        updated: '2025-04-06T06:12:46.521Z',
+        tenants: []
+    }
+*/
+```
+</CodeGroup>

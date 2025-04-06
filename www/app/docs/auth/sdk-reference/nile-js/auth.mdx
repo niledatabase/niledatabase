@@ -1,0 +1,71 @@
+---
+title: 'Nile-JS Auth Module'
+description: 'Securely authenticating users'
+---
+
+The Auth module is used to securely authenticate users. It provides a number of methods for signing in, signing out, and managing user sessions.
+
+## Login
+
+The `nile.api.login` method is used to login as a user.
+
+### Parameters
+
+- `email`: The email of the user to login as.
+- `password`: The password of the user to login as.
+- `config`: Additional configuration options. Currently there is only one option:
+  - `returnResponse`: If `true`, the method will return the result of the login attempt as a response object. 
+  If `false`, the method will set the corresponding session cookie if the login attempt succeeds and leave it unset if the login attempt fails.
+
+### Examples
+
+Both examples below will print out the session token for the authenticated user. 
+Do not actually print out the user's session token in production - it should be kept secret.
+
+Worth noting that the header name is different in each case. `set-cookie` is used for the response object and `cookie` is used for Nile's `headers` object.
+
+<CodeGroup>
+```ts without returnResult
+await nile.api.login({
+  email: 'delete@me.com',
+  password: 'deleteme',
+});
+
+const authCookie = nile.api.headers?.get('cookie');
+if (!authCookie) {
+    throw new Error('Login failed. No auth cookie found');
+}
+
+const [, token] =
+    /((__Secure-)?nile\.session-token=.+?);/.exec(authCookie) ?? [];
+if (!token) {
+    throw new Error('Login failed. No session token found in auth cookie');
+}
+console.log('Session token: ', token)
+```
+
+```ts with returnResponse
+const loginRes = await nile.api.login({
+  email: 'delete@me.com',
+  password: 'deleteme',
+  { returnResponse: true },
+});
+
+if (!loginResponse) {
+    throw new Error('No login response. This should never happen.');
+}
+const authCookie = loginResponse.headers?.get('set-cookie');
+if (!authCookie) {
+    throw new Error('Login failed. No auth cookie found');
+}
+
+const [, token] =
+    /((__Secure-)?nile\.session-token=.+?);/.exec(authCookie) ?? [];
+if (!token) {
+    throw new Error('Login failed. No session token found in auth cookie');
+}
+console.log('Session token: ', token)
+```
+</CodeGroup>
+
+

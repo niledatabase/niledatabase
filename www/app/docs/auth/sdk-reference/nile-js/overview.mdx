@@ -1,0 +1,80 @@
+---
+title: 'Nile-JS SDK Overview'
+description: 'Toolkit for building multi-tenant applications with Next.js, Remix, Express, and more'
+---
+import DbCreds from '/snippets/dbcreds.mdx'
+
+The Nile-JS SDK is a toolkit for building multi-tenant applications with React, Next.js, Remix, Express, and more.
+The React and web components are documented under [components](/auth/components). 
+This reference is for the server-side SDK, which is used to build your server-side application logic.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @niledatabase/server 
+```
+
+```bash yarn
+yarn add @niledatabase/server
+```
+
+</CodeGroup>
+
+## Configuration
+
+The SDK is configured using environment variables. You can get these from the [Nile Console](https://console.thenile.dev):
+
+<DbCreds />
+
+## Initializing the SDK
+
+The SDK is initialized using the `Nile` class. If you initialize the SDK without any arguments, it will use the configuration in the `.env` file.
+You can also pass in a configuration object to the `Nile` constructor to override the configuration in the `.env` file. 
+For more information about the available configuration options, see [configuration](/auth/sdk-reference/nile-js/configuration).
+
+<Tip> The Nile object is a singleton. Initializing it multiple times in the same application will return the same instance. </Tip>
+
+<CodeGroup>
+```ts using env variables
+import { Nile } from "@niledatabase/server";
+
+const nile = await Nile();
+```
+
+```ts override config
+import { Nile } from "@niledatabase/server";
+
+const nile = await Nile({
+    debug: true,
+});
+```
+</CodeGroup>
+
+## Available Modules
+
+The SDK provides a number of modules with methods for interacting with Nile:
+
+<CardGroup>
+<Card title="Auth" href="/auth/sdk-reference/nile-js/auth" icon="right-to-bracket">
+  Securely authenticating users
+</Card>
+<Card title="DB" href="/auth/sdk-reference/nile-js/db" icon="database">
+  Tenant-aware querying of your database
+</Card>
+<Card title="Users" href="/auth/sdk-reference/nile-js/users" icon="user">
+  Managing users
+</Card>
+<Card title="Tenants" href="/auth/sdk-reference/nile-js/tenants" icon="building">
+  Managing tenants
+</Card>
+<Card title="Routes" href="/auth/sdk-reference/nile-js/routes" icon="route">
+  Built-in and custom routes
+</Card>
+</CardGroup>
+
+## API Reference
+
+The API reference is available in the [API Reference](/auth/api_reference/auth) section.
+
+
