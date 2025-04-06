@@ -43,12 +43,11 @@ export default function AuthPricingCalculator() {
       const chargeableStorageMB = Math.max(0, totalStorageMB - freeStorageMB);
 
       computeCost = (chargeableTokens / 1_000_000) * 0.05;
-      storageCost = (chargeableStorageMB / 1024) * 1.00;
-
+      storageCost = (chargeableStorageMB / 1024) * 1.0;
     } else if (plan === "scale") {
       // Scale Plan Calculation (Assuming similar structure, adjust if needed)
       // Example: Assume 50GB free storage, 1B free tokens for Scale (update as needed)
-      const freeTokens = 1_000_000_000; 
+      const freeTokens = 1_000_000_000;
       const freeStorageMB = 50 * 1024;
       const chargeableTokens = Math.max(0, totalTokens - freeTokens);
       const chargeableStorageMB = Math.max(0, totalStorageMB - freeStorageMB);
@@ -60,8 +59,9 @@ export default function AuthPricingCalculator() {
     return computeCost + storageCost + basePrice;
   };
 
-  const storageCostPerGB = plan === "free" ? 0 : (plan === "pro" ? 1.00 : 0.75);
-  const computeCostPerMillionTokens = plan === "free" ? 0 : (plan === "pro" ? 0.05 : 0.04);
+  const storageCostPerGB = plan === "free" ? 0 : plan === "pro" ? 1.0 : 0.75;
+  const computeCostPerMillionTokens =
+    plan === "free" ? 0 : plan === "pro" ? 0.05 : 0.04;
 
   // --- Display Text Logic ---
   const getStorageRateText = () => {
@@ -164,8 +164,12 @@ export default function AuthPricingCalculator() {
         <div className="overflow-x-auto">
           {/* Tenant Slider - Prevent wrap */}
           <div className="flex items-start mb-2 whitespace-nowrap">
-            <span className="text-[#636669] w-6 text-right mr-4 select-none shrink-0">1</span>
-            <div className="flex-1 min-w-0"> {/* Add min-w-0 to allow shrinking */}
+            <span className="text-[#636669] w-6 text-right mr-4 select-none shrink-0">
+              1
+            </span>
+            <div className="flex-1 min-w-0">
+              {" "}
+              {/* Add min-w-0 to allow shrinking */}
               <span className="text-[#E06C75]">// Tenants: </span>
               <span className="text-[#e4e4e4]">{formatNumber(tenants[0])}</span>
               <Slider
@@ -181,17 +185,31 @@ export default function AuthPricingCalculator() {
 
           {/* Active Users Slider - Prevent wrap */}
           <div className="flex items-start mb-2 whitespace-nowrap">
-            <span className="text-[#636669] w-6 text-right mr-4 select-none shrink-0">2</span>
-            <div className="flex-1 min-w-0"> {/* Add min-w-0 */}
+            <span className="text-[#636669] w-6 text-right mr-4 select-none shrink-0">
+              2
+            </span>
+            <div className="flex-1 min-w-0">
+              {" "}
+              {/* Add min-w-0 */}
               <span className="text-[#E06C75]">// Active Users: </span>
-              <span className="text-[#e4e4e4]">{formatNumber(activeUsers[0])}</span>
-              <span className="text-[#98C379] ml-2">(~{calculateStorageGB().toFixed(2)} GB @ {getStorageRateText()})</span>
+              <span className="text-[#e4e4e4]">
+                {formatNumber(activeUsers[0])}
+              </span>
+              <span className="text-[#98C379] ml-2">
+                (~{calculateStorageGB().toFixed(2)} GB @ {getStorageRateText()})
+              </span>
               <Slider
                 value={activeUsers}
                 onValueChange={setActiveUsers}
                 min={0}
                 // Set max dynamically: 1M for Free, 50M for Pro, 100M for Scale
-                max={plan === "free" ? 1000000 : plan === "pro" ? 50000000 : 100000000}
+                max={
+                  plan === "free"
+                    ? 1000000
+                    : plan === "pro"
+                    ? 50000000
+                    : 100000000
+                }
                 // Adjust step based on plan
                 step={plan === "pro" ? 50000 : plan === "scale" ? 100000 : 1000}
                 className="w-full my-1.5"
@@ -201,11 +219,18 @@ export default function AuthPricingCalculator() {
 
           {/* Logins Slider - Prevent wrap */}
           <div className="flex items-start mb-2 whitespace-nowrap">
-            <span className="text-[#636669] w-6 text-right mr-4 select-none shrink-0">3</span>
-            <div className="flex-1 min-w-0"> {/* Add min-w-0 */}
+            <span className="text-[#636669] w-6 text-right mr-4 select-none shrink-0">
+              3
+            </span>
+            <div className="flex-1 min-w-0">
+              {" "}
+              {/* Add min-w-0 */}
               <span className="text-[#E06C75]">// Logins/mo: </span>
               <span className="text-[#e4e4e4]">{formatNumber(logins[0])}</span>
-              <span className="text-[#98C379] ml-2">(~{formatNumber(calculateComputeTokens())} tokens @ {getComputeRateText()})</span>
+              <span className="text-[#98C379] ml-2">
+                (~{formatNumber(calculateComputeTokens())} tokens @{" "}
+                {getComputeRateText()})
+              </span>
               <Slider
                 value={logins}
                 onValueChange={setLogins}
@@ -222,29 +247,39 @@ export default function AuthPricingCalculator() {
           {/* Cost Calculation Output - Prevent wrap */}
           <div className="mt-4 pt-3 border-t border-[#2a2a2a] whitespace-nowrap">
             <div className="flex items-start">
-              <span className="text-[#636669] w-6 text-right mr-4 select-none shrink-0">4</span>
+              <span className="text-[#636669] w-6 text-right mr-4 select-none shrink-0">
+                4
+              </span>
               <span className="text-[#636669]">/*</span>
             </div>
-            <div className="flex items-start pl-[calc(1.5rem+1rem)]"> {/* Align with code content */}
+            <div className="flex items-start pl-[calc(1.5rem+1rem)]">
+              {" "}
+              {/* Align with code content */}
               <span className="text-[#e4e4e4]">Total Monthly Cost: </span>
               <span className="text-[#e4e4e4] font-semibold ml-2">
                 ${plan === "free" ? "0.00" : calculateTotalCost().toFixed(2)}
               </span>
             </div>
-            <div className="flex items-start pl-[calc(1.5rem+1rem)]"> {/* Align with code content */}
-              {plan !== 'free' && (
+            <div className="flex items-start pl-[calc(1.5rem+1rem)]">
+              {" "}
+              {/* Align with code content */}
+              {plan !== "free" && (
                 <span className="text-[#e4e4e4]">
-                  (Includes ${plan === "pro" ? "$15" : "$350"} base price for {plan} plan)
+                  (Includes ${plan === "pro" ? "$15" : "$350"} base price for{" "}
+                  {plan} plan)
                 </span>
               )}
             </div>
             <div className="flex items-start">
-              <span className="text-[#636669] w-6 text-right mr-4 select-none shrink-0">5</span>
+              <span className="text-[#636669] w-6 text-right mr-4 select-none shrink-0">
+                5
+              </span>
               <span className="text-[#636669]">*/</span>
             </div>
           </div>
-        </div> {/* Close inner overflow wrapper */}
+        </div>{" "}
+        {/* Close inner overflow wrapper */}
       </div>
     </div>
   );
-} 
+}
