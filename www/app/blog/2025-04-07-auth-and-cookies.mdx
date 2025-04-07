@@ -15,17 +15,15 @@ Want to skip ahead and implement secure authentication right away? [Try Nile-Aut
 
 ## What is a cookie?
 
-Cookies are simply a way for the server to tell the client "remember this info and send it back with new requests".
-
-Cookies are commonly used for:
+Cookies are simply a way for the server to tell the client "remember this info and send it back with new requests". Cookies are commonly used for:
 
 - Authentication: Proving who you are on subsequent requests
 - Session management: Maintaining your state as you browse
-- Tracking: Understanding user behavior across pages
+- Personalization: Remembering your preferences
 
 While cookies can be used to store any data, their properties make them better suited for some use cases than others:
 
-- Every request to the server automatically includes relevant cookies, making them perfect for maintaining authentication state
+- Every request to the server automatically includes cookies - great for maintaining authentication state, wasteful for just storing data.
 - Their size limitation (typically 4KB) encourages storing only essential information
 - They come with built-in security features that help protect sensitive data
 
