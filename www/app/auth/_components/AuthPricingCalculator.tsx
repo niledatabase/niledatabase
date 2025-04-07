@@ -178,7 +178,7 @@ export default function AuthPricingCalculator() {
                 min={0}
                 max={1000000}
                 step={1000}
-                className="w-full my-1.5"
+                className="w-full my-1.5 touch-pan-y"
               />
             </div>
           </div>
@@ -212,7 +212,7 @@ export default function AuthPricingCalculator() {
                 }
                 // Adjust step based on plan
                 step={plan === "pro" ? 50000 : plan === "scale" ? 100000 : 1000}
-                className="w-full my-1.5"
+                className="w-full my-1.5 touch-pan-y"
               />
             </div>
           </div>
@@ -239,7 +239,7 @@ export default function AuthPricingCalculator() {
                 max={plan === "free" ? 750000 : 100000000}
                 // Dynamically set step based on plan
                 step={plan === "free" ? 1000 : 100000}
-                className="w-full my-1.5"
+                className="w-full my-1.5 touch-pan-y"
               />
             </div>
           </div>
