@@ -299,14 +299,12 @@ export default function MultiTenantCodeEditor({
         </div>
       </div>
       <div className="p-6 font-mono text-sm">
-        <div className="w-full lg:w-[600px]">
-          <pre
-            className="text-[#e4e4e4] leading-6 whitespace-pre overflow-x-auto"
-            dangerouslySetInnerHTML={{
-              __html: highlightCode(tabs[activeTab]),
-            }}
-          />
-        </div>
+        <pre
+          className="text-[#e4e4e4] leading-6 whitespace-pre overflow-x-auto"
+          dangerouslySetInnerHTML={{
+            __html: highlightCode(tabs[activeTab]),
+          }}
+        />
       </div>
     </div>
   );

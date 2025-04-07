@@ -12,6 +12,7 @@ import MultiTenantCodeEditor, {
   authExamples,
 } from "./MultiTenantCodeEditor";
 import VideoEmbed from "./VideoEmbed";
+import AuthCalculator from "./_components/AuthPricingCalculator";
 
 export default function Auth() {
   return (
@@ -22,11 +23,11 @@ export default function Auth() {
             <div className="flex gap-8 flex-col lg:w-1/2">
               <h1 className="text-[42px] leading-[42px] lg:text-[96px] lg:leading-[96px] flex flex-col">
                 <span>Auth for</span>
-                <div className="flex flex-row">
+                <div className="flex flex-row whitespace-nowrap items-baseline">
                   <span className="bg-clip-text text-transparent bg-gradient-text subpixel-antialiased bg-black overflow-hidden whitespace-nowrap leading-[48px] lg:leading-[120px] font-bold">
                     B2B
                   </span>
-                  <span className="ml-4 pt-3.5">apps</span>
+                  <span className="ml-3">apps</span>
                 </div>
               </h1>
               <h2 className="text-[16px] leading-[16px] xl:text-[20px] xl:leading-[20px] w-full">
@@ -60,7 +61,7 @@ export default function Auth() {
         <div className="mt-20">
           <div className="flex justify-center flex-col gap-16">
             <div className="flex justify-center flex-col w-full items-center">
-              <h2 className="text-[42px] leading-[42px] xl:text-[64px] xl:leading-[64px] lg:leading-[50px] lg:text-[50px] text-center w-5/6 2xl:w-2/3 -tracking-[0.64px]">
+              <h2 className="text-[42px] leading-[42px] xl:text-[64px] xl:leading-[64px] lg:leading-[50px] lg:text-[50px] w-5/6 2xl:w-2/3 -tracking-[0.64px] text-left lg:text-center">
                 Built for startups and enterprise
               </h2>
             </div>
@@ -139,14 +140,8 @@ export default function Auth() {
                     </div>
                   </div>
                 </div>
-                <div className="lg:w-1/2">
-                  <div className="group transition-all max-w-[472px] min-h-[216px]">
-                    <div className="p-6 flex flex-col max-w-[472px] flex-1 !justify-between min-h-[216px] h-full bg-[#000000]">
-                      <div className="w-full h-full min-h-[204px]">
-                        <VideoEmbed />
-                      </div>
-                    </div>
-                  </div>
+                <div className="lg:w-1/2 lg:-ml-16">
+                  <AuthCalculator />
                 </div>
               </div>
 
@@ -608,14 +603,14 @@ export const metadata: Metadata = {
   title:
     "Auth for B2B Apps | Multi-tenant, unlimited active users, open source",
   description:
-    "Nile Auth is a comprehensive B2B auth solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile’s Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize the cloud version.",
+    "Nile Auth is a comprehensive B2B auth solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile's Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize the cloud version.",
   keywords:
     "PostgreSQL, Multi-tenant, open source, unlimited active users, customer data in your Postgres, drop-in customizable UI modules",
   openGraph: {
     title:
       "Auth for B2B Apps | Multi-tenant, unlimited active users, open source",
     description:
-      "Nile Auth is a comprehensive B2B auth solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile’s Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize our cloud version.",
+      "Nile Auth is a comprehensive B2B auth solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile's Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize our cloud version.",
     url: "https://thenile.dev/auth",
     images: "https://thenile.dev/opengraph/auth.jpg",
     type: "website",
@@ -625,7 +620,7 @@ export const metadata: Metadata = {
     title:
       "Auth for B2B Apps | Multi-tenant, unlimited active users, open source",
     description:
-      "Nile Auth is a comprehensive B2B auth solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile’s Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize our cloud version.",
+      "Nile Auth is a comprehensive B2B auth solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile's Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize our cloud version.",
     images: "https://thenile.dev/opengraph/auth.jpg",
   },
 };
