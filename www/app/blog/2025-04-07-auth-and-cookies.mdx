@@ -7,8 +7,7 @@ export const metadata = {
   tags: ["auth", "security", "privacy"],
 };
 
-
-HTTP Cookies are essential for web authentication. Using cookies wrong can make a webapp easy target for hackers. But using cookies right isn't trivial. You need to understand cookie attributes and the implications of setting them. Let's dive into cookies and how to use them properly. 
+HTTP Cookies are essential for web authentication. Using cookies wrong can make a webapp easy target for hackers. But using cookies right isn't trivial. You need to understand cookie attributes and the implications of setting them. Let's dive into cookies and how to use them properly.
 
 Want to skip ahead and implement secure authentication right away? [Try Nile-Auth](https://www.thenile.dev/auth) - our open-source solution that handles all these security considerations for you.
 
@@ -16,7 +15,7 @@ Want to skip ahead and implement secure authentication right away? [Try Nile-Aut
 
 ## What is a cookie?
 
-Cookies are simply a way for the server to tell the client "remember this info and send it back with new requests". 
+Cookies are simply a way for the server to tell the client "remember this info and send it back with new requests".
 
 Cookies are commonly used for:
 
@@ -38,7 +37,7 @@ However, their security properties make them a great fit for authentication and 
 
 If you set the `expires` or `max-age` attributes on a cookie, the cookie will disappear after a specific time (or at a specific time). If you specify both, `max-age` takes precedence and is generally the preferred way to set the cookie lifetime - since it depends on the browser time, not the server time.
 
-Cookies without a `max-age` or `expires` attribute are called "session cookies". They expire whenever the browser decides the session is over. Which could be "never". 
+Cookies without a `max-age` or `expires` attribute are called "session cookies". They expire whenever the browser decides the session is over. Which could be "never".
 
 If you use session cookies, you should expire old sessions and create new ones every time the user logs in. This will prevent "session fixation" attacks where a hacker can get a user to authenticate to the victim's account but use a session identifier provided by the attacher as a session cookie. Since the attacker knows the session identifier, they will be able to access the victim's account.
 
@@ -50,11 +49,11 @@ Cookies have several powerful security attributes that, when used correctly, cre
 
 ```javascript
 // Example of setting a secure authentication cookie
-res.cookie('sessionId', 'user123', {
+res.cookie("sessionId", "user123", {
   httpOnly: true,
   secure: true,
-  sameSite: 'strict',
-  maxAge: 3600000 // 1 hour
+  sameSite: "strict",
+  maxAge: 3600000, // 1 hour
 });
 ```
 
@@ -70,9 +69,9 @@ res.cookie('sessionId', 'user123', {
 
 Cookie prefixes are important for security when authentication cookies are shared across multiple webapps and subdomains. The problem they solve is that servers can't know what was the origin of the cookie, so if one webapp in a domain was hacked, it can be used to set cookies that will be sent to other apps in the same domain. To prevent this, you can use the following prefixes in cookie names:
 
-- **__Host-**: Browsers will only use the cookie if it has `secure` attribute set and no `domain` set - this prevents the cookie from being used to compromise other webapps in the same parent domain.
+- **\_\_Host-**: Browsers will only use the cookie if it has `secure` attribute set and no `domain` set - this prevents the cookie from being used to compromise other webapps in the same parent domain.
 
-- **__Secure-**: Browsers will only accept the cookie if it has the `secure` attribute and was set from HTTPS.
+- **\_\_Secure-**: Browsers will only accept the cookie if it has the `secure` attribute and was set from HTTPS.
 
 ## Conclusion
 
