@@ -8,20 +8,27 @@ export const metadata = {
 };
 
 
-HTTP Cookies are essential for web authentication. Using cookies wrong can make a webapp easy target for hackers. But using cookies right isn't trivial. You need to understand cookie attributes and the immplications of setting them. Lets dive into cookies and how to use them properly.
+HTTP Cookies are essential for web authentication. Using cookies wrong can make a webapp easy target for hackers. But using cookies right isn't trivial. You need to understand cookie attributes and the implications of setting them. Let's dive into cookies and how to use them properly. 
+
+Want to skip ahead and implement secure authentication right away? [Try Nile-Auth](https://www.thenile.dev/auth) - our open-source solution that handles all these security considerations for you.
 
 ![Diagram of authentication flow with cookies, from MDN documentation](/blog/2025-04-07-auth-and-cookies/auth_diagram.png)
 
 ## What is a cookie?
 
-Cookies are simply a way for the server to tell the client “remember this info and send it back with new requests”. 
+Cookies are simply a way for the server to tell the client "remember this info and send it back with new requests". 
 
-It can be used for authentication, session management, and tracking.
+Cookies are commonly used for:
+
+- Authentication: Proving who you are on subsequent requests
+- Session management: Maintaining your state as you browse
+- Tracking: Understanding user behavior across pages
+
 While cookies can be used to store any data, their properties make them better suited for some use cases than others:
 
-- They are sent with every request to the server
-- They are limited in size
-- They have multiple attributes that allow securing them against attacks
+- Every request to the server automatically includes relevant cookies, making them perfect for maintaining authentication state
+- Their size limitation (typically 4KB) encourages storing only essential information
+- They come with built-in security features that help protect sensitive data
 
 In the early days of the web, cookies were the only way to store data on the client side. These days, there are other options like Local Storage and Session Storage. Using cookies to store data that doesn't need to be sent to the server is a waste of bandwidth and a performance liability.
 
@@ -31,21 +38,31 @@ However, their security properties make them a great fit for authentication and 
 
 If you set the `expires` or `max-age` attributes on a cookie, the cookie will disappear after a specific time (or at a specific time). If you specify both, `max-age` takes precedence and is generally the preferred way to set the cookie lifetime - since it depends on the browser time, not the server time.
 
-Cookies without a `max-age` or `expires` attribute are called "session cookies". They expire whenever the browser decides the session is over. Which could be “never”. 
+Cookies without a `max-age` or `expires` attribute are called "session cookies". They expire whenever the browser decides the session is over. Which could be "never". 
 
-If you use session cookies, you should expire old sessions and create new ones every time the user logs in. This will prevent “session fixation” attacks where a hacker can get a user to authenticate to the victim's account but use a session identifier provided by the attacher as a session cookie. Since the attacker knows the session identifier, they will be able to access the victim's account.
+If you use session cookies, you should expire old sessions and create new ones every time the user logs in. This will prevent "session fixation" attacks where a hacker can get a user to authenticate to the victim's account but use a session identifier provided by the attacher as a session cookie. Since the attacker knows the session identifier, they will be able to access the victim's account.
 
 ![Diagram of session fixation attack from OWASP documentation](/blog/2025-04-07-auth-and-cookies/session_fixation.jpg)
 
 ## Security attributes
 
-Cookies have a number of attributes that can be set to make your web app more secure. It is recommended to set as many of these attributes as possible:
+Cookies have several powerful security attributes that, when used correctly, create multiple layers of protection for your application:
+
+```javascript
+// Example of setting a secure authentication cookie
+res.cookie('sessionId', 'user123', {
+  httpOnly: true,
+  secure: true,
+  sameSite: 'strict',
+  maxAge: 3600000 // 1 hour
+});
+```
 
 - **HTTP Only**: Cookies with `HttpOnly` attribute can't be read on the client. The client sends the cookie to the server with requests and only the server can read it. Setting this attribute helps mitigate **cross-site scripting attacks** (XSS).
 
 - **Secure**: Cookies with `Secure` attribute can only be set over HTTPS (except for `http://localhost`). This helps protect from **man-in-the-middle attacks** where the session cookie is grabbed over the network (from wifi in a coffee shop for instance).
 
-- **Same-Site**: This attribute controls whether 3rd party assets (iframes, images, scripts) can set their own cookies when someone visits the webapp. Same-Site is important to mitigate **cross-site request forgery** (CSRF), although it does not completely prevent it (CSRF attacks also require the use of CSRF tokens for mitigation). Same-Site attribute can be “**strict**” and only allow browsers to send cookies to their origin site or “**lax**” which also sends the cookies when clicking a link to navigate to the origin site. Both settings are secure and “lax” is the default behavior. Since authentication is typically done entirely on one site, “strict” is a better choice.
+- **Same-Site**: This attribute controls whether 3rd party assets (iframes, images, scripts) can set their own cookies when someone visits the webapp. Same-Site is important to mitigate **cross-site request forgery** (CSRF), although it does not completely prevent it (CSRF attacks also require the use of CSRF tokens for mitigation). Same-Site attribute can be "**strict**" and only allow browsers to send cookies to their origin site or "**lax**" which also sends the cookies when clicking a link to navigate to the origin site. Both settings are secure and "lax" is the default behavior. Since authentication is typically done entirely on one site, "strict" is a better choice.
 
 - **Domain**: Specifies which servers can read the cookie. If you specify nothing, only the subdomain that sets the cookie can read it, but not any other subdomain. This option is most secure, but is often too limited. If you need other subdomains to read the cookie, you can set the domain attribute to a parent domain of the server that sets the cookie.
 
@@ -59,7 +76,9 @@ Cookie prefixes are important for security when authentication cookies are share
 
 ## Conclusion
 
-Using cookies to store authentication tokens is a common practice, but it is important to understand the security implications of using cookies. By setting the appropriate attributes, you can make your webapp more secure and protect against common attacks. Using a quality authentication library like [Nile-Auth](https://github.com/niledatabase/nile-auth) can help you manage authentication and cookies properly.
+Using cookies to store authentication tokens is a common practice, but it is important to understand the security implications of using cookies. By setting the appropriate attributes, you can make your webapp more secure and protect against common attacks. Using a quality authentication library like [Nile-Auth](https://github.com/niledatabase/nile-auth) will help you manage authentication and cookies properly - keeping your app secure while you focus on building great features.
+
+Whether you choose to implement cookie-based authentication yourself or use a battle-tested solution like Nile-Auth, understanding these fundamentals will help you make better security decisions for your applications.
 
 ## Resources
 
