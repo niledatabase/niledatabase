@@ -6,6 +6,30 @@ description: 'Managing tenants'
 The Tenants module is used to manage tenants. It provides a number of methods for creating, updating, and deleting tenants. 
 As well as adding and removing users from tenants.
 
+## Setting the current tenant
+
+Current tenant is used as default tenant for operations that otherwise would require a tenant id parameter such as updating or deleting a tenant.
+Current tenant also affects the behavior of some methods in `users` and `db` modules. 
+
+To set the current tenant:
+```ts
+nile.tenantId = '019612d7-56e7-7e87-8f30-ad6b05d85645';
+```
+
+You typically don't hardcode the tenant id in your application. Instead you either use a tenant id from the current user's list of tenants,
+you use the tenant object returned by `createTenant`, or you use `listTenants` to get the list of tenants and then set the current tenant to 
+the one you want.
+
+```ts
+const tenants = await nile.api.tenants.listTenants();
+if (!(tenants instanceof Response)) {
+nile.tenantId = tenants[0].id;
+console.log("Current tenant: ", nile.tenantId);
+}
+```
+
+If you don't explicitly set the current tenant, the first tenant in the list of tenants will be used as the default tenant.
+
 ## createTenant
 
 The `nile.api.tenants.createTenant` method is used to create a new tenant.
@@ -80,6 +104,42 @@ console.log(tenant);
 //  name: 'My Tenant',
 //  created: '2025-04-08T00:40:24.557Z',
 //  updated: '2025-04-08T00:40:24.557Z',
+//  deleted: null,
+//  compute_id: null
+// }
+```
+
+## updateTenant
+
+The `nile.api.tenants.updateTenant` method is used to update the name of the current tenant.
+
+### Parameters
+
+- `name`: The name of the tenant to update.
+
+### Returns
+
+- If successful, a promise that resolves to a `Tenant` object.
+```ts
+interface Tenant {
+  id: string;
+  name: string;
+}
+```
+- If unauthenticated, a promise that resolves to a Response object with 401 status code.
+- If the tenant is not found, a promise that resolves to a Response object with 404 status code.
+
+### Examples
+
+```ts updateTenant
+    const tenant = await nile.api.tenants.updateTenant('My Updated Tenant');
+    console.log(tenant);
+
+// Tenant:  {
+//  id: '019612d6-e550-73ba-9fca-f4868f8e2787',
+//  name: 'My Updated Tenant',
+//  created: '2025-04-08T00:39:55.491Z',
+//  updated: '2025-04-08T00:39:55.491Z',
 //  deleted: null,
 //  compute_id: null
 // }
