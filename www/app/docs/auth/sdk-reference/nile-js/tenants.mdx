@@ -1,0 +1,86 @@
+---
+title: 'Nile-JS Tenants Module'
+description: 'Managing tenants'
+---
+
+The Tenants module is used to manage tenants. It provides a number of methods for creating, updating, and deleting tenants. 
+As well as adding and removing users from tenants.
+
+## createTenant
+
+The `nile.api.tenants.createTenant` method is used to create a new tenant.
+
+### Parameters
+
+- `name`: The name of the tenant to create. Nile does not enforce uniqueness of tenant names. You can have multiple tenants with the same name.
+
+<Note>
+The new tenant is automatically added to the current user's list of tenants.
+</Note>
+
+### Returns
+
+- If successful, a promise that resolves to a `Tenant` object.
+
+```ts
+interface Tenant {
+  id: string;
+  name: string;
+}
+```
+- If unauthenticated, a promise that resolves to a Response object with 401 status code.
+- Other failures return a promise that resolves to a Response object with 400 status code and a text body with the error message.
+
+### Examples
+
+```ts createTenant
+const tenant = await nile.api.tenants.createTenant('My Tenant');
+console.log(tenant);
+
+// Tenant:  {
+//  id: '019612d7-56e7-7e87-8f30-ad6b05d85645',
+//  name: 'My Tenant',
+//  created: '2025-04-08T00:40:24.557Z',
+//  updated: '2025-04-08T00:40:24.557Z',
+//  deleted: null,
+//  compute_id: null
+// }
+```
+
+## getTenant
+
+The `nile.api.tenants.getTenant` method is used to get information about a specific tenant. A user can only access tenants that they are a member of.
+
+### Parameters
+
+- `id`: The id of the tenant to get.
+
+### Returns
+
+- If successful, a promise that resolves to a `Tenant` object.
+
+```ts
+interface Tenant {
+  id: string;
+  name: string;
+}
+```
+- If unauthenticated, a promise that resolves to a Response object with 401 status code.
+- If the tenant is not found, a promise that resolves to a Response object with 404 status code.
+- Other failures return a promise that resolves to a Response object with 400 status code and a text body with the error message.
+
+### Examples
+
+```ts getTenant
+const tenant = await nile.api.tenants.getTenant('019612d7-56e7-7e87-8f30-ad6b05d85645');
+console.log(tenant);
+
+// Tenant:  {
+//  id: '019612d7-56e7-7e87-8f30-ad6b05d85645',
+//  name: 'My Tenant',
+//  created: '2025-04-08T00:40:24.557Z',
+//  updated: '2025-04-08T00:40:24.557Z',
+//  deleted: null,
+//  compute_id: null
+// }
+```

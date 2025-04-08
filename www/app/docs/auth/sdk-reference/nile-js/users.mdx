@@ -5,7 +5,7 @@ description: 'Managing users'
 
 The Users module is used to manage users. It provides a number of methods for creating, updating, and deleting users.
 
-## Create User
+## createUser
 
 The `nile.api.users.createUser` method is used to create a new user.
 
@@ -54,20 +54,19 @@ if (user instanceof Response) {
     console.log("User creation successful");
     console.log(user);
 }
-/* 
-Example response:
-{
-  id: '019609a8-ef6e-7df8-a50e-418a703d3cc1',
-  email: 'test@example.com',
-  name: null,
-  familyName: null,
-  givenName: null,
-  picture: null,
-  created: '2025-04-06T05:53:08.461Z',
-  updated: '2025-04-06T05:53:08.461Z',
-  tenants: []
-}
-*/
+
+// Example response:
+// {
+//   id: '019609a8-ef6e-7df8-a50e-418a703d3cc1',
+//   email: 'test@example.com',
+//   name: null,
+//   familyName: null,
+//   givenName: null,
+//  picture: null,
+//  created: '2025-04-06T05:53:08.461Z',
+//  updated: '2025-04-06T05:53:08.461Z',
+//  tenants: []
+// }
 ```
 
 ```ts createUser with preferred name
@@ -83,20 +82,19 @@ if (user instanceof Response) {
     console.log("User creation successful");
     console.log(user);
 }
-/* 
-Example response:
-{
-  id: '019609ab-0a3f-782a-a32e-ed22d994891a',
-  email: 'test2@example.com',
-  name: null,
-  familyName: null,
-  givenName: null,
-  picture: null,
-  created: '2025-04-06T05:55:26.399Z',
-  updated: '2025-04-06T05:55:26.399Z',
-  tenants: []
-}
-*/
+ 
+// Example response:
+// {
+//   id: '019609ab-0a3f-782a-a32e-ed22d994891a',
+//   email: 'test2@example.com',
+//   name: null,
+//   familyName: null,
+//   givenName: null,
+//   picture: null,
+//   created: '2025-04-06T05:55:26.399Z',
+//   updated: '2025-04-06T05:55:26.399Z',
+//   tenants: []
+// }
 ```
 
 ```ts createUser with new tenant
@@ -112,19 +110,113 @@ if (user instanceof Response) {
     console.log("User creation successful");
     console.log(user);
 }
-/* 
-    Example response:
-    {
-        id: '019609ba-e939-7774-81c2-990173617154',
-        email: 'test3@example.com',
-        name: null,
-        familyName: null,
-        givenName: null,
-        picture: null,
-        created: '2025-04-06T06:12:46.521Z',
-        updated: '2025-04-06T06:12:46.521Z',
-        tenants: []
-    }
-*/
+
+//    Example response:
+//    {
+//        id: '019609ba-e939-7774-81c2-990173617154',
+//        email: 'test3@example.com',
+//        name: null,
+//        familyName: null,
+//        givenName: null,
+//        picture: null,
+//        created: '2025-04-06T06:12:46.521Z',
+//        updated: '2025-04-06T06:12:46.521Z',
+//        tenants: []
+//    }
 ```
 </CodeGroup>
+
+## me
+
+The `nile.api.users.me` method is used to get information about the current user.
+
+### Returns
+
+If succeeds, a promise that resolves to a `User` object.
+
+```ts
+interface User {
+  id: string;
+  email: string;
+  name?: string | null;
+  familyName?: string | null;
+  givenName?: string | null;
+  picture?: string | null;
+  created: string;
+  updated?: string;
+  emailVerified?: string | null;
+  tenants: { id: string }[];
+}
+```
+
+If unauthenticated, a promise that resolves to a Response object with 401 status code.
+
+### Examples
+
+```ts me
+const user = await nile.api.users.me();
+console.log(user);
+
+// Example response:
+// Me:  {
+//   id: '0195f4de-4721-7712-8261-327ede439e11',
+//   email: 'testRunner@thenile.dev',
+//   name: 'Test User',
+//   familyName: '',
+//   givenName: '',
+//   picture: '',
+//  created: '2025-04-02T04:59:22.784Z',
+//  updated: '2025-04-02T04:59:22.784Z',
+//  emailVerified: null,
+//  tenants: [
+//    { id: '019612d6-e550-73ba-9fca-f4868f8e2787' },
+//    { id: '019612d7-56e7-7e87-8f30-ad6b05d85645' }
+//  ]
+// }
+```
+
+## updateMe
+
+The `nile.api.users.updateMe` method is used to update the current user.
+
+### Parameters
+
+`User` object with one or more of the following properties:
+- name
+- familyName
+- givenName
+- picture (string with url to the picture)
+- emailVerified
+
+<Note>
+Email address, ID, created and updated properties cannot be modified. Tenant membership and password are updated via the `nile.api.users.linkTenant` and `nile.api.users.resetPassword` methods respectively.
+</Note>
+
+### Returns
+
+A promise that resolves to a `User` object with the new values.
+
+### Examples
+
+```ts update the name of the user
+const user = await nile.api.users.updateMe({
+  name: 'John Doe',
+});
+
+console.log(user);
+
+// Example response:
+// {
+//   id: '0195f4de-4721-7712-8261-327ede439e11',
+//   email: 'testRunner@thenile.dev',
+//   name: 'John Doe',
+//   familyName: '',
+//   givenName: '',
+//   picture: '',
+//   created: '2025-04-02T04:59:22.784Z',
+//   updated: '2025-04-02T04:59:22.784Z',
+//   emailVerified: null,
+//   tenants: []
+// }
+```
+

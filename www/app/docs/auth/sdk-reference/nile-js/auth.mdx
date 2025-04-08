@@ -68,4 +68,29 @@ console.log('Session token: ', token)
 ```
 </CodeGroup>
 
+## signOut
 
+The `nile.api.auth.signOut` method is used to sign out a user. Calling this method will remove the headers that were set during the login process.
+
+<Tip>
+This method is part of the server-side SDK, therefore it does not and cannot remove the session cookie from the browser.
+For this reason, it is recommended to use the React SDK `<SignOutButton>` component to sign out a user.
+</Tip>
+
+### Returns
+
+A promise that resolves to:
+- A url object with the local signout url if the sign out was successful.
+- A response object with 400 status code if the csrf token is missing.
+
+### Examples
+
+```ts signOut
+const signoutRes = await nile.api.auth.signOut();
+console.log(signoutRes);
+// Example response:
+// { url: 'http://localhost:3000/api/auth/signout?csrf=true' }
+console.log(nile.api.headers);
+// After signout, we expect the headers to be empty
+// Headers {}
+```
