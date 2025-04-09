@@ -94,3 +94,131 @@ console.log(nile.api.headers);
 // After signout, we expect the headers to be empty
 // Headers {}
 ```
+
+## getSession
+
+The `nile.api.auth.getSession` method is used to get the current session. Alternatively `nile.api.session` can be used the same way.
+
+### Returns
+
+A promise that resolves to either a JWT or an ActiveSession object. Depending on the type of the current session.
+
+<CodeGroup>
+```ts JWT
+type JWT = {
+  email: string;
+  sub: string;
+  id: string;
+  iat: number;
+  exp: number;
+  jti: string;
+};
+```
+
+```ts ActiveSession
+type ActiveSession = {
+  id: string;
+  email: string;
+  expires: string;
+  user?: {
+    id: string;
+    name: string;
+    image: string;
+    email: string;
+    emailVerified: void | Date;
+  };
+};
+```
+</CodeGroup>
+
+If there's no active session, the method will return `undefined`.
+
+### Examples
+
+```ts getSession
+const session = await nile.api.auth.getSession();
+console.log(session);
+// Example response (ActiveSession):
+//{
+//  user: {
+//    id: '01961743-d5e7-73bb-8e65-8d403e69e275',
+//    email: 'userB@me.com',
+//    emailVerified: null
+//  },
+//  expires: '2025-05-09T00:28:40.000Z'
+//}
+```
+
+## getCsrf
+
+The `nile.api.auth.getCsrf` method is used to get a new CSRF token. 
+Typically, you will not need to use this method as the CSRF token is automatically retrieved during the login process and stored as a cookie.
+
+### Returns
+
+A promise that resolves to a string of the CSRF token.
+
+### Examples
+
+```ts getCsrf
+const csrf = await nile.api.auth.getCsrf();
+console.log(csrf);
+```
+
+## listProviders
+
+The `nile.api.auth.listProviders` method is used to get the list of authentication providers enabled for the current tenant.
+
+### Returns
+
+A promise that resolves to a mapped type "Providers", with the key being the provider name and the value being the provider object.
+
+```ts
+type ProviderName =
+  | 'discord'
+  | 'github'
+  | 'google'
+  | 'hubspot'
+  | 'linkedin'
+  | 'slack'
+  | 'twitter'
+  | 'email'
+  | 'credentials' // this is email/password
+  | 'azure';
+
+type Providers = {
+  [providerName in ProviderName]: Provider;
+};
+
+type Provider = {
+  id: string;
+  name: string;
+  type: string;
+  signinUrl: string;
+  callbackUr: string;
+};
+```
+
+### Examples
+
+```ts getProviders
+const providers = await nile.api.auth.listProviders();
+console.log(providers);
+// Example response:
+// {
+//   credentials: {
+//     id: 'credentials',
+//     name: 'credentials',
+//     type: 'credentials',
+//     signinUrl: 'http://localhost:3000/api/auth/signin/credentials',
+//     callbackUrl: 'http://localhost:3000/api/auth/callback/credentials'
+//   },
+//   github: {
+//     id: 'github',
+//     name: 'GitHub',
+//     type: 'oauth',
+//     signinUrl: 'http://localhost:3000/api/auth/signin/github',
+//     callbackUrl: 'http://localhost:3000/api/auth/callback/github'
+//   }
+// }
+```
