@@ -1,0 +1,167 @@
+---
+title: 'Nile-JS SDK Configuration'
+description: 'Configuration options for the Nile-JS SDK'
+---
+
+NileJS SDK can be configured using both environment variables and a configuration object. 
+If both are provided, the configuration object will take precedence.
+
+This document describes the available configuration options, and how to set them using either method.
+
+## SDK Configuration
+
+The following configuration options are available at the overall SDK level:
+
+| Configuration Option | Environment Variable | Required | Default | Description |
+| -------------------- | -------------------- | -------- | ------- | ----------- |
+| `databaseId` | `NILEDB_ID` or `NILEDB_API_URL` | Yes | - | The ID of the database to use |
+| `user` | `NILEDB_USER` | Yes | - | The user to use for the database |
+| `password` | `NILEDB_PASSWORD` | Yes | - | The password to use for the database |
+| `databaseName` | `NILEDB_NAME` or `NILEDB_POSTGRES_URL` | Yes | - | The name of the database to use |
+| `tenantId` | `NILEDB_TENANT` | No | - | Current tenant ID |
+| `userId` | - | No | - | Default user for operations like `updateUser` or queries |
+| `debug`  | - | No | `false` | Whether to enable debug logging |
+| `configureUrl` | `NILEDB_CONFIGURE` | No | `https://global.thenile.dev` | Nile Control plane URL. Don't change this. |
+| `db` | - | No | - | Object with configuration for the database connection pool |
+| `api` | - | No | - | Object with API-specific configuration |
+| `logger` | - | No | - | Instance of a logger, must conform to the `LoggerType` interface |
+
+## API Configuration
+
+The `api` object is used to configure the API-specific configuration.
+
+| Configuration Option | Environment Variable | Required | Default | Description |
+| -------------------- | -------------------- | -------- | ------- | ----------- |
+| `basePath` | `NILEDB_API_URL` | No | - | The base path of the API  |
+| `cookieKey` | `NILEDB_COOKIE_KEY` | No | `token` | Key used for storing the session cookie |
+| `token` | `NILEDB_TOKEN` | No | - | The token to use for the API. Used for debugging. During normal operation the token is set by `login` and is managed by the SDK. |
+| `callbackUrl` | `NILEDB_CALLBACK_URL` | No | - | Default callback URL for the API. Used to set origin header for requests if `origin` is not set. |
+| `routes` | - | No | - | Nile SDK generates routes for various operations and then calls in the SDK methods. You can override them here if you want to inject your own routes in different paths. |
+| `routePrefix` | - | No | `/api` | The route prefix for the API |
+| `secureCookies` | `NILEDB_SECURECOOKIES` | No | `false` | Whether to use secure cookies. Must be set to true in production and anywhere with HTTPS. |
+| `origin` | - | No | - | Allows the setting of the callback origin to a specific frontend URL. Useful for cross-origin apps where the frontend and backend have different urls. |
+
+## Database Configuration
+
+The `db` object is used to configure the database connection pool.
+NileJS SDK uses `pg` under the hood to connect to the database, and the configuration is passed to `pg`'s `PoolConfig` object which is 
+then passed to `pg`'s `Client` constructor.
+Any valid `pg` configuration option is supported.
+
+| Configuration Option | Environment Variable | Required | Default | Description |
+|----------------------|----------------------|----------|---------|-------------|
+| user | `NILEDB_USER` | No | - | Database user. Will be set to the user configured at the SDK level if not provided. |
+| password | `NILEDB_PASSWORD` | No | - | Database password. Will be set to the password configured at the SDK level if not provided. |
+| host | `NILEDB_HOST` or `NILEDB_POSTGRES_URL` | No | `db.thenile.dev` | Database host. Will be set to the host specified in `NILEDB_POSTGRES_URL` if provided. |
+| port | `NILEDB_PORT` or `NILEDB_POSTGRES_URL` | No | 5432 | Database port. Will be set to the port specified in `NILEDB_POSTGRES_URL` if provided. |
+| database | `NILEDB_NAME` or `NILEDB_POSTGRES_URL` | No | - | Database name. Will be set to the name configured at the SDK level if not provided. |
+| connectionString | - | No | - | Connection string for the database. If provided, other database configuration options will be ignored. |
+| ssl | - | No | - | SSL configuration. Passed directly to `node.TLSSocket`, [supports all `tls.connect` options](https://nodejs.org/api/tls.html#new-tlstlssocketsocket-options) |
+| types | - | No | - | Custom type parsers |
+| statement_timeout | - | No | - | Number of milliseconds before a statement in query will time out, default is no timeout |
+| query_timeout | - | No | - | Number of milliseconds before a query call will timeout, default is no timeout |
+| lock_timeout | - | No | - | Number of milliseconds a query is allowed to be en lock state before it's cancelled due to lock timeout |
+| application_name | - | No | - | The name of the application that created this Client instance |
+| connectionTimeoutMillis | - | No | No timeout | Number of milliseconds to wait for connection |
+| idle_in_transaction_session_timeout | - | No | No timeout | Number of milliseconds before terminating any session with an open idle transaction |
+| idleTimeoutMillis | - | No | 10000 (10 seconds) | Number of milliseconds a client must sit idle in the pool and not be checked out before it is disconnected from the backend and discarded. Set to 0 to avoid discarding idle clients. |
+| max | - | No | 10 | Maximum number of clients the pool should contain |
+| allowExitOnIdle | - | No | `false`| If true, allow the node event loop to exit as soon as all clients in the pool are idle, even if they are still connected to the backend. This is mostly useful for testing. |
+
+
+## Example Configurations
+
+### Basic configuration with environment variables
+
+In this example, we're using environment variables to configure the SDK, and the configuration object is empty.
+
+<CodeGroup>
+
+```bash .env
+NILEDB_USER=0195f45d-c3ca-7b29-8a9c-717a99d993a1
+NILEDB_PASSWORD=5e64c8e9-8ac7-4c0d-b6f1-dab7672fe1be
+NILEDB_API_URL=https://us-west-2.api.thenile.dev/v2/databases/0195f4dd-22d3-68c6-a6c1-1ddc24f0f37c
+NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/my_database
+```
+
+```js nile.ts
+import { Nile } from '@niledatabase/server';
+
+const nile = await Nile({});
+```
+</CodeGroup>
+
+### Basic configuration with configuration object
+
+In this example, we're using a configuration object to configure the SDK, and the environment variables are not set.
+
+```ts nile.ts
+import { Nile } from '@niledatabase/server';
+
+const nile = await Nile({
+  databaseId: '0195f4dd-22d3-68c6-a6c1-1ddc24f0f37c',
+  databaseName: 'my_database',
+  user: '0195f45d-c3ca-7b29-8a9c-717a99d993a1',
+  password: '5e64c8e9-8ac7-4c0d-b6f1-dab7672fe1be',
+  api: {
+    basePath: 'https://us-west-2.api.thenile.dev/v2/databases/0195f4dd-22d3-68c6-a6c1-1ddc24f0f37c',
+  },
+  db: {
+    host: 'us-west-2.db.thenile.dev',
+    port: 5432,
+  }
+});
+```
+
+### Production configuration
+
+In this example, we will set the configuration to realistic production values with secure cookies, larger connection pools and a longer idle timeout.
+
+<CodeGroup>
+```bash .env
+NILEDB_USER=0195f45d-c3ca-7b29-8a9c-717a99d993a1
+NILEDB_PASSWORD=5e64c8e9-8ac7-4c0d-b6f1-dab7672fe1be
+NILEDB_API_URL=https://us-west-2.api.thenile.dev/v2/databases/0195f4dd-22d3-68c6-a6c1-1ddc24f0f37c
+NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/my_database
+DEBUG=false
+```
+
+```ts nile.ts
+import { Nile } from '@niledatabase/server';
+
+const nile = await Nile({
+    debug: process.env.DEBUG === 'true',
+    api: {
+        secureCookies: process.env.NODE_ENV === 'production',
+    },
+    db: {
+        max: 20,
+        idleTimeoutMillis: 30000,
+    }
+});
+```
+</CodeGroup>
+
+### Cross-origin configuration
+
+In this example, we will set the configuration to allow cross-origin requests.
+
+<CodeGroup>
+
+```bash .env
+NILEDB_USER=0195f45d-c3ca-7b29-8a9c-717a99d993a1
+NILEDB_PASSWORD=5e64c8e9-8ac7-4c0d-b6f1-dab7672fe1be
+NILEDB_API_URL=https://us-west-2.api.thenile.dev/v2/databases/0195f4dd-22d3-68c6-a6c1-1ddc24f0f37c
+NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/my_database
+```
+
+```ts nile.ts
+import { Nile } from '@niledatabase/server';
+
+const nile = await Nile({
+    api: {
+        origin: 'https://my-frontend.com',
+    }
+});
+```
+</CodeGroup>

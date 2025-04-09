@@ -405,6 +405,7 @@ The `nile.api.users.listUsers` method is used to list all users in the current t
 
 - Array with `User` objects if successful.
 - 401 Unauthorized if unauthenticated.
+- 400 If current tenant is not set (`nile.tenantId` is `null` or `undefined`).
 - 404 Not Found if the current user does not have permission to access the current tenant.
 
 ### Examples

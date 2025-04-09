@@ -222,3 +222,18 @@ console.log(providers);
 //   }
 // }
 ```
+
+## headers
+
+The `nile.api.headers` object is used to get or manually set the headers of the current session.
+If you are manually modifying the cookie, you need to make sure you leave all the Nile entries intact, otherwise the session will break.
+
+### Examples
+
+```ts
+console.log(nile.api.headers);
+nile.api.headers = new Headers({
+    'X-Tenant-Id': tenantA.id,
+});
+console.log(nile.api.headers);
+```
