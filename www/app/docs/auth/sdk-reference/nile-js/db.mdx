@@ -18,7 +18,7 @@ The `query` method is used to query the database. This is the main method expose
 
 ### Querying a shared table
 
-All tenants and users have access to any [shared tables](/docs/tenant-virtualization/tenant-sharing) - tables without a tenant id column.
+All tenants and users have access to any [shared tables](/tenant-virtualization/tenant-sharing) - tables without a tenant id column.
 
 ```ts
 const db = nile.db;
@@ -30,7 +30,7 @@ console.log(result);
 
 ### Querying a tenant-aware table
 
-Tenant-aware tables have a tenant id column. 
+[Tenant-aware tables](/tenant-virtualization/tenant-isolation) have a tenant id column. 
 If you query them without setting `nile.tenantId`, this will be a cross-tenant query.
 If you set `nile.tenantId`, the query will run against the tenant's virtual database.
 
