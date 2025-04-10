@@ -1,0 +1,313 @@
+---
+title: 'Routes'
+description: 'Routes in the Nile-JS SDK'
+---
+
+The Nile-JS SDK includes generated routes for all its operations. 
+These routes are used by the SDK methods to proxy requests to nile-auth, as well as directly from the React hooks and components in `@niledatabase/react`.
+
+## Generating routes
+
+Route generation depends on the framework you are using.
+
+### Next.js example
+
+<CodeGroup>
+```ts nile.ts
+// app/api/[...nile]/nile.ts
+import { Nile } from "@niledatabase/server";
+
+export const nile = await Nile({
+  secureCookies: process.env.VERCEL === "1",
+  debug: true,
+});
+
+export const { handlers } = nile.api;
+```
+
+```ts route.ts
+// app/api/[...nile]/route.ts
+import { handlers } from "./nile";
+
+export const { POST, GET, DELETE, PUT } = handlers;
+```
+</CodeGroup>
+
+### Remix example
+
+<CodeGroup>
+```ts nile.ts
+// app/nile.ts
+import { Nile } from "@niledatabase/server";
+
+export const nile = await Nile();
+export const { handlers } = nile.api;
+```
+
+```ts nile-api.ts
+//app/routes/nile-api.ts
+// This is where the routes are exported
+import type { Route } from "./+types/home";
+import { handlers } from "~/nile";
+
+const { GET, POST, PUT, DELETE } = handlers;
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  switch (request.method.toUpperCase()) {
+    case "GET":
+      return GET(request);
+    case "POST":
+      return POST(request);
+    case "PUT":
+      return PUT(request);
+    case "DELETE":
+      return DELETE(request);
+    default:
+      return new Response("Method Not Allowed", { status: 405 });
+  }
+};
+
+export const action = async ({ request }: Route.ActionArgs) => {
+  switch (request.method.toUpperCase()) {
+    case "POST":
+      return POST(request);
+    case "PUT":
+      return PUT(request);
+    case "DELETE":
+      return DELETE(request);
+    default:
+      return new Response("Method Not Allowed", { status: 405 });
+  }
+};
+```
+
+```ts routes.ts
+// app/routes.ts
+// This routes all the api/* requests to the routes in nile-api.ts
+import { type RouteConfig, index, route } from "@react-router/dev/routes";
+
+export default [
+  index("routes/home.tsx"),
+  route("api/*", "routes/nile-api.ts"),
+] satisfies RouteConfig;
+```
+</CodeGroup>
+```
+
+## Using routes
+
+You typically don't need to use the routes directly. 
+The SDK methods and react/web components use the routes under the hood to communicate with nile-auth.
+
+The generated routes are available via `nile.api.paths`. For reference, here are the paths for the default routes:
+
+```ts
+export const appRoutes = (prefix = '/api'): Routes => ({
+  SIGNIN: `${prefix}/auth/signin`,
+  PROVIDERS: `${prefix}/auth/providers`,
+  SESSION: `${prefix}/auth/session`,
+  CSRF: `${prefix}/auth/csrf`,
+  CALLBACK: `${prefix}/auth/callback`, // this path has a route per enabled provider (e.g. google, github, etc.)
+  SIGNOUT: `${prefix}/auth/signout`,
+  ERROR: `${prefix}/auth/error`,
+  VERIFY_REQUEST: `${prefix}/auth/verify-request`,
+  PASSWORD_RESET: `${prefix}/auth/reset-password`,
+  ME: `${prefix}/me`,
+  USERS: `${prefix}/users`,
+  TENANTS: `${prefix}/tenants`,
+  TENANT: `${prefix}/tenants/{tenantId}`,
+  TENANT_USER: `${prefix}/tenants/{tenantId}/users/{userId}`,
+  TENANT_USERS: `${prefix}/tenants/{tenantId}/users`,
+  SIGNUP: `${prefix}/signup`,
+  LOG: `${prefix}/_log`,
+});
+```
+
+## Overriding routes
+
+Sometimes you might want to intercept or override the routes used by the SDK in order to inject your own logic.
+For example, adding your own logging or metrics, adding debugging information, or perhaps injecting your own cookies during login.
+
+There are three ways to override routes:
+
+1. **Route wrappers**: Wrap the route in your own logic. This can be done in the routes file, and is useful for minor modifications or debugging.
+2. **Route overrides**: Override the route for a specific operation.
+
+### Route wrappers
+
+In the examples below, we'll use route wrappers to log the headers before every request and the body if it's a POST request.
+We'll also log the status code of the response.
+
+<CodeGroup>
+```ts NextJS route wrappers
+// app/api/[...nile]/route.ts
+import { handlers } from "./nile";
+
+// Middleware function to log request and response details
+const logRequestAndResponseDetails = (handler) => async (req, res) => {
+  // Log the request method and URL
+  console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
+
+  // Log the request headers
+  console.log('Request Headers:', req.headers);
+
+  // Clone the request to safely read the body
+  const clonedReq = req.clone();
+
+  // Log the request body if it's a POST or PUT request
+  if (req.method === 'POST') {
+    const body = await clonedReq.text();
+    console.log('Request Body:', body);
+  }
+  // Call the original handler and return its result
+  const result = await handler(req, res);
+
+  // Log the response status after the handler has executed
+  console.log('Result Status:', result.status);
+
+  return result;
+};
+
+// Wrap each handler with the logging middleware
+export const POST = logRequestAndResponseDetails(handlers.POST);
+export const GET = logRequestAndResponseDetails(handlers.GET);
+export const DELETE = logRequestAndResponseDetails(handlers.DELETE);
+export const PUT = logRequestAndResponseDetails(handlers.PUT);
+```
+
+```ts Remix route wrappers
+// app/routes/nile-api.ts
+// In Remix, we need to add logging on both the loader and the action
+import type { Route } from "./+types/home";
+import { handlers } from "~/nile";
+
+const { GET, POST, PUT, DELETE } = handlers;
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  // Log request headers
+  console.log('Request Headers:', JSON.stringify([...request.headers]));
+
+  let response;
+  switch (request.method.toUpperCase()) {
+    case "GET":
+      response = await GET(request);
+      break;
+    case "POST":
+      // Log request body for POST
+      const postBody = await request.text();
+      console.log('POST Request Body:', postBody);
+      response = await POST(request);
+      break;
+    case "PUT":
+      response = await PUT(request);
+      break;
+    case "DELETE":
+      response = await DELETE(request);
+      break;
+    default:
+      response = new Response("Method Not Allowed", { status: 405 });
+  }
+
+  // Log response status
+  console.log('Response Status:', response.status);
+  return response;
+};
+
+export const action = async ({ request }: Route.ActionArgs) => {
+  // Log request headers
+  console.log('Request Headers:', JSON.stringify([...request.headers]));
+
+  let response;
+  switch (request.method.toUpperCase()) {
+    case "POST":
+      // Log request body for POST
+      const postBody = await request.text();
+      console.log('POST Request Body:', postBody);
+      response = await POST(request);
+      break;
+    case "PUT":
+      response = await PUT(request);
+      break;
+    case "DELETE":
+      response = await DELETE(request);
+      break;
+    default:
+      response = new Response("Method Not Allowed", { status: 405 });
+  }
+
+  // Log response status
+  console.log('Response Status:', response.status);
+  return response;
+};
+```
+</CodeGroup>
+
+### Route overrides
+
+In the examples below, we'll add a new route that will override the default route for `\auth\google\callback` with custom logic.
+
+<CodeGroup>
+```ts NextJS route overrides
+// app/api/auth/google/callback/route.ts
+import { NextRequest } from "next/server";
+import { nile, handlers } from "../../../[...nile]/nile";
+import { registerTenants } from "@/lib/TenantRegistration";
+
+export async function GET(req: NextRequest) {
+  const postHandled = await handlers.GET(req); // call the original route
+
+  if (postHandled) {
+    const setCookie = postHandled.headers.getSetCookie();
+    const hasSession = setCookie.filter((c) =>
+      c.includes("nile.session-token")
+    );
+    if (hasSession) { // if login was successful, register the tenants
+      nile.api.headers = new Headers({ cookie: hasSession.toString() });
+      const me = await nile.api.users.me();
+      if ("id" in me) {
+        // custom logic is here
+        await registerTenants(me.id);
+      }
+    }
+  }
+  // return the original response from the route
+  return postHandled;
+}
+```
+
+```ts Remix route overrides
+// app/routes/auth-callback-google.tsx
+// Also, add to routes.ts:
+// route("api/auth/google/callback", "routes/auth-callback-google.tsx")
+import type { Route } from "./+types/home";
+import { handlers } from "~/nile";
+
+const { GET } = handlers;
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  // Call Nile's GET handler
+  const nileResponse = await GET(request);
+
+  const setCookie = nileResponse.headers.get('set-cookie');
+  const hasSession = setCookie && setCookie.includes("nile.session-token");
+
+  if (hasSession) {
+    // If login was successful, register the tenants
+    const headers = new Headers();
+    headers.append('cookie', setCookie);
+
+    // Set the headers for the Nile API
+    nile.api.headers = headers;
+
+    // Fetch user information
+    const me = await nile.api.users.me();
+    if ("id" in me) {
+      // Custom logic: register tenants
+      await registerTenants(me.id);
+    }
+  }
+
+  return nileResponse;
+};
+```
+</CodeGroup>

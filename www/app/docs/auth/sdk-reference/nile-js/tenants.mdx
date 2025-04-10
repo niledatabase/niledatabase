@@ -1,0 +1,223 @@
+---
+title: 'Tenants Module'
+description: 'Managing tenants'
+---
+
+The Tenants module is used to manage tenants. It provides a number of methods for creating, updating, and deleting tenants. 
+As well as adding and removing users from tenants.
+
+## Setting the current tenant
+
+Current tenant is used as default tenant for operations that otherwise would require a tenant id parameter such as updating or deleting a tenant.
+Current tenant also affects the behavior of some methods in `users` and `db` modules. 
+
+To set the current tenant:
+```ts
+nile.tenantId = '019612d7-56e7-7e87-8f30-ad6b05d85645';
+```
+
+You typically don't hardcode the tenant id in your application. Instead you either use a tenant id from the current user's list of tenants,
+you use the tenant object returned by `createTenant`, or you use `listTenants` to get the list of tenants and then set the current tenant to 
+the one you want.
+
+```ts
+const tenants = await nile.api.tenants.listTenants();
+if (!(tenants instanceof Response)) {
+nile.tenantId = tenants[0].id;
+console.log("Current tenant: ", nile.tenantId);
+}
+```
+
+If you don't explicitly set the current tenant, the first tenant in the list of tenants will be used as the default tenant.
+
+## createTenant
+
+The `nile.api.tenants.createTenant` method is used to create a new tenant and link it to the current user.
+
+### Parameters
+
+- `name`: The name of the tenant to create. Nile does not enforce uniqueness of tenant names. You can have multiple tenants with the same name.
+
+<Note>
+The new tenant is automatically added to the current user's list of tenants.
+</Note>
+
+### Returns
+
+- If successful, a promise that resolves to a `Tenant` object.
+
+```ts
+interface Tenant {
+  id: string;
+  name: string;
+}
+```
+- If unauthenticated, a promise that resolves to a Response object with 401 status code.
+- Other failures return a promise that resolves to a Response object with 400 status code and a text body with the error message.
+
+### Examples
+
+```ts createTenant
+const tenant = await nile.api.tenants.createTenant('My Tenant');
+console.log(tenant);
+
+// Tenant:  {
+//  id: '019612d7-56e7-7e87-8f30-ad6b05d85645',
+//  name: 'My Tenant',
+//  created: '2025-04-08T00:40:24.557Z',
+//  updated: '2025-04-08T00:40:24.557Z',
+//  deleted: null,
+//  compute_id: null
+// }
+```
+
+## getTenant
+
+The `nile.api.tenants.getTenant` method is used to get information about a specific tenant. A user can only access tenants that they are a member of.
+
+### Parameters
+
+- `id`: (optional) The id of the tenant to get. If not provided, the current tenant in `nile.tenantId` will be used.
+
+### Returns
+
+- If successful, a promise that resolves to a `Tenant` object. If tenant id was provided as an input parameter, 
+the method will also set `nile.tenantId` to this tenant id.
+
+```ts
+interface Tenant {
+  id: string;
+  name: string;
+}
+```
+- If unauthenticated, a promise that resolves to a Response object with 401 status code.
+- If the tenant is not found, or the current user is not a member of the tenant, a promise that resolves to a Response object with 404 status code.
+- Other failures return a promise that resolves to a Response object with 400 status code and a text body with the error message.
+
+### Examples
+
+<CodeGroup>
+```ts getTenant by ID
+const tenant = await nile.api.tenants.getTenant('019612d7-56e7-7e87-8f30-ad6b05d85645');
+console.log(tenant);
+console.log("current tenant: ", nile.tenantId);
+
+// Tenant:  {
+//  id: '019612d7-56e7-7e87-8f30-ad6b05d85645',
+//  name: 'My Tenant',
+//  created: '2025-04-08T00:40:24.557Z',
+//  updated: '2025-04-08T00:40:24.557Z',
+//  deleted: null,
+//  compute_id: null
+// }
+```
+
+```ts getCurrentTenant
+nile.tenantId = '019612d7-56e7-7e87-8f30-ad6b05d85645';
+const tenant = await nile.api.tenants.getTenant();
+console.log(tenant);
+
+// Tenant:  {
+//  id: '019612d7-56e7-7e87-8f30-ad6b05d85645',
+//  name: 'My Tenant',
+//  created: '2025-04-08T00:40:24.557Z',
+//  updated: '2025-04-08T00:40:24.557Z',
+//  deleted: null,
+//  compute_id: null
+// }
+```
+</CodeGroup>
+
+## updateTenant
+
+The `nile.api.tenants.updateTenant` method is used to update the name of the current tenant.
+
+### Parameters
+
+- `name`: The name of the tenant to update.
+
+### Returns
+
+- If successful, a promise that resolves to a `Tenant` object.
+```ts
+interface Tenant {
+  id: string;
+  name: string;
+}
+```
+- If unauthenticated, a promise that resolves to a Response object with 401 status code.
+- If the tenant is not found, a promise that resolves to a Response object with 404 status code.
+
+### Examples
+
+```ts updateTenant
+    nile.tenantId = '019612d6-e550-73ba-9fca-f4868f8e2787';
+    const tenant = await nile.api.tenants.updateTenant('My Updated Tenant');
+    console.log(tenant);
+
+// Tenant:  {
+//  id: '019612d6-e550-73ba-9fca-f4868f8e2787',
+//  name: 'My Updated Tenant',
+//  created: '2025-04-08T00:39:55.491Z',
+//  updated: '2025-04-08T00:39:55.491Z',
+//  deleted: null,
+//  compute_id: null
+// }
+```
+
+## deleteTenant
+
+The `nile.api.tenants.deleteTenant` method is used to mark a tenant as deleted. 
+This is a soft delete and does not delete the tenant or its data from the database.
+
+### Parameters
+- Optional `id` (string): The id of the tenant to delete. If not provided, the current tenant will be deleted. 
+
+### Returns
+- If successful, a promise that resolves to a Response object with 204 status code. Note that deleting the same tenant multiple times will
+return a 204 status code every time. If `id` was provided as an input parameter, the method will also set `nile.tenantId` to the deleted tenant id.
+- If unauthenticated, a promise that resolves to a Response object with 401 status code.
+- If the tenant is not found, a promise that resolves to a Response object with 404 status code.
+
+### Examples
+
+<CodeGroup>
+```ts deleteTenant
+const response = await nile.api.tenants.deleteTenant('019612d7-56e7-7e87-8f30-ad6b05d85645');
+console.log(response);
+console.log("current tenant: ", nile.tenantId); // current tenant:  019612d7-56e7-7e87-8f30-ad6b05d85645
+```
+
+```ts delete current tenant
+nile.tenantId = '019612d7-56e7-7e87-8f30-ad6b05d85645';
+const response = await nile.api.tenants.deleteTenant();
+console.log(response);
+```
+</CodeGroup>
+
+## listTenants
+
+The `nile.api.tenants.listTenants` method is used to list all tenants for the current user.
+
+### Returns
+
+- If successful, a promise that resolves to an array of `Tenant` objects. The array will be empty if the current user is not a member of any tenants.
+
+```ts
+interface Tenant {
+  id: string;
+  name: string;
+}
+```
+- 401 if there's no authenticated user.
+
+### Examples
+
+```ts listTenants
+const tenants = await nile.api.tenants.listTenants();
+console.log(tenants);
+// [
+//  { id: '01961743-d83b-7134-9198-5adf8285fb51', name: 'Tenant B' },
+//  { id: '01961745-5dfa-77d0-b13e-245282ba9bc6', name: 'Tenant B2' }
+// ]
+```
