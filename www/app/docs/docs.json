@@ -284,13 +284,18 @@
                 "group": "SDK Reference",
                 "icon": "code",
                 "pages": [
-                  "auth/sdk-reference/nile-js/overview",
-                  "auth/sdk-reference/nile-js/auth",
-                  "auth/sdk-reference/nile-js/db",
-                  "auth/sdk-reference/nile-js/users",
-                  "auth/sdk-reference/nile-js/tenants",
-                  "auth/sdk-reference/nile-js/routes",
-                  "auth/sdk-reference/nile-js/configuration"
+                  {
+                    "group": "JavaScript",
+                    "pages": [
+                      "auth/sdk-reference/nile-js/overview",
+                      "auth/sdk-reference/nile-js/auth",
+                      "auth/sdk-reference/nile-js/users",
+                      "auth/sdk-reference/nile-js/tenants",
+                      "auth/sdk-reference/nile-js/db",
+                      "auth/sdk-reference/nile-js/routes",
+                      "auth/sdk-reference/nile-js/configuration"
+                    ]
+                  }
                 ]
               },
               {
