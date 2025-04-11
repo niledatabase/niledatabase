@@ -45,11 +45,16 @@ the user will be linked to the same user ID. This is the simplest and most secur
 ### User signs up with email/password and then signs in with SSO
 
 If a user signs up with email/password and then signs in with a SSO provider, the SSO provider will be linked to the same user ID.
-However, unless the email address is **validated** in Nile Auth, the user will not be able to sign in to their email/password account after linking.
+However, unless the email address is **verified** in Nile Auth, the user will not be able to sign in to their email/password account after linking.
 
 Why? Because the email address is not verified, it is possible that a malicious actor created the same email address, and could potentially 
 hijack the account. In order to prevent this, we require the email address to be verified before the user can sign in to their email/password account 
-after linking. For this reason, we strongly recommend that you verify email addresses in your production application. 
+after linking. You can use our [email verification feature](/auth/email/verification) to automatically send developers an email to verify their 
+email address when they sign up. Or alternaively, you can manually verify any email address in the Nile console.
+
+![Manual Email Verification in Nile Console](/images/auth/manual-email-verification.png)
+
+For this reason, we strongly recommend that you verify email addresses in your production application. 
 We support unverified email addresses, but we recommend limiting this to development environments.
 
 ### User signs up with SSO and then signs in with email/password
