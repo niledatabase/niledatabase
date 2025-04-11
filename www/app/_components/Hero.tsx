@@ -6,7 +6,7 @@ import { HeroText } from "./common/Hero";
 export default function Hero() {
   return (
     <div className="container mx-auto">
-      <div className="sm:px-4 py-32 pb-10 xl:px-24 xl:py-48 md:px-12 md:py-24">
+      <div className="sm:px-4 py-12 pb-8 xl:px-24 xl:py-24 md:px-12 md:py-12">
         <div className="flex gap-8 flex-col">
           <div className="flex justify-start">
             <Link
