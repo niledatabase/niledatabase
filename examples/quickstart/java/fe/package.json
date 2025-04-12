@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@niledatabase/react": "^4.0.0",
+    "@niledatabase/server": "^4.0.0",
     "highlight.js": "^11.9.0",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",
