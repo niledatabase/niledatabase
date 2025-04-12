@@ -1,18 +1,21 @@
 "use client";
 
 import "./globals.css";
-import styles from "./page.module.css";
-import type { Metadata } from "next";
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import Stack from "@mui/joy/Stack";
-import Link from "@mui/joy/Link";
-import Card from "@mui/joy/Card";
-import CardContent from "@mui/joy/CardContent";
-import Typography from "@mui/joy/Typography";
 const inter = Inter({ subsets: ["latin"] });
 import { usePathname } from "next/navigation";
 
+import styles from "./page.module.css";
+import Link from "next/link";
+import { SignOutButton } from "@niledatabase/react";
+function Card({ children }: { children: JSX.Element }) {
+  return (
+    <div className="p-4 hover:shadow-lg hover:border-gray-700 border border-gray-600 rounded-lg w-60 transition-all">
+      {children}
+    </div>
+  );
+}
 export default function RootLayout({
   children,
 }: {
@@ -22,134 +25,104 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className={styles.main}>
+        <main className="h-screen flex items-center flex-col">
           <div
             style={{ display: "flex", flexDirection: "column", width: "100%" }}
           >
-            <div className={styles.description}>
-              <div>
-                <Image
-                  src="/java.svg"
-                  alt="Java Logo"
-                  className={styles.logo}
-                  width={49.125}
-                  height={60}
-                />
+            <div className="bg-black text-white border-b-px flex flex-row justify-between w-full items-center px-6 py-4">
+              <div className="container mx-auto">
+                <div className="flex space-between items-center w-full">
+                  <div className="flex items-center text-lg">
+                    <Image
+                      src="/java.svg"
+                      alt="Java Logo"
+                      className={styles.logo}
+                      width={49.125}
+                      height={60}
+                    />{" "}
+                    Drizzle
+                  </div>
+                  <div className="text-4xl flex-1 text-center">
+                    Yet Another Todo Application
+                  </div>
+                  <div>
+                    <a
+                      href="https://thenile.dev"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Created by{"    "}
+                      <Image
+                        src="/nile_logo.svg"
+                        alt="Nile Logo"
+                        className={styles.logo}
+                        height={24}
+                        width={100}
+                      />
+                    </a>
+                  </div>
+                </div>
               </div>
-              <Typography level="h2">Yet Another Todo Application</Typography>
-              <div>
-                <a
-                  href="https://thenile.dev"
+              {pathname === "/" ? null : <SignOutButton callbackUrl="/" />}
+            </div>
+          </div>
+          <div className="flex flex-col flex-1">{children}</div>
+          <div className="flex flex-row gap-8 p-4">
+            <Card>
+              <div className="flex flex-col space-between h-full">
+                <Link
+                  href="https://www.thenile.dev/docs/getting-started/languages/java"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener"
+                  style={{
+                    fontSize: "18px",
+                    alignItems: "center",
+                    display: "flex",
+                    color: "black",
+                  }}
                 >
-                  Created by{"    "}
+                  <Image
+                    src="/java.svg"
+                    alt="Java Logo"
+                    width={49.125}
+                    height={60}
+                  />
+                  Drizzle
+                </Link>
+                Getting started guide
+              </div>
+            </Card>
+
+            <Card>
+              <div className="flex flex-col justify-between h-full">
+                <Link href="https://thenile.dev" target="_blank" rel="noopener">
                   <Image
                     src="/nile_logo.svg"
                     alt="Nile Logo"
-                    className={styles.logo}
                     height={24}
                     width={100}
                   />
-                </a>
-              </div>
-            </div>
-            {pathname === "/" ? null : (
-              <div className={styles.logout}>
-                <Link href="/?logout" style={{ color: "black" }}>
-                  [ Logout ]
                 </Link>
+                Sign up to Nile
               </div>
-            )}
-          </div>
-          <div></div>
-          {children}
-          <div className={styles.grid}>
-            <Card
-              variant="outlined"
-              sx={{
-                "--card-padding": "1rem",
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
-                },
-              }}
-            >
-              <Link
-                overlay
-                href="https://www.thenile.dev/docs/getting-started/languages/java"
-                target="_blank"
-                rel="noopener"
-              >
-                <Image
-                  src="/java.svg"
-                  alt="Java Logo"
-                  className={styles.logo}
-                  width={49.125}
-                  height={60}
-                />
-              </Link>
-              <CardContent>
-                <Typography>Getting started guide</Typography>
-              </CardContent>
             </Card>
 
-            <Card
-              variant="outlined"
-              sx={{
-                "--card-padding": "1rem",
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
-                },
-              }}
-            >
-              <Link
-                overlay
-                href="https://thenile.dev"
-                target="_blank"
-                rel="noopener"
-              >
-                <Image
-                  src="/nile_logo.svg"
-                  alt="Nile Logo"
-                  className={styles.logo}
-                  height={24}
-                  width={100}
-                />
-              </Link>
-              <CardContent>
-                <Typography>Sign up to Nile</Typography>
-              </CardContent>
-            </Card>
-
-            <Card
-              variant="outlined"
-              sx={{
-                "--card-padding": "1rem",
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
-                },
-              }}
-            >
-              <Link
-                overlay
-                href="https://www.thenile.dev/templates"
-                target="_blank"
-                rel="noopener"
-              >
-                <Image
-                  src="/nile_logo.svg"
-                  alt="Nile Logo"
-                  className={styles.logo}
-                  height={24}
-                  width={100}
-                />
-              </Link>
-              <CardContent>
-                <Typography>Try additional templates</Typography>
-              </CardContent>
+            <Card>
+              <div className="flex flex-col justify-between h-full">
+                <Link
+                  href="https://www.thenile.dev/templates"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <Image
+                    src="/nile_logo.svg"
+                    alt="Nile Logo"
+                    height={24}
+                    width={100}
+                  />
+                </Link>
+                Try additional templates
+              </div>
             </Card>
           </div>
         </main>
