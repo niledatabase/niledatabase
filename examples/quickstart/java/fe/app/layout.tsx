@@ -87,7 +87,6 @@ export default function RootLayout({
                     width={49.125}
                     height={60}
                   />
-                  Drizzle
                 </Link>
                 Getting started guide
               </div>
