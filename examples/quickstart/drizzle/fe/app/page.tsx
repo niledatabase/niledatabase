@@ -7,9 +7,9 @@ export default function Home() {
         className="bg-[#4285f4] hover:bg-[#4285f4] pl-[3px] text-white gap-4"
         callbackUrl="/directions"
       />
-      <Discord className="bg-[#5865F2] !pl-3" callbackUrl="/directions" />
-      <SignUpForm />
-      <SignInForm />
+      {/*<Discord className="bg-[#5865F2] !pl-3" callbackUrl="/directions" />*/}
+      {/* <SignUpForm /> */}
+      {/* <SignInForm /> */}
     </div>
   );
 }

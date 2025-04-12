@@ -63,7 +63,6 @@ export default async function Page() {
 
   return (
     <div className="flex flex-col gap-2 mt-10">
-      <UserInfo />
       <div>This demo shows a backend service for a Todo List application</div>
       <div>
         You can experiment with it by running the following commands in your

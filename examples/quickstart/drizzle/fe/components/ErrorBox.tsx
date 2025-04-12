@@ -1,19 +1,17 @@
 import { cookies } from "next/headers";
-import { Alert } from "@mui/joy";
-import Stack from "@mui/joy/Stack";
-import Typography from "@mui/joy/Typography";
+import styles from './ErrorBox.module.css';
 
 export default async function ErrorBox() {
   const errorCookie = (await cookies()).get("errorData");
   const errorData = errorCookie ? JSON.parse(errorCookie.value) : null;
 
   return errorData ? (
-    <Stack sx={{ mb: 2 }}>
-      <Alert sx={{ mb: 1 }} color="danger">
+    <div className={styles['error-stack']}>
+      <div className={styles['error-alert']}>
         An error occurred during sign-in.
-      </Alert>
-      <Typography level="title-sm">Error details:</Typography>
-      <Typography level="body-sm">{errorData?.message}</Typography>
-    </Stack>
+      </div>
+      <p className={styles['error-title']}>Error details:</p>
+      <p className={styles['error-message']}>{errorData?.message}</p>
+    </div>
   ) : null;
 }
