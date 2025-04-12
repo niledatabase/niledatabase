@@ -25,35 +25,35 @@ export default async function Page() {
   // Using "auth bearer" header with a JWT token is a more common practice, that looks worse in a demo.
   const codeString = `
   # Create a tenant:
-  curl --location --request POST '${backendServer}/api/tenants' \\
+  curl --location --request POST '${backendServer}/tenants' \\
   --header 'Content-Type: application/json' \\
   --user '${userID}:' \\
   --data-raw '{"id":"${tenantID}", "name":"my first customer"}'
 
   # Create a todo item:
-  curl -X POST '${backendServer}/api/tenants/${tenantID}/todos' \\
+  curl -X POST '${backendServer}/tenants/${tenantID}/todos' \\
   --header 'Content-Type: application/json' \\
   --user '${userID}:' \\
   --data-raw '{"title": "feed the cat", "complete": false}'
 
   # Create a second tenant and a todo item for that tenant:
-  curl --location --request POST '${backendServer}/api/tenants' \\
+  curl --location --request POST '${backendServer}/tenants' \\
   --header 'Content-Type: application/json' \\
   --user '${userID}:' \\
   --data-raw '{"id":"${tenant2ID}", "name":"a different customer"}'
 
-  curl -X POST '${backendServer}/api/tenants/${tenant2ID}/todos' \\
+  curl -X POST '${backendServer}/tenants/${tenant2ID}/todos' \\
   --header 'Content-Type: application/json' \\
   --user '${userID}:' \\
   --data-raw '{"title": "take out the trash", "complete": false}'
 
   # List all todos for the first tenant:
   # This endpoint uses Nile's tenant isolation feature to only show todos to the tenant in the URL path.
-  curl -X GET '${backendServer}/api/tenants/${tenantID}/todos' \\
+  curl -X GET '${backendServer}/tenants/${tenantID}/todos' \\
   --user '${userID}:'
 
   # List your tenants:
-  curl -X GET '${backendServer}/api/tenants' --user '${userID}:'
+  curl -X GET '${backendServer}/tenants' --user '${userID}:'
 
   # This endpoint will show you all todos for all tenants
   # For demo purposes, we excluded it from the tenant isolation.
