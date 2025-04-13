@@ -32,7 +32,9 @@ export function TweetCard({ tweet }: { tweet: Tweet }) {
             {tweet.author.name}
           </span>
           {tweet.author.title && (
-            <span className="text-zinc-400 text-sm mt-0.5">{tweet.author.title}</span>
+            <span className="text-zinc-400 text-sm mt-0.5">
+              {tweet.author.title}
+            </span>
           )}
         </div>
         <div className="ml-auto">
@@ -48,7 +50,7 @@ export function TweetCard({ tweet }: { tweet: Tweet }) {
       </div>
 
       {/* Read More Button */}
-      <a 
+      <a
         href={`https://x.com/i/status/${tweet.id}`}
         target="_blank"
         rel="noopener noreferrer"
@@ -60,4 +62,4 @@ export function TweetCard({ tweet }: { tweet: Tweet }) {
       </a>
     </div>
   );
-} 
+}
