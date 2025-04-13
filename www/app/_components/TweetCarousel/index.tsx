@@ -10,7 +10,8 @@ const tweets: Tweet[] = [
     author: {
       name: "Guillermo Rauch",
       handle: "@rauchg",
-      avatar: "/profiles/rauch.jpg"
+      avatar: "/profiles/rauch.jpg",
+      title: "CEO, Vercel"
     },
     content: "Tenant-aware serverless Postgres. So clever!"
   },
@@ -19,25 +20,28 @@ const tweets: Tweet[] = [
     author: {
       name: "Oz Katz",
       handle: "@ozkatz100",
-      avatar: "/profiles/ozkatz.jpg"
+      avatar: "/profiles/ozkatz.jpg",
+      title: "CTO, lakeFS"
     },
     content: "This looks INCREDIBLE!\nI've had the \"pleasure\" of designing multi-tenant SaaS applications several times in my career. Nile seems to tackle exactly all the right problems."
   },
   {
-    id: "2345678901",
+    id: "1717235597063213325",
     author: {
       name: "Simon Eskildsen",
       handle: "@sirupsen",
-      avatar: "/profiles/sirupsen.jpg"
+      avatar: "/profiles/sirupsen.jpg",
+      title: "CEO, Turbopuffer"
     },
     content: "fascinating as a primitive. Always wanted this.\n\nMulti Tenancy Engineering is a real thing that's often a massive % of what SaaS companies' infra teams do, without naming it."
   },
   {
-    id: "3456789012",
+    id: "1717205300259017054",
     author: {
       name: "Siva Narayanan",
       handle: "@sivanarayanan",
-      avatar: "/profiles/siva.jpg"
+      avatar: "/profiles/siva.jpg",
+      title: "CTO, Fyle"
     },
     content: "I wish we had all of these things when we started @FyleHQ. This should help startups immensely."
   },
@@ -46,7 +50,8 @@ const tweets: Tweet[] = [
     author: {
       name: "Tanel Poder",
       handle: "@TanelPoder",
-      avatar: "/profiles/tanel.jpg"
+      avatar: "/profiles/tanel.jpg",
+      title: "Co-founder, Gluent"
     },
     content: "I like how the @niledatabase positions itself. Not a yet another scalable Postgres database, but a SaaS platform with a lot of built-in integrations (yes also AI) for rapid app development *and* shipping!"
   },
@@ -55,7 +60,8 @@ const tweets: Tweet[] = [
     author: {
       name: "Jay Kreps",
       handle: "@jaykreps",
-      avatar: "/profiles/kreps.png"
+      avatar: "/profiles/kreps.png",
+      title: "CEO, Confluent"
     },
     content: "Postgres, as a service, done right. Awesome team and an awesome product. Excited to see it launch…"
   },
@@ -64,7 +70,8 @@ const tweets: Tweet[] = [
     author: {
       name: "Milos Gajdos",
       handle: "@milosgajdos",
-      avatar: "/profiles/milos.jpg"
+      avatar: "/profiles/milos.jpg",
+      title: "Tech Lead, Docker Hub"
     },
     content: "There are a lot of Postgres startups out there but Nile is one of the more interesting things happening in the PG space. To anyone who has worked on some SaaS product, this must look like a no-brainer: multitenant PG."
   }
@@ -74,7 +81,7 @@ const tweets: Tweet[] = [
 const extendedTweets = [...tweets, ...tweets, ...tweets];
 
 const SCROLL_SPEED = 0.4; // pixels per frame
-const CARD_WIDTH = 406; // width + gap
+const CARD_WIDTH = typeof window !== 'undefined' && window.innerWidth < 640 ? 300 : 406; // width + gap for mobile/desktop
 const WHEEL_SCROLL_SPEED = 25; // pixels per wheel event
 const TOTAL_WIDTH = tweets.length * CARD_WIDTH;
 
@@ -227,19 +234,30 @@ export default function TweetCarousel() {
   const handleWheel = useCallback((e: React.WheelEvent) => {
     e.preventDefault();
     
+    // Use a smaller multiplier for smoother scrolling
+    const SMOOTH_SCROLL_SPEED = 5;
+    
+    // Determine scroll direction and amount
     const delta = e.shiftKey ? e.deltaY : e.deltaX;
     
     if (delta !== 0) {
       setTranslateX(prev => {
-        const newValue = prev - (delta * WHEEL_SCROLL_SPEED / 100);
-        return handleLoop(newValue);
+        const newValue = prev - (delta * SMOOTH_SCROLL_SPEED / 100);
+        const loopedValue = handleLoop(newValue);
+        
+        // Prevent large jumps by checking if the change is too big
+        if (Math.abs(loopedValue - prev) > CARD_WIDTH * 2) {
+          return prev;
+        }
+        
+        return loopedValue;
       });
     }
   }, [handleLoop]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-16">
-      <div className="flex justify-center mb-12">
+    <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 py-6 sm:py-16">
+      <div className="mb-6 sm:mb-12 flex justify-center">
         <NewHeading>What People Are Saying</NewHeading>
       </div>
 
@@ -260,7 +278,7 @@ export default function TweetCarousel() {
         onWheel={handleWheel}
       >
         <div 
-          className="flex gap-6"
+          className="flex gap-3 sm:gap-6"
           style={{ 
             transform: `translateX(${translateX}px)`,
             width: 'fit-content',
@@ -272,8 +290,8 @@ export default function TweetCarousel() {
             <div
               key={`${tweet.id}-${index}`}
               style={{
-                minWidth: "400px",
-                maxWidth: "400px",
+                minWidth: typeof window !== 'undefined' && window.innerWidth < 640 ? "300px" : "400px",
+                maxWidth: typeof window !== 'undefined' && window.innerWidth < 640 ? "300px" : "400px",
                 userSelect: 'none'
               }}
             >

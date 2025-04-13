@@ -8,6 +8,7 @@ export type Tweet = {
     name: string;
     handle: string;
     avatar: string;
+    title?: string;
   };
   content: string;
 };
@@ -30,7 +31,9 @@ export function TweetCard({ tweet }: { tweet: Tweet }) {
           <span className="font-bold text-white hover:underline">
             {tweet.author.name}
           </span>
-          <span className="text-zinc-500">{tweet.author.handle}</span>
+          {tweet.author.title && (
+            <span className="text-zinc-400 text-sm mt-0.5">{tweet.author.title}</span>
+          )}
         </div>
         <div className="ml-auto">
           <svg viewBox="0 0 24 24" className="w-5 h-5 text-white fill-current">
