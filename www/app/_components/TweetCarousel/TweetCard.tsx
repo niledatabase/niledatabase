@@ -14,7 +14,7 @@ export type Tweet = {
 
 export function TweetCard({ tweet }: { tweet: Tweet }) {
   return (
-    <div className="bg-[#16181c] rounded-2xl border border-[#2f3336] p-4 h-[300px] flex flex-col">
+    <div className="bg-[#16181c] rounded-2xl border border-[#2f3336] p-4 h-[250px] flex flex-col">
       {/* Author Section */}
       <div className="flex items-center gap-3">
         <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-zinc-800 to-zinc-700">

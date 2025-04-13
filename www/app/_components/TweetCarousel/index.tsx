@@ -6,6 +6,15 @@ import { NewHeading } from "../common/NewHeading";
 
 const tweets: Tweet[] = [
   {
+    id: "1717203591944089762",
+    author: {
+      name: "Guillermo Rauch",
+      handle: "@rauchg",
+      avatar: "/profiles/rauch.jpg"
+    },
+    content: "Tenant-aware serverless Postgres. So clever!"
+  },
+  {
     id: "1717518173824569471",
     author: {
       name: "Oz Katz",
@@ -58,60 +67,6 @@ const tweets: Tweet[] = [
       avatar: "/profiles/milos.jpg"
     },
     content: "There are a lot of Postgres startups out there but Nile is one of the more interesting things happening in the PG space. To anyone who has worked on some SaaS product, this must look like a no-brainer: multitenant PG."
-  },
-  {
-    id: "5678901234",
-    author: {
-      name: "Emma Wilson",
-      handle: "@emmaw",
-      avatar: "/images/profiles/emma.jpg"
-    },
-    content: "Security teams love @NileDatabase! The row-level security and tenant isolation are rock solid. Plus, the audit logs and access controls make compliance a breeze. 🔒"
-  },
-  {
-    id: "6789012345",
-    author: {
-      name: "James Lee",
-      handle: "@jamesdev",
-      avatar: "/images/profiles/james.jpg"
-    },
-    content: "Switched to @NileDatabase for our B2B SaaS and couldn't be happier. The database branching feature is amazing for testing, and the migration tools made the switch painless! ⚡"
-  },
-  {
-    id: "7890123456",
-    author: {
-      name: "Priya Patel",
-      handle: "@priyatech",
-      avatar: "/images/profiles/priya.jpg"
-    },
-    content: "Love how @NileDatabase handles global data distribution. Our users across different regions are seeing much better latency, and the automatic failover gives us peace of mind! 🌍"
-  },
-  {
-    id: "8901234567",
-    author: {
-      name: "Tom Martinez",
-      handle: "@tommdev",
-      avatar: "/images/profiles/tom.jpg"
-    },
-    content: "The developer experience with @NileDatabase is top-notch! Great docs, helpful support team, and the CLI tools make development so much faster. Exactly what devs need! 👨‍💻"
-  },
-  {
-    id: "9012345678",
-    author: {
-      name: "Rachel Brown",
-      handle: "@rachelb",
-      avatar: "/images/profiles/rachel.jpg"
-    },
-    content: "Impressed by how @NileDatabase handles schema migrations across tenants. The versioning system is clever, and being able to test changes on specific tenants first is super useful! 🛠️"
-  },
-  {
-    id: "0123456789",
-    author: {
-      name: "Michael Chang",
-      handle: "@michaelc",
-      avatar: "/images/profiles/michael.jpg"
-    },
-    content: "The vector embeddings support in @NileDatabase is exactly what we needed for our AI features. 10x lower cost than other solutions and it's all in the same database! 🤖"
   }
 ];
 
