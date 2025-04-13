@@ -86,7 +86,7 @@ const tweets: Tweet[] = [
 // Triple the tweets array to ensure smooth looping
 const extendedTweets = [...tweets, ...tweets, ...tweets];
 
-const SCROLL_SPEED = 0.4; // pixels per frame
+const SCROLL_SPEED = 0.65; // pixels per frame (increased by 20% from 0.4)
 const CARD_WIDTH =
   typeof window !== "undefined" && window.innerWidth < 640 ? 300 : 406; // width + gap for mobile/desktop
 const WHEEL_SCROLL_SPEED = 25; // pixels per wheel event
