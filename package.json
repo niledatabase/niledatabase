@@ -49,6 +49,11 @@
   "overrides": {
     "prismjs": "1.30.0"
   },
+  "optionalDependencies": {
+    "@img/sharp-linux-x64": "^0.34.0",
+    "@swc/core-linux-x64-gnu": "^1.2.160",
+    "piscina": "^4.9.2"
+  },
   "packageManager": "npm@10.8.3",
   "dependencies": {
     "hast-to-hyperscript": "^10.0.3",
