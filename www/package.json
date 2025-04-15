@@ -63,14 +63,6 @@
   "optionalDependencies": {
     "@img/sharp-linux-x64": "^0.34.0",
     "@swc/core-linux-x64-gnu": "^1.2.160",
-    "@next/core-linux-x64-gnu": "^15.3.0",
-    "@next/swc-linux-x64-musl": "^15.3.0",
-    "@next/swc-darwin-x64": "^15.3.0",
-    "@next/swc-linux-arm64-musl": "^15.3.0",
-    "@next/swc-linux-arm64-gnu": "^15.3.0",
-    "@next/swc-linux-x64-gnu": "^15.3.0",
-    "@next/swc-win32-arm64-msvc": "^15.3.0",
-    "@next/swc-win32-x64-msvc": "^15.3.0",
     "piscina": "^4.9.2"
   },
   "devDependencies": {
