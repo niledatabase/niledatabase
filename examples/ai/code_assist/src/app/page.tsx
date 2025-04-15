@@ -2,6 +2,7 @@ import styles from "./page.module.css";
 import ErrorBox from "../components/ErrorBox";
 import { Google } from "@niledatabase/react";
 import BasicSignInForm from "@/components/BasicSignInForm";
+export const runtime = "edge";
 
 export default async function Home() {
   // This demo supports both Google and email/password auth.

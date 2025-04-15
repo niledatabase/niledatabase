@@ -11,6 +11,7 @@ const backendServer = String(
 export default async function Page() {
   const headers = await nextHeaders();
   const me = await nile.api.users.me(headers);
+  console.log(me);
   if (me instanceof Response) {
     return <div>Unauthorized</div>;
   }
