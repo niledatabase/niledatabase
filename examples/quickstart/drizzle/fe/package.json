@@ -26,6 +26,9 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.1"
   },
+  "overrides": {
+    "prismjs": "1.30.0"
+  },
   "devDependencies": {
     "@types/js-cookie": "^3.0.5",
     "@types/jsonwebtoken": "^9.0.7",
