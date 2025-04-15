@@ -29,7 +29,7 @@ The SDK is configured using environment variables. You can get these from the [N
 
 ## Initializing the SDK
 
-The SDK is initialized using the `Nile` class. If you initialize the SDK without any arguments, it will use the configuration in the `.env` file.
+The SDK is initialized using the `Nile` instance. If you initialize the SDK without any arguments, it will use the configuration in the `.env` file.
 You can also pass in a configuration object to the `Nile` constructor to override the configuration in the `.env` file. 
 For more information about the available configuration options, see [configuration](/auth/sdk-reference/nile-js/configuration).
 
@@ -50,6 +50,12 @@ const nile = await Nile({
 });
 ```
 </CodeGroup>
+
+### Understanding the Nile Instance
+
+A configured Nile instance handles proxying requests to the Nile Auth API. Your client connects to your server, which then formats and ensures 
+the requests can be handled by the Nile Auth API. The SDK is designed to make clients talking through your server to the Nile auth service as 
+transparent as possible. In addition, you can use the SDK to directly access the Nile Auth API from your server.
 
 ## Available Modules
 
@@ -72,6 +78,42 @@ The SDK provides a number of modules with methods for interacting with Nile:
   Built-in and custom routes
 </Card>
 </CardGroup>
+
+## Authentication Flow
+
+### 1. User Initiates Authentication
+- The user clicks a "Sign in" button.
+- This action triggers a `signIn` method with the chosen provider. Your server handles all requests, which in most cases is simply forwarding them on to the Nile auth service with some additional information to help identify the client.
+
+### 2. Redirect to Provider (OAuth Flow)
+- If an OAuth provider (e.g., Google, GitHub) is used, the user is redirected to the provider's authentication page. This works by Nile auth returning redirects to your application, which the SDK handles in order to send the user to the provider. 
+- The user enters their credentials and grants permission to the application. Because your server is handling the requests, the user is redirected back to your application.
+
+### 3. Provider Callback & Token Exchange
+- After successful authentication, the provider redirects the user back to your application, which proxies the request to the Nile auth service. 
+- Nile auth exchanges the authorization code for an access token and forwards the authorization information to your server, which in turn would just pass that on to the client.
+
+### 4. Session Creation
+- Via your service, nile auth provides a secure cookie.
+- The cookie includes basic user information, which can be accessed using the `nile.api.auth.getSession` or a full user profile via `nile.api.auth.me`
+
+### 5. Accessing the Session
+- A session is always within the context of a request. You can access session data using:
+
+```typescript
+import http from "http";
+import { Nile } from "@niledatabase/server";
+
+const nile = await Nile();
+
+const server = http.createServer(async (req, res) => {
+  const session = nile.api.auth.getSession(req);
+  // or const session = nile.api.auth.getSession(new Headers('cookie', req.headers.cookie));
+  if (session) {
+    console.log("User is authenticated", session.user);
+  });
+)}
+```
 
 ## API Reference
 

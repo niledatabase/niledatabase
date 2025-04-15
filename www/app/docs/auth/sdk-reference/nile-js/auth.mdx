@@ -3,7 +3,10 @@ title: 'Auth'
 description: 'Securely authenticating users'
 ---
 
-The Auth module is used to securely authenticate users. It provides a number of methods for signing in, signing out, and managing user sessions.
+The Auth module is used to securely authenticate users on the server side. It provides a number of methods for signing in, signing out, and managing user sessions.
+
+For full-stack applications, much of this would be handled with components and APIs, but in some cases you may need to use the server-side SDK to manage 
+user sessions.
 
 ## login
 
@@ -71,6 +74,12 @@ console.log('Session token: ', token)
 ## signOut
 
 The `nile.api.auth.signOut` method is used to sign out a user. Calling this method will remove the headers that were set during the login process.
+
+It follows a two-step process similar to how sign-out works in the browser, ensuring CSRF protection and API consistency.
+
+- The CSRF token is extracted and passed along with the request.
+- The request is made with the appropriate headers, including the user's cookies.
+- The callback-url cookie is introspected and used as the origin, ensuring Nile Auth correctly handles the redirect after logout.
 
 <Tip>
 This method is part of the server-side SDK, therefore it does not and cannot remove the session cookie from the browser.
