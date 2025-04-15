@@ -3,226 +3,214 @@ title: 'JavaScript'
 description: 'Integrate Nile Auth with any JavaScript backend'
 ---
 
-# JavaScript Backend Integration
+Learn how to integrate Nile Auth with any JavaScript backend framework. This guide shows a quickstart example for Node.js to help you get started using 
+the Nile Auth SDK with your backend. In full-stack applications, user signup, authentication and even user profile UI can be handled automatically by the 
+built-in routes and UI components. However, depending on your application's requirements, you may need to use the SDK to directly call user management 
+APIs in Nile Auth. This quickstart example shows how to do this. For more details on the Nile Auth JavaScript SDK, see the [Nile Auth JS SDK](/auth/sdk-reference/nile-js) documentation.
 
-Learn how to integrate Nile Auth with any JavaScript backend framework.
+<Tip>It is important to note that the Auth service is designed to work with actions a **user** would take in the context of your B2b webapplication.</Tip>
 
-<Tip>It is important to note that the Auth service is designed to work with actions a **user** would take, it is not an exhaustive list of actions a developer or super user could take.</Tip>
-## Overview
+## Quickstart
 
-This guide covers the general principles of integrating Nile Auth with any JavaScript backend framework.
+Nile SDK has APIs for working with users, tenants and sessions. 
+In the example below, we'll create a new user, login as that user, get and update the user's profile information.
+We'll then create a new tenant for that user, list users in the tenant and delete the tenant. Finally, we'll show how to use the SDK to protect a route by checking if 
+the user is authenticated and sign the user out.
 
-## Installation
+<Steps>
+<Step title="Create a new NodeJS project">
+
+```bash
+mkdir my-project
+cd my-project
+npm init -y
+```
+</Step>
+
+<Step title="Install the Nile Auth SDK">
 
 ```bash
 npm install @niledatabase/server
 ```
 
-## Core Concepts
+</Step>
 
-### Nile Instance
+<Step title="Import and initialize the Nile Auth SDK">
 
-A configured Nile instance handles proxying requests to the Nile Auth API. Your client connects to your server, which then formats and ensures the requests can be handled by the Nile Auth API.
+We'll use a single file for the entire example. Create a new file called `nile-qs.js` and add the following code:
 
-The SDK is designed to make clients talking through your server to the Nile auth service as transparent as possible.
+```javascript
+import { Nile } from '@niledatabase/server';
 
-In addition, you can use the SDK to directly access the Nile Auth API from your server.
-
-## Authentication Flow
-
-### 1. User Initiates Authentication
-- The user clicks a "Sign in" button.
-- This action triggers a `signIn` method with the chosen provider. Your server handles all requests, which in most cases is simply forwarding them on to the Nile auth service with some additional information to help identify the client.
-
-### 2. Redirect to Provider (OAuth Flow)
-- If an OAuth provider (e.g., Google, GitHub) is used, the user is redirected to the provider's authentication page. This works by Nile auth returning redirects to your application, which the SDK handles in order to send the user to the provider. 
-- The user enters their credentials and grants permission to the application. Because your server is handling the requests, the user is redirected back to your application.
-
-### 3. Provider Callback & Token Exchange
-- After successful authentication, the provider redirects the user back to your application, which proxies the request to the Nile auth service. 
-- Nile auth exchanges the authorization code for an access token and forwards the authorization information to your server, which in turn would just pass that on to the client.
-
-### 4. Session Creation
-- Via your service, nile auth provides a secure cookie.
-- The cookie includes basic user information, which can be accessed using the `nile.api.auth.getSession` or a full user profile via `nile.api.auth.me`
-
-### 5. Accessing the Session
-- A session is always within the context of a request. You can access session data using:
-
-```typescript
-import http from "http";
-import { Nile } from "@niledatabase/server";
-
-const nile = await Nile();
-
-const server = http.createServer(async (req, res) => {
-  const session = nile.api.auth.getSession(req);
-  // or const session = nile.api.auth.getSession(new Headers('cookie', req.headers.cookie));
-  if (session) {
-    console.log("User is authenticated", session.user);
-  });
-)}
+const nile = await Nile({
+  // debug: true  // Enable detailed logging
+});
 ```
 
-A Nile auth application server must respond to API requests. To see a full list of available API routes, check out the [API Reference](/api-reference).
+</Step>
+<Step title="Configure the Nile Auth SDK with your environment variables">
+The `Nile` object can be configured directly from environment variables, which you can get from [Nile Console](https://console.thenile.dev).
+Place them in a `.env` file in the root of your project.
 
-## User Management
+```
+NILEDB_USER=
+NILEDB_PASSWORD=
+NILEDB_API_URL=
+NILEDB_POSTGRES_URL=
+```
+</Step>
+<Step title="Create a new user">
 
-While user signup, authentication and even user profile UI is handled automatically by the built-in routes and UI components, you can use the SDK to directly call user management APIs in Nile Auth.
+Let's start by creating a new user, so we can use it for the rest of the example:
 
-For example, to login a user with email and password, you can use the following code:
+```javascript create
+console.log("Creating user:");
+const user = await nile.api.users.createUser({
+    email: 'test@test.com',
+    password: 'password'
+});
+```
+
+</Step>
+<Step title="Login a user with email and password">
+
+To login a user with email and password, you can use the following code:
 
 ```javascript login
 try {
-    const loginBody = {
-        email: 'test@test.com',
-        password: 'password'
-    }
-    debug(`logging in using ${loginBody.email} ${loginBody.password}`);
-    await nile.api.login(loginBody);
-  } catch (err) {
-    console.error("Failed to login", err);
-    return err;
+  const loginBody = {
+      email: 'test@test.com',
+      password: 'password'
   }
+  console.info(`logging in using ${loginBody.email} ${loginBody.password}`);
+  await nile.api.login(loginBody);
+} catch (err) {
+  console.error("Failed to login", err);
+  process.exit(1);
+}
 ```
 
-This will set `nile.token` to the user's session token, which you can use to make authenticated requests to the Nile Auth API.
+This will set `nile.api.headers` to include the user's session token and the CSRF token. These will automatically be added to all subsequent requests.
 
-You can get the user's profile information by calling the `me` API:
+</Step>
+<Step title="Get the user's profile information">
+
+Next, let's get the user's profile information by calling the `me` API:
 
 ```javascript me
-const user = await nile.api.users.me();
-console.log(user);
+console.log("Getting user's profile information:");
+const me = await nile.api.users.me();
+console.log(me);
 ```
 
-You can also create a new user by calling the `create` API:
+</Step>
+<Step title="Update a user's profile information">
 
-```javascript create
-const user = await nile.api.users.create({
-    email: 'test@test.com',
-    password: 'password'
-});
-```
-
-Or create a user in a specific tenant by setting `tenantId` before creating the user:
-
-```javascript create-tenant
-nile.tenantId = '8fa00d5e-ffa3-4662-96b0-bb8499b1cb68';
-const user = await nile.api.users.createTenantUser({
-    email: 'test@test.com',
-    password: 'password'
-});
-```
-You can also update a user's profile information by calling the `update` API:
+Update a user's profile information by calling the `update` API:
 
 ```javascript update
-   const update = {
-      name: 'updatedName',
-    };
-    const updatedUser = await nile.api.users.updateMe(update);
-    console.log(updatedFirstUser);
+console.log("Updating user's profile information:");
+const update = {
+  name: 'updatedName',
+};
+const updatedUser = await nile.api.users.updateMe(update);
+console.log(updatedUser);
 ```
-## Tenant Management
+</Step>
+<Step title="Create a new tenant">
 
-Nile Auth supports multi-tenancy out of the box and includes tenant management APIs. You can create a new tenant by calling the `createTenant` API:
+You can create a new tenant by calling the `createTenant` API:
 
 ```javascript create-tenant
-const tenant = await nile.api.tenants.create({
+console.log("Creating tenant:");
+const tenant = await nile.api.tenants.createTenant({
     name: 'tenantName'
 });
+console.log(tenant);
 ```
+<Tip> Because we already authenticated as a user in a previous step, the new tenant will be linked to the user. </Tip>
+
+</Step>
+<Step title="Update a tenant">
 
 You rename a tenant by calling the `updateTenant` API after setting the `tenantId` to the tenant you want to update:
 
 ```javascript update-tenant
-nile.tenantId = '8fa00d5e-ffa3-4662-96b0-bb8499b1cb68';
-const tenant = await nile.api.tenants.updateTenant({
+console.log("Updating tenant:");
+nile.tenantId = tenant.id; // `tenant` object is returned from the `tenants.create` call in the previous step
+const updatedTenant = await nile.api.tenants.updateTenant({
     name: 'newTenantName'
 });
+console.log(updatedTenant);
 ```
+</Step>
+<Step title="List users in a tenant">
 
 You can list the users in a tenant by calling the `listUsers` API after setting the `tenantId` to the tenant you want to list users from:
 
 ```javascript list-users
-nile.tenantId = '8fa00d5e-ffa3-4662-96b0-bb8499b1cb68';
-const users = await nile.api.tenants.listUsers();
+nile.tenantId = tenant.id;
+console.log("Listing users in a tenant:");
+const users = await nile.api.users.listUsers();
 console.log(users);
 ```
+</Step>
+<Step title="Delete a tenant">
 
 You can mark a tenant as deleted by calling the `deleteTenant` API after setting the `tenantId` to the tenant you want to delete:
 
 ```javascript delete-tenant
-nile.tenantId = '8fa00d5e-ffa3-4662-96b0-bb8499b1cb68';
+console.log("Deleting tenant:");
+nile.tenantId = tenant.id; 
 await nile.api.tenants.deleteTenant();
 ```
 
-You can add users to a tenant and remove them by calling `linkUser` and `unlinkUser` APIs:  
+<Tip> This does not delete the tenant or its data from the database, it soft-deletes the tenant by setting the `deleted` field to current timestamp. </Tip>
+</Step>
+<Step title="Check if a user is authenticated">
 
-```javascript link-user
-nile.tenantId = '8fa00d5e-ffa3-4662-96b0-bb8499b1cb68';
-await nile.api.tenants.linkUser({
-    userId: '123'
-});
-await nile.api.tenants.unlinkUser({
-    userId: '123'
-});
+A key use case for the server-side SDK is to check if a user is authenticated before allowing them to access a resource:
+
+```typescript check-auth
+console.log("Checking if a user is authenticated:");
+const session = await nile.api.auth.getSession();
+if (!session) {
+  // in real example, you would return a 401 Unauthorized error
+  console.error('User is not authenticated');
+  process.exit(1);
+}
+
+// in real example, you would allow the user to do something that only authenticated users can do
+// and then return a 200 OK response and maybe some data
+console.log('User is authenticated', session.user);
+console.log('We can now allow them to do something that only authenticated users can do');
 ```
 
-## Auth Management
+</Step>
+<Step title="Sign out a user">
 
-Methods for using auth on the server side. For most applications, much of this would be handled with components and APIs, but we understand that maybe there are other use cases that need supported.
-
-Server-side sign-out for Nile Auth. It follows a two-step process similar to how sign-out works in the browser, ensuring CSRF protection and API consistency.
-
-- The CSRF token is extracted and passed along with the request.
-- The request is made with the appropriate headers, including the user's cookies.
-- The callback-url cookie is introspected and used as the origin, ensuring Nile Auth correctly handles the redirect after logout.
+Once we are done, we can sign out the user by calling the `signOut` API:
 
 ```javascript signOut
-nile.api.headers = new Headers(req.headers);
+console.log("Signing out a user:");
 const res = await nile.api.auth.signOut();
 if (res.url) {
+  // In real example, you would redirect the user to the URL in the response
   console.log('Redirect to:', res.url);
 }
 ```
 
-Obtains the CSRF token needed for `POST` requests to the API
-```javascript getCsrf
-nile.api.headers = new Headers(req.headers);
-const res = await nile.api.auth.getCsrf();
-if (res.csrfToken) {
-  console.log('token to pass:', res.csrfToken);
-}
+</Step>
+<Step title="Run the example">
+
+To see the example in action, run the following command:
+
+```bash
+node nile-qs.js
 ```
 
-Lists out the providers that are enabled for the database. 
-
-```javascript listProviders
-nile.api.headers = new Headers(req.headers);
-const providers = await nile.api.auth.listProviders();
-if (res.csrfToken) {
-  console.log('providers enabled in the DB:', providers);
-}
-```
-
-## API Authentication
-
-To authenticate API requests, you can use the session token:
-
-```typescript
-const server = http.createServer(async (req, res) => {
-  // Verify the session from the request
-  const session = nile.api.auth.getSession(req);
-  if (!session) {
-    res.writeHead(401);
-    res.end('Unauthorized');
-    return;
-  }
-  
-  // Process authenticated request
-  // ...
-});
-```
+</Step>
+</Steps>
 
 ## Security Considerations
 - Never log or otherwise store user passwords in plain text
@@ -234,11 +222,13 @@ const server = http.createServer(async (req, res) => {
 - Implement appropriate error responses that don't leak sensitive information
 - Keep your Nile SDK and dependencies up to date
 
-## Framework-Specific Guides
+## For more information and examples
 
-- [Express.js Integration](/auth/backendframeworks/express)
-- [Next.js API Routes](/auth/frontendframeworks/nextjs)
-- [Remix](/auth/frontendframeworks/remix)
+- [SDK Reference](/auth/sdk-reference/nile-js)
+- [Express.js Quickstart](/auth/backendframeworks/express)
+- [Next.js Quickstart](/auth/frontendframeworks/nextjs)
+- [Remix Quickstart](/auth/frontendframeworks/remix)
+
 
 ## Best Practices
 
