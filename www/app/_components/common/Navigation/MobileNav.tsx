@@ -15,11 +15,11 @@ export function NavMenu({ open }: { open: boolean }) {
       <div className="fixed top-0 right-0 z-20">
         <div className={`transition-all ${open ? "opacity-100" : "opacity-0"}`}>
           <div className="fixed top-0 left-0 right-0 bottom-0 bg-[#000]">
-            <div className="flex flex-col gap-10 py-32 px-4">
-              <Links className="text-xl font-semibold" />
+            <div className="flex flex-col gap-10 pt-20 px-4">
               <div className="flex flex-row">
                 <GithubCta />
               </div>
+              <Links className="text-xl font-semibold" />
             </div>
           </div>
         </div>
