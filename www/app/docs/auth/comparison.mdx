@@ -1,0 +1,49 @@
+---
+title: 'Comparison'
+icon: 'code-compare'
+---
+
+There are many auth solutions. A common question is how Nile Auth is different. We have tried to provide our most unbiased opinion about why and when you should consider using Nile Auth. Note that our opinions could be biased, and we encourage our users to do their due diligence.
+
+## Why use Nile Auth over other options?
+
+Nile Auth is a 100% open-source auth solution for B2B apps. It supports multi-tenant workflows, drop-in UI modules, stores user data in Nile’s Postgres database, and you get unlimited active users. You can self host it or use the managed cloud solution.
+
+### vs OSS libraries focused on a specific language or framework
+
+1. Auth as a service. It provides centralized control, helps B2B companies roll out security fixes quickly across all their apps, and gives an easy way to audit
+2. Routes auto-generate with Nile Auth. You have to write a lot less backend code.
+3. Drop-in B2B components, which makes end-to-end integration possible in a few minutes. Most libraries do not provide this.
+4. Tightly integrated to Nile Postgres built-in tables. So, no DB setups are required to bootstrap
+5. Multi-language support - A nice benefit is getting auth features across services in multiple languages.
+6. With the hosted version, we manage the service and help scale to millions of users across the globe with Nile's Postgres. We offer unlimited active users.
+7. If using NextAuth, you do not have any B2B feature support. Nile Auth also supports tenant-level overrides.
+8. Unified customer dashboard showing both DB and auth usage with management features
+
+### vs closed-source auth service
+
+1. Not open source.
+2. You need to sync user data from a third-party service to your DB. Not required with Nile Auth.
+3. We are biased, but Nile Auth UX is superior to most proprietary auth solutions.
+4. There is no pricing on active users. For example, Auth0 costs 1700$ for 7500 active users. With Nile Auth, it is 0$
+5. Single customer dashboard showing both DB and auth usage with management features.
+6. Routes auto-generate with Nile Auth. You have to write a lot less backend code.
+
+### vs OSS auth service
+
+1. Routes auto-generate with Nile Auth. You have to write a lot less backend code.
+2. Drop-in B2B components make end-to-end integration possible in a few minutes, which is not provided by most OSS auth as a service solution.
+3. Tightly integrated to Nile Postgres built-in tables. So, no DB setups are required to bootstrap
+4. Nile Auth hosted solution offers unlimited active users and only prices for the database.
+5. Full support for B2B features, which may not be comprehensive or not fully supported in other solutions like tenant-level overrides.
+6. Single customer dashboard showing both DB and auth usage with management features.
+
+### vs build your own auth solution
+
+1. Nile Auth will invest more time and people into security. It may not be the best use of time to build your own auth solution.
+2. Nile Auth will be patched proactively, and vulnerabilities will be addressed quickly. It could be hard to do this while focusing on building your product.
+3. Nile Auth is open source, and data is stored in your database. There is no lock-in, and you can always access your user data. This has the same benefits as building your own auth solution.
+4. With the hosted version, we manage the service and help scale to millions of users across the globe with Nile's Postgres. We offer unlimited active users.
+5. A lot of effort is needed to support B2B features. You can leverage Nile Auth for this.
+6. Unified customer dashboard showing both DB and auth usage with management features
+7. You can self-host Nile Auth, which gives you all the benefits without having to write the code.

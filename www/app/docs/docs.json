@@ -190,6 +190,7 @@
             "group": "Nile Auth",
             "pages": [
               "auth/introduction",
+              "auth/comparison",
               "auth/quickstart",
               "auth/selfhosting",
               {
