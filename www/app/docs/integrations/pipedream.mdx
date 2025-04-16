@@ -1,0 +1,111 @@
+---
+title: "Pipedream"
+sidebarTitle: "Pipedream"
+description: "Automate customer workflow"
+icon: "clock"
+---
+
+By combining Nile's tenant-aware database with [Pipedream](https://pipedream.com/)'s workflow automation, you can build these integrations quickly and reliably, without getting lost in integration code. Pipedream has hundreds of integrations (over 2400 per their website), so you can truly connect your tenants to anything.
+
+## Integration Types
+
+Pipedream supports two types of integrations with Nile:
+
+- Nile as a trigger: Pipedream can run a query every few minutes and initialize a workflow based on the results. Perhaps updating your CRM when a tenant modifies their account in your application or email tenants after the create their 10th user.
+- Nile as an action: Use this when you want to create a tenant, a user or run a query in Nile as a result of a trigger. Maybe you want to create a tenant when your sales team creates a new customer in Salesforce, or update tenant's status based on payment events from Stripe.
+
+## Setting Up Your First Workflow
+
+Lets start with a very simple example that you can try without having access to Stripe or Salesforce accounts. To try this out, you'll need credentials for a Nile database and a Pipedream account.
+
+<Steps>
+  <Step title="Create a workflow">
+    In Pipedream, create a workspace or choose an existing one. Then click on new to create a new workflow.
+  </Step>
+
+  <Step title="Set up HTTP trigger">
+    We'll use HTTP trigger, since those are simple to test. Click on Add trigger and then select New HTTP / Webhook Requests.
+    Selecting a trigger
+    <img src="/images/pipedream-1.png" width="400" height="400"/> 
+  </Step>
+  <Step>
+    You can leave all the defaults as is and just click Save and continue. Click on Generate test event. This will send a simple HTTP request and Pipedream will show you all the available information about HTTP events. All these fields will be available in the workflow.
+    HTTP event fields
+    <img src="/images/pipedream-2.png" width="400" height="400"/> 
+  </Step>
+  <Step title="Add Nile action">
+    Now lets add Nile action to the workflow. Click on the + icon in the flow diagram, search for Nile and pick Execute Query action.
+
+    In the Action configuration, under Nile Database Account click on Connect Account. This will redirect you to Nile, where you'll be able to give Pipedream access to your workspaces and databases. This is control-plane access. Pipedream will still require credentials to access any specific database.
+
+    Once you gave Pipedream access to Nile, you'll be able to pick your workspace and database from the dropdown menus. Then, provide username and password credentials to the database you picked.
+    Nile configuration
+    <img src="/images/pipedream-3.png" width="400" height="400"/> 
+  </Step>
+
+  <Step title="Configure the query">
+    Finally, we tell Pipedream what query to run. Lets say that we simply want to log the HTTP request in a shared table. We can use the following query. Note how we use the values exported by the trigger in our query:
+
+    ```sql
+    INSERT INTO pipe (client_ip, url) VALUES
+    ('{{steps.trigger.event.client_ip}}', '{{steps.trigger.event.url}}')
+    ```
+
+    Before testing the pipeline, you'll want to make sure the pipe table exists, otherwise the insert statement will fail:
+
+    ```sql
+    CREATE TABLE pipe (client_ip VARCHAR(16), url VARCHAR(1024));
+    ```
+  </Step>
+
+  <Step title="Test the workflow">
+    As the last step, click on Test and then check the pipe table in your database. If all went well, you'll see something like this:
+
+    ```sql
+    stripe_demo=> SELECT * FROM pipe;
+      client_ip   |                   url
+    --------------+------------------------------------------
+     75.3.243.203 | https://eoly6egu9oxmmq2.m.pipedream.net/
+     75.3.243.203 | https://eoly6egu9oxmmq2.m.pipedream.net/
+    (2 rows)
+    ```
+  </Step>
+</Steps>
+
+Hopefully this was fun. While HTTP triggers may not be what you are after, you can use the exact same steps to build all kinds of integrations. Simply pick a trigger, run a test to examine the available fields, and then add actions that use these fields. Each workflow can have as many triggers and actions as you need, so you can get quite fancy!
+
+## Real-World Integration Examples
+
+Let's look at a few useful B2B workflows that you can build with Nile and Pipedream:
+
+### New Customer (From product):
+1. Trigger: Nile
+2. Event: New tenant
+3. Actions: Add new customer in Hubspot
+4. Actions: Update team via Slack
+
+### New Customer (From sales team):
+1. Trigger: Hubspot
+2. Event: New Deal in Stage. Configure the source to only trigger on "won" deals.
+3. Actions: Create tenant in Nile
+4. Actions: Send welcome email via SendGrid
+
+### Support Ticket
+1. Trigger: Zendesk
+2. Event: New ticket
+3. Actions: Query Nile for more information about tenant - subscription type, number of users, etc.
+4. Actions: Update tenant metadata in Zendesk
+5. Actions: If ticket is high priority, send Slack message to customer success team
+
+### Subscription Cancelled
+1. Trigger: Stripe
+2. Event: Cancelled subscription
+3. Actions: Update tenant status in Nile
+4. Actions: Notify customer success team via Slack
+
+## Tips
+
+When building these integrations, keep these tips in mind:
+
+- Always Preserve Tenant Context: Make sure you're passing tenant IDs through your entire workflow, especially when executing queries againt tenant data in Nile. Pipedream makes this easy by exporting event variables in each step.
+- Handle Errors Gracefully: Things will go wrong. Set up proper error handling and notifications.

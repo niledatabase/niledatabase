@@ -1,0 +1,115 @@
+---
+title: "Cloudflare"
+sidebarTitle: "Cloudflare"
+description: "Deploy globally accelerated B2B applications with Cloudflare Workers and Hyperdrive"
+icon: "clock-eleven"
+---
+
+Cloudflare Workers enables you to deploy serverless functions or entire application backends globally, drastically reducing latency between your application and users. Combined with Cloudflare Hyperdrive's caching proxy capabilities, you can achieve exceptional database performance for your B2B applications.
+
+## Why Nile with Cloudflare?
+
+### Global Scale
+Deploy your B2B applications worldwide using Cloudflare Workers, while Nile ensures tenant isolation, auth-scaling, and tenant insights.
+
+### Accelerated Performance
+Leverage Cloudflare Hyperdrive to accelerate database queries, making interactions lightning-fast for your users.
+
+### Multi-Tenant Isolation
+Nile's tenant-aware architecture ensures that your customers' data is securely isolated, enabling you to build scalable and compliant apps effortlessly.
+
+### Simplified Deployment
+Combine Nile's serverless Postgres with Cloudflare's edge network to streamline the deployment of modern B2B applications with less operational overhead.
+
+### Optimized for AI Workloads
+Build AI-driven, multi-tenant applications with Nile and deploy them globally with Cloudflare. This architecture minimizes latency while easily scaling to millions of embeddings.
+
+## Quick Start Guide
+
+<Steps>
+  <Step title="Create a Database">
+    1. Sign up and log in to [Nile Console](https://console.thenile.dev)
+    2. Create a new database
+    3. Create your required tables using the SQL editor
+    4. Get your connection string with credentials from the "Connect" tab
+  </Step>
+
+  <Step title="Clone the Example App">
+    Clone our example repository and navigate to the Cloudflare integration:
+
+    ```bash
+    git clone https://github.com/niledatabase/niledatabase
+    cd niledatabase/examples/integrations/cloudflare/
+    ```
+
+    This example includes:
+    - [Hono](https://hono.dev/): A lightweight web framework
+    - [Drizzle](https://orm.drizzle.team/): A TypeScript ORM
+    - Built-in multi-tenant todo list functionality
+  </Step>
+
+  <Step title="Configure Hyperdrive">
+    Create a Hyperdrive configuration using your Nile connection string:
+
+    ```bash
+    npx wrangler hyperdrive create your_config_name \
+      --connection-string="postgres://..."
+    ```
+
+    Update your `wrangler.toml` with the Hyperdrive ID returned from the command above:
+
+    ```toml
+    [hyperdrive]
+    id = "your_hyperdrive_id"
+    ```
+  </Step>
+
+  <Step title="Deploy">
+    Test your application locally:
+    ```bash
+    npm run dev
+    ```
+
+    Deploy to Cloudflare Workers:
+    ```bash
+    npm run deploy
+    ```
+
+    Your globally accelerated multi-tenant application is now live! 🚀
+  </Step>
+
+  <Step title="What's Next?">
+    Now that you have your application running, you can:
+    - Explore the [complete example](https://github.com/niledatabase/niledatabase/tree/main/examples/integrations/cloudflare) on GitHub
+    - Learn more about [Nile's multi-tenant features](/docs/tenant-isolation)
+    - Check out [Cloudflare Workers documentation](https://developers.cloudflare.com/workers/)
+    - Join our [Discord community](https://discord.gg/8UuBB84tTy) for support
+  </Step>
+</Steps>
+
+## Example Implementation
+
+Here's a simple example of how to use Nile with Cloudflare Workers:
+
+```typescript
+import { Hono } from 'hono';
+import { drizzle } from 'drizzle-orm/neon-serverless';
+import { todos } from './schema';
+
+const app = new Hono();
+
+app.post('/api/todos', async (c) => {
+  const { title } = await c.req.json();
+  const tenant_id = c.req.header('x-tenant-id');
+  
+  const db = drizzle(c.env.HYPERDRIVE);
+  
+  const [todo] = await db.insert(todos)
+    .values({ title, tenant_id })
+    .returning();
+    
+  return c.json(todo);
+});
+
+export default app;
+```

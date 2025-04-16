@@ -381,7 +381,10 @@
               "integrations/vercel",
               "integrations/lambda",
               "integrations/nextauth",
-              "integrations/stripe"
+              "integrations/stripe",
+              "integrations/cloudflare",
+              "integrations/betterauth",
+              "integrations/pipedream"
             ]
           },
           {
