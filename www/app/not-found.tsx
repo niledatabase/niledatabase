@@ -13,7 +13,8 @@ export default function NotFound() {
             Oops! This page seems to have drifted into the void
           </h2>
           <p className="text-[16px] md:text-[20px] text-center text-gray-400 max-w-[600px]">
-            Don't worry, even the best databases have their moments. Let's get you back to familiar territory.
+            Don't worry, even the best databases have their moments. Let's get
+            you back to familiar territory.
           </p>
           <div className="flex flex-row gap-4 mt-4">
             <Link href="/">
@@ -31,4 +32,4 @@ export default function NotFound() {
       </div>
     </Container>
   );
-} 
+}
