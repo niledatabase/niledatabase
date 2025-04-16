@@ -92,7 +92,48 @@ export default [
 ] satisfies RouteConfig;
 ```
 </CodeGroup>
+
+### Express example
+
+<CodeGroup>
+```ts server.mjs
+import "dotenv/config";
+import express from "express";
+import { Nile } from "@niledatabase/server";
+import { NileExpressHandler } from "@niledatabase/server/express";
+
+const startServer = async () => {
+    try {
+        const app = express();
+        const nile = await Nile();
+        // This is where the route handlers are imported
+        const { paths, handler } = await NileExpressHandler(nile);
+        
+
+        app.use(express.json());
+        app.use(express.urlencoded({ extended: true }));
+
+        // This is where the routes are exposed in your express app
+        app.get(paths.get, handler);
+        app.post(paths.post, handler);
+        app.put(paths.put, handler);
+        app.delete(paths.delete, handler);
+
+        // Your own routes go here
+
+        const PORT = process.env.PORT || 3040;
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Error starting server:", error);
+        process.exit(1);
+    }
+};
+
+startServer();
 ```
+</CodeGroup>
 
 ## Using routes
 
@@ -122,6 +163,60 @@ export const appRoutes = (prefix = '/api'): Routes => ({
   LOG: `${prefix}/_log`,
 });
 ```
+
+A case where you might want to use the routes directly is when these routes are exposed as a REST API of your application backend.
+
+For example, if you use the `@niledatabase/server/express` package, the routes are exposed in the `app` object and 
+while you may have a frontend that uses `@niledatabase/react` to call these routes from the application UI, 
+you may want to also use them as a REST API for another backend or external service.
+
+In this case, you need to use the routes directly. The key is to:
+1. Include both the session cookie and the CRSF cookie in the request headers.
+2. Include the CSRF token in the request body.
+
+Here are a few examples of how to call the routes directly:
+
+<CodeGroup>
+```bash getCSRFToken
+# This gets the CSRF token from an API exposed by your application, and also saves the cookies to a file
+csrf_token=$(curl -s -X GET "http://localhost:3040/api/auth/csrf" -c "csrf_cookies.txt" | jq -r '.csrfToken')
+```
+
+```bash signup
+# This signs up a new user with email/password credentials
+# The CSRF token is included in the request body and in the cookies
+# The cookies are saved to a file so they can be used in subsequent requests
+curl -X POST "http://localhost:3040/api/signup" \
+  -H "Content-Type: application/json" \
+  -b "csrf_cookies.txt" \
+  --cookie-jar "login_cookies.txt" \
+  -d "{\"csrfToken\":\"$csrf_token\",\"email\":\"newuser@example.com\",\"password\":\"foobar\"}"
+```
+
+```bash login
+# This logs in a user with email/password credentials
+# The CSRF token is included in the request body and in the cookies
+# The cookies are saved to a file so they can be used in subsequent requests
+curl -X POST "http://localhost:3040/api/auth/callback/credentials" \
+  -H "Content-Type: application/json" \
+  -b "csrf_cookies.txt" \
+  --cookie-jar "login_cookies.txt" \
+  -d "{\"csrfToken\":\"$csrf_token\",\"email\":\"newuser@example.com\",\"password\":\"foobar\"}"
+```
+
+```bash getMe
+# This gets the user's profile information
+curl -X GET "http://localhost:3040/api/me" -b "login_cookies.txt"
+```
+
+```bash createTenant
+# This creates a new tenant
+curl -X POST 'localhost:3040/api/tenants' \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"my first customer"}' \
+  -b login_cookies.txt
+```
+</CodeGroup>
 
 ## Overriding routes
 
@@ -240,6 +335,53 @@ export const action = async ({ request }: Route.ActionArgs) => {
   return response;
 };
 ```
+
+```ts Express route wrappers
+// server.mjs
+import "dotenv/config";
+import express from "express";
+import { Nile } from "@niledatabase/server";
+import { NileExpressHandler } from "@niledatabase/server/express";
+
+const startServer = async () => {
+    try {
+        const app = express();
+        const nile = await Nile({
+            debug: true,
+        });
+        const { paths, handler } = await NileExpressHandler(nile);
+        console.log(paths);
+
+        app.use(express.json());
+        app.use(express.urlencoded({ extended: true }));
+
+        // Create logging wrapper
+        const withLogging = (handler) => async (req, res, next) => {
+            console.log('Request Headers:', req.headers);
+            if (req.method === 'POST') {
+                console.log('Request Body:', req.body);
+            }
+            return handler(req, res, next);
+        };
+
+        // Apply wrapper to specific routes
+        app.get(paths.get, withLogging(handler));
+        app.post(paths.post, withLogging(handler));
+        app.put(paths.put, withLogging(handler));
+        app.delete(paths.delete, withLogging(handler));
+
+        const PORT = process.env.PORT || 3040;
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Error starting server:", error);
+        process.exit(1);
+    }
+};
+
+startServer();
+```
 </CodeGroup>
 
 ### Route overrides
@@ -309,5 +451,92 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
   return nileResponse;
 };
+```
+
+```ts Express route overrides
+// server.mjs
+// One big difference between express and other frameworks is that Nile's route handlers
+// do not return a response by default. In order to use them in a custom handler,
+// you need some extra configuration and extra handling of all routes
+
+import "dotenv/config";
+import express from "express";
+import { Nile } from "@niledatabase/server";
+import { NileExpressHandler } from "@niledatabase/server/express";
+
+const startServer = async () => {
+    try {
+        const app = express();
+        const nile = await Nile({
+           // debug: true,
+        });
+        // muteResponse is set to true to avoid sending the response back to the client from the route handler
+        // this is useful when you want to override the route with your own logic
+        const { paths, handler } = await NileExpressHandler(nile, {muteResponse:true});
+        console.log(paths);
+
+        app.use(express.json());
+        app.use(express.urlencoded({ extended: true }));
+
+        // Add custom Google OAuth callback route - This has to be done before all the default routes
+        app.get('/auth/google/callback', async (req, res, next) => {
+          const { status, headers, body } = await handler(req, res, next);
+          if (status === 200) {
+              // Fetch user information
+              const me = await nile.api.users.me(headers);
+              if ("id" in me) {
+                  // Custom logic: register tenants
+                  await registerTenants(me.id);
+              }
+          }
+          res.status(status).set(headers);
+          if (typeof body === 'string') {
+              res.send(body);
+          } else {
+              res.json(body ?? {});
+          }
+          return;
+        });
+
+        // Create response logging wrapper
+        // This is critical to ensure that the response is sent back to the client from the route handlers
+        // So make sure you use with `{ muteResponse: true }` even if you don't want to log all the responses.
+        const withResponseLogging = (handler) => async (req, res, next) => {
+            try {
+                // Wait for the handler to complete
+                const result = await handler(req, res, next);
+                // Log the result
+                console.log('Handler result:', result);
+                const { status, headers, body } = result;
+                res.status(status).set(headers);
+                if (typeof body === 'string') {
+                    res.send(body);
+                } else {
+                    res.json(body ?? {});
+                }
+                return;
+            } catch (error) {
+                console.error('Handler error:', error);
+                throw error;
+            }
+        };
+
+        // Apply wrapper to routes
+        app.get(paths.get, withResponseLogging(handler));
+        app.post(paths.post, withResponseLogging(handler));
+        app.put(paths.put, withResponseLogging(handler));
+        app.delete(paths.delete, withResponseLogging(handler));
+
+        const PORT = process.env.PORT || 3040;
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Error starting server:", error);
+        process.exit(1);
+    }
+};
+
+startServer();
 ```
 </CodeGroup>
