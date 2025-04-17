@@ -25,6 +25,15 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+  console.log("Incoming request through proxy:");
+  console.log("Method:", req.method);
+  console.log("URL:", req.url);
+  console.log("Headers:", req.headers);
+  console.log("Body:", req.body); // only if body-parser is used
+  next();
+});
+
 const { paths, handler } = await NileExpressHandler(nile, {
   muteResponse: true,
 });
@@ -40,8 +49,15 @@ async function handleRoutes(
 ) {
   try {
     // because a proxy is used, we must re-create the valid that goes to the FE
-    req.url = `${fe_url}${req.originalUrl}`;
-    const response = await handler(req);
+    // req.url = `${fe_url}${req.originalUrl}`;
+
+    // delete req.headers;
+
+    console.log(req.url, `${process.env.NILEDB_API_URL}/auth/providers`);
+    const request = new Request(`${process.env.NILEDB_API_URL}/auth/providers`);
+    const blah = await fetch(request, { headers: req.headers });
+    console.log(await blah.json());
+    const response = await handler(new Request(req));
 
     if (response) {
       const { status, headers, body } = response;
