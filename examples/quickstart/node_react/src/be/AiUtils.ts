@@ -27,6 +27,7 @@ export function embeddingToSQL(embedding: number[]) {
 }
 
 export async function embedTask(title: string, task: EmbeddingTasks) {
+  console.log(`Embedding task: ${title} ${task}`);
   const ai = new OpenAI({
     apiKey: process.env.AI_API_KEY,
     baseURL: process.env.AI_BASE_URL,
@@ -35,13 +36,16 @@ export async function embedTask(title: string, task: EmbeddingTasks) {
   // generate embeddings
   let resp = await ai.embeddings.create({
     model: EMBEDDING_MODEL,
-    input: adjust_input(title, task),
+    input: title,
+    dimensions: 768,
   });
 
   // OpenAI's response is an object with an array of
   // objects that contain the vector embeddings
   // We just return the vector embeddings
-  return resp.data[0].embedding;
+  const embedding = resp.data[0].embedding;
+  console.log(`Embedding dimensions: ${embedding.length}`);
+  return embedding;
 }
 
 export async function findSimilarTasks(
@@ -73,18 +77,30 @@ export async function aiEstimate(title: string, similarTasks: todo[]) {
     process.env.AI_MODEL ||
     "accounts/fireworks/models/llama-v3p1-405b-instruct";
 
+  const message = `you are an amazing project manager. I need to ${title}. How long do you think this will take?${
+    similarTasks.length > 0
+      ? ` I have a few similar tasks with their estimates in json format, please use them as reference: ${JSON.stringify(similarTasks.map(task => ({
+          title: task.title,
+          estimate: task.estimate
+        })), null, 2)}.`
+      : ''
+  }
+  respond with just the estimate, keep the answer short.`;
+
+  console.log("Message to AI:", message);
+
   const aiEstimate = await ai.chat.completions.create({
     messages: [
       {
         role: "user",
-        content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
-        I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
-        respond with just the estimate, keep the answer short.`,
+        content: message,
       },
     ],
     max_tokens: 64, // limit the response to 64 tokens
     model: model,
   });
+
+  console.log("aiEstimate", aiEstimate);
 
   // if we got a valid response, return it
   if (aiEstimate.choices[0].finish_reason === "stop") {
