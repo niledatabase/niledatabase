@@ -27,6 +27,7 @@ export function embeddingToSQL(embedding: number[]) {
 }
 
 export async function embedTask(title: string, task: EmbeddingTasks) {
+  console.log(`Embedding task: ${title} ${task}`);
   const ai = new OpenAI({
     apiKey: process.env.AI_API_KEY,
     baseURL: process.env.AI_BASE_URL,
@@ -36,12 +37,15 @@ export async function embedTask(title: string, task: EmbeddingTasks) {
   let resp = await ai.embeddings.create({
     model: EMBEDDING_MODEL,
     input: adjust_input(title, task),
+    dimensions: 768,
   });
 
   // OpenAI's response is an object with an array of
   // objects that contain the vector embeddings
   // We just return the vector embeddings
-  return resp.data[0].embedding;
+  const embedding = resp.data[0].embedding;
+  console.log(`Embedding dimensions: ${embedding.length}`);
+  return embedding;
 }
 
 export async function findSimilarTasks(

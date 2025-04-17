@@ -45,6 +45,8 @@ async function handleRoutes(
 
     if (response) {
       const { status, headers, body } = response;
+      console.log("response from nile:");
+      console.log(status, headers, body);
       res.status(status).set(headers);
       if (typeof body === "string") {
         res.send(body);
