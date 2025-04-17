@@ -41,6 +41,7 @@ async function handleRoutes(
   try {
     // because a proxy is used, we must re-create the valid that goes to the FE
     req.url = `${fe_url}${req.originalUrl}`;
+    console.log("request headers", req.headers);
     const response = await handler(req);
 
     if (response) {
