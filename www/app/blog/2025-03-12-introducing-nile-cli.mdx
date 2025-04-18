@@ -72,8 +72,6 @@ nile db list
   style={{ borderRadius: "12px" }}
 />
 
-###
-
 We can create a database in one of the available regions. Nile creates databases instantaneously and you should see the database ready status in a second.
 
 ```bash
@@ -139,6 +137,8 @@ You can also obtain the env variables required for authentication setup and copy
 nile auth env --output .env.local
 ```
 
+This would copy the env variables to your local .env file
+
 ```bash
 NILEDB_USER=your_database_user
 NILEDB_PASSWORD=your_database_password
@@ -161,7 +161,7 @@ You can use the CLI to spin up the entire Nile platform in a local Docker and do
 nile local start
 ```
 
-##
+This will initiate a bunch of steps and automatically setup the local env
 
 ```bash
 ✓ Latest Nile testing container pulled successfully

@@ -18,6 +18,7 @@ const searchClient = algoliasearch(
   String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
   String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY)
 );
+
 function RefinementItem({
   item,
   refine,
@@ -115,12 +116,6 @@ function Hit({ hit }: any) {
 
 function SearchBox() {
   const { query, refine } = useSearchBox();
-  const [width, setWidth] = useState<"norm" | "max">("norm");
-
-  const widths = {
-    norm: "left-[75%]",
-    max: "left-[50%]",
-  };
   const [inputValue, setInputValue] = useState(query);
 
   useEffect(() => {
@@ -128,41 +123,28 @@ function SearchBox() {
   }, [inputValue]);
 
   return (
-    <div
-      className={`transition-[left] duration-[500ms] md:absolute right-0 ${widths[width]} p-1 bg-black rounded-xl`}
-    >
-      <div className="hidden absolute w-[86px] h-[60px] bg-horizontal-fade -left-[76px] -top-[1px]"></div>
-      <div
-        className={`py-1 w-full flex flex-row relative z-10 px-2 border border-[#242627] bg-black rounded-[12px] items-center gap-[10px]`}
-      >
-        <Image
-          className="ml-3"
-          src={SearchIcon}
-          alt="looking glass"
-          width={24}
-          height={24}
-        />
-        <input
-          className={`bg-black w-full border-none text-lg leading-10 focus:outline-none py-[1px] placeholder:opacity-40`}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          placeholder="Search"
-          spellCheck={false}
-          maxLength={512}
-          type="search"
-          value={inputValue}
-          onFocus={() => {
-            setWidth("max");
-          }}
-          onBlur={() => {
-            setWidth("norm");
-          }}
-          onChange={(event) => {
-            setInputValue(event.currentTarget.value);
-          }}
-        />
-      </div>
+    <div className="flex flex-row gap-2 flex-1 w-full -mt-16 relative z-10 lg:px-8 md:px-24 px-6">
+      <Image
+        alt="looking glass"
+        src={SearchIcon}
+        width={24}
+        height={24}
+        data-image-zoom-disabled
+      />
+      <input
+        className="bg-transparent text-lg border-none w-full leading-10 focus:outline-none placeholder:opacity-40"
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        placeholder="Search all articles"
+        spellCheck={false}
+        maxLength={512}
+        type="search"
+        value={inputValue}
+        onChange={(event) => {
+          setInputValue(event.currentTarget.value);
+        }}
+      />
     </div>
   );
 }
@@ -197,13 +179,16 @@ function Hits() {
     </div>
   );
 }
+
 export default function Search() {
+  if (!searchClient) {
+    return null;
+  }
+
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="templateSearch flex flex-col gap-[24px] w-full">
       <InstantSearch searchClient={searchClient} indexName="blog">
-        <div className="flex flex-col md:flex-row items-center gap-4 justify-between -mt-5 z-10 relative h-16">
-          <SearchBox />
-        </div>
+        <SearchBox />
         <Hits />
       </InstantSearch>
     </div>
