@@ -70,6 +70,9 @@ ${await Promise.all(
       const entryId = `https://www.thenile.dev/blog/${slug}`;
       const timestamp = new Date(publishDate).toISOString();
 
+      // Generate tags if they exist in metadata
+      const tagsXml = metadata.tags ? metadata.tags.map((tag: string) => `        <category term="${tag}" />`).join('\n') : '';
+
       return `  
       <entry>
         <title>${metadata.title}</title>
@@ -77,6 +80,7 @@ ${await Promise.all(
         <id>${entryId}</id>
         <published>${timestamp}</published>
         <updated>${timestamp}</updated>
+${tagsXml}
         <content><![CDATA[${plainText}]]></content>
         <summary><![CDATA[${summary}]]></summary>
         ${metadata.authors.map((author: string) => `<author><name>${author}</name></author>`).join("\n")}
