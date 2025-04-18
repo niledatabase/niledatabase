@@ -14,13 +14,10 @@ import { Metadata } from "../Metadata";
 import Coffee from "@/public/blog/coffee.webp";
 import SearchIcon from "@/public/icons/search.svg";
 
-const ALGOLIA_APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
-const ALGOLIA_API_KEY = process.env.NEXT_PUBLIC_ALGOLIA_API_KEY;
-
-const searchClient =
-  ALGOLIA_APP_ID && ALGOLIA_API_KEY
-    ? algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY)
-    : null;
+const searchClient = algoliasearch(
+  String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
+  String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY)
+);
 
 function RefinementItem({
   item,
