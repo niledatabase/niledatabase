@@ -2,6 +2,7 @@
   "name": "fe-for-lambda-todo-app",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@10.8.3",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -16,17 +17,21 @@
     "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",
     "next": "^15.3.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "react-syntax-highlighter": "^15.6.1",
     "tailwind-merge": "^2.5.4",
     "uuid": "^9.0.1"
   },
+  "overrides": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
   "devDependencies": {
     "@types/js-cookie": "^3.0.5",
     "@types/node": "^20.3.3",
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
     "@types/react-syntax-highlighter": "^15.5.9",
     "@types/uuid": "^9.0.6",
     "autoprefixer": "^10.4.21",
