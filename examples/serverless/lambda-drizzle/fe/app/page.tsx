@@ -1,10 +1,12 @@
-import { Suspense } from "react";
-import GoogleAuthPanel from "../components/GoogleSSOForm";
+import { Discord, Google, SignInForm, SignUpForm } from "@niledatabase/react";
 
 export default function Home() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <GoogleAuthPanel />
-    </Suspense>
+    <div className="flex flex-col gap-4 mt-44">
+      <Google
+        className="bg-[#4285f4] hover:bg-[#4285f4] pl-[3px] text-white gap-4"
+        callbackUrl="/directions"
+      />
+    </div>
   );
 }

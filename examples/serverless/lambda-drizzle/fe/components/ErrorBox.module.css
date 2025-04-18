@@ -1,0 +1,22 @@
+.error-stack {
+  margin-bottom: 1rem;
+}
+
+.error-alert {
+  background-color: #fdeded;
+  color: #5f2120;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.error-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.error-message {
+  font-size: 0.875rem;
+  margin: 0;
+} 
