@@ -9,18 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mui/joy": "^5.0.0-beta.11",
     "@niledatabase/react": "^4.0.0",
     "@niledatabase/server": "^4.0.0",
-    "ai": "4.2.6",
     "class-variance-authority": "^0.7.0",
     "highlight.js": "^11.9.0",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",
-    "langchain": "0.3.19",
-    "next": "^14.2.28",
-    "react": "^18",
-    "react-dom": "^18",
+    "next": "^15.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-syntax-highlighter": "^15.6.1",
     "tailwind-merge": "^2.5.4",
     "uuid": "^9.0.1"
@@ -32,12 +29,13 @@
     "@types/react-dom": "^18.2.6",
     "@types/react-syntax-highlighter": "^15.5.9",
     "@types/uuid": "^9.0.6",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.4.21",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.8",
+    "object-hash": "^3.0.0",
     "postcss": "^8.4.31",
-    "tailwindcss": "^3.4.14",
+    "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.1.6"
+    "typescript": "^5.8.3"
   }
 }
