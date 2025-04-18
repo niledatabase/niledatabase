@@ -124,27 +124,30 @@ function SearchBox() {
 
   return (
     <div className="flex flex-row gap-2 flex-1 w-full -mt-16 relative z-10 lg:px-8 md:px-24 px-6">
-      <Image
-        alt="looking glass"
-        src={SearchIcon}
-        width={24}
-        height={24}
-        data-image-zoom-disabled
-      />
-      <input
-        className="bg-transparent text-lg border-none w-full leading-10 focus:outline-none placeholder:opacity-40"
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        placeholder="Search all articles"
-        spellCheck={false}
-        maxLength={512}
-        type="search"
-        value={inputValue}
-        onChange={(event) => {
-          setInputValue(event.currentTarget.value);
-        }}
-      />
+      <div className="flex items-center gap-2 w-full px-4 py-3">
+        <Image
+          alt="looking glass"
+          src={SearchIcon}
+          width={24}
+          height={24}
+          className="opacity-40"
+          data-image-zoom-disabled
+        />
+        <input
+          className="bg-transparent text-lg border-none w-full leading-10 focus:outline-none placeholder:opacity-40"
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          placeholder="Search all articles"
+          spellCheck={false}
+          maxLength={512}
+          type="search"
+          value={inputValue}
+          onChange={(event) => {
+            setInputValue(event.currentTarget.value);
+          }}
+        />
+      </div>
     </div>
   );
 }
