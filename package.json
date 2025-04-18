@@ -18,7 +18,7 @@
     "examples/ai/code_assist"
   ],
   "scripts": {
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --concurrency=12",
     "dev:www": "turbo run dev --filter=www",
     "format": "prettier --write \"(www|examples)/**/*.{js,jsx,ts,tsx,css,md,mdx,json,mjs}\"",
     "build:www": "turbo run build --filter=www"
@@ -47,7 +47,8 @@
     "turbo": "^1.10.13"
   },
   "overrides": {
-    "prismjs": "1.30.0"
+    "prismjs": "1.30.0",
+    "@radix-ui/react-use-controllable-state": "1.1.1"
   },
   "optionalDependencies": {
     "@img/sharp-linux-x64": "^0.34.0",

@@ -1,7 +1,9 @@
 import "server-only";
-import NileServer from "@niledatabase/server";
-const _nile = await NileServer({
-  secureCookies: process.env.VERCEL === "1",
+import {Nile} from "@niledatabase/server";
+const _nile = await Nile({
+  api: {
+    secureCookies: process.env.VERCEL === "1",
+  },
   debug: true,
 });
 export const { handlers } = _nile.api;
