@@ -1,4 +1,4 @@
-import styles from '../blog.module.css';
+import styles from "../blog.module.css";
 
 export function Metadata({
   publishDate,

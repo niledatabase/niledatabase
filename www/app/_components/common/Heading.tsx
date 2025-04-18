@@ -37,7 +37,9 @@ export default function Heading(props: Props) {
             className={`${
               className ? `${className} ` : ""
             }text-white leading-[40px] text-[32px] lg:leading-[64px] lg:text-[56px] ${
-              textAlign === "left" ? "text-left" : "text-center lg:text-" + textAlign
+              textAlign === "left"
+                ? "text-left"
+                : "text-center lg:text-" + textAlign
             }`}
           >
             {text}

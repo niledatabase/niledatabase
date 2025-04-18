@@ -43,7 +43,18 @@ export function TableOfContents({ headings }: Props) {
   return (
     <div>
       <div className="flex items-center gap-2 mb-6">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="w-5 h-5"
+        >
           <line x1="21" y1="10" x2="7" y2="10"></line>
           <line x1="21" y1="6" x2="3" y2="6"></line>
           <line x1="21" y1="14" x2="3" y2="14"></line>
@@ -58,9 +69,11 @@ export function TableOfContents({ headings }: Props) {
             href={`#${slugify(heading.text)}`}
             className={`
               block text-[14px] transition-colors duration-200 break-words
-              ${activeId === slugify(heading.text)
-                ? 'text-[#fdb768] font-medium'
-                : 'text-gray-400 opacity-50 hover:text-gray-200 hover:opacity-100'}
+              ${
+                activeId === slugify(heading.text)
+                  ? "text-[#fdb768] font-medium"
+                  : "text-gray-400 opacity-50 hover:text-gray-200 hover:opacity-100"
+              }
               ${heading.level === 3 ? "ml-4" : ""}
             `}
           >
@@ -70,4 +83,4 @@ export function TableOfContents({ headings }: Props) {
       </nav>
     </div>
   );
-} 
+}

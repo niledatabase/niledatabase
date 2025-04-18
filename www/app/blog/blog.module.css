@@ -29,7 +29,7 @@
 }
 
 .imageContainer {
-  background-color: #2D2D2D;
+  background-color: #2d2d2d;
   border-radius: 0.75rem;
   overflow: hidden;
   flex-shrink: 0;
@@ -38,12 +38,14 @@
   justify-content: center;
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .imageContainer:hover {
   border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
   transform: translateY(-2px);
 }
 
@@ -90,12 +92,15 @@
 
 .postCardInner:hover {
   transform: translateY(-2px);
-  background: linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.01)
+  );
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.2);
 }
 
 .postImageContainer {
-  background-color: #2D2D2D;
+  background-color: #2d2d2d;
   border-radius: 0.75rem;
   overflow: hidden;
   flex-shrink: 0;
@@ -107,12 +112,14 @@
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .postImageContainer:hover {
   border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
   transform: translateY(-2px);
 }
 
@@ -129,7 +136,7 @@
 /* Dark mode specific styles */
 :global(.dark) .imageContainer,
 :global(.dark) .postImageContainer {
-  background-color: #1F1F1F;
+  background-color: #1f1f1f;
 }
 
 /* Responsive styles */
@@ -185,4 +192,4 @@
   margin-bottom: 1rem;
   font-size: 16px;
   line-height: 1.5;
-} 
+}

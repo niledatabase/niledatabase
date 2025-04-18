@@ -33,9 +33,9 @@ async function getBlog(props: Props) {
   }
 
   // Read the file content and get headings
-  const content = fs.readFileSync(file, 'utf-8');
+  const content = fs.readFileSync(file, "utf-8");
   const headings = getHeadings(content);
-  
+
   const article = file.split("/").reverse();
   const { default: Article, metadata } = await import(`../${article[0]}`);
   const { publishDate, readLength } = parseMetadata(file, Article);
@@ -43,7 +43,8 @@ async function getBlog(props: Props) {
 }
 
 export default async function BlogPage(props: Props) {
-  const { metadata, publishDate, readLength, Article, headings } = await getBlog(props);
+  const { metadata, publishDate, readLength, Article, headings } =
+    await getBlog(props);
 
   const handleCopyLink = (e: MouseEvent<HTMLButtonElement>) => {
     navigator.clipboard.writeText(window.location.href);
@@ -57,14 +58,22 @@ export default async function BlogPage(props: Props) {
           {/* Main Content */}
           <div className="w-full lg:w-[80%] order-first">
             {/* Title */}
-            <Heading text={metadata.title} textAlign="left" className="transition-all duration-300 ease-in-out hover:opacity-90" />
-            
+            <Heading
+              text={metadata.title}
+              textAlign="left"
+              className="transition-all duration-300 ease-in-out hover:opacity-90"
+            />
+
             {/* Metadata: Date, Read Time, Authors */}
             <div className="flex flex-row items-center justify-between my-6">
               <div className="flex flex-row items-center gap-3 text-sm tracking-wide">
-                <div className="opacity-60 transition-opacity duration-200 hover:opacity-80">{publishDate}</div>
+                <div className="opacity-60 transition-opacity duration-200 hover:opacity-80">
+                  {publishDate}
+                </div>
                 <div className="opacity-[.43] text-[10px]">●</div>
-                <div className="opacity-60 transition-opacity duration-200 hover:opacity-80">{readLength} min read</div>
+                <div className="opacity-60 transition-opacity duration-200 hover:opacity-80">
+                  {readLength} min read
+                </div>
                 <div className="opacity-[.43] text-[10px]">●</div>
                 <Authors authors={metadata.authors} />
               </div>
@@ -102,7 +111,8 @@ export default async function BlogPage(props: Props) {
 
             {/* Article Content */}
             <article className="mt-4">
-              <div className="prose prose-invert max-w-none
+              <div
+                className="prose prose-invert max-w-none
                 prose-p:text-[18px] prose-p:leading-[1.6] prose-p:text-[#D9D9D9] prose-p:mb-6
                 prose-headings:text-white prose-headings:font-medium prose-headings:mt-12 prose-headings:mb-4
                 prose-h2:text-[32px] prose-h2:leading-[1.3]
@@ -113,12 +123,13 @@ export default async function BlogPage(props: Props) {
                 prose-strong:text-white prose-strong:font-medium
                 prose-a:transition-colors prose-a:duration-200
                 prose-img:rounded-lg prose-img:shadow-md prose-img:transition-all prose-img:duration-300 prose-img:hover:shadow-lg
-                prose-blockquote:border-l-2 prose-blockquote:border-opacity-50 prose-blockquote:italic prose-blockquote:pl-6 prose-blockquote:my-6">
+                prose-blockquote:border-l-2 prose-blockquote:border-opacity-50 prose-blockquote:italic prose-blockquote:pl-6 prose-blockquote:my-6"
+              >
                 <Article />
               </div>
             </article>
           </div>
-          
+
           {/* Table of Contents */}
           <div className="hidden lg:block w-[18%] flex-shrink-0 transition-opacity duration-300 hover:opacity-100 opacity-90 mt-4">
             <div className="sticky top-24">
