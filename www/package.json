@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build:blogSearch && npm run build:templates && next build",
+    "build": "pnpm run build:blogSearch && npm run build:templates && next build",
     "build:next": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -15,7 +15,7 @@
   "overrides": {
     "graceful-fs": "4.2.11"
   },
-  "packageManager": "npm@10.8.3",
+  "packageManager": "pnpm@10.8.1",
   "dependencies": {
     "@mailchimp/mailchimp_marketing": "^3.0.80",
     "@mapbox/hast-util-table-cell-style": "^0.2.1",
