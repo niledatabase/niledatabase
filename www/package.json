@@ -40,7 +40,7 @@
     "lodash.castarray": "^4.4.0",
     "lodash.isplainobject": "^4.0.6",
     "lodash.merge": "^4.6.2",
-    "next": "^15.1.0",
+    "next": "^15.3.0",
     "postcss-selector-parser": "6.0.10",
     "prism-react-renderer": "^2.4.1",
     "react": "^19.1.0",
