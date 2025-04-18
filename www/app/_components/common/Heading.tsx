@@ -10,6 +10,7 @@ type Props = {
   rootMargin?: string;
   forceVisible?: boolean;
 };
+
 export default function Heading(props: Props) {
   const {
     text,
@@ -23,7 +24,7 @@ export default function Heading(props: Props) {
   const headerVisible =
     forceVisible ?? useIntersection(headerRef, { rootMargin });
   return (
-    <div ref={headerRef} className="w-full px-2">
+    <div ref={headerRef} className="w-full">
       <div
         className={`transition-all ${
           headerVisible
@@ -35,7 +36,9 @@ export default function Heading(props: Props) {
           <h2
             className={`${
               className ? `${className} ` : ""
-            }text-center lg:text-${textAlign} text-white  leading-[40px] text-[32px] lg:leading-[64px] lg:text-[56px]`}
+            }text-white leading-[40px] text-[32px] lg:leading-[64px] lg:text-[56px] ${
+              textAlign === "left" ? "text-left" : "text-center lg:text-" + textAlign
+            }`}
           >
             {text}
           </h2>

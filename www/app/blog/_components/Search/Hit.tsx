@@ -3,19 +3,20 @@ import Image from "next/image";
 import { Authors } from "../Authors";
 import { Metadata } from "../Metadata";
 import Coffee from "@/public/blog/coffee.webp";
+import styles from "../../blog.module.css";
 
 export default function Hit({ hit }: any) {
   const [publishDate] = /\d{4}-\d{2}-\d{2}/.exec(hit.objectID) ?? "";
   const cleaned = hit.objectID.replace(/\d{4}-\d{2}-\d{2}-/, "");
   const slug = cleaned.replace(".mdx", "");
   return (
-    <div className="w-full md:w-1/2 lg:w-1/3">
-      <div className="p-4">
+    <div className={styles.postCard}>
+      <div className={styles.postCardInner}>
         <Link href={`/blog/${slug}`}>
-          <div className="bg-[#2D2D2D] rounded-xl overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex aspect-video w-full">
+          <div className={styles.postImageContainer}>
             {hit?.image ? (
               <Image
-                className="aspect-video w-full"
+                className={styles.postImage}
                 priority
                 alt={hit.image}
                 data-image-zoom-disabled
@@ -26,7 +27,7 @@ export default function Hit({ hit }: any) {
             ) : (
               <Image
                 alt="coffee"
-                className="aspect-video w-full"
+                className={styles.postImage}
                 data-image-zoom-disabled
                 width={416}
                 height={216}

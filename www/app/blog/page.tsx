@@ -93,18 +93,20 @@ export default async function Blog() {
   return (
     <Container background={null}>
       <div className="container mx-auto">
-        <div className="px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4  mt-32">
-          <HeroArticle
-            fileName={mostRecent}
-            {...metadata}
-            content={FirstArticle}
-          />
-          <Divider />
-          <div className="relative px-4 h-16">
-            {/* <RefinementList items={refinementItems} /> */}
+        <div className="px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4 mt-32">
+          <div className="mb-32">
+            <HeroArticle
+              fileName={mostRecent}
+              {...metadata}
+              content={FirstArticle}
+            />
+          </div>
+          <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-20 relative z-10">
             <Search />
           </div>
-          <Hits initialHits={hits} />
+          <div className="mt-8">
+            <Hits initialHits={hits} />
+          </div>
         </div>
       </div>
     </Container>

@@ -1,3 +1,5 @@
+import styles from '../blog.module.css';
+
 export function Metadata({
   publishDate,
   readLength,
@@ -17,7 +19,7 @@ export function Metadata({
         <div className="opacity-60">{readLength} min read</div>
       </div>
       <div className="text-3xl my-4">{title}</div>
-      <div className="opacity-60 mb-4 text-[16px]">{sizzle}</div>
+      <div className={styles.postDescription}>{sizzle}</div>
     </>
   );
 }
