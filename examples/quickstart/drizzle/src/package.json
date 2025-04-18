@@ -4,7 +4,9 @@
   "description": "Getting Started with Nile and Drizzle",
   "main": "index.js",
   "type": "module",
-  "workspaces": ["fe"],
+  "workspaces": [
+    "fe"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -24,5 +26,6 @@
     "drizzle-kit": "latest",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
-  }
+  },
+  "packageManager": "pnpm@10.8.1"
 }

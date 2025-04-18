@@ -10,9 +10,8 @@ import { InputType, ReturnType } from "./types";
 import { absoluteUrl } from "@/lib/utils";
 import { stripe } from "@/lib/stripe";
 import { getUserId } from "@/lib/AuthUtils";
-import { headers, cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { configureNile } from "@/lib/NileServer";
+import { cookies } from "next/headers";
+import { nile } from "@/lib/NileServer";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const orgId = data.orgId;
@@ -25,14 +24,12 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     };
   }
 
-  const tenantNile = await configureNile(orgId);
-
   const settingsUrl = absoluteUrl(`/dashboard/organization/${orgId}`);
 
   let url = "";
 
   try {
-    const orgSubscription = await tenantNile.db.query(
+    const orgSubscription = await nile.query(
       "select * from user_subscription where user_id = $1",
       [userId]
     );

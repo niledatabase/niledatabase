@@ -1,10 +1,9 @@
 import { Logo } from "@/components/logo";
 import { ModeToggle } from "@/components/mode-toggle";
 import UserAccountNav from "@/components/user-account-nav";
-import { getNile } from "@/lib/NileServer";
+import { nile } from "@/lib/NileServer";
 import { redirect } from "next/navigation";
 import { MobileSidebar } from "./mobile-sidebar";
-import { User } from "@niledatabase/server";
 
 export const dynamic = "force-dynamic";
 export const dynamicParams = true;
@@ -12,11 +11,9 @@ export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 export const Navbar = async () => {
-  const nile = await getNile();
-
   const [userInfo, tenants] = await Promise.all([
-    nile.api.users.me as unknown as User,
-    nile.api.tenants.listTenants,
+    nile.users.getSelf(),
+    nile.tenants.list(),
   ]);
 
   if (userInfo instanceof Response || tenants instanceof Response) {

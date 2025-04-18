@@ -174,7 +174,7 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
     const tenantId = req.params.tenantId;
     // Only estimate if AI_API_KEY is set
     let estimate = null;
-    let embedding= null;
+    let embedding = null;
     if (process.env.AI_API_KEY) {
       // We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
       const similarTasks = await findSimilarTasks(tenantDB, title);

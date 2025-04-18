@@ -79,11 +79,15 @@ export async function aiEstimate(title: string, similarTasks: todo[]) {
 
   const message = `you are an amazing project manager. I need to ${title}. How long do you think this will take?${
     similarTasks.length > 0
-      ? ` I have a few similar tasks with their estimates in json format, please use them as reference: ${JSON.stringify(similarTasks.map(task => ({
-          title: task.title,
-          estimate: task.estimate
-        })), null, 2)}.`
-      : ''
+      ? ` I have a few similar tasks with their estimates in json format, please use them as reference: ${JSON.stringify(
+          similarTasks.map((task) => ({
+            title: task.title,
+            estimate: task.estimate,
+          })),
+          null,
+          2
+        )}.`
+      : ""
   }
   respond with just the estimate, keep the answer short.`;
 

@@ -3,7 +3,7 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 
-import nile, { configureNile } from "@/lib/NileServer";
+import { configureNile, nile } from "@/lib/NileServer";
 import { getUserToken, getUserId, getUserName } from "@/lib/AuthUtils";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
@@ -25,9 +25,9 @@ const f = createUploadthing();
 
 //@ts-ignore
 const middleware = async ({ req, files }) => {
-  nile.api.headers = new Headers({ cookie: (await cookies()).toString() });
-  const user = await nile.api.users.me();
-  if (!user || user instanceof Request) throw new Error("Unauthorized");
+  // nile.api.headers = new Headers({ cookie: (await cookies()).toString() }); // Commented out
+  const user = await nile.users.getSelf(); // Changed nile.api.users.me to nile.users.getSelf
+  if (!user || user instanceof Response) throw new Error("Unauthorized");
   const orgId = await currentTenantId(); // extracting tenant id from the "referer" header. the alternative is to introduce tenant-id cookie
   const isPro = await checkSubscription(orgId);
   console.log("isPro: ", isPro, " orgId: ", orgId, user);
@@ -54,7 +54,7 @@ const onUploadComplete = async ({
   };
 }) => {
   console.log("metadata in onUploadComplete:", JSON.stringify(metadata));
-  const tenantNile = await configureNile(metadata.orgId);
+  const { nile: tenantNile } = await configureNile(metadata.orgId);
   console.log("1: On upload complete. Trying to get file: ", file.key);
   console.log("file url", file.url);
 
@@ -109,8 +109,9 @@ const onUploadComplete = async ({
       file.name,
       pagesAmt,
     ]);
+    let createdFile; // Declare createdFile here
     if (!isPageLimitExceeded) {
-      const createdFile = await tenantNile.db.query(
+      createdFile = await nile.query(
         `INSERT INTO file (tenant_id, url, key, user_id, user_name, "isIndex", name, "pageAmt") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
         [
           metadata.orgId,
@@ -168,7 +169,7 @@ const onUploadComplete = async ({
             if (batch.length === batchSize || idx === chunks.length - 1) {
               for (const vector of batch) {
                 const uuid = vector.id.split("_")[0];
-                await tenantNile.db.query(
+                await nile.query(
                   `INSERT INTO file_embedding (file_id, tenant_id, embedding_api_id, embedding, "pageContent", location) VALUES ($1, $2, $3, $4, $5, $6)`,
                   [
                     fileId,
@@ -186,10 +187,10 @@ const onUploadComplete = async ({
         }
 
         console.log(`Database index updated with  vectors`);
-        await tenantNile.db.query(
-          `UPDATE file SET "isIndex" = $1 WHERE id = $2`,
-          [true, fileId]
-        );
+        await nile.query(`UPDATE file SET "isIndex" = $1 WHERE id = $2`, [
+          true,
+          fileId,
+        ]);
       } catch (err) {
         console.log("error: Error in updating file status in Nile", err);
         return { status: "EMBEDDING FAILED" };

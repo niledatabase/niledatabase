@@ -81,7 +81,7 @@ This demo uses Google authentication for signup. You will need to configure this
 
 - Rename `.env.example` to `.env.local`, and update it with your Nile credentials, OpenAI credentials and (if using Google SSO) Nile's API URL.
 
-- Install dependencies with `npm install`.
+- Install dependencies with `pnpm install`.
 
 ### 6. Generating Embeddings
 
@@ -90,7 +90,7 @@ You'll need to start by generating and storing embeddings for a few interesting 
 - Start by cloning some interesting repos to your laptop. You can start with this examples repository, but any repo will work.
 - Open `src/lib/OrgRepoEmbedder.ts`
 - Edit the `await embedDirectory(...)'` calls to refer to your repos. It is typical to map each github organization to a Nile tenant and each repo to a project, but you can model this in any way that makes sense to you. Keep in mind that CodeAssist will only use embeddings from the current project and current tenant as context, so make sure each project is interesting enough to discuss.
-- Run the embedder with `node --experimental-specifier-resolution=node --loader ts-node/esm --no-warnings src/lib/OrgRepoEmbedder.ts`
+- Run the embedder with `pnpm tsx src/lib/OrgRepoEmbedder.ts`
 - The embedder automatically creates tenants, projects and embeddings for you. You can use Nile Console to view the data you just generated and double check that it all looks right.
 
 ### 7. Running the app
@@ -98,7 +98,7 @@ You'll need to start by generating and storing embeddings for a few interesting 
 To run the app, simply:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

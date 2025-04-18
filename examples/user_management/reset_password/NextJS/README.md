@@ -23,7 +23,7 @@ It includes a **password reset flow** with a **two-step process** for securely r
 First, install the required dependencies:
 
 ```sh
-npm install
+pnpm install
 ```
 
 ---
@@ -62,7 +62,7 @@ To send password reset emails, **configure an SMTP server** in your Nile Databas
 Now, install dependencies and start the development server:
 
 ```sh
-npm run dev
+pnpm run dev
 ```
 
 Then, open [http://localhost:3000](http://localhost:3000) in your browser.  

@@ -29,12 +29,12 @@ cd nile-todo
 
 Create an `.env.local` file and paste in the values from step 3.
 
-Install dependencies with `npm install`.
+Install dependencies with `pnpm install`.
 
 ### 5. Running the app
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

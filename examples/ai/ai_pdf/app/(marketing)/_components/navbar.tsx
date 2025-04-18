@@ -3,14 +3,11 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-import { cookies } from "next/headers";
-import nile from "@/lib/NileServer";
+import { nile } from "@/lib/NileServer";
 import UserAccountNav from "@/components/user-account-nav";
 
 export const Navbar = async () => {
-  const nextCookies = await cookies();
-  const headers = new Headers({ cookie: nextCookies.toString() });
-  const userInfo = await nile.api.users.me(headers);
+  const userInfo = await nile.users.getSelf();
 
   // Show the public navbar for unauthenticated users or failed responses
   if (!userInfo || userInfo instanceof Response) {

@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { File } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { configureNile } from "@/lib/NileServer";
-import { cookies } from "next/headers";
 import {
   Card,
   CardContent,
@@ -12,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import IndexButton from "./index-button";
-import { TrashBox } from "./trash-box";
+import { nile } from "@/lib/NileServer";
 
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
@@ -26,8 +24,8 @@ export const BoardList = async ({
 }: {
   organizationId: string;
 }) => {
-  const tenantNile = await configureNile(organizationId);
-  const files = await tenantNile.db.query("select * from file"); // no need for "where" clause since we are connecting to tenant db
+  const tenantNile = await nile.withContext({ tenantId: organizationId });
+  const files = await tenantNile.query("select * from file"); // no need for "where" clause since we are connecting to tenant db
   console.log("Number of files reported by board component:" + files.rowCount);
 
   return (

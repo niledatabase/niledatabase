@@ -33,17 +33,17 @@ export default function RootLayout({
               <div className="container mx-auto">
                 <div className="flex space-between items-center w-full">
                   <div className="flex items-center text-lg">
-                <Image
-                  src="/lambda_logo.svg"
-                  alt="Lambda Logo"
-                  className={styles.logo}
-                  width={40}
-                  height={40}
-                  style={{ marginRight: "1rem" }}
-                />{" "}
-                AWS Lambda
-              </div>
-              <div className="text-4xl flex-1 text-center">
+                    <Image
+                      src="/lambda_logo.svg"
+                      alt="Lambda Logo"
+                      className={styles.logo}
+                      width={40}
+                      height={40}
+                      style={{ marginRight: "1rem" }}
+                    />{" "}
+                    AWS Lambda
+                  </div>
+                  <div className="text-4xl flex-1 text-center">
                     Yet Another Todo Application
                   </div>
                   <div>
@@ -70,7 +70,7 @@ export default function RootLayout({
           <div className="flex flex-col flex-1">{children}</div>
           <div className="flex flex-row gap-8 p-4">
             <Card>
-            <div className="flex flex-col space-between h-full">
+              <div className="flex flex-col space-between h-full">
                 <Link
                   href="https://www.thenile.dev/docs/serverless/lambda"
                   target="_blank"
@@ -83,14 +83,14 @@ export default function RootLayout({
                   }}
                 >
                   <Image
-                  src="/lambda_logo.svg"
-                  alt="Lambda Logo"
-                  className={styles.logo}
-                  width={30}
-                  height={30}
-                  style={{ marginRight: "1rem" }}
-                />{" "}
-                AWS Lambda
+                    src="/lambda_logo.svg"
+                    alt="Lambda Logo"
+                    className={styles.logo}
+                    width={30}
+                    height={30}
+                    style={{ marginRight: "1rem" }}
+                  />{" "}
+                  AWS Lambda
                 </Link>
                 Getting started guide
               </div>

@@ -10,18 +10,14 @@ This example demonstrates how to integrate an application with Nile to authentic
 
 - Start by creating a database: Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already and choose "Yes, let's get started". Follow the prompts to create a new workspace and a database.
 
-- Install dependencies with `yarn install` or `npm install`.
+- Install dependencies with `pnpm install`.
 
 - Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name. _(Your workspace and database name are displayed in the header of the Nile dashboard.)_
 
 - Run the server with:
 
   ```bash
-  npm run dev
-  # or
-  yarn dev
-  # or
-  pnpm dev
+  pnpm run dev
   ```
 
 - Open [http://localhost:3000](http://localhost:3000) to try the app.

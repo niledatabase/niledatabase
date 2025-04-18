@@ -60,18 +60,12 @@ STRIPE_SECRET_KEY=
 NEXT_PUBLIC_APP_URL=http://localhost:3000/api
 ```
 
-Install dependencies with `yarn install` or `npm install`.
+Install dependencies with `pnpm install`.
 
 ### 5. Running the app
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

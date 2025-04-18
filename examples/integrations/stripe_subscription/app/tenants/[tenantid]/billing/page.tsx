@@ -23,11 +23,10 @@ export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 // Todo: replace "raw" context setting with nicer SDK
-export default async function Page({
-  params,
-}: {
-  params: { tenantid: string };
+export default async function Page(props: {
+  params: Promise<{ tenantid: string }>;
 }) {
+  const params = await props.params;
   // Here we are getting a connection to a specific tenant database for the current usr
   // if we already got such connection earlier, it will reuse the existing one
   const tenantNile = await configureNile(params.tenantid);
@@ -35,14 +34,14 @@ export default async function Page({
     `SELECT tenant_tier FROM tenants`
   );
 
-  console.log(
+  /* console.log(
     "showing org dashboard for user " +
       tenantNile.userId +
       " for tenant " +
       tenantNile.tenantId
-  );
+  ); */
   // Get tenant name doesn't need any input parameters because it uses the tenant ID and user token from the context
-  const tenant = await tenantNile.api.tenants.getTenant();
+  const tenant = await tenantNile.tenants.get();
   if (tenant instanceof Response) {
     throw new Error("unable to get tenant");
   }

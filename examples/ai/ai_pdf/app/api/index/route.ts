@@ -1,4 +1,4 @@
-import { configureNile } from "@/lib/NileServer";
+import { configureNile, nile } from "@/lib/NileServer";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { OpenAIEmbeddings } from "@langchain/openai";
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     console.log("Index route uploading and embedding:" + JSON.stringify(data));
-    const tenantNile = await configureNile(data.file.tenant_id);
+    const { nile: tenantNile } = await configureNile(data.file.tenant_id);
     try {
       const response = await fetch(`${data.file.url}`);
       console.log("Index api getting file: " + response.status);
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
             if (batch.length === batchSize || idx === chunks.length - 1) {
               for (const vector of batch) {
                 const uuid = vector.id.split("_")[0];
-                await tenantNile.db.query(
+                await nile.query(
                   `INSERT INTO file_embedding (file_id, tenant_id, embedding_api_id, embedding, "pageContent", location) VALUES ($1, $2, $3, $4, $5, $6)`,
                   [
                     data.file.id,
@@ -84,10 +84,10 @@ export async function POST(req: NextRequest) {
           }
         }
         console.log(`Database index updated with vectors`);
-        await tenantNile.db.query(
-          `UPDATE file SET "isIndex" = $1 WHERE id = $2`,
-          [true, data.file.id]
-        );
+        await nile.query(`UPDATE file SET "isIndex" = $1 WHERE id = $2`, [
+          true,
+          data.file.id,
+        ]);
       } catch (err) {
         console.log(
           "error: Error in generating embeddings and updating database ",

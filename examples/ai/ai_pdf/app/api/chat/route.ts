@@ -1,4 +1,4 @@
-import { configureNile } from "@/lib/NileServer";
+import { configureNile, nile } from "@/lib/NileServer";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { NextResponse } from "next/server";
@@ -11,12 +11,12 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log("Chat request body:", body);
 
-    const tenantNile = await configureNile(body.tenant_id);
+    const { nile: tenantNile } = await configureNile(body.tenant_id);
 
     const question = body.messages[body.messages.length - 1].content;
 
     console.log("Chat question:", question);
-    await tenantNile.db.query(
+    await nile.query(
       `INSERT INTO message 
       (text, "fileId", user_id, "isUserMessage", tenant_id) 
       VALUES 
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
     console.log("Query Nile index and return top 10 matches");
 
-    const queryResponse = await tenantNile.db.query(
+    const queryResponse = await nile.query(
       `SELECT "pageContent", location 
        FROM file_embedding 
        WHERE file_id = $1 
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
         .join(" ");
       console.log("Got matches from vector index on Nile");
 
-      const prevMessages = await tenantNile.db.query(
+      const prevMessages = await nile.query(
         `select * from message where "fileId" = $1 AND user_id = $2 limit 6`,
         [body.fileId, body.user_id]
       );
@@ -136,7 +136,7 @@ export async function POST(req: Request) {
         for await (const chunk of result) {
           completionText += chunk.choices[0]?.delta?.content || "";
         }
-        await tenantNile.db.query(
+        await nile.query(
           `INSERT INTO message 
       (text, "fileId", user_id, "isUserMessage", tenant_id) 
       VALUES 
