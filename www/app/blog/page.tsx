@@ -29,6 +29,11 @@ const index = searchClient.initIndex("blog");
 export const metadata = {
   title: "Blog | Nile Database",
   description: "All things database SaaS",
+  alternates: {
+    types: {
+      "application/atom+xml": "/blog/feed.atom",
+    },
+  },
 };
 export const dynamic = "force-dynamic";
 function HeroArticle(props: Props) {

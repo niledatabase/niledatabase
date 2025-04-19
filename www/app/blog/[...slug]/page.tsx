@@ -65,7 +65,7 @@ export default async function BlogPage(props: Props) {
             />
 
             {/* Metadata: Date, Read Time, Authors */}
-            <div className="flex flex-row items-center justify-between my-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between my-6 gap-4 sm:gap-0">
               <div className="flex flex-row items-center gap-3 text-sm tracking-wide">
                 <div className="opacity-60 transition-opacity duration-200 hover:opacity-80">
                   {publishDate}
@@ -79,32 +79,42 @@ export default async function BlogPage(props: Props) {
               </div>
 
               {/* Social Links and Utilities */}
-              <SocialButtons />
+              <div className="hidden sm:block">
+                <SocialButtons />
+              </div>
             </div>
 
             {/* Featured Image */}
-            <div className="group bg-[#2D2D2D] rounded-xl aspect-video w-full overflow-hidden flex-shrink-0 mb-6 items-center justify-center flex relative border border-[#1c1c1c] transition-all duration-300 ease-in-out hover:border-opacity-50 hover:shadow-lg">
+            <div className="group bg-[#2D2D2D] rounded-xl w-full overflow-hidden flex-shrink-0 mb-6 items-center justify-center flex relative border border-[#1c1c1c] transition-all duration-300 ease-in-out hover:border-opacity-50 hover:shadow-lg">
               {metadata?.image ? (
                 <Image
-                  className="object-cover object-center h-full w-full absolute transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                  className="object-cover object-center w-full transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                   data-image-zoom-disabled
                   alt={metadata.image}
-                  width={800}
-                  height={505}
-                  sizes="50vw"
+                  width={1200}
+                  height={675}
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                   src={`/blog/${metadata.image}`}
                   style={{
-                    width: "100%",
+                    height: "auto",
+                    aspectRatio: "16/9",
                   }}
                 />
               ) : (
                 <Image
-                  className="object-cover object-center h-full w-full absolute transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                  className="object-cover object-center w-full transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                   data-image-zoom-disabled
                   alt="coffee"
-                  width={800}
-                  height={505}
+                  width={1200}
+                  height={675}
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                   src={Coffee}
+                  style={{
+                    height: "auto",
+                    aspectRatio: "16/9",
+                  }}
                 />
               )}
             </div>
@@ -115,15 +125,18 @@ export default async function BlogPage(props: Props) {
                 className="prose prose-invert max-w-none
                 prose-p:text-[18px] prose-p:leading-[1.6] prose-p:text-[#D9D9D9] prose-p:mb-6
                 prose-headings:text-white prose-headings:font-medium prose-headings:mt-12 prose-headings:mb-4
-                prose-h2:text-[32px] prose-h2:leading-[1.3]
-                prose-h3:text-[24px] prose-h3:leading-[1.3]
+                prose-h2:text-[32px] prose-h2:leading-[1.3] prose-h2:tracking-[-0.02em]
+                prose-h3:text-[24px] prose-h3:leading-[1.3] prose-h3:tracking-[-0.02em]
                 prose-code:text-[16px] prose-code:leading-[1.6] prose-code:bg-[#1C1C1C] prose-code:p-1 prose-code:rounded
                 prose-pre:bg-[#1C1C1C] prose-pre:p-6 prose-pre:rounded-xl prose-pre:my-6 prose-pre:shadow-md
-                prose-ul:my-6 prose-li:my-1 prose-li:text-[18px] prose-li:leading-[1.6] prose-li:text-[#D9D9D9]
+                prose-ul:my-6 prose-ul:pl-0 prose-ul:list-none
+                prose-li:my-1 prose-li:text-[18px] prose-li:leading-[1.6] prose-li:text-[#D9D9D9] prose-li:relative prose-li:pl-6
+                [&_ul>li]:before:content-['•'] [&_ul>li]:before:absolute [&_ul>li]:before:left-0 [&_ul>li]:before:text-white/60
                 prose-strong:text-white prose-strong:font-medium
                 prose-a:transition-colors prose-a:duration-200
                 prose-img:rounded-lg prose-img:shadow-md prose-img:transition-all prose-img:duration-300 prose-img:hover:shadow-lg
-                prose-blockquote:border-l-2 prose-blockquote:border-opacity-50 prose-blockquote:italic prose-blockquote:pl-6 prose-blockquote:my-6"
+                prose-blockquote:border-l-2 prose-blockquote:border-opacity-50 prose-blockquote:italic prose-blockquote:pl-6 prose-blockquote:my-6
+                [&>*]:!mx-0 [&>*]:!px-0"
               >
                 <Article />
               </div>
