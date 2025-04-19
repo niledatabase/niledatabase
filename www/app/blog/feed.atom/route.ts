@@ -73,21 +73,19 @@ ${await Promise.all(
       // Generate tags if they exist in metadata
       const tagsXml = metadata.tags ? metadata.tags.map((tag: string) => `        <category term="${tag}" />`).join('\n') : '';
 
-      return `  
+      return `
       <entry>
         <title>${metadata.title}</title>
         <link href="${entryId}" />
         <id>${entryId}</id>
         <published>${timestamp}</published>
-        <updated>${timestamp}</updated>
-${tagsXml}
+        <updated>${timestamp}</updated>${tagsXml ? '\n' + tagsXml : ''}
         <content><![CDATA[${plainText}]]></content>
         <summary><![CDATA[${summary}]]></summary>
         ${metadata.authors.map((author: string) => `<author><name>${author}</name></author>`).join("\n")}
-      </entry>
-    `;
+      </entry>`;
     })
-  ).then((entries) => entries.join("\n"))}
+  ).then((entries) => entries.join(''))}
     </feed>`;
 
   return new Response(atomXml, {
