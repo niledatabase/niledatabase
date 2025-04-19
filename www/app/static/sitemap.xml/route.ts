@@ -39,12 +39,16 @@ export async function GET() {
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${entries.map(entry => `  <url>
+${entries
+  .map(
+    (entry) => `  <url>
     <loc>${entry.url}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>${entry.changefreq}</changefreq>
     <priority>${entry.priority}</priority>
-  </url>`).join("\n")}
+  </url>`
+  )
+  .join("\n")}
 </urlset>`;
 
   return new Response(sitemap, {
@@ -52,4 +56,4 @@ ${entries.map(entry => `  <url>
       "Content-Type": "application/xml",
     },
   });
-} 
+}
