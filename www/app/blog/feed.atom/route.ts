@@ -10,28 +10,36 @@ function stripToPlainText(content: string): string {
   content = content.replace(/^import\s+.*?;?\s*$/gm, "");
   content = content.replace(/^export\s+.*?{[\s\S]*?}\s*;?/gm, "");
 
-  // Remove all markdown and formatting
+  // Remove images and convert markdown to HTML
   content = content
-    .replace(/```[\s\S]*?```/g, "") // code blocks
-    .replace(/!\[.*?\]\(.*?\)/g, "") // images
-    .replace(/\[([^\]]+)\]\(.*?\)/g, "$1") // links
-    .replace(/[*_]{1,2}([^*_]+)[*_]{1,2}/g, "$1") // bold/italic
-    .replace(/`[^`]+`/g, "$1") // inline code
-    .replace(/^>\s*(.*)/gm, "$1") // blockquotes
-    .replace(/^[-*+]\s+/gm, "") // list markers
-    .replace(/^\d+\.\s+/gm, "") // numbered lists
-    .replace(/^#{1,6}\s+(.*)/gm, "$1") // headers
-    .replace(/<[^>]+>/g, "") // HTML tags
-    .replace(/\{[^}]+\}/g, ""); // JSX expressions
+    .replace(/!\[.*?\]\(.*?\)/g, "") // remove images
+    .replace(
+      /```[\s\S]*?```/g,
+      (match) => `<pre><code>${match.slice(3, -3)}</code></pre>`
+    ) // code blocks
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>') // links
+    .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>") // bold
+    .replace(/_([^_]+)_/g, "<i>$1</i>") // italic
+    .replace(/`([^`]+)`/g, "<code>$1</code>") // inline code
+    .replace(/^>\s*(.*)/gm, "<blockquote>$1</blockquote>") // blockquotes
+    .replace(/^[-*+]\s+(.*)$/gm, "<li>$1</li>") // unordered list items
+    .replace(/^\d+\.\s+(.*)$/gm, "<li>$1</li>") // ordered list items
+    .replace(/^#{1,6}\s+(.*)/gm, "<p><b>$1</b></p>") // headers to bold paragraphs
+    .replace(/<\/li>\n<li>/g, "</li><li>") // clean up list items
+    .replace(/(<li>.*<\/li>)/gs, "<ul>$1</ul>"); // wrap lists
 
-  // Convert to single block of text
-  return content
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line)
-    .join(" ")
-    .replace(/\s+/g, " ")
-    .trim();
+  // Split into paragraphs and wrap with <p> tags
+  const paragraphs = content
+    .split("\n\n")
+    .map((para) => para.trim())
+    .filter((para) => para)
+    .map((para) => {
+      if (para.startsWith("<")) return para; // Already HTML
+      return `<p>${para}</p>`;
+    })
+    .join("\n");
+
+  return paragraphs.replace(/\n+/g, "\n").trim();
 }
 
 function extractSummary(content: string, sizzle: string): string {
@@ -84,7 +92,14 @@ export async function GET() {
         <id>${entryId}</id>
         <published>${timestamp}</published>
         <updated>${timestamp}</updated>${tagsXml ? "\n" + tagsXml : ""}
-        <content><![CDATA[${plainText}]]></content>
+        <content type="xhtml">
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            ${stripToPlainText(content)}
+            <p class="more">
+              <a href="${entryId}">Read more</a>
+            </p>
+          </div>
+        </content>
         <summary><![CDATA[${summary}]]></summary>
         ${metadata.authors
           .map((author: string) => `<author><name>${author}</name></author>`)
