@@ -10,20 +10,23 @@ function stripToPlainText(content: string): string {
   content = content.replace(/^import\s+.*?;?\s*$/gm, "");
   content = content.replace(/^export\s+.*?{[\s\S]*?}\s*;?/gm, "");
 
-  // Convert markdown to HTML
+  // Remove images and convert markdown to HTML
   content = content
-    .replace(/```[\s\S]*?```/g, (match) => `<pre><code>${match.slice(3, -3)}</code></pre>`) // code blocks
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" />') // images
+    .replace(/!\[.*?\]\(.*?\)/g, "") // remove images
+    .replace(
+      /```[\s\S]*?```/g,
+      (match) => `<pre><code>${match.slice(3, -3)}</code></pre>`
+    ) // code blocks
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>') // links
-    .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') // bold
-    .replace(/_([^_]+)_/g, '<i>$1</i>') // italic
-    .replace(/`([^`]+)`/g, '<code>$1</code>') // inline code
-    .replace(/^>\s*(.*)/gm, '<blockquote>$1</blockquote>') // blockquotes
-    .replace(/^[-*+]\s+(.*)$/gm, '<li>$1</li>') // unordered list items
-    .replace(/^\d+\.\s+(.*)$/gm, '<li>$1</li>') // ordered list items
-    .replace(/^#{1,6}\s+(.*)/gm, '<p><b>$1</b></p>') // headers to bold paragraphs
-    .replace(/<\/li>\n<li>/g, '</li><li>') // clean up list items
-    .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>'); // wrap lists
+    .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>") // bold
+    .replace(/_([^_]+)_/g, "<i>$1</i>") // italic
+    .replace(/`([^`]+)`/g, "<code>$1</code>") // inline code
+    .replace(/^>\s*(.*)/gm, "<blockquote>$1</blockquote>") // blockquotes
+    .replace(/^[-*+]\s+(.*)$/gm, "<li>$1</li>") // unordered list items
+    .replace(/^\d+\.\s+(.*)$/gm, "<li>$1</li>") // ordered list items
+    .replace(/^#{1,6}\s+(.*)/gm, "<p><b>$1</b></p>") // headers to bold paragraphs
+    .replace(/<\/li>\n<li>/g, "</li><li>") // clean up list items
+    .replace(/(<li>.*<\/li>)/gs, "<ul>$1</ul>"); // wrap lists
 
   // Split into paragraphs and wrap with <p> tags
   const paragraphs = content
