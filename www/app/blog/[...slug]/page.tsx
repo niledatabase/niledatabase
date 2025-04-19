@@ -97,8 +97,8 @@ export default async function BlogPage(props: Props) {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                   src={`/blog/${metadata.image}`}
                   style={{
-                    height: 'auto',
-                    aspectRatio: '16/9'
+                    height: "auto",
+                    aspectRatio: "16/9",
                   }}
                 />
               ) : (
@@ -112,8 +112,8 @@ export default async function BlogPage(props: Props) {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                   src={Coffee}
                   style={{
-                    height: 'auto',
-                    aspectRatio: '16/9'
+                    height: "auto",
+                    aspectRatio: "16/9",
                   }}
                 />
               )}

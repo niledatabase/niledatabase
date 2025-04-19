@@ -31,7 +31,7 @@ export const metadata = {
   description: "All things database SaaS",
   alternates: {
     types: {
-      'application/atom+xml': '/blog/feed.atom',
+      "application/atom+xml": "/blog/feed.atom",
     },
   },
 };
