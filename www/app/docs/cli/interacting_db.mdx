@@ -250,6 +250,58 @@ nile db connectionstring --psql
 
 <img height="100" src="/images/niledbconnectionstring.png" />
 
+## Importing Data
+
+The `copy` command allows you to import data from files into database tables. The target table must already exist in the database with the appropriate columns that match your input data.
+
+```bash
+nile db copy [options]
+```
+<img height="100" src="/images/niledbcopy.png" />
+
+### Required Options
+
+| Flag | Description |
+|------|-------------|
+| `--table-name` | Name of the target table (must exist in database) |
+| `--format` | File format (csv or text) |
+| `--file-name` | Path to the input file |
+
+### Additional Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--delimiter` | Column delimiter character | comma for CSV |
+| `--column-list` | Comma-separated list of column names | All columns from file |
+| `--debug` | Show detailed progress information | false |
+
+### Examples
+
+```bash Copy Examples
+# Basic CSV import
+nile db copy --table-name products --format csv --file-name products.csv
+
+# Import with specific columns
+nile db copy --table-name products --format csv --file-name products.csv --column-list "id,name,price"
+
+# Import tab-delimited text file
+nile db copy --table-name products --format text --file-name products.txt --delimiter "\t"
+
+# Import with progress details
+nile db copy --table-name products --format csv --file-name products.csv --debug
+```
+
+### Features
+- Shows progress bar with completion status and import speed
+- Supports CSV files with headers
+- Allows custom column mapping
+- Provides detailed progress information in debug mode
+- Processes data in batches for optimal performance
+
+<Note>
+Make sure your target table exists and has the correct schema before running the import. The columns in your input file should match the table's structure.
+</Note>
+
 ## Common Workflows
 
 ### Setting Up a New Database
