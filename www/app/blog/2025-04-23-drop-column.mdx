@@ -1,0 +1,249 @@
+export const metadata = {
+  title: "What Really Happens When You Drop a Column in Postgres",
+  authors: ["gwenshap"],
+  image: "2025-04-23-drop-column/cover.png",
+  sizzle:
+    "When you drop a column in Postgres, the data doesn't actually go away - here's why, and what that means for you",
+  tags: ["postgres", "internals", "compliance"],
+};
+
+Dropping columns in Postgres is a common task - but few developers understand what actually happens under the hood.
+Let's dive in and explore this simple operation. We'll start with a riddle that had
+[many developers on X](https://x.com/gwenshap/status/1914751044812505441) scratching their heads. Then, we'll use some of the tools Postgres provides to
+peek behind the scenes. Finally, we'll touch on compliance implications you might not expect.
+
+If you have access to a Postgres database, you can follow along. If not, you can spin one up locally, try Nile's [test container](https://www.thenile.dev/docs/getting-started/postgres_docker), or create a database on [Nile](https://console.thenile.dev).
+
+## A Riddle
+
+Let's start with a puzzle:
+
+> We have a table with 2 columns: `id` and `name`.  
+> What will happen if we add and remove a column 2000 times?
+
+Think about it for a moment and then you can try it yourself with a simple script:
+
+```python
+import psycopg2, textwrap, sys
+conn = psycopg2.connect("postgresql://user:password@us-west-2.db.thenile.dev:5432/dbbame") ; cur = conn.cursor()
+conn.autocommit = True
+cur.execute("DROP TABLE IF EXISTS t; CREATE TABLE t(a int, b int);")
+for i in range(1, 2001):
+    cur.execute(textwrap.dedent(f"""
+        ALTER TABLE t ADD COLUMN c{i} int;
+        ALTER TABLE t DROP COLUMN c{i};
+    """))
+cur.close(); conn.close()
+```
+
+It looks harmless. The table should end up with just the original two columns. But instead, you'll hit this:
+
+```
+psycopg2.errors.TooManyColumns: tables can have at most 1600 columns
+```
+
+But... we only have two columns? What gives?
+
+## What's happening under the hood?
+
+[Postgres has a hard limit of 1600 columns per table](https://www.postgresql.org/docs/15/limits.html).
+We hit this limit when we only had two columns in our table because when you drop a column, it doesn't actually get deleted.
+
+### Why doesn't Postgres delete the column?
+
+Postgres stores table data in files, divided into 8KB pages. Each page holds metadata and the actual row data.
+
+![Diagram of a Postgres page](./2025-04-23-drop-column/pgdata_2.png)
+
+Now, imagine that we have to delete a column from the table. Physically removing the data would be very inefficient - Postgres would have to scan
+the entire file(s), and in each and every row, find the column we want to delete and either replace it with a null value or re-write the entire row without it.
+This kind of full table rewrite is very expensive, and Postgres avoids it by... not deleting the column.
+
+So instead, Postgres marks the column as "dropped" in metadata. The data remains, but Postgres will ignore the dropped column during queries, inserts, and updates. Much faster.
+
+You can see this in action by checking the `pg_attribute` table after we've added and removed a column:
+
+```sql
+CREATE TABLE test2 (a integer, b integer, c integer);
+INSERT INTO test2 VALUES (1, 2, 3);
+ALTER TABLE test2 DROP COLUMN b;
+INSERT INTO test2 VALUES (1, 3);
+
+SELECT attnum, attname, attisdropped, format_type(atttypid, atttypmod) AS data_type
+FROM   pg_attribute
+WHERE  attrelid = 'test2'::regclass
+AND attnum > 0;
+```
+
+The output is:
+
+```text
+ attnum |           attname            | attisdropped | data_type
+--------+------------------------------+--------------+-----------
+      1 | a                            | f            | integer
+      2 | ........pg.dropped.2........ | t            | -
+      3 | c                            | f            | integer
+```
+
+The second column, formerly known as `b`, has a new name, and `attisdropped` is set to `t`. It is there, but hidden.
+
+### Diving deeper: Inspecting the data file
+
+If you're curious, you can confirm the dropped column's data still exists by inspecting the data file with [`pg_filedump`](https://github.com/df7cb/pg_filedump). (Requires superuser and disk access.)
+
+First, lets find the file we want to explore:
+
+```sql
+SHOW data_directory; -- base directory of the data files
+SELECT pg_relation_filepath('test2'); -- path to the data file for the table
+```
+
+Now, we can use `pg_filedump` to explore the file:
+
+```bash
+pg_filedump -f -i -y /usr/local/pgsql/data/base/5/204238
+```
+
+The (truncated) output is:
+
+```text
+<Data> -----
+ Item   1 -- Length:   36  Offset: 8152 (0x1fd8)  Flags: NORMAL
+  XMIN: 107999  XMAX: 0  CID|XVAC: 0
+  Block Id: 0  linp Index: 1   Attributes: 3   Size: 24
+  infomask: 0x0900 (XMIN_COMMITTED|XMAX_INVALID)
+
+  1fd8: dfa50100 00000000 00000000 00000000  ................
+  1fe8: 01000300 00091800 01000000 02000000  ................
+  1ff8: 03000000                             ....
+
+ Item   3 -- Length:   32  Offset: 8088 (0x1f98)  Flags: NORMAL
+  XMIN: 108002  XMAX: 0  CID|XVAC: 0
+  Block Id: 0  linp Index: 3   Attributes: 3   Size: 24
+  infomask: 0x0801 (HASNULL|XMAX_INVALID)
+  t_bits: [0]: 0x05
+
+  1f98: e2a50100 00000000 00000000 00000000  ................
+  1fa8: 03000300 01081805 01000000 03000000  ................
+```
+
+Each `Item` refers to a row. You can see `Attributes: 3` on each row, which means that there are 3 columns in the row.
+
+In `Item 1`, the first row, you see `01000000 02000000 03000000` - the values we inserted into the first row, before dropping the `b` column.
+Compare this with `Item 3` and you see `01000000 03000000` - the values we inserted into another row after dropping the `b` column.
+`Item 3` has `HASNULL` set, because its `b` column is (implicitly) `NULL`.
+
+## Cleaning up dropped columns
+
+To actually remove the data, the entire table must be rewritten. There are two main approaches:
+
+### VACUUM FULL
+
+`VACUUM FULL` will rewrite the entire table, removing all the dead tuples and compacting the table. The documentation doesn't say it explicitly, but it will
+also remove the data from the dropped column. Here's the same file dump after running `VACUUM FULL`.
+
+If you run it yourself, note that the file name will be different - since the table is fully rewritten to a new file:
+
+```text
+ Item   1 -- Length:   32  Offset: 8160 (0x1fe0)  Flags: NORMAL
+  XMIN: 2  XMAX: 0  CID|XVAC: 0
+  Block Id: 0  linp Index: 1   Attributes: 3   Size: 24
+  infomask: 0x0b01 (HASNULL|XMIN_COMMITTED|XMIN_INVALID|XMAX_INVALID)
+  t_bits: [0]: 0x05
+
+  1fe0: dfa50100 00000000 00000000 00000000  ................
+  1ff0: 01000300 010b1805 01000000 03000000  ................
+
+ Item   3 -- Length:   32  Offset: 8096 (0x1fa0)  Flags: NORMAL
+  XMIN: 2  XMAX: 0  CID|XVAC: 0
+  Block Id: 0  linp Index: 3   Attributes: 3   Size: 24
+  infomask: 0x0b01 (HASNULL|XMIN_COMMITTED|XMIN_INVALID|XMAX_INVALID)
+  t_bits: [0]: 0x05
+
+  1fa0: e2a50100 00000000 00000000 00000000  ................
+  1fb0: 03000300 010b1805 01000000 03000000  ................
+```
+
+See how `Item 1` is now identical to `Item 3`? That's because `VACUUM FULL` removed the dead tuple.
+Both rows still have 3 columns, but the second column is now `NULL` for both rows, reclaiming the space.
+
+However, if you look at the `pg_attribute` table, you'll see that the column is still there and marked as dropped.
+
+```sql
+postgres=# VACUUM FULL test2;
+VACUUM
+postgres=# SELECT attnum, attname, attisdropped, format_type(atttypid, atttypmod) AS data_type
+FROM   pg_attribute
+WHERE  attrelid = 'test2'::regclass
+AND attnum > 0;
+ attnum |           attname            | attisdropped | data_type
+--------+------------------------------+--------------+-----------
+      1 | a                            | f            | integer
+      2 | ........pg.dropped.2........ | t            | -
+      3 | c                            | f            | integer
+```
+
+### Manual re-writing
+
+Most of the time, having a column marked as dropped in not a problem at all. But, as you recall from the riddle at the beginning,
+there's a limit to how many columns we can have - and dropped columns count towards that limit.
+
+So, if you need to add a new column, but you can't because of the limit, you will need to manually rewrite the table and get rid of all the dropped columns.
+
+If the table is simple, you can do this with `CREATE TABLE <new_name> AS SELECT ... FROM <old_name>`. Then you can drop the old table and rename the new one.
+
+If the table has constraints, indexes, etc, you can also use `CREATE TABLE <new_name> (LIKE <old_name> INCLUDING ALL)`.
+
+However, even this will not re-create foreign keys and triggers, so you will need to do that manually (in addition to copying the data into the new table).
+
+Finally, you can also use `pg_dump` to dump the table, rename it (in the dump file), and then restore it.
+
+All these methods are both time-consuming and a bit fiddly, so hopefully you'll never drop enough columns to hit the limit.
+
+## Implications for compliance
+
+When I first posted about this on X, I got a lot of comments about how this is a problem for GDPR compliance. I believe the concern is around
+"the right to be forgotten", which is the right to request that personal data be deleted from a company's records.
+
+In my view (I'm not a lawyer, but I have dealt with GDPR compliance before), the right to be forgotten is not relevant to this specific scenario.
+
+If you think about how personal data is stored in Postgres, it is typically stored in various tables, with a foreign key to a user table.
+When a user requests their data or asks to be deleted, the query will look either like this:
+
+```sql
+-- This delete will cascade to all the tables that have a foreign key to the users table
+DELETE FROM users WHERE id = <user_id>;
+```
+
+or like this:
+
+```sql
+-- Delete from the data tables directly
+DELETE FROM data_table_1 WHERE user_id = <user_id>;
+DELETE FROM data_table_2 WHERE user_id = <user_id>;
+-- etc
+DELETE FROM users WHERE id = <user_id>;
+```
+
+In both cases, dropped columns are not the problem, since the user is forgotten by deleting entire rows.
+There are no real-world scenarios where a user "right to be forgotten" request will require dropping columns
+(if you happen to be the exception, `VACUUM FULL` is available, but do consider your data model and whether it actually makes sense).
+
+This raises a different concern: Postgres uses MVCC, so deleted rows are not immediately removed from the table. In fact, they will not be removed until
+all transactions that have seen the row have completed **and** the vacuum process has run. And if you are diving into the compliance rabbit hole, note that just because Postgres asked the operating system to delete some data, doesn't mean the data is
+truly gone from the storage. Between copy-on-write systems and the way disk sectors are marked as free, it is still possible to recover the data using special tools. And we didn't even start discussing backups!
+
+I am not a lawyer, but my understanding is that companies are required to make reasonable efforts to delete data upon request - and this doesn't extend to scrubbing disks with magnets.
+
+## Conclusion
+
+In this post, we explored how Postgres handles dropped columns under the hood, and considered the implications for compliance.
+This information isn't typically useful for most developers, but in my opinion it is always fun to explore the internals of the database and learn more about how databases work.
+
+## Resources
+
+- [Postgres File Layout](https://www.postgresql.org/docs/current/storage-file-layout.html) - Learn about how Postgres organizes data files on disk
+- [Postgres Page Layout](https://www.postgresql.org/docs/current/storage-page-layout.html) - Detailed explanation of how data is structured within pages
+- [Internal Layout of Heap Tables](https://www.postgresql.org/docs/current/storage-page-layout.html) - Deep dive into how heap tables store data
+- [Vacuuming in Postgres](https://www.postgresql.org/docs/current/sql-vacuum.html) - Documentation on VACUUM commands and their effects
+- [pg_filedump](https://github.com/df7cb/pg_filedump) - Tool for examining the contents of PostgreSQL data files
