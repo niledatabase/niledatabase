@@ -7,13 +7,12 @@ export const metadata = {
   tags: ["postgres", "internals", "compliance"],
 };
 
-Dropping columns in Postgres is a common task - but few developers understand what actually happens under the hood. 
-Let's dive in and explore this simple operation. We'll start with a riddle that had 
-[many developers on X](https://x.com/gwenshap/status/1914751044812505441) scratching their heads. Then, we'll use some of the tools Postgres provides to 
+Dropping columns in Postgres is a common task - but few developers understand what actually happens under the hood.
+Let's dive in and explore this simple operation. We'll start with a riddle that had
+[many developers on X](https://x.com/gwenshap/status/1914751044812505441) scratching their heads. Then, we'll use some of the tools Postgres provides to
 peek behind the scenes. Finally, we'll touch on compliance implications you might not expect.
 
 If you have access to a Postgres database, you can follow along. If not, you can spin one up locally, try Nile's [test container](https://www.thenile.dev/docs/getting-started/postgres_docker), or create a database on [Nile](https://console.thenile.dev).
-
 
 ## A Riddle
 
@@ -47,17 +46,17 @@ But... we only have two columns? What gives?
 
 ## What's happening under the hood?
 
-[Postgres has a hard limit of 1600 columns per table](https://www.postgresql.org/docs/15/limits.html). 
+[Postgres has a hard limit of 1600 columns per table](https://www.postgresql.org/docs/15/limits.html).
 We hit this limit when we only had two columns in our table because when you drop a column, it doesn't actually get deleted.
 
 ### Why doesn't Postgres delete the column?
 
-Postgres stores table data in files, divided into 8KB pages. Each page holds metadata and the actual row data. 
+Postgres stores table data in files, divided into 8KB pages. Each page holds metadata and the actual row data.
 
 ![Diagram of a Postgres page](./2025-04-23-drop-column/pgdata.png)
 
-Now, imagine that we have to delete a column from the table. Physically removing the data would be very inefficient - Postgres would have to scan 
-the entire file(s), and in each and every row, find the column we want to delete and either replace it with a null value or re-write the entire row without it. 
+Now, imagine that we have to delete a column from the table. Physically removing the data would be very inefficient - Postgres would have to scan
+the entire file(s), and in each and every row, find the column we want to delete and either replace it with a null value or re-write the entire row without it.
 This kind of full table rewrite is very expensive, and Postgres avoids it by... not deleting the column.
 
 So instead, Postgres marks the column as "dropped" in metadata. The data remains, but Postgres will ignore the dropped column during queries, inserts, and updates. Much faster.
@@ -70,10 +69,11 @@ INSERT INTO test2 VALUES (1, 2, 3);
 ALTER TABLE test2 DROP COLUMN b;
 INSERT INTO test2 VALUES (1, 3);
 
-SELECT attnum, attname, attisdropped, format_type(atttypid, atttypmod) AS data_type 
-FROM   pg_attribute 
+SELECT attnum, attname, attisdropped, format_type(atttypid, atttypmod) AS data_type
+FROM   pg_attribute
 WHERE  attrelid = 'test2'::regclass;
 ```
+
 The output is:
 
 ```text
@@ -135,8 +135,8 @@ The (truncated) output is:
 
 Each `Item` refers to a row. You can see `Attributes: 3` on each row, which means that there are 3 columns in the row.
 
-In `Item 1`, the first row, you see `01000000 02000000 03000000` - the values we inserted into the first row, before dropping the `b` column. 
-Compare this with `Item 3` and you see `01000000 03000000` - the values we inserted into another row after dropping the `b` column. 
+In `Item 1`, the first row, you see `01000000 02000000 03000000` - the values we inserted into the first row, before dropping the `b` column.
+Compare this with `Item 3` and you see `01000000 03000000` - the values we inserted into another row after dropping the `b` column.
 `Item 3` has `HASNULL` set, because its `b` column is (implicitly) `NULL`.
 
 ## Cleaning up dropped columns
@@ -145,8 +145,8 @@ To actually remove the data, the entire table must be rewritten. There are two m
 
 ### VACUUM FULL
 
-`VACUUM FULL` will rewrite the entire table, removing all the dead tuples and compacting the table. The documentation doesn't say it explicitly, but it will 
-also remove the data from the dropped column. Here's the same file dump after running `VACUUM FULL`. 
+`VACUUM FULL` will rewrite the entire table, removing all the dead tuples and compacting the table. The documentation doesn't say it explicitly, but it will
+also remove the data from the dropped column. Here's the same file dump after running `VACUUM FULL`.
 
 If you run it yourself, note that the file name will be different - since the table is fully rewritten to a new file:
 
@@ -170,7 +170,7 @@ If you run it yourself, note that the file name will be different - since the ta
   1fb0: 03000300 010b1805 01000000 03000000  ................
 ```
 
-See how `Item 1` is now identical to `Item 3`? That's because `VACUUM FULL` removed the dead tuple. 
+See how `Item 1` is now identical to `Item 3`? That's because `VACUUM FULL` removed the dead tuple.
 Both rows still have 3 columns, but the second column is now `NULL` for both rows, reclaiming the space.
 
 However, if you look at the `pg_attribute` table, you'll see that the column is still there and marked as dropped.
@@ -195,7 +195,7 @@ postgres=# SELECT attnum,                                                       
 
 ### Manual re-writing
 
-Most of the time, having a column marked as dropped in not a problem at all. But, as you recall from the riddle at the beginning, 
+Most of the time, having a column marked as dropped in not a problem at all. But, as you recall from the riddle at the beginning,
 there's a limit to how many columns we can have - and dropped columns count towards that limit.
 
 So, if you need to add a new column, but you can't because of the limit, you will need to manually rewrite the table and get rid of all the dropped columns.
@@ -212,12 +212,12 @@ All these methods are both time-consuming and a bit fiddly, so hopefully you'll 
 
 ## Implications for compliance
 
-When I first posted about this on X, I got a lot of comments about how this is a problem for GDPR compliance. I believe the concern is around 
+When I first posted about this on X, I got a lot of comments about how this is a problem for GDPR compliance. I believe the concern is around
 "the right to be forgotten", which is the right to request that personal data be deleted from a company's records.
 
 In my view (I'm not a lawyer, but I have dealt with GDPR compliance before), the right to be forgotten is not relevant to this specific scenario.
 
-If you think about how personal data is stored in Postgres, it is typically stored in various tables, with a foreign key to a user table. 
+If you think about how personal data is stored in Postgres, it is typically stored in various tables, with a foreign key to a user table.
 When a user requests their data or asks to be deleted, the query will look either like this:
 
 ```sql
@@ -235,15 +235,15 @@ DELETE FROM data_table_2 WHERE user_id = <user_id>;
 DELETE FROM users WHERE id = <user_id>;
 ```
 
-In both cases, dropped columns are not the problem, since the user is forgotten by deleting entire rows. 
-There are no real-world scenarios where a user "right to be forgotten" request will require dropping columns 
+In both cases, dropped columns are not the problem, since the user is forgotten by deleting entire rows.
+There are no real-world scenarios where a user "right to be forgotten" request will require dropping columns
 (if you happen to be the exception, `VACUUM FULL` is available, but do consider your data model and whether it actually makes sense).
 
-This raises a different concern: Postgres uses MVCC, so deleted rows are not immediately removed from the table. In fact, they will not be removed until 
-all transactions that have seen the row have completed **and** the vacuum process has run. 
+This raises a different concern: Postgres uses MVCC, so deleted rows are not immediately removed from the table. In fact, they will not be removed until
+all transactions that have seen the row have completed **and** the vacuum process has run.
 Since no reasonable database will leave transactions open and no running vacuum for over a month, this isn't typically a problem.
 
-And if you are diving into the compliance rabbit hole, note that just because Postgres asked the operating system to delete some data, doesn't mean the data is 
+And if you are diving into the compliance rabbit hole, note that just because Postgres asked the operating system to delete some data, doesn't mean the data is
 truly gone from the storage. Between copy-on-write systems and the way disk sectors are marked as free, it is still possible to recover the data using special tools. And we didn't even start discussing backups!
 
 I am not a lawyer, but my understanding is that companies are required to make reasonable efforts to delete data upon request - and this doesn't extend to scrubbing disks with magnets.
@@ -255,12 +255,8 @@ This information isn't typically useful for most developers, but in my opinion i
 
 ## Resources
 
-* [Postgres File Layout](https://www.postgresql.org/docs/current/storage-file-layout.html) - Learn about how Postgres organizes data files on disk
-* [Postgres Page Layout](https://www.postgresql.org/docs/current/storage-page-layout.html) - Detailed explanation of how data is structured within pages
-* [Internal Layout of Heap Tables](https://www.postgresql.org/docs/current/storage-page-layout.html) - Deep dive into how heap tables store data
-* [Vacuuming in Postgres](https://www.postgresql.org/docs/current/sql-vacuum.html) - Documentation on VACUUM commands and their effects
-* [pg_filedump](https://github.com/df7cb/pg_filedump) - Tool for examining the contents of PostgreSQL data files
-
-
-
-
+- [Postgres File Layout](https://www.postgresql.org/docs/current/storage-file-layout.html) - Learn about how Postgres organizes data files on disk
+- [Postgres Page Layout](https://www.postgresql.org/docs/current/storage-page-layout.html) - Detailed explanation of how data is structured within pages
+- [Internal Layout of Heap Tables](https://www.postgresql.org/docs/current/storage-page-layout.html) - Deep dive into how heap tables store data
+- [Vacuuming in Postgres](https://www.postgresql.org/docs/current/sql-vacuum.html) - Documentation on VACUUM commands and their effects
+- [pg_filedump](https://github.com/df7cb/pg_filedump) - Tool for examining the contents of PostgreSQL data files
