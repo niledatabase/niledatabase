@@ -53,7 +53,7 @@ We hit this limit when we only had two columns in our table because when you dro
 
 Postgres stores table data in files, divided into 8KB pages. Each page holds metadata and the actual row data.
 
-![Diagram of a Postgres page](./2025-04-23-drop-column/pgdata.png)
+![Diagram of a Postgres page](./2025-04-23-drop-column/pgdata_2.png)
 
 Now, imagine that we have to delete a column from the table. Physically removing the data would be very inefficient - Postgres would have to scan
 the entire file(s), and in each and every row, find the column we want to delete and either replace it with a null value or re-write the entire row without it.
@@ -71,7 +71,8 @@ INSERT INTO test2 VALUES (1, 3);
 
 SELECT attnum, attname, attisdropped, format_type(atttypid, atttypmod) AS data_type
 FROM   pg_attribute
-WHERE  attrelid = 'test2'::regclass;
+WHERE  attrelid = 'test2'::regclass
+AND attnum > 0;
 ```
 
 The output is:
@@ -79,23 +80,16 @@ The output is:
 ```text
  attnum |           attname            | attisdropped | data_type
 --------+------------------------------+--------------+-----------
-     -6 | tableoid                     | f            | oid
-     -5 | cmax                         | f            | cid
-     -4 | xmax                         | f            | xid
-     -3 | cmin                         | f            | cid
-     -2 | xmin                         | f            | xid
-     -1 | ctid                         | f            | tid
       1 | a                            | f            | integer
       2 | ........pg.dropped.2........ | t            | -
       3 | c                            | f            | integer
-(9 rows)
 ```
 
 The second column, formerly known as `b`, has a new name, and `attisdropped` is set to `t`. It is there, but hidden.
 
 ### Diving deeper: Inspecting the data file
 
-If you're curious, you can confirm the dropped column's data still exists by inspecting the data file with pg_filedump. (Requires superuser and disk access.)
+If you're curious, you can confirm the dropped column's data still exists by inspecting the data file with [`pg_filedump`](https://github.com/df7cb/pg_filedump). (Requires superuser and disk access.)
 
 First, lets find the file we want to explore:
 
@@ -180,19 +174,13 @@ postgres=# VACUUM FULL test2;
 VACUUM
 postgres=# SELECT attnum, attname, attisdropped, format_type(atttypid, atttypmod) AS data_type
 FROM   pg_attribute
-WHERE  attrelid = 'test2'::regclass;
+WHERE  attrelid = 'test2'::regclass
+AND attnum > 0;
  attnum |           attname            | attisdropped | data_type
 --------+------------------------------+--------------+-----------
-     -6 | tableoid                     | f            | oid
-     -5 | cmax                         | f            | cid
-     -4 | xmax                         | f            | xid
-     -3 | cmin                         | f            | cid
-     -2 | xmin                         | f            | xid
-     -1 | ctid                         | f            | tid
       1 | a                            | f            | integer
       2 | ........pg.dropped.2........ | t            | -
       3 | c                            | f            | integer
-(9 rows)
 ```
 
 ### Manual re-writing
@@ -242,10 +230,7 @@ There are no real-world scenarios where a user "right to be forgotten" request w
 (if you happen to be the exception, `VACUUM FULL` is available, but do consider your data model and whether it actually makes sense).
 
 This raises a different concern: Postgres uses MVCC, so deleted rows are not immediately removed from the table. In fact, they will not be removed until
-all transactions that have seen the row have completed **and** the vacuum process has run.
-Since no reasonable database will leave transactions open and no running vacuum for over a month, this isn't typically a problem.
-
-And if you are diving into the compliance rabbit hole, note that just because Postgres asked the operating system to delete some data, doesn't mean the data is
+all transactions that have seen the row have completed **and** the vacuum process has run. And if you are diving into the compliance rabbit hole, note that just because Postgres asked the operating system to delete some data, doesn't mean the data is
 truly gone from the storage. Between copy-on-write systems and the way disk sectors are marked as free, it is still possible to recover the data using special tools. And we didn't even start discussing backups!
 
 I am not a lawyer, but my understanding is that companies are required to make reasonable efforts to delete data upon request - and this doesn't extend to scrubbing disks with magnets.
