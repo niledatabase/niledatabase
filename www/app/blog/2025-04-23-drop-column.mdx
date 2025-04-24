@@ -26,13 +26,13 @@ Think about it for a moment and then you can try it yourself with a simple scrip
 ```python
 import psycopg2, textwrap, sys
 conn = psycopg2.connect("postgresql://user:password@us-west-2.db.thenile.dev:5432/dbbame") ; cur = conn.cursor()
+conn.autocommit = True
 cur.execute("DROP TABLE IF EXISTS t; CREATE TABLE t(a int, b int);")
 for i in range(1, 2001):
     cur.execute(textwrap.dedent(f"""
         ALTER TABLE t ADD COLUMN c{i} int;
         ALTER TABLE t DROP COLUMN c{i};
     """))
-conn.commit()
 cur.close(); conn.close()
 ```
 
@@ -178,7 +178,9 @@ However, if you look at the `pg_attribute` table, you'll see that the column is 
 ```sql
 postgres=# VACUUM FULL test2;
 VACUUM
-postgres=# SELECT attnum,                                                                                                                                                                                   attname,                                                                                                                                                                                             attisdropped,                                                                                                                                                                                        format_type(atttypid, atttypmod) AS data_type                                                                                                                                                 FROM   pg_attribute                                                                                                                                                                                  WHERE  attrelid = 'test2'::regclass;
+postgres=# SELECT attnum, attname, attisdropped, format_type(atttypid, atttypmod) AS data_type 
+FROM   pg_attribute
+WHERE  attrelid = 'test2'::regclass;
  attnum |           attname            | attisdropped | data_type
 --------+------------------------------+--------------+-----------
      -6 | tableoid                     | f            | oid
