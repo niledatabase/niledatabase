@@ -178,7 +178,7 @@ However, if you look at the `pg_attribute` table, you'll see that the column is 
 ```sql
 postgres=# VACUUM FULL test2;
 VACUUM
-postgres=# SELECT attnum, attname, attisdropped, format_type(atttypid, atttypmod) AS data_type 
+postgres=# SELECT attnum, attname, attisdropped, format_type(atttypid, atttypmod) AS data_type
 FROM   pg_attribute
 WHERE  attrelid = 'test2'::regclass;
  attnum |           attname            | attisdropped | data_type
