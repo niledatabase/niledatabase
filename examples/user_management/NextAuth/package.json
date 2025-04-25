@@ -1,0 +1,39 @@
+{
+  "name": "nextauth-demo",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "npm@10.6.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generate-migration": "drizzle-kit generate:pg --out ./db/migrations --schema ./db/schema.ts"
+  },
+  "dependencies": {
+    "@auth/drizzle-adapter": "^0.3.9",
+    "@mui/icons-material": "^5.14.19",
+    "@mui/joy": "^5.0.0-beta.11",
+    "@niledatabase/server": "^2.4.2-alpha.3",
+    "@types/node": "^20.6.3",
+    "@types/react": "^18.2.22",
+    "@types/react-dom": "^18.2.7",
+    "dotenv": "^16.3.1",
+    "drizzle-kit": "^0.20.6",
+    "drizzle-orm": "^0.29.0",
+    "eslint": "^8.49.0",
+    "eslint-config-next": "^13.5.2",
+    "jwt-decode": "^3.1.2",
+    "lodash": "^4.17.21",
+    "next": "^13.5.4",
+    "next-auth": "^4.24.5",
+    "pg": "^8.11.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.10.9",
+    "nodemailer": "^6.9.9"
+  }
+}
