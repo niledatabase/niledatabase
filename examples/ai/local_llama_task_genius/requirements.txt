@@ -18,7 +18,7 @@ fastapi==0.115.12
 frozenlist==1.4.1
 fsspec==2024.9.0
 greenlet==3.1.1
-h11==0.14.0
+h11==0.16.0
 httpcore==1.0.5
 httpx==0.27.0
 idna==3.7
