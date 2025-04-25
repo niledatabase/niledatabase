@@ -67,17 +67,17 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
 
         if (!res || !Array.isArray(res) || res.length === 0) {
           toast.error("Something went wrong: " + JSON.stringify(res));
-        } else if (res[0].serverData !== "SUCCESS") {
-          if (res[0].serverData === "LIMIT EXCEEDED") {
+        } else if (res[0].serverData.status !== "SUCCESS") {
+          if (res[0].serverData.status === "LIMIT EXCEEDED") {
             toast.error(
               "You have exceeded the allowed page limit for your subscription plan. The maximum number of pages allowed is " +
                 (isSubscribed ? MAX_PRO_PAGES : MAX_FREE_PAGES)
             );
-          } else if (res[0].serverData === "PARSE FAILED") {
+          } else if (res[0].serverData.status === "PARSE FAILED") {
             toast.error(
               "File can't be parsed and text can't be extracted. Please try another."
             );
-          } else if (res[0].serverData === "EMBEDDING FAILED") {
+          } else if (res[0].serverData.status === "EMBEDDING FAILED") {
             toast.error(
               "Failed to create embeddings while uploading file. You can try manually with the Embed File button."
             );
@@ -85,7 +85,7 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
             router.refresh();
           } else {
             toast.error(
-              "File upload failed due to an error: " + res[0].serverData
+              "File upload failed due to an error: " + res[0].serverData.status
             );
           }
         } else if (!res[0].key) {

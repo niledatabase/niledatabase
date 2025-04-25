@@ -4,28 +4,29 @@ import { redirect } from "next/navigation";
 import { Chat } from "./_components/chat";
 
 interface FileIdPageProps {
-  params: {
+  params: Promise<{
     organizationId: string;
     fileId: string;
-  };
+  }>;
 }
 
 const FileIdPage = async ({ params }: FileIdPageProps) => {
-  const tenantNile = await configureNile(params.organizationId);
+  const resolvedParams = await params;
+  const tenantNile = await configureNile(resolvedParams.organizationId);
   console.log(tenantNile.userId);
   if (!tenantNile.userId) {
     redirect("/");
   }
-  const number = await params.organizationId;
-  console.log(number);
+  const number = resolvedParams.organizationId;
+  
   const messages = await tenantNile.db.query(
     `select * from message where "fileId" = $1`,
-    [params.fileId]
+    [resolvedParams.fileId]
   );
 
   const fileInfo = await tenantNile.db.query(
     `select * from file where id = $1`,
-    [params.fileId]
+    [resolvedParams.fileId]
   );
 
   console.log(fileInfo);
@@ -33,7 +34,7 @@ const FileIdPage = async ({ params }: FileIdPageProps) => {
     <>
       <div className="max-h-[88vh] overflow-hidden">
         <Chat
-          fileId={params.fileId}
+          fileId={resolvedParams.fileId}
           pastMessages={messages.rows}
           userId={tenantNile.userId}
           tenant_id={number}

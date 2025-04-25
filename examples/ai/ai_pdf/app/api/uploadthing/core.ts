@@ -63,7 +63,7 @@ const onUploadComplete = async ({
     const response = await fetch(`${file.url}`);
     console.log("on upload complete: ", response.status, response.ok);
     if (!response.ok) {
-      return "FAILED TO GET FILE";
+      return { status: "FAILED TO GET FILE" };
     }
     const blob = await response.blob();
 
@@ -76,7 +76,7 @@ const onUploadComplete = async ({
     });
     if (!pageLevelDocs) {
       console.log("failed to load file");
-      return "FAILED TO LOAD FILE";
+      return { status: "FAILED TO LOAD FILE" };
     }
 
     // Check if the pages amount exceeds the limit for the subscription plan
@@ -85,7 +85,7 @@ const onUploadComplete = async ({
 
     console.log("parsing", pagesAmt, pageLevelDocs);
     if (pagesAmt === 0) {
-      return "PARSE FAILED";
+      return { status: "PARSE FAILED" };
     }
 
     const isPageLimitExceeded = pagesAmt > maxPageLimit;
@@ -146,7 +146,7 @@ const onUploadComplete = async ({
             dimensions: +(process.env.OPENAI_EMBEDDING_DIMENSIONS || 1024),
             modelName: modelName,
           }).embedDocuments(
-            chunks.map((chunk) => chunk.pageContent.replace(/\n/g, " "))
+            chunks.map((chunk: any) => chunk.pageContent.replace(/\n/g, " "))
           );
           const batchSize = 100;
           let batch: any = [];
@@ -192,17 +192,17 @@ const onUploadComplete = async ({
         );
       } catch (err) {
         console.log("error: Error in updating file status in Nile", err);
-        return "EMBEDDING FAILED";
+        return { status: "EMBEDDING FAILED" };
       }
       // trigger re-render of file list, since the new file exists
       revalidatePath(`/dashboard/organization/${metadata.orgId}`);
-      return "SUCCESS";
+      return { status: "SUCCESS" };
     } else {
-      return "LIMIT EXCEEDED";
+      return { status: "LIMIT EXCEEDED" };
     }
   } catch (err) {
     console.log("error: Error in uploading file", err);
-    return "UPLOAD FAILED";
+    return { status: "UPLOAD FAILED" };
   } finally {
     console.log("Asking for re-render of file list");
     // trigger re-render of file list

@@ -4,7 +4,12 @@ import { cookies } from "next/headers";
 // Initialize the Nile server object for reuse in all pages
 // Note that the Nile server configuration points to Nile APIs as the base path
 
-const nile = await Nile({ debug: true });
+const nile = await Nile({ 
+  debug: true,
+  api: {
+    secureCookies: process.env.VERCEL === "1",
+  },
+});
 
 export default nile;
 

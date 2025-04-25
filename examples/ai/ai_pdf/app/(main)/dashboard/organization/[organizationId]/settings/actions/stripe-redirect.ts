@@ -16,7 +16,8 @@ import { configureNile } from "@/lib/NileServer";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const orgId = data.orgId;
-  const user = cookies().get("authData");
+  const nextCookies = await cookies();
+  const user = nextCookies.get("authData");
   const userId = getUserId(user);
   if (!orgId || !user || !userId) {
     return {
@@ -24,7 +25,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     };
   }
 
-  const tenantNile = await configureNile(user, orgId);
+  const tenantNile = await configureNile(orgId);
 
   const settingsUrl = absoluteUrl(`/dashboard/organization/${orgId}`);
 
