@@ -25,15 +25,6 @@ const MarketingPage = () => {
       >
         Every Resource you need in one place
       </div>
-      {/* {nile.userId ? (
-        <Button size="lg" asChild className="mt-5">
-          <Link href="/dashboard">Dashboard</Link>
-        </Button>
-      ) : (
-        <Button size="sm" asChild className="mt-5">
-          <Link href="/sign-up">Get Chatty for free</Link>
-        </Button>
-      )} */}
       <Button size="sm" asChild className="mt-5">
         <Link href="/login">Login</Link>
       </Button>
