@@ -14,7 +14,7 @@ exceptiongroup==1.2.2
 fastapi==0.115.12
 frozenlist==1.5.0
 grpclib==0.4.7
-h11==0.14.0
+h11==0.16.0
 h2==4.2.0
 hpack==4.1.0
 httpcore==1.0.7
