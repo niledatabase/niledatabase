@@ -3,7 +3,9 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { configureNile } from "@/lib/NileServer";
+import { Nile } from "@niledatabase/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 export async function addTodo(
   tenantId: string,
@@ -11,7 +13,10 @@ export async function addTodo(
   formData: FormData
 ) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
-  const tenantNile = await configureNile(tenantId);
+  const tenantNile = await Nile();
+  const session = await getServerSession(authOptions);
+  //@ts-ignore
+  const userId = session?.user?.id;
   const title = formData.get("todo");
   console.log(
     "adding Todo " +
@@ -40,14 +45,17 @@ export async function completeTodo(
   complete: boolean
 ) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
-  const tenantNile = await configureNile(tenantId);
+  const tenantNile = await Nile();
+  const session = await getServerSession(authOptions);
+  //@ts-ignore
+  const userId = session?.user?.id;
   console.log(
     "updating Todo " +
       id +
       " for tenant:" +
       tenantNile.tenantId +
       " for user:" +
-      tenantNile.userId
+      userId
   );
   try {
     // Tenant ID and user ID are in the context, so we don't need to specify them as query filters

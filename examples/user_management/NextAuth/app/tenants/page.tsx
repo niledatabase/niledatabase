@@ -10,8 +10,10 @@ import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
 import { AddForm } from "@/app/tenants/add-form";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
-import { configureNile, getUserName } from "@/lib/NileServer";
+import { Nile } from "@niledatabase/server";
 
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
@@ -23,17 +25,20 @@ export const fetchCache = "force-no-store";
 export default async function Page() {
   // This is the tenant selector, so we use Nile with just the current user and reset tenant_id if already set
   // if Nile is already configured for this user, it will reuse the existing Nile instance
-  const nile = await configureNile(undefined);
-  console.log("showing tenants page for user: " + nile.userId);
+  const nile = await Nile();
+  const session = await getServerSession(authOptions);
+  //@ts-ignore
+  const userId = session?.user?.id;
+  console.log("showing tenants page for user: " + userId);
   let tenants: any = [];
 
-  if (nile.userId) {
+  if (userId) {
     const res = await nile.db.query(
       `SELECT tenants.id, tenants.name
        FROM tenants
        JOIN users.tenant_users ON tenants.id = tenant_users.tenant_id
        WHERE tenant_users.user_id = $1`,
-      [nile.userId]
+      [userId]
     );
     if (res) {
       tenants = res.rows;
@@ -81,7 +86,7 @@ export default async function Page() {
         <CardContent>
           <Typography level="body-md" textAlign="center">
             {" "}
-            You are logged in as {await getUserName()}{" "}
+            You are logged in as {session?.user?.email}{" "}
             <MUILink href="/api/auth/signout" component={NextLink}>
               (Logout)
             </MUILink>

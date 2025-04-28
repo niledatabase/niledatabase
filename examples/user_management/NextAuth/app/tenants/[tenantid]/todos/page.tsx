@@ -9,8 +9,9 @@ import MUILink from "@mui/joy/Link";
 import { cookies } from "next/headers";
 import { AddForm } from "./add-form";
 import { DoneForm } from "./done-form";
-import { configureNile } from "@/lib/NileServer";
-
+import { Nile } from "@niledatabase/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
 export const dynamic = "force-dynamic";
@@ -22,15 +23,19 @@ export const fetchCache = "force-no-store";
 export default async function Page({
   params,
 }: {
-  params: { tenantid: string };
+  params: Promise<{ tenantid: string }>;
 }) {
   // Here we are getting a connection to a specific tenant database for the current usr
   // if we already got such connection earlier, it will reuse the existing one
-  const tenantNile = await configureNile(params.tenantid);
+  const tenantNile = await Nile();
+  const session = await getServerSession(authOptions);
+  //@ts-ignore
+  const userId = session?.user?.id;
+  tenantNile.tenantId = (await params).tenantid;
 
   console.log(
     "showing todos for user " +
-      tenantNile.userId +
+      userId +
       " for tenant " +
       tenantNile.tenantId
   );
