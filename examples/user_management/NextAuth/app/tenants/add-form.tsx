@@ -1,6 +1,5 @@
 "use client";
-// @ts-expect-error -- useFormState is new and lacks type definitions
-import { experimental_useFormState as useFormState } from "react-dom";
+import { useFormState } from "react-dom";
 import { useState } from "react";
 import Button from "@mui/joy/Button";
 import Typography from "@mui/joy/Typography";
@@ -13,11 +12,15 @@ import { createTenant } from "@/app/tenants/tenant-actions";
 // ^^^ the actual actions are in a server component because they are database operations
 
 const initialState = {
-  message: null,
+  message: "",
 };
 
 export function AddForm() {
-  const [state, formAction] = useFormState(createTenant, initialState);
+  const [state, formAction] = useFormState(
+    (prevState: { message: string } | undefined, formData: FormData) => 
+      createTenant(prevState, formData),
+    initialState
+  );
   const [open, setOpen] = useState(false);
 
   return (
