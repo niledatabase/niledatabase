@@ -7,4 +7,4 @@ export const nile = await Nile({
   debug: true,
 });
 
-export const { handlers } = nile.api;
+export const { handlersWithContext, handlers } = nile.api;
