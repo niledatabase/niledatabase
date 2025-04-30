@@ -60,14 +60,7 @@ def downgrade():
 
   <Step title="Connect to Database">
 
-To connect Alembic to the right database, edit `alembic.ini` and edit the following:
-
-```ini
-sqlalchemy.url = postgresql://user:password@host:5432/dbname
-```
-
-You can hard-code your connection string, but the example project also supports using an 
-environment variable. You can create a `.env` file and add the connection string there:
+To connect Alembic to the right database, create a `.env` file and add the connection string there:
 
 ```
 DATABASE_URL=postgresql://user:password@host:5432/dbname
@@ -85,8 +78,49 @@ alembic upgrade head
 
 Thats it! You can connect to your database and see the new table.
 
+  <Tip>
+  If you see an error that the table already exists, double check that you didn't accidentally create a second 
+  migration with the `accounts` table on top of the existing one. If this happened to you, you can delete the new migration file (or alternatively, modify the table name).
+  </Tip>
   </Step>
 </Steps>
+
+## Generating Migrations
+
+Alembic can also generate migrations for you. This is useful if you want to create a migration for a new table.
+
+<Steps>
+
+  <Step title="Create a new migration">
+
+The example project has a `models.py` file that defines two models: `Todo` and `Tenant`. 
+
+To generate a migration for these models, you can use the following command:
+
+```bash
+alembic revision --autogenerate -m "create todo and tenant models"
+```
+
+<Tip>
+Alembic autogeneration compares your database state with models.py and will drop any tables not defined there. 
+Since Nile has a built-in `Tenants` table that can't be dropped, we include the `Tenant` model in models.py to prevent this.
+</Tip>
+
+</Step>
+
+<Step title="Run the generated migration file">
+
+You can then edit the generated migration file (if needed) and run it like as we did before:
+
+```bash
+alembic upgrade head
+```
+
+</Step>
+
+</Steps>
+
+
 
 ## Next Steps
 
