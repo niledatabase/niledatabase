@@ -3,4 +3,144 @@ title: "Schema Migrations with Django"
 sidebarTitle: "Django"
 ---
 
-Coming soon...
+Django has built-in support for schema migrations. Below, we'll walk through the process of setting up a Django project 
+with Nile and running your first migration.
+
+<Steps>
+
+<Step title="Install Django">
+
+If you don't already have Django installed, you can install it using pip:
+
+```bash
+pip install django
+```
+
+</Step>
+
+<Step title="Create a new Django project">
+
+```bash
+django-admin startproject myproject
+```
+
+This will create a new Django project in the `myproject` directory.
+
+</Step>
+
+<Step title="Create a new app">
+
+```bash
+cd myproject
+python manage.py startapp myapp
+```
+
+This will create a new Django app in the `myproject` directory.
+
+If all went well, the `myproject` directory should now have the following structure:
+
+```
+myproject/
+    manage.py
+    myproject/
+        __init__.py
+        settings.py
+        urls.py
+        wsgi.py
+    myapp/
+        __init__.py
+        admin.py
+        apps.py
+        migrations/
+            __init__.py
+        models.py
+        tests.py
+        views.py
+```
+</Step>
+<Step title="Setting up Nile Database">
+Edit the `myproject/settings.py` file to include the Nile database URL:
+
+```python
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "mydb",
+        "USER": "myuser",
+        "PASSWORD": "mypassword",
+        "HOST": "us-west-2.db.thenile.dev",
+        "PORT": "5432",
+    }
+}
+```
+
+You can find your database credentials in the Nile dashboard.
+</Step>
+
+<Step title="Run the migrations built-in migrations">
+
+Django has several default modules that need database tables created. To create these tables, run the following command:
+
+```bash
+python manage.py migrate
+```
+
+This will create the tables in the database.
+
+</Step>
+
+<Step title="Create a new model">
+
+In `myapp/models.py`, create a new model:
+
+```python
+from django.db import models
+
+class MyModel(models.Model):
+    name = models.CharField(max_length=255)
+```
+
+And update the installed apps in `myproject/settings.py` to include your app:
+
+```python
+INSTALLED_APPS = [
+    'myapp.apps.MyappConfig',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+```
+</Step>
+
+<Step title="Create a new migration">
+
+To create a new migration, run the following command:
+
+```bash
+python manage.py makemigrations myapp
+```
+
+This will create a new migration file in the `myapp/migrations` directory.
+
+</Step>
+
+<Step title="Run the migration">
+
+To run the migration, run the following command:
+
+```bash
+python manage.py migrate
+```
+
+This will apply the migration to the database.
+
+Connect to your database and see a new table created, called `myapp_mymodel`.
+
+</Step>
+
+</Steps>
+
+
