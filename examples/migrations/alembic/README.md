@@ -52,3 +52,9 @@ Thats it! You can connect to your database and see the new table.
 ## Next Steps
 
 This is the most basic use-case of Alembic. There is a lot more to it, which you can learn from the official [Alembic documentation](https://alembic.sqlalchemy.org/en/latest/front.html).
+
+## Generating migrations from model and database
+
+```
+alembic revision --autogenerate -m initial
+```
