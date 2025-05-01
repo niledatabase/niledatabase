@@ -23,28 +23,29 @@ export default function SignUpPage() {
 </Tabs>
 
 #### Error handling 
-In the case of errors from the API, or you want to do something more custom with the response, a `Response` object will come back from the `onSuccess` function. This is true even for HTTP error status codes such as 4XX and 5XX. The API will return text informing you of the error, so simply use `response.text()` to obtain your error, or `response.json()` in the event that the API returned an `ok` response.
+In the case of errors from the API, or you want to do something more custom with the response, you can use the `onError` and `onSuccess` callbacks.
+Note that `redirect` is set to the current page by default, so you may want to set it to `false` if you want 
+to handle the redirect yourself - especially if you want to display a custom error message.
 
 ```jsx
 export default function SignUpPage() {
   const [error, setError] = error('')
   return (
-    <SignUpForm 
-      beforeMutate={() => {
-        setError('')
-      }}
-      onSuccess={async (res) => {
-        if (res.ok) {
-          // something good happened
-        } else {
-          const error = await res.text();
-          setError(error);
-        }
-      }}
-      onError={(e)=> {
-        console.error('Catastrophic failure 😭', e)
-      }}
-    />
+    {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+    )}
+      <SignUpForm
+        redirect={false}
+        onError={(e) => {
+          setError(e.message);
+        }}
+        onSuccess={(data) => {
+          console.log(data); // do something with the data
+          router.push("/"); // redirect to a new page
+        }}
+      />
   )
 }
 ```
