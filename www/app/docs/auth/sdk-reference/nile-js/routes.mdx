@@ -23,6 +23,7 @@ export const nile = await Nile({
 });
 
 export const { handlers } = nile.api;
+export const { handlersWithContext } = nile.api;
 ```
 
 ```ts route.ts
@@ -386,34 +387,32 @@ startServer();
 
 ### Route overrides
 
-In the examples below, we'll add a new route that will override the default route for `\auth\google\callback` with custom logic.
+In the examples below, we'll add a new route that will override the default route for `\auth\google\callback` with 
+custom logic. We are using `handlersWithContext` to get the `nile` object in the route handler. 
+`handlersWithContext` returns a tuple with the `nile` object, configured based on the response from the route handler, 
+and the response from the route handler.
 
 <CodeGroup>
 ```ts NextJS route overrides
 // app/api/auth/google/callback/route.ts
 import { NextRequest } from "next/server";
-import { nile, handlers } from "../../../[...nile]/nile";
+// make sure you export handlersWithContext from nile.api
+import { handlersWithContext } from "../../../[...nile]/nile"; 
 import { registerTenants } from "@/lib/TenantRegistration";
 
 export async function GET(req: NextRequest) {
-  const postHandled = await handlers.GET(req); // call the original route
+  // call the original route
+  const {nile, response} = await handlersWithContext.GET(req); 
 
-  if (postHandled) {
-    const setCookie = postHandled.headers.getSetCookie();
-    const hasSession = setCookie.filter((c) =>
-      c.includes("nile.session-token")
-    );
-    if (hasSession) { // if login was successful, register the tenants
-      nile.api.headers = new Headers({ cookie: hasSession.toString() });
+  if (nile) {
       const me = await nile.api.users.me();
       if ("id" in me) {
         // custom logic is here
         await registerTenants(me.id);
       }
-    }
   }
   // return the original response from the route
-  return postHandled;
+  return response;
 }
 ```
 

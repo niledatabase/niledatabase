@@ -37,6 +37,7 @@ The `nile.api.tenants.createTenant` method is used to create a new tenant and li
 ### Parameters
 
 - `name`: The name of the tenant to create. Nile does not enforce uniqueness of tenant names. You can have multiple tenants with the same name.
+- `id`: (optional) The id of the tenant to create. If not provided, a random id will be generated.
 
 <Note>
 The new tenant is automatically added to the current user's list of tenants.
@@ -57,6 +58,7 @@ interface Tenant {
 
 ### Examples
 
+<CodeGroup>
 ```ts createTenant
 const tenant = await nile.api.tenants.createTenant('My Tenant');
 console.log(tenant);
@@ -70,6 +72,23 @@ console.log(tenant);
 //  compute_id: null
 // }
 ```
+
+```ts createTenant with id
+const tenant = await nile.api.tenants.createTenant({
+  name: 'My Tenant with id',
+  id: '019612d7-56e7-7e87-8f30-ad6b05d85644',
+});
+console.log("Tenant: ", tenant);
+// Tenant:  {
+//   id: '019612d7-56e7-7e87-8f30-ad6b05d85644',
+//   name: 'My Tenant with id',
+//   created: '2025-05-01T03:00:30.901Z',
+//   updated: '2025-05-01T03:00:30.901Z',
+//   deleted: null,
+//   compute_id: null
+// }
+```
+</CodeGroup>
 
 ## getTenant
 
