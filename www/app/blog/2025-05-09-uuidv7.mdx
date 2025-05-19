@@ -1,0 +1,176 @@
+export const metadata = {
+  title: "UUIDv7 Comes to PostgreSQL 18",
+  authors: ["gwenshap"],
+  image: "2025-05-09-uuidv7/cover.png",
+  sizzle:
+    "PostgreSQL 18 adds native support for UUIDv7. A sortable UUID variant that plays nicely with indexes. Here's what that means for you.",
+  tags: ["postgres", "performance"],
+};
+
+PostgreSQL 18 is on the horizon, with beta testing now underway. Among the many improvements in this release is support 
+for UUIDv7. A UUID variant that is sortable and plays nicely with indexes. In this post, we'll discuss UUIDs in general, why UUIDv7 is so useful and how you'll want to use it in Postgres.
+
+## PostgreSQL 18
+
+[PostgreSQL 18 beta 1 was released](https://www.postgresql.org/about/news/postgresql-18-beta-1-released-3070/) few days ago. The release is packed with new features, improvements and bug fixes.
+As usual, the community is encouraged to try it out and report issues, with the goal of shipping a high quality release in September.
+
+The highlights of the release include:
+
+- Async I/O (with io_uring) — 2-3x speedups on seq scans, vacuums
+- Skip scan + smarter OR/IN optimizations
+- Keep planner stats during major upgrades
+- `uuidv7()` and virtual generated columns
+- OAuth login + md5 deprecation warning
+- EXPLAIN ANALYZE now shows I/O, CPU, WAL
+- Temporal constraints, LIKE on nondeterministic collation, casefolding
+- New wire protocol version: 3.2 (first since 2003!)
+
+While `uuidv7()` is not the most exciting feature (that would be async I/O), it's probably the most awaited one. It was close to being added in 17, and many users have been a bit disappointed that it didn't make the cut. I'm so excited about it, that I decided to take the beta for a spin and write a blog post about it.
+
+## What is a UUID and why are they useful?
+
+UUIDs are 128-bit values used as identifiers for various items - anything from transactions to companies. They are designed to be unique across space and time and can be generated 
+efficiently at high rates without depending on centralized services. 
+
+Traditionally, relational databases used auto-incrementing types (like `SERIAL` or `identity`) to generate unique identifiers. This can be done efficiently on a single machine (although there are drawbacks even in this case), but once you need to scale out, you need a way to generate identifiers that are unique across all nodes. Instagram team wrote a [short blog](https://instagram-engineering.com/sharding-ids-at-instagram-1cf5a71e5a5c) about their migration to UUIDs as they sharded their Postgres database.
+
+UUIDs are useful as primary keys in databases in several common scenarios:
+* **Generating unique IDs in a distributed database**:\
+While many distributed databases can support auto-increment (identity) columns, they have limitations and performance issues.
+* **Unguessable public identifiers**:\
+Properly generated, UUIDs can't be guessed, predicted or used to infer information about the system. If you use auto-increment as a customer identifier, for instance, attackers can scan all existing identifiers and attempt to use them, they can guess the next identifier and estimate how many customers you have.
+* **Allowing clients to generate identifiers**:\
+Using UUIDs allows clients to generate identifiers that they can use without coordinating with the server. This is useful in mobile apps and serverless environments where you want to minimize communication to the server.
+
+As a result of these benefits, UUIDs are used as primary keys in many databases. However, there are also 3 concerns with the use of UUIDs in databases:
+* **Sorting**: UUIDs are not meaningfully sortable by value.
+* **Index locality**: New UUIDs are not close to each other in the index, this means that inserts will be performed at random locations. This can cause index bloat and other performance issues, as you can see in the charts in [this blog post](https://www.enterprisedb.com/blog/sequential-uuid-generators).
+* **Size**: UUIDs are 128-bit values. Most developers default to using `INT` (32-bit) or `BIGINT` (64-bit) for their primary keys. For tables with large number of very small records, this can be meaningful overhead.
+
+As I'll explain in the next section, UUIDv7 addresses 2 out of these 3 concerns. 
+
+The size of the UUID may be a problem when disk space or network bandwidth is limited, but it is worth noting that modern CPUs can compare 128-bit values in a single instruction (`CMEQ`, part of SIMD instructions), so database operations on UUIDs are highly optimized. The key here is to make sure you use binary representation of UUIDs (proper UUID type) in both the database and the application, and not the string representation.
+
+## Why UUIDv7?
+
+UUIDs were first standardized in [RFC 4122](https://tools.ietf.org/html/rfc4122) in 2005. This RFC defines 5 variants of UUIDs, of which variant 1 and 4 are the most common. 
+The specification was later revised to add variants 6-8 in [RFC 9562](https://tools.ietf.org/html/rfc9562) which was published in May 2024 
+(although the first public working draft was published in 2020). Happy Birthday RFC 9562 and UUIDv7!
+
+To motivate the specification update, RFC 9562 discusses the common use case of using UUIDs as primary keys in databases:
+
+> One area in which UUIDs have gained popularity is database keys ... but UUID versions 1-5, which were originally defined by [RFC4122], lack certain other desirable characteristics, such as:
+> 
+> UUID versions that are not time ordered, such as UUIDv4 (described in Section 5.4), have poor database-index locality. This means that new values created in succession are not close to each other in the index; thus, they require inserts to be performed at random locations. The resulting negative performance effects on the common structures used for this (B-tree and its variants) can be dramatic.
+> 
+> many widely distributed database applications and large application vendors have sought to solve the problem of creating a better time-based, sortable unique identifier for use as a database key. This has led to numerous implementations over the past 10+ years solving the same problem in slightly different ways.
+
+The RFC proceeds to specify 16 (!) different implementations of non-standard UUIDs, each with their own trade-offs. This includes the popular `ULID`, Twitter's `Snowflake`, Instagram's `ShardId` and many more.
+All of these implementations were evaluated when designing the new specification.
+
+While the new RFC specifies 3 new variants of UUIDs, the only interesting one is **UUIDv7**. UUIDv6 is introduced for backwards compatibility only - the RFC says "Systems that do not involve legacy UUIDv1 SHOULD use UUIDv7 instead".
+UUIDv8 provides a format for experimental and vendor-specific extensions.
+
+**UUIDv7 solves both the sorting and index locality concerns.** It uses Unix Epoch timestamp as the most significant 48 bits, keeping the other 74 bits for random values (additional bits are used for version and variant).
+This makes UUIDs sortable by time sequence and unique. The standard also provides the option to include millisecond timestamp in the UUID and/or carefully seeded counter, 
+to support ordering within a single second (if needed). As a result, UUIDv7 is a great fit for use as a primary key in databases - it is guaranteed to be unique, sortable and have good index locality.
+
+## UUIDv7 in PostgreSQL 18
+
+Until PostgreSQL 18, UUIDv7 was not natively supported. The built-in `gen_random_uuid()` function generated UUIDv4, and while the popular `uuid-ossp` extension added 
+support for additional UUID variants, it was limited to the variants specified in RFC 4122.
+
+PostgreSQL 18 adds a new function: `uuidv7()`, which generates UUIDv7 values. The Postgres implementation includes a 12-bit sub-millisecond timestamp fraction immediately after the timestamp (as allowed but not required by the standard). This guarantees monotonicity for all UUIDv7 values generated by the same Postgres session (same backend process).
+
+For consistency, PostgreSQL 18 added `uuidv4()` as an alias for `gen_random_uuid()`, to match the naming.
+
+Calling `uuidv7()` will generate a new UUIDv7 value where the timestamp is the current time. If you need to generate a UUIDv7 value for a different time, you can pass an optional `interval` to the function.
+
+Postgres' existing functions for extracting timestamp and version from a UUID are also updated to support UUIDv7. Here is an example of how to use the new functions:
+
+```sql
+postgres=# select uuidv7();
+                uuidv7
+--------------------------------------
+ 0196ea4a-6f32-7fd0-a9d9-9c815a0750cd
+(1 row)
+
+postgres=# select uuidv7(INTERVAL '1 day');
+                uuidv7
+--------------------------------------
+ 0196ef74-8d09-77b0-a84b-5301262f05ad
+(1 row)
+
+postgres=# SELECT uuid_extract_version(uuidv4());
+ uuid_extract_version
+----------------------
+                    4
+(1 row)
+
+postgres=# SELECT uuid_extract_version(uuidv7());
+ uuid_extract_version
+----------------------
+                    7
+(1 row)
+
+postgres=# SELECT uuid_extract_timestamp(uuidv7());
+   uuid_extract_timestamp
+----------------------------
+ 2025-05-19 20:50:40.381+00
+(1 row)
+
+postgres=# SELECT uuid_extract_timestamp(uuidv7(INTERVAL '1 hour'));
+   uuid_extract_timestamp
+----------------------------
+ 2025-05-19 21:50:59.388+00
+(1 row)
+
+postgres=# SELECT uuid_extract_timestamp(uuidv7(INTERVAL '-1 day'));
+   uuid_extract_timestamp
+----------------------------
+ 2025-05-18 20:51:15.774+00
+(1 row)
+```
+
+Using `uuidv7()` as the primary key in a table is straightforward, and together with the ability to extract the timestamp, it makes it easy to use the UUID as a sortable key and even inspect the creation time of the record:
+
+```sql
+CREATE TABLE test (
+    id uuid DEFAULT uuidv7() PRIMARY KEY,
+    name text
+);
+
+INSERT INTO test (name) VALUES ('foo');
+INSERT INTO test (name) VALUES ('bar');
+-- this will be sorted to the beginning of the list since we are making it 1h older than the other two
+INSERT INTO test (id, name) VALUES (uuidv7(INTERVAL '-1 hour'), 'oldest');
+
+SELECT uuid_extract_timestamp(id), name FROM test ORDER BY id;
+
+   uuid_extract_timestamp   |  name
+----------------------------+--------
+ 2025-05-19 19:55:43.87+00  | oldest
+ 2025-05-19 20:55:01.304+00 | foo
+ 2025-05-19 20:55:01.305+00 | bar
+(3 rows)
+```
+
+All these functions are documented in the [PostgreSQL documentation](https://www.postgresql.org/docs/18/functions-uuid.html) and if you are interested in the implementation details, you can review the [patch](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commitdiff;h=78c5e141e).
+
+## Try it out!
+
+Once PostgreSQL 18 is released, you will be able to use `uuidv7()` and all the other new functionality by installing it as you normally do. 
+While the official release is planned for September, `Beta 1` version is already available and the community encourages users to try it out and report issues.
+
+The installations instructions for the beta versions and nightly snapshots are available [here](https://www.postgresql.org/download/snapshots/).
+
+## Final Thoughts
+
+PostgreSQL 18 delivers practical improvements that experienced developers will really appreciate. Native support for UUIDv7 is a quiet but impactful addition that addresses long-standing pain points in database design.
+
+UUIDs have always been a tradeoff: secure, guaranteed to be unique, efficient to generate in distributed systems. but with performance drawbacks for use with B-tree indexes. UUIDv7 brings the best of both worlds — globally unique, yet ordered in a way that plays nicely with B-tree indexes and write-heavy workloads. Postgres 18 makes them that much more convenient to use.
+
+If you've ever hesitated to use UUIDs for primary keys, this is your chance to revisit that decision. Try the beta, test it in your schema, and see how it behaves. Whether you're building multi-tenant apps or just want more stable ID generation, UUIDv7 is worth a look.
+
+The best way to shape the future of Postgres is to get involved early — so go ahead, spin up a test instance and let the community know what you find.
