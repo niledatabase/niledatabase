@@ -3,12 +3,12 @@ export const metadata = {
   authors: ["gwenshap"],
   image: "2025-05-09-uuidv7/cover.png",
   sizzle:
-    "PostgreSQL 18 adds native support for UUIDv7. A sortable UUID variant that plays nicely with indexes. Here's what that means for you.",
+    "PostgreSQL 18 adds native support for UUIDv7. A timestamp-based UUID variant that plays nicely with btree indexes. Here's what that means for you.",
   tags: ["postgres", "performance"],
 };
 
 PostgreSQL 18 is on the horizon, with beta testing now underway. Among the many improvements in this release is support
-for UUIDv7. A UUID variant that is sortable and plays nicely with indexes. In this post, we'll discuss UUIDs in general, why UUIDv7 is so useful and how you'll want to use it in Postgres.
+for UUIDv7. A timestamp-based UUID variant that plays nicely with btree indexes. In this post, we'll discuss UUIDs in general, why UUIDv7 is so useful and how you'll want to use it in Postgres.
 
 ## PostgreSQL 18
 
@@ -18,9 +18,10 @@ As usual, the community is encouraged to try it out and report issues, with the 
 The highlights of the release include:
 
 - Async I/O (with io_uring) — 2-3x speedups on seq scans, vacuums
-- Skip scan + smarter OR/IN optimizations
+- Skip scan on multi-column btree indexes + smarter OR/IN optimizations
 - Keep planner stats during major upgrades
-- `uuidv7()` and virtual generated columns
+- UUIDv7 functions
+- Virtual generated columns
 - OAuth login + md5 deprecation warning
 - EXPLAIN ANALYZE now shows I/O, CPU, WAL
 - Temporal constraints, LIKE on nondeterministic collation, casefolding
