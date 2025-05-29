@@ -25,11 +25,12 @@ When a user signs in via an OAuth provider, the following flow occurs:
 - Your server then exchanges the authorization code for an access token from nile auth, which in turn sends a payload back to give to the client.
 - The user is authenticated, and a session is created.
 
-
 ## Provider Configuration
 
 All providers can be configured on the **Configuration** screen under **Providers**, which is located in the **Tenant and Users** page
 ![Provider Configuration](/images/auth/providers.png)
+
+<Info>When using SSO providers and email + password, the `email_verified` column in the `users.users` table must be set. An error will be produced if an SSO user attempts to log in with email + password.</Info>
 
 ## Error Handling
 
