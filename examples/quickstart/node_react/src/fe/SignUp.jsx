@@ -13,7 +13,9 @@ export default function SignUp() {
         redirect={false}
         onSuccess={(response) => {
           console.log("success response from signup:", response);
-          navigate("/tenants");
+          // Work around for now, we need to redirect to the tenants page after signup 
+          // assuming signup actually authenticates the user
+          navigate("/"); 
         }}
         onError={(error) => setError(error)}
       />
