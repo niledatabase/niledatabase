@@ -123,7 +123,7 @@ fly launch
 fly secrets set DATABASE_URL=...
 fly secrets set AI_API_KEY=...
 fly deploy
-fly scale memory 1024
+fly scale memory 512
 fly scale count 1
 ```
 

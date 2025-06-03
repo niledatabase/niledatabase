@@ -1,5 +1,7 @@
 import "dotenv/config";
 import express from "express";
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import {
   embedTask,
@@ -13,6 +15,9 @@ import { NileExpressHandler } from "@niledatabase/server/express";
 
 const fe_url = process.env.FE_URL || "http://localhost:3006";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const nile = await Nile({
   api: {
     secureCookies: process.env.VERCEL === "1",
@@ -24,6 +29,9 @@ const nile = await Nile({
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from the Vite React app build directory
+app.use(express.static(path.join(__dirname, '../fe')));
 
 const { paths, handler } = await NileExpressHandler(nile, {
   muteResponse: true,
@@ -163,4 +171,9 @@ app.get("/insecure/all_todos", async (req, res) => {
       message: "Internal Server Error",
     });
   }
+});
+
+// All other GET requests not handled before will return the React app's index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../fe', 'index.html'));
 });
