@@ -10,14 +10,10 @@ export default function SignUp() {
   return (
     <div className="justify-center items-center flex flex-1 flex-col">
       <SignUpForm 
+        redirect={false}
         onSuccess={(response) => {
           console.log("success response from signup:", response);
-          if (response.data?.id) {
-            navigate("/tenants");
-          } else {
-            console.log("error response from signup:", response);
-            setError("Signup failed. Please check your information and try again.");
-          }
+          navigate("/tenants");
         }}
         onError={(error) => setError(error)}
       />

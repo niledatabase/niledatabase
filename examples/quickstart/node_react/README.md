@@ -96,6 +96,6 @@ Assuming you already installed `fly` CLI and got the signup/login all set up.
 Also, as you can see, this is just an example for "try it out" purposes. It isn't especially secure or highly available with these configs...
 
 ```bash
-fly launch --internal-port 3006 --vm-memory 1024 --env DANGEROUSLY_DISABLE_HOST_CHECK=true
+fly launch --internal-port 3006 --vm-memory 1024
 fly deploy --ha=false --vm-memory 1024
 ```

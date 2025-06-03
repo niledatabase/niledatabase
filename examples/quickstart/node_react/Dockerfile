@@ -1,20 +1,38 @@
-FROM node:20
-
-# Create app directory
+# Stage 1: Builder
+FROM node:20 AS builder
 WORKDIR /usr/src/app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
+# Copy package files and install all dependencies (including dev)
+COPY package.json package-lock.json* ./
+RUN npm ci
 
-RUN npm install
-RUN npm install -g typescript
-RUN npm install -g ts-node
-
-# Bundle app source
+# Copy the rest of the application source code
 COPY . .
 
-# Assuming port 3006 for now. Will get the port management working here later.
-EXPOSE 3006
-CMD ["npm", "run", "dev"]
+# Run the build script (builds backend TS to JS, and frontend React app)
+RUN npm run build
+RUN ls -R /usr/src/app/dist
+# At this point, we have:
+# - ./dist/be (compiled backend)
+# - ./dist/fe (static frontend assets)
+
+# Prune devDependencies from node_modules
+RUN npm prune --omit=dev
+
+# Stage 2: Runner
+FROM node:20-alpine AS runner
+WORKDIR /usr/src/app
+ENV NODE_ENV=production
+
+# Copy production dependencies from the builder stage
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+
+# Copy compiled backend and frontend static assets
+COPY --from=builder /usr/src/app/dist ./dist
+
+# Copy package.json (it might be needed for `npm start`)
+COPY --from=builder /usr/src/app/package.json . 
+
+# The Express app should listen on a port, e.g., 3000 or from process.env.PORT
+EXPOSE 3000
+CMD ["npm", "start"]

@@ -2,8 +2,8 @@ import React from "react";
 import "@fontsource/inter";
 import "./css/globals.css";
 import "./css/output.css";
-import { ReactComponent as NodeLogoRight } from "./images/node_logo_r.svg";
-import { ReactComponent as NodeLogoBottom } from "./images/node_logo_b.svg";
+import NodeLogoRight from "./images/node_logo_r.svg?react";
+import NodeLogoBottom from "./images/node_logo_b.svg?react";
 import Logo from "./components/ui/logo";
 import { Card } from "./components/ui/card";
 
