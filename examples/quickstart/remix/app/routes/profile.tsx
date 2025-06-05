@@ -4,9 +4,26 @@ import { nile } from "~/nile";
 import type { Route } from "./+types/profile";
 import { database } from "~/database/context";
 import GuestBook from "~/welcome/guestbook";
+import Tenants from "./tenants";
 
-export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
+async function handleCreateTenant(formData: FormData, request: Request) {
+  const headers = new Headers();
+  headers.set('cookie', request.headers.get('cookie') || '');
+  nile.api.headers = headers;
+
+  const tenantName = formData.get("tenantName");
+  if (typeof tenantName !== "string" || !tenantName.trim()) {
+    return { tenantsError: "Tenant name is required" };
+  }
+
+  const tenant = await nile.api.tenants.createTenant(tenantName.trim());
+  if (tenant instanceof Response) {
+    return { tenantsError: await tenant.text() };
+  }
+  return null;
+}
+
+async function handleGuestBook(formData: FormData) {
   let name = formData.get("name");
   let email = formData.get("email");
   if (typeof name !== "string" || typeof email !== "string") {
@@ -22,11 +39,27 @@ export async function action({ request }: Route.ActionArgs) {
   const db = database();
   try {
     await db.insert(schema.guestBook).values({ name, email });
+    return null;
   } catch (error) {
     console.log(error);
     return { guestBookError: "Error adding to guest book" };
   }
 }
+
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const action = formData.get("action");
+
+  switch (action) {
+    case "createTenant":
+      return handleCreateTenant(formData, request);
+    case "guestbook":
+      return handleGuestBook(formData);
+    default:
+      return null;
+  }
+}
+
 export async function loader({ context, request }: Route.LoaderArgs) {
   const user = await nile.api.users.me(request.headers);
   if (user instanceof Response) {
@@ -35,16 +68,28 @@ export async function loader({ context, request }: Route.LoaderArgs) {
 
   const db = database();
 
-  const guestBook = await db.query.guestBook.findMany({
-    columns: {
-      id: true,
-      name: true,
-    },
-  });
+  const [guestBook, tenants] = await Promise.all([
+    db.query.guestBook.findMany({
+      columns: {
+        id: true,
+        name: true,
+      },
+    }),
+    nile.api.tenants.listTenants(request.headers),
+  ]);
+
+  if (tenants instanceof Response) {
+    return {
+      user,
+      guestBook,
+      message: await tenants.text(),
+    };
+  }
 
   return {
     user,
     guestBook,
+    tenants,
   };
 }
 
@@ -61,6 +106,11 @@ export default function Profile({
       <GuestBook
         guestBook={loaderData.guestBook ?? []}
         guestBookError={actionData?.guestBookError}
+        message={loaderData.message}
+      />
+      <Tenants
+        tenants={loaderData.tenants ?? []}
+        tenantsError={actionData?.tenantsError}
         message={loaderData.message}
       />
     </div>
