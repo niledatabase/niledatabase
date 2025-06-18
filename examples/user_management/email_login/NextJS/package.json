@@ -38,5 +38,5 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.0.4"
   },
-  "packageManager": "npm@10.8.3"
+  "packageManager": "npm@10.9.2"
 }

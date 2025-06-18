@@ -4,7 +4,7 @@
   "description": "Getting Started with Nile and Prisma",
   "main": "index.js",
   "type": "module",
-  "packageManager": "npm@10.8.3",
+  "packageManager": "npm@10.9.2",
   "scripts": {
     "dev": "node --watch --loader ts-node/esm app.ts",
     "start": "node --loader ts-node/esm app.ts",

@@ -1,7 +1,7 @@
 {
   "name": "fe-for-java-todo-app",
   "version": "0.1.0",
-  "packageManager": "npm@10.8.3",
+  "packageManager": "npm@10.9.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
