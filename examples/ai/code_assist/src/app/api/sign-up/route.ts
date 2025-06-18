@@ -8,7 +8,7 @@ import { Nile } from "@niledatabase/server";
 // Note that this route must exist in this exact location for user/password signup to work
 // Nile's SignUp component posts to this route, we call Nile's signup API via the SDK
 export async function POST(req: Request) {
-  const nile = await Nile({
+  const nile = Nile({
     debug: true,
   });
   const res = await nile.api.auth.signUp(req);
