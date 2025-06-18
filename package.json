@@ -43,10 +43,15 @@
   },
   "homepage": "https://github.com/TheNileDev/niledatabase#readme",
   "devDependencies": {
+    "eslint": "9.2.0",
     "prettier": "^2.8.8",
     "turbo": "^1.10.13"
   },
   "overrides": {
+    "eslint": "9.2.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint-config-next": "^15.3.3",
+    "tar-fs": "2.1.3",
     "prismjs": "1.30.0",
     "@radix-ui/react-use-controllable-state": "1.1.1"
   },
@@ -55,7 +60,7 @@
     "@swc/core-linux-x64-gnu": "^1.2.160",
     "piscina": "^4.9.2"
   },
-  "packageManager": "npm@10.8.3",
+  "packageManager": "npm@10.9.2",
   "dependencies": {
     "hast-to-hyperscript": "^10.0.3",
     "mdurl": "^2.0.0"
