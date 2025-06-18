@@ -195,26 +195,17 @@
             "pages": [
               "auth/introduction",
               "auth/comparison",
-              "auth/quickstart",
+              "auth/getting-started/installation",
+              {
+                "group": "Quickstart",
+                "icon": "rocket",
+                "pages": [
+                  "auth/quickstarts/nextjs",
+                  "auth/quickstarts/remix",
+                  "auth/quickstarts/express"
+                ]
+              },
               "auth/selfhosting",
-              {
-                "group": "Frontend Framework",
-                "icon": "bring-forward",
-                "pages": [
-                  "auth/frontendframeworks/nextjs",
-                  "auth/frontendframeworks/react",
-                  "auth/frontendframeworks/remix"
-                ]
-              },
-              {
-                "group": "Backend Framework",
-                "icon": "send-backward",
-                "pages": [
-                  "auth/backendframeworks/express",
-                  "auth/backendframeworks/JS backend",
-                  "auth/backendframeworks/customize-routes"
-                ]
-              },
               "auth/examples",
               {
                 "group": "Concepts",
@@ -292,14 +283,15 @@
                 "pages": [
                   {
                     "group": "JavaScript",
+                    "icon": "js",
                     "pages": [
-                      "auth/sdk-reference/nile-js/overview",
-                      "auth/sdk-reference/nile-js/auth",
-                      "auth/sdk-reference/nile-js/users",
-                      "auth/sdk-reference/nile-js/tenants",
-                      "auth/sdk-reference/nile-js/db",
-                      "auth/sdk-reference/nile-js/routes",
-                      "auth/sdk-reference/nile-js/configuration"
+                      "auth/sdk-reference/javascript/overview",
+                      "auth/sdk-reference/javascript/server/auth",
+                      "auth/sdk-reference/javascript/server/users",
+                      "auth/sdk-reference/javascript/server/tenants",
+                      "auth/sdk-reference/javascript/server/db",
+                      "auth/sdk-reference/javascript/server/routes",
+                      "auth/sdk-reference/javascript/server/configuration"
                     ]
                   }
                 ]
@@ -323,6 +315,15 @@
                 ]
               },
               "auth/roadmap"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "icon": "puzzle-piece",
+            "pages": [
+              "auth/integrations/nextjs",
+              "auth/integrations/remix",
+              "auth/integrations/express"
             ]
           }
         ]
@@ -402,13 +403,6 @@
         "openapi": {
           "source": "https://global.thenile.dev/openapi.yaml",
           "directory": "api-reference"
-        }
-      },
-      {
-        "tab": "Auth API",
-        "openapi": {
-          "source": "https://us-west-2.api.thenile.dev/v2/openapi",
-          "directory": "auth/api-reference"
         }
       },
       {

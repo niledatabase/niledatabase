@@ -41,7 +41,7 @@ export async function POST(req: Request) {
   const embedding = await createVectorEmbedding(body.question);
   const formattedEmbedding = JSON.stringify(embedding);
 
-  const nile = await Nile();
+  const nile = Nile();
   nile.tenantId = body.tenant_id;
   const project_id = body.project_id;
 

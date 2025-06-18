@@ -1,6 +1,7 @@
 ---
 title: 'Express.js'
 description: 'Integrate Nile Auth with Express.js applications'
+icon: 'server'
 ---
 
 import DbCreds from '/snippets/dbcreds.mdx'
@@ -47,8 +48,8 @@ import { NileExpressHandler } from "@niledatabase/server/express";
 const startServer = async () => {
     try {
         const app = express();
-        const nile = await Nile();
-        const { paths, handler } = await NileExpressHandler(nile);
+        const nile = Nile();
+        const { paths, handler } = NileExpressHandler(nile);
         
 
         app.use(express.json());
@@ -285,4 +286,4 @@ curl "http://localhost:3040/api/tenants/019637b6-6d72-774b-9796-8c35813f9f78/tod
 - [JWT Concepts](/auth/concepts/jwt)
 - [Sessions](/auth/concepts/sessions) 
 - [Tenant Isolation](/tenant-virtualization/tenant-isolation)
-- [SDK Reference](/auth/sdk-reference/nile-js)
+- [SDK Reference](/auth/sdk-reference/server)

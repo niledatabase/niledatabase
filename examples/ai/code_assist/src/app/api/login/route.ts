@@ -11,7 +11,7 @@ import { Nile } from "@niledatabase/server";
 // The reason we need this is that this example supports both Google SSO (which has custom information) and user/password login which doesn't
 // Check the authentication quickstart for a simpler example of using the Nile SDK without custom cookies
 export async function POST(req: Request) {
-  const nile = await Nile({
+  const nile = Nile({
     debug: true,
   });
   const res = await nile.api.auth.login(req);

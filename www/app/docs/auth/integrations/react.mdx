@@ -1,6 +1,7 @@
 ---
 title: 'React'
 description: 'Integrate Nile Auth with React applications'
+icon: 'atom'
 ---
 
 ## Installation
@@ -36,7 +37,7 @@ import { nile } from "@/lib/nile";
 
 export default async function SignUpPage() {
   nile.api.headers = req.headers; // from the incoming request
-  const session = await nile.api.auth.getSession(); 
+  const session = await nile.auth.getSession(); 
 
   if (session.status === 'unauthenticated') {
     return <div>No soup for you!</div>

@@ -234,7 +234,7 @@ The NodeJS server uses the [Nile JS client](https://github.com/niledatabase/nile
 When the Nile client is initialized, it uses the credentials you provided in the `.env` file to connect with the API:
 
 ```js
-const nile = await Nile();
+const nile = Nile();
 ```
 
 The application uses Express middleware to capture the tenant identity for the current request and set Nile context:
