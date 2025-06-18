@@ -51,7 +51,7 @@
     "@radix-ui/react-use-controllable-state": "1.1.1"
   },
   "optionalDependencies": {
-    "@img/sharp-linux-x64": "^0.34.0",
+    "@img/sharp-linux-x64": "^0.34.2",
     "@swc/core-linux-x64-gnu": "^1.2.160",
     "piscina": "^4.9.2"
   },
