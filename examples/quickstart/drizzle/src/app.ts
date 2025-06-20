@@ -159,15 +159,18 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
     }
     const tenantId = req.params.tenantId;
 
-    // We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
-    const similarTasks = await findSimilarTasks(tenantDB, title);
-    console.log("found similar tasks: " + JSON.stringify(similarTasks));
-
-    const estimate = await aiEstimate(title, similarTasks);
-    console.log("estimated time: " + estimate);
-
-    // get the embedding for the task, so we can find it in future similarity searches
-    const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
+    // Estimate and embedonly when AI_API_KEY is set
+    let estimate = null;
+    let embedding = null;
+    if (process.env.AI_API_KEY) {
+      // We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
+      const similarTasks = await findSimilarTasks(tenantDB, title);
+      console.log("found similar tasks: " + JSON.stringify(similarTasks));
+      estimate = await aiEstimate(title, similarTasks);
+      console.log("estimated time: " + estimate);
+      // get the embedding for the task, so we can find it in future similarity searches
+      embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
+    }
 
     const newTodo = await tenantDB(async (tx) => {
       return await tx

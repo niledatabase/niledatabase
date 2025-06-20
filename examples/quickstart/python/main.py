@@ -76,12 +76,18 @@ async def create_todo(todo:Todo, session = Depends(get_tenant_session)):
     logger.debug(f"Tenant ID: {get_tenant_id()}")
     # Nile won't automatically set the tenant_id for you, so we get it from the context
     todo.tenant_id = get_tenant_id(); 
-    embedding = get_embedding(todo.title, EmbeddingTasks.SEARCH_DOCUMENT)
-    todo.embedding = embedding
-    similar_tasks = get_similar_tasks(session, todo.title)
-    logger.info(f"Generating estimate based on similar tasks: {similar_tasks}")
-    estimate = ai_estimate(todo.title, similar_tasks)
-    todo.estimate = estimate
+    # Only estimate if AI_API_KEY is set
+    if os.getenv("AI_API_KEY"):
+        embedding = get_embedding(todo.title, EmbeddingTasks.SEARCH_DOCUMENT)
+        todo.embedding = embedding
+        similar_tasks = get_similar_tasks(session, todo.title)
+        logger.info(f"Generating estimate based on similar tasks: {similar_tasks}")
+        estimate = ai_estimate(todo.title, similar_tasks)
+        todo.estimate = estimate
+    else:
+        logger.info("AI_API_KEY is not set, skipping estimate")
+        todo.estimate = None
+        todo.embedding = None
     session.add(todo)
     session.commit()
     short_todo = Todo(id=todo.id, tenant_id=todo.tenant_id, title=todo.title, estimate=todo.estimate, complete=todo.complete)
