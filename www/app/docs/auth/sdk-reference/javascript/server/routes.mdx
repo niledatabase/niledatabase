@@ -17,13 +17,9 @@ Route generation depends on the framework you are using.
 // app/api/[...nile]/nile.ts
 import { Nile } from "@niledatabase/server";
 
-export const nile = await Nile({
-  secureCookies: process.env.VERCEL === "1",
-  debug: true,
-});
+export const nile = Nile();
 
-export const { handlers } = nile.api;
-export const { handlersWithContext } = nile.api;
+export const { handlers } = nile;
 ```
 
 ```ts route.ts
@@ -41,7 +37,7 @@ export const { POST, GET, DELETE, PUT } = handlers;
 // app/nile.ts
 import { Nile } from "@niledatabase/server";
 
-export const nile = await Nile();
+export const nile = Nile();
 export const { handlers } = nile.api;
 ```
 
@@ -106,7 +102,7 @@ import { NileExpressHandler } from "@niledatabase/server/express";
 const startServer = async () => {
     try {
         const app = express();
-        const nile = await Nile();
+        const nile = Nile();
         // This is where the route handlers are imported
         const { paths, handler } = await NileExpressHandler(nile);
         
@@ -347,7 +343,7 @@ import { NileExpressHandler } from "@niledatabase/server/express";
 const startServer = async () => {
     try {
         const app = express();
-        const nile = await Nile({
+        const nile = Nile({
             debug: true,
         });
         const { paths, handler } = await NileExpressHandler(nile);
@@ -466,7 +462,7 @@ import { NileExpressHandler } from "@niledatabase/server/express";
 const startServer = async () => {
     try {
         const app = express();
-        const nile = await Nile({
+        const nile = Nile({
            // debug: true,
         });
         // muteResponse is set to true to avoid sending the response back to the client from the route handler

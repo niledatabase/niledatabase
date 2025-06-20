@@ -128,7 +128,7 @@ async function embedDirectory(
   project_url: string
 ) {
   try {
-    const nile = await Nile();
+    const nile = Nile();
     const tenant_id = await getOrCreateTenantId(nile, tenant_name!);
     nile.tenantId = tenant_id;
 

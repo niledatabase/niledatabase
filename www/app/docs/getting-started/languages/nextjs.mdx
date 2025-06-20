@@ -154,7 +154,7 @@ This method configures a shared instance of `nile` that is used throughout the a
 This instance is a singleton, which you get by calling Nile SDK's `getInstance` method. This is also where all the environment variables we've set earlier are being used, so lets take a look at this file:
 
 ```typescript
-const nile = await Nile();
+const nile = Nile();
 ```
 
 The SDK uses your credentials to call the Nile API. Every page, route and function in our app can use the same `nile` instance to access Nile APIs and DB.

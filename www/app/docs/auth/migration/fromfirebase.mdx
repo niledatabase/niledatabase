@@ -214,7 +214,7 @@ async function migrateTenants(nile: any) {
 
 // Single initialization of Nile
 async function migrateAll() {
-    const nile = await Nile({});
+    const nile = Nile({});
     await migrateTenants(nile);
     await migrateUsers(nile);
 }

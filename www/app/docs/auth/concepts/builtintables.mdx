@@ -99,6 +99,23 @@ Indexes:
     "verification_tokens_pkey" PRIMARY KEY, btree (identifier)
     "token_identifier_unique" UNIQUE CONSTRAINT, btree (token, identifier)
 ```
+
+### `auth.invites`
+```sql
+   Column   |           Type           | Collation | Nullable |      Default
+------------+--------------------------+-----------+----------+-------------------
+ id         | uuid                     |           | not null | gen_random_uuid()
+ tenant_id  | uuid                     |           | not null |
+ token      | text                     |           | not null |
+ identifier | text                     |           | not null |
+ roles      | text                     |           |          |
+ created_by | uuid                     |           |          |
+ expires    | timestamp with time zone |           |          | LOCALTIMESTAMP + '7 days'::interval
+Indexes:
+    "auth_invites_pkey" PRIMARY KEY, btree (tenant_id, id)
+    "unique_invite_per_email_per_tenant" UNIQUE, btree (tenant_id, identifier)
+```
+
 ## OIDC Provider tables
 
 ### `auth.oidc_providers`

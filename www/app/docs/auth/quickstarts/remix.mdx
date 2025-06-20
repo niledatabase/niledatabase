@@ -1,6 +1,7 @@
 ---
 title: 'Remix'
 description: 'Integrate Nile Auth with Remix applications'
+icon: 'shuffle'
 ---
 
 import DbCreds from '/snippets/dbcreds.mdx'
@@ -256,7 +257,7 @@ Now we need to add the nile instance and route handlers to allow our server to r
 cat > app/nile.ts << 'EOF'
 import { Nile } from "@niledatabase/server";
 
-export const nile = await Nile();
+export const nile = Nile();
 export const { handlers } = nile.api;
 EOF
 
@@ -314,7 +315,7 @@ Create a file to house the main Nile instance. You can use this file to access n
 ```ts
 import { Nile } from "@niledatabase/server";
 
-export const nile = await Nile();
+export const nile = Nile();
 export const { handlers } = nile.api;
 ```
 
@@ -521,43 +522,6 @@ This will start the development server at `http://localhost:3000`, and you can t
 ## Summary
 
 Now you can interact with your Nile Database through Remix API routes and manage authentication in your app!
-
-## Creating a loader
-
-In some cases, you may want to create specific action and loader around the API, to do that, use the server side functions in the sdk in your loader. This code loads and updates a user&apos;s profile.
-
-```tsx
-
-import type { Route } from "./+types/profile";
-import { nile } from "~/nile";
-
-export const loader: LoaderFunction = async ({ request }) => {
-  try {
-    const user = await nile.api.users.me(); 
-    if (user) {
-      // If the user is authenticated, we can return their info or pass it to the UI
-      return json({ user });
-    } else {
-      // If the user is not authenticated, redirect to the index page
-      return redirect("/");
-    }
-  } catch (error) {
-    return json({ message: error.message }, { status: 500 });
-  }
-};
-
-export default function Profile({ loaderData }: : Route.ComponentProps) {
-  const { user, message } = loaderData;
-   return (
-      <div className="container mx-auto flex flex-col items-center pt-20 gap-20 relative">
-        <div>{message ? <>{message}</> : null}</div>
-        <SignOutButton callbackUrl="/" className="absolute right-0 top-20" />
-        <UserInfo user={user} className="w-[400px]" />
-      </div>
-   );
-}
-
-```
 
 ## Related Topics
 
