@@ -72,12 +72,13 @@ pip install -r requirements.txt
 
 ## 5. Running the app
 
-If you'd like to use the app with the UI, you'll want to build the UI assets first:
+Start by building the UI assets first:
 
 ```bash
 cd ui
 npm install
 npm run build
+cd ..
 ```
 
 Then, whether or not you have UI, start the Python webapp:
