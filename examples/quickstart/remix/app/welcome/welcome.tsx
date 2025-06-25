@@ -37,7 +37,7 @@ export function Welcome() {
               className="text-primary hover:underline hover:opacity-80"
               to="/sign-up"
             >
-              Login here
+              Sign up here
             </Link>
           </div>
         </div>
