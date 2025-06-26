@@ -172,15 +172,20 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
 
     const { title, complete } = req.body;
     const tenantId = req.params.tenantId;
-    // We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
-    const similarTasks = await findSimilarTasks(tenantDB, title);
-    console.log("found similar tasks: " + JSON.stringify(similarTasks));
+    // Only estimate if AI_API_KEY is set
+    let estimate = null;
+    let embedding= null;
+    if (process.env.AI_API_KEY) {
+      // We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
+      const similarTasks = await findSimilarTasks(tenantDB, title);
+      console.log("found similar tasks: " + JSON.stringify(similarTasks));
 
-    const estimate = await aiEstimate(title, similarTasks);
-    console.log("estimated time: " + estimate);
+      estimate = await aiEstimate(title, similarTasks);
+      console.log("estimated time: " + estimate);
 
-    // get the embedding for the task, so we can find it in future similarity searches
-    const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
+      // get the embedding for the task, so we can find it in future similarity searches
+      embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
+    }
     console.log("tenant_id: " + tenantId);
     // This is safe because Nile validates the tenant ID and protects against SQL injection
     const newTodo = await tenantDB.$queryRawUnsafe(
@@ -189,7 +194,7 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
       title,
       complete,
       estimate,
-      embeddingToSQL(embedding)
+      embedding ? embeddingToSQL(embedding) : null
     );
 
     res.json(newTodo);

@@ -64,16 +64,21 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-Then, whether you have a virtual environment or not, install dependencies with `pip install -r requirements.txt`
+Then, whether you have a virtual environment or not, install dependencies with:
+
+```bash
+pip install -r requirements.txt
+```
 
 ## 5. Running the app
 
-If you'd like to use the app with the UI, you'll want to build the UI assets first:
+Start by building the UI assets first:
 
 ```bash
 cd ui
 npm install
 npm run build
+cd ..
 ```
 
 Then, whether or not you have UI, start the Python webapp:
