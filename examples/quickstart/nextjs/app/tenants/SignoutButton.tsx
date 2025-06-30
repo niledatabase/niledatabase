@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { signOut } from "@niledatabase/react";
+import { signOut } from "@niledatabase/client";
 
 export default function SignoutButton() {
   return (
