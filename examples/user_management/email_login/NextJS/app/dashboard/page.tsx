@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tenant, ActiveSession, JWT } from "@niledatabase/server";
 import { Ban } from "lucide-react";
 import { SignOutButton, TenantSelector, UserInfo } from "@niledatabase/react";
-// import "@niledatabase/react/styles.css";
 
 function Carder({
   children,

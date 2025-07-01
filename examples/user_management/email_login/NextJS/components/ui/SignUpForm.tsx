@@ -1,7 +1,6 @@
 "use client";
 
 import { useSignUp } from "@niledatabase/react";
-// import "@niledatabase/react/styles.css";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -14,18 +14,13 @@ export async function createTenant(prevState: any, formData: FormData) {
   }
   //@ts-ignore
   const userId = session.user?.id;
-  const nile = await Nile(); // we don't have a tenant yet
+  const nile = Nile(); // we don't have a tenant yet
   const tenantName = formData.get("tenantname")?.toString();
   if (!tenantName) {
     return { message: "No tenant name provided" };
   }
 
-  console.log(
-    "creating tenant " +
-      tenantName +
-      " for user:" +
-      userId
-  );
+  console.log("creating tenant " + tenantName + " for user:" + userId);
   let success = false; // needed because redirect can't be used in try-catch block
   let tenantId = null;
   try {

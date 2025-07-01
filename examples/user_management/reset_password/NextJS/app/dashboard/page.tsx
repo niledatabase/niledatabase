@@ -5,7 +5,6 @@ import SignOutButton from "./SignOutButton";
 import { Tenant, ActiveSession, JWT } from "@niledatabase/server";
 import { Ban } from "lucide-react";
 import { TenantSelector, UserInfo } from "@niledatabase/react";
-import "@niledatabase/react/styles.css";
 
 function Carder({
   children,
