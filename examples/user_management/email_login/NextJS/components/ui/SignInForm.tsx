@@ -1,7 +1,7 @@
 "use client";
 
 import { SignInForm } from "@niledatabase/react";
-import "@niledatabase/react/styles.css";
+// import "@niledatabase/react/styles.css";
 import { Button } from "./button";
 import Link from "next/link";
 
