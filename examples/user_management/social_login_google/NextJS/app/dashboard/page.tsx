@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { nile } from "../api/[...nile]/nile";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import SignOutButton from "./SignOutButton";
@@ -19,10 +18,7 @@ function Carder({
   );
 }
 export default async function Dashboard() {
-  const nextCookies = cookies();
-  nile.api.headers = new Headers({ cookie: nextCookies.toString() });
-
-  const currentUser = await nile.api.users.me();
+  const currentUser = await nile.users.getSelf();
 
   if (currentUser instanceof Response) {
     return (
@@ -43,8 +39,8 @@ export default async function Dashboard() {
 
   const requests: [ActiveSession, Tenant[]] = [
     // could be a JWT, but in this case we're using sso
-    nile.api.auth.getSession() as unknown as ActiveSession,
-    nile.api.tenants.listTenants() as unknown as Tenant[],
+    nile.auth.getSession() as unknown as ActiveSession,
+    nile.tenants.list() as unknown as Tenant[],
   ];
   const [session, tenants] = await Promise.all(requests);
 
