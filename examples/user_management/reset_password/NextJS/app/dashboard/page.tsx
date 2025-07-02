@@ -4,7 +4,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import SignOutButton from "./SignOutButton";
 import { Tenant, ActiveSession, JWT } from "@niledatabase/server";
 import { Ban } from "lucide-react";
-import { TenantSelector, UserInfo } from "@niledatabase/react";
+import {
+  PasswordResetForm,
+  TenantSelector,
+  UserInfo,
+} from "@niledatabase/react";
 
 function Carder({
   children,
@@ -19,10 +23,7 @@ function Carder({
   );
 }
 export default async function Dashboard() {
-  const nextCookies = cookies();
-  nile.api.headers = new Headers({ cookie: nextCookies.toString() });
-
-  const currentUser = await nile.api.users.me();
+  const currentUser = await nile.users.getSelf();
 
   if (currentUser instanceof Response) {
     return (
@@ -42,8 +43,8 @@ export default async function Dashboard() {
   }
 
   const requests: [ActiveSession, Tenant[]] = [
-    nile.api.auth.getSession() as unknown as ActiveSession,
-    nile.api.tenants.listTenants() as unknown as Tenant[],
+    nile.auth.getSession() as unknown as ActiveSession,
+    nile.tenants.list() as unknown as Tenant[],
   ];
   const [session, tenants] = await Promise.all(requests);
 
@@ -63,10 +64,11 @@ export default async function Dashboard() {
         <CardHeader>Token information</CardHeader>
         <CardContent>
           <Carder>email {session.user?.email}</Carder>
-          <Carder>id {session.user?.id}</Carder>
+          <Carder>user id {session.user?.id}</Carder>
           <Carder>expires {new Date(session.expires).toLocaleString()}</Carder>
         </CardContent>
       </Card>
+      <PasswordResetForm defaultValues={{ email: currentUser.email }} />
       <SignOutButton />
     </div>
   );
