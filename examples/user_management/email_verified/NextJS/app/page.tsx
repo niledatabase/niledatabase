@@ -1,6 +1,5 @@
 "use client";
 import { EmailSignIn, SignInForm } from "@niledatabase/react";
-import "@niledatabase/react/styles.css";
 import Link from "next/link";
 import { useState } from "react";
 

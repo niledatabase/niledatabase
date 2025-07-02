@@ -1,11 +1,8 @@
-import { headers as nextHeaders } from "next/headers";
 import { nile } from "../api/[...nile]/nile";
 import { SignOutButton, UserInfo } from "@niledatabase/react";
-import "@niledatabase/react/styles.css";
 
 export default async function Success() {
-  const headers = await nextHeaders();
-  const me = await nile.api.users.me(headers);
+  const me = await nile.users.getSelf();
   if (me instanceof Response) {
     return (
       <div className="flex flex-col items-center justify-center gap-4">

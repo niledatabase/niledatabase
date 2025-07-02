@@ -46,7 +46,7 @@ export const { POST, GET, DELETE, PUT } = handlers;`,
   TenantSelector,
   UserInfo,
 } from "@niledatabase/react";
-import "@niledatabase/react/styles.css";
+
 
 export default function SignUpPage() {
   return (

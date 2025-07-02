@@ -1,7 +1,7 @@
 import type { Route } from "./+types/home";
-import { handlers } from "~/nile";
+import { nile } from "~/nile";
 
-const { GET, POST, PUT, DELETE } = handlers;
+const { GET, POST, PUT, DELETE } = nile.handlers;
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   switch (request.method.toUpperCase()) {

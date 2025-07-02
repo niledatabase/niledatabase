@@ -1,4 +1,4 @@
-import Tenants from "./tenants.jsx";
+import Tenants from "./TenantPage.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./error-page.jsx";
 import Todos from "./todos.jsx";

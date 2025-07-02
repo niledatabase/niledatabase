@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@niledatabase/react": "^v3.0.0",
-    "@niledatabase/server": "^v3.0.0",
+    "@niledatabase/nextjs": "^5.0.0-alpha.20",
+    "@niledatabase/react": "^5.0.0-alpha.20",
+    "@niledatabase/server": "^5.0.0-alpha.20",
+    "@niledatabase/client": "^5.0.0-alpha.20",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-toast": "^1.2.2",
@@ -21,11 +23,11 @@
     "eslint-config-next": "^13.5.2",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
-    "lucide-react": "^0.447.0",
-    "next": "^14.2.30",
+    "lucide-react": "^0.525.0",
+    "next": "^15.3.0",
     "openai": "^4.53.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "react-markdown": "^9.0.1",
     "typescript": "^5.2.2"
   },

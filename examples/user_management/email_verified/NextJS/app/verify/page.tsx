@@ -1,10 +1,8 @@
-import { headers as nextHeaders } from "next/headers";
 import { nile } from "../api/[...nile]/nile";
 import { redirect } from "next/navigation";
 import VerifyButton from "./VerifyButton";
 export default async function Verify() {
-  const headers = await nextHeaders();
-  const me = await nile.api.users.me(headers);
+  const me = await nile.users.getSelf();
   if (me instanceof Response) {
     return (
       <div className="flex flex-col h-full w-full items-center justify-center gap-4">
