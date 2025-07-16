@@ -137,6 +137,7 @@
                   "extensions/btree_gist",
                   "extensions/citext",
                   "extensions/fuzzystrmatch",
+                  "extensions/pgvectorscale",
                   "extensions/pg_bigm",
                   "extensions/pg_similarity",
                   "extensions/pg_trgm",
