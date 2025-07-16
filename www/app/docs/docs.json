@@ -335,8 +335,15 @@
             "group": "Artificial Intelligence",
             "pages": [
               "ai-embeddings/introduction",
-              "ai-embeddings/vector_database",
-              "ai-embeddings/pg_vector",
+              {
+                "group": "Vectors",
+                "icon": "vector-square",
+                "pages": [
+                  "ai-embeddings/vectors/pg_vector",
+                  "ai-embeddings/vectors/diskann",
+                  "ai-embeddings/vectors/vector_database"
+                ]
+              },
               "ai-embeddings/rag",
               {
                 "group": "Embedding Models",
