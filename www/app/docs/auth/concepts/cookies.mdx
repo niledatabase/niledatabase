@@ -68,7 +68,22 @@ Here are the key cookies used by Nile Auth:
   - `httpOnly`: Ensures the cookie is not accessible to JavaScript, mitigating the risk of attacks that access browser storage.
   - `sameSite: 'lax'`: Limits the cookie to same-site requests, preventing cross-site request forgery.
   - `secure`: The cookie is only sent over HTTPS, providing security for sensitive data.
+
+### Tenant cookie
+- **Cookie Name**: `nile.tenant-id`
+- **Purpose**: This cookie stores the tenant id, if selected. If it is present, the SDK and nile auth will use this value as the context for any query or request.
+- **Options**:
+  - `sameSite: 'lax'`: Limits the cookie to same-site requests, preventing cross-site request forgery.
+  - `secure`: The cookie is only sent over HTTPS, providing security for sensitive data.
+
+### Password reset cookie
+- **Cookie Name**: `nile.reset`
+- **Purpose**: This cookie stores a signed value that is allowed to reset a user&apos;s password.
+- **Options**:
+  - `sameSite: 'lax'`: Limits the cookie to same-site requests, preventing cross-site request forgery.
+  - `secure`: The cookie is only sent over HTTPS, providing security for sensitive data.
   
+ 
 
 ## Related Topics
 

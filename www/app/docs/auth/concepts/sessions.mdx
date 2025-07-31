@@ -30,14 +30,14 @@ function Profile() {
 
 export default Profile;
 ```
-You can access the session server side by using `nile.api.auth.getSession`.
+You can access the session server side by using `nile.auth.getSession`.
 ```jsx
 import { Nile } from "@niledatabase/server";
 
-const nile = await Nile();
+const nile = Nile();
 
 app.get("/some-path", async (req, res) => {
-  const session = await nile.api.auth.getSession(req);
+  const session = await nile.auth.getSession(req);
   if (!session) {
     res.status(401).json({
       message: "Unauthorized",

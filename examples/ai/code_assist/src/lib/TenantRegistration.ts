@@ -1,7 +1,7 @@
 import { Nile } from "@niledatabase/server";
 
 export async function registerTenants(user_id: string) {
-  const nile = await Nile();
+  const nile = Nile();
   const tenants = await nile.db.query(
     "select id from tenants where id not in (select tenant_id from users.tenant_users where user_id = $1)",
     [user_id]

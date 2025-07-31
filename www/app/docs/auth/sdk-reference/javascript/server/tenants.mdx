@@ -1,0 +1,313 @@
+---
+
+title: 'Tenants'
+description: 'Managing tenants for the current user'
+---
+
+The Tenants module provides methods to create, fetch, update, delete, and interact with tenants that the currently authenticated user is a member of.
+
+Each user may belong to multiple tenants, and most operations automatically default to the currently selected tenant. You can explicitly override this by providing a tenant ID to most methods.
+
+<Note>
+Most methods assume the current user is authenticated. If not, a 401 Unauthorized error will be returned.
+</Note>
+
+---
+
+## Setting the Current Tenant
+
+You can manually set the current tenant using `await nile.withContext({ tenantId })`. `withContext` returns a copy of the nile instance with a context that captures what was passed. It also accepts a second parameter for convenience for multiple requests.
+
+```ts Returns a nile with the context 
+const nileWithContext = await nile.withContext({ tenantId: '019612d7-56e7-7e87-8f30-ad6b05d85645' });
+```
+
+```ts Self contained callback 
+const [currentUser, listOfTenantUsers]= await nile.withContext({ 
+    tenantId: '019612d7-56e7-7e87-8f30-ad6b05d85645' 
+  }, 
+  async(_nile) => Promise.all([_nile.users.getSelf, _nile.users.list])
+);
+```
+
+This method updates the internal configuration to use the given tenant in subsequent API calls.
+
+<Note>
+Framework-specific integrations may set context automatically, so calling `withContext` every time may not be necessary in those environments. see [extensions](../../../concepts/extensions.mdx) for more information
+</Note>
+
+This ID is typically sourced from:
+
+* The result of `create()`
+* A specific tenant via `get()`
+* A selected tenant from `list()`
+
+<CodeGroup>
+```ts setCurrentTenant from list
+const tenants = await nile.tenants.list();
+if (!(tenants instanceof Response)) {
+  nile.withContext({ tenantId: tenants[0].id });
+}
+```
+</CodeGroup>
+
+If not explicitly set, an error will be thrown by the SDK if the tenant Id is missing.
+
+---
+
+## create
+
+Create a new tenant using `POST /api/tenants`. The current user is automatically linked to the new tenant.
+
+<CodeGroup>
+```ts createTenant by name
+const tenant = await nile.tenants.create('Acme Inc');
+```
+
+```ts createTenant with ID
+const tenant = await nile.tenants.create({ name: 'My Org', id: 'custom-uuid' });
+```
+
+</CodeGroup>
+
+### Parameters
+
+* `name`: Name of the tenant (required)
+* `id`: Optional. Unique ID to use instead of auto-generating
+
+### Returns
+
+If successful, resolves to a `Tenant` object:
+
+```ts
+interface Tenant {
+  id: string;
+  name: string;
+}
+```
+
+Returns a `Response` with 401 or 400 on failure.
+
+---
+
+## get
+
+Fetch a specific tenant or the current tenant using `GET /api/tenants/{id}`.
+
+<CodeGroup>
+```ts getTenant by ID
+const tenant = await nile.tenants.get('0196...');
+```
+
+```ts getCurrentTenant
+const n = await nile.withContext({ tenantId: '0196...' });
+const tenant = await n.tenants.get();
+```
+
+</CodeGroup>
+
+### Parameters
+
+* `id`: Optional. If omitted, uses the current context
+
+### Returns
+
+A `Tenant` object or a raw `Response`.
+
+---
+
+## update
+
+Update the name of the current tenant via `PUT /api/tenants/{id}`.
+
+```ts
+const n = await nile.withContext({ tenantId: '0196...' });
+const tenant = await n.tenants.update({ name: 'New Name' });
+```
+
+### Parameters
+
+* `name`: New name of the tenant
+* `id`: Optional. If omitted, uses context
+
+### Returns
+
+Updated `Tenant` object or a `Response`.
+
+<Note>
+Only the name is currently updatable.
+</Note>
+
+---
+
+## delete
+
+Mark a tenant as deleted using `DELETE /api/tenants/{id}`. This is a soft delete.
+
+<CodeGroup>
+```ts delete by ID
+const res = await nile.tenants.delete('0196...');
+```
+
+```ts delete current
+const n = await nile.withContext({ tenantId: '0196...' });
+await n.tenants.delete();
+```
+
+</CodeGroup>
+
+### Returns
+
+A `Response` with status 204 on success.
+
+---
+
+## list
+
+List all tenants the current user belongs to via `GET /api/tenants/by-user`.
+
+```ts
+const tenants = await nile.tenants.list();
+```
+
+### Returns
+
+Array of `Tenant` objects:
+
+```ts
+[{ id: '...', name: '...' }]
+```
+
+401 if the user is unauthenticated.
+
+---
+
+## users
+
+List users who are members of a given tenant (or the current one).
+
+```ts
+const n = await nile.withContext({ tenantId: '0196...' });
+const users = await n.tenants.users();
+```
+
+### Returns
+
+Array of `User` objects, or a `Response` on error.
+
+---
+
+## addMember
+
+Add a user to the current tenant using their user ID.
+
+```ts
+const n = await nile.withContext({ tenantId: '0196...' });
+await n.tenants.addMember('user-id');
+```
+
+### Returns
+
+The added `User` object or a `Response`.
+
+---
+
+## removeMember
+
+Remove a user from the tenant.
+
+```ts
+const n  = await nile.withContext({ tenantId: '0196...' });
+await n.tenants.removeMember('user-id');
+```
+
+### Returns
+
+A `Response`.
+
+---
+
+## leaveTenant
+
+Removes the current user from a tenant they belong to.
+
+```ts
+const n = await nile.WithContext({ tenantId: '0196...' });
+await n.tenants.leaveTenant();
+```
+
+### Returns
+
+A `Response`.
+
+---
+
+## invites
+
+Fetch all invites for the current tenant:
+
+```ts
+const n = await nile.withContext({ tenantId: '0196...' });
+const invites = await n.tenants.invites();
+```
+
+### Returns
+
+An array of `Invite` objects.
+
+---
+
+## invite
+
+Invite a new user by email to the current tenant. the `callbackUrl` is the value that is used to return the user to a page that renders HTML. There is a primary endpoint that is used to exchange the token in the email to join the tenant. Upon a successful exchange, the user will be redirected to the `callbackUrl`
+
+<CodeGroup>
+```ts invite
+const n = await nile.withContext({ tenantId: '0196...' });
+await n.tenants.invite('user@example.com');
+```
+
+```ts invite with callback
+const n = await nile.withContext({ tenantId: '0196...' });
+await n.tenants.invite({ email: 'user@example.com', callbackUrl: 'https://myapp.com/welcome' });
+```
+
+</CodeGroup>
+
+### Parameters
+
+* `email`: Email of the user to invite
+* `callbackUrl`: Optional URL to redirect after acceptance
+* `redirectUrl`: Optional URL used as the base in the email
+
+### Returns
+
+An `Invite` object or a `Response`.
+
+---
+
+## acceptInvite
+
+Accept an invite using an emailed token and email address.
+
+```ts
+await nile.tenants.acceptInvite({ identifier: 'email', token: '123' });
+```
+
+### Returns
+
+A `Response` indicating success or failure.
+
+---
+
+## deleteInvite
+
+Delete a previously sent invite.
+
+```ts
+await nile.tenants.deleteInvite('invite-id');
+```
+
+### Returns
+
+A `Response`.

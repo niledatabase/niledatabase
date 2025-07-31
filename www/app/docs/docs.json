@@ -196,26 +196,17 @@
             "pages": [
               "auth/introduction",
               "auth/comparison",
-              "auth/quickstart",
+              "auth/getting-started/installation",
+              {
+                "group": "Quickstart",
+                "icon": "rocket",
+                "pages": [
+                  "auth/quickstarts/nextjs",
+                  "auth/quickstarts/remix",
+                  "auth/quickstarts/express"
+                ]
+              },
               "auth/selfhosting",
-              {
-                "group": "Frontend Framework",
-                "icon": "bring-forward",
-                "pages": [
-                  "auth/frontendframeworks/nextjs",
-                  "auth/frontendframeworks/react",
-                  "auth/frontendframeworks/remix"
-                ]
-              },
-              {
-                "group": "Backend Framework",
-                "icon": "send-backward",
-                "pages": [
-                  "auth/backendframeworks/express",
-                  "auth/backendframeworks/JS backend",
-                  "auth/backendframeworks/customize-routes"
-                ]
-              },
               "auth/examples",
               {
                 "group": "Concepts",
@@ -229,7 +220,8 @@
                   "auth/concepts/oauth",
                   "auth/concepts/builtintables",
                   "auth/concepts/per-tenantoverrides",
-                  "auth/concepts/acclinking"
+                  "auth/concepts/acclinking",
+                  "auth/concepts/extensions"
                 ]
               },
               {
@@ -239,7 +231,8 @@
                   "auth/email/password",
                   "auth/email/templates",
                   "auth/email/verification",
-                  "auth/email/customsmtp"
+                  "auth/email/customsmtp",
+                  "auth/email/invites"
                 ]
               },
               {
@@ -292,17 +285,19 @@
                 "icon": "code",
                 "pages": [
                   {
-                    "group": "JavaScript",
+                    "group": "JavaScript (server)",
+                    "icon": "js",
                     "pages": [
-                      "auth/sdk-reference/nile-js/overview",
-                      "auth/sdk-reference/nile-js/auth",
-                      "auth/sdk-reference/nile-js/users",
-                      "auth/sdk-reference/nile-js/tenants",
-                      "auth/sdk-reference/nile-js/db",
-                      "auth/sdk-reference/nile-js/routes",
-                      "auth/sdk-reference/nile-js/configuration"
+                      "auth/sdk-reference/javascript/overview",
+                      "auth/sdk-reference/javascript/server/auth",
+                      "auth/sdk-reference/javascript/server/users",
+                      "auth/sdk-reference/javascript/server/tenants",
+                      "auth/sdk-reference/javascript/server/db",
+                      "auth/sdk-reference/javascript/server/routes",
+                      "auth/sdk-reference/javascript/server/configuration"
                     ]
-                  }
+                  },
+                  "auth/sdk-reference/javascript/client/authorizer"
                 ]
               },
               {
@@ -324,6 +319,18 @@
                 ]
               },
               "auth/roadmap"
+            ]
+          },
+          {
+            "group": "Frameworks",
+            "icon": "puzzle-piece",
+            "pages": [
+              "auth/frameworks/express",
+              "auth/frameworks/nextjs",
+              "auth/frameworks/nitro",
+              "auth/frameworks/nuxt",
+              "auth/frameworks/react",
+              "auth/frameworks/remix"
             ]
           }
         ]
@@ -410,13 +417,6 @@
         "openapi": {
           "source": "https://global.thenile.dev/openapi.yaml",
           "directory": "api-reference"
-        }
-      },
-      {
-        "tab": "Auth API",
-        "openapi": {
-          "source": "https://us-west-2.api.thenile.dev/v2/openapi",
-          "directory": "auth/api-reference"
         }
       },
       {

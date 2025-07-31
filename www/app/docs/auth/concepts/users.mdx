@@ -39,7 +39,7 @@ interface User {
 To create a new user, you can make a POST request to the `/users` endpoint.
 
 ```typescript
-const newUser = await nile.api.users.createUser({ email: 'user@example.com', password: 'user1' });
+const newUser = await nile.users.createUser({ email: 'user@example.com', password: 'user1' });
 ```
 
 ### Adding users
@@ -47,10 +47,10 @@ const newUser = await nile.api.users.createUser({ email: 'user@example.com', pas
 When a user is created, they are not automatically added to a tenant, unless `newTenant` is present. Users can only add other users to tenants of which they are a member. To add a user to a tenant, use `linkUser`
 
 ```typescript
-const user1 = await nile.api.users.createUser({ email: 'user1@example.com', password: 'user1', newTenant: 'myTenant' });
-const user2 = await nile.api.users.createUser({ email: 'user2@example.com', password: 'user2' });
+const user1 = await nile.users.createUser({ email: 'user1@example.com', password: 'user1', newTenant: 'myTenant' });
+const user2 = await nile.users.createUser({ email: 'user2@example.com', password: 'user2' });
 // make user1 and user2 part of the same tenant
-const updated2 = await nile.api.users.linkUser(user2.id);
+const updated2 = await nile.tenants.addMember(user2.id);
 ```
 
 
@@ -59,7 +59,7 @@ const updated2 = await nile.api.users.linkUser(user2.id);
 Because users are isolated to their own session, existing user update themselves via `PUT` method. A custom endpoint would need to be created in order for one user to update the information of another.
 
 ```typescript
-const updatedUser = await nile.api.users.updateMe({ name: 'user1' });
+const updatedUser = await nile.users.updateSelf({ name: 'user1' });
 ```
 
 ### Deleting Users
@@ -67,7 +67,7 @@ const updatedUser = await nile.api.users.updateMe({ name: 'user1' });
 Because user accounts are isolated, one user is unable to delete another. It is possible remove a user from a tenant from the built-in API. In order to to that, use `unlinkUser` 
 
 ```typescript
-const unlinked = await nile.api.users.unlinkUser(user2.id);
+const unlinked = await nile.tenants.removeMember(user2.id);
 ```
 
 ## User Authentication
@@ -83,7 +83,7 @@ For demonstration purposes, we are using the server-side methods. It would be ra
 
 ```typescript
 // Example password authentication - not recommended for production
-const session = await nile.api.login({
+const session = await nile.auth.login({
   email: 'user@example.com',
   password: 'password123',
 });
@@ -99,7 +99,7 @@ Nile Auth also supports social authentication via OAuth providers such as Google
 A session is always within the context of a request. You can access session data using:
 
 ```typescript
-const session = await nile.api.session(req);
+const session = await nile.auth.getSession();
 ```
 
 ## Related Topics

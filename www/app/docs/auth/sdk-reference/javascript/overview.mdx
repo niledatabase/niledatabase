@@ -1,0 +1,97 @@
+---
+title: 'Overview'
+description: 'Toolkit for building multi-tenant applications with Next.js, Remix, Express, and more'
+---
+
+## Available Modules
+
+The SDK provides a number of modules with methods for interacting with Nile:
+
+<CardGroup>
+<Card title="Auth" href="./server/auth" icon="right-to-bracket">
+  Securely authenticating users
+</Card>
+<Card title="DB" href="./server/db" icon="database">
+  Tenant-aware querying of your database
+</Card>
+<Card title="Users" href="./server/users" icon="user">
+  Managing users
+</Card>
+<Card title="Tenants" href="./server/tenants" icon="building">
+  Managing tenants
+</Card>
+<Card title="Routes" href="./server/routes" icon="route">
+  Built-in and custom routes
+</Card>
+</CardGroup>
+
+## Understanding the Nile Instance
+
+A configured Nile instance handles proxying requests to the Nile Auth API. Your client connects to your server, which then formats and ensures 
+the requests can be handled by the Nile Auth API. The SDK is designed to make clients talking through your server to the Nile auth service as 
+transparent as possible. In addition, you can use the SDK to directly access the Nile Auth API from your server.
+
+
+## A Note on Context
+
+It is important to ensure that the proper context is being used when calling functions from the server side. This can be done in [extensions](../../concepts/extensions.mdx) intelligently, or by using `nile.withContext`.
+Additionally, the context for the database is enforced for calls via `nile.query(...)`, but not for `nile.db.query(...)`. 
+
+The SDK will try its hardest to use context whenever possible. Under the hood, it uses `AsyncLocalStorage`, which relies on execution within the same request lifecycle. If you await or dispatch across async boundaries without using the SDK, the context may be lost, in which will default to the last used.
+
+The easiest way to deal with this and ensure proper context 100% of the time is to use a cookie saved by your application when a user determines their tenant, and the SDK will automatically look for `nile.tenant-id` cookie (`TENANT_COOKIE` exported by `@niledatabase/server`).
+
+## Authentication Flow
+
+### 1. User Initiates Authentication
+- The user clicks a "Sign in" button.
+- This action triggers a `signIn` method with the chosen provider. Your server handles all requests, which in most cases is simply forwarding them on to the Nile auth service with some additional information to help identify the client.
+
+### 2. Redirect to Provider (OAuth Flow)
+- If an OAuth provider (e.g., Google, GitHub) is used, the user is redirected to the provider's authentication page. This works by Nile auth returning redirects to your application, which the SDK handles in order to send the user to the provider. 
+- The user enters their credentials and grants permission to the application. Because your server is handling the requests, the user is redirected back to your application.
+
+### 3. Provider Callback & Token Exchange
+- After successful authentication, the provider redirects the user back to your application, which proxies the request to the Nile auth service. 
+- Nile auth exchanges the authorization code for an access token and forwards the authorization information to your server, which in turn would just pass that on to the client.
+
+### 4. Session Creation
+- Via your service, nile auth provides a secure cookie.
+- The cookie includes basic user information, which can be accessed using the `nile.auth.getSession` or a full user profile via `nile.users.getSelf`
+
+### 5. Accessing the Session
+- A session is always within the context of a request. For some frameworks, the session management is handled by an extension, but you can always session data by forwarding the client's request:
+
+<CodeGroup>
+  ```typescript JS
+  import http from "http";
+  import { Nile } from "@niledatabase/server";
+
+  const nile = Nile();
+
+  const server = http.createServer(async (req, res) => {
+    const session = await nile.auth.getSession(req);
+    if (session) {
+      console.log("User is authenticated", session.user);
+    });
+  )}
+  ```
+  ```typescript nextjs
+  import { headers } from "next/headers";
+  import { Nile } from "@niledatabase/server";
+  import { nextJs } from "@niledatabase/nextjs";
+
+  const nile = Nile({ extensions: [nextJs] });
+
+  export default function Page() {
+    // without the extension, you would use nile.withContext({ headers: await headers() })
+    const session = await nile.auth.getSession();
+  }
+  ```
+</CodeGroup>
+
+## API Reference
+
+The API reference is available in the [API Reference](/auth/api-reference/auth) section.
+
+

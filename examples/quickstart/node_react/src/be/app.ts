@@ -18,7 +18,7 @@ import {
 import { Nile } from "@niledatabase/server";
 import cookieParser from "cookie-parser";
 
-const nile = await Nile();
+const nile = Nile();
 
 const fe_url = process.env.FE_URL || "http://localhost:3006";
 

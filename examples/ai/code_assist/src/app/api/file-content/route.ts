@@ -6,7 +6,7 @@ type Data = {
 
 // TODO: Need to set nile user ID from cookie for security
 export async function POST(req: Request) {
-  const nile = await Nile();
+  const nile = Nile();
   const body = await req.json();
   const fileName = body.file_name;
 

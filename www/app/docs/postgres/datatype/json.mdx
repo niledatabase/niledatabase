@@ -6,7 +6,7 @@ The `jsonb` data type in PostgreSQL allows you to store JSON (JavaScript Object 
 
 ---
 
-## Key Features of `jsonb`
+### **Key Features of `jsonb`:**
 
 - **Efficient Storage**: `jsonb` is stored in a binary representation, making it more compact than `json`.
 - **Better Performance**: `jsonb` allows indexing, making it faster for querying and retrieval.
@@ -15,9 +15,9 @@ The `jsonb` data type in PostgreSQL allows you to store JSON (JavaScript Object 
 
 ---
 
-## How to Use the `jsonb` data type with `tenant_id` in PostgreSQL
+### **How to Use the `jsonb` data type with `tenant_id` in PostgreSQL**
 
-### 1. Creating a table with `jsonb` and `tenant_id` column
+### **1. Creating a table with `jsonb` and `tenant_id` column**
 
 ```sql
 CREATE TABLE products (
@@ -47,9 +47,9 @@ VALUES (1, '550e8400-e29b-41d4-a716-446655440000', 'Smartphone', '{"brand": "XYZ
 
 Here, the `tenant_id` is a UUID that ties the data to a specific tenant.
 
-### 3. Querying `jsonb` data by `tenant_id`
+### **3. Querying `jsonb` data by `tenant_id`**
 
-**Accessing specific keys for a specific tenant**
+### **Accessing specific keys for a specific tenant**
 
 You can access specific keys in the `jsonb` column and filter by `tenant_id`:
 
@@ -60,7 +60,7 @@ WHERE tenant_id = '550e8400-e29b-41d4-a716-446655440000' AND name = 'Smartphone'
 
 This will return the brand for a given tenant’s product.
 
-**Using the `@>` operator for containment**
+### **Using the `@>` operator for containment**
 
 The `@>` operator checks if one JSON object contains another JSON object. It’s useful for filtering rows by specific keys/values for a tenant.
 
@@ -72,7 +72,7 @@ AND details @> '{"brand": "XYZ"}';
 
 This finds all products with brand "XYZ" for a specific tenant.
 
-### 4. Updating `jsonb` data for a tenant
+### **4. Updating `jsonb` data for a tenant**
 
 You can use the `jsonb_set` function to update specific parts of a JSON object for a given tenant.
 
@@ -84,7 +84,7 @@ WHERE tenant_id = '550e8400-e29b-41d4-a716-446655440000' AND name = 'Smartphone'
 
 This updates the price for the product belonging to a specific tenant.
 
-### 5. Deleting a key from a `jsonb` object by tenant
+### **5. Deleting a key from a `jsonb` object by tenant**
 
 You can remove keys from a `jsonb` object for a specific tenant:
 
@@ -102,7 +102,21 @@ WHERE tenant_id = '550e8400-e29b-41d4-a716-446655440000' AND name = 'Smartphone'
 
 This will delete the keys from the JSON object for the specified tenant.
 
-### 6. Aggregating data from `jsonb` by tenant
+### **6. Indexing `jsonb` data by `tenant_id` for faster queries**
+
+You can create indexes on the `jsonb` fields for better query performance, particularly for multi-tenant systems.
+
+### **GIN Index (Generalized Inverted Index)**
+
+This index allows fast searches for keys and values within `jsonb` fields for tenants:
+
+```sql
+CREATE INDEX idx_products_details ON products USING GIN (details);
+```
+
+You can now query efficiently using operators like `@>`, and PostgreSQL will leverage this index.
+
+### **7. Aggregating data from `jsonb` by tenant**
 
 You can extract and aggregate data from `jsonb` fields for each tenant.
 
@@ -114,7 +128,7 @@ GROUP BY tenant_id, details->>'brand';
 
 This query counts the number of products per brand for each tenant.
 
-### 7. Full-Text Search on `jsonb` fields by tenant
+### **8. Full-Text Search on `jsonb` fields by tenant**
 
 You can perform full-text searches on `jsonb` columns for specific tenants using `to_tsvector()`.
 
@@ -126,101 +140,9 @@ AND to_tsvector(details->>'description') @@ to_tsquery('fast & processor');
 
 This will search for products with the words "fast" and "processor" in the `description` key for a specific tenant.
 
-
-## Indexing `jsonb` data for faster queries
-
-You can create indexes on the `jsonb` fields for better query performance, particularly for multi-tenant systems.
-
-### GIN Index (Generalized Inverted Index)
-
-This index allows fast searches for keys and values within `jsonb` fields for tenants:
-
-```sql
-CREATE INDEX idx_products_details ON products USING GIN (details);
-```
-
-You can now query efficiently using operators like `@>`, and PostgreSQL will leverage this index.
-
-### Expression GIN index
-
-You can create an index on a specific key in a `jsonb` field. 
-This is useful when a specific key is used frequently in queries **and** the value is an array or an object.
-If the value is a scalar, a BTREE index is more appropriate (see below).
-
-```sql
--- Create the table
-CREATE TABLE api (
-    id serial PRIMARY KEY,
-    jdoc jsonb
-);
-
--- Insert some data
-INSERT INTO api (jdoc) VALUES
-  ('{"tags": ["postgres", "jsonb", "index"]}'),
-  ('{"tags": ["postgres", "performance"]}'),
-  ('{"tags": ["jsonb"]}'),
-  ('{"title": "no tags field"}');
-
--- Create a GIN index on the tags key
-CREATE INDEX idxgintags ON api USING GIN ((jdoc -> 'tags'));
-
--- Find rows where 'tags' contains "postgres"
-SELECT * FROM api
-WHERE (jdoc -> 'tags') @> '["postgres"]';
-```
-
-This will find all rows where the `tags` key contains "postgres".
-
-### Expression BTREE index
-
-You can create a BTREE index on a specific key in a `jsonb` field. This is useful when comparing scalar values.
-
-```sql
-CREATE TABLE api (
-    id serial PRIMARY KEY,
-    jdoc jsonb
-);
-
-INSERT INTO api (jdoc) VALUES
-  ('{"name": "alpha", "rank": 3}'),
-  ('{"name": "beta", "rank": 1}'),
-  ('{"name": "gamma", "rank": 2}'),
-  ('{"name": "delta"}');  -- no rank field
-
--- We extract the rank field and cast it to an integer so it can be used in a BTREE index
--- Note that the parentheses are required because it is an expression index
-CREATE INDEX idx_btree_rank ON api ((jdoc->>'rank')::int);
-
--- Find rows where rank >= 2
-SELECT * FROM api
-WHERE (jdoc->>'rank')::int >= 2;
-```
 ---
 
-## Valid `jsonb` expressions
-
-PostgreSQL supports JSON syntax as specified in [RFC 7159](https://www.rfc-editor.org/rfc/rfc7159.html). 
-Below are some examples of valid `jsonb` expressions:
-
-```sql
--- Simple scalar values
-SELECT '"apple"'::jsonb, '5'::jsonb;
-
--- objects containing pairs of keys and values
--- keys must be double-quoted strings
-SELECT '{"name": "John", "age": 30}'::jsonb;
-
--- arrays of one or more elements, of the same type
-SELECT '["apple", "banana", "cherry"]'::jsonb;
-
--- Arrays and objects can be nested
-SELECT '{"fruits": ["apple", "banana", "cherry"]}'::jsonb;
-SELECT '{"name": "John", "age": 30, "address": {"street": "123 Main St", "city": "Anytown", "state": "CA"}}'::jsonb;
-SELECT '{"fruits": ["apple", "banana", "cherry"], "numbers": [1, 2, 3]}'::jsonb;
-```
----
-
-## Common `jsonb` functions & operators with tenant ID
+### **Common `jsonb` functions & operators with tenant ID:**
 
 - **`>`**: Accesses a key, returns JSON data.
 - **`>>`**: Accesses a key, returns text.
@@ -232,7 +154,7 @@ SELECT '{"fruits": ["apple", "banana", "cherry"], "numbers": [1, 2, 3]}'::jsonb;
 
 ---
 
-## **Best Practices for `jsonb` with Multi-Tenancy:**
+### **Best Practices for `jsonb` with Multi-Tenancy:**
 
 1. **Indexing**: Use GIN or BTREE indexes for frequent lookups by `tenant_id` and specific keys.
 2. **Normalization**: Use `jsonb` for semi-structured data. For structured data, use regular columns and normalize the schema.

@@ -175,7 +175,7 @@ let model = new OpenAIEmbeddings({
   dimensions: 1024, // we'll explain why in the next blog
 });
 
-let nile = await Nile({
+let nile = Nile({
   user: NILEDB_USER,
   password: NILEDB_PASSWORD,
 });

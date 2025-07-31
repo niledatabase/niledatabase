@@ -155,7 +155,7 @@ const similarTasks = await findSimilarTasks(nile, title);
 const estimate = await aiEstimate(title, similarTasks);
 const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
 
-const newTodo = await nile.db.query(
+const newTodo = await nile.query(
   `INSERT INTO todos (tenant_id, title, complete, estimate, embedding)
   VALUES ($1, $2, $3, $4, $5)
   RETURNING *;`,
@@ -180,7 +180,7 @@ Getting similar tasks is done by querying the database for tasks with similar em
 const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
 
 // get similar tasks, no need to filter by tenant because we are already in the tenant context
-const similarTasks = await tenantNile.db.query(
+const similarTasks = await nile.db.query(
   `SELECT title, estimate FROM todos WHERE embedding <-> $1 < 1 ORDER BY embedding <-> $1 LIMIT 3;`,
   [embeddingToSQL(embedding)]
 );
@@ -234,7 +234,7 @@ The NodeJS server uses the [Nile JS client](https://github.com/niledatabase/nile
 When the Nile client is initialized, it uses the credentials you provided in the `.env` file to connect with the API:
 
 ```js
-const nile = await Nile();
+const nile = Nile();
 ```
 
 The application uses Express middleware to capture the tenant identity for the current request and set Nile context:
@@ -259,7 +259,7 @@ app.post("/api/tenants", async (req, res) => {
   }
 
   try {
-    const createTenantResponse = await nile.api.tenants.createTenant({
+    const createTenantResponse = await nile.tenants.create({
       name: name,
     });
     const tenant = await createTenantResponse.json();

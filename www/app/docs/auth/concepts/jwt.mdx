@@ -27,7 +27,7 @@ Nile Auth uses JWTs to represent user sessions for the email + password provider
 For other providers, database sessions are used instead.
 
 You never need to deal with JWTs directly - Nile Auth and Nile SDK are responsible for creating, verifying and storing them.
-You can access the current JWT using the `useSession` hook (client side), or by calling `nile.api.auth.getSession` (server side).
+You can access the current JWT using the `useSession` hook (client side), or by calling `nile.auth.getSession` (server side).
 
 You can learn more about sessions in the [Sessions](/auth/concepts/sessions) documentation - which includes information about working with 
 user sessions whether they are represented by JWTs or database sessions.

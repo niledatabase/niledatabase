@@ -20,12 +20,12 @@ When a user signs up, Nile Auth:
   <InstallNileAndNext />
   <Step title="Middleware for Verification Enforcement">
     ```typescript
-    import NileServer from "@niledatabase/server";
+    import { Nile } from "@niledatabase/server";
 
-    export const nile = await NileServer();
+    export const nile = Nile();
 
     app.use("verification-page", async (req, res, next) => {
-      const me = await nile.api.users.me(req.headers);
+      const me = await nile.users.getSelf(req.headers);
 
       if (!me.emailVerified) {
         return res.redirect("/force-verification");

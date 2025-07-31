@@ -140,23 +140,6 @@ There are a few moving pieces here, so let's break it down.
 This example uses NextJS `app router`, so the application landing page is in `app/page.tsx`.
 We'll start here and go over the code for creating tenants, selecting tenants and adding tasks.
 
-### Configuring Nile SDK
-
-All the signup and login methods eventually route users to `/tenants`. You'll find the code in `app/tenants/page.tsx`.
-
-The first thing we do in this page is to configure Nile SDK for the current user:
-
-```typescript
-configureNile();
-```
-
-This method configures a shared instance of `nile` that is used throughout the application.
-This instance is a singleton, which you get by calling Nile SDK's `getInstance` method. This is also where all the environment variables we've set earlier are being used, so lets take a look at this file:
-
-```typescript
-const nile = await Nile();
-```
-
 The SDK uses your credentials to call the Nile API. Every page, route and function in our app can use the same `nile` instance to access Nile APIs and DB.
 
 But, we need to make sure we are using the right user and tenant context.
@@ -166,19 +149,21 @@ After this point, we can use `nile` to access the database and APIs, and it will
 In addition to accessing the database and requesting data server side, there are also APIs that are integrated for you via [dynamic routes](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes).
 The route file `api/[...nile]/route.ts` intercepts routes from the client and responds accordingly. There is a single file that is used to export the nile instance into the routes, which is then used to export the various handlers.
 
+In addition, the NextJS extension automatically handles obtaining the cookies from the request.
+
 ```typescript
-import { Server } from "@niledatabase/server";
-export const nile = await Server();
+import { Nile } from "@niledatabase/server";
+import { nextJs } from '@niledatabase/nextjs';
+export const nile = Nile({ extensions: [nextJs]});
 ```
 
 ### Listing tenants
 
 Next thing we do in `app/tenants/page.tsx` is to list all the tenants for the current user, but the SDK must know about the user. The simplest way to do that is to pass the NextJS cookies to the function.
-We use Nile SDK to query the database for all the tenants for the current user:
+We use Nile SDK to query the database for all the tenants for the current user.
 
 ```typescript
-const headers = new Headers({ cookie: cookies().toString() });
-const tenants = nile.api.tenants.listTenants(headers);
+const tenants = await ctx.tenants.list();
 ```
 
 and then we render the list of tenants as a list of links:
@@ -203,8 +188,7 @@ Create tenant logic is in `app/tenants/tenant-actions.tsx`.
 In `createTenant` method, we use Nile SDK to create a new tenant and link it to the current user.
 
 ```typescript
-configureNile(); // we don't have a tenant yet
-const createTenantResponse = await nile.api.tenants.createTenant({
+const createTenantResponse = await nile.tenants.create({
   name: tenantName,
 });
 ```
@@ -223,9 +207,9 @@ Since there is no API for listing specific data in your database, it is now time
 Instead of using SQL `where` clauses to get only todos for this specific tenant, we are relying on Nile's tenant isolation feature:
 
 ```typescript
-const nile = configureNile(params.tenantId);
+const _nile = await nile.withContext({ tenantId });
 // no need for where clause because we previously set Nile context
-const todos = await nile.db.query("select * from todos");
+const todos = await _nile.query("select * from todos");
 ```
 
 Note that this time we are configuring Nile with the tenant ID too. Previously called `configureNile` without parameters because there was no tenant yet.
@@ -245,8 +229,8 @@ You can find the logic for adding a task in `app/tenants/[tenantid]/todos/todo-a
 As you can see, we again use the tenant context to insert the new task:
 
 ```typescript
-const nile = configureNile(tenantId);
-await nile.db.query(
+const _nile = await nile.withContext({ tenantId });
+await _nile.query(
   `INSERT INTO todos (tenant_id, title, estimate, embedding, complete)
     VALUES ($1, $2, $3, $4, $5)`,
   [
@@ -262,8 +246,8 @@ await nile.db.query(
 or update an existing one:
 
 ```typescript
-const nile = configureNile(tenantId);
-await tenantNile.db.query(
+const _nile = await nile.withContext({ tenantId });
+await _nile.query(
   `UPDATE todos 
   SET complete = $1
   WHERE id = $2`,
@@ -308,7 +292,7 @@ The `aiEstimate` function is defined in `lib/AiUtils.tsx` and first it looks up 
 context (see the use of `tenantNile` client), we only look up tasks for this tenant:
 
 ```typescript
-const similarTasks = await tenantNile.db.query(
+const similarTasks = await tenantNile.query(
   `SELECT title, estimate FROM todos WHERE embedding <-> $1 < 1`,
   [embeddingToSQL(embedding)]
 );

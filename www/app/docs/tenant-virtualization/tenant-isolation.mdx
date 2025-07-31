@@ -95,8 +95,8 @@ select * from candidates;
 
 ```typescript
 // get a connection to the virtual tenant DB you want to access.
-const tenantNile = configureNile(cookies().get("authData"), params.tenantid);
-const candidates = await tenantNile.db("candidates").select("*");
+const tenantNile = nile.withContext({ headers, tenantId });
+const candidates = await tenantNile.query("select * from candidates")
 ```
 
 </CodeGroups>
