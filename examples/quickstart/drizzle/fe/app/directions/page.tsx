@@ -1,16 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
 import Code from "./Code";
-import { headers as nextHeaders } from "next/headers";
 import { nile } from "../api/[...nile]/nile";
-import { UserInfo } from "@niledatabase/react";
 
 const backendServer = String(
   process.env.NEXT_PUBLIC_BASE_PATH || "http://localhost:3001"
 );
 
 export default async function Page() {
-  const headers = await nextHeaders();
-  const me = await nile.api.users.me(headers);
+  const me = await nile.users.getSelf();
   if (me instanceof Response) {
     return <div>Unauthorized</div>;
   }

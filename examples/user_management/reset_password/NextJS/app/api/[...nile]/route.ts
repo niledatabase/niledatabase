@@ -1,3 +1,4 @@
-import { handlers } from "./nile";
+import { Handlers } from "@niledatabase/nextjs";
+import { nile } from "./nile";
 
-export const { GET, POST, DELETE, PUT } = handlers;
+export const { POST, GET, DELETE, PUT } = nile.handlers as Handlers;

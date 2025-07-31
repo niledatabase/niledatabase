@@ -3,22 +3,23 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { configureNile } from "@/lib/NileServer";
+import { nile } from "../api/[...nile]/nile";
 
 export async function createTenant(prevState: any, formData: FormData) {
-  const nile = await configureNile();
   const tenantName = formData.get("tenantname")?.toString();
   if (!tenantName) {
     return { message: "No tenant name provided" };
   }
 
-  console.log("creating tenant " + tenantName + " for user:" + nile.userId);
+  console.log(
+    "creating tenant " + tenantName + " for user:" + nile.getContext().userId
+  );
 
   let success = false; // needed because redirect can't be used in try-catch block
   let tenantID = null;
   try {
     // The token is sent to Nile API and the tenant is created for the specific user
-    const tenant = await nile.api.tenants.createTenant(tenantName);
+    const tenant = await nile.tenants.create(tenantName);
     if (tenant instanceof Response) {
       return { message: "Tenant creation failed." };
     }
@@ -27,7 +28,7 @@ export async function createTenant(prevState: any, formData: FormData) {
       "created tenant with tenantID: ",
       tenantID,
       " for user: ",
-      nile.userId
+      nile.getContext().userId
     );
     revalidatePath("/tenants");
     success = true;

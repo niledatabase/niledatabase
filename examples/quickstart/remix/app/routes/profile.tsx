@@ -28,7 +28,10 @@ export async function action({ request }: Route.ActionArgs) {
   }
 }
 export async function loader({ context, request }: Route.LoaderArgs) {
-  const user = await nile.api.users.me(request.headers);
+  const user = nile.withContext(
+    { headers: request.headers },
+    async ({ users }) => users.getSelf()
+  );
   if (user instanceof Response) {
     return { message: await user.text() };
   }

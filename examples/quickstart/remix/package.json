@@ -11,8 +11,9 @@
     "typecheck": "react-router typegen && tsc -b"
   },
   "dependencies": {
-    "@niledatabase/react": "^4.0.0-alpha.5",
-    "@niledatabase/server": "^4.0.0-alpha.5",
+    "@niledatabase/react": "^5.0.0",
+    "@niledatabase/client": "^5.0.0",
+    "@niledatabase/server": "^5.0.0",
     "@radix-ui/react-slot": "^1.1.2",
     "@react-router/express": "^7.4.0",
     "@react-router/node": "^7.4.0",

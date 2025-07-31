@@ -13,6 +13,7 @@ export default function Todos() {
   const params = useParams();
   const tenantId = params.tenantId;
 
+  const [error, setError] = React.useState("");
   const [todos, setTodos] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [tenantName, setTenantName] = React.useState("");
@@ -21,12 +22,20 @@ export default function Todos() {
   React.useEffect(() => {
     fetch(`/api/tenants/${tenantId}/todos`)
       .then((res) => res.json())
-      .then((data) => setTodos(data));
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setTodos(data);
+        } else {
+          setError(data.message);
+        }
+      });
 
     fetch(`/api/tenants/${tenantId}`)
       .then((res) => res.json())
       .then((data) => {
-        setTenantName(data.name);
+        if (data.name) {
+          setTenantName(data.name);
+        }
         setLoading(false);
       });
   }, [tenantId]);
@@ -45,6 +54,9 @@ export default function Todos() {
           </Button>
         </Link>
 
+        {error ? (
+          <div className="p-8 rounded-xl text-red ">⚠️ {error}</div>
+        ) : null}
         <form
           className="flex flex-col w-full"
           name="newtodo"

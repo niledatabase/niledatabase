@@ -14,29 +14,27 @@ export async function createTenant(prevState: any, formData: FormData) {
   }
   //@ts-ignore
   const userId = session.user?.id;
-  const nile = await Nile(); // we don't have a tenant yet
+  const nile = Nile(); // we don't have a tenant yet
   const tenantName = formData.get("tenantname")?.toString();
   if (!tenantName) {
     return { message: "No tenant name provided" };
   }
 
-  console.log(
-    "creating tenant " +
-      tenantName +
-      " for user:" +
-      userId
-  );
+  console.log("creating tenant " + tenantName + " for user:" + userId);
   let success = false; // needed because redirect can't be used in try-catch block
-  let tenantId = null;
+  let tenantId = "";
   try {
-    const tenants = await nile.db.query(
-      `INSERT INTO tenants (name) VALUES ($1) RETURNING id`,
-      [tenantName]
+    const tenants = await nile.noContext(({ db }) =>
+      db.query(`INSERT INTO tenants (name) VALUES ($1) RETURNING id`, [
+        tenantName,
+      ])
     );
     tenantId = tenants.rows[0].id;
-    await nile.db.query(
-      `INSERT INTO users.tenant_users (user_id, tenant_id) VALUES ($1, $2)`,
-      [userId, tenantId]
+    await nile.noContext(({ db }) =>
+      db.query(
+        `INSERT INTO users.tenant_users (user_id, tenant_id) VALUES ($1, $2)`,
+        [userId, tenantId]
+      )
     );
     console.log(
       "created tenant with tenantID: ",

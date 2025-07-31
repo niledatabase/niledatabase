@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@niledatabase/react": "^3.0.0",
-    "@niledatabase/server": "^3.0.0",
+    "@niledatabase/client": "^5.0.0",
+    "@niledatabase/nextjs": "^5.0.0",
+    "@niledatabase/react": "^5.0.0",
+    "@niledatabase/server": "^5.0.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.479.0",
-    "next": "^14.2.30",
+    "next": "^15.3.0",
     "next-auth": "^4.24.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

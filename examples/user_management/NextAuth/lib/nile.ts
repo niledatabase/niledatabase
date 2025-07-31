@@ -1,9 +1,10 @@
 import { Nile } from "@niledatabase/server";
 import { nextJs } from "@niledatabase/nextjs";
 
-const nile = await Nile({
+const nile = Nile({
   debug: true,
   extensions: [nextJs],
 });
 
-export { nile };
+const noContext = nile.noContext;
+export { nile, noContext };

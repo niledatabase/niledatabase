@@ -39,11 +39,9 @@ function ExistingTenants({ tenants }: { tenants: Tenant[] }) {
   );
 }
 export default async function Page() {
-  const headers = new Headers({ cookie: cookies().toString() });
-  const [tenants, me] = await Promise.all([
-    nile.api.tenants.listTenants(headers),
-    nile.api.users.me(headers),
-  ]);
+  const [tenants, me] = await nile.withContext(() =>
+    Promise.all([nile.tenants.list(), nile.users.getSelf()])
+  );
 
   if (tenants instanceof Response) {
     // signed out

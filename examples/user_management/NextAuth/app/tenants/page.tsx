@@ -12,8 +12,7 @@ import { AddForm } from "@/app/tenants/add-form";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-
-import { Nile } from "@niledatabase/server";
+import { nile } from "@/lib/nile";
 
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
@@ -25,7 +24,6 @@ export const fetchCache = "force-no-store";
 export default async function Page() {
   // This is the tenant selector, so we use Nile with just the current user and reset tenant_id if already set
   // if Nile is already configured for this user, it will reuse the existing Nile instance
-  const nile = await Nile();
   const session = await getServerSession(authOptions);
   //@ts-ignore
   const userId = session?.user?.id;

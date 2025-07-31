@@ -6,12 +6,11 @@ import ListDivider from "@mui/joy/ListDivider";
 import Stack from "@mui/joy/Stack";
 import NextLink from "next/link";
 import MUILink from "@mui/joy/Link";
-import { cookies } from "next/headers";
 import { AddForm } from "./add-form";
 import { DoneForm } from "./done-form";
-import { Nile } from "@niledatabase/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { nile } from "@/lib/nile";
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
 export const dynamic = "force-dynamic";
@@ -27,20 +26,26 @@ export default async function Page({
 }) {
   // Here we are getting a connection to a specific tenant database for the current usr
   // if we already got such connection earlier, it will reuse the existing one
-  const tenantNile = await Nile();
   const session = await getServerSession(authOptions);
   //@ts-ignore
   const userId = session?.user?.id;
-  tenantNile.tenantId = (await params).tenantid;
+
+  const tenantId = (await params).tenantid;
+  const [todos, resp] = await nile.withContext(
+    { tenantId, userId },
+    ({ query }) =>
+      Promise.all([
+        query("SELECT * FROM todos ORDER BY title"),
+        query("SELECT name FROM tenants"),
+      ])
+  );
 
   console.log(
     "showing todos for user " +
       userId +
       " for tenant " +
-      tenantNile.tenantId
+      nile.getContext().tenantId
   );
-  const todos = await tenantNile.db.query("SELECT * FROM todos ORDER BY title"); // no need for where clause because we previously set Nile context
-  const resp = await tenantNile.db.query("SELECT name FROM tenants"); // no need for where clause because we previously set Nile context
   const tenant = resp.rows[0].name;
   return (
     <Stack spacing={2} width={"50%"}>
@@ -56,7 +61,7 @@ export default async function Page({
       </MUILink>
       <List variant="plain" size="lg">
         <ListItem>
-          <AddForm tenantid={tenantNile.tenantId!} />
+          <AddForm tenantid={tenantId} />
         </ListItem>
         <ListDivider />
         {todos.rows.map((todo: any) => (
@@ -65,7 +70,7 @@ export default async function Page({
             style={{ display: "flex", flexWrap: "nowrap", padding: "0.5rem" }}
           >
             <ListItem key={todo.id}>
-              <DoneForm tenantId={tenantNile.tenantId!} todo={todo} />
+              <DoneForm tenantId={tenantId} todo={todo} />
             </ListItem>
             <ListDivider />
           </div>
