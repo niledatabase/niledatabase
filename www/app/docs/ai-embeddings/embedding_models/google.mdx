@@ -85,7 +85,7 @@ const question_vec = question_vec_resp.embedding.values;
 const { Nile } = await import("@niledatabase/server");
 const NILEDB_USER = "you need a nile user with access to a nile database";
 const NILEDB_PASSWORD = "and a password for that user";
-const nile = await Nile({
+const nile = Nile({
   user: NILEDB_USER,
   password: NILEDB_PASSWORD,
 });

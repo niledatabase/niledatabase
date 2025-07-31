@@ -1,0 +1,529 @@
+---
+title: 'Remix'
+description: 'Integrate Nile Auth with Remix applications'
+icon: 'shuffle'
+---
+
+import DbCreds from '/snippets/dbcreds.mdx'
+
+# Remix API Integration with Nile Database
+
+This guide explains how to integrate **Nile Database** with **Remix** and set up routes for handling various HTTP requests (`GET`, `POST`, `PUT`, `DELETE`). Additionally, you'll see how to include **client-side components** for user authentication and interaction using **Nile's React SDK**.
+
+---
+
+<Steps>
+<Step title="Create a new Remix project">
+
+Run the following command in your terminal to create a new Remix project:
+
+```bash
+npx create-react-router@latest --template remix-run/react-router-templates/node-postgres
+```
+
+Follow the prompts and install your app.  After creating the project, navigate into the newly created project directory:
+
+```bash
+cd <your-project-name>
+```
+
+```bash
+npm install @niledatabase/server @niledatabase/react @niledatabase/client
+```
+</Step>
+
+
+<Step title="Obtain Database Credentials">
+1. If you haven't signed up for Nile yet, [sign up here](https://console.thenile.dev) and follow the steps to create a database.
+2. Navigate to **Database Settings** in your database's UI at [console.thenile.dev](https://console.thenile.dev).
+3. Go to **Connection** settings.
+4. Select the CLI icon, and click **Generate credentials**
+![Generate credentials](/images/auth/generate-credentials.png)
+5. **Copy** the required credentials and **store them in an `.env` file** so they can be used in the application to connect to the Nile auth service.
+6. While you are there, click on the `PostgreSQL` icon and also **copy your database url** for drizzle to use
+    ```bash
+    NILEDB_USER=niledb_user
+    NILEDB_PASSWORD=niledb_password
+    NILEDB_API_URL=https://us-west-2.api.thenile.dev/v2/databases/<database_id>
+    NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/<database_name>
+    DATABASE_URL=postgres://niledb_user:niledb_password0@us-west-2.db.thenile.dev:5432/<database_name>
+    ```
+</Step>
+
+
+<Step title="Update create-react-router output">
+Now we must update the output from the default `create-react-router` for use with Nile. We want to switch to using `node-postgres`,  and be able to do a top level `await` for nile configuration.
+<Tabs>
+<Tab title="CLI">
+```bash bash [expandable]
+cat > server/app.ts << 'EOF'
+import { createRequestHandler } from "@react-router/express";
+import { drizzle } from "drizzle-orm/node-postgres";
+import express from "express";
+import postgres from "pg";
+import "react-router";
+
+import { DatabaseContext } from "~/database/context";
+import * as schema from "~/database/schema";
+
+declare module "react-router" {
+  interface AppLoadContext {
+    VALUE_FROM_EXPRESS: string;
+  }
+}
+
+export const app = express();
+
+if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required");
+
+const client = new postgres.Client(process.env.DATABASE_URL);
+await client.connect();
+const db = drizzle(client, { schema });
+app.use((_, __, next) => DatabaseContext.run(db, next));
+
+app.use(
+  createRequestHandler({
+    build: () => import("virtual:react-router/server-build"),
+    getLoadContext() {
+      return {
+        VALUE_FROM_EXPRESS: "Hello from Express",
+      };
+    },
+  })
+);
+EOF
+
+cat > database/context.ts << 'EOF'
+import { AsyncLocalStorage } from "node:async_hooks";
+
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+
+import * as schema from "./schema";
+
+export const DatabaseContext = new AsyncLocalStorage<
+  NodePgDatabase<typeof schema>
+>();
+
+export function database() {
+  const db = DatabaseContext.getStore();
+  if (!db) {
+    throw new Error("DatabaseContext not set");
+  }
+  return db;
+}
+EOF
+
+cat > drizzle/0000_short_donald_blake.sql << 'EOF'
+CREATE TABLE IF NOT EXISTS "guestBook" (
+    "id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    "name" varchar(255) NOT NULL,
+    "email" varchar(255) NOT NULL,
+    CONSTRAINT "guestBook_email_unique" UNIQUE("email")
+);
+EOF
+
+cat > vite.config.ts << 'EOF'
+import { reactRouter } from "@react-router/dev/vite";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
+
+export default defineConfig(({ isSsrBuild }) => ({
+  optimizeDeps: {
+    esbuildOptions: {
+      target: "esnext",
+    },
+  },
+  build: {
+    target: "esnext",
+    rollupOptions: isSsrBuild
+      ? {
+          input: "./server/app.ts",
+        }
+      : undefined,
+  },
+  plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
+}));
+EOF
+
+```
+</Tab>
+<Tab title="Manual">
+Replace `/server/app.ts` with the following
+
+```ts
+import { createRequestHandler } from "@react-router/express";
+import { drizzle } from "drizzle-orm/node-postgres";
+import express from "express";
+import postgres from "pg";
+import "react-router";
+
+import { DatabaseContext } from "~/database/context";
+import * as schema from "~/database/schema";
+
+declare module "react-router" {
+  interface AppLoadContext {
+    VALUE_FROM_EXPRESS: string;
+  }
+}
+
+export const app = express();
+
+if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required");
+
+const client = new postgres.Client(process.env.DATABASE_URL);
+await client.connect();
+const db = drizzle(client, { schema });
+app.use((_, __, next) => DatabaseContext.run(db, next));
+
+app.use(
+  createRequestHandler({
+    build: () => import("virtual:react-router/server-build"),
+    getLoadContext() {
+      return {
+        VALUE_FROM_EXPRESS: "Hello from Express",
+      };
+    },
+  })
+);
+```
+
+Replace `database/context.ts` with the following
+
+```ts
+import { AsyncLocalStorage } from "node:async_hooks";
+
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+
+import * as schema from "./schema";
+
+export const DatabaseContext = new AsyncLocalStorage<
+  NodePgDatabase<typeof schema>
+>();
+
+export function database() {
+  const db = DatabaseContext.getStore();
+  if (!db) {
+    throw new Error("DatabaseContext not set");
+  }
+  return db;
+}
+```
+
+Update the placeholder table `drizzle/0000_short_donald_blake.sql` to generate correctly
+
+```sql
+CREATE TABLE IF NOT EXISTS "guestBook" (
+    "id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    "name" varchar(255) NOT NULL,
+    "email" varchar(255) NOT NULL,
+    CONSTRAINT "guestBook_email_unique" UNIQUE("email")
+);
+
+```
+Modify `vite.config.ts` to allow for top level awaits
+```ts
+import { reactRouter } from "@react-router/dev/vite";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
+
+export default defineConfig(({ isSsrBuild }) => ({
+  optimizeDeps: {
+    esbuildOptions: {
+      target: "esnext",
+    },
+  },
+  build: {
+    target: "esnext",
+    rollupOptions: isSsrBuild
+      ? {
+          input: "./server/app.ts",
+        }
+      : undefined,
+  },
+  plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
+}));
+```
+</Tab>
+</Tabs>
+</Step>
+
+<Step title="Add Nile to the server">
+Now we need to add the nile instance and route handlers to allow our server to respond to authentication, user, and tenant requests.
+<Tabs>
+<Tab title="CLI">
+```bash Bash [expandable]
+cat > app/nile.ts << 'EOF'
+import { Nile } from "@niledatabase/server";
+
+export const nile = Nile();
+export const { handlers } = nile;
+EOF
+
+cat > app/routes/nile-api.ts << 'EOF'
+import type { Route } from "./+types/home";
+import { handlers } from "~/nile";
+
+const { GET, POST, PUT, DELETE } = handlers;
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  switch (request.method.toUpperCase()) {
+    case "GET":
+      return GET(request);
+    case "POST":
+      return POST(request);
+    case "PUT":
+      return PUT(request);
+    case "DELETE":
+      return DELETE(request);
+    default:
+      return new Response("Method Not Allowed", { status: 405 });
+  }
+};
+
+export const action = async ({ request }: Route.ActionArgs) => {
+  switch (request.method.toUpperCase()) {
+    case "POST":
+      return POST(request);
+    case "PUT":
+      return PUT(request);
+    case "DELETE":
+      return DELETE(request);
+    default:
+      return new Response("Method Not Allowed", { status: 405 });
+  }
+};
+EOF
+
+cat > app/routes.ts << 'EOF'
+import { type RouteConfig, index, route } from "@react-router/dev/routes";
+
+export default [
+  index("routes/home.tsx"),
+  route("api/*", "routes/nile-api.ts"),
+] satisfies RouteConfig;
+EOF
+
+```
+</Tab>
+<Tab title="Manual">
+
+Create a file to house the main Nile instance. You can use this file to access nile from a central location any where in the app.
+
+`app/nile.ts`
+```ts
+import { Nile } from "@niledatabase/server";
+
+export const nile = Nile();
+export const { handlers } = nile;
+```
+
+Create the API route file at `app/routes/nile-api.ts`. This file will handle different HTTP methods (GET, POST, PUT, DELETE) using the **Nile SDK**.
+
+```ts
+import type { Route } from "./+types/home";
+import { handlers } from "~/nile";
+
+const { GET, POST, PUT, DELETE } = handlers;
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  switch (request.method.toUpperCase()) {
+    case "GET":
+      return GET(request);
+    case "POST":
+      return POST(request);
+    case "PUT":
+      return PUT(request);
+    case "DELETE":
+      return DELETE(request);
+    default:
+      return new Response("Method Not Allowed", { status: 405 });
+  }
+};
+
+export const action = async ({ request }: Route.ActionArgs) => {
+  switch (request.method.toUpperCase()) {
+    case "POST":
+      return POST(request);
+    case "PUT":
+      return PUT(request);
+    case "DELETE":
+      return DELETE(request);
+    default:
+      return new Response("Method Not Allowed", { status: 405 });
+  }
+};
+```
+
+This code handles different HTTP methods (`GET`, `POST`, `PUT`, `DELETE`) for the `/api/*` route and delegates the logic to Nile Database.
+
+Update your routes to respond to the api
+
+`app/routes.ts`
+```ts
+import { type RouteConfig, index, route } from "@react-router/dev/routes";
+
+export default [
+  index("routes/home.tsx"),
+  route("api/*", "routes/auth-api.ts"),
+] satisfies RouteConfig;
+```
+</Tab>
+</Tabs>
+
+</Step>
+
+
+<Step title="Add Client-Side Code for Authentication">
+
+
+
+You can use the components from `@niledatabase/react` to handle authentication. Replace the boilerplate of the main `_index.tsx` file with the following:
+
+This component will render:
+- **User info** and the **guest book** if the user is signed in.
+- **Sign-up form** if the user is not signed in.
+
+<Tabs>
+<Tab title="CLI">
+```bash Bash [expandable]
+cat > app/routes/home.tsx << 'EOF'
+import {
+  SignedIn,
+  SignedOut,
+  SignOutButton,
+  SignUpForm,
+  UserInfo,
+} from "@niledatabase/react";
+
+import "@niledatabase/react/styles.css";
+import { database } from "~/database/context";
+import * as schema from "~/database/schema";
+
+import type { Route } from "./+types/home";
+import { Welcome } from "../welcome/welcome";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "New React Router App" },
+    { name: "description", content: "Welcome to React Router!" },
+  ];
+}
+
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  let name = formData.get("name");
+  let email = formData.get("email");
+  if (typeof name !== "string" || typeof email !== "string") {
+    return { guestBookError: "Name and email are required" };
+  }
+
+  name = name.trim();
+  email = email.trim();
+  if (!name || !email) {
+    return { guestBookError: "Name and email are required" };
+  }
+
+  const db = database();
+  try {
+    await db.insert(schema.guestBook).values({ name, email });
+  } catch (error) {
+    return { guestBookError: "Error adding to guest book" };
+  }
+}
+
+export async function loader({ context }: Route.LoaderArgs) {
+  const db = database();
+
+  const guestBook = await db.query.guestBook.findMany({
+    columns: {
+      id: true,
+      name: true,
+    },
+  });
+
+  return {
+    guestBook,
+    message: context.VALUE_FROM_EXPRESS,
+  };
+}
+
+export default function Home({ actionData, loaderData }: Route.ComponentProps) {
+  return (
+    <div className="w-screen h-screen flex items-center justify-center flex-col">
+      <SignedIn className="flex flex-col gap-4">
+        <UserInfo />
+        <SignOutButton />
+        <Welcome
+          guestBook={loaderData.guestBook}
+          guestBookError={actionData?.guestBookError}
+          message={loaderData.message}
+        />
+      </SignedIn>
+      <SignedOut>
+        <SignUpForm />
+      </SignedOut>
+    </div>
+  );
+}
+
+EOF
+```
+</Tab>
+<Tab title="Manual">
+
+Update the render of `home.tsx` to use the following components:
+
+`app/routes/home.tsx`
+```tsx
+import { SignedIn, SignedOut, SignUpForm, UserInfo } from "@niledatabase/react";
+import "@niledatabase/react/styles.css";
+
+{/**rest of the actions/meta/loader*/}
+
+export default function Home({ actionData, loaderData }: Route.ComponentProps) {
+  return (
+    <SignedIn>
+    <Welcome
+      guestBook={loaderData.guestBook}
+      guestBookError={actionData?.guestBookError}
+      message={loaderData.message}
+    />
+    </SignedIn>
+      <SignedOut>
+        <SignUpForm>
+      </SignedOut>
+  );
+}
+
+```
+</Tab>
+</Tabs>
+
+
+</Step>
+<Step title="Running the Project">
+
+
+To run your project, execute the following:
+
+```bash
+npm run db:migrate
+npm run build
+npm run dev
+```
+
+This will start the development server at `http://localhost:3000`, and you can test your API endpoints and authentication components.
+</Step>
+
+</Steps>
+
+## Summary
+
+Now you can interact with your Nile Database through Remix API routes and manage authentication in your app!
+
+## Related Topics
+
+- [React Integration](/auth/frontendframeworks/react)
+- [Components](/auth/components/signin) 

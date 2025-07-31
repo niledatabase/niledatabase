@@ -1,0 +1,299 @@
+---
+title: 'Auth'
+description: 'Secure server-side user authentication'
+---
+
+The Auth module provides a comprehensive interface for managing user authentication and sessions on the server side. It wraps all interactions with the `/api/auth` endpoints including sign-up, sign-in, session handling, password reset, and provider management.
+
+This module is intended for use in server-side code only. For client-side login flows, use the React SDK components or OAuth redirects.
+
+<Note>
+All Auth methods depend on cookies and headers for managing CSRF tokens, sessions, and callback behavior. For framework-specific integrations (e.g., Next.js), some of these flows may be automated.
+</Note>
+
+---
+
+## signUp
+
+Create a new user and start a session using email/password credentials.
+
+<CodeGroup>
+```ts signUp
+const user = await nile.auth.signUp({
+  email: 'jane@example.com',
+  password: 'secure123',
+});
+```
+
+```ts signUp raw
+const res = await nile.auth.signUp({
+  email: 'jane@example.com',
+  password: 'secure123',
+}, true);
+```
+
+</CodeGroup>
+
+### Parameters
+
+* `email`: required string
+* `password`: required string
+* `tenantId`: optional. Join an existing tenant
+* `newTenantName`: optional. If no `tenantId` **is** provided, creates a new tenant with this name
+
+### Returns
+
+* A `User` object (with associated tenant info) or a raw `Response`
+
+<Note>
+On success, a session token is automatically stored via `withContext()` and used in subsequent calls.
+</Note>
+
+---
+
+## signIn
+
+Authenticate an existing user with email/password or via a configured provider.
+
+<CodeGroup>
+```ts credentials
+const user = await nile.auth.signIn('email', {
+  email: 'jane@example.com',
+  password: 'secure123',
+});
+```
+
+```ts raw
+const res = await nile.auth.signIn('email', {
+  email: 'jane@example.com',
+  password: 'secure123',
+}, true);
+```
+
+</CodeGroup>
+
+### Parameters
+
+* `provider`: either `'email'` (for credentials) or another supported provider name
+* `payload`: either a request or credentials object
+* `rawResponse`: optional, when `true` returns a `Response`
+
+### Returns
+
+* The authenticated `User` object or a `Response`
+
+<Note>
+This method handles both OAuth and email/password sign-in flows. For OAuth providers, the client should call `/api/auth/signin/{provider}`.
+</Note>
+
+---
+
+## signOut
+
+Ends the current session.
+
+```ts
+await nile.auth.signOut();
+```
+
+### Returns
+
+* A `Response` object from `/api/auth/signout`
+
+On success, the session and CSRF cookies are cleared, and `nile.withContext()` resets the current session state.
+
+<Tip>
+This method is only for server-side sign out. To clear browser cookies, use the React SDK `<SignOutButton />` component.
+</Tip>
+
+---
+
+## getSession
+
+Retrieve the current user session.
+
+```ts
+const session = await nile.auth.getSession();
+```
+
+### Returns
+
+Either a `JWT` or an `ActiveSession` object, depending on the session type:
+
+<CodeGroup>
+```ts JWT
+{
+  email: string;
+  sub: string;
+  id: string;
+  iat: number;
+  exp: number;
+  jti: string;
+}
+```
+
+```ts ActiveSession
+{
+  id: string;
+  email: string;
+  expires: string;
+  user?: {
+    id: string;
+    name: string;
+    image: string;
+    email: string;
+    emailVerified: void | Date;
+  };
+}
+```
+
+</CodeGroup>
+
+Returns `undefined` if no session is active.
+
+---
+
+## getCsrf
+
+Fetches the CSRF token used for protected requests.
+
+```ts
+const csrf = await nile.auth.getCsrf();
+```
+
+### Returns
+
+A `csrfToken` string or a `Response` if requested
+
+<Note>
+This method is called automatically by `signIn`, `signUp`, and `resetPassword`. You typically don’t need to call it manually.
+</Note>
+
+---
+
+## listProviders
+
+Retrieve the list of authentication providers configured for the current tenant.
+
+```ts
+const providers = await nile.auth.listProviders();
+```
+
+### Returns
+
+A mapping of provider names to provider configs:
+
+```ts
+{
+  [provider: string]: {
+    id: string;
+    name: string;
+    type: string;
+    signinUrl: string;
+    callbackUrl: string;
+  }
+}
+```
+
+---
+
+## forgotPassword
+
+Initiate a password reset request.
+
+```ts
+await nile.auth.forgotPassword({
+  email: 'jane@example.com',
+  callbackUrl: 'https://myapp.com/reset-confirm',
+});
+```
+
+### Parameters
+
+* `email`: required string
+* `callbackUrl`: optional redirect after password reset
+* `redirectUrl`: optional link shown in the email
+
+### Returns
+
+A `Response` with password reset instructions
+
+---
+
+## resetPassword
+
+Complete the password reset flow.
+
+```ts
+await nile.auth.resetPassword({
+  email: 'jane@example.com',
+  password: 'newPassword123',
+});
+```
+
+### Parameters
+
+* `email`, `password`: required
+* `callbackUrl`, `redirectUrl`: optional fallback URLs
+
+### Returns
+
+A `Response`. On success, session headers are automatically applied using `withContext()`.
+
+---
+
+## callback
+
+Handle a callback from an OAuth provider.
+
+```ts
+await nile.auth.callback('github', request);
+```
+
+### Parameters
+
+* `provider`: name of the auth provider
+* `body`: a `Request` or serialized request body
+
+### Returns
+
+A `Response` with session cookies or error headers
+
+<Note>
+This method is rarely used directly. It powers the internal OAuth flow of `signIn()`.
+</Note>
+
+
+---
+
+## Utility Methods
+
+These are internal helpers that power the core authentication flows:
+
+### parseToken
+
+Extracts the session token from headers.
+
+```ts
+const token = parseToken(response.headers);
+```
+
+### parseCallback
+
+Extracts the callback URL cookie from headers.
+
+```ts
+const cbUrl = parseCallback(request.headers);
+```
+
+### parseResetToken
+
+Extracts the reset token from password reset response.
+
+```ts
+const resetToken = parseResetToken(response.headers);
+```
+
+<Note>
+These functions are mostly used internally. You typically don&apos;t need to call them directly unless customizing the authentication flow.
+</Note>

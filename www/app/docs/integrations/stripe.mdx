@@ -137,7 +137,7 @@ All the signup and login methods eventually route users to `/tenants`. You'll fi
 The first thing we do in this page is to configure Nile SDK for the current user:
 
 ```typescript
-configureNile(cookies().get("authData"), null);
+nile.withContext({ headers });
 ```
 
 This method configures a shared instance of `nile` that is used throughout the application.
@@ -145,15 +145,12 @@ This instance is a singleton, which you get by calling Nile SDK's `Server` metho
 This is also where all the environment variables we've set earlier are being used, so lets take a look at this file:
 
 ```typescript
-const nile =  Server(
-        ...
-        api: {
-          basePath: String(process.env.NEXT_PUBLIC_NILE_API),
-        },
-        ...);
+const nile = Nile({
+  basePath: String(process.env.NEXT_PUBLIC_NILE_API)
+});
 ```
 
-The `basePath` configuration is the URL that `nile.api` methods will call. This component calls Nile APIs directly, and therefore we set `basePath` to `NEXT_PUBLIC_NILE_API`.
+The `basePath` configuration is the URL that `nile` methods will call. This component calls Nile APIs directly, and therefore we set `basePath` to `NEXT_PUBLIC_NILE_API`.
 
 So every page, route and function in our app can use the same `nile` instance to access Nile APIs and DB.
 
@@ -166,9 +163,9 @@ After this point, we can use `nile` to access the database and APIs, and it will
 When tenants are created, we initially create them in the `free` tier. This is done in `app/tenants/tenant-actions.tsx`:
 
 ```typescript
-const createTenantResponse = await nile.api.tenants.createTenant({
+const createTenantResponse = await nile.tenants.create({
   name: tenantName,
-});
+}, true);
 ```
 
 Note that we don't pass in a `tier` parameter. This is because we want to create the tenant in the default tier, which is `free`.
@@ -242,15 +239,14 @@ let location: string;
 const checkoutSession = await stripe.checkout.sessions.retrieve(session_id); // (1)
 
 // Here we are getting a connection to a specific tenant database
-const tenantNile = configureNile(cookies().get("authData"), tenantId); // (2)
+const tenantNile = await nile.withContext({ headers, tenantId }); // (2)
 
 // Store the Stripe customer ID  and subscription in the database
-const resp = await tenantNile.db("tenants").update({
-  // (3)
-  stripe_customer_id: checkoutSession.customer,
-  stripe_subscription_id: checkoutSession.subscription,
-  tenant_tier: "basic",
-});
+const resp = await tenantNile.query("update tenants set (stripe_customer_id = $1, stripe_subscription_id = $2, tenant_tier = $3", [
+  checkoutSession.customer,
+  checkoutSession.subscription,
+  "basic",
+]);
 
 revalidatePath("/tenants");
 return respond("/tenants/" + tenantId + "/billing");
@@ -268,9 +264,9 @@ To direct users to the dashboard, we use Stripe's `customer_portal` API. This is
 ```typescript
 export async function redirectToStripePortal(formData: FormData) {
   const tenantId = formData.get("tenantid")?.toString();
-  const tenantNile = configureNile(cookies().get("authData"), tenantId);
+  const tenantNile = await nile.withContext({headers, tenantId});
 
-  const resp = await tenantNile.db("tenants").select("stripe_customer_id");
+  const resp = await tenantNile.tenants.list();
   const customerId = resp[0].stripe_customer_id;
 
   const returnUrl =
@@ -295,17 +291,15 @@ A tenant who is subscribed to the "basic" tier can downgrade to the "free" tier.
 ```typescript
 export async function cancelSubscription(formData: FormData) {
   const tenantid = formData.get("tenantid")?.toString();
-  const tenantNile = configureNile(cookies().get("authData"), tenantid);
+  const tenantNile = await nile.withContext({ headers, tenantId });
 
-  const resp = await tenantNile.db("tenants").select("stripe_subscription_id");
+  const resp = await tenantNile.tenants.list()
   const subscriptionId = resp[0].stripe_subscription_id;
 
   try {
     await stripe.subscriptions.cancel(subscriptionId);
     // if we got here, subscription was cancelled successfully, lets downgrade the tenant tier too
-    await tenantNile
-      .db("tenants")
-      .update({ tenant_tier: "free", stripe_subscription_id: null });
+    await tenantNile.query("update tenants set (tenant_tier = 'free' AND stripe_subscription_id = NULL)")
   } catch (e) {
     console.error(e);
     return { message: "Failed to cancel subscription" };

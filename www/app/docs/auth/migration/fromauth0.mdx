@@ -116,11 +116,10 @@ async function migrateUsers(nile: any) {
                     continue;
                 }
                 nile.tenant_id = tenant.rows[0].id; // Set the tenant id so the user is created in the correct tenant
-                newUser = await nile.api.users.createUser({
-                    email: user.email,
-                    password: tempPassword,
-                    preferredName: user.Nickname || user.Name,
-                });
+                const preferredName = user.Nickname || user.Name;
+                const {rows: [newUser] }= await nile.db.query('insert into users.users (email, password, preferredName) values ($1, $2, $3) returning *', 
+                    [user.email, tempPassword, preferredName]
+                )
 
                 // uncomment this to update the password hash in the credentials table
                 // only do this if you exported the password hashes in bcrypt format
@@ -155,7 +154,7 @@ async function migrateTenants(nile: any) {
         // Process each organization
         for (const org of organizations) {
             try {
-                const tenant = await nile.api.tenants.createTenant({
+                const tenant = await nile.tenants.create({
                     name: org.name,
                 });
 
@@ -175,7 +174,7 @@ async function migrateTenants(nile: any) {
 
 // Single initialization of Nile
 async function migrateAll() {
-    const nile = await Nile({});
+    const nile = Nile();
     await migrateTenants(nile);
     await migrateUsers(nile);
 }
@@ -188,7 +187,7 @@ If you did not have the password hashes exported, your users will need to reset 
 <Tip>
 For staged migration, or for edge cases, you can implement the fallback strategy in your application. Attempt authentication with 
 Nile Auth, and in the failure handler, attempt the Auth0 authentication. If Auth0 authentication succeeds, 
-you can call `nile.api.users.createUser` to create the user in Nile Auth.
+you can insert into the `users.users` table.
 </Tip>
 </Step>
   <Step title="Migrate Social Providers">

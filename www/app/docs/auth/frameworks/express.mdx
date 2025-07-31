@@ -1,0 +1,60 @@
+---
+title: 'Express'
+description: 'Integrate Nile Auth with express applications'
+icon: 'server'
+---
+This guide will help you get started with Nile Auth and Express. This guide outlines the steps required to configure and integrate authentication in your application.
+<Note>
+If you have not done so yet, be sure you have [obtained credentials from the console](../getting-started/installation).
+</Note>
+
+<Steps>
+<Step title="Install packages">
+<CodeGroup>
+
+```bash npm
+  npm install @niledatabase/server @niledatabase/express 
+```
+```bash yarn 
+  yarn add @niledatabase/server @niledatbase/express 
+```
+```bash pnpm
+  pnpm add @niledatabase/server @niledatabase/express 
+```
+</CodeGroup>
+</Step>
+
+<Step title="Configure the extension">
+Out of the box, the express extension will add all routes and middleware to your express application to ensure everything works properly.
+
+```ts app/api/[...nile]/route.ts
+import { express } from 'express'
+import { Nile } from '@niledatabase/server'
+import { express as nileExpress } from '@niledatabase/express'
+
+const app = express();
+
+export const nile = Nile({ 
+  extensions: [nileExpress(app)],
+  origin: fe_url, // whitelist your FE origin 
+});
+
+```
+</Step>
+
+</Steps>
+## The extension
+
+Under the hood, the express extension does the following:
+
+1. Reconfigures `handlers[method]` and `paths[method]` to be compatible with express.
+2. Modifies the request handling to match express
+3. Uses a combination of `AsyncLocalStorage` and middleware to ensure each request has the correct context.
+
+### Handlers and paths
+
+The express extension registers routes though the specific methods, not as middleware, because nile-auth can span a lot of routes (`/api/auth/signin`, `/api/tenants/:tenantId/users`, etc). This allows you to override specific routes, or add new ones since nile only matches specific routes (either the default, or ones that have been configured)
+
+Additionally, since the base `@niledatabase/server` assumes standard `Request` and `Response` objects, this extension turns express objects into those and responds accordingly.
+
+Lastly, because of the express lifecycle, its important to be sure that each requests is executed within a specific context. We automatically add a `:tenantId` param listener and set the context of the nile instance to that tenantId for convenience. That way, no matter the request or DB query, if you have the tenantId in your param (this also works automatically with the `nile.tenantId` cookie), there's no additional work that needs done.

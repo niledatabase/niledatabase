@@ -22,14 +22,14 @@ To manage tenants, you can interact with Nile Auth's API and middleware. Below i
 ```typescript
 // Middleware to set the tenantId from the URL parameter
 app.param("tenantId", (req, res, next, tenantId) => {
-  nile.tenantId = tenantId;
+  nile.withContext({ tenantId });
   next();
 });
 
 // get all tasks for tenant
 app.get("/api/tenants/:tenantId/todos", async (req, res) => {
   // No need for a "where" clause here because we are setting the tenant ID in the context
-  const todos = await nile.db.query(
+  const todos = await nile.query(
     `SELECT * FROM todos 
      ORDER BY title`
   );

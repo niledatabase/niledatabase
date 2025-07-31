@@ -1,0 +1,68 @@
+---
+title: 'Nitro'
+description: 'Integrate Nile Auth with Nitro applications'
+icon: 'bolt-lightning'
+---
+This guide will help you get started with Nile Auth and Nitro. This guide outlines the steps required to configure and integrate authentication in your application. This guide uses the `Nuxt` layouts, and can be adjusted for any `Nitro` application
+<Note>
+If you have not done so yet, be sure you have [obtained credentials from the console](../getting-started/installation).
+</Note>
+
+<Steps>
+<Step title="Install packages">
+<CodeGroup>
+
+```bash npm
+  npm install @niledatabase/server @niledatabase/nitro
+```
+```bash yarn 
+  yarn add @niledatabase/server @niledatbase/nitro
+```
+```bash pnpm
+  pnpm add @niledatabase/server @niledatabase/nitro
+```
+</CodeGroup>
+</Step>
+
+<Step title="Configure the extension">
+Create the base nile instance, extended with the nitro plugin
+
+```ts app/composables/useNile.ts
+import { Nile } from "@niledatabase/server";
+import { nitro } from "@niledatabase/nitro";
+import type { withNitro } from "@niledatabase/nitro";
+
+export const nile = Nile<withNitro>({
+  debug: true,
+  extensions: [nitro],
+}));
+
+```
+</Step>
+
+<Step>
+Add the route so that the APIs can be handled
+```ts server/api/[...slug].ts
+import { nile } from "~/composables/useNile";
+export default defineEventHandler(nile.handlers);
+```
+</Step>
+
+</Steps>
+## The extension
+
+Under the hood, the nitro extension does the following reconfigures `handlers` to use the h3 callbacks, vs the default. The default method calls are still handled the same way internally, it only modifies the base call.
+
+For instance, the calls on the server-side will still need to have their context set.
+
+```ts
+import { nile } from "~/composables/useNile";
+
+const serverFunction = (event) => {
+  const ctxNile = nile.withContext({ headers: event.headers });
+  const userTenants = await ctxNile.tenants.list();
+}
+```
+
+
+

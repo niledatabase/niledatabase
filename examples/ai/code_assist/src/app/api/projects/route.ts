@@ -6,7 +6,7 @@ type Data = {
 
 export async function POST(req: Request) {
   try {
-    const nile = await Nile();
+    const nile = Nile();
     const body = await req.json();
     nile.tenantId = body.tenant_id;
     console.log("tenant_id:", body.tenant_id);
