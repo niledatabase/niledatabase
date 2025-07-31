@@ -29,7 +29,16 @@ export default async function Page({
   const session = await getServerSession(authOptions);
   //@ts-ignore
   const userId = session?.user?.id;
-  nile.setContext({ tenantId: (await params).tenantid, userId });
+
+  const tenantId = (await params).tenantid;
+  const [todos, resp] = await nile.withContext(
+    { tenantId, userId },
+    ({ query }) =>
+      Promise.all([
+        query("SELECT * FROM todos ORDER BY title"),
+        query("SELECT name FROM tenants"),
+      ])
+  );
 
   console.log(
     "showing todos for user " +
@@ -37,9 +46,6 @@ export default async function Page({
       " for tenant " +
       nile.getContext().tenantId
   );
-  const tenantId = nile.getContext().tenantId;
-  const todos = await nile.db.query("SELECT * FROM todos ORDER BY title"); // no need for where clause because we previously set Nile context
-  const resp = await nile.db.query("SELECT name FROM tenants"); // no need for where clause because we previously set Nile context
   const tenant = resp.rows[0].name;
   return (
     <Stack spacing={2} width={"50%"}>

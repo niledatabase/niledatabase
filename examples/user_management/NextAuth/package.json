@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.9.0",
-    "@niledatabase/nextjs": "^5.0.0-alpha.20",
-    "@niledatabase/server": "^5.0.0-alpha.20",
+    "@niledatabase/nextjs": "^5.0.0",
+    "@niledatabase/server": "^5.0.0",
     "@types/node": "^20.6.3",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",

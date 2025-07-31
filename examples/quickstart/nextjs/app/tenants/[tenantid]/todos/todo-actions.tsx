@@ -15,13 +15,13 @@ export async function addTodo(
   prevState: any,
   formData: FormData
 ) {
-  nile.setContext({ tenantId });
+  const tenantNile = await nile.withContext({ tenantId });
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
   let startTime = performance.now();
   let endTime = performance.now();
   let timeToConfigureNile = endTime - startTime;
 
-  const { userId } = nile.getContext();
+  const { userId } = tenantNile.getContext();
   const title = formData.get("todo");
   console.log(
     "adding Todo " + title + " for tenant:" + tenantId + " for user:" + userId
@@ -48,7 +48,7 @@ export async function addTodo(
       // use embeddings to get some similar tasks, for reference
       startTime = performance.now();
       const similarTasks = await findSimilarTasks(
-        nile,
+        tenantNile,
         title.toString(),
         embedding
       );
@@ -56,18 +56,18 @@ export async function addTodo(
       timeToFindSimilarTasks = endTime - startTime;
       // for each todo, we want to try and generate an AI estimate.
       startTime = performance.now();
-      estimate = await aiEstimate(nile, title.toString(), similarTasks);
+      estimate = await aiEstimate(tenantNile, title.toString(), similarTasks);
       endTime = performance.now();
       timeToAiEstimate = endTime - startTime;
     }
 
     // need to set tenant ID because it is part of the primary key
     startTime = performance.now();
-    await nile.db.query(
+    await tenantNile.db.query(
       `INSERT INTO todos (tenant_id, title, estimate, embedding, complete)
         VALUES ($1, $2, $3, $4, $5)`,
       [
-        nile.getContext().tenantId,
+        tenantId,
         title,
         estimate?.substring(0, 255),
         embeddingToSQL(embedding),
@@ -97,16 +97,20 @@ export async function addTodo(
   }
 }
 
-export async function completeTodo(tId: string, id: string, complete: boolean) {
+export async function completeTodo(
+  tenantId: string,
+  id: string,
+  complete: boolean
+) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
-  nile.setContext({ tenantId: tId });
-  const { tenantId, userId } = nile.getContext();
+  const tenantNile = await nile.withContext({ tenantId });
+  const { userId } = nile.getContext();
   console.log(
     "updating Todo " + id + " for tenant:" + tenantId + " for user:" + userId
   );
   try {
     // Tenant ID and user ID are in the context, so we don't need to specify them as query filters
-    await nile.db.query(
+    await tenantNile.query(
       `UPDATE todos 
       SET complete = $1
       WHERE id = $2`,

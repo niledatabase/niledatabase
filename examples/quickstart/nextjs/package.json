@@ -9,10 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@niledatabase/nextjs": "^5.0.0-alpha.20",
-    "@niledatabase/react": "^5.0.0-alpha.20",
-    "@niledatabase/server": "^5.0.0-alpha.20",
-    "@niledatabase/client": "^5.0.0-alpha.20",
+    "@niledatabase/nextjs": "^5.0.0",
+    "@niledatabase/react": "^5.0.0",
+    "@niledatabase/server": "^5.0.0",
+    "@niledatabase/client": "^5.0.0",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-toast": "^1.2.2",

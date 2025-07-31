@@ -12,21 +12,30 @@ export async function addTodo(tId: string, prevState: any, formData: FormData) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
 
   const session = await getServerSession(authOptions);
-  //@ts-expect-error
-  nile.setContext({ userId: session?.user?.id, tenantId: tId });
+  const context = {
+    userId: (session?.user as { id?: string })?.id,
+    tenantId: tId,
+  };
 
   const title = formData.get("todo");
 
-  const { tenantId, userId } = nile.getContext();
-  console.log(
-    "adding Todo " + title + " for tenant:" + tenantId + " for user:" + userId
-  );
   try {
     // need to set tenant ID because it is part of the primary key
-    await nile.db.query(
-      `INSERT INTO todos (tenant_id, title, complete) VALUES ($1, $2, $3)`,
-      [tenantId, title, false]
-    );
+    await nile.withContext(context, async ({ db, getContext }) => {
+      const { tenantId, userId } = getContext();
+      console.log(
+        "adding Todo " +
+          title +
+          " for tenant:" +
+          tenantId +
+          " for user:" +
+          userId
+      );
+      await db.query(
+        `INSERT INTO todos (tenant_id, title, complete) VALUES ($1, $2, $3)`,
+        [tenantId, title, false]
+      );
+    });
     revalidatePath("/tenants/${tenantID}/todos");
   } catch (e) {
     console.error(e);
@@ -43,17 +52,25 @@ export async function completeTodo(
   const session = await getServerSession(authOptions);
   //@ts-ignore
   const userId = session?.user?.id;
+  const context = {
+    userId: (session?.user as { id?: string })?.id,
+    tenantId,
+  };
+  // can do it both ways in this file
+  const tenantNile = await nile.withContext(context);
+  const ctx = tenantNile.getContext();
   console.log(
     "updating Todo " +
       id +
       " for tenant:" +
-      nile.getContext().tenantId +
+      ctx.tenantId +
       " for user:" +
-      userId
+      ctx.userId
   );
+
   try {
     // Tenant ID and user ID are in the context, so we don't need to specify them as query filters
-    await nile.db.query(`UPDATE todos SET complete = $1 WHERE id = $2`, [
+    await tenantNile.db.query(`UPDATE todos SET complete = $1 WHERE id = $2`, [
       complete,
       id,
     ]);

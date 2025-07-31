@@ -12,10 +12,8 @@ import { AddForm } from "@/app/tenants/add-form";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { nile } from "@/lib/nile";
 
-import { Nile } from "@niledatabase/server";
-
-const nile = Nile();
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
 export const dynamic = "force-dynamic";

@@ -59,7 +59,7 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
     EmbeddingTasks.SEARCH_DOCUMENT
   ).catch((e) => {
     console.error(e);
-    return new Array(768).fill(0);
+    return new Array(3).fill(0);
   });
 
   try {
