@@ -34,7 +34,7 @@ transparent as possible. In addition, you can use the SDK to directly access the
 
 ## A Note on Context
 
-It is important to ensure that the proper context is being used when calling functions from the server side. This can be done in [extensions](../../concepts/extensions.mdx) intelligently, or by using `nile.withContext`.
+It is important to ensure that the proper context is being used when calling functions from the server side. This can be done in [extensions](../../concepts/extensions) intelligently, or by using `nile.withContext`.
 Additionally, the context for the database is enforced for calls via `nile.query(...)`, but not for `nile.db.query(...)`. 
 
 The SDK will try its hardest to use context whenever possible. Under the hood, it uses `AsyncLocalStorage`, which relies on execution within the same request lifecycle. If you await or dispatch across async boundaries without using the SDK, the context may be lost, in which will default to the last used.
