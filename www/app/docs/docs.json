@@ -356,6 +356,7 @@
                 "group": "Embedding Models",
                 "icon": "microchip",
                 "pages": [
+                  "ai-embeddings/embedding_models/overview",
                   "ai-embeddings/embedding_models/cohere",
                   "ai-embeddings/embedding_models/deepinfra",
                   "ai-embeddings/embedding_models/fireworks",
@@ -417,6 +418,13 @@
         "openapi": {
           "source": "https://global.thenile.dev/openapi.yaml",
           "directory": "api-reference"
+        }
+      },
+      {
+        "tab": "Auth API",
+        "openapi": {
+          "source": "https://us-west-2.api.thenile.dev/v2/openapi",
+          "directory": "auth/api-reference"
         }
       },
       {

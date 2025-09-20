@@ -5,10 +5,10 @@ sidebarTitle: "Sales Insight"
 
 ![sales insight snapshot](/images/sales_insight.png)
 
-In this tutorial, you will learn how to use Nile's tenant virtualization and [vector embedding](/images/ai-embeddings/pg_vector) to build a
+In this tutorial, you will learn how to use Nile's tenant virtualization and [vector embedding](/ai-embeddings/vectors/pg_vector) to build a
 SaaS application that helps browse and query new code-bases.
 
-The web application we'll build is designed to be end-to-end serverless [RAG architecture](/images/ai-embeddings/rag). We'll use Modal to deploy the web application and also deploy a
+The web application we'll build is designed to be end-to-end serverless [RAG architecture](/ai-embeddings/rag). We'll use Modal to deploy the web application and also deploy a
 Llama 3.1 7B model. We'll use Nile's serverless Postgres to store the embeddings and the application data and retrieve the relevant parts of the sales transcripts.
 
 Embeddings for the code in each repository are generated with OpenAI's `text-embedding-3-small` model and stored in Nile with the relevant chunks of the transcripts.
@@ -55,7 +55,7 @@ In addition, you'll need the API URL. You'll find it under "Settings" in the "Ge
 ### 4. Third party dependencies
 
 This project uses Modal for hosting the web application and the LLM. You will need to have a Modal account, set up the Modal CLI,
-nd link your Nile credentials to your Modal account. Our [Modal Integration doc](../../partners/modal) will help you through this.
+nd link your Nile credentials to your Modal account. Our [Modal Integration doc](/integrations/modal) will help you through this.
 
 We are also using [Hugging Face](https://huggingface.co/) for the Llama 3.1 7B model. You will need to have a Hugging Face account for this, and an HuggingFace API key.
 Set up the API key as a secret in Modal using Hugging Face integration.
