@@ -25,12 +25,12 @@ but you can reach out to us for [help](auth/help/community).
 <Steps>
 <Step title="Migrating NextAuth data to Nile Auth">
 
-You can see the schema of the auth tables in Nile Auth in our [built-in tables documentation](/auth/concepts/buildintables).
+You can see the schema of the auth tables in Nile Auth in our [built-in tables documentation](/auth/concepts/builtintables).
 If you are using the standard Postgres adapter for NextAuth.js, your schema is documented [here](https://authjs.dev/getting-started/adapters/pg?framework=next-js). This schema is the same for NextAuth versions 3, 4 and 5 (also called Auth.js).
 
 As you can see, there are quite a few similarities between the two schemas. Making the migration relatively straightforward.
 
-First, if you are not using Nile, you'll need to create the tables as [documented](/auth/concepts/buildintables).
+First, if you are not using Nile, you'll need to create the tables as [documented](/auth/concepts/builtintables).
 
 Assuming you have these tables, either built into Nile or created by yourself, you'll need to migrate the data from the NextAuth.js tables to the Nile Auth tables. In the example queries below, I'm assuming that the NextAuth.js tables are in the `nextauth` schema. Modify the queries below to match your schema.
 
@@ -141,7 +141,7 @@ Refer to the [email configuration](/auth/dashboard/configurations#email-configur
 <Step title="Application Migration">
 In addition to the data migration, you'll need to update your application to use Nile Auth.
 
-Refer to the [NextJS](/auth/frontendframeworks/nextjs) guide to learn how to set up Nile Auth environment variables and routes in your application. 
+Refer to the [NextJS](/auth/frameworks/nextjs) guide to learn how to set up Nile Auth environment variables and routes in your application. 
 These will replace the NextAuth.js routes in your application.
 
 NileAuth routes are purely backend and do not serve any frontend content. This means that you'll need to create login/signup pages in your application with 

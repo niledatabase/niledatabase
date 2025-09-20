@@ -30,7 +30,7 @@ Filling in the required fields and clicking on the "Create" button will create a
 ![Create user](/images/auth/create_user.png)
 
 <Tip>
-Creating a user in this dashboard will not add them to any tenant (you can do that later in the [tenants dashboard](/docs/auth/dashboard/managing-tenants)) and will not send them an email to verify their account.
+Creating a user in this dashboard will not add them to any tenant (you can do that later in the [tenants dashboard](/auth/dashboard/managing-tenants)) and will not send them an email to verify their account.
 </Tip>
 
 ### Editing Users
@@ -98,7 +98,7 @@ export interface User {
 It is common to want to verify a user's email address before allowing them to access your application. 
 This is especially important for email/password users since there is no other way to know if the email address is valid.
 Nile Auth APIs and SDK support email verification with the `<EmailSignInButton />` component. 
-You can learn how to use it in the [Email Verification](/docs/auth/email/verification) guide.
+You can learn how to use it in the [Email Verification](/auth/email/verification) guide.
 
 In addition, you may want to verify (or unverify) a user's email address manually.
 You can do this by updating the `emailVerified` property in the `users.users` table.
