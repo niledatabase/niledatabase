@@ -420,6 +420,13 @@
         }
       },
       {
+        "tab": "Auth API",
+        "openapi": {
+          "source": "https://us-west-2.api.thenile.dev/v2/openapi",
+          "directory": "auth/api-reference"
+        }
+      },
+      {
         "tab": "Pricing",
         "href": "https://www.thenile.dev/pricing"
       },
