@@ -9,16 +9,14 @@ import EmbeddingsCost from "./_components/EmbeddingsCost";
 import Autoscale from "./_components/Autoscale";
 import PlaceTenants from "./_components/PlaceTenants";
 import BottomFour from "./_components/BottomFour";
-import Divider from "./_components/common/Divider";
 
-export default function Home() {
+export default async function Home() {
   return (
     <Container background={null}>
       <Hero />
       <TweetCarousel />
       <PurposeBuilt />
       <UnlimitedVirtualDbs />
-      {/* <AIPartners /> */}
       <EmbeddingsCost />
       <Virtualization />
       <Autoscale />
