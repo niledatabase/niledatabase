@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
       cookieConfig.domain = ".thenile.dev";
       cookieConfig.sameSite = "none";
     }
-    // should do something better here, problaby
+    // should do something better here, probably
     const developerToken = await signedIn.text();
 
     // do we need the developer token for subsequent requests? probably not, but would be good for www -> nad experience (auto-login)
@@ -80,29 +80,34 @@ export async function POST(req: NextRequest) {
         headers,
       }
     );
-    const db = await database.json();
-    const creds = await fetch(
-      `${globalControlPlane}/workspaces/${slug}/databases/${databaseName}/credentials?internal=true`,
-      {
-        method: "POST",
-        headers,
-      }
-    );
-    const generated = await creds.json();
-    const encoded = await createIdToken({
-      username: generated.id,
-      password: generated.password,
-    });
-    cookieStore.set(
-      buildCredsKey({ workspaceSlug: slug, databaseName }),
-      encoded,
-      cookieConfig
-    );
-    const jwt = decode(developerToken);
-    const database64 = encodeBase64Url({ ...db, sub: jwt?.sub });
 
-    cookieStore.set(databasePrefix, database64, cookieConfig);
-    return new Response(null, { status: 201 });
+    const db = await database.json();
+    if (database.ok) {
+      const creds = await fetch(
+        `${globalControlPlane}/workspaces/${slug}/databases/${databaseName}/credentials?internal=true`,
+        {
+          method: "POST",
+          headers,
+        }
+      );
+      const generated = await creds.json();
+      const encoded = await createIdToken({
+        username: generated.id,
+        password: generated.password,
+      });
+      cookieStore.set(
+        buildCredsKey({ workspaceSlug: slug, databaseName }),
+        encoded,
+        cookieConfig
+      );
+      const jwt = decode(developerToken);
+      const database64 = encodeBase64Url({ ...db, sub: jwt?.sub });
+
+      cookieStore.set(databasePrefix, database64, cookieConfig);
+      return new Response(null, { status: 201 });
+    } else {
+      return new Response(db.message, { status: 400 });
+    }
   }
   return new Response("login failed, what do I do about this?", {
     status: 400,

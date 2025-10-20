@@ -32,7 +32,16 @@ export default function ConsoleEmbed({ domain }: { domain?: string }) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ nonce }),
       })
-        .then(() => channel.port1.postMessage({ type: "COOKIE_SET_OK" }))
+        .then(async (data) => {
+          if (data.ok) {
+            channel.port1.postMessage({ type: "COOKIE_SET_OK" });
+          } else {
+            channel.port1.postMessage({
+              type: "COOKIE_SET_FAILED",
+              message: await data.text(),
+            });
+          }
+        })
         .catch(() => channel.port1.postMessage({ type: "COOKIE_SET_FAIL" }));
     };
 
