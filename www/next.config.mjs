@@ -49,9 +49,6 @@ const nextConfig = {
   // Configure page extensions
   pageExtensions: ["js", "jsx", "ts", "tsx", "mdx"],
 
-  // Add rewrites configuration
-  rewrites,
-
   // Exclude docs from the build
   webpack: (config, { isServer }) => {
     // Add a rule to exclude the docs directory
@@ -63,5 +60,8 @@ const nextConfig = {
     return config;
   },
 };
+if (process.env.DISABLE_REWRITES === true) {
+  nextConfig.rewrites = rewrites;
+}
 
 export default withMdx(nextConfig);
