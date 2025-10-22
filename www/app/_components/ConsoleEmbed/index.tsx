@@ -36,9 +36,10 @@ export default function ConsoleEmbed({ domain }: { domain?: string }) {
           if (data.ok) {
             channel.port1.postMessage({ type: "COOKIE_SET_OK" });
           } else {
+            const message = await data.text();
             channel.port1.postMessage({
               type: "COOKIE_SET_FAILED",
-              message: await data.text(),
+              message,
             });
           }
         })
