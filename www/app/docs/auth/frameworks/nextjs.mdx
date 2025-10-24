@@ -26,14 +26,21 @@ If you have not done so yet, be sure you have [obtained credentials from the con
 </CodeGroup>
 </Step>
 <Step title="Configure routes">
-Configure the splat route. Be sure to add the nextJs extension, it will handle passing the client requests (`next/headers`), as well passing the correct headers on server-side calls automatically.
-```ts app/api/[...nile]/route.ts
-import { Nile } from '@niledatabase/server'
-import { nextJs } from '@niledatabase/nextjs'
-export const nile = Nile({ extensions: [nextJs] });
-```
 
-</Step>
+  Configure the splat route. Be sure to add the nextJs extension, it will handle passing the client requests (`next/headers`), as well passing the correct headers on server-side calls automatically.
+
+  ```typescript app/api/[...nile]/nile.ts
+  import { Nile } from "@niledatabase/server";
+  import { nextJs } from '@niledatabase/nextjs';
+
+  export const nile = Nile({ extensions: [nextJs] });
+  ```
+
+  ```typescript app/api/[...nile]/route.ts
+  import { nile } from "./nile";
+  export const { POST, GET, DELETE, PUT } = nile.handlers;
+  ```
+  </Step>
 </Steps>
 
 ## Server actions and RSC
