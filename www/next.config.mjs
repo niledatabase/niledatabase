@@ -60,7 +60,7 @@ const nextConfig = {
     return config;
   },
 };
-if (process.env.DISABLE_REWRITES === true) {
+if (process.env.DISABLE_REWRITES !== true) {
   nextConfig.rewrites = rewrites;
 }
 
