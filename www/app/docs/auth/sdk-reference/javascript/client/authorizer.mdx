@@ -115,7 +115,75 @@ const auth = new Authorizer({ baseUrl: 'https://myapp.com' });
 
 The instance exposes a `state` object with `baseUrl`, `session`, and loading status. You can update the configuration later by calling `auth.configure({ baseUrl })`.
 
+## Multi-factor (Client)
+
+Client helper for MFA setup, challenge verification, and removal against `/auth/mfa`.
+
+### Overview
+Use `mfa` from `@niledatabase/client` when you need to script MFA flows directly or pair with custom UI (React components wrap this helper under the hood). It mirrors the API contract: `POST` starts setup, `PUT` verifies a challenge, and `DELETE` disables an enrolled method when `remove: true` is supplied. Redirect responses are surfaced as `{ url: string }` so you can route accordingly.
+
+<CodeGroup>
+```ts setup
+import { mfa } from '@niledatabase/client';
+
+const setup = await mfa({ method: 'authenticator', scope: 'setup' });
+```
+
+```ts verify
+const verified = await mfa({
+  token: setup.token,
+  code: '123456',
+  method: setup.method,
+  scope: setup.scope, // "setup" or "challenge"
+});
+```
+
+```ts disable
+await mfa({ method: 'authenticator', remove: true });
+```
+
+```ts challenge
+// Finish an MFA-required sign-in
+const challenge = await auth.signIn('credentials', { email, password });
+if (challenge && typeof challenge === 'object' && 'token' in challenge) {
+  const result = await mfa({
+    token: String((challenge as any).token),
+    code: '654321',
+    method: (challenge as any).method ?? 'authenticator',
+    scope: 'challenge',
+  });
+  if (!result?.ok) throw new Error('MFA verification failed');
+}
+```
+</CodeGroup>
+
+### API
+`mfa(params: MfaParams)` automatically selects the HTTP verb based on the payload.
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `token` | `string` | `undefined` | Challenge token from setup or sign-in; required for verification and some email disable flows. |
+| `scope` | `'setup' \| 'challenge'` | `'challenge'` | Whether you are initiating setup or completing a challenge. |
+| `method` | `'authenticator' \| 'email'` | `'authenticator'` | MFA mechanism to target. |
+| `code` | `string` | `undefined` | 6-digit or recovery code when verifying or disabling. |
+| `remove` | `boolean` | `false` | Sends a `DELETE` request to disable MFA for the current user. |
+| `baseUrl` | `string` | Browser origin | Override the base API URL when not using the default proxy. |
+| `fetchUrl` | `string` | `${baseUrl}/api/auth/mfa` | Full URL override for the MFA endpoint. |
+| `init` | `RequestInit` | `undefined` | Extra fetch options (credentials, headers, etc.). |
+| `auth` | `Authorizer` | `undefined` | Reuse an existing `Authorizer` instance/context. |
+
+Returns one of:
+- A setup payload (`AuthenticatorSetup` or `EmailSetup`) with `token`, `scope`, and method-specific fields.
+- `{ ok: true; scope: 'setup' \| 'challenge'; recoveryCodesRemaining?: number }` after verification.
+- `{ url: string }` when the backend expects a redirect (inspect `error` query param for messaging).
+
+### Error handling and notes
+- Non-200 responses are coerced into `{ url: string }` with an `error` search parameter; parse it to display user-friendly errors.
+- Codes should be 6 digits for authenticator/email verification; recovery codes are string tokens issued during setup.
+- Challenge tokens expire; expect 410 for stale tokens and 404 for missing challenges.
+- Email MFA may require the same token for verification and disable flows.
+
 ## Related Topics
 
 - [React Integration](/auth/frameworks/react)
-- [Components](/auth/components/signin)
+- [Components](/auth/components/signin) 

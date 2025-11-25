@@ -6,7 +6,7 @@ icon: 'atom'
 
 ## Installation
 
-`@niledatbase/react` contains components and hooks for using the API. It handles sessions, cookies, fetching data, and comes with built-in components to be used as either templates or directly in your application to handle common user tasks. It is designed to be used with `@niledatabase/server`, which handles API calls itself or forwards them to the regional API for your database.
+`@niledatabase/react` contains components and hooks for using the API. It handles sessions, cookies, fetching data, and comes with built-in components to be used as either templates or directly in your application to handle common user tasks. It is designed to be used with `@niledatabase/server`, which handles API calls itself or forwards them to the regional API for your database.
 
 ```bash
 npm install @niledatabase/react @niledatabase/client
@@ -427,6 +427,129 @@ export type LoginInfo = {
 - If `beforeMutate` is provided, it modifies the login data before the request.
 - Calls `onSuccess` if login succeeds.
 - Calls `onError` if login fails.
+
+## Multi-factor (Client)
+
+Client-side MFA enrollment, challenge, and removal flows powered by the React SDK.
+
+### Features
+- Authenticator app or email one-time-code enrollment against `/auth/mfa`
+- Recovery codes for authenticator challenges with remaining-count feedback
+- Redirect-aware helpers that work with custom routers or default navigation
+- UI building blocks (`MultiFactor*` components) plus a lightweight hook
+- Optional low-level `mfa` helper for bespoke prompts or headless flows
+
+### Overview
+Nile Auth exposes a single `/auth/mfa` endpoint for starting MFA setup, completing challenges, and removing an enrolled method. The React SDK wraps the endpoint in `useMultiFactor` and UI components that parse server responses into ready-to-render experiences. For custom prompts, you can call the `mfa` helper from `@niledatabase/client` directly; it understands the same payloads and returns either redirect URLs or structured setup/challenge objects.
+
+Tokens returned from setup or sign-in responses must be echoed back on subsequent calls (challenge verification or removal). When the backend needs the browser to redirect, the helper returns `{ url: string }` so you can route accordingly. HTTP verbs mirror the API contract: `POST` initiates setup, `PUT` verifies a challenge (token + code), and `DELETE` disables MFA when `remove: true` is passed.
+
+### Installation
+```sh
+npm install @niledatabase/react @niledatabase/client
+```
+
+### Quick start
+#### Enroll with an authenticator app
+```tsx
+import { useMultiFactor, MultiFactorAuthenticator } from '@niledatabase/react';
+
+export function MfaEnrollment() {
+  const { setup, loading, startSetup } = useMultiFactor({
+    method: 'authenticator',
+    currentMethod: null,
+    onRedirect: (url) => window.location.assign(url), // optional
+  });
+
+  return (
+    <>
+      <button onClick={startSetup} disabled={loading}>
+        {loading ? 'Starting...' : 'Enable authenticator MFA'}
+      </button>
+
+      {setup?.scope === 'setup' && setup.method === 'authenticator' ? (
+        <MultiFactorAuthenticator
+          setup={setup}
+          onError={console.error}
+          onSuccess={(scope) => scope === 'setup' && window.location.reload()}
+        />
+      ) : null}
+    </>
+  );
+}
+```
+
+#### Handle a challenge prompt (sign-in or removal)
+```tsx
+import { mfa } from '@niledatabase/client';
+
+async function verify({ token, code, method }: { token: string; code: string; method: 'authenticator' | 'email'; }) {
+  const result = await mfa({ token, code, method, scope: 'challenge' });
+  if (result?.ok) {
+    // `scope` will be "challenge" for sign-in or "setup" when completing enrollment
+    window.location.replace('/app');
+  } else if (result && 'url' in result) {
+    const url = new URL(result.url);
+    throw new Error(url.searchParams.get('error') ?? 'Unable to verify code');
+  }
+}
+```
+
+### API
+#### `useMultiFactor(options)`
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `method` | `'authenticator' \| 'email'` | _(required)_ | MFA mechanism to enable or disable. |
+| `currentMethod` | `'authenticator' \| 'email' \| null` | `null` | Currently enrolled method; blocks switching until disabled. |
+| `onRedirect` | `(url: string) => void` | `window.location.assign` | Optional handler when the backend responds with a `url` to visit. |
+| `onChallengeRedirect` | `(params: { token; method; scope; destination? }) => void` | Internal `/mfa/prompt` navigation | Override the default challenge redirect builder. |
+
+Returns `{ setup, loading, errorType, startSetup, startDisable }`.
+
+- `setup`: `null` or an MFA payload. For authenticator: `{ method: 'authenticator'; token; scope; otpauthUrl?; secret?; recoveryKeys? }`. For email: `{ method: 'email'; token; scope; maskedEmail? }`.
+- `startSetup()`: begins enrollment (POST `/auth/mfa`); `setup.scope` will be `"setup"` or `"challenge"` if a verification step is required.
+- `startDisable()`: starts removal for the given method. If verification is required, `setup.scope` will be `"challenge"`.
+- `errorType`: one of `setup`, `disable`, `parseSetup`, `parseDisable`, or `null` for success.
+
+### Components
+- `MultiFactorAuthenticator` — renders QR code, recovery keys, and a verification form.  
+  Props: `setup: AuthenticatorSetup`, `onError(message: string | null)`, `onSuccess(scope: 'setup' | 'challenge')`.
+- `MultiFactorEmail` — shows masked email messaging and a verification form.  
+  Props: `setup: EmailSetup`, `onSuccess(scope: 'setup' | 'challenge')`.
+- `MultiFactorChallenge` — shared challenge UI for either method (used for disable flows or sign-in prompts).  
+  Props: `setup: MfaSetup`, `message: string`, `isEnrolled: boolean`, `onSuccess(scope)`.
+
+### `mfa(options)` (client helper)
+Low-level wrapper around `/auth/mfa`. Verbs follow the OpenAPI spec:
+- `POST` with `{ method, scope: 'setup' }` to initiate setup and receive a challenge (201 on success).
+- `PUT` with `{ token, code, method, scope }` to satisfy a challenge (200 on success; 400 invalid payload; 401 invalid code; 404/410 missing or expired challenge).
+- `DELETE` with `{ token?, code?, method, scope? }` when `remove: true` to disable MFA; may require a valid code/token if the backend is configured to require confirmation.
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `token` | `string` | `undefined` | Challenge token issued during setup or sign-in; required for verification and some disable flows (email). |
+| `scope` | `'setup' \| 'challenge'` | `'challenge'` | Operation to perform; setup responses can still return `scope: 'challenge'` when verification is needed. |
+| `method` | `'authenticator' \| 'email'` | `'authenticator'` | MFA mechanism to target. |
+| `code` | `string` | `undefined` | 6-digit code or recovery code for verification/disable. |
+| `remove` | `boolean` | `false` | Sends a `DELETE` request to disable MFA for the current user. |
+| `baseUrl` | `string` | Browser origin | Override the base API URL when not using the default proxy. |
+| `fetchUrl` | `string` | `${baseUrl}/api/auth/mfa` | Full URL override for the MFA endpoint. |
+| `init` | `RequestInit` | `undefined` | Extra fetch options (e.g., credentials). |
+| `auth` | `Authorizer` | `undefined` | Reuse an existing `Authorizer` instance/context. |
+
+Returns one of:
+- A setup payload (`AuthenticatorSetup` or `EmailSetup`) with `token`, `scope`, and method-specific fields.
+- `{ ok: true; scope: 'setup' \| 'challenge'; recoveryCodesRemaining?: number }` after verification.
+- `{ url: string }` when the backend expects a redirect (errors are provided via `error` query param).
+
+### Error handling
+- Non-200 responses are coerced into `{ url: string }` with an `error` search param. `MfaVerifyForm` and the examples above parse this for user-friendly messaging.
+- If `code` is missing or shorter than 6 digits, the React forms set a validation error before calling the API.
+
+### Additional notes
+- Codes are expected to be 6 digits for authenticator/email verification; recovery codes are string tokens issued during setup.
+- Challenge tokens expire; expect 410 responses for stale tokens and 404 for unknown challenges.
+- Email MFA may return a `maskedEmail` and require the same token on verification and disable flows.
 
 ## Related Topics
 
