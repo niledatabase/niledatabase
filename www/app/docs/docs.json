@@ -221,7 +221,8 @@
                   "auth/concepts/builtintables",
                   "auth/concepts/per-tenantoverrides",
                   "auth/concepts/acclinking",
-                  "auth/concepts/extensions"
+                  "auth/concepts/extensions",
+                  "auth/concepts/multifactor"
                 ]
               },
               {
@@ -259,7 +260,8 @@
                   "auth/components/signout",
                   "auth/components/user",
                   "auth/components/organization",
-                  "auth/components/customization"
+                  "auth/components/customization",
+                  "auth/components/multifactor"
                 ]
               },
               {

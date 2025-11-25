@@ -6,121 +6,238 @@ icon: js
 
 ## Installation
 
-`@niledatabase/client` exposes the the client side functions for various authorization requests. It handles API requests for sign-in, sign-up, sessions, and password reset. The client is designed to work with `@niledatabase/server` which provides the server-side routes.
+`@niledatabase/client` provides client-side functions for managing authentication, sessions, and user accounts. It is designed to work seamlessly with `@niledatabase/server` which provides the server-side routes.
 
 ```bash
 npm install @niledatabase/client
 ```
 
-## Getting Started
+## Usage
 
-For most cases, These helpers call the underlying singleton instance of `Authorizer`, which can be accessed via `auth`
-
-```ts
-import {
-  auth,
-  // signIn // could just use this instead
-} from '@niledatabase/client';
-
-await auth.signIn('credentials', { email: 'user@example.com', password: 'pw' });
-```
-
-### getSession
-
-Fetches the current session. If a session is cached and still valid it returns that, otherwise it requests `/auth/session`.
+The library exports a singleton instance of the `Authorizer` class, named `auth`, which is pre-configured for most use cases.
 
 ```ts
-await auth.getSession();
+import { auth } from '@niledatabase/client';
 ```
+
+## Authentication
 
 ### signIn
 
-Sends a sign-in request to the authentication endpoint. The initial signIn values are [the supported providers for single sign on](../../../singlesignon/google), in addition to `credentials`
+Signs in a user. Supports both credentials (email/password) and Single Sign-On (SSO) providers.
 
 ```ts
+// Email and password
 await auth.signIn('credentials', {
   email: 'user@example.com',
   password: 'password',
 });
+
+// Single Sign-On (Google, GitHub, etc.)
+await auth.signIn('google', { callbackUrl: '/dashboard' });
 ```
 
-#### Params
+#### Parameters
 
-| Name          | Type      | Description                                                                   |
-| ------------- | --------- | ----------------------------------------------------------------------------- |
-| `callbackUrl` | `string`  | The URL to return when the request is complete.                               |
-| `redirect`    | `boolean` | Allows configuration of client-side redirects in the case of credential login |
+| Name       | Type     | Description                                                                  |
+| ---------- | -------- | ---------------------------------------------------------------------------- |
+| `provider` | `string` | The authentication provider (e.g., `'credentials'`, `'google'`, `'github'`). |
+| `options`  | `object` | Configuration options.                                                       |
+
+**Options:**
+
+| Name          | Type      | Description                                                                          |
+| ------------- | --------- | ------------------------------------------------------------------------------------ |
+| `email`       | `string`  | User's email (required for `'credentials'`).                                         |
+| `password`    | `string`  | User's password (required for `'credentials'`).                                      |
+| `callbackUrl` | `string`  | URL to redirect to after successful sign-in.                                         |
+| `redirect`    | `boolean` | If `false`, prevents automatic redirection (useful for handling responses manually). |
+
+### signUp
+
+Creates a new user account. Can optionally create a new tenant for the user.
+
+```ts
+await auth.signUp({
+  email: 'user@example.com',
+  password: 'password',
+  createTenant: true, // Creates a tenant with the user's email as the name
+});
+```
+
+#### Parameters
+
+| Name      | Type     | Description            |
+| --------- | -------- | ---------------------- |
+| `options` | `object` | Sign-up configuration. |
+
+**Options:**
+
+| Name           | Type                | Description                                                                                                      |
+| -------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `email`        | `string`            | User's email address.                                                                                            |
+| `password`     | `string`            | User's password.                                                                                                 |
+| `createTenant` | `boolean \| string` | If `true`, creates a tenant named after the user's email. If a string, creates a tenant with that specific name. |
+| `callbackUrl`  | `string`            | URL to redirect to after successful sign-up.                                                                     |
 
 ### signOut
 
-Logs the user out and clears the session.
+Logs the current user out and clears the session.
 
 ```ts
 await auth.signOut({ callbackUrl: '/goodbye' });
 ```
 
-### signUp
+#### Parameters
 
-Creates a new user account. You can also create tenants during sign up. A boolean value will create a tenant with the same email address. If a string is passed, that will be the name of the created tenant.
+| Name      | Type     | Description             |
+| --------- | -------- | ----------------------- |
+| `options` | `object` | Sign-out configuration. |
+
+**Options:**
+
+| Name          | Type     | Description                        |
+| ------------- | -------- | ---------------------------------- |
+| `callbackUrl` | `string` | URL to redirect to after sign-out. |
+
+## Session Management
+
+### getSession
+
+Retrieves the current user session. If a valid session is cached, it is returned; otherwise, a request is made to the server.
 
 ```ts
-await auth.signUp({
-  email: 'user@example.com',
-  password: 'pass',
-  createTenant: true,
-});
+const session = await auth.getSession();
+if (session.user) {
+  console.log('User is logged in:', session.user);
+}
 ```
+
+## Password Management
 
 ### resetPassword
 
-Sends requests to the password reset endpoints. You must be an authorized user to do this action.
+Initiates a password reset flow (typically by sending a reset email).
 
 ```ts
 await auth.resetPassword({
   email: 'user@example.com',
-  password: 'new-pass',
+  password: 'new-pass', // Optional: if setting a new password directly
 });
 ```
 
+## Multi-factor Authentication
+
+### mfa
+
+Manages Multi-Factor Authentication (MFA) flows, including setup, challenge verification, and removal. The `User` object in the session includes a `multiFactor` property indicating if MFA is enabled.
+
+```ts
+import { mfa } from '@niledatabase/client';
+// or
+// await auth.mfa({ ... });
+```
+
+#### Parameters
+
+`mfa(params: MfaParams)` automatically selects the HTTP verb based on the payload.
+
+| Name     | Type                         | Default           | Description                                                         |
+| -------- | ---------------------------- | ----------------- | ------------------------------------------------------------------- |
+| `method` | `'authenticator' \| 'email'` | `'authenticator'` | MFA method to target.                                               |
+| `scope`  | `'setup' \| 'challenge'`     | `'challenge'`     | The operation scope.                                                |
+| `token`  | `string`                     | `undefined`       | Challenge token (required for verification and some disable flows). |
+| `code`   | `string`                     | `undefined`       | 6-digit verification code or recovery code.                         |
+| `remove` | `boolean`                    | `false`           | If `true`, disables MFA for the specified method.                   |
+
+#### Examples
+
+<CodeGroup>
+```ts setup
+// 1. Start Setup
+// Returns a payload with secret/otpauthUrl (for QR) or triggers an email code
+const setup = await auth.mfa({ method: 'authenticator', scope: 'setup' });
+```
+
+```ts verify
+// 2. Verify Challenge
+// Use the token from setup or login challenge, and the user's code
+const verified = await auth.mfa({
+  token: setup.token,
+  code: '123456',
+  method: setup.method,
+  scope: 'challenge',
+});
+```
+
+```ts disable
+// 3. Disable MFA
+await auth.mfa({ method: 'authenticator', remove: true });
+```
+
+```ts challenge
+// 4. Handle Login Challenge
+const challenge = await auth.signIn('credentials', { email, password });
+
+// If MFA is required, the response contains a token
+if (challenge && typeof challenge === 'object' && 'token' in challenge) {
+  const result = await auth.mfa({
+    token: String(challenge.token),
+    code: '654321', // Code input by user
+    method: challenge.method ?? 'authenticator',
+    scope: 'challenge',
+  });
+  if (!result?.ok) throw new Error('MFA verification failed');
+}
+```
+
+</CodeGroup>
+
+#### Error Handling
+
+Non-200 responses may return a `ChallengeRedirect` object (`{ url: string }`) with an `error` query parameter. Parse this parameter to display user-friendly error messages.
+
+## Utilities
+
 ### getCsrfToken
 
-Returns a CSRF token used for form submissions.
+Retrieves a CSRF token for form submissions.
 
 ```ts
 const token = await auth.getCsrfToken();
+// Optional: Fetch from custom URL
+const customToken = await auth.getCsrfToken('/api/auth/custom-csrf');
 ```
 
 ### getProviders
 
-Returns a list of available authentication providers.
+Retrieves the list of configured authentication providers.
 
 ```ts
 const providers = await auth.getProviders();
 ```
 
-## Authorizer
+## Advanced Configuration
 
-You can also customize your own authorizer on the client by creating an instance of `Authorizer`.
+### Custom Authorizer
+
+For advanced use cases, such as connecting to a different API endpoint or managing multiple auth contexts, you can create a custom instance of `Authorizer`.
 
 ```ts
 import { Authorizer } from '@niledatabase/client';
 
-const auth = new Authorizer({ baseUrl: 'https://myapp.com' });
+const customAuth = new Authorizer({
+  baseUrl: 'https://api.myapp.com',
+  basePath: '/auth',
+});
 ```
 
-### Constructor Options
-
-`new Authorizer(config)` accepts the following options:
+#### Constructor Options
 
 | Name       | Type          | Description                               |
 | ---------- | ------------- | ----------------------------------------- |
-| `baseUrl`  | `string`      | The base URL of your application.         |
-| `basePath` | `string`      | Optional API path, defaults to `/api`.    |
-| `init`     | `RequestInit` | Default `fetch` options for all requests. |
+| `baseUrl`  | `string`      | The base URL of the API.                  |
+| `basePath` | `string`      | Path to auth endpoints (default: `/api`). |
+| `init`     | `RequestInit` | Default fetch options for all requests.   |
 
-The instance exposes a `state` object with `baseUrl`, `session`, and loading status. You can update the configuration later by calling `auth.configure({ baseUrl })`.
-
-## Related Topics
-
-- [React Integration](/auth/frameworks/react)
-- [Components](/auth/components/signin)
+The instance exposes a `state` object with `baseUrl`, `session`, and loading status. Configuration can be updated later via `auth.configure({ ... })`.
