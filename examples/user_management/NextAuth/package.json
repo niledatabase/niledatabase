@@ -37,6 +37,6 @@
   },
   "devDependencies": {
     "@types/pg": "^8.10.9",
-    "nodemailer": "^6.9.9"
+    "nodemailer": "^7.0.11"
   }
 }

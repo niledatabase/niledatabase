@@ -240,10 +240,10 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@19.1.0))(@types/react@18.3.27)(react@19.1.0)
       '@langchain/community':
         specifier: ^0.2.0
-        version: 0.2.33(@browserbasehq/sdk@2.6.0)(@langchain/langgraph@1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@3.25.76))(zod@3.25.76))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@6.9.1(ws@8.18.1)(zod@3.25.76))(pg@8.16.3)(playwright@1.52.0)(ws@8.18.1)
+        version: 0.2.33(@browserbasehq/sdk@2.6.0)(@langchain/langgraph@1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@4.1.13))(zod@4.1.13))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))(pg@8.16.3)(playwright@1.52.0)(ws@8.18.1)
       '@langchain/core':
         specifier: ^0.2.0
-        version: 0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+        version: 0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       '@langchain/openai':
         specifier: ^0.2.0
         version: 0.2.11(ws@8.18.1)
@@ -270,7 +270,7 @@ importers:
         version: 4.1.17
       ai:
         specifier: 4.2.6
-        version: 4.2.6(react@19.1.0)(zod@3.25.76)
+        version: 4.2.6(react@19.1.0)(zod@4.1.13)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -291,7 +291,7 @@ importers:
         version: 4.0.0
       langchain:
         specifier: ^0.2.0
-        version: 0.2.20(@browserbasehq/sdk@2.6.0)(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(openai@6.9.1(ws@8.18.1)(zod@3.25.76))(playwright@1.52.0)(ws@8.18.1)
+        version: 0.2.20(@browserbasehq/sdk@2.6.0)(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))(playwright@1.52.0)(ws@8.18.1)
       lucide-react:
         specifier: ^0.486.0
         version: 0.486.0(react@19.1.0)
@@ -416,7 +416,7 @@ importers:
         version: 15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-auth:
         specifier: ^4.24.11
-        version: 4.24.13(@auth/core@0.34.3)(next@15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 4.24.13(@auth/core@0.34.3(nodemailer@7.0.11))(next@15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@7.0.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       openai:
         specifier: ^4.76.3
         version: 4.95.1(ws@8.18.1)(zod@3.25.76)
@@ -483,7 +483,7 @@ importers:
         version: 5.0.0-beta.52(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@niledatabase/react':
         specifier: ^2.5.0-alpha.0
-        version: 2.5.0-alpha.0(@auth/core@0.34.3)(@mui/system@5.18.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@tanstack/react-query@5.90.11(react@18.3.1))(@types/react@18.3.27)(next@16.0.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 2.5.0-alpha.0(@auth/core@0.34.3(nodemailer@7.0.11))(@mui/system@5.18.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@tanstack/react-query@5.90.11(react@18.3.1))(@types/react@18.3.27)(next@16.0.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@7.0.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       js-cookie:
         specifier: ^3.0.5
         version: 3.0.5
@@ -1412,7 +1412,7 @@ importers:
         version: 1.2.4(@types/react@18.3.27)(react@19.1.0)
       ai:
         specifier: 4.2.6
-        version: 4.2.6(react@19.1.0)(zod@3.25.76)
+        version: 4.2.6(react@19.1.0)(zod@4.1.13)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1427,7 +1427,7 @@ importers:
         version: 3.1.2
       langchain:
         specifier: 0.3.19
-        version: 0.3.19(@langchain/core@1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))(@opentelemetry/api@1.9.0)(axios@1.13.2)(handlebars@4.7.8)(openai@6.9.1(ws@8.18.1)(zod@3.25.76))(ws@8.18.1)
+        version: 0.3.19(@langchain/core@1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))(@opentelemetry/api@1.9.0)(axios@1.13.2)(handlebars@4.7.8)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))(ws@8.18.1)
       next:
         specifier: ^15.3.0
         version: 15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1500,7 +1500,7 @@ importers:
         version: 5.0.0-beta.52(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@niledatabase/react':
         specifier: ^2.5.0-alpha.0
-        version: 2.5.0-alpha.0(@auth/core@0.34.3)(@mui/system@5.18.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@tanstack/react-query@5.90.11(react@18.3.1))(@types/react@18.3.27)(next@16.0.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 2.5.0-alpha.0(@auth/core@0.34.3(nodemailer@7.0.11))(@mui/system@5.18.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@tanstack/react-query@5.90.11(react@18.3.1))(@types/react@18.3.27)(next@16.0.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@7.0.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       js-cookie:
         specifier: ^3.0.5
         version: 3.0.5
@@ -1825,10 +1825,10 @@ importers:
     dependencies:
       '@auth/core':
         specifier: ^0.34.0
-        version: 0.34.3(nodemailer@6.10.1)
+        version: 0.34.3(nodemailer@7.0.11)
       '@auth/drizzle-adapter':
         specifier: ^1.9.0
-        version: 1.11.1(nodemailer@6.10.1)
+        version: 1.11.1(nodemailer@7.0.11)
       '@emotion/react':
         specifier: ^11.11.1
         version: 11.14.0(@types/react@18.3.27)(react@19.1.0)
@@ -1879,7 +1879,7 @@ importers:
         version: 15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next-auth:
         specifier: ^4.24.5
-        version: 4.24.13(@auth/core@0.34.3(nodemailer@6.10.1))(next@15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(nodemailer@6.10.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 4.24.13(@auth/core@0.34.3(nodemailer@7.0.11))(next@15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(nodemailer@7.0.11)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       pg:
         specifier: ^8.11.3
         version: 8.16.3
@@ -1897,8 +1897,8 @@ importers:
         specifier: ^8.10.9
         version: 8.15.6
       nodemailer:
-        specifier: ^6.9.9
-        version: 6.10.1
+        specifier: ^7.0.11
+        version: 7.0.11
 
   examples/user_management/email_login/NextJS:
     dependencies:
@@ -2147,7 +2147,7 @@ importers:
         version: 15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-auth:
         specifier: ^4.24.11
-        version: 4.24.13(@auth/core@0.34.3)(next@15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 4.24.13(@auth/core@0.34.3(nodemailer@7.0.11))(next@15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@7.0.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2214,7 +2214,7 @@ importers:
         version: 1.1.6(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       ai:
         specifier: 4.2.6
-        version: 4.2.6(react@19.1.0)(zod@3.25.76)
+        version: 4.2.6(react@19.1.0)(zod@4.1.13)
       algoliasearch:
         specifier: ^4.24.0
         version: 4.24.0
@@ -2256,7 +2256,7 @@ importers:
         version: 4.0.0
       langchain:
         specifier: 0.3.19
-        version: 0.3.19(@langchain/core@1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))(@opentelemetry/api@1.9.0)(axios@1.13.2)(handlebars@4.7.8)(openai@6.9.1(ws@8.18.1)(zod@3.25.76))(ws@8.18.1)
+        version: 0.3.19(@langchain/core@1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))(@opentelemetry/api@1.9.0)(axios@1.13.2)(handlebars@4.7.8)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))(ws@8.18.1)
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -12206,8 +12206,8 @@ packages:
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
-  nodemailer@6.10.1:
-    resolution: {integrity: sha512-Z+iLaBGVaSjbIzQ4pX6XV41HrooLsQ10ZWPUehGmuantvzWoDVBnmsdUcOIDM1t+yPor5pDhVlDESgOMEGxhHA==}
+  nodemailer@7.0.11:
+    resolution: {integrity: sha512-gnXhNRE0FNhD7wPSCGhdNh46Hs6nm+uTyg+Kq0cZukNQiYdnCsoQjodNP9BQVG9XrcK/v6/MgpAPBUFyzh9pvw==}
     engines: {node: '>=6.0.0'}
 
   nopt@1.0.10:
@@ -14584,12 +14584,12 @@ snapshots:
     optionalDependencies:
       zod: 3.24.3
 
-  '@ai-sdk/provider-utils@2.2.1(zod@3.25.76)':
+  '@ai-sdk/provider-utils@2.2.1(zod@4.1.13)':
     dependencies:
       '@ai-sdk/provider': 1.1.0
       nanoid: 3.3.11
       secure-json-parse: 2.7.0
-      zod: 3.25.76
+      zod: 4.1.13
 
   '@ai-sdk/provider-utils@2.2.8(zod@3.24.3)':
     dependencies:
@@ -14620,15 +14620,15 @@ snapshots:
       react: 19.1.0
       zod: 3.24.3
 
-  '@ai-sdk/react@1.2.2(react@19.1.0)(zod@3.25.76)':
+  '@ai-sdk/react@1.2.2(react@19.1.0)(zod@4.1.13)':
     dependencies:
-      '@ai-sdk/provider-utils': 2.2.1(zod@3.25.76)
-      '@ai-sdk/ui-utils': 1.2.1(zod@3.25.76)
+      '@ai-sdk/provider-utils': 2.2.1(zod@4.1.13)
+      '@ai-sdk/ui-utils': 1.2.1(zod@4.1.13)
       react: 19.1.0
       swr: 2.3.3(react@19.1.0)
       throttleit: 2.1.0
     optionalDependencies:
-      zod: 3.25.76
+      zod: 4.1.13
 
   '@ai-sdk/solid@0.0.54(zod@3.24.3)':
     dependencies:
@@ -14657,12 +14657,12 @@ snapshots:
     optionalDependencies:
       zod: 3.24.3
 
-  '@ai-sdk/ui-utils@1.2.1(zod@3.25.76)':
+  '@ai-sdk/ui-utils@1.2.1(zod@4.1.13)':
     dependencies:
       '@ai-sdk/provider': 1.1.0
-      '@ai-sdk/provider-utils': 2.2.1(zod@3.25.76)
-      zod: 3.25.76
-      zod-to-json-schema: 3.24.5(zod@3.25.76)
+      '@ai-sdk/provider-utils': 2.2.1(zod@4.1.13)
+      zod: 4.1.13
+      zod-to-json-schema: 3.24.5(zod@4.1.13)
 
   '@ai-sdk/vue@0.0.59(vue@3.5.25(typescript@5.8.3))(zod@3.24.3)':
     dependencies:
@@ -14754,7 +14754,7 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@auth/core@0.34.3(nodemailer@6.10.1)':
+  '@auth/core@0.34.3(nodemailer@7.0.11)':
     dependencies:
       '@panva/hkdf': 1.2.1
       '@types/cookie': 0.6.0
@@ -14764,9 +14764,9 @@ snapshots:
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
     optionalDependencies:
-      nodemailer: 6.10.1
+      nodemailer: 7.0.11
 
-  '@auth/core@0.41.1(nodemailer@6.10.1)':
+  '@auth/core@0.41.1(nodemailer@7.0.11)':
     dependencies:
       '@panva/hkdf': 1.2.1
       jose: 6.1.3
@@ -14774,11 +14774,11 @@ snapshots:
       preact: 10.24.3
       preact-render-to-string: 6.5.11(preact@10.24.3)
     optionalDependencies:
-      nodemailer: 6.10.1
+      nodemailer: 7.0.11
 
-  '@auth/drizzle-adapter@1.11.1(nodemailer@6.10.1)':
+  '@auth/drizzle-adapter@1.11.1(nodemailer@7.0.11)':
     dependencies:
-      '@auth/core': 0.41.1(nodemailer@6.10.1)
+      '@auth/core': 0.41.1(nodemailer@7.0.11)
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
       - '@simplewebauthn/server'
@@ -16040,22 +16040,22 @@ snapshots:
       - peggy
       - pyodide
 
-  '@langchain/community@0.2.33(@browserbasehq/sdk@2.6.0)(@langchain/langgraph@1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@3.25.76))(zod@3.25.76))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@6.9.1(ws@8.18.1)(zod@3.25.76))(pg@8.16.3)(playwright@1.52.0)(ws@8.18.1)':
+  '@langchain/community@0.2.33(@browserbasehq/sdk@2.6.0)(@langchain/langgraph@1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@4.1.13))(zod@4.1.13))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))(pg@8.16.3)(playwright@1.52.0)(ws@8.18.1)':
     dependencies:
-      '@langchain/core': 0.2.30(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      '@langchain/core': 0.2.30(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       '@langchain/openai': 0.2.0(ws@8.18.1)
       binary-extensions: 2.3.0
       expr-eval: 2.0.2
       flat: 5.0.2
       js-yaml: 4.1.1
-      langchain: 0.2.17(@browserbasehq/sdk@2.6.0)(@langchain/community@0.2.33(@browserbasehq/sdk@2.6.0)(@langchain/langgraph@1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@3.25.76))(zod@3.25.76))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@6.9.1(ws@8.18.1)(zod@3.25.76))(pg@8.16.3)(playwright@1.52.0)(ws@8.18.1))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(openai@6.9.1(ws@8.18.1)(zod@3.25.76))(playwright@1.52.0)(ws@8.18.1)
-      langsmith: 0.1.68(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      langchain: 0.2.17(@browserbasehq/sdk@2.6.0)(@langchain/community@0.2.33(@browserbasehq/sdk@2.6.0)(@langchain/langgraph@1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@4.1.13))(zod@4.1.13))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))(pg@8.16.3)(playwright@1.52.0)(ws@8.18.1))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))(playwright@1.52.0)(ws@8.18.1)
+      langsmith: 0.1.68(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       uuid: 10.0.0
       zod: 3.25.76
       zod-to-json-schema: 3.24.5(zod@3.25.76)
     optionalDependencies:
       '@browserbasehq/sdk': 2.6.0
-      '@langchain/langgraph': 1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@3.25.76))(zod@3.25.76)
+      '@langchain/langgraph': 1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@4.1.13))(zod@4.1.13)
       ignore: 5.3.2
       jsonwebtoken: 9.0.2
       lodash: 4.17.21
@@ -16112,13 +16112,13 @@ snapshots:
     transitivePeerDependencies:
       - openai
 
-  '@langchain/core@0.2.30(openai@6.9.1(ws@8.18.1)(zod@3.25.76))':
+  '@langchain/core@0.2.30(openai@6.9.1(ws@8.18.1)(zod@4.1.13))':
     dependencies:
       ansi-styles: 5.2.0
       camelcase: 6.3.0
       decamelize: 1.2.0
       js-tiktoken: 1.0.19
-      langsmith: 0.1.68(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      langsmith: 0.1.68(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       mustache: 4.2.0
       p-queue: 6.6.2
       p-retry: 4.6.2
@@ -16128,13 +16128,13 @@ snapshots:
     transitivePeerDependencies:
       - openai
 
-  '@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76))':
+  '@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13))':
     dependencies:
       ansi-styles: 5.2.0
       camelcase: 6.3.0
       decamelize: 1.2.0
       js-tiktoken: 1.0.19
-      langsmith: 0.1.68(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      langsmith: 0.1.68(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       mustache: 4.2.0
       p-queue: 6.6.2
       p-retry: 4.6.2
@@ -16156,7 +16156,26 @@ snapshots:
       p-queue: 6.6.2
       p-retry: 7.1.0
       uuid: 10.0.0
-      zod: 4.1.13
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - '@opentelemetry/api'
+      - '@opentelemetry/exporter-trace-otlp-proto'
+      - '@opentelemetry/sdk-trace-base'
+      - openai
+
+  '@langchain/core@1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))':
+    dependencies:
+      '@cfworker/json-schema': 4.1.1
+      ansi-styles: 5.2.0
+      camelcase: 6.3.0
+      decamelize: 1.2.0
+      js-tiktoken: 1.0.21
+      langsmith: 0.3.82(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
+      mustache: 4.2.0
+      p-queue: 6.6.2
+      p-retry: 7.1.0
+      uuid: 10.0.0
+      zod: 3.25.76
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-proto'
@@ -16169,9 +16188,9 @@ snapshots:
       uuid: 10.0.0
     optional: true
 
-  '@langchain/langgraph-checkpoint@1.0.0(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))':
+  '@langchain/langgraph-checkpoint@1.0.0(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))':
     dependencies:
-      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       uuid: 10.0.0
     optional: true
 
@@ -16186,13 +16205,13 @@ snapshots:
       react-dom: 19.1.0(react@19.1.0)
     optional: true
 
-  '@langchain/langgraph-sdk@1.1.0(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@langchain/langgraph-sdk@1.1.0(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       p-queue: 6.6.2
       p-retry: 4.6.2
       uuid: 9.0.1
     optionalDependencies:
-      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
     optional: true
@@ -16211,15 +16230,15 @@ snapshots:
       - react-dom
     optional: true
 
-  '@langchain/langgraph@1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@3.25.76))(zod@3.25.76)':
+  '@langchain/langgraph@1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@4.1.13))(zod@4.1.13)':
     dependencies:
-      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
-      '@langchain/langgraph-checkpoint': 1.0.0(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))
-      '@langchain/langgraph-sdk': 1.1.0(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
+      '@langchain/langgraph-checkpoint': 1.0.0(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))
+      '@langchain/langgraph-sdk': 1.1.0(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       uuid: 10.0.0
-      zod: 3.25.76
+      zod: 4.1.13
     optionalDependencies:
-      zod-to-json-schema: 3.24.5(zod@3.25.76)
+      zod-to-json-schema: 3.24.5(zod@4.1.13)
     transitivePeerDependencies:
       - react
       - react-dom
@@ -16254,9 +16273,9 @@ snapshots:
     transitivePeerDependencies:
       - openai
 
-  '@langchain/textsplitters@0.0.3(openai@6.9.1(ws@8.18.1)(zod@3.25.76))':
+  '@langchain/textsplitters@0.0.3(openai@6.9.1(ws@8.18.1)(zod@4.1.13))':
     dependencies:
-      '@langchain/core': 0.2.30(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      '@langchain/core': 0.2.30(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       js-tiktoken: 1.0.19
     transitivePeerDependencies:
       - openai
@@ -16264,6 +16283,11 @@ snapshots:
   '@langchain/textsplitters@0.1.0(@langchain/core@1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))':
     dependencies:
       '@langchain/core': 1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      js-tiktoken: 1.0.19
+
+  '@langchain/textsplitters@0.1.0(@langchain/core@1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))':
+    dependencies:
+      '@langchain/core': 1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       js-tiktoken: 1.0.19
 
   '@mailchimp/mailchimp_marketing@3.0.80':
@@ -16944,7 +16968,7 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@niledatabase/react@2.5.0-alpha.0(@auth/core@0.34.3)(@mui/system@5.18.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@tanstack/react-query@5.90.11(react@18.3.1))(@types/react@18.3.27)(next@16.0.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@niledatabase/react@2.5.0-alpha.0(@auth/core@0.34.3(nodemailer@7.0.11))(@mui/system@5.18.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@tanstack/react-query@5.90.11(react@18.3.1))(@types/react@18.3.27)(next@16.0.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@7.0.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.27)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1)
@@ -16954,7 +16978,7 @@ snapshots:
       '@mui/x-data-grid': 7.29.12(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@mui/material@5.14.18(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@5.18.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@niledatabase/browser': 2.5.0-alpha.0
       '@tanstack/react-query': 5.90.11(react@18.3.1)
-      next-auth: 4.24.13(@auth/core@0.34.3)(next@16.0.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next-auth: 4.24.13(@auth/core@0.34.3(nodemailer@7.0.11))(next@16.0.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@7.0.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-hook-form: 7.55.0(react@18.3.1)
@@ -20362,15 +20386,15 @@ snapshots:
       - solid-js
       - vue
 
-  ai@4.2.6(react@19.1.0)(zod@3.25.76):
+  ai@4.2.6(react@19.1.0)(zod@4.1.13):
     dependencies:
       '@ai-sdk/provider': 1.1.0
-      '@ai-sdk/provider-utils': 2.2.1(zod@3.25.76)
-      '@ai-sdk/react': 1.2.2(react@19.1.0)(zod@3.25.76)
-      '@ai-sdk/ui-utils': 1.2.1(zod@3.25.76)
+      '@ai-sdk/provider-utils': 2.2.1(zod@4.1.13)
+      '@ai-sdk/react': 1.2.2(react@19.1.0)(zod@4.1.13)
+      '@ai-sdk/ui-utils': 1.2.1(zod@4.1.13)
       '@opentelemetry/api': 1.9.0
       jsondiffpatch: 0.6.0
-      zod: 3.25.76
+      zod: 4.1.13
     optionalDependencies:
       react: 19.1.0
 
@@ -23412,7 +23436,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 20.3.1
+      '@types/node': 20.19.25
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -23565,16 +23589,16 @@ snapshots:
       - encoding
       - openai
 
-  langchain@0.2.17(@browserbasehq/sdk@2.6.0)(@langchain/community@0.2.33(@browserbasehq/sdk@2.6.0)(@langchain/langgraph@1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@3.25.76))(zod@3.25.76))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@6.9.1(ws@8.18.1)(zod@3.25.76))(pg@8.16.3)(playwright@1.52.0)(ws@8.18.1))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(openai@6.9.1(ws@8.18.1)(zod@3.25.76))(playwright@1.52.0)(ws@8.18.1):
+  langchain@0.2.17(@browserbasehq/sdk@2.6.0)(@langchain/community@0.2.33(@browserbasehq/sdk@2.6.0)(@langchain/langgraph@1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@4.1.13))(zod@4.1.13))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))(pg@8.16.3)(playwright@1.52.0)(ws@8.18.1))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))(playwright@1.52.0)(ws@8.18.1):
     dependencies:
-      '@langchain/core': 0.2.30(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      '@langchain/core': 0.2.30(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       '@langchain/openai': 0.2.0(ws@8.18.1)
-      '@langchain/textsplitters': 0.0.3(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      '@langchain/textsplitters': 0.0.3(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       binary-extensions: 2.3.0
       js-tiktoken: 1.0.19
       js-yaml: 4.1.1
       jsonpointer: 5.0.1
-      langsmith: 0.1.68(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      langsmith: 0.1.68(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       openapi-types: 12.1.3
       p-retry: 4.6.2
       uuid: 10.0.0
@@ -23583,7 +23607,7 @@ snapshots:
       zod-to-json-schema: 3.24.5(zod@3.25.76)
     optionalDependencies:
       '@browserbasehq/sdk': 2.6.0
-      '@langchain/community': 0.2.33(@browserbasehq/sdk@2.6.0)(@langchain/langgraph@1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@3.25.76)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@3.25.76))(zod@3.25.76))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@6.9.1(ws@8.18.1)(zod@3.25.76))(pg@8.16.3)(playwright@1.52.0)(ws@8.18.1)
+      '@langchain/community': 0.2.33(@browserbasehq/sdk@2.6.0)(@langchain/langgraph@1.0.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.5(zod@4.1.13))(zod@4.1.13))(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))(pg@8.16.3)(playwright@1.52.0)(ws@8.18.1)
       axios: 1.13.2
       handlebars: 4.7.8
       ignore: 5.3.2
@@ -23593,16 +23617,16 @@ snapshots:
       - encoding
       - openai
 
-  langchain@0.2.20(@browserbasehq/sdk@2.6.0)(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(openai@6.9.1(ws@8.18.1)(zod@3.25.76))(playwright@1.52.0)(ws@8.18.1):
+  langchain@0.2.20(@browserbasehq/sdk@2.6.0)(axios@1.13.2)(handlebars@4.7.8)(ignore@5.3.2)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))(playwright@1.52.0)(ws@8.18.1):
     dependencies:
-      '@langchain/core': 0.2.30(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      '@langchain/core': 0.2.30(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       '@langchain/openai': 0.2.0(ws@8.18.1)
-      '@langchain/textsplitters': 0.0.3(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      '@langchain/textsplitters': 0.0.3(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       binary-extensions: 2.3.0
       js-tiktoken: 1.0.19
       js-yaml: 4.1.1
       jsonpointer: 5.0.1
-      langsmith: 0.1.68(openai@6.9.1(ws@8.18.1)(zod@3.25.76))
+      langsmith: 0.1.68(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
       openapi-types: 12.1.3
       p-retry: 4.6.2
       uuid: 10.0.0
@@ -23646,6 +23670,32 @@ snapshots:
       - openai
       - ws
 
+  langchain@0.3.19(@langchain/core@1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))(@opentelemetry/api@1.9.0)(axios@1.13.2)(handlebars@4.7.8)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))(ws@8.18.1):
+    dependencies:
+      '@langchain/core': 1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
+      '@langchain/openai': 0.2.0(ws@8.18.1)
+      '@langchain/textsplitters': 0.1.0(@langchain/core@1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@4.1.13)))
+      js-tiktoken: 1.0.19
+      js-yaml: 4.1.1
+      jsonpointer: 5.0.1
+      langsmith: 0.3.82(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@4.1.13))
+      openapi-types: 12.1.3
+      p-retry: 4.6.2
+      uuid: 10.0.0
+      yaml: 2.7.1
+      zod: 3.25.76
+      zod-to-json-schema: 3.24.5(zod@3.25.76)
+    optionalDependencies:
+      axios: 1.13.2
+      handlebars: 4.7.8
+    transitivePeerDependencies:
+      - '@opentelemetry/api'
+      - '@opentelemetry/exporter-trace-otlp-proto'
+      - '@opentelemetry/sdk-trace-base'
+      - encoding
+      - openai
+      - ws
+
   langsmith@0.1.68(openai@4.95.1(ws@8.18.1)(zod@3.24.3)):
     dependencies:
       '@types/uuid': 10.0.0
@@ -23668,7 +23718,7 @@ snapshots:
     optionalDependencies:
       openai: 4.95.1(ws@8.18.1)(zod@3.25.76)
 
-  langsmith@0.1.68(openai@6.9.1(ws@8.18.1)(zod@3.25.76)):
+  langsmith@0.1.68(openai@6.9.1(ws@8.18.1)(zod@4.1.13)):
     dependencies:
       '@types/uuid': 10.0.0
       commander: 10.0.1
@@ -23677,7 +23727,7 @@ snapshots:
       semver: 7.7.3
       uuid: 10.0.0
     optionalDependencies:
-      openai: 6.9.1(ws@8.18.1)(zod@3.25.76)
+      openai: 6.9.1(ws@8.18.1)(zod@4.1.13)
 
   langsmith@0.3.82(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@3.25.76)):
     dependencies:
@@ -23690,6 +23740,18 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
       openai: 6.9.1(ws@8.18.1)(zod@3.25.76)
+
+  langsmith@0.3.82(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.1)(zod@4.1.13)):
+    dependencies:
+      '@types/uuid': 10.0.0
+      chalk: 4.1.2
+      console-table-printer: 2.12.1
+      p-queue: 6.6.2
+      semver: 7.7.3
+      uuid: 10.0.0
+    optionalDependencies:
+      '@opentelemetry/api': 1.9.0
+      openai: 6.9.1(ws@8.18.1)(zod@4.1.13)
 
   language-subtag-registry@0.3.23: {}
 
@@ -24814,25 +24876,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next-auth@4.24.13(@auth/core@0.34.3(nodemailer@6.10.1))(next@15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(nodemailer@6.10.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
-    dependencies:
-      '@babel/runtime': 7.27.0
-      '@panva/hkdf': 1.2.1
-      cookie: 0.7.2
-      jose: 4.15.9
-      next: 15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      oauth: 0.9.15
-      openid-client: 5.7.1
-      preact: 10.26.5
-      preact-render-to-string: 5.2.6(preact@10.26.5)
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-      uuid: 8.3.2
-    optionalDependencies:
-      '@auth/core': 0.34.3(nodemailer@6.10.1)
-      nodemailer: 6.10.1
-
-  next-auth@4.24.13(@auth/core@0.34.3)(next@15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-auth@4.24.13(@auth/core@0.34.3(nodemailer@7.0.11))(next@15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@7.0.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.27.0
       '@panva/hkdf': 1.2.1
@@ -24847,9 +24891,28 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       uuid: 8.3.2
     optionalDependencies:
-      '@auth/core': 0.34.3(nodemailer@6.10.1)
+      '@auth/core': 0.34.3(nodemailer@7.0.11)
+      nodemailer: 7.0.11
 
-  next-auth@4.24.13(@auth/core@0.34.3)(next@16.0.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-auth@4.24.13(@auth/core@0.34.3(nodemailer@7.0.11))(next@15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(nodemailer@7.0.11)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      '@babel/runtime': 7.27.0
+      '@panva/hkdf': 1.2.1
+      cookie: 0.7.2
+      jose: 4.15.9
+      next: 15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      oauth: 0.9.15
+      openid-client: 5.7.1
+      preact: 10.26.5
+      preact-render-to-string: 5.2.6(preact@10.26.5)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+      uuid: 8.3.2
+    optionalDependencies:
+      '@auth/core': 0.34.3(nodemailer@7.0.11)
+      nodemailer: 7.0.11
+
+  next-auth@4.24.13(@auth/core@0.34.3(nodemailer@7.0.11))(next@16.0.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@7.0.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.27.0
       '@panva/hkdf': 1.2.1
@@ -24864,7 +24927,8 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       uuid: 8.3.2
     optionalDependencies:
-      '@auth/core': 0.34.3(nodemailer@6.10.1)
+      '@auth/core': 0.34.3(nodemailer@7.0.11)
+      nodemailer: 7.0.11
 
   next-themes@0.2.1(next@15.3.1(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
@@ -25044,7 +25108,7 @@ snapshots:
 
   node-releases@2.0.27: {}
 
-  nodemailer@6.10.1: {}
+  nodemailer@7.0.11: {}
 
   nopt@1.0.10:
     dependencies:
@@ -25200,6 +25264,12 @@ snapshots:
     optionalDependencies:
       ws: 8.18.1
       zod: 3.25.76
+    optional: true
+
+  openai@6.9.1(ws@8.18.1)(zod@4.1.13):
+    optionalDependencies:
+      ws: 8.18.1
+      zod: 4.1.13
     optional: true
 
   openapi-types@12.1.3: {}
@@ -28081,6 +28151,10 @@ snapshots:
   zod-to-json-schema@3.24.5(zod@3.25.76):
     dependencies:
       zod: 3.25.76
+
+  zod-to-json-schema@3.24.5(zod@4.1.13):
+    dependencies:
+      zod: 4.1.13
 
   zod@3.22.3: {}
 
