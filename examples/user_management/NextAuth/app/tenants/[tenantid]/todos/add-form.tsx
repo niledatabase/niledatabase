@@ -12,7 +12,7 @@ const initialState = {
 
 export function AddForm({ tenantid }: { tenantid: string }) {
   const [state, formAction] = useFormState(
-    (prevState: { message: string } | undefined, formData: FormData) => 
+    (prevState: { message: string } | undefined, formData: FormData) =>
       addTodo(tenantid, prevState, formData),
     initialState
   );

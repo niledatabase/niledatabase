@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "packageManager": "npm@10.9.2",
+  "packageManager": "pnpm@10.8.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -13,8 +13,8 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@langchain/community": "^0.3.37",
-    "@langchain/openai": "^0.1.3",
+    "@langchain/community": "^0.2.0",
+    "@langchain/openai": "^0.2.0",
     "@mui/icons-material": "^5.15.20",
     "@mui/joy": "^5.0.0-beta.36",
     "@mui/material": "^5.14.18",
@@ -29,7 +29,7 @@
     "glob": "^10.4.1",
     "highlight.js": "^11.11.1",
     "jwt-decode": "^4.0.0",
-    "langchain": "0.3.19",
+    "langchain": "^0.2.0",
     "lucide-react": "^0.486.0",
     "next": "^15.1.4",
     "pg": "^8.12.0",
@@ -46,7 +46,8 @@
     "tailwind-merge": "^3.1.0",
     "tailwindcss": "^4.0.17",
     "tw-animate-css": "^1.2.5",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "@langchain/core": "^0.2.0"
   },
   "optionalDependencies": {
     "@tailwindcss/oxide-linux-x64-gnu": "^4.0.1",
@@ -60,8 +61,8 @@
     "@types/react-highlight": "^0.12.8",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/uuid": "^10.0.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.4",
+    "eslint": "^9.2.0",
+    "eslint-config-next": "^15.3.3",
     "typescript": "^5"
   }
 }

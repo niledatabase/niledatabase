@@ -1,10 +1,10 @@
 import "server-only";
-import {Nile} from "@niledatabase/server";
+import { Nile } from "@niledatabase/server";
+import { nextJs } from "@niledatabase/nextjs";
+
 const _nile = await Nile({
-  api: {
-    secureCookies: process.env.VERCEL === "1",
-  },
   debug: true,
+  extensions: [nextJs],
 });
-export const { handlers } = _nile.api;
+export const { handlers } = _nile;
 export const nile = _nile;

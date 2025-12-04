@@ -1,5 +1,5 @@
 {
-  "name": "ui",
+  "name": "local-llama-task-genius-ui",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -29,10 +29,11 @@
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "eslint": "^8.56.0",
+    "eslint": "^9.2.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "typescript": "^5.2.2",
     "vite": "^6.2.6"
-  }
+  },
+  "packageManager": "pnpm@10.8.1"
 }

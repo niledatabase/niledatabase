@@ -65,19 +65,20 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
         const res = await startUpload(acceptedFile);
         console.log("Result of startUpload:" + JSON.stringify(res));
 
+        const serverData = String(res?.[0].serverData);
         if (!res || !Array.isArray(res) || res.length === 0) {
           toast.error("Something went wrong: " + JSON.stringify(res));
-        } else if (res[0].serverData.status !== "SUCCESS") {
-          if (res[0].serverData.status === "LIMIT EXCEEDED") {
+        } else if (serverData !== "SUCCESS") {
+          if (serverData === "LIMIT EXCEEDED") {
             toast.error(
               "You have exceeded the allowed page limit for your subscription plan. The maximum number of pages allowed is " +
                 (isSubscribed ? MAX_PRO_PAGES : MAX_FREE_PAGES)
             );
-          } else if (res[0].serverData.status === "PARSE FAILED") {
+          } else if (serverData === "PARSE FAILED") {
             toast.error(
               "File can't be parsed and text can't be extracted. Please try another."
             );
-          } else if (res[0].serverData.status === "EMBEDDING FAILED") {
+          } else if (serverData === "EMBEDDING FAILED") {
             toast.error(
               "Failed to create embeddings while uploading file. You can try manually with the Embed File button."
             );

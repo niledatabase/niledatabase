@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { configureNile } from "@/lib/NileServer";
+import { configureNile, nile } from "@/lib/NileServer";
 import { redirect } from "next/navigation";
 
 const DAY_IN_MS = 86_400_000;
@@ -16,7 +16,7 @@ export const checkSubscription = async (tenant_id: string) => {
     redirect("/login");
   }
 
-  const orgSubscription = await tenantNile.db.query(
+  const orgSubscription = await nile.query(
     "SELECT stripe_subscription_id, stripe_current_period_end, stripe_customer_id, stripe_price_id FROM user_subscription WHERE user_id = $1",
     [tenantNile.userId]
   );

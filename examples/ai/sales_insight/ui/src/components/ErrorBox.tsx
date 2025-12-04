@@ -1,11 +1,11 @@
-import { cookies } from "next/headers";
+import Cookies from "js-cookie";
 import { Alert } from "@mui/joy";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 
 export default function ErrorBox() {
-  const errorCookie = cookies().get("errorData");
-  const errorData = errorCookie ? JSON.parse(errorCookie.value) : null;
+  const errorCookie = Cookies.get("errorData");
+  const errorData = errorCookie ? JSON.parse(errorCookie) : null;
 
   return errorData ? (
     <Stack sx={{ mb: 2 }}>

@@ -10,7 +10,11 @@ export default function DestroyUser() {
   const [message, setMessage] = useState<JSX.Element>();
   return (
     <div className="text-center">
-      <Button variant="destructive" onClick={() => setShowForm(!showForm)}>
+      <Button
+        // @ts-ignore
+        variant="destructive"
+        onClick={() => setShowForm(!showForm)}
+      >
         Delete the user
       </Button>
 
@@ -39,6 +43,7 @@ export default function DestroyUser() {
                       Great work, the user was removed from the database. Now
                       you can try again.
                       <Link href="/">
+                        {/* @ts-ignore */}
                         <Button variant="link">Go back home</Button>
                       </Link>
                     </div>

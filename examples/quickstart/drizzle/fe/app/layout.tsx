@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import styles from "./page.module.css";
 import Link from "next/link";
 import { SignOutButton } from "@niledatabase/react";
-function Card({ children }: { children: JSX.Element }) {
+function Card({ children }: { children: React.ReactNode }) {
   return (
     <div className="p-4 hover:shadow-lg hover:border-gray-700 border border-gray-600 rounded-lg w-60 transition-all">
       {children}

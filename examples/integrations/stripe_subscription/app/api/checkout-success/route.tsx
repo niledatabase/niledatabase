@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
   const nile = await configureNile();
 
   // Store the Stripe customer ID  and subscription in the database
-  await nile.db.query(
+  await nile.query(
     `UPDATE tenants 
      SET stripe_customer_id = $1,
          stripe_subscription_id = $2,

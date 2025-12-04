@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { stripe } from "@/lib/stripe";
@@ -26,14 +26,14 @@ export async function POST(req: Request) {
   if (!session?.metadata?.orgId) {
     return new NextResponse("Org ID is required", { status: 400 });
   }
-  const nile = await configureNile(session.metadata.orgId);
+  const { nile: nileInstance } = await configureNile(session.metadata.orgId);
 
   if (event.type === "checkout.session.completed") {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     );
 
-    await nile.db.query(
+    await nileInstance.db.query(
       "INSERT INTO user_subscription (user_id, tenant_id, stripe_subscription_id, stripe_customer_id, stripe_price_id, stripe_current_period_end) VALUES ($1, $2, $3, $4, $5, $6)",
       [
         session.metadata.userId,
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     );
-    await nile.db.query(
+    await nileInstance.db.query(
       "UPDATE user_subscription SET stripe_price_id = $1, stripe_current_period_end = $2 WHERE stripe_subscription_id = $3",
       [
         subscription.items.data[0].price.id,

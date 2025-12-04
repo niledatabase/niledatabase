@@ -3,7 +3,11 @@ import { checkSubscription } from "@/lib/subscription";
 
 interface pageProps {}
 
-const page = async ({ params }: { params: Promise<{ organizationId: string }> }) => {
+const page = async ({
+  params,
+}: {
+  params: Promise<{ organizationId: string }>;
+}) => {
   const { organizationId } = await params;
   const isPro = await checkSubscription(organizationId);
   return (

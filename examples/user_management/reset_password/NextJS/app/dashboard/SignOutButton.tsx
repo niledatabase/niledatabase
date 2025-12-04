@@ -10,6 +10,7 @@ export default function SignOutButton({
 }) {
   return (
     <Button
+      // @ts-ignore
       variant="link"
       onClick={() => signOut({ callbackUrl: "/" })}
       className="px-0"

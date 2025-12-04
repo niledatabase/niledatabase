@@ -11,7 +11,7 @@ const page: FC<pageProps> = ({}) => {
         <Card className="min-w-sm max-w-md p-5 mt-24">
           <CardHeader className="text-2xl p-0 text-center">Sign up</CardHeader>
           <div className="mt-7 items-center flex justify-center flex-col">
-          <Google callbackUrl="/dashboard" />
+            <Google />
           </div>
           <CardFooter className="mt-10 text-sm text-center flex items-center justify-center">
             <h1>

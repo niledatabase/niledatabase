@@ -17,7 +17,7 @@ const initialState = {
 
 export function AddForm() {
   const [state, formAction] = useFormState(
-    (prevState: { message: string } | undefined, formData: FormData) => 
+    (prevState: { message: string } | undefined, formData: FormData) =>
       createTenant(prevState, formData),
     initialState
   );

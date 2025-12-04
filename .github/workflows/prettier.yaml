@@ -20,9 +20,12 @@ jobs:
       - name: Authenticate with GitHub Package Registry
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_PAT }}" > ~/.npmrc
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Download dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Run prettier on website
         run: |-
-          npx prettier -c 'www/**/*.{js,jsx,ts,tsx,css,md,mdx,json}'
+          pnpm prettier -c 'www/**/*.{js,jsx,ts,tsx,css,md,mdx,json}'

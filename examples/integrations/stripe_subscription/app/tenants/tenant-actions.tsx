@@ -17,7 +17,7 @@ export async function createTenant(formData: FormData) {
     // The token is sent to Nile API and the tenant is created for the specific user
     // The tenant is created with "free tier" plan by default
     const nile = await configureNile();
-    const tenant = await nile.api.tenants.createTenant(tenantName);
+    const tenant = await nile.tenants.create({ name: tenantName });
     if (tenant instanceof Response) {
       console.log("ERROR creating tenant: ", tenant);
       return { message: "no tenant" };

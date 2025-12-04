@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { configureNile } from "@/lib/NileServer";
+import { configureNile, nile } from "@/lib/NileServer";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { FC } from "react";
@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import AddOrgButton from "./_components/add-org-button";
 import Link from "next/link";
 import { Navbar } from "@/app/(marketing)/_components/navbar";
+import { Tenant } from "@niledatabase/server";
 
 interface pageProps {}
 
@@ -18,12 +19,7 @@ export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 const page: FC<pageProps> = async ({}) => {
-  const nile = await configureNile();
-  console.log("showing tenants page for user: " + nile.userId);
-  const tenants = await nile.api.tenants.listTenants();
-  if (!nile.userId || !Array.isArray(tenants)) {
-    redirect("/login");
-  }
+  const tenants = await nile.tenants.list<Tenant[]>();
 
   return (
     <>

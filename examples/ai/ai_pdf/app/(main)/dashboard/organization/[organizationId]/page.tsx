@@ -29,18 +29,17 @@ const OrganizationIdPage = async ({
   params: Promise<{ organizationId: string }>;
 }) => {
   const { organizationId } = await params;
-  const tenantNile = await configureNile(organizationId);
+  const {
+    nile: tenantNile,
+    userId,
+    tenantId,
+  } = await configureNile(organizationId);
 
-  console.log(
-    "showing boards for user " +
-      tenantNile.userId +
-      " for tenant " +
-      tenantNile.tenantId
-  );
+  console.log("showing boards for user " + userId + " for tenant " + tenantId);
   const currentFileCount = await tenantNile.db.query(
     "select COUNT(*) from file"
   );
-  const tenant: Tenant = await tenantNile.api.tenants.getTenant();
+  const tenant: Tenant = await tenantNile.tenants.get();
 
   const isPro = await checkSubscription(organizationId);
 

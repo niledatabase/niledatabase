@@ -50,6 +50,25 @@ To get started, it helps to be familiar with how this repository is laid out. He
 
 As we can see, we have separate directories for our [website](./www/DEVELOPERS.md), [documentation](./www/app/docs//README.md), [templates](./www/app/templates/README.md) and [examples](./examples/README.md). Each is a bit different, so they each have a separate developer guide with more details on how to make changes and validate them locally.
 
+### Using pnpm for Dependency Management
+
+This repository uses [pnpm](https://pnpm.io/) for efficient dependency management. Please ensure you have pnpm installed.
+
+To enable pnpm (recommended):
+```bash
+corepack enable pnpm
+```
+
+To install project dependencies:
+```bash
+pnpm install
+```
+
+To run scripts defined in `package.json` (e.g., `format`, `build`, `dev`):
+```bash
+pnpm run <script-name>
+```
+
 ### Creating a Pull Request
 
 Once you have changes to contribute, please open a pull request from a branch in your fork to this repository, and we will review it promptly.
@@ -58,7 +77,7 @@ To make the review process more pleasant, please make sure the pull request incl
 
 - The type of change you are making (correcting a mistake in the docs, new document, fix an issue in an example, enhance an example)
 - The intent of the change. What was the situation before the change, what is the situation after and why is the new situation better.
-- Make sure you run `npm run format` and commit the changes it makes. This will make our linter happy.
+- Make sure you run `pnpm run format` and commit the changes it makes. This will make our linter happy.
 
 ## Discuss with the Community
 

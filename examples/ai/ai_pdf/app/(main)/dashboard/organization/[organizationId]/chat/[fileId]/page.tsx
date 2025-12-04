@@ -12,13 +12,15 @@ interface FileIdPageProps {
 
 const FileIdPage = async ({ params }: FileIdPageProps) => {
   const resolvedParams = await params;
-  const tenantNile = await configureNile(resolvedParams.organizationId);
-  console.log(tenantNile.userId);
-  if (!tenantNile.userId) {
+  const { nile: tenantNile, userId } = await configureNile(
+    resolvedParams.organizationId
+  );
+  console.log(userId);
+  if (!userId) {
     redirect("/");
   }
   const number = resolvedParams.organizationId;
-  
+
   const messages = await tenantNile.db.query(
     `select * from message where "fileId" = $1`,
     [resolvedParams.fileId]
@@ -36,7 +38,7 @@ const FileIdPage = async ({ params }: FileIdPageProps) => {
         <Chat
           fileId={resolvedParams.fileId}
           pastMessages={messages.rows}
-          userId={tenantNile.userId}
+          userId={userId}
           tenant_id={number}
           url={fileInfo.rows[0].url}
         />

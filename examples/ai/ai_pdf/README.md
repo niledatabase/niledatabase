@@ -113,18 +113,12 @@ This example requires a few more 3rd party SaaS accounts. You'll need to set the
   Fill in the username and password with the credentials you picked up in the previous step.
   And fill in the access keys for UploadThing and OpenAI.
 
-- Install dependencies with `yarn install` or `npm install`.
+- Install dependencies with `pnpm install`.
 
 ### 5. Running the app
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

@@ -1,5 +1,5 @@
 {
-  "name": "drizzle",
+  "name": "migration-drizzle-example",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -19,5 +19,6 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.37.0",
     "pg": "^8.13.0"
-  }
+  },
+  "packageManager": "pnpm@10.8.1"
 }

@@ -58,11 +58,11 @@ AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
 EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
 ```
 
-Install dependencies with `npm install`.
+Install dependencies with `pnpm install`.
 
 ### 5. Running the app
 
-You can start both NodeJS api server and the React frontend with `npm run start`.
+You can start both NodeJS api server and the React frontend with `pnpm run start`.
 
 If all went well, your browser should show you the first page in the app, asking you to create a tenant. Feel free to create a tenant or 5.
 

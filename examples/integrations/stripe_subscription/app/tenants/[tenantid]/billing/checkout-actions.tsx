@@ -2,12 +2,12 @@
 import { redirect } from "next/navigation";
 import { configureNile } from "@/lib/NileServer";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 
 // This is a public sample test API key.
 // Don’t submit any personally identifiable information in requests made with this key.
 // You will need your own API key from Stripe
 import Stripe from "stripe";
+import { nile } from "@/app/api/[...nile]/nile";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
@@ -41,8 +41,8 @@ export async function createCheckoutSession(formData: FormData) {
 export async function cancelSubscription(formData: FormData) {
   console.log("cancelSubscription called");
 
-  const tenantid = formData.get("tenantid")?.toString();
-  const tenantNile = await configureNile(tenantid);
+  const tenantId = formData.get("tenantid")?.toString();
+  const tenantNile = await nile.withContext({ tenantId });
 
   // We are looking up the subscription ID from the tenant database
   const resp = await tenantNile.db.query(
@@ -51,7 +51,7 @@ export async function cancelSubscription(formData: FormData) {
 
   const subscriptionId = resp.rows[0].stripe_subscription_id;
   console.log(
-    "cancelling subscription " + subscriptionId + " for tenant " + tenantid
+    "cancelling subscription " + subscriptionId + " for tenant " + tenantId
   );
 
   // and we ask Stripe to cancel the subscription immediately
@@ -59,21 +59,20 @@ export async function cancelSubscription(formData: FormData) {
     await stripe.subscriptions.cancel(subscriptionId);
     // if we got here, subscription was cancelled successfully, lets downgrade the tenant tier too
     // we need to reset the tenantID before we update the tenant
-    tenantNile.tenantId = null;
     await tenantNile.db.query(
       `UPDATE tenants 
        SET tenant_tier = $1,
            stripe_subscription_id = NULL
        WHERE id = $2`,
-      ["free", tenantid]
+      ["free", tenantId]
     );
   } catch (e) {
     console.log("error cancelling subscription", e);
     console.error(e);
   }
 
-  revalidatePath("/tenants/" + tenantid + "/billing");
-  redirect("/tenants/" + tenantid + "/billing");
+  revalidatePath("/tenants/" + tenantId + "/billing");
+  redirect("/tenants/" + tenantId + "/billing");
 }
 
 export async function redirectToStripePortal(formData: FormData) {

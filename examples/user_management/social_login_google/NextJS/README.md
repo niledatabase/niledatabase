@@ -11,7 +11,7 @@ Google.
 
 ## Setup & Run
 
-Install dependencies with `yarn install` or `npm install`.
+Install dependencies with `pnpm install`.
 
 Rename `.env.local.example` to `.env.local`, and update it with your database credentials, along with the database id.
 
@@ -20,11 +20,7 @@ _(Your database id is displayed in the database settings of the Nile dashboard.)
 Run the server with:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+pnpm run dev
 ```
 
 and open [http://localhost:3000](http://localhost:3000).
