@@ -31,7 +31,7 @@
     "jwt-decode": "^4.0.0",
     "langchain": "^0.2.0",
     "lucide-react": "^0.486.0",
-    "next": "^15.1.4",
+    "next": "^15.4.8",
     "pg": "^8.12.0",
     "postcss": "^8.4.31",
     "prismjs": "^1.30.0",
