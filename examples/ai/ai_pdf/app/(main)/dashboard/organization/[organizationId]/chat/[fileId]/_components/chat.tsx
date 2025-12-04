@@ -1,9 +1,9 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { useChat } from "ai/react";
+import { useChat } from "@ai-sdk/react";
 import { useTheme } from "next-themes";
-import { ElementRef, FC, useEffect, useRef } from "react";
+import { ElementRef, FC, useEffect, useRef, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
 import UserMessage from "./user-message";
@@ -52,27 +52,37 @@ export const Chat: FC<ChatProps> = ({
   url,
 }) => {
   const router = useRouter();
-  const {
-    input,
-    handleInputChange,
-    handleSubmit,
-    data,
-    isLoading,
-    setInput,
-    append,
-    messages,
-  } = useChat({
-    body: {
-      fileId: fileId,
-      user_id: userId,
-      tenant_id: tenant_id,
-    },
-    onResponse(response) {
-      if (response.status === 401) {
-        toast.error("Error Processing Request");
-      }
+
+  const { messages, status, sendMessage } = useChat({
+    onError(error) {
+      toast.error("Error Processing Request");
+      console.error(error);
     },
   });
+
+  const [input, setInput] = useState("");
+  const isLoading = status === "streaming" || status === "submitted";
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    sendMessage(
+      { text: input },
+      {
+        body: {
+          fileId: fileId,
+          user_id: userId,
+          tenant_id: tenant_id,
+        },
+      }
+    );
+    setInput("");
+  };
+
   const { theme } = useTheme();
   const scrollRef = useRef<ElementRef<"div">>(null);
   useEffect(() => {
@@ -112,34 +122,42 @@ export const Chat: FC<ChatProps> = ({
             ) : (
               ""
             )}
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={cn("whitespace-pre-wrap group", {
-                  "text-blue-500 text-right p-4  gap-x-8 rounded-lg max-w-lg ":
-                    m.role === "user",
-                  "text-green-500 p-4 w-full flex items-start gap-x-8 rounded-lg max-w-lg bg-muted":
-                    m.role !== "user",
-                  "prose-p:text-indigo-400 prose-li:text-indigo-400":
-                    m.role === "user",
-                })}
-              >
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm, remarkMath]}
-                  className="text-base prose dark:prose-invert prose-ul:m-0 prose-li:m-0 prose-p:my-0 prose-h3:my-0"
+            {messages.map((m) => {
+              const content = m.parts
+                ? m.parts
+                    .filter((part) => part.type === "text")
+                    .map((part) => part.text)
+                    .join("")
+                : "";
+              return (
+                <div
+                  key={m.id}
+                  className={cn("whitespace-pre-wrap group", {
+                    "text-blue-500 text-right p-4  gap-x-8 rounded-lg max-w-lg ":
+                      m.role === "user",
+                    "text-green-500 p-4 w-full flex items-start gap-x-8 rounded-lg max-w-lg bg-muted":
+                      m.role !== "user",
+                    "prose-p:text-indigo-400 prose-li:text-indigo-400":
+                      m.role === "user",
+                  })}
                 >
-                  {m.content}
-                </ReactMarkdown>
-                <Button
-                  onClick={() => onCopy(m.content)}
-                  className="hidden group-hover:block"
-                  size="icon"
-                  variant="ghost"
-                >
-                  <Copy className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm, remarkMath]}
+                    className="text-base prose dark:prose-invert prose-ul:m-0 prose-li:m-0 prose-p:my-0 prose-h3:my-0"
+                  >
+                    {content}
+                  </ReactMarkdown>
+                  <Button
+                    onClick={() => onCopy(content)}
+                    className="hidden group-hover:block"
+                    size="icon"
+                    variant="ghost"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                </div>
+              );
+            })}
             {/* <div className="bg-white">Some</div> */}
             <form onSubmit={handleSubmit}>
               {isLoading && (

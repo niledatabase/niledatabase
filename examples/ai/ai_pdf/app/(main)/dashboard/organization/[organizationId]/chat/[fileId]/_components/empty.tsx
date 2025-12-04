@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { UseChatHelpers } from "ai/react";
 import { ArrowRight } from "lucide-react";
 
 const exampleMessages = [
@@ -15,7 +14,11 @@ const exampleMessages = [
   },
 ];
 
-export function EmptyStateAI({ setInput }: Pick<UseChatHelpers, "setInput">) {
+export function EmptyStateAI({
+  setInput,
+}: {
+  setInput: (value: string) => void;
+}) {
   return (
     <>
       <div className="text-2xl font-ranadeRegular">

@@ -10,22 +10,22 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@niledatabase/nextjs": "^5.0.0",
     "@niledatabase/react": "^5.0.0",
     "@niledatabase/server": "^5.0.0",
-    "@niledatabase/nextjs": "^5.0.0",
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "highlight.js": "^11.9.0",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",
-    "next": "^15.3.0",
+    "langchain": "0.3.19",
+    "next": "15.5.7",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-syntax-highlighter": "^15.6.1",
     "tailwind-merge": "^3.2.0",
     "tailwindcss-animate": "^1.0.7",
-    "langchain": "0.3.19",
-    "react-syntax-highlighter": "^15.6.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
