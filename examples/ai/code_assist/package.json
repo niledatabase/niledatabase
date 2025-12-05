@@ -23,7 +23,7 @@
     "@niledatabase/server": "^4.2.0-alpha.3",
     "@radix-ui/react-slot": "^1.1.2",
     "@tailwindcss/postcss": "^4.0.17",
-    "ai": "4.2.6",
+    "ai": "5.0.52",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "expand-tilde": "^2.0.2",
