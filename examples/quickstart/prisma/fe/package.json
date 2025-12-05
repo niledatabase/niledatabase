@@ -12,8 +12,8 @@
   "dependencies": {
     "@mui/joy": "^5.0.0-beta.11",
     "@niledatabase/client": "^5.0.0",
-    "@niledatabase/react": "^5.0.0",
     "@niledatabase/nextjs": "^5.0.0",
+    "@niledatabase/react": "^5.0.0",
     "@niledatabase/server": "^5.0.0",
     "@radix-ui/react-slot": "^1.0.2",
     "ai": "4.2.6",
@@ -22,7 +22,7 @@
     "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",
     "langchain": "0.3.19",
-    "next": "^15.3.0",
+    "next": "15.5.7",
     "react": "^19",
     "react-dom": "^19",
     "react-syntax-highlighter": "^15.6.1",

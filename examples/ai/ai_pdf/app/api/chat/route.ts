@@ -1,8 +1,7 @@
 import { configureNile, nile } from "@/lib/NileServer";
 import { OpenAIEmbeddings } from "@langchain/openai";
-import { OpenAIStream, StreamingTextResponse } from "ai";
-import { NextResponse } from "next/server";
-import OpenAI from "openai";
+import { openai } from "@ai-sdk/openai";
+import { streamText } from "ai";
 
 export const maxDuration = 60;
 
@@ -23,10 +22,6 @@ export async function POST(req: Request) {
       ($1, $2, $3, $4, $5)`,
       [question, body.fileId, body.user_id, true, body.tenant_id]
     );
-
-    const openAI = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY!,
-    });
 
     const modelName =
       process.env.OPENAI_EMBEDDING_MODEL_NAME || "text-embedding-3-small";
@@ -66,97 +61,63 @@ export async function POST(req: Request) {
         `Got ${prevMessages.rowCount} previous messages from chat history in Nile.`
       );
 
-      let result;
+      let messages: {
+        role: "system" | "user" | "assistant";
+        content: string;
+      }[] = [];
+      const systemMessage = {
+        role: "system" as const,
+        content:
+          "You are a friendly assistant who uses the context below to answer questions in markdown format. Answer honestly, citing sources with line numbers. Provide inline citation.",
+      };
+
+      let userContent = "";
       if ((prevMessages.rowCount ?? 0) < 6) {
-        result = await openAI.chat.completions.create({
-          model: process.env.OPENAI_CHAT_MODEL_NAME || "gpt-3.5-turbo",
-          temperature: 0.1,
-          stream: true,
-          messages: [
-            {
-              role: "system",
-              content:
-                "You are a friendly assistant who uses the context below to answer questions in markdown format. Answer honestly, citing sources with line numbers. Provide inline citation.",
-            },
-            {
-              role: "user",
-              content: `Use the provided context: ${concatenatedPageContent} to answer the user's question: ${question}. Answers should be in markdown format. If unsure, simply say you don't know.
-      Helpful Answer:`,
-            },
-          ],
-        });
+        userContent = `Use the provided context: ${concatenatedPageContent} to answer the user's question: ${question}. Answers should be in markdown format. If unsure, simply say you don't know.
+      Helpful Answer:`;
       } else {
-        result = await openAI.chat.completions.create({
-          model: process.env.OPENAI_CHAT_MODEL_NAME || "gpt-3.5-turbo",
-          temperature: 0.1,
-          stream: true,
-          messages: [
-            {
-              role: "system",
-              content:
-                "You are a friendly assistant who uses the context below to answer questions in markdown format. Answer honestly, citing sources with line numbers. Provide inline citation.",
-            },
-            {
-              role: "user",
-              content: `Use the provided context: ${concatenatedPageContent} to answer the user's question: ${question}. Answers should be in markdown format. If unsure, simply say you don't know.
+        userContent = `Use the provided context: ${concatenatedPageContent} to answer the user's question: ${question}. Answers should be in markdown format. If unsure, simply say you don't know.
       \n----------------\n
       PREVIOUS CONVERSATION:
       ${prevMessages.rows
         .map((msg: any) => `${msg.role}: ${msg.text}`)
         .join("\n")}
       \n----------------\n
-      Helpful Answer:`,
-            },
-          ],
-        });
+      Helpful Answer:`;
       }
 
-      console.log("Chat result:", result);
+      messages = [
+        systemMessage,
+        { role: "user" as const, content: userContent },
+      ];
 
-      const encoder = new TextEncoder();
-      const stream = new ReadableStream({
-        async start(controller) {
-          try {
-            for await (const chunk of result) {
-              const text = chunk.choices[0]?.delta?.content || "";
-              if (text) {
-                controller.enqueue(encoder.encode(text));
-              }
-            }
-            controller.close();
-          } catch (error) {
-            controller.error(error);
-          }
+      const result = streamText({
+        model: openai(process.env.OPENAI_CHAT_MODEL_NAME || "gpt-3.5-turbo"),
+        messages: messages,
+        temperature: 0.1,
+        onFinish: async ({ text }) => {
+          await nile.query(
+            `INSERT INTO message 
+            (text, "fileId", user_id, "isUserMessage", tenant_id) 
+            VALUES 
+            ($1, $2, $3, $4, $5)`,
+            [text, body.fileId, body.user_id, false, body.tenant_id]
+          );
         },
       });
 
-      // **Insert the completion result into the database**
-      (async () => {
-        let completionText = "";
-        for await (const chunk of result) {
-          completionText += chunk.choices[0]?.delta?.content || "";
-        }
-        await nile.query(
-          `INSERT INTO message 
-      (text, "fileId", user_id, "isUserMessage", tenant_id) 
-      VALUES 
-      ($1, $2, $3, $4, $5)`,
-          [completionText, body.fileId, body.user_id, false, body.tenant_id]
-        );
-      })();
-
-      return new Response(stream, {
-        status: 200,
-        headers: {
-          "Content-Type": "text/plain; charset=utf-8",
-        },
-      });
+      return result.toUIMessageStreamResponse();
     } else {
       console.log("There are no matches.");
-      return new NextResponse("No Matches", { status: 200 });
+      // Return a data stream with "No Matches" text.
+      // 0:"text" is the format for text parts.
+      return new Response('0:"No Matches"\n', {
+        status: 200,
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+      });
     }
   } catch (error) {
     console.log("[READ_error]", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return new Response("Internal Error", { status: 500 });
   }
 }
