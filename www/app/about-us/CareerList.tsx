@@ -1,5 +1,5 @@
 import { glob } from "glob";
-import { processFile } from "../docs/_build/processFile.mjs";
+import { processFile } from "../careers/processFile.mjs";
 import { OpenPositionMetadata } from "./OpenPositionMetadata";
 import CareerPost from "./CareerPost";
 import CareerHeader from "./CareerHeader";
