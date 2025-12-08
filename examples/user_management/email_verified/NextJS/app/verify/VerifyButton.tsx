@@ -1,19 +1,19 @@
-"use client";
-import { User } from "@niledatabase/server";
+'use client';
+import { User } from '@niledatabase/server';
 
-import { EmailSignInButton } from "@niledatabase/react";
-import { useState } from "react";
+import { EmailSignInButton } from '@niledatabase/react';
+import { useState } from 'react';
 
 export default function VerifyButton({ me }: { me: User }) {
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   return (
-    <div className="flex flex-col gap-4 items-center">
+    <div className="flex flex-col items-center gap-4">
       {error ? <div className="rounded bg-red-600/50 p-2">{error}</div> : null}
       <div>
         <EmailSignInButton
           email={me.email}
           onSent={() => {
-            setError("");
+            setError('');
           }}
           onFailure={(e) => {
             if (e) {

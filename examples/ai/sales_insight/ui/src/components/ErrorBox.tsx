@@ -1,10 +1,10 @@
-import Cookies from "js-cookie";
-import { Alert } from "@mui/joy";
-import Stack from "@mui/joy/Stack";
-import Typography from "@mui/joy/Typography";
+import Cookies from 'js-cookie';
+import { Alert } from '@mui/joy';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
 
 export default function ErrorBox() {
-  const errorCookie = Cookies.get("errorData");
+  const errorCookie = Cookies.get('errorData');
   const errorData = errorCookie ? JSON.parse(errorCookie) : null;
 
   return errorData ? (

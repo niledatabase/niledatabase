@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Layout, Settings } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { Layout, Settings } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export type Organization = {
   id: string;
@@ -28,13 +28,13 @@ NavItemProps) => {
 
   const routes = [
     {
-      label: "Files",
-      icon: <Layout className="h-4 w-4 mr-2" />,
+      label: 'Files',
+      icon: <Layout className="mr-2 h-4 w-4" />,
       href: `/dashboard/organization/${organizationId}`,
     },
     {
-      label: "Settings",
-      icon: <Settings className="h-4 w-4 mr-2" />,
+      label: 'Settings',
+      icon: <Settings className="mr-2 h-4 w-4" />,
       href: `/dashboard/organization/${organizationId}/settings`,
     },
   ];
@@ -51,9 +51,9 @@ NavItemProps) => {
           size="sm"
           onClick={() => onClick(route.href)}
           className={cn(
-            "w-full font-normal justify-start pl-10 mb-1",
+            'mb-1 w-full justify-start pl-10 font-normal',
             pathname === route.href &&
-              "bg-sky-500/10 text-sky-700 dark:text-indigo-300"
+              'bg-sky-500/10 text-sky-700 dark:text-indigo-300',
           )}
           variant="ghost"
         >
@@ -68,8 +68,8 @@ NavItemProps) => {
 NavItem.Skeleton = function SkeletonNavItem() {
   return (
     <div className="flex items-center gap-x-2">
-      <div className="w-10 h-10 relative shrink-0">
-        <Skeleton className="h-full w-full absolute" />
+      <div className="relative h-10 w-10 shrink-0">
+        <Skeleton className="absolute h-full w-full" />
       </div>
       <Skeleton className="h-10 w-full" />
     </div>

@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import Pro from "./Pro";
-import Free from "./Free";
-import Scale from "./Scale";
-import Enterprise from "./Enterprise";
+import { useMemo, useState } from 'react';
+import Pro from './Pro';
+import Free from './Free';
+import Scale from './Scale';
+import Enterprise from './Enterprise';
 
-type ValidPlans = "pro" | "free" | "scale" | "enterprise";
+type ValidPlans = 'pro' | 'free' | 'scale' | 'enterprise';
 export default function PlanPicker() {
-  const [currentPlan, setCurrentPlan] = useState<ValidPlans>("pro");
+  const [currentPlan, setCurrentPlan] = useState<ValidPlans>('pro');
   const plan = useMemo(() => {
     switch (currentPlan) {
-      case "free":
+      case 'free':
         return <Free />;
-      case "enterprise":
+      case 'enterprise':
         return <Enterprise />;
-      case "scale":
+      case 'scale':
         return <Scale />;
-      case "pro":
+      case 'pro':
         return (
-          <div className="flex flex-col w-full">
+          <div className="flex w-full flex-col">
             <div className="flex justify-center">
-              <div className="gradientButton after:rounded-full !py-0 !px-3 leading-[22px] font-semibold">
+              <div className="gradientButton !px-3 !py-0 font-semibold leading-[22px] after:rounded-full">
                 Recommended
               </div>
             </div>
@@ -31,11 +31,11 @@ export default function PlanPicker() {
     }
   }, [currentPlan]);
   return (
-    <div className="flex flex-col gap-8 justify-between lg:hidden p-5">
+    <div className="flex flex-col justify-between gap-8 p-5 lg:hidden">
       <div className="flex justify-center">
         <label
           htmlFor="plan"
-          className="bg-gradient-text bg-clip-text text-transparent text-2xl w-fit"
+          className="w-fit bg-gradient-text bg-clip-text text-2xl text-transparent"
         >
           Change plan
         </label>
@@ -43,7 +43,7 @@ export default function PlanPicker() {
       <div className="relative">
         <select
           id="plan"
-          className="appearance-none w-full bg-[#000] border border-slate-700 rounded-lg px-3 py-1"
+          className="w-full appearance-none rounded-lg border border-slate-700 bg-[#000] px-3 py-1"
           onChange={(e) => {
             setCurrentPlan(e.target.value as ValidPlans);
           }}
@@ -53,9 +53,9 @@ export default function PlanPicker() {
           <option value="scale">Scale</option>
           <option value="enterprise">Enterprise</option>
         </select>
-        <div className="opacity-70 absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 opacity-70">
           <svg
-            className="w-5 h-5 text-gray-400"
+            className="text-gray-400 h-5 w-5"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"

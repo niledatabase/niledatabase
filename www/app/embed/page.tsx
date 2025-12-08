@@ -1,6 +1,6 @@
-import Container from "@/app/_components/common/Container";
-import { notFound } from "next/navigation";
-import ConsoleEmbed from "../_components/ConsoleEmbed";
+import Container from '@/app/_components/common/Container';
+import { notFound } from 'next/navigation';
+import ConsoleEmbed from '../_components/ConsoleEmbed';
 
 export default async function Home({
   searchParams,

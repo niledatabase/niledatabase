@@ -1,9 +1,9 @@
-import Email from "next-auth/providers/email";
-import GithubProvider from "next-auth/providers/github";
-import NileAdapter from "@/adapter-nile/src/index";
-import { Pool } from "pg";
-import "dotenv/config";
-import type { NextAuthOptions } from "next-auth";
+import Email from 'next-auth/providers/email';
+import GithubProvider from 'next-auth/providers/github';
+import NileAdapter from '@/adapter-nile/src/index';
+import { Pool } from 'pg';
+import 'dotenv/config';
+import type { NextAuthOptions } from 'next-auth';
 
 const pool = new Pool({
   connectionString: process.env.NILEDB_CONNECTION_STRING,
@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   session: {
-    strategy: "database",
+    strategy: 'database',
   },
   providers: [
     GithubProvider({

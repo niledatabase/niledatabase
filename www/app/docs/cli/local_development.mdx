@@ -1,0 +1,244 @@
+---
+title: 'Local Development'
+icon: 'laptop'
+---
+
+The `nile local` command helps you manage a local development environment using Docker. This environment provides a PostgreSQL database pre-configured with Nile's schema and features.
+
+## Overview
+
+```bash
+nile local [command] [options]
+```
+
+Available commands:
+
+- `start` - Start the local environment
+- `stop` - Stop the local environment
+- `info` - Display connection information
+
+## Prerequisites
+
+Before using the local environment, ensure you have:
+
+1. Docker installed and running
+2. PostgreSQL client tools (psql) installed
+3. Sufficient permissions to run Docker commands
+
+```bash Prerequisites Check
+# Check Docker installation
+docker --version
+
+# Check PostgreSQL tools
+psql --version
+```
+
+## Starting the Environment
+
+The `start` command launches a Docker container with a pre-configured PostgreSQL database.
+
+```bash
+nile local start [options]
+```
+
+### Options
+
+| Flag          | Description                                 | Default |
+| ------------- | ------------------------------------------- | ------- |
+| `--no-prompt` | Start without prompting for psql connection | false   |
+
+### Examples
+
+```bash Start Examples
+# Start with interactive prompt
+nile local start
+
+# Start without psql prompt
+nile local start --no-prompt
+```
+
+### Sample Output
+
+```bash Start Output
+✓ Latest Nile testing container pulled successfully
+✓ Database is ready
+✓ Local development environment started successfully
+
+Connection Information:
+Host:     localhost
+Port:     5432
+Database: test
+Username: 00000000-0000-0000-0000-000000000000
+Password: password
+
+Would you like to connect using psql? (y/N)
+```
+
+## Stopping the Environment
+
+The `stop` command gracefully stops and removes the Docker container.
+
+```bash
+nile local stop
+```
+
+### Examples
+
+```bash Stop Examples
+# Stop the environment
+nile local stop
+```
+
+### Sample Output
+
+```bash Stop Output
+✓ Local environment stopped successfully
+```
+
+## Viewing Connection Information
+
+The `info` command displays connection details for the running environment.
+
+```bash
+nile local info
+```
+
+### Examples
+
+```bash Info Examples
+# Show connection information
+nile local info
+
+# Show with debug information
+nile local info --debug
+```
+
+### Sample Output
+
+```bash Info Output
+Connection Information:
+Host:     localhost
+Port:     5432
+Database: test
+Username: 00000000-0000-0000-0000-000000000000
+Password: password
+```
+
+## Common Workflows
+
+### Starting Development Session
+
+```bash Development Setup
+# 1. Start the environment
+nile local start
+
+# 2. Connect using psql (if prompted)
+# Or use connection information with your preferred client
+
+# 3. Start development
+
+# 4. Stop when finished
+nile local stop
+```
+
+### Using with Database Tools
+
+```bash Database Tools
+# Get connection information
+nile local info
+
+# Use with your preferred database tool
+# Example: TablePlus, DBeaver, pgAdmin, etc.
+```
+
+### Debugging Connection Issues
+
+```bash Debug Example
+# Start with debug output
+nile local start --debug
+
+# Check connection information
+nile local info --debug
+```
+
+## Common Issues
+
+### Container Already Running
+
+```bash Container Running
+# Start attempt with existing container
+nile local start
+Error: A Nile local environment is already running
+
+# Solution: Stop existing container
+nile local stop
+```
+
+### PostgreSQL Client Missing
+
+```bash Missing PSQL
+# When psql is not installed
+Error: Failed to launch psql
+
+# Solution: Install PostgreSQL client tools
+# macOS:
+brew install postgresql
+
+# Ubuntu:
+sudo apt-get install postgresql-client
+```
+
+### Docker Not Running
+
+```bash Docker Not Running
+# When Docker daemon is not running
+Error: Docker failed to start
+
+# Solution: Start Docker daemon
+# macOS: Start Docker Desktop
+# Linux: sudo systemctl start docker
+```
+
+## Best Practices
+
+1. **Clean Environment**: Always stop the environment when not in use:
+
+   ```bash
+   nile local stop
+   ```
+
+2. **Connection Management**: Save connection information for reuse:
+
+   ```bash
+   nile local info > connection.txt
+   ```
+
+3. **Debug Mode**: Use debug flag when encountering issues:
+   ```bash
+   nile local start --debug
+   ```
+
+## Related Commands
+
+- `nile db` - Manage cloud databases
+- `nile tenants` - Manage tenants
+- `nile users` - Manage users
+- `nile config` - Configure CLI settings
+
+## Environment Variables
+
+The local environment uses these default values:
+
+```bash Environment
+POSTGRES_USER=00000000-0000-0000-0000-000000000000
+POSTGRES_PASSWORD=password
+POSTGRES_DB=test
+POSTGRES_PORT=5432
+```
+
+## Security Notes
+
+1. The local environment is for development only
+2. Default credentials should never be used in production
+3. The environment is not encrypted by default
+4. Container is accessible only from localhost

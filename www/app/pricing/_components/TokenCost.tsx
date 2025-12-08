@@ -1,19 +1,19 @@
-import React from "react";
+import React from 'react';
 export default function TokenCost({ header }: { header: string }) {
   return (
-    <div className="flex flex-col justify-center items-start 2xl:px-24">
-      <div className="text-[16px] leading-[44px] border-b-2 border-b-zinc-700 w-full">
+    <div className="flex flex-col items-start justify-center 2xl:px-24">
+      <div className="w-full border-b-2 border-b-zinc-700 text-[16px] leading-[44px]">
         {header}
       </div>
-      <div className="w-full py-4 border-b border-b-zinc-700">
-        <div className="flex flex-row justify-between w-full gap-8 items-center">
-          <div className="opacity-70 w-2/3">Query</div>
-          <div className="opacity-70 flex flex-row w-1/3">
-            <div className="flex flex-col w-1/2">
+      <div className="w-full border-b border-b-zinc-700 py-4">
+        <div className="flex w-full flex-row items-center justify-between gap-8">
+          <div className="w-2/3 opacity-70">Query</div>
+          <div className="flex w-1/3 flex-row opacity-70">
+            <div className="flex w-1/2 flex-col">
               <div>Avg query tokens</div>
               <div>for one million queries</div>
             </div>
-            <div className="flex flex-col w-1/2">
+            <div className="flex w-1/2 flex-col">
               <div>
                 Price for one million
                 <div></div>
@@ -38,9 +38,9 @@ export function TableRow({
 }) {
   return (
     <div className="2xl:px-24">
-      <div className="w-full py-4 border-b border-b-zinc-700 flex flex-row gap-8">
+      <div className="flex w-full flex-row gap-8 border-b border-b-zinc-700 py-4">
         <div className="w-2/3">{col1}</div>
-        <div className="flex flex-row w-1/3">
+        <div className="flex w-1/3 flex-row">
           <div className="w-1/2">{col2}</div>
           <div className="w-1/2">{col3}</div>
         </div>

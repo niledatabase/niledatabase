@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { useProModal } from "@/hooks/use-pro-modal";
-import { useAction } from "@/hooks/use-action";
-import { stripeRedirect } from "../actions/stripe-redirect";
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { useProModal } from '@/hooks/use-pro-modal';
+import { useAction } from '@/hooks/use-action';
+import { stripeRedirect } from '../actions/stripe-redirect';
 
 interface SubscriptionButtonProps {
   orgId: string;
@@ -29,7 +29,7 @@ export const SubscriptionButton = ({
   const onClick = () => {
     // Disable for now
     toast.warning(
-      "Subscription management is not currently available. Coming soon! Contact support for assistance."
+      'Subscription management is not currently available. Coming soon! Contact support for assistance.',
     );
     /*if (isPro) {
       execute({orgId});
@@ -40,7 +40,7 @@ export const SubscriptionButton = ({
 
   return (
     <Button variant="default" onClick={onClick} disabled={isLoading}>
-      {isPro ? "Manage subscription" : "Upgrade to pro"}
+      {isPro ? 'Manage subscription' : 'Upgrade to pro'}
     </Button>
   );
 };

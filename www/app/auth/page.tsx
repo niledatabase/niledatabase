@@ -1,42 +1,42 @@
-import Container from "../_components/common/Container";
-import { HeroBottom } from "../_components/common/Hero";
-import arrow from "@/public/icons/arrow.svg";
-import Image from "next/image";
-import Logo from "@/public/githubLogo.svg";
-import Link from "next/link";
+import Container from '../_components/common/Container';
+import { HeroBottom } from '../_components/common/Hero';
+import arrow from '@/public/icons/arrow.svg';
+import Image from 'next/image';
+import Logo from '@/public/githubLogo.svg';
+import Link from 'next/link';
 import MultiTenantCodeEditor, {
   setupCodeExamples,
   socialLoginExamples,
   databaseExamples,
   selfHostExamples,
   authExamples,
-} from "./MultiTenantCodeEditor";
-import VideoEmbed from "./VideoEmbed";
-import AuthCalculator from "./_components/AuthPricingCalculator";
+} from './MultiTenantCodeEditor';
+import VideoEmbed from './VideoEmbed';
+import AuthCalculator from './_components/AuthPricingCalculator';
 
 export default function Auth() {
   return (
     <Container background={null}>
       <div className="container mx-auto">
-        <div className="sm:px-4 py-32 pb-10 xl:px-24 xl:py-48 md:px-12 md:py-24">
-          <div className="flex gap-8 lg:gap-20 lg:flex-row flex-col">
-            <div className="flex gap-8 flex-col lg:w-1/2">
-              <h1 className="text-[42px] leading-[42px] lg:text-[96px] lg:leading-[96px] flex flex-col">
+        <div className="py-32 pb-10 sm:px-4 md:px-12 md:py-24 xl:px-24 xl:py-48">
+          <div className="flex flex-col gap-8 lg:flex-row lg:gap-20">
+            <div className="flex flex-col gap-8 lg:w-1/2">
+              <h1 className="flex flex-col text-[42px] leading-[42px] lg:text-[96px] lg:leading-[96px]">
                 <span>Auth for</span>
-                <div className="flex flex-row whitespace-nowrap items-baseline">
-                  <span className="bg-clip-text text-transparent bg-gradient-text subpixel-antialiased bg-black overflow-hidden whitespace-nowrap leading-[48px] lg:leading-[120px] font-bold">
+                <div className="flex flex-row items-baseline whitespace-nowrap">
+                  <span className="overflow-hidden whitespace-nowrap bg-black bg-gradient-text bg-clip-text font-bold leading-[48px] text-transparent subpixel-antialiased lg:leading-[120px]">
                     B2B
                   </span>
                   <span className="ml-3">apps</span>
                 </div>
               </h1>
-              <h2 className="text-[16px] leading-[16px] xl:text-[20px] xl:leading-[20px] w-full">
+              <h2 className="w-full text-[16px] leading-[16px] xl:text-[20px] xl:leading-[20px]">
                 Multi-tenant, open source, unlimited active users, customer data
                 in your Postgres, drop-in customizable UI modules
               </h2>
-              <div className="flex flex-row gap-4 items-center">
+              <div className="flex flex-row items-center gap-4">
                 <Link href="https://console.thenile.dev/" target="_blank">
-                  <button className="bg-blue text-black transition-colors px-4 py-2 rounded-[10px] flex flex-row gap-2 items-center text-[16px] leading-[20px] h-11">
+                  <button className="flex h-11 flex-row items-center gap-2 rounded-[10px] bg-blue px-4 py-2 text-[16px] leading-[20px] text-black transition-colors">
                     Build for free
                     <Image
                       className="-ml-1 invert"
@@ -59,34 +59,34 @@ export default function Auth() {
           </div>
         </div>
         <div className="mt-20">
-          <div className="flex justify-center flex-col gap-16">
-            <div className="flex justify-center flex-col w-full items-center">
-              <h2 className="text-[42px] leading-[42px] xl:text-[64px] xl:leading-[64px] lg:leading-[50px] lg:text-[50px] w-5/6 2xl:w-2/3 -tracking-[0.64px] text-left lg:text-center">
+          <div className="flex flex-col justify-center gap-16">
+            <div className="flex w-full flex-col items-center justify-center">
+              <h2 className="w-5/6 text-left text-[42px] leading-[42px] -tracking-[0.64px] lg:text-center lg:text-[50px] lg:leading-[50px] xl:text-[64px] xl:leading-[64px] 2xl:w-2/3">
                 Built for startups and enterprise
               </h2>
             </div>
             <div className="flex flex-col gap-16">
-              <div className="flex flex-col lg:flex-row gap-16 justify-center items-start">
+              <div className="flex flex-col items-start justify-center gap-16 lg:flex-row">
                 <div className="lg:w-1/2">
-                  <div className="group transition-all max-w-[472px] min-h-[216px]">
-                    <div className="p-6 flex flex-col max-w-[472px] flex-1 !justify-between min-h-[216px] h-full bg-[#000000]">
+                  <div className="group min-h-[216px] max-w-[472px] transition-all">
+                    <div className="flex h-full min-h-[216px] max-w-[472px] flex-1 flex-col !justify-between bg-[#000000] p-6">
                       <div className="flex items-center gap-2">
                         <div className="brightness-100 transition-all duration-700">
                           {cards[0].icon}
                         </div>
-                        <div className="text-[24px] leading-[24px] font-medium brightness-100 bg-clip-text text-transparent bg-gradient-text duration-700">
+                        <div className="bg-gradient-text bg-clip-text text-[24px] font-medium leading-[24px] text-transparent brightness-100 duration-700">
                           {cards[0].title}
                         </div>
                       </div>
 
-                      <div className="text-[14px] leading-[20px] xl:text-[18px] xl:leading-[24px] lg:text-[16px] lg:leading-[18px] font-normal">
+                      <div className="text-[14px] font-normal leading-[20px] lg:text-[16px] lg:leading-[18px] xl:text-[18px] xl:leading-[24px]">
                         {cards[0].subTitle}
                       </div>
                       <Link
-                        className="text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
+                        className="flex flex-row items-center gap-2 text-[16px] font-medium leading-[24px]"
                         href="http://thenile.dev/docs/auth/concepts/tenants"
                       >
-                        <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center gap-2 border-b border-b-transparent transition-colors hover:border-b-[#fff]">
                           Learn more
                           <Image
                             src={arrow}
@@ -104,30 +104,30 @@ export default function Auth() {
                 </div>
               </div>
 
-              <div className="w-full h-[1px] bg-[#333333]" />
+              <div className="h-[1px] w-full bg-[#333333]" />
 
               {/* Second row */}
-              <div className="flex flex-col lg:flex-row gap-16 justify-center items-start">
+              <div className="flex flex-col items-start justify-center gap-16 lg:flex-row">
                 <div className="lg:w-1/2">
-                  <div className="group transition-all max-w-[472px] min-h-[216px]">
-                    <div className="p-6 flex flex-col max-w-[472px] flex-1 !justify-between min-h-[216px] h-full bg-[#000000]">
+                  <div className="group min-h-[216px] max-w-[472px] transition-all">
+                    <div className="flex h-full min-h-[216px] max-w-[472px] flex-1 flex-col !justify-between bg-[#000000] p-6">
                       <div className="flex items-center gap-2">
                         <div className="brightness-100 transition-all duration-700">
                           {cards[2].icon}
                         </div>
-                        <div className="text-[24px] leading-[24px] font-medium brightness-100 bg-clip-text text-transparent bg-gradient-text duration-700">
+                        <div className="bg-gradient-text bg-clip-text text-[24px] font-medium leading-[24px] text-transparent brightness-100 duration-700">
                           {cards[2].title}
                         </div>
                       </div>
 
-                      <div className="text-[14px] leading-[20px] xl:text-[18px] xl:leading-[24px] lg:text-[16px] lg:leading-[18px] font-normal">
+                      <div className="text-[14px] font-normal leading-[20px] lg:text-[16px] lg:leading-[18px] xl:text-[18px] xl:leading-[24px]">
                         {cards[2].subTitle}
                       </div>
                       <Link
-                        className="text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
+                        className="flex flex-row items-center gap-2 text-[16px] font-medium leading-[24px]"
                         href="https://www.thenile.dev/pricing"
                       >
-                        <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center gap-2 border-b border-b-transparent transition-colors hover:border-b-[#fff]">
                           Learn more
                           <Image
                             src={arrow}
@@ -140,35 +140,35 @@ export default function Auth() {
                     </div>
                   </div>
                 </div>
-                <div className="lg:w-1/2 lg:-ml-16">
+                <div className="lg:-ml-16 lg:w-1/2">
                   <AuthCalculator />
                 </div>
               </div>
 
-              <div className="w-full h-[1px] bg-[#333333]" />
+              <div className="h-[1px] w-full bg-[#333333]" />
 
               {/* Third row - User data stored in your DB */}
-              <div className="flex flex-col lg:flex-row gap-16 justify-center items-start">
+              <div className="flex flex-col items-start justify-center gap-16 lg:flex-row">
                 <div className="lg:w-1/2">
-                  <div className="group transition-all max-w-[472px] min-h-[216px]">
-                    <div className="p-6 flex flex-col max-w-[472px] flex-1 !justify-between min-h-[216px] h-full bg-[#000000]">
+                  <div className="group min-h-[216px] max-w-[472px] transition-all">
+                    <div className="flex h-full min-h-[216px] max-w-[472px] flex-1 flex-col !justify-between bg-[#000000] p-6">
                       <div className="flex items-center gap-2">
                         <div className="brightness-100 transition-all duration-700">
                           {cards[1].icon}
                         </div>
-                        <div className="text-[24px] leading-[24px] font-medium brightness-100 bg-clip-text text-transparent bg-gradient-text duration-700">
+                        <div className="bg-gradient-text bg-clip-text text-[24px] font-medium leading-[24px] text-transparent brightness-100 duration-700">
                           {cards[1].title}
                         </div>
                       </div>
 
-                      <div className="text-[14px] leading-[20px] xl:text-[18px] xl:leading-[24px] lg:text-[16px] lg:leading-[18px] font-normal">
+                      <div className="text-[14px] font-normal leading-[20px] lg:text-[16px] lg:leading-[18px] xl:text-[18px] xl:leading-[24px]">
                         {cards[1].subTitle}
                       </div>
                       <Link
-                        className="text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
+                        className="flex flex-row items-center gap-2 text-[16px] font-medium leading-[24px]"
                         href="http://thenile.dev/docs/auth/concepts/builtintables"
                       >
-                        <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center gap-2 border-b border-b-transparent transition-colors hover:border-b-[#fff]">
                           Learn more
                           <Image
                             src={arrow}
@@ -189,30 +189,30 @@ export default function Auth() {
                 </div>
               </div>
 
-              <div className="w-full h-[1px] bg-[#333333]" />
+              <div className="h-[1px] w-full bg-[#333333]" />
 
               {/* Fourth row - Comprehensive auth features */}
-              <div className="flex flex-col lg:flex-row gap-16 justify-center items-start">
+              <div className="flex flex-col items-start justify-center gap-16 lg:flex-row">
                 <div className="lg:w-1/2">
-                  <div className="group transition-all max-w-[472px] min-h-[216px]">
-                    <div className="p-6 flex flex-col max-w-[472px] flex-1 !justify-between min-h-[216px] h-full bg-[#000000]">
+                  <div className="group min-h-[216px] max-w-[472px] transition-all">
+                    <div className="flex h-full min-h-[216px] max-w-[472px] flex-1 flex-col !justify-between bg-[#000000] p-6">
                       <div className="flex items-center gap-2">
                         <div className="brightness-100 transition-all duration-700">
                           {cards[3].icon}
                         </div>
-                        <div className="text-[24px] leading-[24px] font-medium brightness-100 bg-clip-text text-transparent bg-gradient-text duration-700">
+                        <div className="bg-gradient-text bg-clip-text text-[24px] font-medium leading-[24px] text-transparent brightness-100 duration-700">
                           {cards[3].title}
                         </div>
                       </div>
 
-                      <div className="text-[14px] leading-[20px] xl:text-[18px] xl:leading-[24px] lg:text-[16px] lg:leading-[18px] font-normal">
+                      <div className="text-[14px] font-normal leading-[20px] lg:text-[16px] lg:leading-[18px] xl:text-[18px] xl:leading-[24px]">
                         {cards[3].subTitle}
                       </div>
                       <Link
-                        className="text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
+                        className="flex flex-row items-center gap-2 text-[16px] font-medium leading-[24px]"
                         href="http://thenile.dev/docs/auth/introduction#comprehensive-auth-features"
                       >
-                        <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center gap-2 border-b border-b-transparent transition-colors hover:border-b-[#fff]">
                           Learn more
                           <Image
                             src={arrow}
@@ -233,30 +233,30 @@ export default function Auth() {
                 </div>
               </div>
 
-              <div className="w-full h-[1px] bg-[#333333]" />
+              <div className="h-[1px] w-full bg-[#333333]" />
 
               {/* Fifth row - Self hosted */}
-              <div className="flex flex-col lg:flex-row gap-16 justify-center items-start">
+              <div className="flex flex-col items-start justify-center gap-16 lg:flex-row">
                 <div className="lg:w-1/2">
-                  <div className="group transition-all max-w-[472px] min-h-[216px]">
-                    <div className="p-6 flex flex-col max-w-[472px] flex-1 !justify-between min-h-[216px] h-full bg-[#000000]">
+                  <div className="group min-h-[216px] max-w-[472px] transition-all">
+                    <div className="flex h-full min-h-[216px] max-w-[472px] flex-1 flex-col !justify-between bg-[#000000] p-6">
                       <div className="flex items-center gap-2">
                         <div className="brightness-100 transition-all duration-700">
                           {cards[4].icon}
                         </div>
-                        <div className="text-[24px] leading-[24px] font-medium brightness-100 bg-clip-text text-transparent bg-gradient-text duration-700">
+                        <div className="bg-gradient-text bg-clip-text text-[24px] font-medium leading-[24px] text-transparent brightness-100 duration-700">
                           {cards[4].title}
                         </div>
                       </div>
 
-                      <div className="text-[14px] leading-[20px] xl:text-[18px] xl:leading-[24px] lg:text-[16px] lg:leading-[18px] font-normal">
+                      <div className="text-[14px] font-normal leading-[20px] lg:text-[16px] lg:leading-[18px] xl:text-[18px] xl:leading-[24px]">
                         {cards[4].subTitle}
                       </div>
                       <Link
-                        className="text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
+                        className="flex flex-row items-center gap-2 text-[16px] font-medium leading-[24px]"
                         href="http://thenile.dev/docs/auth/quickstart"
                       >
-                        <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center gap-2 border-b border-b-transparent transition-colors hover:border-b-[#fff]">
                           Learn more
                           <Image
                             src={arrow}
@@ -277,30 +277,30 @@ export default function Auth() {
                 </div>
               </div>
 
-              <div className="w-full h-[1px] bg-[#333333]" />
+              <div className="h-[1px] w-full bg-[#333333]" />
 
               {/* Sixth row - Drop-in Auth UI Modules */}
-              <div className="flex flex-col lg:flex-row gap-16 justify-center items-start">
+              <div className="flex flex-col items-start justify-center gap-16 lg:flex-row">
                 <div className="lg:w-1/2">
-                  <div className="group transition-all max-w-[472px] min-h-[216px]">
-                    <div className="p-6 flex flex-col max-w-[472px] flex-1 !justify-between min-h-[216px] h-full bg-[#000000]">
+                  <div className="group min-h-[216px] max-w-[472px] transition-all">
+                    <div className="flex h-full min-h-[216px] max-w-[472px] flex-1 flex-col !justify-between bg-[#000000] p-6">
                       <div className="flex items-center gap-2">
                         <div className="brightness-100 transition-all duration-700">
                           {cards[5].icon}
                         </div>
-                        <div className="text-[24px] leading-[24px] font-medium brightness-100 bg-clip-text text-transparent bg-gradient-text duration-700">
+                        <div className="bg-gradient-text bg-clip-text text-[24px] font-medium leading-[24px] text-transparent brightness-100 duration-700">
                           {cards[5].title}
                         </div>
                       </div>
 
-                      <div className="text-[14px] leading-[20px] xl:text-[18px] xl:leading-[24px] lg:text-[16px] lg:leading-[18px] font-normal">
+                      <div className="text-[14px] font-normal leading-[20px] lg:text-[16px] lg:leading-[18px] xl:text-[18px] xl:leading-[24px]">
                         {cards[5].subTitle}
                       </div>
                       <Link
-                        className="text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
+                        className="flex flex-row items-center gap-2 text-[16px] font-medium leading-[24px]"
                         href="http://thenile.dev/docs/auth/singlesignon/google"
                       >
-                        <div className="transition-colors border-b border-b-transparent hover:border-b-[#fff] flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center gap-2 border-b border-b-transparent transition-colors hover:border-b-[#fff]">
                           Learn more
                           <Image
                             src={arrow}
@@ -321,14 +321,14 @@ export default function Auth() {
                 </div>
               </div>
 
-              <div className="w-full h-[1px] bg-[#333333]" />
+              <div className="h-[1px] w-full bg-[#333333]" />
             </div>
           </div>
         </div>
       </div>
       <HeroBottom
         cta={
-          <div className="bg-black rounded-xl text-white flex flex-row gap-2 px-4 py-1 items-center w-fit">
+          <div className="flex w-fit flex-row items-center gap-2 rounded-xl bg-black px-4 py-1 text-white">
             <div className="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -345,7 +345,7 @@ export default function Auth() {
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
             </div>
-            <div className="text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px] flex-row shrink-0">
+            <div className="shrink-0 flex-row text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px]">
               Nile auth
             </div>
           </div>
@@ -358,12 +358,12 @@ export default function Auth() {
 function ViewOnGithub() {
   return (
     <Link
-      href={"https://github.com/niledatabase/nile-auth"}
+      href={'https://github.com/niledatabase/nile-auth'}
       target="_blank"
-      className="shrink-0 github"
+      className="github shrink-0"
     >
-      <button className="border border-[#1c1c1c] bg-[#000] hover:bg-[#1c1c1c] rounded-[10px]">
-        <div className="flex flex-row py-3 px-4 items-center gap-[10px]">
+      <button className="rounded-[10px] border border-[#1c1c1c] bg-[#000] hover:bg-[#1c1c1c]">
+        <div className="flex flex-row items-center gap-[10px] px-4 py-3">
           <span className="whitespace-nowrap">View on GitHub</span>
           <Image src={Logo} alt="Github Logo" width={20} height={20} />
         </div>
@@ -405,9 +405,9 @@ const cards = [
         </defs>
       </svg>
     ),
-    title: "Purpose-built for multi-tenant apps",
+    title: 'Purpose-built for multi-tenant apps',
     subTitle:
-      "Designed from the ground up to support multi-tenant applications. Manage tenants, invite users to tenants, override tenant specific settings, and more.",
+      'Designed from the ground up to support multi-tenant applications. Manage tenants, invite users to tenants, override tenant specific settings, and more.',
   },
   {
     icon: (
@@ -442,9 +442,9 @@ const cards = [
         </defs>
       </svg>
     ),
-    title: "User data stored in your DB",
+    title: 'User data stored in your DB',
     subTitle:
-      "Keep full control of your user data by storing it directly in your own database. Your customer data is strongly consistent with no synchronization needs",
+      'Keep full control of your user data by storing it directly in your own database. Your customer data is strongly consistent with no synchronization needs',
   },
   {
     icon: (
@@ -480,9 +480,9 @@ const cards = [
         </defs>
       </svg>
     ),
-    title: "Unlimited active users",
+    title: 'Unlimited active users',
     subTitle:
-      "Scale your application with confidence. Supports unlimited active users at no additional cost. Pay only for the database usage.",
+      'Scale your application with confidence. Supports unlimited active users at no additional cost. Pay only for the database usage.',
   },
   {
     icon: (
@@ -518,9 +518,9 @@ const cards = [
         </defs>
       </svg>
     ),
-    title: "Comprehensive auth features",
+    title: 'Comprehensive auth features',
     subTitle:
-      "Access a full suite of authentication features to secure your application thoroughly. Includes email/password, session management, social login, and more to come.",
+      'Access a full suite of authentication features to secure your application thoroughly. Includes email/password, session management, social login, and more to come.',
   },
   {
     icon: (
@@ -556,7 +556,7 @@ const cards = [
         </defs>
       </svg>
     ),
-    title: "Self host or let Nile manage it",
+    title: 'Self host or let Nile manage it',
     subTitle:
       "Choose between Nile's managed solution or self-host for complete control. Build your app locally during development and switch to managed solution for production.",
   },
@@ -591,36 +591,36 @@ const cards = [
         </defs>
       </svg>
     ),
-    title: "Drop-in auth UI modules",
+    title: 'Drop-in auth UI modules',
     subTitle:
-      "Easily integrate pre-built authentication UI modules into your application in five minutes. Add support for Google, GitHub, and more and override per-tenant.",
+      'Easily integrate pre-built authentication UI modules into your application in five minutes. Add support for Google, GitHub, and more and override per-tenant.',
   },
 ];
 
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title:
-    "Auth for B2B Apps | Multi-tenant, unlimited active users, open source",
+    'Auth for B2B Apps | Multi-tenant, unlimited active users, open source',
   description:
     "Nile Auth is a comprehensive B2B auth solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile's Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize the cloud version.",
   keywords:
-    "PostgreSQL, Multi-tenant, open source, unlimited active users, customer data in your Postgres, drop-in customizable UI modules",
+    'PostgreSQL, Multi-tenant, open source, unlimited active users, customer data in your Postgres, drop-in customizable UI modules',
   openGraph: {
     title:
-      "Auth for B2B Apps | Multi-tenant, unlimited active users, open source",
+      'Auth for B2B Apps | Multi-tenant, unlimited active users, open source',
     description:
       "Nile Auth is a comprehensive B2B auth solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile's Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize our cloud version.",
-    url: "https://thenile.dev/auth",
-    images: "https://thenile.dev/opengraph/auth.jpg",
-    type: "website",
+    url: 'https://thenile.dev/auth',
+    images: 'https://thenile.dev/opengraph/auth.jpg',
+    type: 'website',
   },
   twitter: {
-    card: "summary_large_image",
+    card: 'summary_large_image',
     title:
-      "Auth for B2B Apps | Multi-tenant, unlimited active users, open source",
+      'Auth for B2B Apps | Multi-tenant, unlimited active users, open source',
     description:
       "Nile Auth is a comprehensive B2B auth solution explicitly designed for multi-tenant applications. Nile Auth is fully open source and built on top of Nile's Postgres. It allows you to store user and customer data in your Postgres database, giving you complete control over your information. You can choose to self-host Nile Auth or utilize our cloud version.",
-    images: "https://thenile.dev/opengraph/auth.jpg",
+    images: 'https://thenile.dev/opengraph/auth.jpg',
   },
 };

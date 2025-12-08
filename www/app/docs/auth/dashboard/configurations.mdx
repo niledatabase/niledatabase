@@ -1,0 +1,146 @@
+---
+title: 'Configurations'
+description: 'Configure Nile Auth settings in the Dashboard'
+---
+
+Nile Auth works out of the box with minimal configuration.
+In this guide, we'll walk you through the various configurations available and how to use them, both in [Nile Console](https://console.thenile.dev) and in your application.
+
+## Authentication Settings
+
+### Sign-in Methods
+
+Nile auth supports a variety of authentication methods. To manage them, navigate to the "Tenants and Users" page in the
+Dashboard and select the "Configure" tab.
+
+![Sign-in methods](/images/auth/auth_methods.png)
+
+### Email Configuration
+
+If you chose to use email as the authentication method, you'll likely want to set up email verification.
+To verify users' emails, you'll need a way to send them a verification email and customize
+your email templates. Nile provides full control over your email templates, allowing you to
+maintain consistent branding and messaging.
+
+You'll find both the SMTP settings and the email templates in the "Configure" tab, under "Email templates". As always in Nile, the templates, the variables and the SMTP settings are stored in _your_ database, in the `auth` schema.
+
+You can learn more about email verification in the [Email Verification](/auth/email/verification) guide.
+
+### SMTP Settings
+
+Nile Auth supports email providers like SendGrid, Mailgun, and others.
+You'll need to sign up for an account with one of these providers and then enter the SMTP URI, including credentials.
+
+In addition, you'll need to set the "Sender" email address to a valid email address in your domain.
+
+![SMTP settings](/images/auth/smtp_settings.png)
+
+As you can see, in addition to the "Sender" email address, you can provide other variables.
+These will be used in the email templates.
+
+You can learn more about SMTP settings in the [Custom SMTP](/auth/email/customsmtp) guide.
+
+### Email Templates
+
+Once you've set up the SMTP settings, you can customize the email templates.
+You'll find two templates in the "Email templates" section:
+
+- **Email invitation**: Sent when a user uses their email address to sign up (whether with magic link, through an invitation or with a password).
+- **Reset password**: Sent when a user requests a password reset.
+
+Click on the template you want to customize and you'll see the template editor. Email templates are just HTML, so you can customize them as you like.
+You'll find the template variables that are available on the left side of the template editor, for convenience.
+
+![Email template](/images/auth/email_template.png)
+
+You can learn more about email templates in the [Email Templates](/auth/email/templates) guide.
+
+## Social Providers
+
+You can configure social providers in the "Providers" tab.
+Simply click on the provider you want to configure and you'll see the provider configuration page.
+All providers use OAuth, so you'll need to provide the OAuth client ID and secret,
+which you will get from the provider when you configure it in their developer console.
+
+![Social providers](/images/auth/social_providers.png)
+
+You can see more details on how to configure and use each provider in the [Single Sign-On](/auth/singlesignon/google) section of the documentation.
+
+## Per-Tenant Configuration
+
+In addition to setting up authentication for your application as a whole,
+you can also configure authentication providers on a per-tenant basis.
+
+To do this, navigate to the "Tenants and Users" page in Nile console, select the tenant
+you want to configure and click on the "Configuration" tab.
+
+![Configure tenant authentication](/images/auth/configure_tenant_auth.png)
+
+## Application Configuration
+
+When you use Nile SDK with your application, you'll need to tell the application where to find the database and the auth service.
+
+### Environment Variables
+
+You'll find all the environment variables you need in the [Nile Console](https://console.thenile.dev) under the "Settings" tab.
+
+![Environment variables](/images/auth/generate-credentials.png)
+
+Make sure you generate credentials, and then copy the configuration to your `.env` file:
+
+```bash
+NILEDB_USER=niledb_user
+NILEDB_PASSWORD=niledb_password
+NILEDB_API_URL=https://us-west-2.api.thenile.dev/v2/databases/<database_id>
+NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/<database_name>
+```
+
+### Instantiate the SDK
+
+When using the SDK, you'll need to instantiate it:
+
+```typescript
+const _nile = await NileServer({});
+```
+
+Typically, you don't need to pass any configuration, since the SDK will automatically use the environment variables you set in the `.env` file.
+
+However, if you need to, you can pass a configuration object to the `NileServer` constructor. Here's the type definition for the configuration object and the matching environment variables. The debug flag is useful to enable debug logging while developing.
+
+```typescript
+export type ServerConfig = {
+  databaseId?: string; // process.env.NILEDB_ID
+  user?: string; // process.env.NILEDB_USER
+  password?: string; // process.env.NILEDB_PASSWORD
+  databaseName?: string; // process.env.NILEDB_NAME
+  tenantId?: string | null | undefined; // process.env.NILEDB_TENANT
+  userId?: string | null | undefined;
+  debug?: boolean;
+  configureUrl?: string; // process.env.NILEDB_CONFIGURE
+  secureCookies?: boolean; // process.env.NILEDB_SECURECOOKIES
+  db?: NilePoolConfig; // db.host process.env.NILEDB_HOST
+  api?: {
+    version?: number;
+    basePath?: string; // process.env.NILEDB_API
+    cookieKey?: string;
+    token?: string; // process.env.NILEDB_TOKEN
+  };
+  logger?: LoggerType;
+};
+```
+
+## Best Practices
+
+- Always configure SMTP settings with a production-grade email provider to ensure reliable delivery of verification and password reset emails
+- Enable only the authentication methods you plan to actively maintain and support.
+- Some authentication providers (Notably Google) require approval process, so it is recommended to start setting them up in advance.
+- Store environment variables securely and never commit them to version control.
+- For multi-tenant applications, review and test authentication settings for key tenants individually.
+- Customize email templates to match your brand and provide clear instructions to users.
+- Enable debug logging only in development environments - it is not recommended to use it in production for both performance and security reasons.
+
+## Related Topics
+
+- [Managing Users](/auth/dashboard/managing-users)
+- [Managing Tenants](/auth/dashboard/managing-tenants)
+- [Email Templates](/auth/email/templates)

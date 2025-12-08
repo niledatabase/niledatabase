@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { slugify } from "./addHeadingIds";
+import { useEffect, useState } from 'react';
+import { slugify } from './addHeadingIds';
 
 interface Heading {
   text: string;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function TableOfContents({ headings }: Props) {
-  const [activeId, setActiveId] = useState<string>("");
+  const [activeId, setActiveId] = useState<string>('');
 
   useEffect(() => {
     // Set up intersection observer for headings
@@ -25,7 +25,7 @@ export function TableOfContents({ headings }: Props) {
           }
         });
       },
-      { rootMargin: "0px 0px -80% 0px" }
+      { rootMargin: '0px 0px -80% 0px' },
     );
 
     headings.forEach((heading) => {
@@ -42,7 +42,7 @@ export function TableOfContents({ headings }: Props) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-6">
+      <div className="mb-6 flex items-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -53,7 +53,7 @@ export function TableOfContents({ headings }: Props) {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="w-5 h-5"
+          className="h-5 w-5"
         >
           <line x1="21" y1="10" x2="7" y2="10"></line>
           <line x1="21" y1="6" x2="3" y2="6"></line>
@@ -67,15 +67,11 @@ export function TableOfContents({ headings }: Props) {
           <a
             key={i}
             href={`#${slugify(heading.text)}`}
-            className={`
-              block text-[14px] transition-colors duration-200 break-words
-              ${
-                activeId === slugify(heading.text)
-                  ? "text-[#fdb768] font-medium"
-                  : "text-gray-400 opacity-50 hover:text-gray-200 hover:opacity-100"
-              }
-              ${heading.level === 3 ? "ml-4" : ""}
-            `}
+            className={`block break-words text-[14px] transition-colors duration-200 ${
+              activeId === slugify(heading.text)
+                ? 'font-medium text-[#fdb768]'
+                : 'text-gray-400 hover:text-gray-200 opacity-50 hover:opacity-100'
+            } ${heading.level === 3 ? 'ml-4' : ''} `}
           >
             {heading.text}
           </a>

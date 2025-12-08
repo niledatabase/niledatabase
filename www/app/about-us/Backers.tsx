@@ -1,87 +1,87 @@
-import Image from "next/image";
-import Heading from "../_components/common/Heading";
-import { sizes } from "../_components/common/sizes";
+import Image from 'next/image';
+import Heading from '../_components/common/Heading';
+import { sizes } from '../_components/common/sizes';
 
 const investors = [
   {
-    name: "SV Angel",
-    title: "Investment Fund",
-    imgSrc: "sv-angel.png",
+    name: 'SV Angel',
+    title: 'Investment Fund',
+    imgSrc: 'sv-angel.png',
   },
   {
-    name: "Elad Gil",
-    title: "Investor",
-    imgSrc: "elad-gil.png",
+    name: 'Elad Gil',
+    title: 'Investor',
+    imgSrc: 'elad-gil.png',
   },
   {
-    name: "Jay Kreps",
-    title: "CEO, Confluent",
-    imgSrc: "jay-kreps.png",
+    name: 'Jay Kreps',
+    title: 'CEO, Confluent',
+    imgSrc: 'jay-kreps.png',
   },
   {
-    name: "Dylan Field",
-    title: "Founder of Figma",
-    imgSrc: "dylan-field.png",
+    name: 'Dylan Field',
+    title: 'Founder of Figma',
+    imgSrc: 'dylan-field.png',
   },
   {
-    name: "Neha Narkhede",
-    title: "Co-founder, Confluent",
-    imgSrc: "neha-narkhede.png",
+    name: 'Neha Narkhede',
+    title: 'Co-founder, Confluent',
+    imgSrc: 'neha-narkhede.png',
   },
   {
-    name: "Akshay Kothari",
-    title: "COO Notion",
-    imgSrc: "akshay-kothari.png",
+    name: 'Akshay Kothari',
+    title: 'COO Notion',
+    imgSrc: 'akshay-kothari.png',
   },
   {
-    name: "Erica Ruliffson Schultz",
-    title: "President, Field Operations at Confluent",
-    imgSrc: "erica-ruliffson-schultz.png",
+    name: 'Erica Ruliffson Schultz',
+    title: 'President, Field Operations at Confluent',
+    imgSrc: 'erica-ruliffson-schultz.png',
   },
   {
-    name: "Ganesh Srinivasan",
-    title: "Ex CPO Confluent",
-    imgSrc: "ganesh-srinivasan.png",
+    name: 'Ganesh Srinivasan',
+    title: 'Ex CPO Confluent',
+    imgSrc: 'ganesh-srinivasan.png',
   },
   {
-    name: "Tim Howes",
-    title: "Ex Engineering Director, Facebook AI",
-    imgSrc: "tim-howes.png",
+    name: 'Tim Howes',
+    title: 'Ex Engineering Director, Facebook AI',
+    imgSrc: 'tim-howes.png',
   },
   {
-    name: "Chris Riccomini",
-    title: "Investor",
-    imgSrc: "chris-riccomini.png",
+    name: 'Chris Riccomini',
+    title: 'Investor',
+    imgSrc: 'chris-riccomini.png',
   },
   {
-    name: "Kishore Gopalakrishna",
-    title: "CEO, StarTree",
-    imgSrc: "kishore-gopalakrishna.png",
+    name: 'Kishore Gopalakrishna',
+    title: 'CEO, StarTree',
+    imgSrc: 'kishore-gopalakrishna.png',
   },
   {
-    name: "Chrix Finne",
-    title: "Investor",
-    imgSrc: "chrix-finne.png",
+    name: 'Chrix Finne',
+    title: 'Investor',
+    imgSrc: 'chrix-finne.png',
   },
   {
-    name: "Josh Wills",
-    title: "Investor",
-    imgSrc: "josh-wills.png",
+    name: 'Josh Wills',
+    title: 'Investor',
+    imgSrc: 'josh-wills.png',
   },
   {
-    name: "Srikrishnan Ganesan",
-    title: "CEO, Rocketlane",
-    imgSrc: "srikrishnan-ganesan.png",
+    name: 'Srikrishnan Ganesan',
+    title: 'CEO, Rocketlane',
+    imgSrc: 'srikrishnan-ganesan.png',
   },
   {
-    name: "Corey Quinn",
-    title: "Chief Cloud Economist, Duckbill group",
-    imgSrc: "corey-quinn.png",
+    name: 'Corey Quinn',
+    title: 'Chief Cloud Economist, Duckbill group',
+    imgSrc: 'corey-quinn.png',
   },
   {
-    name: "Ilan Rabinovitch",
-    title: "Ex SVP of product, Datadog",
-    imgSrc: "ilan-rabinovitch.png",
+    name: 'Ilan Rabinovitch',
+    title: 'Ex SVP of product, Datadog',
+    imgSrc: 'ilan-rabinovitch.png',
   },
 ];
 export default function Backers() {
@@ -89,7 +89,7 @@ export default function Backers() {
   const secondHalf = investors.slice(firstHalf.length, investors.length);
   return (
     <div className="container mx-auto">
-      <div className="flex flex-col gap-14 items-center">
+      <div className="flex flex-col items-center gap-14">
         <Heading text="Backed by amazing people" />
         <Image
           width={296}
@@ -97,16 +97,16 @@ export default function Backers() {
           src="benchmark.svg"
           alt="benchmark logo"
         />
-        <div className="overflow-y-scroll relative z-10 mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mx-auto">
+        <div className="relative z-10 mx-auto overflow-y-scroll">
+          <div className="mx-auto grid grid-cols-2 gap-4 lg:grid-cols-4">
             {firstHalf.map(({ name, title, imgSrc }) => {
               return (
                 <div
                   key={name}
-                  className="flex flex-row gap-2 mb-12 items-center justify-center"
+                  className="mb-12 flex flex-row items-center justify-center gap-2"
                 >
                   <Image
-                    className="rounded-full flex-shrink-0 w-[56px] h-[56px]"
+                    className="h-[56px] w-[56px] flex-shrink-0 rounded-full"
                     width={56}
                     height={56}
                     alt={name}
@@ -114,21 +114,21 @@ export default function Backers() {
                   />
                   <div className="flex flex-col">
                     <div>{name}</div>
-                    <div className="opacity-60 w-[160px]">{title}</div>
+                    <div className="w-[160px] opacity-60">{title}</div>
                   </div>
                 </div>
               );
             })}
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mx-auto">
+          <div className="mx-auto grid grid-cols-2 gap-4 lg:grid-cols-4">
             {secondHalf.map(({ name, title, imgSrc }) => {
               return (
                 <div
                   key={name}
-                  className="flex flex-row gap-2 mb-12 items-center justify-center"
+                  className="mb-12 flex flex-row items-center justify-center gap-2"
                 >
                   <Image
-                    className="rounded-full flex-shrink-0 w-[56px] h-[56px]"
+                    className="h-[56px] w-[56px] flex-shrink-0 rounded-full"
                     width={56}
                     height={56}
                     alt={name}
@@ -136,7 +136,7 @@ export default function Backers() {
                   />
                   <div className="flex flex-col">
                     <div>{name}</div>
-                    <div className="opacity-60 w-[160px]">{title}</div>
+                    <div className="w-[160px] opacity-60">{title}</div>
                   </div>
                 </div>
               );

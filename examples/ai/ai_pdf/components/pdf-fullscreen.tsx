@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
-import { Button } from "./ui/button";
-import { Expand, Loader2 } from "lucide-react";
-import SimpleBar from "simplebar-react";
-import { Document, Page } from "react-pdf";
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
+import { Button } from './ui/button';
+import { Expand, Loader2 } from 'lucide-react';
+import SimpleBar from 'simplebar-react';
+import { Document, Page } from 'react-pdf';
 
-import { useResizeDetector } from "react-resize-detector";
-import { toast } from "sonner";
+import { useResizeDetector } from 'react-resize-detector';
+import { toast } from 'sonner';
 
 interface PdfFullscreenProps {
   fileUrl: string;
@@ -32,8 +32,8 @@ const PdfFullscreen = ({ fileUrl }: PdfFullscreenProps) => {
           <Expand className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-7xl w-full">
-        <SimpleBar autoHide={false} className="max-h-[calc(100vh-10rem)] mt-6">
+      <DialogContent className="w-full max-w-7xl">
+        <SimpleBar autoHide={false} className="mt-6 max-h-[calc(100vh-10rem)]">
           <div ref={ref}>
             <Document
               loading={
@@ -42,7 +42,7 @@ const PdfFullscreen = ({ fileUrl }: PdfFullscreenProps) => {
                 </div>
               }
               onLoadError={() => {
-                toast.error("Error Loading Pdf");
+                toast.error('Error Loading Pdf');
               }}
               onLoadSuccess={({ numPages }) => setNumPages(numPages)}
               file={fileUrl}

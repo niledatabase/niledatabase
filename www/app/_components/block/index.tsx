@@ -1,6 +1,6 @@
-import Link from "next/link";
-import Image from "next/image";
-import arrow from "@/public/icons/arrow.svg";
+import Link from 'next/link';
+import Image from 'next/image';
+import arrow from '@/public/icons/arrow.svg';
 
 export function Block({
   title,
@@ -12,21 +12,21 @@ export function Block({
   href: string;
 }) {
   return (
-    <div className="p-6 flex flex-col max-w-[472px] flex-1 justify-between min-h-[216px] h-full">
+    <div className="flex h-full min-h-[216px] max-w-[472px] flex-1 flex-col justify-between p-6">
       <div className="flex flex-col gap-2">
-        <div className="text-black  text-[24px] leading-[24px] font-medium">
+        <div className="text-[24px] font-medium leading-[24px] text-black">
           {title}
         </div>
-        <div className="text-black text-[16px] leading-[20px] xl:text-[20px] xl:leading-[24px] lg:text-[18px] lg:leading-[18px] font-normal">
+        <div className="text-[16px] font-normal leading-[20px] text-black lg:text-[18px] lg:leading-[18px] xl:text-[20px] xl:leading-[24px]">
           {subTitle}
         </div>
       </div>
       <div>
         <Link
-          className="text-black text-[16px] leading-[24px] font-medium flex flex-row items-center gap-2"
+          className="flex flex-row items-center gap-2 text-[16px] font-medium leading-[24px] text-black"
           href={href}
         >
-          <div className="transition-colors border-b border-b-transparent hover:border-b-[#000] flex flex-row items-center gap-2">
+          <div className="flex flex-row items-center gap-2 border-b border-b-transparent transition-colors hover:border-b-[#000]">
             Learn more
             <Image
               src={arrow}

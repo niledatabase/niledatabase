@@ -1,0 +1,166 @@
+---
+title: 'Prefix'
+description: 'Prefix search functionality for PostgreSQL'
+---
+
+The `prefix` extension provides efficient prefix (starts-with) search functionality in PostgreSQL.
+While it's useful for implementing autocomplete features and prefix-based filtering, it's particularly
+important in telephony applications where call routing and costs depend on matching phone numbers
+to operator prefixes.
+Your Nile database arrives with the `prefix` extension already enabled.
+
+## Understanding Prefix Search
+
+A prefix search finds strings that begin with a specific pattern. In telephony applications,
+this is crucial for:
+
+- Matching phone numbers to carrier prefixes
+- Determining call routing paths
+- Calculating call costs based on destination
+- Identifying geographic regions from area codes
+
+For example:
+
+- "1212" is a prefix for all London phone numbers starting with "1212"
+- "+1" is a prefix for North American numbers
+- "91" is a prefix for calls to India
+
+## Quick Start
+
+Let's walk through some common prefix search operations using telephony examples.
+
+### Creating a Table for Phone Prefixes
+
+```sql
+-- Create a table for phone number prefixes
+CREATE TABLE phone_prefixes (
+    id INTEGER PRIMARY KEY,
+    prefix prefix_range,
+    carrier TEXT,
+    region TEXT,
+    rate_per_minute DECIMAL(10,4)
+);
+
+-- Create a prefix index on the prefix column
+CREATE INDEX idx_prefix ON phone_prefixes USING gist(prefix);
+```
+
+### Inserting Sample Data
+
+```sql
+-- Insert sample phone prefixes
+INSERT INTO phone_prefixes (id, prefix, carrier, region, rate_per_minute) VALUES
+    (1, '1212', 'UK Telecom', 'London', 0.02),
+    (2, '1', 'US Carrier', 'North America', 0.01),
+    (3, '91', 'India Tel', 'India', 0.05),
+    (4, '44', 'UK Mobile', 'United Kingdom', 0.03),
+    (5, '86', 'China Tel', 'China', 0.04),
+    (6, '972', 'Israel Tel', 'Israel', 0.06);
+```
+
+### Basic Phone Number Queries
+
+Find carrier and rate for a specific phone number:
+
+```sql
+-- Find the matching prefix for a phone number
+-- You should see that '1212' and 'UK Telecom' are returned
+SELECT prefix, carrier, rate_per_minute
+FROM phone_prefixes
+WHERE prefix @> '12125551234'
+ORDER BY length(prefix) DESC
+LIMIT 1;
+```
+
+### Call Cost Calculations
+
+```sql
+-- Create a table for call records
+CREATE TABLE call_records (
+    tenant_id uuid,
+    id INTEGER,
+    caller_number TEXT,
+    callee_number TEXT,
+    duration_minutes INTEGER,
+    timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, id)
+);
+
+-- Insert sample call records
+INSERT INTO call_records (tenant_id, id, caller_number, callee_number, duration_minutes) VALUES
+    ('123e4567-e89b-12d3-a456-426614174000', 1, '12125550123', '912234567890', 5),
+    ('123e4567-e89b-12d3-a456-426614174000', 2, '14155550123', '442087654321', 3),
+    ('123e4567-e89b-12d3-a456-426614174000', 3, '16175550123', '861234567890', 8);
+
+-- Example query to calculate call costs directly
+SELECT
+    cr.callee_number,
+    cr.duration_minutes,
+    (cr.duration_minutes * pp.rate_per_minute) as cost
+FROM call_records cr
+LEFT JOIN LATERAL (
+    SELECT rate_per_minute
+    FROM phone_prefixes
+    WHERE prefix @> cr.callee_number
+    ORDER BY length(prefix) DESC
+    LIMIT 1
+) pp ON true;
+```
+
+### Call Router Implementation
+
+```sql
+-- Create a table for routing rules
+CREATE TABLE routing_rules (
+    tenant_id uuid,
+    id INTEGER,
+    prefix prefix_range,
+    route_to TEXT,
+    priority INTEGER,
+    PRIMARY KEY (tenant_id, id)
+);
+
+-- Create prefix index
+CREATE INDEX idx_routing ON routing_rules USING gist(prefix);
+
+-- Insert sample routing rules
+INSERT INTO routing_rules (tenant_id, id, prefix, route_to, priority) VALUES
+    ('123e4567-e89b-12d3-a456-426614174000', 1, '1212', 'london-gateway-1', 100),
+    ('123e4567-e89b-12d3-a456-426614174000', 2, '1', 'us-gateway-main', 50),
+    ('123e4567-e89b-12d3-a456-426614174000', 3, '91', 'india-gateway-1', 75),
+    ('123e4567-e89b-12d3-a456-426614174000', 4, '44', 'uk-gateway-main', 80),
+    ('123e4567-e89b-12d3-a456-426614174000', 5, '86', 'china-gateway-1', 70);
+
+-- Find route for a number
+SELECT route_to
+FROM routing_rules
+WHERE prefix @> '12125551234'
+ORDER BY priority DESC, length(prefix) DESC
+LIMIT 1;
+```
+
+## Operators
+
+The `prefix` extension introduces operators on prefix ranges:
+
+- `@>`: Checks if the prefix range contains the given number or range
+- `<@`: Checks if the prefix range or numberis contained within another prefix range
+- `&&`: Checks for overlapping prefix ranges
+- `|`: Is union of two prefix ranges
+- `&`: Is intersection of two prefix ranges
+
+In addition, operators `<=`, `>=`, `<`, `>`, `=`, `<>` are supported for prefix ranges.
+
+## Common Use Cases
+
+- Telephone number routing
+- Call cost calculation
+- Carrier and geographic prefix matching
+- Product SKU searches (e.g., finding all products starting with 'ELEC-')
+- URL path routing and matching
+- File system path lookups
+
+## Additional Resources
+
+- [Prefix Extension Repository](https://github.com/dimitri/prefix)
+- [PostgreSQL Pattern Matching](https://www.postgresql.org/docs/current/functions-matching.html)

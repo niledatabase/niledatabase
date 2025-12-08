@@ -1,14 +1,14 @@
-import React from "react";
-import Image from "next/image";
-import arrow from "@/public/icons/arrow.svg";
-import Column from "./Column";
-import Link from "next/link";
+import React from 'react';
+import Image from 'next/image';
+import arrow from '@/public/icons/arrow.svg';
+import Column from './Column';
+import Link from 'next/link';
 export default function Scale() {
   return (
     <Column
-      tier={"Scale"}
+      tier={'Scale'}
       price={350}
-      tierSizzle={"For scale, more security and global presence"}
+      tierSizzle={'For scale, more security and global presence'}
       computeTop="500 million query tokens"
       computeSub="$0.04 per million additional tokens"
       storageTop="50 GB"
@@ -30,8 +30,8 @@ export default function Scale() {
           href="https://console.thenile.dev"
           className="flex w-full justify-center"
         >
-          <button className="bg-brightOrange lg:bg-transparent gradientBorderButton text-black lg:text-[#fff] rounded-md before:opacity-0 lg:before:opacity-100 lg:w-full flex flex-row px-20 lg:px-5 xl:px-11 justify-center">
-            <div className="px-5 py-2.5 rounded-md flex flex-row items-center justify-center">
+          <button className="gradientBorderButton flex flex-row justify-center rounded-md bg-brightOrange px-20 text-black before:opacity-0 lg:w-full lg:bg-transparent lg:px-5 lg:text-[#fff] lg:before:opacity-100 xl:px-11">
+            <div className="flex flex-row items-center justify-center rounded-md px-5 py-2.5">
               Start now
               <Image src={arrow} alt="arrow" className="invert lg:invert-0" />
             </div>

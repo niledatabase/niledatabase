@@ -1,0 +1,139 @@
+---
+title: 'Extensions'
+description: 'Extend the SDK to automatically set context in your application'
+---
+
+Extensions make it possible for `@niledatabase/server` package to integrate into developer applications easier.
+
+It allows developers to hook into the life cycle of the SDK, from REST calls to db queries and set the context according to whatever method is being used to store user session information beyond cookies.
+
+## Understanding context
+
+`@niledatabase/server` contains three basic items that are controlled via context:
+
+`headers`
+`tenantId`
+`userId`
+
+Each of these can be set and will cause the SDK to use them either as a REST call or in a database query.
+
+### Headers
+
+Headers contain the auth cookies used to allows users access to `nile-auth`.
+
+More often than not, a framework-specific extension will handle setting `headers` automatically when it comes to serving REST request to the client.
+
+```ts nextjs
+// because NextJS uses an import, we must set it outside of the request lifecycle to be used later
+export function nextJs = () => ({
+  id: 'next-js',
+  withContext:(ctx: CTX) => {
+    const { cookies, headers } = await import('next/headers');
+    const headersHelper = await headers();
+    const cooks = await cookies();
+    ctx.set({ headers: headersHelper });
+    // rest of context
+  },
+    // rest of extension
+})
+```
+
+```ts express
+// express is one long callback chain, so execute from within the instance context directly.
+export function express = (instance:  Server) => ({
+  id: 'express',
+  onHandleRequest: async (
+    params: [ExpressRequest, ExpressResponse, NextFunction]
+  ) => {
+    // ...
+    const proxyRequest = new Request(reqUrl, init);
+    const context = {
+      headers: new Headers(req.headers as HeadersInit),
+      tenantId: req.params?.tenantId || undefined,
+    };
+    const response = await instance.withContext(context, async (ctx) => {
+      return (await ctx.handlers[
+        method as 'GET' | 'POST' | 'PUT' | 'DELETE'
+      ](proxyRequest, { disableExtensions: ['express'] })) as Response;
+    });
+    // ...
+})
+```
+
+### tenantId and userId
+
+The tenantId and userId are used to further authorize users in the database. There are many ways that a tenantId can be stored, but the most common ways would be stored in the URL or in a cookie.
+
+Lets have a look at a cookie in express for illustrative purposes.
+
+```ts naive approach
+app.get(async (req) => {
+  const tenantId = getTenant(req.headers); // your logic
+  const ctx = await nile.withContext({ tenantId });
+
+  // Use the contextualized instance
+  const users = await ctx.users.list();
+});
+```
+
+Doing this manually on every route is repetitive and error-prone.
+
+Instead, you can use Express middleware to call withContext once per request. The SDK caches the last used context, so any subsequent SDK calls will automatically use it within the same request chain:
+
+```ts
+app.use((req, res, next) => {
+  const tenantId = getTenant(req.headers); // your logic
+  nile.withContext({ tenantId });
+  next();
+});
+
+app.get(async (req, res) => {
+  // Context is already set by the middleware
+  const users = await nile.users.list();
+  res.json(users);
+});
+```
+
+<Note>
+  This relies on synchronous execution within the same request lifecycle. If you
+  await or dispatch across async boundaries without using the SDK&apos;s
+  internal context propagation (like AsyncLocalStorage), the context may be
+  lost, which defaults to the last used.
+</Note>
+
+Depending on where you are in the lifecycle of your application, you will want to call different functions within your extension.
+
+## Extension methods
+
+### withContext
+
+Called when ever `withContext` is called, including internally by the SDK. Use this function set the `tenantId`, `userId` or `headers`
+
+### onRequest
+
+Called before the request is sent via `fetch` to `nile-auth`. the internal `Request` object and `ctx` methods are provided to the function.
+
+### onResponse
+
+Called immediately after the `fetch` completes. The raw `Response` object and `ctx` are provided to the function.
+
+### onHandleRequest
+
+Replaces the calls in the sdk that go to `nile-auth`. This function is provided the `params` from the calling framework. Useful for turning whatever framework's REST handlers into a standard `Request` object to be sent to `nile-auth` and then calling `nile-auth` directly from the extension.
+Must return `ExtensionState.onHandleRequest` from the function to stop the standard handlers from being called.
+
+### onConfigure
+
+Allows for runtime configuration changes by extensions.
+
+### withUserId
+
+Called with `withContext`, allows overriding of a user id within the context.
+
+### withTenantId
+
+Called with `withContext`, allows overriding of a tenant id within the context.
+
+### replace.handlers
+
+Allows a full replacement of handlers that do not match any expected signature from the SDK. This is specifically for server side frameworks like Nitro, which expect a specific signature from `defineEventHandler` that the sdk does not have, as the standard signature is `const { GET, POST, PUT, DELETE } = nile.handlers`

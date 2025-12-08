@@ -1,8 +1,8 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { MAX_FREE_TENANTS } from "@/constants/limits";
-import { useOrgs } from "@/hooks/use-orgs";
-import { FC } from "react";
+'use client';
+import { Button } from '@/components/ui/button';
+import { MAX_FREE_TENANTS } from '@/constants/limits';
+import { useOrgs } from '@/hooks/use-orgs';
+import { FC } from 'react';
 
 interface AddOrgButtonProps {
   count: number;
@@ -26,7 +26,7 @@ const AddOrgButton: FC<AddOrgButtonProps> = ({ count }) => {
         </>
       ) : (
         <>
-          {" "}
+          {' '}
           <Button onClick={orgs.onOpen} disabled>
             Create Workspace
           </Button>

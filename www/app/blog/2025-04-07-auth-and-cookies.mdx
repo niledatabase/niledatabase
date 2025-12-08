@@ -1,10 +1,10 @@
 export const metadata = {
-  title: "Secure Authentication with Cookies",
-  authors: ["gwenshap"],
-  image: "2025-04-07-auth-and-cookies/cover3.png",
+  title: 'Secure Authentication with Cookies',
+  authors: ['gwenshap'],
+  image: '2025-04-07-auth-and-cookies/cover3.png',
   sizzle:
-    "Cookies are at the core of web authentication. How to use them properly?",
-  tags: ["auth", "security", "privacy"],
+    'Cookies are at the core of web authentication. How to use them properly?',
+  tags: ['auth', 'security', 'privacy'],
 };
 
 HTTP Cookies are essential for web authentication. Using cookies wrong can make a webapp easy target for hackers. But using cookies right isn't trivial. You need to understand cookie attributes and the implications of setting them. Let's dive into cookies and how to use them properly.
@@ -45,10 +45,10 @@ Cookies have several security attributes that, when used correctly, create multi
 
 ```javascript
 // Example of setting a secure authentication cookie
-res.cookie("sessionId", "user123", {
+res.cookie('sessionId', 'user123', {
   httpOnly: true,
   secure: true,
-  sameSite: "strict",
+  sameSite: 'strict',
   maxAge: 3600000, // 1 hour
 });
 ```

@@ -3,19 +3,19 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from '@/components/ui/tooltip';
 
 interface HintProps {
   children: React.ReactNode;
   description: string;
-  side?: "left" | "right" | "top" | "bottom";
+  side?: 'left' | 'right' | 'top' | 'bottom';
   sideOffset?: number;
 }
 
 export const Hint = ({
   children,
   description,
-  side = "bottom",
+  side = 'bottom',
   sideOffset = 0,
 }: HintProps) => {
   return (
@@ -25,7 +25,7 @@ export const Hint = ({
         <TooltipContent
           sideOffset={sideOffset}
           side={side}
-          className="text-xs max-w-[220px] break-words"
+          className="max-w-[220px] break-words text-xs"
         >
           {description}
         </TooltipContent>

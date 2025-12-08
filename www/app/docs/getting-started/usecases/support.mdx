@@ -1,0 +1,229 @@
+---
+title: 'CustomerDesk AI - AI-Powered Efficiency for Your Supply Chain'
+sidebarTitle: 'CustomerDesk AI'
+---
+
+![supportsnapshot](/images/supportsnapshot.png)
+
+### 1. Multitenancy
+
+- **Data Isolation:** Each tenant's data is stored separately, ensuring that one organization's data is not accessible to another.
+- **Scalability:** The system can handle multiple tenants efficiently, scaling as the number of organizations increases.
+- **Security:** Enhanced security measures are in place to protect tenant data and ensure compliance with data protection regulations.
+
+### 2. User Roles
+
+- **Support Members:**
+  - **Reply to Support Tickets:** Support members can view and respond to support tickets raised by customers.
+  - **Summarize Tickets:** Using AI, support members can generate concise summaries of lengthy support tickets to quickly understand the issue.
+  - **AI-assisted Reply Drafting:** AI helps draft appropriate responses to customer queries, making the process more efficient.
+  - **Prioritization:** Support members can set priorities for tickets (e.g., high, medium, low) to manage workflow better.
+  - **Track Status:** The status of each ticket (open, in-progress, resolved, closed) can be tracked to monitor progress.
+  - **Create Knowledge Base Articles:** Support members can create articles to help customers self-service their issues.
+  - **AI-assisted Article Drafting:** AI aids in drafting articles, ensuring they are comprehensive and easy to understand.
+- **Customers:**
+  - **Create Support Tickets:** Customers can raise support tickets to get help with their issues.
+  - **Respond to Support Questions:** Customers can interact with support members by replying to their questions within the ticket.
+  - **Browse Knowledge Base Articles:** Customers have access to a knowledge base where they can find articles to solve common problems.
+  - **Ask Questions on Articles:** Customers can ask questions on knowledge base articles for further clarification.
+  - **Mark Ticket Status:** Customers can update the status of their tickets (e.g., resolved if the issue is fixed).
+
+### 3. Support Tickets
+
+- **Creation:** Customers can create support tickets through the customer portal.
+- **Updating:** Both support members and customers can update the tickets with new information.
+- **Tracking:** Every ticket is tracked from creation to resolution, including the history of all interactions.
+- **AI-assisted Reply Drafting and Summarization:** AI helps support members draft replies and summarize tickets to improve response times and clarity.
+- **Prioritization and Status Tracking:** Tickets can be prioritized, and their status can be tracked to ensure timely resolution.
+
+### 4. Knowledge Base
+
+- **Article Creation and Updating:** Support members can create and update knowledge base articles to provide self-help resources to customers.
+- **AI-assisted Drafting:** AI assists in drafting articles to ensure they are well-written and informative.
+- **Browsing and Interaction:** Customers can browse articles and ask questions on them, facilitating a better understanding of the solutions provided.
+
+### Postgres Schemas
+
+![supportschema](/images/supportschema.png)
+
+### 1. support_members
+
+Tracks support members who are part of the support team. The support member belongs to a specific tenant.
+
+```sql
+CREATE TABLE support_members (
+    tenant_id UUID,
+    member_id UUID,
+    role VARCHAR(50) NOT NULL,
+    PRIMARY KEY (tenant_id, member_id),
+    FOREIGN KEY (tenant_id, member_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+```
+
+### 2. customers
+
+Track a list of customers that a particular tenant is managing through support. This tracks all the details about the customer that a particular tenant is managing.
+
+```sql
+CREATE TABLE customers (
+    tenant_id UUID,
+    customer_id UUID DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    contact_email VARCHAR(100) NOT NULL,
+    contact_phone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, customer_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+```
+
+### 3. customer_employees
+
+Tracks customer employees who are part of the customer team. The customer employees are part of a particular customer. It tracks all the information about the employee.
+
+```sql
+CREATE TABLE customer_employees (
+    tenant_id UUID,
+    employee_id UUID,
+    customer_id UUID,
+    department VARCHAR(100),
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, customer_id) REFERENCES customers(tenant_id, customer_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+```
+
+### 4. support_tickets
+
+Tracks support tickets created by customers. The table tracks all the information about a particular ticket. To implement summarization and search on tickets, the embeddings are calculated on the descriptions of the ticket. In an actual application, you may want to chunk the description to create embeddings.
+
+```sql
+CREATE TABLE support_tickets (
+    tenant_id UUID,
+    ticket_id UUID DEFAULT gen_random_uuid(),
+    customer_id UUID,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    status VARCHAR(50) DEFAULT 'open',
+    priority VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, ticket_id),
+    FOREIGN KEY (tenant_id, customer_id) REFERENCES customers(tenant_id, customer_id)
+);
+```
+
+### 5. ticket_comments
+
+Tracks comments on support tickets. The table tracks all the comments made by both the support member and the customer employee. This is why user_id is used to reference the owner of the comment. The comments can also be auto filled by AI and to do this, we calculate the embeddings of all the past comments to feed into the AI model.
+
+```sql
+CREATE TABLE ticket_comments (
+    tenant_id UUID,
+    comment_id UUID DEFAULT gen_random_uuid(),
+    ticket_id UUID,
+    user_id UUID,
+    comment_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, comment_id),
+    FOREIGN KEY (tenant_id, ticket_id) REFERENCES support_tickets(tenant_id, ticket_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+```
+
+### 6. knowledge_base
+
+Tracks knowledge base articles created by the support team. This table is shared across customers within a tenant. These knowledge bases have embeddings calculated for each article. In a real world application, the knowledge based are chunked to create multiple embeddings per article.
+
+```sql
+CREATE TABLE knowledge_base (
+    article_id UUID DEFAULT gen_random_uuid(),
+    tenant_id UUID,
+    support_member_id UUID,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, article_id),
+    FOREIGN KEY (tenant_id, support_member_id) REFERENCES support_members(tenant_id, member_id)
+);
+```
+
+### Complete SQL Script
+
+```sql
+-- Create support_members table
+CREATE TABLE support_members (
+    tenant_id UUID,
+    member_id UUID,
+    role VARCHAR(50) NOT NULL,
+    PRIMARY KEY (tenant_id, member_id),
+    FOREIGN KEY (tenant_id, member_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+-- Create customers table
+CREATE TABLE customers (
+    tenant_id UUID,
+    customer_id UUID DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    contact_email VARCHAR(100) NOT NULL,
+    contact_phone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, customer_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Create customer_employees table
+CREATE TABLE customer_employees (
+    tenant_id UUID,
+    employee_id UUID,
+    customer_id UUID,
+    department VARCHAR(100),
+    PRIMARY KEY (tenant_id, employee_id),
+    FOREIGN KEY (tenant_id, customer_id) REFERENCES customers(tenant_id, customer_id),
+    FOREIGN KEY (tenant_id, employee_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create support_tickets table
+CREATE TABLE support_tickets (
+    tenant_id UUID,
+    ticket_id UUID DEFAULT gen_random_uuid(),
+    customer_id UUID,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    status VARCHAR(50) DEFAULT 'open',
+    priority VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, ticket_id),
+    FOREIGN KEY (tenant_id, customer_id) REFERENCES customers(tenant_id, customer_id)
+);
+
+-- Create ticket_comments table
+CREATE TABLE ticket_comments (
+    tenant_id UUID,
+    comment_id UUID DEFAULT gen_random_uuid(),
+    ticket_id UUID,
+    user_id UUID,
+    comment_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, comment_id),
+    FOREIGN KEY (tenant_id, ticket_id) REFERENCES support_tickets(tenant_id, ticket_id),
+    FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+);
+
+-- Create knowledge_base table
+CREATE TABLE knowledge_base (
+    article_id UUID DEFAULT gen_random_uuid(),
+    tenant_id UUID,
+    support_member_id UUID,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, article_id),
+    FOREIGN KEY (tenant_id, support_member_id) REFERENCES support_members(tenant_id, member_id)
+);
+```

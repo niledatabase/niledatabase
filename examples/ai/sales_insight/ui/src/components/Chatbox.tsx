@@ -1,18 +1,18 @@
-import React, { useState, useReducer } from "react";
-import { Box, Button, List, ListItem, Card, Autocomplete } from "@mui/joy";
-import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
+import React, { useState, useReducer } from 'react';
+import { Box, Button, List, ListItem, Card, Autocomplete } from '@mui/joy';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 const cannedQuestions = [
-  "What are the customer painpoints?",
-  "What are the next steps after the conversation?",
-  "What did we promise the customer?",
-  "Are they using a competitor product?",
+  'What are the customer painpoints?',
+  'What are the next steps after the conversation?',
+  'What did we promise the customer?',
+  'Are they using a competitor product?',
 ];
 
 export type MessageType = {
-  type: "question" | "answer";
+  type: 'question' | 'answer';
   text: string;
   count?: number;
 };
@@ -33,18 +33,18 @@ interface AppState {
 }
 
 function reducer(state: AppState, action: AppActions): AppState {
-  console.log("got text: " + action.text);
+  console.log('got text: ' + action.text);
   switch (action.type) {
-    case "addQuestion":
+    case 'addQuestion':
       return {
         ...state,
         messages: [
           ...state.messages,
-          { type: "question", text: action.text },
-          { type: "answer", text: "" },
+          { type: 'question', text: action.text },
+          { type: 'answer', text: '' },
         ],
       };
-    case "updateAnswer":
+    case 'updateAnswer':
       const conversationListCopy = [...state.messages];
       const lastIndex = conversationListCopy.length - 1;
       conversationListCopy[lastIndex] = {
@@ -62,27 +62,27 @@ function reducer(state: AppState, action: AppActions): AppState {
 
 // TODO: Add the transcript name, so we'll only chat with one transcript
 const Chatbox: React.FC<ChatboxProps> = ({ tenantId, selectedTranscript }) => {
-  const [userInput, setUserInput] = useState("");
-  const [selectedInput, setSelectedInput] = useState("");
+  const [userInput, setUserInput] = useState('');
+  const [selectedInput, setSelectedInput] = useState('');
   const [state, dispatch] = useReducer(reducer, { messages: [] });
 
   const headers: HeadersInit = new Headers();
-  headers.set("X-Tenant-Id", tenantId);
-  headers.set("Content-Type", "application/json");
+  headers.set('X-Tenant-Id', tenantId);
+  headers.set('Content-Type', 'application/json');
 
   const handleSend = async () => {
     console.log(
-      "Got user input:" + userInput + " selected input:" + selectedInput
+      'Got user input:' + userInput + ' selected input:' + selectedInput,
     );
     const input = selectedInput || userInput;
-    console.log("Sending question:", input);
+    console.log('Sending question:', input);
     if (input.trim()) {
-      dispatch({ type: "addQuestion", text: input });
-      setUserInput("");
-      setSelectedInput("");
+      dispatch({ type: 'addQuestion', text: input });
+      setUserInput('');
+      setSelectedInput('');
 
       const resp = await fetch(`/api/chat`, {
-        method: "POST",
+        method: 'POST',
         headers: headers,
         body: JSON.stringify({
           conversation_id: selectedTranscript[0],
@@ -101,11 +101,11 @@ const Chatbox: React.FC<ChatboxProps> = ({ tenantId, selectedTranscript }) => {
           done = doneReading;
           const chunkValue = decoder.decode(value);
           if (chunkValue) {
-            dispatch({ type: "updateAnswer", text: chunkValue });
+            dispatch({ type: 'updateAnswer', text: chunkValue });
           }
         }
       } else {
-        console.log("No response body");
+        console.log('No response body');
       } // end handling of response
     } // end hanling of input
   }; // end handleSend method
@@ -115,9 +115,9 @@ const Chatbox: React.FC<ChatboxProps> = ({ tenantId, selectedTranscript }) => {
       <Card
         sx={{
           padding: 2,
-          minHeight: "60vh",
-          maxHeight: "60vh",
-          overflow: "auto",
+          minHeight: '60vh',
+          maxHeight: '60vh',
+          overflow: 'auto',
         }}
       >
         {/* <Typography level="h4" component="h1" mb={2}>
@@ -128,22 +128,22 @@ const Chatbox: React.FC<ChatboxProps> = ({ tenantId, selectedTranscript }) => {
             <ListItem
               key={index}
               sx={{
-                display: "flex",
+                display: 'flex',
                 justifyContent:
-                  msg.type === "question" ? "flex-end" : "flex-start",
+                  msg.type === 'question' ? 'flex-end' : 'flex-start',
               }}
             >
               <Box
                 sx={{
-                  maxWidth: "75%",
+                  maxWidth: '75%',
                   pt: 1,
                   pb: 1,
                   pl: 2,
                   pr: 2,
                   borderRadius: 20,
                   backgroundColor:
-                    msg.type === "question" ? "primary.500" : "neutral.200",
-                  color: msg.type === "question" ? "white" : "black",
+                    msg.type === 'question' ? 'primary.500' : 'neutral.200',
+                  color: msg.type === 'question' ? 'white' : 'black',
                 }}
               >
                 <Markdown
@@ -152,7 +152,7 @@ const Chatbox: React.FC<ChatboxProps> = ({ tenantId, selectedTranscript }) => {
                   components={{
                     ol(props) {
                       const { node, ...rest } = props;
-                      return <ol style={{ paddingLeft: "1rem" }} {...rest} />;
+                      return <ol style={{ paddingLeft: '1rem' }} {...rest} />;
                     },
                   }}
                 >
@@ -163,19 +163,19 @@ const Chatbox: React.FC<ChatboxProps> = ({ tenantId, selectedTranscript }) => {
           ))}
         </List>
       </Card>
-      <Box sx={{ display: "flex", mt: 2, alignItems: "flex-end" }}>
+      <Box sx={{ display: 'flex', mt: 2, alignItems: 'flex-end' }}>
         <Autocomplete
           freeSolo
           options={cannedQuestions}
           value={selectedInput}
           onChange={(_, newValue) => {
-            setSelectedInput(newValue || "");
+            setSelectedInput(newValue || '');
           }}
           onInputChange={(_, newInputValue) => {
             setUserInput(newInputValue);
           }}
           placeholder="Type your question or select one..."
-          sx={{ mr: 1, width: "100%" }}
+          sx={{ mr: 1, width: '100%' }}
         />
         <Button onClick={handleSend} variant="solid">
           Send

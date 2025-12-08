@@ -1,0 +1,91 @@
+---
+title: 'H3_postgis'
+description: 'PostgreSQL extends H3 functionality with PostGIS integration.'
+---
+
+Your Nile database arrives with `h3_postgis` extension and its dependencies `h3` and `postgis` already installed and enabled.
+
+## H3_postgis Functions and Usage
+
+The `h3_postgis` extension provides several functions that enable interoperability between H3 and PostGIS.
+
+### Converting a Geometry to an H3 Index
+
+To convert a **PostGIS geometry** (Point) into an H3 index at a given resolution:
+
+```sql
+SELECT h3_lat_lng_to_cell(ST_SetSRID(ST_MakePoint(-122.4194, 37.7749), 4326), 9);
+```
+
+### Converting an H3 Index to a Geometry
+
+To convert an H3 index into a **PostGIS polygon geometry**:
+
+```sql
+SELECT h3_cell_to_geometry('8928308280fffff');
+```
+
+### Finding Neighboring H3 Cells as Geometries
+
+To get the neighboring H3 cells as **PostGIS geometries**:
+
+```sql
+SELECT h3_cell_to_geometry(neighbor)
+FROM h3_grid_disk('8928308280fffff', 1) AS neighbor;
+```
+
+### Checking if a Point is Within an H3 Cell
+
+To check if a given point lies within an H3 indexed cell:
+
+```sql
+SELECT ST_Contains(h3_cell_to_geometry('8928308280fffff'),
+                   ST_SetSRID(ST_MakePoint(-122.4194, 37.7749), 4326));
+```
+
+## Example: Storing H3 Indices and Geometries in a Table
+
+A common use case is storing H3 indices alongside geospatial data:
+
+```sql
+CREATE TABLE locations (
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    geom GEOMETRY(Point, 4326),
+    h3_index H3INDEX
+);
+
+INSERT INTO locations (name, geom, h3_index)
+VALUES ('San Francisco', ST_SetSRID(ST_MakePoint(-122.4194, 37.7749), 4326),
+        h3_lat_lng_to_cell(ST_SetSRID(ST_MakePoint(-122.4194, 37.7749), 4326), 9));
+```
+
+## Querying Locations by Proximity
+
+To find all locations within a given H3 ring distance:
+
+```sql
+SELECT DISTINCT l.name
+FROM locations l
+CROSS JOIN LATERAL (
+    SELECT h3_grid_disk(h3_lat_lng_to_cell(l.geom, 9), 1) AS nearby_cell
+) disk
+WHERE l.h3_index = disk.nearby_cell;
+```
+
+## Use Cases
+
+- **Efficient geospatial indexing** using hexagonal grids.
+- **Spatial analysis** integrating H3 with PostGIS functions.
+- **Fast proximity searches** based on geospatial cells rather than bounding boxes.
+
+## Limitations
+
+- H3 cells approximate real-world geography and do not align with political or administrative boundaries.
+- Higher-resolution H3 cells increase data granularity but also computational costs.
+
+## Conclusion
+
+The `h3_postgis` extension in PostgreSQL enables seamless integration between **H3 spatial indexing** and **PostGIS geometry operations**, making it an excellent choice for advanced geospatial analysis and location-based applications.
+
+For more details, refer to the [`h3-pg` GitHub repository](https://github.com/bytesandbrains/h3-pg).

@@ -1,22 +1,22 @@
-"use client";
-import Image from "next/image";
-import algoliasearch from "algoliasearch/lite";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+'use client';
+import Image from 'next/image';
+import algoliasearch from 'algoliasearch/lite';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   InstantSearch,
   useHits,
   useRefinementList,
   useSearchBox,
-} from "react-instantsearch";
-import Link from "next/link";
-import { Authors } from "../Authors";
-import { Metadata } from "../Metadata";
-import Coffee from "@/public/blog/coffee.webp";
-import SearchIcon from "@/public/icons/search.svg";
+} from 'react-instantsearch';
+import Link from 'next/link';
+import { Authors } from '../Authors';
+import { Metadata } from '../Metadata';
+import Coffee from '@/public/blog/coffee.webp';
+import SearchIcon from '@/public/icons/search.svg';
 
 const searchClient = algoliasearch(
   String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
-  String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY)
+  String(process.env.NEXT_PUBLIC_ALGOLIA_API_KEY),
 );
 
 function RefinementItem({
@@ -26,17 +26,17 @@ function RefinementItem({
   item: any;
   refine: (value: string) => void;
 }) {
-  const [selected, setSelected] = useState<"selected" | "normal">("normal");
+  const [selected, setSelected] = useState<'selected' | 'normal'>('normal');
 
   const borderColors = {
-    selected: "border-lightGray",
-    normal: "border-gray text-transparent",
+    selected: 'border-lightGray',
+    normal: 'border-gray text-transparent',
   };
   const onClick = useCallback(() => {
-    if (selected !== "selected") {
-      setSelected("selected");
+    if (selected !== 'selected') {
+      setSelected('selected');
     } else {
-      setSelected("normal");
+      setSelected('normal');
     }
     refine(item.value);
   }, [selected]);
@@ -44,7 +44,7 @@ function RefinementItem({
   return (
     <button
       onClick={onClick}
-      className={`border ${borderColors[selected]} hover:border-lightGray rounded-xl px-4 py-3 text-[16px] leading-[20px] bg-gradient-white bg-clip-text whitespace-nowrap`}
+      className={`border ${borderColors[selected]} whitespace-nowrap rounded-xl bg-gradient-white bg-clip-text px-4 py-3 text-[16px] leading-[20px] hover:border-lightGray`}
     >
       {item.label}
     </button>
@@ -52,19 +52,19 @@ function RefinementItem({
 }
 
 function RefinementList() {
-  const { items, refine } = useRefinementList({ attribute: "tags" });
+  const { items, refine } = useRefinementList({ attribute: 'tags' });
   const sortedItems = useMemo(
-    () => items.sort((a, b) => a.value.localeCompare(b.value, "en")),
-    [items]
+    () => items.sort((a, b) => a.value.localeCompare(b.value, 'en')),
+    [items],
   );
   useEffect(() => {
-    if (items.length && typeof document !== "undefined") {
-      const serverSide = document.querySelector(".server-side-refinements");
-      serverSide?.setAttribute("style", "display:none");
+    if (items.length && typeof document !== 'undefined') {
+      const serverSide = document.querySelector('.server-side-refinements');
+      serverSide?.setAttribute('style', 'display:none');
     }
   }, [items.length]);
   return (
-    <div className="flex flex-row items-center gap-6 overflow-y-scroll lg:max-w-[1000px] w-screen min-h-[42px]">
+    <div className="flex min-h-[42px] w-screen flex-row items-center gap-6 overflow-y-scroll lg:max-w-[1000px]">
       {sortedItems.map((item) => (
         <RefinementItem key={item.label} item={item} refine={refine} />
       ))}
@@ -73,15 +73,15 @@ function RefinementList() {
 }
 
 function Hit({ hit }: any) {
-  console.log(hit.objectID, "what is this?");
+  console.log(hit.objectID, 'what is this?');
   const [, publishDate] = /.+(\d{4}-\d{2}-\d{2}).+/.exec(hit.objectID) ?? [];
-  const cleaned = hit.objectID.replace(/\d{4}-\d{2}-\d{2}-/, "");
-  const slug = cleaned.replace(".mdx", "");
+  const cleaned = hit.objectID.replace(/\d{4}-\d{2}-\d{2}-/, '');
+  const slug = cleaned.replace('.mdx', '');
   return (
     <div className="w-full md:w-1/2 lg:w-1/3">
       <div className="p-4">
         <Link href={`/blog/${slug}`}>
-          <div className="bg-[#2D2D2D] rounded-xl overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex aspect-video w-full">
+          <div className="mb-4 flex aspect-video w-full flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#2D2D2D]">
             {hit?.image ? (
               <Image
                 className="aspect-video w-full"
@@ -123,8 +123,8 @@ function SearchBox() {
   }, [inputValue]);
 
   return (
-    <div className="flex flex-row gap-2 flex-1 w-full -mt-16 relative z-10 lg:px-8 md:px-24 px-6">
-      <div className="flex items-center gap-2 w-full px-4 py-3">
+    <div className="relative z-10 -mt-16 flex w-full flex-1 flex-row gap-2 px-6 md:px-24 lg:px-8">
+      <div className="flex w-full items-center gap-2 px-4 py-3">
         <Image
           alt="looking glass"
           src={SearchIcon}
@@ -134,7 +134,7 @@ function SearchBox() {
           data-image-zoom-disabled
         />
         <input
-          className="bg-transparent text-lg border-none w-full leading-10 focus:outline-none placeholder:opacity-40"
+          className="w-full border-none bg-transparent text-lg leading-10 placeholder:opacity-40 focus:outline-none"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -157,12 +157,12 @@ function Hits() {
   const { query } = useSearchBox();
 
   useEffect(() => {
-    if (typeof document !== "undefined") {
-      const serverSide = document.querySelector(".server-side-hits");
+    if (typeof document !== 'undefined') {
+      const serverSide = document.querySelector('.server-side-hits');
       if (query) {
-        serverSide?.setAttribute("style", "display:none");
+        serverSide?.setAttribute('style', 'display:none');
       } else {
-        serverSide?.setAttribute("style", "display:flex");
+        serverSide?.setAttribute('style', 'display:flex');
       }
     }
   }, [query]);
@@ -189,7 +189,7 @@ export default function Search() {
   }
 
   return (
-    <div className="templateSearch flex flex-col gap-[24px] w-full">
+    <div className="templateSearch flex w-full flex-col gap-[24px]">
       <InstantSearch searchClient={searchClient} indexName="blog">
         <SearchBox />
         <Hits />

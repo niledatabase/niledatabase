@@ -1,12 +1,12 @@
-"use client";
-import { useEffect, useRef, useState } from "react";
+'use client';
+import { useEffect, useRef, useState } from 'react';
 
 export default function TextTyper({ words }: { words: string[] }) {
   const typingSpeed = 100;
   const pauseDuration = 1000;
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeWord, setActiveWord] = useState(words[activeIndex]);
-  const [displayedText, setDisplayedText] = useState("");
+  const [displayedText, setDisplayedText] = useState('');
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   let timer = useRef<NodeJS.Timeout>(undefined);
@@ -44,7 +44,7 @@ export default function TextTyper({ words }: { words: string[] }) {
       timer.current = setTimeout(() => {
         const nextIndex = charIndex - 1;
         if (charIndex <= 0) {
-          setDisplayedText("");
+          setDisplayedText('');
           nextWordTimer.current = setTimeout(() => {
             setIsDeleting(false);
             setActiveIndex((index) => {

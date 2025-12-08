@@ -1,0 +1,122 @@
+---
+title: 'Remix'
+description: 'Integrate Nile Auth with Remix applications'
+icon: 'route'
+---
+
+import DbCreds from '/snippets/dbcreds.mdx';
+
+This guide explains how to integrate **Nile Database** with **Remix** and set up routes for handling various HTTP requests (`GET`, `POST`, `PUT`, `DELETE`). Additionally, you'll see how to include **client-side components** for user authentication and interaction using **Nile's React SDK**.
+
+<Note>
+  This guide assumes you are running an application similar to `npx
+  create-react-router@latest --template
+  remix-run/react-router-templates/node-postgres`, and have already updated your
+  `.env` file from [the installation](../getting-started/installation.mdx)
+</Note>
+
+---
+
+<Steps>
+<Step title="Update .env">
+    Update your .env file with `DATABASE_URL` so drizzle works.
+    ```bash .env
+    DATABASE_URL=postgres://niledb_user:niledb_password0@us-west-2.db.thenile.dev:5432/<database_name>
+    ```
+</Step>
+
+<Step title="Update to node-pg">
+
+Update `/server/app.ts`
+
+```ts server/app.ts
+import postgres from 'pg';
+```
+
+Along with that change, sync up `database/context.ts` to be sure its using the same types, changing from `PostgresJsDatabase`, to `NodePgDatabase`. In addition, there are may be some compatibility changes that need handled if you are updating an existing project [based on our compatibility](../../postgres/postgres-compatibility)
+
+```ts
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+
+export const DatabaseContext = new AsyncLocalStorage<
+  NodePgDatabase<typeof schema>
+>();
+```
+
+</Step>
+
+<Step title="Add Nile to the server">
+Now we need to add the nile instance and route handlers to allow our server to respond to authentication, user, and tenant requests.
+
+```ts app/routes/api.$.ts
+import type { LoaderFunctionArgs, ActionFunctionArgs } from '@remix-run/node';
+import { nile } from '~/nile'; // the nile instance
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const method = request.method.toUpperCase();
+  return nile.handlers[method](request);
+};
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const method = request.method.toUpperCase();
+  return nile.handlers[method](request);
+};
+```
+
+Then update your route config to allow the handlers to work
+
+```ts app/routes.ts
+import { type RouteConfig, index, route } from '@react-router/dev/routes';
+
+export default [
+  index('routes/home.tsx'),
+  route('api/*', 'app/routes/api.$.ts'),
+] satisfies RouteConfig;
+```
+
+</Step>
+
+</Steps>
+
+## Creating a loader
+
+In some cases, you may want to create specific action and loader around the API, to do that, use the server side functions in the sdk in your loader. This code loads and updates a user&apos;s profile.
+
+```tsx
+
+import type { Route } from "./+types/profile";
+import { nile } from "~/nile";
+
+export const loader: LoaderFunction = async ({ request }) => {
+  try {
+    const _nile = nile.withContext({ headers: request.headers });// be sure the context is correct from the request
+    const user = await _nile.users.getSelf();
+    if (user) {
+      // If the user is authenticated, we can return their info or pass it to the UI
+      return json({ user });
+    } else {
+      // If the user is not authenticated, redirect to the index page
+      return redirect("/");
+    }
+  } catch (error) {
+    return json({ message: error.message }, { status: 500 });
+  }
+};
+
+export default function Profile({ loaderData }: : Route.ComponentProps) {
+  const { user, message } = loaderData;
+   return (
+      <div className="container mx-auto flex flex-col items-center pt-20 gap-20 relative">
+        <div>{message ? <>{message}</> : null}</div>
+        <SignOutButton callbackUrl="/" className="absolute right-0 top-20" />
+        <UserInfo user={user} className="w-[400px]" />
+      </div>
+   );
+}
+
+```
+
+## Related Topics
+
+- [React Integration](/auth/frameworks/react)
+- [Components](/auth/components/signin)

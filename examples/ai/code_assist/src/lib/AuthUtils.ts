@@ -1,4 +1,4 @@
-import { JwtPayload } from "jwt-decode";
+import { JwtPayload } from 'jwt-decode';
 
 export default interface AuthCookieData {
   accessToken: string | undefined;
@@ -27,22 +27,22 @@ export interface CookieOptions {
 export function cookieOptions(maxAge: number): CookieOptions {
   return {
     httpOnly: false,
-    secure: process.env.NODE_ENV !== "development", // Use HTTPS in production
+    secure: process.env.NODE_ENV !== 'development', // Use HTTPS in production
     maxAge: maxAge,
-    path: "/",
+    path: '/',
   };
 }
 
 export function toCookieData(
   formData: FormData,
-  decodedJWT: NileJWTPayload
+  decodedJWT: NileJWTPayload,
 ): AuthCookieData {
   return {
-    accessToken: String(formData.get("access_token")),
-    state: String(formData.get("state")),
-    event: String(formData.get("event")),
-    error: String(formData.get("error")),
-    tenantId: String(formData.get("tenantId")),
+    accessToken: String(formData.get('access_token')),
+    state: String(formData.get('state')),
+    event: String(formData.get('event')),
+    error: String(formData.get('error')),
+    tenantId: String(formData.get('tenantId')),
     tokenData: decodedJWT,
   };
 }

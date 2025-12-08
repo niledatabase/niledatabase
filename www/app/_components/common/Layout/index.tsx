@@ -3,21 +3,21 @@ type LayoutProps = {
   className?: string;
 };
 
-export function Col({ children, className = "" }: LayoutProps) {
+export function Col({ children, className = '' }: LayoutProps) {
   return (
     <div
-      className={`flex flex-col flex-1 gap-2 not-prose justify-between w-full ${className}`}
+      className={`not-prose flex w-full flex-1 flex-col justify-between gap-2 ${className}`}
     >
       {children}
     </div>
   );
 }
 
-export function Row({ children, className = "" }: LayoutProps) {
+export function Row({ children, className = '' }: LayoutProps) {
   return (
     <div className="mb-2 flex w-full">
       <div
-        className={`flex flex-col md:flex-row flex-1 gap-4 not-prose justify-between w-full ${className}`}
+        className={`not-prose flex w-full flex-1 flex-col justify-between gap-4 md:flex-row ${className}`}
       >
         {children}
       </div>

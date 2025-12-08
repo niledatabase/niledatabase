@@ -1,0 +1,115 @@
+---
+title: "Integration testing with Nile's Postgres platform using Docker"
+sidebarTitle: 'Testing'
+icon: 'vials'
+---
+
+Nile provides a cloud offering to help build multi-tenant apps. However, it is a lot easier to build and iterate
+locally before using the cloud solution. Nile Docker provides all the tools required to build and test locally before
+moving to the cloud solution.
+
+The image is running all the extensions and components that Nile uses as part of our cloud offering except our global
+control plane used to manage our customers and billing.
+
+The Docker image includes:
+
+- 3 Postgres instances, to emulate a distributed production-like setup
+- Each Postgres instance has all the Nile extensions installed
+- All functionalities documented in our docs work with the image
+- At this point, the UI console is not included in the image
+
+[Join our discord](https://discord.com/invite/8UuBB84tTy) to give feedback or ask questions about running and testing with Nile's Docker image.
+
+## Using Nile's docker container with TestContainers
+
+A common way to automate integration tests is using [TestContainers](https://testcontainers.org/).
+
+### Node.js
+
+The following example shows how to use Nile's docker container with Node.js and
+the [TestContainers](https://testcontainers.org/) library. It exposes a Postgres port and uses
+`waitForLog` strategy to wait until the container is ready. Then it connects to the database and runs a simple query.
+
+Make sure you install `testcontainers` and `pg` npm packages:
+
+```bash
+npm install testcontainers pg
+```
+
+and then you can run the following snippet:
+
+```typescript
+import { GenericContainer, Wait } from 'testcontainers';
+import pg from 'pg';
+
+const image = 'ghcr.io/niledatabase/testingcontainer:latest';
+const container = await new GenericContainer(image)
+  .withExposedPorts(5432)
+  .withWaitStrategy(
+    Wait.forLogMessage('Database has been created and is ready'),
+  )
+  .start();
+
+const client = new pg.Client({
+  host: container.getHost(),
+  port: container.getMappedPort(5432),
+  user: '00000000-0000-0000-0000-000000000000',
+  password: 'password',
+  database: 'test',
+});
+await client.connect();
+const res = await client.query('SELECT version()');
+console.log(res.rows[0]);
+await client.end();
+```
+
+Troubleshooting tip:
+
+✏️ Note that the container uses ephemeral storage, so all the data will be lost when the container is stopped.
+This is intentional, as it simplifies the setup (and more importantly - the cleanup), while still allowing you to experiment and test your application.
+
+- You can get the containter logs while tests are running by running `export DEBUG=testcontainers*` before running the tests.
+
+### Python
+
+Make sure you install `testcontainers` and `psycopg2` python packages:
+
+```bash
+pip install testcontainers psycopg2-binary
+```
+
+and then you can run the following snippet:
+
+```python
+from testcontainers.postgres import PostgresContainer
+from testcontainers.core.waiting_utils import wait_for_logs
+import psycopg
+
+with PostgresContainer(
+    image="ghcr.io/niledatabase/testingcontainer:latest",
+    port=5432,
+    username="00000000-0000-0000-0000-000000000000",
+    password="password",
+    dbname="test",
+    driver="psycopg"
+) as postgres:
+    delay = wait_for_logs(postgres, "Database has been created and is ready")
+    connection_url = f'postgresql://00000000-0000-0000-0000-000000000000:password@localhost:{postgres.get_exposed_port(5432)}/test'
+    client = psycopg.connect(connection_url)
+    with client.cursor() as cursor:
+        cursor.execute("SELECT version()")
+        print(cursor.fetchone())
+```
+
+Troubleshooting tip:
+
+✏️ Note that the container uses ephemeral storage, so all the data will be lost when the container is stopped.
+This is intentional, as it simplifies the setup (and more importantly - the cleanup), while still allowing you to experiment and test your application.
+
+- On MacOS, you may need to explicitly set the `DOCKER_HOST` environment variable:
+
+```bash
+export DOCKER_HOST=unix:///Users/<your username>/.docker/run/docker.sock
+```
+
+Happy testing!

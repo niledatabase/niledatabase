@@ -1,10 +1,10 @@
 export const metadata = {
-  title: "Tenant Virtualization in Postgres with 5 lines of code",
-  authors: ["gwenshap", "joseph"],
-  image: "lines_of_code.webp",
+  title: 'Tenant Virtualization in Postgres with 5 lines of code',
+  authors: ['gwenshap', 'joseph'],
+  image: 'lines_of_code.webp',
   sizzle:
     "Nile's serverless Postgres promises easy tenant isolation with a single database experience, requiring minimal code. Doubtful? A quick code walkthrough will prove it.",
-  tags: ["database", "serverless", "postgres", "saas", "multitenant", "nextjs"],
+  tags: ['database', 'serverless', 'postgres', 'saas', 'multitenant', 'nextjs'],
 };
 
 [We make big claims about Nile's serverless Postgres](https://www.thenile.dev/blog/app/blog/introducing-nile).
@@ -28,9 +28,9 @@ Here is a key snippet from our NextJS template, which use Nile's SDK to connect 
 These four lines handle connection pooling, data isolation, routing, authentication and enforcing access rules without RLS.
 
 ```tsx
-const tenantNile = configureNile(cookies().get("authData"), params.tenantid);
-console.log("showing todos for tenant " + tenantNile.tenantId);
-const todos = await tenantNile.db("todos").select("*").orderBy("title");
+const tenantNile = configureNile(cookies().get('authData'), params.tenantid);
+console.log('showing todos for tenant ' + tenantNile.tenantId);
+const todos = await tenantNile.db('todos').select('*').orderBy('title');
 const resp = await tenantNile.api.tenants.getTenant();
 const tenant = await resp.json();
 ```
@@ -54,7 +54,7 @@ to worry about:
 **Where clauses every...where**. Looking back at the query that gets a list of todos,
 
 ```jsx
-await tenantNile.db("todos").select("*").orderBy("title");
+await tenantNile.db('todos').select('*').orderBy('title');
 ```
 
 Notice it does not have a “where” clause. If you are rolling your own solution for a tenant aware database,
@@ -145,7 +145,7 @@ Then, for getting a connection to the specific tenant DB, we call `nile.getInsta
 ```tsx
 export function configureNile(
   rawAuthCookie: any,
-  tenantId: string | null | undefined
+  tenantId: string | null | undefined,
 ) {
   const authData = JSON.parse(rawAuthCookie.value) as AuthCookieData;
   return nile.getInstance({

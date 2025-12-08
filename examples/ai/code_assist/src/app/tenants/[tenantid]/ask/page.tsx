@@ -1,8 +1,8 @@
-import { nile } from "@/app/api/[...nile]/nile";
-import AskIndex from "./AskIndex";
+import { nile } from '@/app/api/[...nile]/nile';
+import AskIndex from './AskIndex';
 
 async function loadProjects(
-  tenantId: string
+  tenantId: string,
 ): Promise<{ id: string; name: string; tenant_name: string }[]> {
   nile.tenantId = tenantId;
   const result = await nile.db
@@ -15,13 +15,13 @@ async function loadProjects(
 async function fileContent(
   tenantId: string,
   projectId: string,
-  fileName: string
+  fileName: string,
 ): Promise<string> {
   nile.tenantId = tenantId;
   const project_id = projectId;
   const result = await nile.db.query(
-    "SELECT contents FROM file_content WHERE project_id=$1 and file_name like $2",
-    [project_id, "%" + fileName]
+    'SELECT contents FROM file_content WHERE project_id=$1 and file_name like $2',
+    [project_id, '%' + fileName],
   ); // guaranteed to belong to current tenant
   return result.rows[0]?.contents || null;
 }
@@ -29,8 +29,8 @@ async function fileContent(
 async function loadFiles(tenantId: string, projectId: string) {
   nile.tenantId = tenantId;
   const result = await nile.db.query(
-    "SELECT file_name FROM file_content where project_id=$1",
-    [projectId]
+    'SELECT file_name FROM file_content where project_id=$1',
+    [projectId],
   );
   return result.rows.map((row: { file_name: string }) => row.file_name);
 }
@@ -42,8 +42,8 @@ export default async function Page({
 }) {
   const p = await params;
   const projects = await loadProjects(p.tenantId);
-  const file = "README.md";
-  const content = await fileContent(p.tenantId, projects[0].id, "README.md");
+  const file = 'README.md';
+  const content = await fileContent(p.tenantId, projects[0].id, 'README.md');
   const loadedFiles = await loadFiles(p.tenantId, projects[0].id);
   return (
     <AskIndex

@@ -1,0 +1,179 @@
+---
+title: 'Introduction'
+description: 'Command line interface for managing Nile databases'
+icon: 'terminal'
+---
+
+<img height="200" noZoom src="/images/intro-cli.gif" />
+
+## Installation
+
+```bash Terminal Installation
+# Using npm (recommended)
+npm install -g niledatabase
+
+# Using yarn
+yarn global add niledatabase
+
+# Using bun
+bun install -g niledatabase
+```
+
+## Getting Started with Nile CLI
+
+Nile CLI is a powerful command-line tool that helps you manage your Nile databases directly from your terminal. With Nile CLI, you can:
+
+- Create and manage databases across multiple regions
+- Handle multi-tenant applications with built-in tenant management
+- Connect to your databases using standard PostgreSQL tools
+- Manage workspaces and configurations
+
+The code is available on [Github](https://github.com/niledatabase/cli). You are welcome to contribute to the project.
+
+```bash Quick Start
+# Verify installation
+nile --version
+
+# Login to Nile
+nile connect login
+
+# List your databases
+nile db list
+```
+
+## Authentication
+
+There are three ways to authenticate with Nile:
+
+1. **Browser-based Authentication** (Recommended)
+2. **API Key Authentication**
+3. **Environment Variables**
+
+```bash Authentication Methods [expandable]
+# 1. Browser-based Authentication
+nile connect login
+
+# 2. API Key Authentication
+nile --api-key YOUR_API_KEY db list
+# or save it in config
+nile config --api-key YOUR_API_KEY
+
+# 3. Environment Variables
+export NILE_API_KEY=YOUR_API_KEY
+nile db list
+```
+
+## Basic Configuration
+
+Before using the CLI, you should set up your workspace and default database:
+
+```bash Basic Setup {2-3}
+# Set your workspace
+nile config --workspace your-workspace
+
+# Set your default database
+nile config --db your-database
+
+# Verify your configuration
+nile config
+```
+
+## Output Formats
+
+The CLI supports multiple output formats for easy integration with other tools:
+
+```bash Output Examples
+# Human-readable format (default)
+nile db list
+
+# JSON format
+nile --format json db list
+
+# CSV format
+nile --format csv db list
+```
+
+## Platform Requirements
+
+The CLI requires:
+
+- Node.js v16 or later
+- npm, yarn, or bun package manager
+- PostgreSQL command line tools (for database connections)
+
+```bash Version Check Commands
+# Check Node.js version
+node --version
+
+# Check npm version
+npm --version
+
+# Check PostgreSQL tools
+psql --version
+```
+
+## Common Workflows
+
+Here are some common workflows to get you started:
+
+### Setting Up a New Database
+
+```bash Database Setup Example {3}
+# List available regions
+nile db regions
+
+# Create a new database
+nile db create --name mydb --region AWS_US_WEST_2
+
+# Connect to your database
+nile db psql --name mydb
+```
+
+### Managing Tenants
+
+```bash Tenant Management Examples [expandable]
+# Create a new tenant
+nile tenants create --name "My Tenant"
+
+# List all tenants
+nile tenants list
+
+# Update a tenant
+nile tenants update --id tenant-123 --new_name "Updated Name"
+
+# Delete a tenant
+nile tenants delete --id tenant-123
+
+# Show tenant details
+nile tenants show --id tenant-123
+```
+
+## Getting Help
+
+The CLI includes comprehensive help for all commands:
+
+```bash Help Examples
+# Show general help
+nile --help
+
+# Show help for specific command
+nile db --help
+
+# Show help for subcommand
+nile tenants create --help
+```
+
+## Debugging
+
+When things go wrong, use the debug flag for detailed output:
+
+```bash Debug Commands {2,5}
+# Enable debug output
+nile --debug db list
+
+# Check connection status
+nile connect status --debug
+
+# View configuration
+nile config
+```

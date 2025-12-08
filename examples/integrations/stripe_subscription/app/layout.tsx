@@ -1,19 +1,19 @@
-import "./globals.css";
-import styles from "./page.module.css";
-import type { Metadata } from "next";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import Stack from "@mui/joy/Stack";
-import Link from "@mui/joy/Link";
-import Card from "@mui/joy/Card";
-import CardContent from "@mui/joy/CardContent";
-import Typography from "@mui/joy/Typography";
-const inter = Inter({ subsets: ["latin"] });
+import './globals.css';
+import styles from './page.module.css';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import { Inter } from 'next/font/google';
+import Stack from '@mui/joy/Stack';
+import Link from '@mui/joy/Link';
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import Typography from '@mui/joy/Typography';
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "SaaS B2B subscription billing with Stripe",
+  title: 'SaaS B2B subscription billing with Stripe',
   description:
-    "Example SaaS with paid subscriptions using Nile, NextJS and Stripe",
+    'Example SaaS with paid subscriptions using Nile, NextJS and Stripe',
 };
 
 export default function RootLayout({
@@ -41,7 +41,7 @@ export default function RootLayout({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Created by{" "}
+                Created by{' '}
                 <Image
                   src="/nile_logo.svg"
                   alt="Nile Logo"
@@ -65,9 +65,9 @@ export default function RootLayout({
             <Card
               variant="outlined"
               sx={{
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
+                '&:hover': {
+                  boxShadow: 'md',
+                  borderColor: 'neutral.outlinedHoverBorder',
                 },
               }}
             >
@@ -93,10 +93,10 @@ export default function RootLayout({
             <Card
               variant="outlined"
               sx={{
-                "--card-padding": "1rem",
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
+                '--card-padding': '1rem',
+                '&:hover': {
+                  boxShadow: 'md',
+                  borderColor: 'neutral.outlinedHoverBorder',
                 },
               }}
             >
@@ -122,10 +122,10 @@ export default function RootLayout({
             <Card
               variant="outlined"
               sx={{
-                "--card-padding": "1rem",
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
+                '--card-padding': '1rem',
+                '&:hover': {
+                  boxShadow: 'md',
+                  borderColor: 'neutral.outlinedHoverBorder',
                 },
               }}
             >

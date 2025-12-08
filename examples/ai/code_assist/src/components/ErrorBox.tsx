@@ -1,10 +1,10 @@
-import { cookies } from "next/headers";
-import { Alert } from "@mui/joy";
-import Stack from "@mui/joy/Stack";
-import Typography from "@mui/joy/Typography";
+import { cookies } from 'next/headers';
+import { Alert } from '@mui/joy';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
 
 export default async function ErrorBox() {
-  const errorCookie = (await cookies()).get("errorData");
+  const errorCookie = (await cookies()).get('errorData');
   const errorData = errorCookie ? JSON.parse(errorCookie.value) : null;
 
   return errorData ? (

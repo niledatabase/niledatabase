@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { Label } from "@/components/ui/label";
-import { useOrgs } from "@/hooks/use-orgs";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
-import { Spinner } from "../spinner";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+} from '@/components/ui/form';
+import { Label } from '@/components/ui/label';
+import { useOrgs } from '@/hooks/use-orgs';
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import * as z from 'zod';
+import { Spinner } from '../spinner';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 
 interface OrganizationModalProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -37,7 +37,7 @@ export function OrganizationModal({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      name: '',
     },
   });
   type FormData = z.infer<typeof formSchema>;
@@ -48,12 +48,12 @@ export function OrganizationModal({
       const response = await axios.post(`/api/tenant`, values);
       // console.log(values, "VALUES VALUES");
       form.reset();
-      toast.success("Organization Created.");
+      toast.success('Organization Created.');
       router.refresh();
       orgs.onClose();
     } catch (error) {
       console.error(error);
-      toast.error("Error creating organization.");
+      toast.error('Error creating organization.');
     }
   };
   const isLoading = form.formState.isSubmitting;
@@ -67,7 +67,7 @@ export function OrganizationModal({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col w-full grid-cols-12 gap-2 px-2 py-4 mt-5 border rounded-lg md:px-4 focus-within:shadow-sm"
+            className="mt-5 flex w-full grid-cols-12 flex-col gap-2 rounded-lg border px-2 py-4 focus-within:shadow-sm md:px-4"
           >
             <div className="grid gap-3">
               <div className="grid gap-1">

@@ -1,0 +1,273 @@
+---
+title: 'SupplyAI - AI-Powered Efficiency for Your Supply Chain'
+sidebarTitle: 'SupplyAI'
+---
+
+![supplysnapshot](/images/supplysnapshot.png)
+
+The Supply Chain Management (SCM) application is designed to streamline the procurement, shipping, and sales processes for businesses. It provides end-to-end visibility and control over the supply chain, from placing orders for supplies to choosing shipment options and selling products through platforms like Amazon or Shopify. The application incorporates AI features to optimize costs, manage unexpected delays, and suggest new vendors and strategies.
+
+### Key Features
+
+1. **Order Management:**
+   - Place orders for supplies from global vendors.
+   - Track order status and history.
+   - Integrate with vendor systems for real-time updates.
+2. **Shipping Management:**
+   - Choose from various shipment options.
+   - Track shipment progress.
+   - Integrate with fulfillment services (e.g., FedEx, UPS).
+3. **Sales Integration:**
+   - Choose sales channels like Amazon or Shopify.
+   - Track sales orders and inventory.
+4. **AI Features:**
+   - Optimize shipping costs based on past trends.
+   - Answer questions about current shipments and unexpected delays.
+   - Propose new vendors and strategies to reduce costs.
+5. **Reporting and Analytics:**
+   - Generate reports on order status, shipping performance, and sales.
+   - Provide insights on cost-saving opportunities.
+
+### Postgres Schemas
+
+![supplyschema](/images/supplyschema.png)
+
+### 1. vendors
+
+This table stores information about vendors from whom supplies are purchased. Each vendor has a unique identifier, a reference to the tenant, and vendor details including contact information.
+
+```sql
+CREATE TABLE supply.vendors (
+    tenant_id UUID,
+    vendor_id UUID,
+    name VARCHAR(100) NOT NULL,
+    contact_info JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, vendor_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+```
+
+### 2. orders
+
+This table stores information about orders placed to buy supplies. Each order has a unique identifier, a reference to the tenant and vendor, order details, and a status.
+
+```sql
+CREATE TABLE supply.orders (
+    tenant_id UUID,
+    order_id UUID,
+    vendor_id UUID,
+    order_date TIMESTAMP NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    total_amount NUMERIC(15, 2) NOT NULL,
+    PRIMARY KEY (tenant_id, order_id),
+    FOREIGN KEY (tenant_id, vendor_id) REFERENCES supply.vendors(tenant_id, vendor_id)
+);
+```
+
+### 3. order_items
+
+This table tracks individual items within an order. Each order item has a unique identifier, a reference to the tenant and order, and includes product details, quantity, and price.
+
+```sql
+CREATE TABLE supply.order_items (
+    tenant_id UUID,
+    order_item_id UUID,
+    order_id UUID,
+    product_name VARCHAR(100) NOT NULL,
+    quantity INT NOT NULL,
+    price NUMERIC(15, 2) NOT NULL,
+    PRIMARY KEY (tenant_id, order_item_id),
+    FOREIGN KEY (tenant_id, order_id) REFERENCES supply.orders(tenant_id, order_id)
+);
+```
+
+### 4. shipments
+
+This table tracks the shipment details of orders, including the shipment status, carrier, and estimated delivery date. The embeddings are calculated on the tracking information. This helps AI to suggest possible delays and also see trends across shipments and propose best routes in the future.
+
+```sql
+CREATE TABLE supply.shipments (
+    tenant_id UUID,
+    shipment_id UUID,
+    order_id UUID,
+    shipment_date TIMESTAMP,
+    delivery_date TIMESTAMP,
+    status VARCHAR(50),
+    tracking_info JSONB,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, shipment_id),
+    FOREIGN KEY (tenant_id, order_id) REFERENCES supply.orders(tenant_id, order_id)
+);
+```
+
+### 5. fulfillment_services
+
+This table stores information about the fulfillment services integrated with the application. Each service has a unique identifier and details about the service. The embeddings are calculated on the fulfillment information. This can be used by AI to identify similar services with cheaper and more efficient operation.
+
+```sql
+CREATE TABLE supply.fulfillment_services (
+    tenant_id UUID,
+    service_id UUID,
+    name VARCHAR(100) NOT NULL,
+    contact_info JSONB,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, service_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+```
+
+### 6. sales_channels
+
+This table stores information about the sales channels used to sell products, such as Amazon or Shopify. Each channel has a unique identifier and details about the channel.
+
+```sql
+CREATE TABLE supply.sales_channels (
+    tenant_id UUID,
+    channel_id UUID,
+    name VARCHAR(100) NOT NULL,
+    contact_info JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, channel_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+```
+
+### 7. sales_orders
+
+This table tracks sales orders, including details such as the order date, status, total amount, and the sales channel used.
+
+```sql
+CREATE TABLE supply.sales_orders (
+    tenant_id UUID,
+    sales_order_id UUID,
+    channel_id UUID,
+    order_date TIMESTAMP NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    total_amount NUMERIC(15, 2) NOT NULL,
+    PRIMARY KEY (tenant_id, sales_order_id),
+    FOREIGN KEY (tenant_id, channel_id) REFERENCES supply.sales_channels(tenant_id, channel_id)
+);
+```
+
+### 8. sales_order_items
+
+This table tracks individual items within a sales order, including product details, quantity, and price.
+
+```sql
+CREATE TABLE supply.sales_order_items (
+    tenant_id UUID,
+    sales_order_item_id UUID,
+    sales_order_id UUID,
+    product_name VARCHAR(100) NOT NULL,
+    quantity INT NOT NULL,
+    price NUMERIC(15, 2) NOT NULL,
+    PRIMARY KEY (tenant_id, sales_order_item_id),
+    FOREIGN KEY (tenant_id, sales_order_id) REFERENCES supply.sales_orders(tenant_id, sales_order_id)
+);
+```
+
+These tables collectively enable the application to manage various aspects of the supply chain, from ordering and shipping to sales and payments, while leveraging AI to provide insights and recommendations.
+
+### Full Script
+
+```sql
+-- Vendors Table
+CREATE TABLE supply.vendors (
+    tenant_id UUID,
+    vendor_id UUID,
+    name VARCHAR(100) NOT NULL,
+    contact_info JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, vendor_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Orders Table
+CREATE TABLE supply.orders (
+    tenant_id UUID,
+    order_id UUID,
+    vendor_id UUID,
+    order_date TIMESTAMP NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    total_amount NUMERIC(15, 2) NOT NULL,
+    PRIMARY KEY (tenant_id, order_id),
+    FOREIGN KEY (tenant_id, vendor_id) REFERENCES supply.vendors(tenant_id, vendor_id)
+);
+
+-- Order Items Table
+CREATE TABLE supply.order_items (
+    tenant_id UUID,
+    order_item_id UUID,
+    order_id UUID,
+    product_name VARCHAR(100) NOT NULL,
+    quantity INT NOT NULL,
+    price NUMERIC(15, 2) NOT NULL,
+    PRIMARY KEY (tenant_id, order_item_id),
+    FOREIGN KEY (tenant_id, order_id) REFERENCES supply.orders(tenant_id, order_id)
+);
+
+-- Shipments Table
+CREATE TABLE supply.shipments (
+    tenant_id UUID,
+    shipment_id UUID,
+    order_id UUID,
+    shipment_date TIMESTAMP,
+    delivery_date TIMESTAMP,
+    status VARCHAR(50),
+    tracking_info JSONB,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, shipment_id),
+    FOREIGN KEY (tenant_id, order_id) REFERENCES supply.orders(tenant_id, order_id)
+);
+
+-- Fulfillment Services Table
+CREATE TABLE supply.fulfillment_services (
+    tenant_id UUID,
+    service_id UUID,
+    name VARCHAR(100) NOT NULL,
+    contact_info JSONB,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, service_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Sales Channels Table
+CREATE TABLE supply.sales_channels (
+    tenant_id UUID,
+    channel_id UUID,
+    name VARCHAR(100) NOT NULL,
+    contact_info JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, channel_id),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+);
+
+-- Sales Orders Table
+CREATE TABLE supply.sales_orders (
+    tenant_id UUID,
+    sales_order_id UUID,
+    channel_id UUID,
+    order_date TIMESTAMP NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    total_amount NUMERIC(15, 2) NOT NULL,
+    PRIMARY KEY (tenant_id, sales_order_id),
+    FOREIGN KEY (tenant_id, channel_id) REFERENCES supply.sales_channels(tenant_id, channel_id)
+);
+
+-- Sales Order Items Table
+CREATE TABLE supply.sales_order_items (
+    tenant_id UUID,
+    sales_order_item_id UUID,
+    sales_order_id UUID,
+    product_name VARCHAR(100) NOT NULL,
+    quantity INT NOT NULL,
+    price NUMERIC(15, 2) NOT NULL,
+    PRIMARY KEY (tenant_id, sales_order_item_id),
+    FOREIGN KEY (tenant_id, sales_order_id) REFERENCES supply.sales_orders(tenant_id, sales_order_id)
+);
+```

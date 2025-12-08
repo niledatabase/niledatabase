@@ -1,13 +1,13 @@
-import { nile } from "../api/[...nile]/nile";
-import { redirect } from "next/navigation";
-import VerifyButton from "./VerifyButton";
+import { nile } from '../api/[...nile]/nile';
+import { redirect } from 'next/navigation';
+import VerifyButton from './VerifyButton';
 export default async function Verify() {
   const me = await nile.users.getSelf();
   if (me instanceof Response) {
     return (
-      <div className="flex flex-col h-full w-full items-center justify-center gap-4">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-4">
         <div className="text-xl">Unauthorized</div>
-        <a className="px-y py-2 hover:underline text-primary" href="/">
+        <a className="px-y py-2 text-primary hover:underline" href="/">
           Back to home
         </a>
       </div>
@@ -15,10 +15,10 @@ export default async function Verify() {
   }
 
   if (me.emailVerified) {
-    return redirect("/success");
+    return redirect('/success');
   }
   return (
-    <div className="container mx-auto p-12 pt-20 gap-8 flex flex-col items-center">
+    <div className="container mx-auto flex flex-col items-center gap-8 p-12 pt-20">
       <div className="text-2xl">Welcome, {me.email}</div>
       <div>
         Before you can proceed, you are required to verify your email address.

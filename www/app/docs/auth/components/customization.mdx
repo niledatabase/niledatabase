@@ -1,0 +1,241 @@
+---
+title: 'Customize'
+description: 'Learn how to style and customize the Nile Auth components'
+---
+
+The Nile Auth components are imported from the `@niledatabase/react` package.
+They are built with Tailwind CSS and React and are designed to be easily customized.
+
+There are a few ways to customize the components, and the best approach depends on how much customization you need.
+In this document we will cover the different approaches and provide examples of how to customize the components.
+You will find more details in the documentation for the specific component you are using.
+
+## Nile Auth Default CSS
+
+Nile's react package includes a CSS file that you can use to style the components.
+
+```jsx
+import '@niledatabase/react/styles.css';
+```
+
+This will apply the default styles to all the components and is an easy way to get started
+if you just want things to look nice but don't need to match a specific design.
+
+## Styling with Component Props
+
+Some of Nile Auth components are a single element, such as a button. This includes the `<SignOutButton>`, `<CreateTenant>` and
+all the social login buttons.
+
+These components can be customized using the `className` prop. For example, if you want your signout button to have a different color, you can do the following:
+
+```jsx
+<SignOutButton className="bg-red-500" />
+```
+
+More complex components, such as the `<SignInForm>`, `<SignUpForm>`, `<UserProfile>` and `<TenantSelector>` components,
+include child components and text. They can still be customized using the `className` prop, to an extent - for example you can add margins to the form by adding a `className` to the component.
+But it isn't the best approach for achieving a specific design.
+
+<Tip>
+  Some components also have a `buttonText` prop that can be used to change the
+  text of the button. Check the documentation for the specific component for
+  more details.
+</Tip>
+
+## Theming with CSS Variables
+
+All Nile Auth components use CSS variables for theming. This means that you can override the colors and other styles by setting the CSS variables.
+We support the same CSS variables that [Shadcn uses](https://ui.shadcn.com/docs/theming#list-of-variables).
+
+If you are not using Shadcn, you can still use Tailwind CSS to style the components. This requires two steps:
+
+1. Modify Tailwind config to include Nile Auth components and the theme variables.
+
+If you are using a Tailwind config file, add the following to your config:
+
+```js tailwind.config.js [expandable]
+module.exports = {
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}',
+    './node_modules/@niledatabase/react/dist/**/*.js',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      fontFamily: {
+        sans: ['var(--font-sans)', ...fontFamily.sans],
+        roboto: ['Roboto', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [],
+};
+```
+
+If you are using Tailwind v4 without a config file, add the following to your `globals.css` file:
+
+```css global.css [expandable]
+@source '../../node_modules/@niledatabase/react/**/*.{html,js,jsx,ts,tsx}';
+
+@theme {
+  --theme-background-color: hsl(var(--background));
+  --theme-foreground-color: hsl(var(--foreground));
+
+  --radius: 0.5rem;
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+
+  --font-family-poppins: var(--font-poppins);
+  --font-family-inter: var(--font-inter);
+}
+```
+
+2. Add the theme variables to the `:root` selector in the `globals.css` file. You can use [shadcn theme generator](https://ui.shadcn.com/themes) to get
+   a nice theme for your app. In the example below, I picked a purple theme.
+
+```css [expandable]
+@layer base {
+  :root {
+    --background: 276 100% 95%;
+    --foreground: 276 5% 10%;
+    --card: 276 50% 90%;
+    --card-foreground: 276 5% 15%;
+    --popover: 276 100% 95%;
+    --popover-foreground: 276 100% 10%;
+    --primary: 276 85% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 276 30% 70%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 238 30% 85%;
+    --muted-foreground: 276 5% 35%;
+    --accent: 238 30% 80%;
+    --accent-foreground: 276 5% 15%;
+    --destructive: 0 100% 30%;
+    --destructive-foreground: 276 5% 90%;
+    --border: 276 30% 50%;
+    --input: 276 30% 26%;
+    --ring: 276 85% 48%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 276 50% 10%;
+    --foreground: 276 5% 90%;
+    --card: 276 50% 10%;
+    --card-foreground: 276 5% 90%;
+    --popover: 276 50% 5%;
+    --popover-foreground: 276 5% 90%;
+    --primary: 276 85% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 276 30% 20%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 238 30% 25%;
+    --muted-foreground: 276 5% 60%;
+    --accent: 238 30% 25%;
+    --accent-foreground: 276 5% 90%;
+    --destructive: 0 100% 30%;
+    --destructive-foreground: 276 5% 90%;
+    --border: 276 30% 26%;
+    --input: 276 30% 26%;
+    --ring: 276 85% 48%;
+    --radius: 0.5rem;
+  }
+}
+```
+
+## Additional customizations
+
+If you need more customization, if you are not using Tailwind CSS, or if you have your own UI component library,
+you can use Nile Auth React hooks with any components you want and any styles you want.
+
+For example, to use Nile's SignIn hook with your own button, you can do the following:
+
+```jsx
+import { useSignIn } from '@niledatabase/react';
+
+const SignInComponent = () => {
+  const signIn = useSignIn({
+    beforeMutate: (data) => ({ ...data, extraParam: 'value' }),
+    onSuccess: () => console.log('Login successful'),
+    onError: (error) => console.error('Login failed', error),
+    callbackUrl: '/dashboard',
+  });
+
+  const handleLogin = () => {
+    signIn({ email: 'user@example.com', password: 'securepassword' });
+  };
+
+  return <button onClick={handleLogin}>Sign In</button>;
+};
+```
+
+This snippet uses the `useSignIn` hook to sign in a user and the `beforeMutate` option to add an extra parameter to the sign in request.
+Note how customizable the hook is - you can add extra parameters, handle the success and error cases, and redirect the user after login.
+
+Individual component pages also include the relevant hooks and code snippets you need to use the component in your own code.

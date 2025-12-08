@@ -1,0 +1,162 @@
+---
+title: 'JSON in Postgres'
+sidebarTitle: 'JSON'
+---
+
+The `jsonb` data type in PostgreSQL allows you to store JSON (JavaScript Object Notation) data in a binary format.
+
+---
+
+### **Key Features of `jsonb`:**
+
+- **Efficient Storage**: `jsonb` is stored in a binary representation, making it more compact than `json`.
+- **Better Performance**: `jsonb` allows indexing, making it faster for querying and retrieval.
+- **Flexibility**: It supports a variety of operations like indexing, full-text search, and partial updates.
+- **Order Independent**: Key order is not preserved (unlike `json`), and duplicate keys are removed.
+
+---
+
+### **How to Use the `jsonb` data type with `tenant_id` in PostgreSQL**
+
+### **1. Creating a table with `jsonb` and `tenant_id` column**
+
+```sql
+CREATE TABLE products (
+    id INT,
+    tenant_id UUID NOT NULL,
+    name TEXT NOT NULL,
+    details jsonb,
+    CONSTRAINT PK_products PRIMARY KEY(tenant_id,id)
+);
+```
+
+In this example:
+
+- `id`: An integer primary key.
+- `tenant_id`: A `UUID` type column for tenant isolation.
+- `name`: A `TEXT` field for product name.
+- `details`: A `jsonb` field that will store additional product details like specifications, availability, etc.
+
+### **2. Inserting data into a `jsonb` column with `tenant_id`**
+
+You can insert JSON data into the `jsonb` column, along with a `tenant_id`, using standard SQL `INSERT`:
+
+```sql
+INSERT INTO products (id, tenant_id, name, details)
+VALUES (1, '550e8400-e29b-41d4-a716-446655440000', 'Smartphone', '{"brand": "XYZ", "model": "A100", "price": 699.99}');
+```
+
+Here, the `tenant_id` is a UUID that ties the data to a specific tenant.
+
+### **3. Querying `jsonb` data by `tenant_id`**
+
+### **Accessing specific keys for a specific tenant**
+
+You can access specific keys in the `jsonb` column and filter by `tenant_id`:
+
+```sql
+SELECT details->'brand' FROM products
+WHERE tenant_id = '550e8400-e29b-41d4-a716-446655440000' AND name = 'Smartphone';
+```
+
+This will return the brand for a given tenant’s product.
+
+### **Using the `@>` operator for containment**
+
+The `@>` operator checks if one JSON object contains another JSON object. It’s useful for filtering rows by specific keys/values for a tenant.
+
+```sql
+SELECT * FROM products
+WHERE tenant_id = '550e8400-e29b-41d4-a716-446655440000'
+AND details @> '{"brand": "XYZ"}';
+```
+
+This finds all products with brand "XYZ" for a specific tenant.
+
+### **4. Updating `jsonb` data for a tenant**
+
+You can use the `jsonb_set` function to update specific parts of a JSON object for a given tenant.
+
+```sql
+UPDATE products
+SET details = jsonb_set(details, '{description}', '"A fast and powerful smartphone with a great processor"'::jsonb)
+WHERE tenant_id = '550e8400-e29b-41d4-a716-446655440000' AND name = 'Smartphone';
+```
+
+This updates the price for the product belonging to a specific tenant.
+
+### **5. Deleting a key from a `jsonb` object by tenant**
+
+You can remove keys from a `jsonb` object for a specific tenant:
+
+```sql
+-- Remove a single key:
+UPDATE products
+SET details = details - 'price'
+WHERE tenant_id = '550e8400-e29b-41d4-a716-446655440000' AND name = 'Smartphone';
+
+-- Remove multiple keys:
+UPDATE products
+SET details = details #- '{price, model}'
+WHERE tenant_id = '550e8400-e29b-41d4-a716-446655440000' AND name = 'Smartphone';
+```
+
+This will delete the keys from the JSON object for the specified tenant.
+
+### **6. Indexing `jsonb` data by `tenant_id` for faster queries**
+
+You can create indexes on the `jsonb` fields for better query performance, particularly for multi-tenant systems.
+
+### **GIN Index (Generalized Inverted Index)**
+
+This index allows fast searches for keys and values within `jsonb` fields for tenants:
+
+```sql
+CREATE INDEX idx_products_details ON products USING GIN (details);
+```
+
+You can now query efficiently using operators like `@>`, and PostgreSQL will leverage this index.
+
+### **7. Aggregating data from `jsonb` by tenant**
+
+You can extract and aggregate data from `jsonb` fields for each tenant.
+
+```sql
+SELECT tenant_id, details->>'brand', COUNT(*)
+FROM products
+GROUP BY tenant_id, details->>'brand';
+```
+
+This query counts the number of products per brand for each tenant.
+
+### **8. Full-Text Search on `jsonb` fields by tenant**
+
+You can perform full-text searches on `jsonb` columns for specific tenants using `to_tsvector()`.
+
+```sql
+SELECT * FROM products
+WHERE tenant_id = '550e8400-e29b-41d4-a716-446655440000'
+AND to_tsvector(details->>'description') @@ to_tsquery('fast & processor');
+```
+
+This will search for products with the words "fast" and "processor" in the `description` key for a specific tenant.
+
+---
+
+### **Common `jsonb` functions & operators with tenant ID:**
+
+- **`>`**: Accesses a key, returns JSON data.
+- **`>>`**: Accesses a key, returns text.
+- **`@>`**: Checks containment (whether a JSON object contains another).
+- **`jsonb_set()`**: Updates a value for a key in a JSON object.
+- **``**: Deletes a key from a JSON object.
+- **`||`**: Concatenates two JSON objects.
+- **`jsonb_array_elements()`**: Expands a JSON array to a set of rows.
+
+---
+
+### **Best Practices for `jsonb` with Multi-Tenancy:**
+
+1. **Indexing**: Use GIN or BTREE indexes for frequent lookups by `tenant_id` and specific keys.
+2. **Normalization**: Use `jsonb` for semi-structured data. For structured data, use regular columns and normalize the schema.
+3. **Use UUID for `tenant_id`**: Ensure the `tenant_id` is a UUID to uniquely identify tenants, providing clear data isolation.

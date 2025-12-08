@@ -1,0 +1,165 @@
+---
+title: 'IP4R'
+description: 'IPv4 and IPv6 types and range operations'
+---
+
+The `ip4r` extension provides data types and functions for working with IPv4 and IPv6 addresses and ranges. It's particularly useful for network-related applications, IP-based access control, and geolocation services.
+
+Your Nile database arrives with the `ip4r` extension already enabled.
+
+## Data Types
+
+The extension provides several data types:
+
+- `ip4` - IPv4 address
+- `ip4r` - IPv4 range
+- `ip6` - IPv6 address
+- `ip6r` - IPv6 range
+- `ipaddress` - Can store either IPv4 or IPv6 address
+- `iprange` - Can store either IPv4 or IPv6 range
+
+## Basic Usage
+
+Here's how to use the IP address types and operations:
+
+```sql
+CREATE TABLE ip_access_rules (
+    tenant_id uuid NOT NULL,
+    rule_id integer NOT NULL,
+    network iprange,
+    description text,
+    is_allowed boolean,
+    PRIMARY KEY(tenant_id, rule_id)
+);
+
+-- Insert sample IPv4 rules
+INSERT INTO ip_access_rules (tenant_id, rule_id, network, description, is_allowed) VALUES
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, '10.0.0.0/8', 'Internal network', true),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, '192.168.1.0/24', 'Office network', true),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 3, '203.0.113.0/24', 'Blocked range', false);
+
+-- Insert IPv6 rules
+INSERT INTO ip_access_rules (tenant_id, rule_id, network, description, is_allowed) VALUES
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 5, '2001:db8::/32', 'IPv6 documentation range', true),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 6, '2001:db8:1::/48', 'IPv6 subnet', false);
+```
+
+## IP Address Operations
+
+The extension provides various operators for IP address manipulation and comparison:
+
+```sql
+-- Check if an IP is in a range
+SELECT network, description
+FROM ip_access_rules
+WHERE network >> '10.0.1.5'::ip4;
+
+-- Find overlapping networks
+SELECT a.network, a.description, b.network, b.description
+FROM ip_access_rules a
+JOIN ip_access_rules b ON a.network && b.network
+WHERE a.rule_id < b.rule_id;
+
+-- Get the containing network
+SELECT network, description
+FROM ip_access_rules
+WHERE network >>= '192.168.1.0/24'::ip4r;
+```
+
+## Common Use Cases
+
+### IP-based Access Control
+
+```sql
+-- Check if an IP address is allowed (direct query)
+SELECT EXISTS (
+    SELECT 1
+    FROM ip_access_rules
+    WHERE network >> '10.0.1.5'::ip4
+    AND is_allowed = true
+);
+
+-- Get all matching rules for an IP address
+SELECT network, description, is_allowed
+FROM ip_access_rules
+WHERE network >> '10.0.1.5'::ip4
+ORDER BY masklen(network) DESC  -- Most specific match first
+LIMIT 1;
+
+-- Check multiple IPs at once
+SELECT
+    client_ip,
+    EXISTS (
+        SELECT 1
+        FROM ip_access_rules
+        WHERE network >> client_ip::ipaddress
+        AND is_allowed = true
+    ) as is_allowed
+FROM (
+    VALUES
+        ('10.0.1.5'),
+        ('192.168.1.100'),
+        ('203.0.113.1')
+) as client_ips(client_ip);
+```
+
+### Network Range Analysis
+
+```sql
+-- Find all subnets within a larger network
+SELECT network, description
+FROM ip_access_rules
+WHERE network <<= '10.0.0.0/8'::ip4r;
+
+-- Calculate number of addresses in each range
+SELECT
+    network,
+    description,
+    CASE
+        WHEN family(network) = 4 THEN masklen(network::ip4r)
+        ELSE masklen(network::ip6r)
+    END as prefix_length
+FROM ip_access_rules;
+```
+
+## Query Optimization
+
+The extension supports GiST indexes for efficient range queries:
+
+```sql
+-- Create GiST index
+CREATE INDEX idx_ip_ranges ON ip_access_rules USING gist (network);
+```
+
+This index improves performance for these operators:
+
+- `>>` (contains)
+- `>>=` (contains or equals)
+- `<<` (contained by)
+- `<<=` (contained by or equals)
+- `&&` (overlaps)
+
+## Performance Considerations
+
+- GiST indexes significantly improve range query performance
+- IP address operations are very efficient as they use native integer comparisons
+- Range operations are optimized for both IPv4 and IPv6
+- Indexes work well with both IP versions in the same column
+
+## Limitations
+
+- Cannot mix IPv4 and IPv6 in range comparisons
+- Some operations are version-specific (ip4 vs ip6)
+- Maximum IPv4 range is /0 (0.0.0.0 to 255.255.255.255)
+- Maximum IPv6 range is /0 (:: to ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff)
+
+## Alternative Approaches
+
+For some use cases, you might want to consider:
+
+1. Using the built-in `inet` type for basic IP address storage
+2. Using `cidr` type for network ranges without host bits
+3. Using separate columns for IPv4 and IPv6 if operations are always version-specific
+
+For more details, refer to the [PostgreSQL documentation on network address types](https://www.postgresql.org/docs/current/datatype-net-types.html) and
+the [ip4r extension documentation](https://github.com/RhodiumToad/ip4r).

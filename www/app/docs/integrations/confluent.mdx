@@ -1,0 +1,84 @@
+---
+title: 'Confluent Cloud'
+sidebarTitle: 'Confluent Cloud'
+icon: 'clock-three'
+---
+
+[Confluent Cloud](https://www.confluent.io/confluent-cloud/) is a cloud-native service for Apache Kafka. It provides, not only Kafka clusters but also managed
+schema registry, connectors, stream processing, and more. If you are building a B2B application that requires real-time data streaming, Confluent Cloud is
+a good place to use these components without having to deploy and manage them yourself.
+
+## Using Confluent Cloud and Nile together
+
+Confluent's Postgres sink connector allows you to stream data from Kafka to Nile. This is great for use cases such as streaming user feedback to Nile for use in RAG,
+as well as for any case where your application requires real-time data from a wide variety of sources
+(check out their [catalog](https://www.confluent.io/product/connectors/) for an insanely long list).
+
+In this guide, we'll walk you through how to set up Confluent Cloud to stream data to Nile. We'll use Confluent Cloud's Datagen connector to generate
+fake customer feedback data, and then stream it to Nile.
+
+### Setting Up Nile
+
+Start by signing up for [Nile](https://console.thenile.dev/). Once you've signed up for Nile, you'll be promoted to create your first database. Go ahead and do so.
+You'll be redirected to the "Query Editor" pageof your new database. This is a good time to create the table we'll be using in this example:
+
+```sql
+CREATE TABLE "feedback" (
+"rating_id" BIGINT NOT NULL,
+"user_id" INT NOT NULL,
+"stars" INT NOT NULL,
+"route_id" INT NOT NULL,
+"rating_time" BIGINT NOT NULL,
+"channel" TEXT NOT NULL,
+"message" TEXT NOT NULL);
+```
+
+Once you've created the table, you'll see it on the left-hand side of the screen. You'll also see the `tenants` table that is built-in to Nile.
+
+Next, you'll want to pick up your database connection string: Navigate to the "Settings" page, select "Connections" and click "Generate credentials".
+Copy the connection string and keep it in a secure location.
+
+### Setting Up Confluent Cloud
+
+If you haven't already, sign up for a [Confluent Cloud account](https://confluent.cloud/signup). You'll probably want to walk through their tutorial - they will walk you
+through creating a cluster, a topic, and a datagen source connector.
+
+### Quickstart
+
+We'll assume that you've already created a cluster. In your cluster, you'll want to create a new topic. You can do this by selecting "Topics" from the left-hand side, and
+clicking on "Add topic". Call the topic `feedback`, and accept the default settings.
+
+#### Creating the source connector
+
+Next, you'll want to create your source connector. You can do this by selecting "Connectors" from the left-hand side, search for "Sample Data" connector and click on it.
+Click on "additional configuration", and configure it by following the wizard and using the following settings:
+
+- Select "feedback" as the topic.
+- Select an API key. If you don't already have one, you can create a new API key on this page.
+- Select "JSON_SR" as the value for "output record value format".
+- Select "Rating" as the schema.
+
+After this, you can accept the defaults and a connector will be created. You can click on it to see metrics and logs. You can also go to the "feedback" topic and see the data
+flowing into it.
+
+#### Creating the sink connector
+
+Now we'll set up the sink connector, to send data from Kafka to Nile. In the connectors page, search for Postgres and make sure you click on the "Postgres Sink" connector.
+Configure it by following the wizard and using the following settings:
+
+- Select "feedback" as the topic.
+- Select an API key. You can generate a new one, or use the one you created for the source connector.
+- Now enter the details of your Nile database. You have all the information in the connection string you generated in a previous step. Or you can use the Settings page in
+  Nile console to get this information.
+
+After this, you can accept the defaults and a connector will be created. You can click on it to see metrics and logs.
+
+Go back to Nile Console, find the "feedback" table in the query editor and run a query:
+
+```sql
+SELECT * FROM "feedback" limit 10;
+```
+
+You should see the data flowing into Nile.
+
+Congratulations! You've now set up a real-time data pipeline using Confluent Cloud, Kafka, and Nile. You are all ready to start building your B2B application with Nile.

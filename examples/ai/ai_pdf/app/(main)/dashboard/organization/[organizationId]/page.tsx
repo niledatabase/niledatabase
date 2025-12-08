@@ -1,5 +1,5 @@
-import React from "react";
-import { Separator } from "@/components/ui/separator";
+import React from 'react';
+import { Separator } from '@/components/ui/separator';
 import {
   Card,
   CardContent,
@@ -7,21 +7,21 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 
-import { configureNile } from "@/lib/NileServer";
-import { cookies } from "next/headers";
-import { Suspense } from "react";
-import { Info } from "./_components/info";
-import { BoardList } from "./_components/board-list";
-import UploadButton from "@/components/upload-button";
-import { checkSubscription } from "@/lib/subscription";
-import { Tenant } from "@niledatabase/server";
+import { configureNile } from '@/lib/NileServer';
+import { cookies } from 'next/headers';
+import { Suspense } from 'react';
+import { Info } from './_components/info';
+import { BoardList } from './_components/board-list';
+import UploadButton from '@/components/upload-button';
+import { checkSubscription } from '@/lib/subscription';
+import { Tenant } from '@niledatabase/server';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
 export const revalidate = 0;
-export const fetchCache = "force-no-store";
+export const fetchCache = 'force-no-store';
 
 const OrganizationIdPage = async ({
   params,
@@ -35,16 +35,16 @@ const OrganizationIdPage = async ({
     tenantId,
   } = await configureNile(organizationId);
 
-  console.log("showing boards for user " + userId + " for tenant " + tenantId);
+  console.log('showing boards for user ' + userId + ' for tenant ' + tenantId);
   const currentFileCount = await tenantNile.db.query(
-    "select COUNT(*) from file"
+    'select COUNT(*) from file',
   );
   const tenant: Tenant = await tenantNile.tenants.get();
 
   const isPro = await checkSubscription(organizationId);
 
   return (
-    <div className="w-full mb-20">
+    <div className="mb-20 w-full">
       <Info name={tenant.name} />
       <Separator className="my-4" />
       <div className="px-2 md:px-4">
@@ -70,7 +70,7 @@ const OrganizationIdPage = async ({
                       className="underline"
                     >
                       Time, Clocks, and the Ordering of Events in a Distributed
-                      System{" "}
+                      System{' '}
                     </a>
                   </li>
                   <li>

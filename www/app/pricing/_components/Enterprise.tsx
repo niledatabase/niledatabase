@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react';
 
-import Indicator from "./Indicator";
-import ContactUs from "./ContactUs";
+import Indicator from './Indicator';
+import ContactUs from './ContactUs';
 
 export default function Enterprise() {
   return (
     <div>
-      <div className="flex lg:flex-row gap-5 flex-col">
-        <div className="flex gap-5 flex-col">
+      <div className="flex flex-col gap-5 lg:flex-row">
+        <div className="flex flex-col gap-5">
           <div className="text-[24px] text-orange">Enterprise</div>
-          <div className="flex gap-4 flex-col">
-            <div className="opacity-70 text-[16px]">
+          <div className="flex flex-col gap-4">
+            <div className="text-[16px] opacity-70">
               Built for enterprises who want to scale with confidence, Nile
               Enterprise offers advanced security, powerful admin controls, and
               more
@@ -20,7 +20,7 @@ export default function Enterprise() {
             </div>
           </div>
         </div>
-        <ul className="flex gap-[22px] flex-col shrink-0 justify-end">
+        <ul className="flex shrink-0 flex-col justify-end gap-[22px]">
           <div className="flex flex-row gap-2">
             <Indicator value={true} hideDivider />
             Large scale workloads

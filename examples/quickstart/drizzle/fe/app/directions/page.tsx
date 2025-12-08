@@ -1,9 +1,9 @@
-import { v4 as uuidv4 } from "uuid";
-import Code from "./Code";
-import { nile } from "../api/[...nile]/nile";
+import { v4 as uuidv4 } from 'uuid';
+import Code from './Code';
+import { nile } from '../api/[...nile]/nile';
 
 const backendServer = String(
-  process.env.NEXT_PUBLIC_BASE_PATH || "http://localhost:3001"
+  process.env.NEXT_PUBLIC_BASE_PATH || 'http://localhost:3001',
 );
 
 export default async function Page() {
@@ -59,14 +59,14 @@ export default async function Page() {
   `;
 
   return (
-    <div className="flex flex-col gap-2 mt-10">
+    <div className="mt-10 flex flex-col gap-2">
       <div>This demo shows a backend service for a Todo List application</div>
       <div>
         You can experiment with it by running the following commands in your
         terminal:
       </div>
 
-      <div style={{ whiteSpace: "pre-line", padding: "0 0 2rem 0" }}></div>
+      <div style={{ whiteSpace: 'pre-line', padding: '0 0 2rem 0' }}></div>
       <Code codeString={codeString} />
     </div>
   );

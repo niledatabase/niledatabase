@@ -1,0 +1,123 @@
+---
+title: 'Quantile'
+description: 'Efficient quantile and percentile calculations in PostgreSQL'
+---
+
+The `quantile` extension provides efficient computation of quantiles and percentiles in PostgreSQL. It's particularly useful for statistical analysis, performance monitoring, and data distribution understanding.
+Your Nile database arrives with the `quantile` extension already enabled.
+
+## Understanding Quantiles
+
+A quantile divides a dataset into equal-sized groups. Common examples include:
+
+- Median (50th percentile)
+- Quartiles (25th, 50th, 75th percentiles)
+- Percentiles (dividing data into 100 groups)
+- Custom quantiles (any division between 0 and 1)
+
+## Quick Start
+
+Let's explore quantile calculations with practical examples.
+
+### Creating a Table with Sample Data
+
+```sql
+-- Create a table for response times
+CREATE TABLE api_responses (
+    tenant_id uuid,
+    id INTEGER,
+    endpoint TEXT,
+    response_time_ms INTEGER,
+    timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, id)
+);
+
+-- Create an index on response time for better performance
+CREATE INDEX idx_response_time ON api_responses(response_time_ms);
+```
+
+```sql
+-- Create a tenant first
+INSERT INTO tenants (id, name) VALUES
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 'Tenant 1');
+
+-- Insert sample response times across different hours
+INSERT INTO api_responses (tenant_id, id, endpoint, response_time_ms, timestamp) VALUES
+    -- Data for current hour
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, '/api/users', 45, CURRENT_TIMESTAMP),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, '/api/users', 52, CURRENT_TIMESTAMP),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 3, '/api/users', 138, CURRENT_TIMESTAMP),
+    -- Data from 1 hour ago
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 4, '/api/users', 42, CURRENT_TIMESTAMP - INTERVAL '1 hour'),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 5, '/api/users', 58, CURRENT_TIMESTAMP - INTERVAL '1 hour'),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 6, '/api/users', 95, CURRENT_TIMESTAMP - INTERVAL '1 hour'),
+    -- Data from 2 hours ago
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 7, '/api/orders', 123, CURRENT_TIMESTAMP - INTERVAL '2 hours'),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 8, '/api/orders', 95, CURRENT_TIMESTAMP - INTERVAL '2 hours'),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 9, '/api/orders', 167, CURRENT_TIMESTAMP - INTERVAL '2 hours'),
+    -- Data from 3 hours ago
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 10, '/api/products', 67, CURRENT_TIMESTAMP - INTERVAL '3 hours'),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 11, '/api/products', 72, CURRENT_TIMESTAMP - INTERVAL '3 hours'),
+    ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 12, '/api/products', 158, CURRENT_TIMESTAMP - INTERVAL '3 hours');
+```
+
+### Basic Quantile Calculations
+
+Calculate median response time:
+
+```sql
+SELECT quantile(response_time_ms, 0.5) as median_response_time
+FROM api_responses;
+```
+
+Calculate multiple percentiles:
+
+```sql
+SELECT
+    endpoint,
+    quantile(response_time_ms, 0.5) as p50,
+    quantile(response_time_ms, 0.90) as p90,
+    quantile(response_time_ms, 0.95) as p95,
+    quantile(response_time_ms, 0.99) as p99
+FROM api_responses
+GROUP BY endpoint;
+```
+
+### Rolling Percentiles Example
+
+```sql
+-- Calculate rolling percentiles for API response times
+SELECT
+    endpoint as service,
+    date_trunc('hour', timestamp) as hour,
+    quantile(response_time_ms, ARRAY[0.5, 0.90, 0.95, 0.99]) as percentiles
+FROM api_responses
+WHERE timestamp >= NOW() - INTERVAL '24 hours'
+GROUP BY endpoint, date_trunc('hour', timestamp)
+ORDER BY service, hour;
+```
+
+This query will show you the 50th, 90th, 95th, and 99th percentiles of response times for each API endpoint, grouped by hour over the last 24 hours.
+
+## Common Use Cases
+
+1. **Performance Monitoring**
+   - Response time percentiles
+   - Resource usage distribution
+   - SLA compliance monitoring
+
+2. **Financial Analysis**
+   - Price distribution analysis
+   - Risk assessment
+   - Portfolio performance metrics
+
+3. **Quality Control**
+   - Process variation monitoring
+   - Outlier detection
+   - Manufacturing tolerances
+
+## Additional Resources
+
+- [PostgreSQL Aggregate Functions](https://www.postgresql.org/docs/current/functions-aggregate.html)
+- [Statistical Functions in PostgreSQL](https://www.postgresql.org/docs/current/functions-aggregate.html#FUNCTIONS-AGGREGATE-STATISTICS-TABLE)
+- [Time-Series Analysis in PostgreSQL](https://www.postgresql.org/docs/current/functions-aggregate.html#FUNCTIONS-AGGREGATE-WINDOW)

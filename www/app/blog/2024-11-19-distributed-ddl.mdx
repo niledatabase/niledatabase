@@ -1,11 +1,11 @@
 export const metadata = {
   title:
-    "Introducing pg_karnak: Transactional schema migration across tenant databases",
-  authors: ["gwenshap"],
-  image: "2024-11-19-distributed-ddl/cover4.png",
+    'Introducing pg_karnak: Transactional schema migration across tenant databases',
+  authors: ['gwenshap'],
+  image: '2024-11-19-distributed-ddl/cover4.png',
   sizzle:
-    "Dive deep into the architecture of pg_karnak, PostgreSQL extension, metadata store and transaction coordinator designed for reliable and scalable schema migrations across many tenants and Postgres instances. This post explores PostgreSQL internals, including extension hooks, transaction lifecycle, and locking mechanisms, offering insights into building scalable, reliable systems for distributed applications.",
-  tags: ["database", "serverless", "postgres", "distributed systems"],
+    'Dive deep into the architecture of pg_karnak, PostgreSQL extension, metadata store and transaction coordinator designed for reliable and scalable schema migrations across many tenants and Postgres instances. This post explores PostgreSQL internals, including extension hooks, transaction lifecycle, and locking mechanisms, offering insights into building scalable, reliable systems for distributed applications.',
+  tags: ['database', 'serverless', 'postgres', 'distributed systems'],
 };
 
 When we need to describe Nile in a single sentence, we say **"PostgreSQL re-engineered for multi-tenant apps"**. By multi-tenant apps, we mean applications like Stripe, Figma, Twilio, Notion, Workday, and Gusto - here a large number of customers is served from a shared application stack. In these types of applications, a key architectural challenge is deciding how to store data for each customer.

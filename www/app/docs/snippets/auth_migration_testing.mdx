@@ -1,0 +1,19 @@
+We recommend you do thorough testing in a staging environment before migrating to production.
+
+Before starting a migration, both in staging and in production, we recommend you create a few test users and organizations in your existing auth provider.
+Make sure you have a mix of email/password, passwordless and social providers users.
+
+Then, after migrating to Nile Auth, test the following (both in test and in production):
+
+- Sign up and sign in with email/password, passwordless and social providers.
+- Sign in with email/password, passwordless and social providers.
+- Sign out
+- Reset password
+- Email verification
+- Validate that the users have access to the correct organizations.
+
+It is also important to test **negative** flows. For example, trying to sign in with an invalid password,
+or an invalid email/password combination. You want to be sure that unauthorized users are not able to sign in.
+
+Finally, use the ["Tenant and Users" page in Nile Console](/auth/dashboard/managing-tenants) to verify that the all the expected user data and
+metadata was migrated, and that the users have access to the correct organizations.

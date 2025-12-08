@@ -1,0 +1,215 @@
+---
+title: 'PostGIS'
+description: 'Spatial and Geographic Objects for PostgreSQL'
+icon: 'earth-americas'
+---
+
+The `PostGIS` extension adds support for geographic objects to PostgreSQL, allowing you to store, query, and manipulate spatial data. It effectively turns PostgreSQL into a spatial database.
+Your Nile database arrives with the `PostGIS` extension already enabled.
+
+## Quick Start
+
+Let's walk through some common PostGIS operations using a simple example of storing and querying location data.
+
+### Creating a Spatial Table
+
+```sql
+-- Create a table for storing points of interest
+CREATE TABLE points_of_interest (
+    tenant_id uuid,
+    id INTEGER,
+    name VARCHAR(100),
+    type VARCHAR(50),
+    -- POINT geometry in WGS84 (latitude/longitude)
+    location geometry(POINT, 4326),
+    PRIMARY KEY (tenant_id, id)
+);
+
+-- Create a spatial index
+CREATE INDEX points_of_interest_gist ON points_of_interest USING GIST(location);
+```
+
+### Inserting Data
+
+```sql
+-- Create a tenant first
+INSERT INTO tenants (id, name) VALUES
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 'Tenant 1');
+
+-- Insert some points of interest
+INSERT INTO points_of_interest (tenant_id, id, name, type, location) VALUES
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, 'Central Park', 'park',
+   ST_SetSRID(ST_MakePoint(-73.965355, 40.782865), 4326)),
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, 'Empire State', 'building',
+   ST_SetSRID(ST_MakePoint(-73.985428, 40.748817), 4326)),
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 3, 'Statue of Liberty', 'monument',
+   ST_SetSRID(ST_MakePoint(-74.044502, 40.689247), 4326));
+```
+
+### Basic Spatial Queries
+
+Find all points within 5km of a location:
+
+```sql
+SELECT name,
+       ST_Distance(
+         location::geography,
+         ST_SetSRID(ST_MakePoint(-73.985428, 40.748817), 4326)::geography
+       ) as distance_meters
+FROM points_of_interest
+WHERE ST_DWithin(
+        location::geography,
+        ST_SetSRID(ST_MakePoint(-73.985428, 40.748817), 4326)::geography,
+        5000  -- 5km in meters
+      )
+ORDER BY distance_meters;
+```
+
+Calculate distance between two points:
+
+```sql
+-- Distance calculations default to meters, you can multiple by 0.000621371 to get miles
+SELECT ST_Distance(
+    (SELECT location::geography FROM points_of_interest WHERE name = 'Central Park'),
+    (SELECT location::geography FROM points_of_interest WHERE name = 'Empire State')
+) as distance_meters;
+```
+
+### Working with Areas
+
+Create and query polygons:
+
+```sql
+-- Create a table for areas
+CREATE TABLE areas (
+    tenant_id uuid,
+    id INTEGER,
+    name VARCHAR(100),
+    boundary geometry(POLYGON, 4326),
+    PRIMARY KEY (tenant_id, id)
+);
+
+-- Insert multiple polygons (simplified boundaries)
+INSERT INTO areas (tenant_id, id, name, boundary) VALUES
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, 'Central Park',
+   ST_SetSRID(ST_MakePolygon(ST_GeomFromText('LINESTRING(
+     -73.968285 40.785091,
+     -73.961675 40.785091,
+     -73.961675 40.780467,
+     -73.968285 40.780467,
+     -73.968285 40.785091
+   )')), 4326)),
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, 'Area1',
+   ST_SetSRID(ST_MakePolygon(ST_GeomFromText('LINESTRING(
+     -73.965 40.783,
+     -73.960 40.783,
+     -73.960 40.779,
+     -73.965 40.779,
+     -73.965 40.783
+   )')), 4326)),
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 3, 'Area2',
+   ST_SetSRID(ST_MakePolygon(ST_GeomFromText('LINESTRING(
+     -73.963 40.784,
+     -73.958 40.784,
+     -73.958 40.780,
+     -73.963 40.780,
+     -73.963 40.784
+   )')), 4326));
+
+-- Find points within the area
+SELECT p.name
+FROM points_of_interest p
+JOIN areas a ON ST_Contains(a.boundary, p.location)
+WHERE a.name = 'Central Park';
+```
+
+## Common Operations
+
+### Coordinate Transformations
+
+Convert between coordinate systems:
+
+```sql
+-- Convert from WGS84 (EPSG:4326) to Web Mercator (EPSG:3857)
+SELECT ST_Transform(
+    ST_SetSRID(ST_MakePoint(-73.985428, 40.748817), 4326),
+    3857
+);
+```
+
+### Distance Calculations
+
+```sql
+-- Calculate distance in meters
+SELECT ST_Distance(
+    ST_SetSRID(ST_MakePoint(-73.985428, 40.748817), 4326)::geography,
+    ST_SetSRID(ST_MakePoint(-73.968285, 40.785091), 4326)::geography
+);
+```
+
+### Spatial Relationships
+
+```sql
+-- Check if point is within polygon
+SELECT ST_Contains(
+    (SELECT boundary FROM areas WHERE name = 'Central Park'),
+    (SELECT location FROM points_of_interest WHERE name = 'Empire State')
+);
+
+-- Find intersection of two polygons
+SELECT ST_Intersection(a.boundary, b.boundary)
+FROM areas a, areas b
+WHERE a.name = 'Area1' AND b.name = 'Area2';
+```
+
+### Geometry Creation
+
+```sql
+-- Create a point
+SELECT ST_SetSRID(ST_MakePoint(-73.985428, 40.748817), 4326);
+
+-- Create a line
+SELECT ST_MakeLine(
+    ST_MakePoint(-73.985428, 40.748817),
+    ST_MakePoint(-73.968285, 40.785091)
+);
+
+-- Create a polygon
+SELECT ST_MakePolygon(ST_GeomFromText('LINESTRING(
+    0 0, 1 0, 1 1, 0 1, 0 0
+)'));
+```
+
+## Best Practices
+
+1. **Indexing**:
+   - Always create spatial indexes (GiST) on geometry columns
+   - Use appropriate coordinate systems for your use case
+
+2. **Performance**:
+   - Use ST_DWithin instead of ST_Distance for radius searches
+   - Cast to geography type for accurate earth-distance calculations
+   - Consider clustering on spatial indexes for large datasets
+
+3. **Data Quality**:
+   - Validate geometries using ST_IsValid
+   - Use appropriate SRID for your data
+   - Clean up invalid geometries using ST_MakeValid
+
+## Common Use Cases
+
+- Location-based services
+- Geofencing
+- Territory management
+- Asset tracking
+- Spatial analysis
+- Map visualization
+- Route planning
+- Environmental analysis
+
+## Additional Resources
+
+- [PostGIS Documentation](https://postgis.net/documentation/)
+- [PostGIS Introduction](https://postgis.net/workshops/postgis-intro/)
+- [Coordinate Systems Guide](https://postgis.net/workshops/postgis-intro/projection.html)
+- [PostGIS in Action Book](https://www.manning.com/books/postgis-in-action-third-edition)

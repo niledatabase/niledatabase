@@ -1,8 +1,8 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 export default [
   {
-    header: "How does billing work?",
+    header: 'How does billing work?',
     content: (
       <>
         Nile is billed on query tokens for usage on serverless compute and on
@@ -14,7 +14,7 @@ export default [
     ),
   },
   {
-    header: "Are the limits per workspace?",
+    header: 'Are the limits per workspace?',
     content: (
       <>
         Yes, most limits are per workspace. This enables us to provide unlimited
@@ -24,7 +24,7 @@ export default [
     ),
   },
   {
-    header: "What happens when I hit the limits of a tier?",
+    header: 'What happens when I hit the limits of a tier?',
     content: (
       <>
         We will reach out to you when you are nearing your usage limits. You can
@@ -34,7 +34,7 @@ export default [
     ),
   },
   {
-    header: "Do I get notified if I am reaching my usage limits?",
+    header: 'Do I get notified if I am reaching my usage limits?',
     content: (
       <>
         Yes, you will be notified when you are close to 70% of the limits for
@@ -43,7 +43,7 @@ export default [
     ),
   },
   {
-    header: "How is your cost so low for serverless compute?",
+    header: 'How is your cost so low for serverless compute?',
     content: (
       <>
         Nile's serverless compute is truly multi-tenant. This enables us to
@@ -56,7 +56,7 @@ export default [
     ),
   },
   {
-    header: "Does my db pause in the free tier?",
+    header: 'Does my db pause in the free tier?',
     content: (
       <>
         No, the db never pauses. We don't have any cold start time on the free

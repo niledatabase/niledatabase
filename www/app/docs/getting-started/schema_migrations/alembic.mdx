@@ -1,0 +1,131 @@
+---
+title: 'Alembic'
+sidebarTitle: 'Alembic'
+---
+
+Alembic is a migration tool for SQLAlchemy. It is a flexible tool for managing database migrations.
+Below, we'll walk through the process of setting up Alembic in a project and running your first migration.
+
+We'll start with an example project that has Alembic already set up, and you can
+follow along with the steps below. Alternatively, you can run these steps in your own project.
+
+## Running an Example Migration
+
+<Steps>
+  <Step title="Clone the example project">
+
+```bash
+git clone https://github.com/niledatabase/niledatabase
+cd niledatabase/examples/migrations/alembic
+```
+
+  </Step>
+
+  <Step title="Set up the environment and install dependencies">
+
+```bash
+virtualenv .venv
+source .venv/bin/activate
+# install alembic, sqlalchemy, psycopg2-binary and dotenv
+pip install -r requirements.txt
+# alembic init alembic # run this if you install alembic in your own project
+```
+
+  </Step>
+
+  <Step title="Create a Migration Script">
+
+In the example project, we have a migration script already created.
+You can find it in the `./alembic/versions` directory.
+
+Here's how to create a new migration script:
+
+```bash
+alembic revision -m "create account table"
+```
+
+This will generate a new file: `./alembic/versions/13379be60997_create_account_table.py`. Now we want to edit the file and add the migration script to it:
+
+```py
+def upgrade():
+    op.create_table(
+        'account',
+        sa.Column('id', sa.Integer, primary_key=True),
+        sa.Column('name', sa.String(50), nullable=False),
+        sa.Column('description', sa.Unicode(200)),
+    )
+
+def downgrade():
+    op.drop_table('account')
+```
+
+  </Step>
+
+  <Step title="Connect to Database">
+
+To connect Alembic to the right database, create a `.env` file and add the connection string there:
+
+```
+DATABASE_URL=postgresql://user:password@host:5432/dbname
+```
+
+You can get your connection string from the Nile database home page.
+
+  </Step>
+
+  <Step title="Run the Migration">
+
+```bash
+alembic upgrade head
+```
+
+Thats it! You can connect to your database and see the new table.
+
+  <Tip>
+  If you see an error that the table already exists, double check that you didn't accidentally create a second 
+  migration with the `accounts` table on top of the existing one. If this happened to you, you can delete the new migration file (or alternatively, modify the table name).
+  </Tip>
+  </Step>
+</Steps>
+
+## Generating Migrations
+
+Alembic can also generate migrations for you. This is useful if you want to create a migration for a new table.
+
+<Steps>
+
+  <Step title="Create a new migration">
+
+The example project has a `models.py` file that defines two models: `Todo` and `Tenant`.
+
+To generate a migration for these models, you can use the following command:
+
+```bash
+alembic revision --autogenerate -m "create todo and tenant models"
+```
+
+<Tip>
+  Alembic autogeneration compares your database state with models.py and will
+  drop any tables not defined there. Since Nile has a built-in `Tenants` table
+  that can't be dropped, we include the `Tenant` model in models.py to prevent
+  this.
+</Tip>
+
+</Step>
+
+<Step title="Run the generated migration file">
+
+You can then edit the generated migration file (if needed) and run it like as we did before:
+
+```bash
+alembic upgrade head
+```
+
+</Step>
+
+</Steps>
+
+## Next Steps
+
+This is the most basic use-case of Alembic. There is a lot more to it, which you can learn
+from the official [Alembic documentation](https://alembic.sqlalchemy.org/en/latest/front.html).

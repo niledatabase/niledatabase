@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fs from 'node:fs';
 
 // only strings for now
 function addMethod(baseResponse, possibleValue, key) {
@@ -9,10 +9,10 @@ function addMethod(baseResponse, possibleValue, key) {
 }
 export async function processFile(file) {
   // get the header from the 1st # - can't import because this also runs at build time
-  const content = fs.readFileSync(file, "utf-8");
+  const content = fs.readFileSync(file, 'utf-8');
 
-  const localFile = file.replace(/\/\[\[...slug\]\]/, "");
-  const parts = localFile.split("/");
+  const localFile = file.replace(/\/\[\[...slug\]\]/, '');
+  const parts = localFile.split('/');
   parts.shift();
   const baseResponse = { file, slug: parts, order: 0 };
 
@@ -38,16 +38,16 @@ export async function processFile(file) {
   }
 
   const maybeMethod = /method:\s['"](.\w+)['"]/.exec(content);
-  addMethod(baseResponse, maybeMethod, "method");
+  addMethod(baseResponse, maybeMethod, 'method');
 
   const maybeLocation = /location:\s['"](.\w+)['"]/.exec(content);
-  addMethod(baseResponse, maybeLocation, "location");
+  addMethod(baseResponse, maybeLocation, 'location');
 
   const maybeOffice = /office:\s['"](.\w+)['"]/.exec(content);
-  addMethod(baseResponse, maybeOffice, "office");
+  addMethod(baseResponse, maybeOffice, 'office');
 
   const maybeFullTime = /fullTime:\s['"](.\w+)['"]/.exec(content);
-  addMethod(baseResponse, maybeFullTime, "fullTime");
+  addMethod(baseResponse, maybeFullTime, 'fullTime');
 
   const maybeTags = /tags:\s(\[.+])/.exec(content);
   if (maybeTags?.[1]) {

@@ -1,0 +1,153 @@
+---
+title: 'Sign In'
+description: 'Learn how to use the Nile Auth Sign In component'
+---
+
+import Theming from '/snippets/theming.mdx';
+
+Users can sign up and be entered into the database via email + password. A JWT is used (which has a default expiry in 30 days). For Single Sign On, sessions are kept in the database in the `auth.session` table.
+`@tanstack/react-query` and `react-hook-form` are used to do much of the heavy lifting in the component. The component is styled via tailwind.
+
+## Installation
+
+```bash
+npm install @niledatabase/react @niledatabase/client
+```
+
+## Email + Password Sign In
+
+Uses simple `<Email />` and `<Password />` fields, along with the `useSignIn()` hook to sign a user in, if they exist. In most cases, you want to supply a `callbackUrl`, which is where the user will be redirected upon successful sign in. Error handling works the same as it does in `<SignUpForm />`
+
+<Tabs>
+<Tab title="Preview">
+  <iframe src="https://storybook.thenile.dev/iframe.html?args=&globals=&id=sign-in-form--sign-in-form" width="100%" height="400px" className="rounded-xl"/>
+</Tab>
+<Tab title="Component">
+```jsx 
+import { SignInForm } from "@niledatabase/react";
+
+export default function SignUpPage() {
+  return <SignInForm callbackUrl="/dashboard" />
+}
+```
+</Tab>
+</Tabs>
+
+## Email Only Sign In
+
+With an SMTP provider configured on your database, users can supply their emails and be sent a link for sign in. The users enters their email, which causes the auth service to create a token (saved to the auth.verification_tokens table in your database), and send it in an email. The token is valid for 4 hours by default.
+
+Once the user clicks the link, they will exchange their token for a session and be redirected to whichever page was provided in the `callbackUrl`
+
+<Tabs>
+<Tab title="Preview">
+<iframe src="https://storybook.thenile.dev/iframe.html?args=&globals=&id=social-email--sign-in-with-email" width="100%" height="230px" className="rounded-xl"/>
+</Tab>
+<Tab title="Component">
+```jsx 
+import { EmailSignIn } from "@niledatabase/react";
+
+export default function SignUpPage() {
+  return <EmailSignIn callbackUrl="/dashboard" />
+}
+```
+</Tab>
+</Tabs>
+
+## Hooks
+
+### useSignIn
+
+The `useSignIn` hook provides a way to authenticate users using credential-based sign-in within a React application. It utilizes React Query's `useMutation` to handle authentication requests and supports optional lifecycle callbacks for customization.
+
+#### Installation
+
+```sh
+npm install @niledatabase/react @niledatabase/client
+```
+
+#### Usage
+
+```tsx
+import { useSignIn } from '@niledatabase/react';
+
+const SignInComponent = () => {
+  const signIn = useSignIn({
+    beforeMutate: (data) => ({ ...data, extraParam: 'value' }),
+    onSuccess: () => console.log('Login successful'),
+    onError: (error) => console.error('Login failed', error),
+    callbackUrl: '/dashboard',
+  });
+
+  const handleLogin = () => {
+    signIn({ email: 'user@example.com', password: 'securepassword' });
+  };
+
+  return <button onClick={handleLogin}>Sign In</button>;
+};
+```
+
+#### API
+
+##### `useSignIn(params?: Props): (data: LoginInfo) => void`
+
+##### Parameters
+
+| Name     | Type                 | Description           |
+| -------- | -------------------- | --------------------- |
+| `params` | `Props` _(optional)_ | Configuration options |
+
+##### Returns
+
+A function that accepts `LoginInfo` containing user credentials to initiate the sign-in process.
+
+#### Props
+
+| Name           | Type                                             | Description                                                                                   |
+| -------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| `callbackUrl`  | `string` _(recommended)_                         | The URL to redirect to upon successful login.                                                 |
+| `beforeMutate` | `(data: any) => any` _(optional)_                | Optional function executed before the mutation occurs, allowing modification of request data. |
+| `onSuccess`    | `(data: LoginSuccess) => void` _(optional)_      | Callback function triggered on a successful login.                                            |
+| `onError`      | `(error: Error, data: any) => void` _(optional)_ | Callback function triggered if the login fails.                                               |
+| `client`       | `QueryClient` _(optional)_                       | React Query client instance.                                                                  |
+
+##### LoginInfo Type
+
+```ts
+export type LoginInfo = {
+  email: string;
+  password: string;
+};
+```
+
+##### Example with Error Handling
+
+```tsx
+const signIn = useSignIn({
+  onSuccess={async (res) => {
+    if (res.ok) {
+      // something good happened
+    } else {
+      const error = await res.text();
+      console.error(error);
+    }
+  }}
+  onError={(e)=> {
+    console.error('Catastrophic failure 😭', e)
+  }}
+});
+
+signIn({ email: "user@example.com", password: "wrongpassword" });
+```
+
+- Ensure that authentication providers are properly configured in your Next.js app.
+- Use `beforeMutate` to modify request payloads before submission.
+- The `callbackUrl` parameter determines the redirection URL post-login.
+
+<Theming component="<SignIn />" />
+
+## Related Components
+
+- [Single Sign On](/auth/singlesignon)
+- [Sign Out](/auth/components/signout)
+- [User Profile](/auth/components/user)

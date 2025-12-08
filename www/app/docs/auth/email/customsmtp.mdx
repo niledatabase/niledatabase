@@ -1,0 +1,45 @@
+---
+title: 'Custom SMTP'
+description: 'Configure custom SMTP servers in Nile Auth'
+---
+
+import CustomSmtp from '/snippets/customsmtp.mdx';
+
+<Steps>
+<CustomSmtp />
+
+<Step title="Verify configuration">
+  Once your SMTP server is configured, you can test the connection to ensure
+  that it is working correctly. Select a template and at the bottom, click the
+  **Test email sending** button. It will send an email to the email address of
+  your developer account.
+  <Info>
+    Most services require you to configure a test email. Use the email address
+    associated with the single sign on account you used when you logged in.
+  </Info>
+</Step>
+
+<Step title="Configure variables">
+You can use variables in your email templates to personalize the content. The following variables are available automatically:
+
+- **user.email** - the email of the user
+- **user.name** - if set, the name of the user
+- **api_url** - the URL of your application. This is used to generate links in the email that come back to the server handling Nile auth requests. By default, this is obtained from the headers of the request, but it is possible to hardcode and/or overide it
+
+Additional variables can be used and will be replaced in the HTML sent using the `${variable}` syntax. For example
+
+```html
+<div>
+  <div>Dear ${user.email}</div>
+  <a href="${api_url}"> Reset Your Password </a>
+  <div></div>
+</div>
+```
+
+  </Step>
+
+</Steps>
+
+- [Email Templates](/auth/email/templates)
+- [Email Verification](/auth/email/verification)
+- [Per-tenant Overrides](/auth/concepts/per-tenantoverrides)

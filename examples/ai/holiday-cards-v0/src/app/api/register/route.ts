@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { users } from "@/lib/schema";
-import bcrypt from "bcrypt";
+import { NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import { users } from '@/lib/schema';
+import bcrypt from 'bcrypt';
 
 export async function POST(request: Request) {
   const { name, email, password } = await request.json();
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   });
 
   if (existingUser) {
-    return NextResponse.json({ error: "User already exists" }, { status: 400 });
+    return NextResponse.json({ error: 'User already exists' }, { status: 400 });
   }
 
   // Hash the password

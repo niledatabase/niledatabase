@@ -1,0 +1,78 @@
+---
+title: 'JWTs'
+description: 'Understanding JWT implementation in Nile Auth'
+---
+
+## What is JWT?
+
+At its core, JWT is just a JSON object that is efficiently encoded as a string.
+However, encoded strings can be easily manipulated, so JWT also includes a signature that allows you to verify that the string has not been tampered with.
+
+In the context of authentication, signed JWTs are used to represent authenticated user sessions.
+When a user logs in, a signed JWT is created and sent to the user's browser.
+The signed JWT includes the user's session information, such as the user's ID, email, and other properties - but most importantly,
+it includes the server's cryptographic signature and an expiration time.
+This JWT is then sent back to the server with subsequent requests, allowing the server to verify that the user is authenticated.
+
+Because the JWT exists only on the client side, and is verified by the server, it has advantages and disadvantages:
+
+- It can be used without cookies (for example, using the bearer authentication scheme for REST APIs)
+- The server can verify the JWT without having to maintain a session on the server side or making database calls.
+- It is easily manipulated, so it is important to verify the signature and check the expiration time.
+- It cannot be revoked once issued, an issued JWT will remain valid until it expires.
+
+## JWT Usage in Nile Auth
+
+Nile Auth uses JWTs to represent user sessions for the email + password provider.
+For other providers, database sessions are used instead.
+
+You never need to deal with JWTs directly - Nile Auth and Nile SDK are responsible for creating, verifying and storing them.
+You can access the current JWT using the `useSession` hook (client side), or by calling `nile.auth.getSession` (server side).
+
+You can learn more about sessions in the [Sessions](/auth/concepts/sessions) documentation - which includes information about working with
+user sessions whether they are represented by JWTs or database sessions.
+
+However, it is useful to understand how JWTs work and what they contain.
+
+### JWT Structure
+
+The JWT used by Nile Auth contains the ID of the user (sub - the subject that the token refers to), the user's email, and the expiration time.
+
+```json
+{
+  "sub": "1234567890",
+  "email": "test@example.com",
+  "exp": 1715027200
+}
+```
+
+## Security Considerations
+
+### Token Storage
+
+Tokens should be stored securely on the client side - this typically means using secure, httpOnly cookies.
+Storing tokens in local storage or session storage is not recommended, as this makes them susceptible to XSS attacks.
+
+Nile Auth uses secure, httpOnly cookies by default. So you typically don't need to worry about this.
+
+### Token Expiration
+
+Nile Auth sessions expiration time is set to 30 days, and this applies to both database sessions and JWT sessions.
+Because JWT sessions are stateless, they cannot be revoked once issued.
+However, you can [remove the user from specific tenants](/auth/dashboard/managing-tenants) and disable their access to them.
+
+## Best Practices
+
+When working with JWTs, there are several important security practices to follow. Nile Auth implements all of these best practices by default:
+
+- **Use Strong Signatures**: Always use strong cryptographic algorithms (like RS256) for signing JWTs. Never use weak algorithms or "none".
+- **Keep Tokens Small**: JWTs should contain only essential claims to minimize token size and reduce overhead.
+- **Secure Token Transmission**: Always transmit tokens over HTTPS and use secure, httpOnly cookies.
+- **Validate All Claims**: Always verify the signature and validate all claims (especially expiration) before trusting a token.
+- **Don't Store Sensitive Data**: Avoid storing sensitive information in JWTs as they are stored on the client side and are only signed, not encrypted.
+
+## Related Topics
+
+- [Sessions](/auth/concepts/sessions)
+- [OAuth](/auth/concepts/oauth)
+- [Cookies](/auth/concepts/cookies)

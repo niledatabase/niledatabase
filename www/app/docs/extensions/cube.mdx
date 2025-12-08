@@ -1,0 +1,75 @@
+---
+title: 'Cube'
+description: 'Provides a data type for multi-dimensional cubes.'
+---
+
+The [cube](https://www.postgresql.org/docs/current/cube.html) extension in PostgreSQL provides a data type for multi-dimensional cubes. It is useful for applications requiring vector operations, such as geometric data, multi-dimensional indexing, and scientific computing.
+Your Nile database arrives with `cube` extension already enabled, so there's no need to run `create extension`.
+
+## Creating and Populating a Sample Table
+
+Before creating the index, let's create a sample table and populate it with cube data:
+
+```sql
+CREATE TABLE my_table (
+    id SERIAL PRIMARY KEY,
+    dimensions CUBE
+);
+
+INSERT INTO my_table (dimensions) VALUES
+    ('(1,2,3)'),
+    ('(4,5,6)'),
+    ('(7,8,9)'),
+    ('(10,11,12)'),
+    ('(13,14,15)');
+```
+
+## Querying cube Data
+
+With the `cube` extension, you can perform various operations on multi-dimensional data:
+
+### Find Points within a Specific Range
+
+```sql
+SELECT * FROM my_table WHERE dimensions <@ '(0,0,0),(5,5,5)';
+```
+
+This query returns all points within the cube defined by `(0,0,0)` to `(5,5,5)`.
+
+### Compute the Distance Between Two Points
+
+```sql
+SELECT cube_distance('(1,2,3)', '(4,5,6)');
+```
+
+This function computes the Euclidean distance between two cube points.
+
+## Creating an Index on cube Columns
+
+To optimize queries, you can create a GiST index:
+
+```sql
+CREATE INDEX cube_idx ON my_table USING gist (dimensions);
+```
+
+This index improves performance for queries filtering cube data.
+
+## Limitations
+
+- The `cube` type supports up to 100 dimensions by default.
+- It does not support operations like `+`, `-`, or `*` directly; you must use provided cube functions.
+- Indexing performance depends on the number of dimensions and the dataset size.
+
+## Removing a cube Index
+
+If you need to remove an index:
+
+```sql
+DROP INDEX cube_idx;
+```
+
+## Conclusion
+
+The `cube` extension in PostgreSQL enables efficient storage and querying of multi-dimensional data. It is particularly useful for geometric and scientific applications where vector operations and spatial indexing are needed.
+
+For more details, refer to the [PostgreSQL documentation](https://www.postgresql.org/docs/current/cube.html).

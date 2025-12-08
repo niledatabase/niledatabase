@@ -1,10 +1,10 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import { Logo } from "@/components/logo";
-import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/mode-toggle";
-import { nile } from "@/lib/NileServer";
-import UserAccountNav from "@/components/user-account-nav";
+import { Logo } from '@/components/logo';
+import { Button } from '@/components/ui/button';
+import { ModeToggle } from '@/components/mode-toggle';
+import { nile } from '@/lib/NileServer';
+import UserAccountNav from '@/components/user-account-nav';
 
 export const Navbar = async () => {
   const userInfo = await nile.users.getSelf();
@@ -12,10 +12,10 @@ export const Navbar = async () => {
   // Show the public navbar for unauthenticated users or failed responses
   if (!userInfo || userInfo instanceof Response) {
     return (
-      <div className="fixed top-0 w-full h-14 px-4 border-b shadow-sm flex items-center">
-        <div className="md:max-w-screen-2xl mx-auto flex items-center w-full justify-between">
+      <div className="fixed top-0 flex h-14 w-full items-center border-b px-4 shadow-sm">
+        <div className="mx-auto flex w-full items-center justify-between md:max-w-screen-2xl">
           <Logo />
-          <div className="space-x-4 md:block md:w-auto flex items-center justify-between w-full">
+          <div className="flex w-full items-center justify-between space-x-4 md:block md:w-auto">
             <Button size="sm" variant="outline" asChild>
               <Link href="/login">Login</Link>
             </Button>
@@ -36,12 +36,12 @@ export const Navbar = async () => {
   const picture = userInfo.picture;
   const name = userInfo.name;
   return (
-    <div className="fixed top-0 w-full h-14 px-4 border-b shadow-sm flex items-center">
-      <div className="md:max-w-screen-2xl mx-auto flex items-center w-full justify-between">
+    <div className="fixed top-0 flex h-14 w-full items-center border-b px-4 shadow-sm">
+      <div className="mx-auto flex w-full items-center justify-between md:max-w-screen-2xl">
         <Logo />
-        <div className="space-x-4 flex items-center justify-end md:w-full">
+        <div className="flex items-center justify-end space-x-4 md:w-full">
           <ModeToggle />
-          <Button variant={"ghost"} size="sm" asChild>
+          <Button variant={'ghost'} size="sm" asChild>
             <Link href="/dashboard">Dashboard</Link>
           </Button>
           <UserAccountNav email={email} imageUrl={picture} name={name} />

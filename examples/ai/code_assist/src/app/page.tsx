@@ -1,7 +1,7 @@
-import styles from "./page.module.css";
-import ErrorBox from "../components/ErrorBox";
-import { Google } from "@niledatabase/react";
-import BasicSignInForm from "@/components/BasicSignInForm";
+import styles from './page.module.css';
+import ErrorBox from '../components/ErrorBox';
+import { Google } from '@niledatabase/react';
+import BasicSignInForm from '@/components/BasicSignInForm';
 
 export default async function Home() {
   // This demo supports both Google and email/password auth.
@@ -12,11 +12,11 @@ export default async function Home() {
   return (
     <div>
       <div className={styles.center}>
-        <div className="flex flex-col gap-4 w-56 items-center">
+        <div className="flex w-56 flex-col items-center gap-4">
           <ErrorBox />
           {/* These components are simple wrappers around Nile's React components. 
            It is needed because Nile's React components are client-side only. */}
-          {authType === "google" ? (
+          {authType === 'google' ? (
             <Google callbackUrl="/tenants" />
           ) : (
             <BasicSignInForm />

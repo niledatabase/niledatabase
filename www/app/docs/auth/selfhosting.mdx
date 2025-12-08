@@ -1,0 +1,45 @@
+---
+title: 'Self Host Nile Auth'
+description: 'Learn how to self-host Nile Auth in your own infrastructure'
+icon: 'server'
+---
+
+import LocalDevelopment from '/snippets/localdevelopment.mdx';
+import CreateNextApp from '/snippets/createnextapp.mdx';
+import InstallNile from '/snippets/installnile.mdx';
+import UsingAuthComponent from '/snippets/usingauthcomponent.mdx';
+
+<Steps>
+  <LocalDevelopment/>
+  <Step title="Test Nile Auth">
+  Nile Auth service is running and listening on port 3000. We will do a curl to check if you can reach it and if it is returning the right information.
+  The curl command queries the list of providers. By default, it should only have the email/credential option.
+
+```bash
+curl http://localhost:3000/v2/databases/01000000-0000-7000-8000-000000000000/auth/providers
+```
+
+Output:
+
+```bash
+{"credentials":{"id":"credentials","name":"credentials","type":"credentials","signinUrl":"https://null/api/auth/signin/credentials","callbackUrl":"https://null/api/auth/callback/credentials"}}%
+```
+
+  </Step>
+  <CreateNextApp/>
+  <Step title="Setup environment">
+  Create a .env file in the next app folder that you just created and paste the values below. This will make the Next app that we just created use the local Nile Postgres and Nile Auth.
+  ```bash
+  NILEDB_USER=00000000-0000-0000-0000-000000000000
+  NILEDB_PASSWORD=password
+  NILEDB_API_URL=http://localhost:3000/v2/databases/01000000-0000-7000-8000-000000000000
+  NILEDB_POSTGRES_URL=postgres://localhost:5432/test
+  ```
+  </Step>
+  <InstallNile/>
+  <UsingAuthComponent/>
+  <Step title="Next Steps">
+    - [Explore Frontend Frameworks](/auth/quickstarts/nextjs)
+    - [Learn About Backend Integration](/auth/quickstarts/express) 
+  </Step>
+</Steps>

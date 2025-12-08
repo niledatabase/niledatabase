@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 interface UserMessageProps {
   text: string;
@@ -7,7 +7,7 @@ interface UserMessageProps {
 const UserMessage: FC<UserMessageProps> = ({ text }) => {
   return (
     <>
-      <div className="text-blue-500 text-right p-4 gap-x-8 rounded-lg w-full">
+      <div className="w-full gap-x-8 rounded-lg p-4 text-right text-blue-500">
         {text}
       </div>
     </>

@@ -1,0 +1,78 @@
+---
+title: 'Random'
+description: 'Random data generator extension for PostgreSQL with wide range of data types'
+---
+
+The `random` extension provides a collection of functions to generate random values for various data types in PostgreSQL. It's particularly useful for testing, data generation, and creating reproducible datasets.
+Your Nile database arrives with the `random` extension already enabled.
+
+## Understanding Reproducible Output
+
+The extension is designed to generate repeatable data sets. Each function takes `seed` and `nvalues` parameters:
+
+- `seed`: Determines a subset of possible values to generate
+- `nvalues`: Determines the number of distinct values
+
+This allows you to generate the same set of values consistently when needed, though the order of values may vary.
+
+## Examples
+
+### String Generation
+
+```sql
+-- Generate random strings with specified length range
+-- This will generate 10 random strings between 5 and 10 characters long
+SELECT random_string(
+    42,           -- seed for reproducibility
+    1000,        -- size of pool of possible values
+    5,      -- minimum string length
+    10      -- maximum string length
+) from generate_series(1, 10);
+
+-- If we set a small pool size, we will get less unique values
+-- This will return the same two strings 10 times
+SELECT random_string(42,2,5,10) from generate_series(1, 10);
+```
+
+### Numeric Types
+
+```sql
+-- Generate 10 random 32-bit integers between 1 and 100
+SELECT random_int(42,1000,1,100) from generate_series(1, 10);
+
+-- Generate 10 random double precision numbers between 0 and 1
+SELECT random_double_precision(42,1000,0.0,1.0) from generate_series(1, 10);
+```
+
+### Network Types
+
+```sql
+-- Generate 10 random IP addresses
+SELECT random_inet(42,1000) from generate_series(1, 10);
+
+-- Generate 10 random CIDR addresses
+SELECT random_cidr(42,1000) from generate_series(1, 10);
+```
+
+## Common Use Cases
+
+The random extension is invaluable for creating reproducible test datasets, populating development
+databases, generating real-looking data for demos and conducting performance testing with controlled data.
+
+## Best Practices
+
+1. **Seed Management**
+   - Use consistent seeds for reproducible results
+   - Document seeds used in test scenarios
+   - Vary seeds systematically for different test cases
+
+2. **Value Distribution**
+   - Consider the actual number of distinct values needed
+   - Account for potential PRNG collisions
+   - Use appropriate ranges for your use case
+
+## Additional Resources
+
+The random extension is a powerful tool for generating reproducible data.
+It contains many more functions than what is shown here. To see the full list of functions,
+please refer to the [Random Extension Repository](https://github.com/tvondra/random).

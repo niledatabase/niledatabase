@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import Image from "next/image";
+import Image from 'next/image';
 
 export type Tweet = {
   id: string;
@@ -15,10 +15,10 @@ export type Tweet = {
 
 export function TweetCard({ tweet }: { tweet: Tweet }) {
   return (
-    <div className="bg-[#16181c] rounded-2xl border border-[#2f3336] p-4 h-[250px] flex flex-col">
+    <div className="flex h-[250px] flex-col rounded-2xl border border-[#2f3336] bg-[#16181c] p-4">
       {/* Author Section */}
       <div className="flex items-center gap-3">
-        <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-zinc-800 to-zinc-700">
+        <div className="relative h-12 w-12 overflow-hidden rounded-full bg-gradient-to-br from-zinc-800 to-zinc-700">
           <Image
             src={tweet.author.avatar}
             alt={`${tweet.author.name}'s profile picture`}
@@ -32,20 +32,20 @@ export function TweetCard({ tweet }: { tweet: Tweet }) {
             {tweet.author.name}
           </span>
           {tweet.author.title && (
-            <span className="text-zinc-400 text-sm mt-0.5">
+            <span className="mt-0.5 text-sm text-zinc-400">
               {tweet.author.title}
             </span>
           )}
         </div>
         <div className="ml-auto">
-          <svg viewBox="0 0 24 24" className="w-5 h-5 text-white fill-current">
+          <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current text-white">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
           </svg>
         </div>
       </div>
 
       {/* Content Section */}
-      <div className="mt-3 text-[15px] leading-normal text-white/90 line-clamp-4">
+      <div className="mt-3 line-clamp-4 text-[15px] leading-normal text-white/90">
         {tweet.content}
       </div>
 
@@ -54,9 +54,9 @@ export function TweetCard({ tweet }: { tweet: Tweet }) {
         href={`https://x.com/i/status/${tweet.id}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-auto pt-4 block"
+        className="mt-auto block pt-4"
       >
-        <button className="w-full bg-black hover:bg-zinc-900 text-white font-bold py-2 px-4 rounded-full transition-colors border border-zinc-700">
+        <button className="w-full rounded-full border border-zinc-700 bg-black px-4 py-2 font-bold text-white transition-colors hover:bg-zinc-900">
           View on X
         </button>
       </a>

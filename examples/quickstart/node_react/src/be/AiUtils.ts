@@ -1,9 +1,9 @@
-import { OpenAI } from "openai";
-import { Server } from "@niledatabase/server";
+import { OpenAI } from 'openai';
+import { Server } from '@niledatabase/server';
 
 export enum EmbeddingTasks {
-  SEARCH_DOCUMENT = "search_document:",
-  SEARCH_QUERY = "search_query:",
+  SEARCH_DOCUMENT = 'search_document:',
+  SEARCH_QUERY = 'search_query:',
 }
 
 export interface todo {
@@ -11,11 +11,11 @@ export interface todo {
   estimate: string;
 }
 
-const DEFAULT_MODEL = "nomic-ai/nomic-embed-text-v1.5";
+const DEFAULT_MODEL = 'nomic-ai/nomic-embed-text-v1.5';
 const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || DEFAULT_MODEL;
 
 function adjust_input(text: string, task: EmbeddingTasks): string {
-  if (EMBEDDING_MODEL?.indexOf("nomic") >= 0) {
+  if (EMBEDDING_MODEL?.indexOf('nomic') >= 0) {
     return task + text;
   } else {
     return text;
@@ -50,14 +50,14 @@ export async function embedTask(title: string, task: EmbeddingTasks) {
 
 export async function findSimilarTasks(
   tenantNile: Server,
-  title: string
+  title: string,
 ): Promise<todo[]> {
   const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
 
   // get similar tasks, no need to filter by tenant because we are already in the tenant context
   const similarTasks = await tenantNile.db.query(
     `SELECT title, estimate FROM todos WHERE embedding <-> $1 < 1 ORDER BY embedding <-> $1 LIMIT 3;`,
-    [embeddingToSQL(embedding)]
+    [embeddingToSQL(embedding)],
   );
 
   console.log(` found ${similarTasks.rowCount} similar tasks`);
@@ -75,7 +75,7 @@ export async function aiEstimate(title: string, similarTasks: todo[]) {
 
   const model =
     process.env.AI_MODEL ||
-    "accounts/fireworks/models/llama-v3p1-405b-instruct";
+    'accounts/fireworks/models/llama-v3p1-405b-instruct';
 
   const message = `you are an amazing project manager. I need to ${title}. How long do you think this will take?${
     similarTasks.length > 0
@@ -85,18 +85,18 @@ export async function aiEstimate(title: string, similarTasks: todo[]) {
             estimate: task.estimate,
           })),
           null,
-          2
+          2,
         )}.`
-      : ""
+      : ''
   }
   respond with just the estimate, keep the answer short.`;
 
-  console.log("Message to AI:", message);
+  console.log('Message to AI:', message);
 
   const aiEstimate = await ai.chat.completions.create({
     messages: [
       {
-        role: "user",
+        role: 'user',
         content: message,
       },
     ],
@@ -104,12 +104,12 @@ export async function aiEstimate(title: string, similarTasks: todo[]) {
     model: model,
   });
 
-  console.log("aiEstimate", aiEstimate);
+  console.log('aiEstimate', aiEstimate);
 
   // if we got a valid response, return it
-  if (aiEstimate.choices[0].finish_reason === "stop") {
+  if (aiEstimate.choices[0].finish_reason === 'stop') {
     return aiEstimate.choices[0].message.content;
   }
   // otherwise, we simply don't have an estimate
-  return "unknown";
+  return 'unknown';
 }

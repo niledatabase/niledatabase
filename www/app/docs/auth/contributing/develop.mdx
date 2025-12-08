@@ -1,0 +1,131 @@
+---
+title: 'Development'
+description: 'Learn how to contribute to Nile Auth development'
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+- Git
+- PostgreSQL (for local development)
+
+### Setting Up the Development Environment
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/niledatabase/niledatabase
+cd niledatabase
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set up environment variables:
+
+```bash
+cp .env.example .env
+```
+
+## Project Structure
+
+```
+src/
+├── auth/         # Authentication core
+├── components/   # React components
+├── hooks/        # Custom hooks
+├── utils/        # Utility functions
+└── types/        # TypeScript types
+```
+
+## Development Workflow
+
+### Running Locally
+
+1. Start the development server:
+
+```bash
+npm run dev
+```
+
+2. Run tests:
+
+```bash
+npm test
+```
+
+### Code Style
+
+We use the following tools for code quality:
+
+- ESLint for linting
+- Prettier for code formatting
+- TypeScript for type checking
+
+### Making Changes
+
+1. Create a new branch:
+
+```bash
+git checkout -b feature/your-feature-name
+```
+
+2. Make your changes and commit:
+
+```bash
+git add .
+git commit -m "feat: description of your changes"
+```
+
+3. Push your changes:
+
+```bash
+git push origin feature/your-feature-name
+```
+
+## Pull Request Process
+
+1. Update documentation for any new features
+2. Ensure all tests pass
+3. Update the changelog
+4. Submit your PR with a clear description
+
+## Documentation
+
+### Adding New Documentation
+
+1. Create new MDX files in the appropriate directory
+2. Update the navigation in `mint.json`
+3. Include code examples and explanations
+
+### Documentation Style Guide
+
+- Use clear, concise language
+- Include code examples
+- Add proper headings and sections
+- Link to related topics
+
+## Best Practices
+
+- Write clean, maintainable code
+- Add unit tests for new features
+- Keep components small and focused
+- Document your code thoroughly
+
+## Getting Help
+
+- [Join our Discord](https://discord.com/invite/8UuBB84tTy)
+- [Report Issues](/auth/contributing/report)
+- [Read Testing Guide](/auth/contributing/testing)
+
+## Related Topics
+
+- [Testing Guide](/auth/contributing/testing)
+- [Issue Reporting](/auth/contributing/report)
+- [Community](/auth/help/community)

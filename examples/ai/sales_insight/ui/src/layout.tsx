@@ -1,16 +1,16 @@
 /// <reference types="vite-plugin-svgr/client" />
-import "@fontsource/inter";
-import Stack from "@mui/joy/Stack";
-import Link from "@mui/joy/Link";
-import Card from "@mui/joy/Card";
-import CardContent from "@mui/joy/CardContent";
-import Typography from "@mui/joy/Typography";
-import "./assets/globals.css";
-import styles from "./assets/page.module.css";
-import { ReactNode } from "react";
+import '@fontsource/inter';
+import Stack from '@mui/joy/Stack';
+import Link from '@mui/joy/Link';
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import Typography from '@mui/joy/Typography';
+import './assets/globals.css';
+import styles from './assets/page.module.css';
+import { ReactNode } from 'react';
 
-import NileLogo from "./assets/nile_logo.svg?react";
-import PythonLogo from "./assets/python_logo.svg?react";
+import NileLogo from './assets/nile_logo.svg?react';
+import PythonLogo from './assets/python_logo.svg?react';
 
 interface Props {
   children?: ReactNode;
@@ -21,7 +21,7 @@ export default function Layout({ children }: Props) {
   console.log(window.location.pathname);
   return (
     <main className={styles.main}>
-      <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+      <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
         <div className={styles.description}>
           <div>
             <PythonLogo width="50px" height="50px" />
@@ -32,25 +32,25 @@ export default function Layout({ children }: Props) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Created by{"    "}
+              Created by{'    '}
               <NileLogo
                 width="100px"
                 height="37px"
-                style={{ marginLeft: "15px" }}
+                style={{ marginLeft: '15px' }}
               />
             </a>
           </div>
         </div>
-        {window.location.pathname === "/" ? null : (
+        {window.location.pathname === '/' ? null : (
           <div className={styles.logout}>
-            <Link href="/?logout" style={{ color: "black" }}>
+            <Link href="/?logout" style={{ color: 'black' }}>
               [ Logout ]
             </Link>
           </div>
         )}
       </div>
       <div>
-        <Stack alignItems="center" sx={{ width: "100%" }}>
+        <Stack alignItems="center" sx={{ width: '100%' }}>
           <Typography level="h2" textAlign="center" maxWidth="800px">
             Sales Insight (Demo)
           </Typography>
@@ -67,10 +67,10 @@ export default function Layout({ children }: Props) {
         <Card
           variant="outlined"
           sx={{
-            "--card-padding": "1rem",
-            "&:hover": {
-              boxShadow: "md",
-              borderColor: "neutral.outlinedHoverBorder",
+            '--card-padding': '1rem',
+            '&:hover': {
+              boxShadow: 'md',
+              borderColor: 'neutral.outlinedHoverBorder',
             },
           }}
         >
@@ -89,10 +89,10 @@ export default function Layout({ children }: Props) {
         <Card
           variant="outlined"
           sx={{
-            "--card-padding": "1rem",
-            "&:hover": {
-              boxShadow: "md",
-              borderColor: "neutral.outlinedHoverBorder",
+            '--card-padding': '1rem',
+            '&:hover': {
+              boxShadow: 'md',
+              borderColor: 'neutral.outlinedHoverBorder',
             },
           }}
         >
@@ -112,10 +112,10 @@ export default function Layout({ children }: Props) {
         <Card
           variant="outlined"
           sx={{
-            "--card-padding": "1rem",
-            "&:hover": {
-              boxShadow: "md",
-              borderColor: "neutral.outlinedHoverBorder",
+            '--card-padding': '1rem',
+            '&:hover': {
+              boxShadow: 'md',
+              borderColor: 'neutral.outlinedHoverBorder',
             },
           }}
         >

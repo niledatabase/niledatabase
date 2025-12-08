@@ -1,5 +1,5 @@
-import ResetPasswordForm from "./ResetPasswordForm";
-import Link from "next/link";
+import ResetPasswordForm from './ResetPasswordForm';
+import Link from 'next/link';
 export default async function ResetPasswordPage({
   searchParams,
 }: {

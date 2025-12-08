@@ -1,0 +1,38 @@
+<Step title="Prerequisites">
+    Nile provides a cloud offering to help build multi-tenant apps. You can also get started with Nile's Docker image
+    and try Nile locally. [Join our discord](https://discord.com/invite/8UuBB84tTy) to give feedback or ask questions about running Nile locally.
+
+    - [Docker](https://www.docker.com/get-started)
+    - Postgres client. We'll use `psql` in this guide.
+
+</Step>
+<Step title="Run the Docker Container">
+
+```bash
+docker run -p 5432:5432 -p 3000:3000 -ti ghcr.io/niledatabase/testingcontainer:latest
+```
+
+This will start a Postgres database with Nile extensions installed. It will also start Nile Auth (optional).
+If this is the first time you are running the container, it will also pull the latest image,create the `test` database
+and the `00000000-0000-0000-0000-000000000000` user.
+
+</Step>
+<Step title="Connecting to the Database">
+
+You can use `psql` with the following connection string:
+
+```bash
+psql postgres://00000000-0000-0000-0000-000000000000:password@localhost:5432/test
+```
+
+Or, if you are using a different client, you use the following connection details:
+
+```
+Host: localhost
+Port: 5432
+Database: test
+Username: 00000000-0000-0000-0000-000000000000
+Password: password
+```
+
+</Step>

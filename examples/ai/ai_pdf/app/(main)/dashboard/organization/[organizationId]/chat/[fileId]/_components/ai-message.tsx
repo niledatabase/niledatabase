@@ -1,12 +1,12 @@
-"use client";
-import { Button } from "@/components/ui/button";
+'use client';
+import { Button } from '@/components/ui/button';
 // import { useToast } from "@/components/ui/use-toast";
-import { Copy } from "lucide-react";
-import { FC } from "react";
-import { toast } from "sonner";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
+import { Copy } from 'lucide-react';
+import { FC } from 'react';
+import { toast } from 'sonner';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
 
 interface AIMessageProps {
   text: string;
@@ -18,11 +18,11 @@ const AIMessage: FC<AIMessageProps> = ({ text }) => {
       return;
     }
     navigator.clipboard.writeText(text);
-    toast.success("Message Copied to Clipboard");
+    toast.success('Message Copied to Clipboard');
   };
   return (
     <>
-      <div className="text-green-500 p-4 w-full flex items-start gap-x-8 rounded-lg max-w-lg bg-muted group">
+      <div className="group flex w-full max-w-lg items-start gap-x-8 rounded-lg bg-muted p-4 text-green-500">
         {/* <ReactMarkdown
           components={{
             pre: ({ node, ...props }) => (
@@ -52,17 +52,17 @@ const AIMessage: FC<AIMessageProps> = ({ text }) => {
         </ReactMarkdown> */}
         <ReactMarkdown
           remarkPlugins={[remarkGfm, remarkMath]}
-          className="text-base prose dark:prose-invert prose-ul:m-0 prose-li:m-0 prose-p:my-0 prose-h3:my-0"
+          className="prose dark:prose-invert prose-ul:m-0 prose-li:m-0 prose-p:my-0 prose-h3:my-0 text-base"
         >
           {text}
         </ReactMarkdown>
         <Button
           onClick={onCopy}
-          className="opacity-0 group-hover:opacity-100 transition"
+          className="opacity-0 transition group-hover:opacity-100"
           size="icon"
           variant="ghost"
         >
-          <Copy className="w-4 h-4" />
+          <Copy className="h-4 w-4" />
         </Button>
       </div>
     </>

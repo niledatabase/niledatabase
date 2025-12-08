@@ -1,5 +1,5 @@
-import { SubscriptionButton } from "./_components/subscription_button";
-import { checkSubscription } from "@/lib/subscription";
+import { SubscriptionButton } from './_components/subscription_button';
+import { checkSubscription } from '@/lib/subscription';
 
 interface pageProps {}
 

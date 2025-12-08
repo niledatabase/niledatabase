@@ -1,0 +1,124 @@
+import InstallNileAndNext from '/snippets/installnile.mdx';
+
+## Overview
+
+Email invites allow users to invite additional users to their tenants.
+
+When a user invites another user, Nile Auth:
+
+1. Sends an invite email using your configured SMTP server.
+2. Grants access to the user after they click the invite link.
+
+## Prerequisites
+
+- A configured SMTP server is required to send verification emails. You can set this up in the Nile Auth UI under **Tenants & Users -> Configuration -> Email templates**.
+- A web server configured to handle Nile Auth requests and serve html.
+
+## Implementation
+
+<Steps>
+  <InstallNileAndNext />
+  <Step title="List invites for a user">
+    ```typescript
+    import { nile } from "@/lib/nile";
+    import { DataTable } from '@/components/table'
+
+    export function Invites() {
+      const [invites, users] = nile.withContext(
+        // better to save tenantId with a cookie or get with extension, but this works too
+        { tenantId: parseTenantId(await headers()) },
+        async(_nile) => Promise.all([
+          _nile.tenants.invites();
+          _nile.tenants.users()
+        ]);
+      );
+      return (
+        <div>
+          <form action={inviteUser}>
+          {/* invite user form that takes an email address */}
+          </form>
+          {/*A table for pending invites*/}
+          <DataTable data={invites}>
+          {/*A table for of existing users*/}
+          <DataTable data={invites}>
+        </div>
+      );
+    }
+
+    ```
+
+  </Step>
+
+<Step title="Basic invite user action">
+Based on the current context, invite the new user
+```ts
+export async function inviteUser(
+  _: unknown,
+  formData: FormData
+): Promise<ServerResponse> {
+  'use server';
+
+const email = formData.get('email') as string;
+}); // tenant context set by extension, else you need `nile.withContext` here
+const response = await nile.tenants.invite({
+email,  
+ callbackUrl: `/your-callback-handler`
+})
+if (response instanceof Response) {
+return {
+ok: false,
+message: `Failed to create invite for user: ${await response.text()}`,
+};
+}
+
+return { ok: true, data: response };
+}
+
+````
+</Step>
+
+  <Step title="Callback after invite">
+For completeness, it is possible that an existing user invited a brand new user. Because user authorization/authentication is separate from tenant membership, and even invites exist outside of a user account, you may need to prompt the user to create an account that they are able to use.
+
+In the below sample code, the `/your-callback-handler` could check if the user has logged in by virtue of the `nile.users.getSelf()` function.
+
+If they are not logged in, send them to a sign up page for user creation or sign in.
+
+If they are logged in, we check to be sure they are the same user. If not, they need to switch users (their current signed in user does not have access to the tenant, after all)
+
+Lastly, if they are signed in as the user that was invited, they can see a list of invites on that tenant.
+
+<Note>Nile-auth email address are an exact match. Some email providers (like gmail) will allow receiving emails that don't exactly match, eg (my.cool.email@gmail.com can receive mail from mycoolemail@gmail.com). In nile-auth, those are considered two separate users.</Note>
+
+  ```ts
+import { User } from '@niledatabase/server';
+import { redirect } from 'next/navigation';
+import { NextRequest } from 'next/server';
+
+import { nile } from '@/app/api/[...nile]/nile';
+
+export async function GET(req: NextRequest) {
+  // you may have already been logged in, so we need to check
+  const me = await nile.users.getSelf<Response | User>();
+  if (me instanceof Response) {
+    // its a 404/401, which means the user needs to sign up before they can do any thing
+    return redirect('/invites/sign-up');
+  }
+  // we need to be sure the identifier matches the user. If not, we need to give them the option to switch users.
+  const email = req.nextUrl.searchParams.get('email');
+  if (email !== me.email) {
+    return redirect('/invites/user-switcher');
+  }
+  return redirect('/invites');
+}
+
+````
+
+  </Step>
+</Steps>
+
+## Related Topics
+
+- [Email Templates](/auth/email/templates)
+- [Email Verification](/auth/email/verification)
+- [Custom SMTP](/auth/email/customsmtp)

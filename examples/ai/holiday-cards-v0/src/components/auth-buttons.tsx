@@ -1,14 +1,14 @@
-"use client";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+'use client';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export function AuthButtons() {
   const { status } = useSession();
 
   return (
     <div className="space-x-4">
-      {status === "authenticated" ? (
+      {status === 'authenticated' ? (
         <>
           <Button asChild variant="ghost">
             <Link href="/dashboard">Dashboard</Link>

@@ -1,9 +1,9 @@
-import type { MDXComponents } from "mdx/types";
-import Video from "./app/_components/Video";
-import Image from "next/image";
-import DataFlows from "./app/blog/_components/data-flows";
-import { Col, Row } from "./app/_components/common/Layout";
-import CopyToClipboard from "./app/_components/common/CopyToClipboard";
+import type { MDXComponents } from 'mdx/types';
+import Video from './app/_components/Video';
+import Image from 'next/image';
+import DataFlows from './app/blog/_components/data-flows';
+import { Col, Row } from './app/_components/common/Layout';
+import CopyToClipboard from './app/_components/common/CopyToClipboard';
 
 // This file allows you to provide custom React components
 // to be used in MDX files. You can import and use any

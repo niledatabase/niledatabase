@@ -1,0 +1,290 @@
+---
+title: 'Managing Tenants'
+icon: 'users'
+---
+
+Nile provides built-in multi-tenancy support. This guide covers all tenant management commands and their usage.
+
+```bash
+nile tenants [command] [options]
+```
+
+Available commands:
+
+- `list` - View all tenants
+- `create` - Create a new tenant
+- `delete` - Remove a tenant
+- `update` - Modify tenant details
+
+## Prerequisites
+
+Before managing tenants, ensure you have:
+
+1. Selected a workspace
+2. Selected a database
+3. Authenticated with Nile
+
+```bash Prerequisites
+# Set workspace and database
+nile config --workspace my-workspace --db my-database
+
+# Verify configuration
+nile config
+```
+
+## Listing Tenants
+
+The `list` command shows all tenants in your database.
+
+```bash
+nile tenants list [options]
+```
+
+### Options
+
+| Flag          | Description                       | Default           |
+| ------------- | --------------------------------- | ----------------- |
+| `--format`    | Output format (human, json, csv)  | human             |
+| `--workspace` | Workspace containing the database | Current workspace |
+| `--db`        | Database to list tenants from     | Current database  |
+
+### Examples
+
+```bash List Examples
+# Basic list
+nile tenants list
+
+# JSON format
+nile tenants list --format json
+
+# List from specific database
+nile tenants list --db customer-db
+```
+
+<img height="100" src="/images/tenantlist.png" />
+
+## Creating Tenants
+
+The `create` command adds a new tenant to your database.
+
+```bash
+nile tenants create [options]
+```
+
+### Required Options
+
+| Flag     | Description        |
+| -------- | ------------------ |
+| `--name` | Name of the tenant |
+
+### Additional Options
+
+| Flag          | Description                       | Default           |
+| ------------- | --------------------------------- | ----------------- |
+| `--id`        | Custom ID for the tenant          | Auto-generated    |
+| `--format`    | Output format (human, json, csv)  | human             |
+| `--workspace` | Workspace containing the database | Current workspace |
+| `--db`        | Database to create tenant in      | Current database  |
+
+### Examples
+
+```bash Create Examples
+# Create with auto-generated ID
+nile tenants create --name "Acme Corp"
+
+# Create with custom ID
+nile tenants create --name "Globex Inc" --id globex-2024
+
+# Create with JSON output
+nile tenants create --name "Initech" --format json
+```
+
+<img height="100" src="/images/tenantcreate.png" />
+
+## Updating Tenants
+
+The `update` command modifies existing tenant details.
+
+```bash
+nile tenants update [options]
+```
+
+### Required Options
+
+| Flag         | Description                |
+| ------------ | -------------------------- |
+| `--id`       | ID of the tenant to update |
+| `--new_name` | New name for the tenant    |
+
+### Additional Options
+
+| Flag          | Description                       | Default           |
+| ------------- | --------------------------------- | ----------------- |
+| `--format`    | Output format (human, json, csv)  | human             |
+| `--workspace` | Workspace containing the database | Current workspace |
+| `--db`        | Database containing the tenant    | Current database  |
+
+### Examples
+
+```bash Update Examples
+# Update tenant name
+nile tenants update --id tenant_123 --new_name "Acme Corporation"
+
+# Update with JSON output
+nile tenants update --id tenant_123 --new_name "Acme Corp Ltd" --format json
+
+# Update in specific database
+nile tenants update --id tenant_123 --new_name "New Name" --db customer-db
+```
+
+<img height="100" src="/images/tenantupdate.png" />
+
+## Deleting Tenants
+
+The `delete` command removes a tenant from your database.
+
+```bash
+nile tenants delete [options]
+```
+
+### Required Options
+
+| Flag   | Description                |
+| ------ | -------------------------- |
+| `--id` | ID of the tenant to delete |
+
+### Additional Options
+
+| Flag          | Description                       | Default           |
+| ------------- | --------------------------------- | ----------------- |
+| `--force`     | Skip confirmation prompt          | false             |
+| `--workspace` | Workspace containing the database | Current workspace |
+| `--db`        | Database containing the tenant    | Current database  |
+
+### Examples
+
+```bash Delete Examples
+# Delete with confirmation
+nile tenants delete --id tenant_123
+
+# Force delete without confirmation
+nile tenants delete --id tenant_123 --force
+
+# Delete from specific database
+nile tenants delete --id tenant_123 --db customer-db
+```
+
+<img height="100" src="/images/tenantdelete.png" />
+
+## Common Workflows
+
+### Setting Up Initial Tenants
+
+```bash Initial Setup
+# 1. Create main tenant
+nile tenants create --name "Main Customer"
+
+# 2. Create additional tenants
+nile tenants create --name "Customer A"
+nile tenants create --name "Customer B"
+
+# 3. Verify creation
+nile tenants list
+```
+
+### Tenant Maintenance
+
+```bash Maintenance
+# 1. List all tenants
+nile tenants list
+
+# 2. Update names if needed
+nile tenants update --id tenant_123 --new_name "Updated Name"
+
+# 3. Remove unused tenants
+nile tenants delete --id tenant_456 --force
+```
+
+### Bulk Operations
+
+```bash Bulk Operations [expandable]
+# List all tenants in JSON format
+nile tenants list --format json > tenants.json
+
+# Create multiple tenants
+cat tenants.txt | while read name; do
+  nile tenants create --name "$name"
+done
+
+# Update multiple tenants
+cat updates.txt | while read id name; do
+  nile tenants update --id "$id" --new_name "$name"
+done
+```
+
+## Common Issues
+
+### Tenant Not Found
+
+When tenant doesn't exist:
+
+```bash Not Found
+# Try to update non-existent tenant
+nile tenants update --id invalid_id --new_name "New Name"
+Error: Tenant 'invalid_id' not found
+
+# List available tenants
+nile tenants list
+```
+
+### Database Not Selected
+
+When database isn't specified:
+
+```bash No Database
+# Try without database selected
+nile tenants list
+Error: No database specified
+
+# Solution: Set database
+nile config --db my-database
+```
+
+### Duplicate Tenant ID
+
+When creating tenant with existing ID:
+
+```bash Duplicate ID
+# Try to create with existing ID
+nile tenants create --name "New Tenant" --id existing_id
+Error: Tenant ID 'existing_id' already exists
+
+# Use auto-generated ID instead
+nile tenants create --name "New Tenant"
+```
+
+## Best Practices
+
+1. **Naming Conventions**: Use clear, consistent tenant names:
+
+   ```bash
+   nile tenants create --name "Company Name - Environment"
+   ```
+
+2. **Regular Verification**: Periodically verify tenant list:
+
+   ```bash
+   nile tenants list --format json > tenant_audit.json
+   ```
+
+3. **Backup Before Delete**: List tenant details before deletion:
+   ```bash
+   nile tenants list > tenants_backup.txt
+   ```
+
+## Related Commands
+
+- `nile db psql` - Connect to tenant's database
+- `nile db connectionstring` - Get tenant-specific connection
+- `nile config` - Configure CLI settings
+- `nile workspace` - Manage workspaces

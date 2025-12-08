@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { teamMembers } from "@/lib/schema";
-import OpenAI from "openai";
-import { eq, and } from "drizzle-orm";
+import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
+import { db } from '@/lib/db';
+import { teamMembers } from '@/lib/schema';
+import OpenAI from 'openai';
+import { eq, and } from 'drizzle-orm';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -12,11 +12,11 @@ const openai = new OpenAI({
 
 export async function POST(
   request: Request,
-  { params }: { params: Promise<{ id: string; memberId: string }> }
+  { params }: { params: Promise<{ id: string; memberId: string }> },
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   const tenantId = (await params).id;
   const memberId = (await params).memberId;
@@ -26,20 +26,20 @@ export async function POST(
   });
 
   if (!member) {
-    return NextResponse.json({ error: "Member not found" }, { status: 404 });
+    return NextResponse.json({ error: 'Member not found' }, { status: 404 });
   }
 
   // Generate holiday wishes
   const completion = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: 'gpt-3.5-turbo',
     messages: [
       {
-        role: "system",
+        role: 'system',
         content:
-          "You are a helpful assistant that generates personalized holiday wishes.",
+          'You are a helpful assistant that generates personalized holiday wishes.',
       },
       {
-        role: "user",
+        role: 'user',
         content: `Generate a short, warm holiday wish for ${member.name}. Their description: ${member.description}`,
       },
     ],
@@ -49,15 +49,15 @@ export async function POST(
 
   // Generate image
   const image = await openai.images.generate({
-    model: "dall-e-2",
+    model: 'dall-e-2',
     prompt: `A festive holiday card image for ${member.name}, incorporating elements from: ${member.description}`,
-    size: "512x512",
+    size: '512x512',
   });
 
   if (!image.data?.[0]?.url) {
     return NextResponse.json(
-      { error: "Failed to generate image" },
-      { status: 500 }
+      { error: 'Failed to generate image' },
+      { status: 500 },
     );
   }
 
@@ -69,7 +69,7 @@ export async function POST(
     }
 
     const imageBuffer = await imageResponse.arrayBuffer();
-    const base64Image = Buffer.from(imageBuffer).toString("base64");
+    const base64Image = Buffer.from(imageBuffer).toString('base64');
     const imageData = `data:image/png;base64,${base64Image}`;
 
     // Update member with holiday wishes and image data
@@ -80,15 +80,15 @@ export async function POST(
         imageData: imageData,
       })
       .where(
-        and(eq(teamMembers.id, memberId), eq(teamMembers.tenantId, tenantId))
+        and(eq(teamMembers.id, memberId), eq(teamMembers.tenantId, tenantId)),
       );
 
     return NextResponse.json({ holidayWishes, imageUrl: imageData });
   } catch (error) {
-    console.error("Error processing image:", error);
+    console.error('Error processing image:', error);
     return NextResponse.json(
-      { error: "Failed to process image" },
-      { status: 500 }
+      { error: 'Failed to process image' },
+      { status: 500 },
     );
   }
 }

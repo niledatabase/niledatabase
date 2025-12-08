@@ -1,0 +1,173 @@
+---
+title: 'LawPilot AI - AI That Thinks Like a Lawyer'
+sidebarTitle: 'LawPilot'
+---
+
+![legalsnapshot](/images/legalsnapshot.png)
+
+This application will assist law firms in managing legal documents, streamline the document creation and editing process, and facilitate client interaction. Lawyers can create, edit, and chat with legal documents. Clients can read, sign, and chat with the documents. AI features include summarizing legal documents and parsing uploaded agreements for searchability.
+
+### Detailed Requirements
+
+1. **Multitenancy:** Each law firm (tenant) has its own isolated data to ensure data security and segregation.
+2. **User Management:** Lawyers and clients can belong to multiple tenants.
+3. **Document Management:**
+   - Lawyers can create and edit legal documents.
+   - Lawyers and clients can chat within the document.
+   - Documents can be shared with clients.
+4. **Client Interaction:**
+   - Clients can read, sign, and chat with legal documents.
+5. **Case Management:** Track cases within the firm, assign cases to lawyers and clients, and maintain case details.
+6. **Contract Management:** Track legal contracts associated with cases, including the ability to upload, create, and summarize contracts.
+7. **Contract Status:** Track the status of contracts (created, read, signed, revoked).
+
+### Postgres Schemas
+
+![legalschema](/images/legalschema.png)
+
+### 1. lawyers
+
+Tracks information about lawyers, including their education and experience. The lawyers are users of the system and belong to a specific tenant. They have to be one of the users registered in the system.
+
+```sql
+CREATE TABLE lawyers (
+    tenant_id UUID,
+    lawyer_id UUID,
+    education TEXT,
+    experience TEXT,
+    PRIMARY KEY (tenant_id, lawyer_id),
+    FOREIGN KEY (tenant_id, lawyer_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+```
+
+### 2. clients
+
+Tracks information about clients, including their personal information. The clients are users of the system and belong to a specific tenant. They have to be one of the users registered in the system.
+
+```sql
+CREATE TABLE clients (
+    tenant_id UUID,
+    client_id UUID,
+    personal_info JSONB,
+    PRIMARY KEY (tenant_id, client_id),
+    FOREIGN KEY (tenant_id, client_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+```
+
+### 3. cases
+
+Tracks all cases within the firm, including assigned tenant, lawyer, and client. The cases have detailed description about the case and both lawyers and clients would want to ask questions about it. The vector embeddings are created for each of the case descriptions that are used to implement a RAG architecture to enable search capabilities. The AI can also study new cases based on past cases and propose next steps.
+
+```sql
+CREATE TABLE cases (
+    tenant_id UUID,
+    case_id UUID DEFAULT gen_random_uuid(),
+    lawyer_id UUID,
+    client_id UUID,
+    case_description TEXT,
+    status VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, case_id),
+    FOREIGN KEY (tenant_id, lawyer_id) REFERENCES lawyers(tenant_id, lawyer_id),
+    FOREIGN KEY (tenant_id, client_id) REFERENCES clients(tenant_id, client_id)
+);
+```
+
+### 4. contracts
+
+Tracks all legal contracts relevant to a case. Contracts can be uploaded or created. These contracts are typically really long and would be a great use case to help summarize and also ask questions. The embeddings are calculated for each of the contracts. For simplicity, this schema calculates one embedding per contract. In a real world application, you would want to create an embedding per contract chunk. This means breaking the contract into chunks and creating a table that tracks embeddings per chunk. These chunks can then be fed into the AI model for Q&A or summarization.
+
+```sql
+CREATE TABLE contracts (
+    tenant_id UUID,
+    contract_id UUID DEFAULT gen_random_uuid(),
+    case_id UUID,
+    contract_content TEXT,
+    created_by UUID,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, contract_id),
+    FOREIGN KEY (tenant_id, case_id) REFERENCES cases(tenant_id, case_id),
+    FOREIGN KEY (tenant_id, created_by) REFERENCES lawyers(tenant_id, lawyer_id)
+);
+```
+
+### 5. contract_status
+
+Tracks the status of contracts (created, read, signed, revoked).
+
+```sql
+CREATE TABLE contract_status (
+    tenant_id UUID,
+    status_id UUID DEFAULT gen_random_uuid(),
+    contract_id UUID,
+    status VARCHAR(50),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, status_id),
+    FOREIGN KEY (tenant_id, contract_id) REFERENCES contracts(tenant_id, contract_id)
+);
+```
+
+### Complete SQL Script
+
+```sql
+-- Create lawyers table
+CREATE TABLE lawyers (
+    tenant_id UUID,
+    lawyer_id UUID,
+    education TEXT,
+    experience TEXT,
+    PRIMARY KEY (tenant_id, lawyer_id),
+    FOREIGN KEY (tenant_id, lawyer_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+-- Create clients table
+CREATE TABLE clients (
+    tenant_id UUID,
+    client_id UUID,
+    personal_info JSONB,
+    PRIMARY KEY (tenant_id, client_id),
+    FOREIGN KEY (tenant_id, client_id) REFERENCES users.tenant_users(tenant_id, user_id)
+);
+
+-- Create cases table
+CREATE TABLE cases (
+    tenant_id UUID,
+    case_id UUID DEFAULT gen_random_uuid(),
+    lawyer_id UUID,
+    client_id UUID,
+    case_description TEXT,
+    status VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, case_id),
+    FOREIGN KEY (tenant_id, lawyer_id) REFERENCES lawyers(tenant_id, lawyer_id),
+    FOREIGN KEY (tenant_id, client_id) REFERENCES clients(tenant_id, client_id)
+);
+
+-- Create contracts table
+CREATE TABLE contracts (
+    tenant_id UUID,
+    contract_id UUID DEFAULT gen_random_uuid(),
+    case_id UUID,
+    contract_content TEXT,
+    created_by UUID,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vector_embedding VECTOR(768), -- Adjust the dimensions as needed
+    PRIMARY KEY (tenant_id, contract_id),
+    FOREIGN KEY (tenant_id, case_id) REFERENCES cases(tenant_id, case_id),
+    FOREIGN KEY (tenant_id, created_by) REFERENCES lawyers(tenant_id, lawyer_id)
+);
+
+-- Create contract_status table
+CREATE TABLE contract_status (
+    tenant_id UUID,
+    status_id UUID DEFAULT gen_random_uuid(),
+    contract_id UUID,
+    status VARCHAR(50),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (tenant_id, status_id),
+    FOREIGN KEY (tenant_id, contract_id) REFERENCES contracts(tenant_id, contract_id)
+);
+```

@@ -1,0 +1,166 @@
+---
+title: 'Next.js'
+description: 'Integrate Nile Auth with Next.js applications'
+icon: 'n'
+---
+
+This guide will help you get started with Nile Auth and NextJS. This guide outlines the steps required to configure and integrate authentication in your
+application. This guide assumes that you have already created a NextJS application, if you haven't, you can use the [Quickstart](/auth/quickstarts/nextjs) to get started.
+
+<Note>
+  If you have not done so yet, be sure you have [obtained credentials from the
+  console](../getting-started/installation).
+</Note>
+
+<Steps>
+<Step title="Install packages">
+<CodeGroup>
+
+```bash npm
+  npm install @niledatabase/server @niledatabase/nextjs @niledatabase/react @niledatabase/client
+```
+
+```bash yarn
+  yarn add @niledatabase/server @niledatbase/nextjs @niledatabase/react @niledatabase/client
+```
+
+```bash pnpm
+  pnpm add @niledatabase/server @niledatabase/nextjs @niledatabase/react @niledatabase/client
+```
+
+</CodeGroup>
+</Step>
+<Step title="Configure routes">
+
+Configure the splat route. Be sure to add the nextJs extension, it will handle passing the client requests (`next/headers`), as well passing the correct headers on server-side calls automatically.
+
+```typescript app/api/[...nile]/nile.ts
+import { Nile } from '@niledatabase/server';
+import { nextJs } from '@niledatabase/nextjs';
+
+export const nile = Nile({ extensions: [nextJs] });
+```
+
+```typescript app/api/[...nile]/route.ts
+import { nile } from './nile';
+export const { POST, GET, DELETE, PUT } = nile.handlers;
+```
+
+  </Step>
+</Steps>
+
+## Server actions and RSC
+
+The build-in components found in `@niledatabase/react` will request information client side. If you'd like to hydrate them, `@niledatabase/server` functions can be called.
+
+### Example: Verify email address
+
+```ts app/verify-email/page.tsx
+import { UserInfo } from "@niledatabase/react";
+import { nile } from "../api/[...nile]/nile";
+
+export default async function VerifyEmail() {
+  const me = await nile.users.getSelf(); // either the json parsed user, or a request (401)
+  if (me instanceof Response) {
+    return "You must be logged in.";
+  }
+  return (
+    <div className="w-3xl mx-auto">
+      <UserInfo user={me} />
+      // rest of component, probably a form with a button that calls the `action`
+      below
+    </div>
+  );
+}
+```
+
+Server actions work in a similar way. Here's an example of an action that is called to verify a user's email address. An action like this requires SMTP to be configured in the console.
+
+```ts
+async function action() {
+  'use server';
+  const res = await nile.users.verifySelf(
+    {
+      callbackUrl: '/dashboard', // customize where the user should land after their email is verified
+    },
+    true,
+  );
+  if (!res.ok) {
+    return { ok: false, message: await res.text() }; // errors are text
+  }
+  return { ok: true, message: 'Check your email for your verification' };
+}
+```
+
+<Info>
+  `nile.users.verifySelf` mirrors the client-side call to
+  `/api/auth/verify-email`. All server side calls can be called from a client
+  based on their configured route.
+</Info>
+
+### Client side
+
+While in most cases, actions would be used to handle the calls to nile-auth, it is possible to use `@niledatabase/react` which can do a lot of the heavy lifting for you, especially when it comes to client-side authorization, or quickly getting a demo app up and running.
+
+### Example: Hydrated sign up / dashboard page
+
+```ts
+import {
+  SignOutButton,
+  SignUpForm,
+  SignedIn,
+  SignedOut,
+  TenantSelector,
+  UserInfo,
+} from "@niledatabase/react";
+import { nile } from "../api/[...nile]/nile";
+import { Tenant, User } from "@niledatabase/server";
+
+export default async function SignUpPage() {
+  // be sure nothing happens on the edge
+  const [session, me, tenants] = await nile.withContext(async (ctx) => Promise.all([
+    ctx.auth.getSession<any>(),
+    ctx.users.getSelf<User>(),
+    ctx.tenants.list<Tenant[]>(),
+  ]);
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <SignedIn className="flex flex-col gap-4" session={session}>
+        <UserInfo user={me} />
+        <TenantSelector className="py-6 mb-10" tenants={tenants} />
+        <SignOutButton />
+      </SignedIn>
+      <SignedOut session={session}>
+        <SignUpForm createTenant />
+      </SignedOut>
+    </div>
+  );
+}
+```
+
+For something like SSO, the easiest thing to do is create a button for signin in, and `@niledatabase/client` to handle the rest
+
+```ts
+"use client";
+import { Button } from "@/components/ui/button";
+import { signIn, getSession } from "@niledatabase/client";
+export default function AllClient() {
+  const session = getSession();
+  return (
+    <div>
+      Session data: {session ? JSON.stringify(session) : null}
+      <Button
+        onClick={() => {
+          signIn("google", { callbackUrl: "/allClientSide" });
+        }}
+      >
+        Sign in to google
+      </Button>
+    </div>
+  );
+}
+```
+
+## Related topics
+
+- [SDK reference](../sdk-reference/javascript/overview)

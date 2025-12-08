@@ -1,31 +1,31 @@
-import Image from "next/image";
-import arrow from "@/public/icons/arrow.svg";
-import postgresBlack from "@/public/postgres-black.png";
-import AnimatedGradient from "../../AnimatedGradient";
-import TextTyper from "./TextTyper";
+import Image from 'next/image';
+import arrow from '@/public/icons/arrow.svg';
+import postgresBlack from '@/public/postgres-black.png';
+import AnimatedGradient from '../../AnimatedGradient';
+import TextTyper from './TextTyper';
 
 export function HeroText() {
   return (
-    <div className="flex gap-8 flex-col">
-      <h1 className="text-[42px] leading-[42px] lg:text-[96px] lg:leading-[96px] flex flex-col gap-2">
-        <div className="flex flex-col lg:flex-row gap-2 items-start lg:items-center font-medium">
-          Build{" "}
-          <div className="gradient-dashed-border relative overflow-hidden py-3 px-6 rounded-[20px]">
-            <div className="bg-clip-text text-transparent bg-gradient-text subpixel-antialiased bg-black overflow-hidden whitespace-nowrap leading-[48px] lg:leading-[120px]">
+    <div className="flex flex-col gap-8">
+      <h1 className="flex flex-col gap-2 text-[42px] leading-[42px] lg:text-[96px] lg:leading-[96px]">
+        <div className="flex flex-col items-start gap-2 font-medium lg:flex-row lg:items-center">
+          Build{' '}
+          <div className="gradient-dashed-border relative overflow-hidden rounded-[20px] px-6 py-3">
+            <div className="overflow-hidden whitespace-nowrap bg-black bg-gradient-text bg-clip-text leading-[48px] text-transparent subpixel-antialiased lg:leading-[120px]">
               <TextTyper
                 words={[
-                  "Marketing",
-                  "Sales",
-                  "Legal",
-                  "Finance",
-                  "Healthcare",
-                  "Collaborative",
-                  "Support",
-                  "Recruiting",
-                  "Security",
-                  "Hospitality",
-                  "Developer",
-                  "Education",
+                  'Marketing',
+                  'Sales',
+                  'Legal',
+                  'Finance',
+                  'Healthcare',
+                  'Collaborative',
+                  'Support',
+                  'Recruiting',
+                  'Security',
+                  'Hospitality',
+                  'Developer',
+                  'Education',
                 ]}
               />
             </div>
@@ -38,9 +38,9 @@ export function HeroText() {
         <br className="block md:hidden" />
         for multi-tenant apps &nbsp;
       </h2>
-      <div className="flex gap-4 items-center justify-start">
+      <div className="flex items-center justify-start gap-4">
         <a href="https://console.thenile.dev" className="flex">
-          <button className="bg-blue text-black transition-colors px-4 py-2 rounded-[10px] flex flex-row gap-2 items-center text-[16px] leading-[20px] h-11">
+          <button className="flex h-11 flex-row items-center gap-2 rounded-[10px] bg-blue px-4 py-2 text-[16px] leading-[20px] text-black transition-colors">
             Build with Nile
             <Image
               className="-ml-1 invert"
@@ -68,7 +68,7 @@ export function HeroBottom({
           width={40}
         />
       </div>
-      <div className="text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px] text-black flex flex-row shrink-0">
+      <div className="flex shrink-0 flex-row text-[24px] leading-[28px] text-black lg:text-[48px] lg:leading-[52px]">
         Postgres.
       </div>
     </>
@@ -78,21 +78,21 @@ export function HeroBottom({
 }) {
   return (
     <div className="container mx-auto">
-      <div className="w-full mt-20">
+      <div className="mt-20 w-full">
         <AnimatedGradient>
-          <div className="px-4 py-6 lg:p-10 lg:pt-48 flex gap-4 flex-col">
-            <div className="flex gap-1 flex-col">
-              <div className="text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px] text-black font-semibold">
+          <div className="flex flex-col gap-4 px-4 py-6 lg:p-10 lg:pt-48">
+            <div className="flex flex-col gap-1">
+              <div className="text-[24px] font-semibold leading-[28px] text-black lg:text-[48px] lg:leading-[52px]">
                 Ready to launch?
               </div>
-              <div className="text-[24px] leading-[28px] lg:text-[48px] lg:leading-[52px] text-black flex gap-1 lg:gap-2 md:items-center flex-col md:flex-row">
+              <div className="flex flex-col gap-1 text-[24px] leading-[28px] text-black md:flex-row md:items-center lg:gap-2 lg:text-[48px] lg:leading-[52px]">
                 <div className="whitespace-nowrap">Start building with</div>
                 {cta}
               </div>
             </div>
-            <div className="flex gap-4 items-center justify-start">
+            <div className="flex items-center justify-start gap-4">
               <a href="https://console.thenile.dev" className="flex">
-                <button className="bg-blue text-black transition-colors px-4 py-2 rounded-[10px] flex flex-row gap-2 items-center text-[16px] leading-[20px] h-11">
+                <button className="flex h-11 flex-row items-center gap-2 rounded-[10px] bg-blue px-4 py-2 text-[16px] leading-[20px] text-black transition-colors">
                   Build with Nile
                   <Image
                     className="-ml-1 invert"

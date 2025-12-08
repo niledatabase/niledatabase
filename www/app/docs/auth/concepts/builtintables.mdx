@@ -1,0 +1,199 @@
+---
+title: 'Built-in Tables'
+description: 'Understanding built-in database tables in Nile Auth'
+---
+
+## User Tables
+
+### `users.users`
+
+```sql
+     Column     |            Type             | Collation | Nullable |          Default
+----------------+-----------------------------+-----------+----------+---------------------------
+ id             | uuid                        |           | not null | public.uuid_generate_v7()
+ created        | timestamp without time zone |           | not null | LOCALTIMESTAMP
+ updated        | timestamp without time zone |           | not null | LOCALTIMESTAMP
+ deleted        | timestamp without time zone |           |          |
+ name           | text                        |           |          |
+ family_name    | text                        |           |          |
+ given_name     | text                        |           |          |
+ email          | text                        |           |          |
+ picture        | text                        |           |          |
+ email_verified | timestamp without time zone |           |          |
+Indexes:
+    "users_pkey" PRIMARY KEY, btree (id)
+    "users_email_key" UNIQUE, btree (email) WHERE deleted IS NULL
+Referenced by:
+    TABLE "auth.credentials" CONSTRAINT "credentials_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
+    TABLE "auth.oidc_auth_attempts" CONSTRAINT "oidc_auth_attempts_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
+    TABLE "auth.sessions" CONSTRAINT "sessions_userId_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+```
+
+### `users.tenant_users`
+
+```sql
+  Column   |            Type             | Collation | Nullable |    Default
+-----------+-----------------------------+-----------+----------+----------------
+ tenant_id | uuid                        |           | not null |
+ user_id   | uuid                        |           | not null |
+ created   | timestamp without time zone |           | not null | LOCALTIMESTAMP
+ updated   | timestamp without time zone |           | not null | LOCALTIMESTAMP
+ deleted   | timestamp without time zone |           |          |
+ roles     | text[]                      |           |          |
+ email     | text                        |           |          |
+Indexes:
+    "tenant_users_pkey" PRIMARY KEY, btree (tenant_id, user_id)
+Foreign-key constraints:
+    "tenant_users_tenant_id_fkey" FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+Referenced by:
+    TABLE "auth.tenant_oidc_auth_attempts" CONSTRAINT "tenant_oidc_auth_attempts_tenant_id_user_id_fkey" FOREIGN KEY (tenant_id, user_id) REFERENCES tenant_users(tenant_id, user_id)
+
+```
+
+## Authentication Tables
+
+### `auth.sessions`
+
+```sql
+    Column     |           Type           | Collation | Nullable |      Default
+---------------+--------------------------+-----------+----------+-------------------
+ id            | uuid                     |           | not null | gen_random_uuid()
+ expires_at    | timestamp with time zone |           | not null |
+ session_token | text                     |           | not null |
+ user_id       | uuid                     |           | not null |
+Indexes:
+    "sessions_pkey" PRIMARY KEY, btree (id)
+    "sessiontoken_unique" UNIQUE CONSTRAINT, btree (session_token)
+Foreign-key constraints:
+    "sessions_userId_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+```
+
+### `auth.credentials`
+
+```sql
+       Column        |             Type             | Collation | Nullable |          Default
+---------------------+------------------------------+-----------+----------+---------------------------
+ id                  | uuid                         |           | not null | public.uuid_generate_v7()
+ user_id             | uuid                         |           | not null |
+ created             | timestamp without time zone  |           | not null | LOCALTIMESTAMP
+ updated             | timestamp without time zone  |           | not null | LOCALTIMESTAMP
+ deleted             | timestamp without time zone  |           |          |
+ method              | public.authentication_method |           | not null |
+ provider            | text                         |           | not null | 'nile'::text
+ payload             | jsonb                        |           |          |
+ provider_account_id | text                         |           |          |
+Indexes:
+    "credentials_pkey" PRIMARY KEY, btree (id)
+Foreign-key constraints:
+    "credentials_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
+```
+
+### `auth.verification_tokens`
+
+```sql
+   Column   |            Type             | Collation | Nullable |                Default
+------------+-----------------------------+-----------+----------+---------------------------------------
+ identifier | text                        |           | not null |
+ token      | text                        |           | not null |
+ expires    | timestamp without time zone |           | not null | LOCALTIMESTAMP + '04:00:00'::interval
+Indexes:
+    "verification_tokens_pkey" PRIMARY KEY, btree (identifier)
+    "token_identifier_unique" UNIQUE CONSTRAINT, btree (token, identifier)
+```
+
+### `auth.invites`
+
+```sql
+   Column   |           Type           | Collation | Nullable |      Default
+------------+--------------------------+-----------+----------+-------------------
+ id         | uuid                     |           | not null | gen_random_uuid()
+ tenant_id  | uuid                     |           | not null |
+ token      | text                     |           | not null |
+ identifier | text                     |           | not null |
+ roles      | text                     |           |          |
+ created_by | uuid                     |           |          |
+ expires    | timestamp with time zone |           |          | LOCALTIMESTAMP + '7 days'::interval
+Indexes:
+    "auth_invites_pkey" PRIMARY KEY, btree (tenant_id, id)
+    "unique_invite_per_email_per_tenant" UNIQUE, btree (tenant_id, identifier)
+```
+
+## OIDC Provider tables
+
+### `auth.oidc_providers`
+
+```sql
+    Column    |            Type             | Collation | Nullable |          Default
+--------------+-----------------------------+-----------+----------+---------------------------
+ id           | uuid                        |           | not null | public.uuid_generate_v7()
+ created      | timestamp without time zone |           | not null | LOCALTIMESTAMP
+ updated      | timestamp without time zone |           | not null | LOCALTIMESTAMP
+ deleted      | timestamp without time zone |           |          |
+ name         | text                        |           | not null |
+ auth_type    | public.provider_auth_type   |           | not null |
+ enabled      | boolean                     |           | not null | false
+ config_url   | text                        |           |          |
+ redirect_url | text                        |           |          |
+ config       | jsonb                       |           |          |
+ ttl_sec      | integer                     |           | not null | 3600
+Indexes:
+    "oidc_providers_pkey" PRIMARY KEY, btree (id)
+    "oidc_providers_name_key" UNIQUE CONSTRAINT, btree (name)
+Referenced by:
+    TABLE "auth.oidc_relying_parties" CONSTRAINT "oidc_relying_parties_provider_fkey" FOREIGN KEY (provider) REFERENCES auth.oidc_providers(id)
+```
+
+### `auth.oidc_relying_parties`
+
+```sql
+Column     |            Type             | Collation | Nullable |          Default
+---------------+-----------------------------+-----------+----------+---------------------------
+ id            | uuid                        |           | not null | public.uuid_generate_v7()
+ provider      | uuid                        |           | not null |
+ created       | timestamp without time zone |           | not null | LOCALTIMESTAMP
+ updated       | timestamp without time zone |           | not null | LOCALTIMESTAMP
+ deleted       | timestamp without time zone |           |          |
+ client_id     | text                        |           | not null |
+ client_secret | text                        |           | not null |
+ enabled       | boolean                     |           | not null | true
+Indexes:
+    "oidc_relying_parties_pkey" PRIMARY KEY, btree (id)
+    "oidc_relying_parties_provider_key" UNIQUE, btree (provider, (deleted IS NULL))
+Foreign-key constraints:
+    "oidc_relying_parties_provider_fkey" FOREIGN KEY (provider) REFERENCES auth.oidc_providers(id)
+Referenced by:
+    TABLE "auth.oidc_auth_attempts" CONSTRAINT "oidc_auth_attempts_relying_party_fkey" FOREIGN KEY (relying_party) REFERENCES auth.oidc_relying_parties(id)
+```
+
+## Tenant override tables
+
+### `auth.tenant_oidc_relying_parties`
+
+```sql
+    Column     |            Type             | Collation | Nullable |          Default
+---------------+-----------------------------+-----------+----------+---------------------------
+ id            | uuid                        |           | not null | public.uuid_generate_v7()
+ tenant_id     | uuid                        |           | not null |
+ provider_name | text                        |           | not null |
+ created       | timestamp without time zone |           | not null | LOCALTIMESTAMP
+ updated       | timestamp without time zone |           | not null | LOCALTIMESTAMP
+ deleted       | timestamp without time zone |           |          |
+ enabled       | boolean                     |           | not null | true
+ config_url    | text                        |           | not null |
+ config        | jsonb                       |           |          |
+ ttl_sec       | integer                     |           | not null | 3600
+ client_id     | text                        |           | not null |
+ client_secret | text                        |           | not null |
+ domains       | text[]                      |           | not null |
+Indexes:
+    "tenant_oidc_relying_parties_pkey" PRIMARY KEY, btree (id, tenant_id)
+    "tenant_oidc_provider_key" UNIQUE, btree (tenant_id, provider_name, (deleted IS NULL))
+Foreign-key constraints:
+    "tenant_oidc_relying_parties_tenant_id_fkey" FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+Referenced by:
+    TABLE "auth.tenant_oidc_auth_attempts" CONSTRAINT "tenant_oidc_auth_attempts_registration_id_tenant_id_fkey" FOREIGN KEY (registration_id, tenant_id) REFERENCES auth.tenant_oidc_relying_parties(id, tenant_id)
+```
+
+- [Tenants](/auth/concepts/tenants)
+- [Users](/auth/concepts/users)
+- [Per-tenant Overrides](/auth/concepts/per-tenantoverrides)

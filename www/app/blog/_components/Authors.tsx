@@ -1,14 +1,14 @@
-import Image from "next/image";
-import authors from "../authors";
-import Zoidberg from "@/public/authors/zoidberg.png";
+import Image from 'next/image';
+import authors from '../authors';
+import Zoidberg from '@/public/authors/zoidberg.png';
 export function Authors({ authors: _authors }: { authors: string[] }) {
   return (
-    <div className="flex flex-row gap-2 flex-wrap">
+    <div className="flex flex-row flex-wrap gap-2">
       {_authors?.map((author) => {
         const _auth = authors[author];
         const imageClasses = `border-2 border-[#7CD1ED] border-[${_auth?.borderColor}] rounded-[33px] h-[32px] w-[32px] flex items-center justify-center overflow-hidden`;
         return (
-          <div key={author} className="flex flex-row gap-2 items-center">
+          <div key={author} className="flex flex-row items-center gap-2">
             <div className={imageClasses}>
               {_auth ? (
                 <Image
@@ -29,7 +29,7 @@ export function Authors({ authors: _authors }: { authors: string[] }) {
               )}
             </div>
             <div className="opacity-60">
-              {_auth?.name ?? "edit ./authors.ts with your bio"}
+              {_auth?.name ?? 'edit ./authors.ts with your bio'}
             </div>
           </div>
         );

@@ -1,12 +1,12 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 export const Logo = () => {
   return (
     <Link href="/">
-      <div className="hover:opacity-75 transition items-center gap-x-2 flex">
+      <div className="flex items-center gap-x-2 transition hover:opacity-75">
         <Image
           src="/logo.svg"
           alt="Logo"
@@ -14,7 +14,7 @@ export const Logo = () => {
           width={30}
           className="bg-white"
         />
-        <p className={cn("text-lg text-primary pb-1 font-switzerBold")}>
+        <p className={cn('font-switzerBold pb-1 text-lg text-primary')}>
           KnowledgeAI
         </p>
       </div>

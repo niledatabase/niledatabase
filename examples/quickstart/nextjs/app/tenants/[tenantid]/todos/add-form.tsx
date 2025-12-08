@@ -1,15 +1,15 @@
-"use client";
-import { useEffect, useCallback, useRef } from "react";
-import { addTodo } from "./todo-actions";
+'use client';
+import { useEffect, useCallback, useRef } from 'react';
+import { addTodo } from './todo-actions';
 // @ts-ignore
-import { useFormState } from "react-dom";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/hooks/use-toast";
+import { useFormState } from 'react-dom';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/hooks/use-toast';
 
 const initialState = {
-  message: "",
+  message: '',
 };
 
 export function AddForm({ tenantid }: { tenantid: string }) {
@@ -26,7 +26,7 @@ export function AddForm({ tenantid }: { tenantid: string }) {
       formAction(formData);
       if (formRef.current) formRef.current.reset();
     },
-    [formAction]
+    [formAction],
   );
 
   useEffect(() => {

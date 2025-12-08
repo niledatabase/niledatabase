@@ -1,0 +1,110 @@
+---
+title: 'DB'
+description: 'Using the Nile-JS SDK DB client'
+---
+
+The `db` object is used to query the database. It is designed as a tenant-aware connection pool.
+When `nile.tenantId` is set, the `db` object will use the correct tenant's virtual database.
+
+## query
+
+The `query` method is used to query the database. This is the main method exposed by the `db` object.
+
+### Parameters
+
+- `sql`: The SQL query to execute.
+- `params`: The parameters to use in the query.
+
+### Querying a shared table
+
+All tenants and users have access to any [shared tables](/tenant-virtualization/tenant-sharing) - tables without a tenant id column.
+
+```ts
+const db = nile.db;
+await db.query(
+  'CREATE TABLE IF NOT EXISTS shared_table (id INTEGER, name TEXT)',
+);
+await db.query('INSERT INTO shared_table (id, name) VALUES (1, "John Doe")');
+const result = await db.query('SELECT * FROM shared_table');
+console.log(result);
+```
+
+### Querying a tenant-aware table
+
+[Tenant-aware tables](/tenant-virtualization/tenant-isolation) have a tenant id column.
+If you query without setting `nile.tenantId`, this will be a cross-tenant query.
+If you set `nile.withContext({ tenantId })`, the query will run against the tenant's virtual database.
+
+When inserting data into a tenant-aware table, you need to provide the tenant id - and it has to belong to an existing tenant.
+If you set `nile.withContext({ tenantId })`, the tenant id must match the tenant id in the table.
+
+In the example below, we also use parameter substitution to prevent SQL injection.
+
+<Note>
+  `nile.db` is a context-less way to query the database. `nile.query` uses
+  context when querying the database, if the context is set
+</Note>
+
+<CodeGroup>
+
+```ts cross-tenant query
+const { db } = nile; // using DB means it will be a cross-tenant query.
+const some_name = 'John Doe';
+const some_tenant_id = '0195f45d-c3ca-7b29-8a9c-717a99d993a1';
+await db.query(
+  'CREATE TABLE IF NOT EXISTS tenant_table (id INTEGER, name TEXT, tenant_id UUID)',
+);
+await db.query(
+  'INSERT INTO tenant_table (id, name, tenant_id) VALUES (1, $1, $2)',
+  [some_name, some_tenant_id],
+);
+const result = await db.query('SELECT * FROM tenant_table'); // this will return all rows from all tenants
+console.log(result);
+```
+
+```ts tenant-aware query
+const context = {
+    tenantId: '0195f45d-c3ca-7b29-8a9c-717a99d993a1'; // may be omitted if already set
+}
+const { query } = await nile.withContext(context);
+const some_name = 'John Doe';
+await query('CREATE TABLE IF NOT EXISTS tenant_table (id INTEGER, name TEXT, tenant_id UUID)');
+await query('INSERT INTO tenant_table (id, name, tenant_id) VALUES (1, $1, $2)', [some_name , context.tenantId]);
+const result = await query('SELECT * FROM tenant_table'); // this will only return rows where tenant_id matches the current tenant
+console.log(result);
+```
+
+</CodeGroup>
+
+## client
+
+The `client` method is used to get a client from the database connection pool. This can be useful if you want to run several queries on the same connection.
+
+<Warning>
+  The client is not automatically released back to the pool after the query is
+  executed. You need to call `client.release()` to release it back to the pool.
+</Warning>
+
+### Example
+
+The example below uses `client` to run a transaction - a group of queries that are executed as a single unit.
+If any of the queries fail, the transaction is rolled back.
+If all queries succeed, the transaction is committed.
+The `client` object guarantees that all queries are executed on the same connection.
+It is then released back to the pool after the transaction is committed or rolled back.
+
+```ts
+const { db } = nile;
+const client = await db.client();
+try {
+  await client.query('BEGIN');
+  await db.query('INSERT INTO shared_table (id, name) VALUES (1, "John Doe")');
+  await db.query('INSERT INTO shared_table (id, name) VALUES (2, "Jane Doe")');
+  await client.query('COMMIT');
+} catch (error) {
+  await client.query('ROLLBACK');
+  throw error;
+} finally {
+  await client.release();
+}
+```

@@ -1,19 +1,19 @@
-"use server";
+'use server';
 // ^^^ This has to run on the server because it uses database operations and updates the cache
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from 'next/cache';
 import {
   aiEstimate,
   embedTask,
   embeddingToSQL,
   findSimilarTasks,
-} from "@/lib/AiUtils";
-import { nile } from "@/app/api/[...nile]/nile";
+} from '@/lib/AiUtils';
+import { nile } from '@/app/api/[...nile]/nile';
 
 export async function addTodo(
   tenantId: string,
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ) {
   const tenantNile = await nile.withContext({ tenantId });
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
@@ -22,12 +22,12 @@ export async function addTodo(
   let timeToConfigureNile = endTime - startTime;
 
   const { userId } = tenantNile.getContext();
-  const title = formData.get("todo");
+  const title = formData.get('todo');
   console.log(
-    "adding Todo " + title + " for tenant:" + tenantId + " for user:" + userId
+    'adding Todo ' + title + ' for tenant:' + tenantId + ' for user:' + userId,
   );
   if (!title) {
-    return { message: "Please enter a title" };
+    return { message: 'Please enter a title' };
   }
 
   let timeToEmbedTask = 0;
@@ -50,7 +50,7 @@ export async function addTodo(
       const similarTasks = await findSimilarTasks(
         tenantNile,
         title.toString(),
-        embedding
+        embedding,
       );
       endTime = performance.now();
       timeToFindSimilarTasks = endTime - startTime;
@@ -72,41 +72,41 @@ export async function addTodo(
         estimate?.substring(0, 255),
         embeddingToSQL(embedding),
         false,
-      ]
+      ],
     );
     endTime = performance.now();
     let timeToInsertTodo = endTime - startTime;
     startTime = performance.now();
-    revalidatePath("/tenants/${tenantID}/todos");
+    revalidatePath('/tenants/${tenantID}/todos');
     endTime = performance.now();
     let timeToRevalidate = endTime - startTime;
-    revalidatePath("/tenants/[tenantid]/todos");
+    revalidatePath('/tenants/[tenantid]/todos');
     return {
-      Message: "Todo added successfully",
+      Message: 'Todo added successfully',
       // "Time to configure Nile (ms)": timeToConfigureNile,
-      "Request embedding from LLM(ms)": timeToEmbedTask.toFixed(2),
-      "Vector similarity search in Postgres (ms)":
+      'Request embedding from LLM(ms)': timeToEmbedTask.toFixed(2),
+      'Vector similarity search in Postgres (ms)':
         timeToFindSimilarTasks.toFixed(2),
-      "Prompt response from LLM (ms)": timeToAiEstimate.toFixed(2),
-      "Insert todo to Postgres (ms)": timeToInsertTodo.toFixed(2),
+      'Prompt response from LLM (ms)': timeToAiEstimate.toFixed(2),
+      'Insert todo to Postgres (ms)': timeToInsertTodo.toFixed(2),
       // "Time to revalidate (ms)": timeToRevalidate,
     };
   } catch (e) {
     console.error(e);
-    return { message: "Failed to add todo" };
+    return { message: 'Failed to add todo' };
   }
 }
 
 export async function completeTodo(
   tenantId: string,
   id: string,
-  complete: boolean
+  complete: boolean,
 ) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
   const tenantNile = await nile.withContext({ tenantId });
   const { userId } = nile.getContext();
   console.log(
-    "updating Todo " + id + " for tenant:" + tenantId + " for user:" + userId
+    'updating Todo ' + id + ' for tenant:' + tenantId + ' for user:' + userId,
   );
   try {
     // Tenant ID and user ID are in the context, so we don't need to specify them as query filters
@@ -114,11 +114,11 @@ export async function completeTodo(
       `UPDATE todos 
       SET complete = $1
       WHERE id = $2`,
-      [complete, id]
+      [complete, id],
     );
-    revalidatePath("/tenants/[tenantid]/todos");
+    revalidatePath('/tenants/[tenantid]/todos');
   } catch (e) {
     console.error(e);
-    return { message: "Failed to update todo" };
+    return { message: 'Failed to update todo' };
   }
 }

@@ -1,0 +1,116 @@
+---
+title: 'OAuth'
+description: 'Understanding OAuth implementation in Nile Auth'
+---
+
+Nile auth provides an easy-to-use, flexible OAuth implementation that allows your application to authenticate users via a variety of third-party OAuth providers (e.g., Google, Facebook, GitHub). This guide explains how to configure and use OAuth authentication in your database.
+
+## OAuth Overview
+
+OAuth is an open standard for authorization, which allows third-party services to securely access resources without exposing sensitive user credentials. NextAuth.js supports OAuth 2.0 and integrates with multiple authentication providers out of the box.
+Nile auth allows you to configure OAuth providers, all while handling the authentication flows and securely storing and managing user sessions directly in your database.
+
+## Setting Up OAuth Providers
+
+### Authorization Code Flow
+
+Your server acts as a proxy against Nile auth. A client interacts directly with your endpoints, which are forwarded on to Nile auth, which does all of the heavy lifting for you, all the while keeping it transparent to your users.
+
+When a user signs in via an OAuth provider, the following flow occurs:
+
+- The user clicks the login button for the desired provider (e.g., Google, GitHub).
+- The user is redirected to the provider&apos;s login page.
+- The user grants permission to your application.
+- The provider redirects the user back to your application with an authorization code.
+- Your server then exchanges the authorization code for an access token from nile auth, which in turn sends a payload back to give to the client.
+- The user is authenticated, and a session is created.
+
+## Provider Configuration
+
+All providers can be configured on the **Configuration** screen under **Providers**, which is located in the **Tenant and Users** page
+![Provider Configuration](/images/auth/providers.png)
+
+<Info>
+  When using SSO providers and email + password, the `email_verified` column in
+  the `users.users` table must be set. An error will be produced if an SSO user
+  attempts to log in with email + password.
+</Info>
+
+## Error Handling
+
+Because your backend service proxy's Nile auth's API, you can intercept errors for your users and handle them accordingly (vs using the default pages).
+In this example, a previously existing user has tried to log in with an email that already exists within the system, and it is tied to a different provider (eg the user used the same email in Google and Discord)
+
+### Example error handling
+
+`/api/auth/error/route.tsx`
+
+```jsx
+import { redirect } from "next/navigation";
+import { handlers } from "../../[...nile]/nile";
+
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  if (url.searchParams.get("error") === "OAuthAccountNotLinked") {
+    redirect("/errors/oauth-not-linked");
+  }
+  return handlers.GET(req);
+}
+```
+
+`/app/errors/oauth-not-linked.tsx`
+
+```jsx
+import Link from 'next/link';
+
+export default function OauthNotLinked() {
+  return (
+    <div className="container mx-auto">
+      <div className="mt-9 flex flex-col gap-4">
+        <div className="text-2xl">Something went wrong.</div>
+        <div>
+          You have selected a provider, but you have previously logged into the
+          app with a different one.
+        </div>
+        <div className="text-center text-lg">
+          <Link href="/">
+            <button>
+              Go back and select the provider associated with this email
+            </button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+### OAuth Errors
+
+If an error occurs in the OAuth flow, query params redirecting back to an error page will occur. Below are a list of errors:
+
+**OAuthAccountNotLinked**
+If the email on the account is already linked, but not with this OAuth account
+
+**OAuthCallback**
+Error in handling the response from an OAuth provider.
+
+**OAuthCreateAccount**:
+Could not create OAuth provider user in the database.
+
+**EmailCreateAccount**
+Could not create email provider user in the database.
+
+**Callback**
+Error in the OAuth callback
+
+**EmailSignin**
+Sending the e-mail with the verification token failed
+
+There should also be further details logged when this occurs, such as the error is thrown, and the request body itself to aid in debugging.
+
+## Related Topics
+
+- [Single Sign On](/auth/singlesignon/google)
+- [JWT](/auth/concepts/jwt)
+- [Sessions](/auth/concepts/sessions)

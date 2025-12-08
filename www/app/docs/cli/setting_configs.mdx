@@ -1,0 +1,243 @@
+---
+title: 'Setting Configurations'
+icon: 'gear'
+---
+
+The `nile config` command helps you manage your CLI configuration settings. This guide covers all configuration options and their usage.
+
+```bash
+nile config [options]
+```
+
+The configuration system supports:
+
+- Viewing current settings
+- Setting individual values
+- Setting multiple values at once
+- Resetting to defaults
+- Environment variable overrides
+
+## Viewing Configuration
+
+View your current configuration settings:
+
+```bash
+nile config
+```
+
+<img height="100" src="/images/configshow.png" />
+
+## Setting API Key
+
+Set your API key for authentication:
+
+```bash
+nile config --api-key <key>
+```
+
+### Examples
+
+```bash API Key Examples
+# Set API key
+nile config --api-key sk_test_1234...
+
+# Set API key from environment variable
+export NILE_API_KEY=sk_test_1234...
+nile config
+```
+
+<img height="100" src="/images/configapi.png" />
+
+## Setting Workspace
+
+Set your default workspace:
+
+```bash
+nile config --workspace <name>
+```
+
+### Examples
+
+```bash Workspace Examples
+# Set default workspace
+nile config --workspace development
+
+# Set workspace and verify
+nile config --workspace production
+nile workspace show
+```
+
+## Setting Database
+
+Set your default database:
+
+```bash
+nile config --db <name>
+```
+
+### Examples
+
+```bash Database Examples
+# Set default database
+nile config --db customer-db
+
+# Set database and verify
+nile config --db myapp-db
+nile db show
+```
+
+## Setting Multiple Configurations
+
+Set multiple configuration values at once:
+
+```bash
+nile config --api-key <key> --workspace <name> --db <name>
+```
+
+### Examples
+
+```bash Multiple Config Examples
+# Set API key and workspace
+nile config --api-key sk_test_1234... --workspace development
+
+# Set workspace and database
+nile config --workspace staging --db test-db
+
+# Set all main configurations
+nile config --api-key sk_test_1234... --workspace production --db prod-db
+```
+
+## Resetting Configuration
+
+Reset all settings to their default values:
+
+```bash
+nile config reset
+```
+
+### Examples
+
+```bash Reset Examples
+# Reset all configurations
+nile config reset
+
+# Reset and verify
+nile config reset
+nile config
+```
+
+<img height="100" src="/images/configreset.png" />
+
+## Environment Variables
+
+All configuration settings can be set using environment variables:
+
+```bash Environment Variables
+# Authentication
+export NILE_API_KEY=sk_test_1234...
+
+# Workspace and Database
+export NILE_WORKSPACE=development
+export NILE_DB=myapp-db
+
+# Host Configuration
+export NILE_DB_HOST=custom.db.host
+export NILE_GLOBAL_HOST=custom.global.host
+```
+
+## Configuration Precedence
+
+Settings are applied in the following order (highest to lowest priority):
+
+1. Command-line flags
+2. Environment variables
+3. Configuration file
+4. Default values
+
+```bash Precedence Example
+# Environment variable set
+export NILE_WORKSPACE=production
+
+# Command-line flag overrides environment
+nile config --workspace development
+
+# Result: workspace is set to "development"
+```
+
+## Common Issues
+
+### Invalid API Key
+
+When API key is invalid:
+
+```bash Invalid Key
+# Set invalid API key
+nile config --api-key invalid_key
+Error: Invalid API key format
+
+# Solution: Use valid API key
+nile config --api-key sk_test_1234...
+```
+
+### Workspace Not Found
+
+When workspace doesn't exist:
+
+```bash Invalid Workspace
+# Set non-existent workspace
+nile config --workspace nonexistent
+Error: Workspace 'nonexistent' not found
+
+# Solution: List available workspaces
+nile workspace list
+```
+
+### Database Not Found
+
+When database doesn't exist:
+
+```bash Invalid Database
+# Set non-existent database
+nile config --db nonexistent
+Error: Database 'nonexistent' not found
+
+# Solution: List available databases
+nile db list
+```
+
+## Best Practices
+
+1. **Environment-specific Configurations**:
+
+   ```bash
+   # Development
+   nile config --workspace dev --db dev-db
+
+   # Production
+   nile config --workspace prod --db prod-db
+   ```
+
+2. **Configuration Verification**:
+
+   ```bash
+   # Set and verify
+   nile config --workspace development
+   nile workspace show
+   ```
+
+3. **Security Best Practices**:
+
+   ```bash
+   # Store API key in environment
+   export NILE_API_KEY=sk_test_1234...
+
+   # Use configuration file for non-sensitive settings
+   nile config --workspace development --db dev-db
+   ```
+
+## Related Commands
+
+- `nile workspace` - Manage workspaces
+- `nile db` - Manage databases
+- `nile connect` - Authentication management
+- `nile tenants` - Tenant management

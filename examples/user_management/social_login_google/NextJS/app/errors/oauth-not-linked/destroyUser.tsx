@@ -1,12 +1,12 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { actuallyDeleteUser } from "./action";
-import Link from "next/link";
+'use client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
+import { actuallyDeleteUser } from './action';
+import Link from 'next/link';
 export default function DestroyUser() {
   const [showForm, setShowForm] = useState(false);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [message, setMessage] = useState<JSX.Element>();
   return (
     <div className="text-center">
@@ -19,10 +19,10 @@ export default function DestroyUser() {
       </Button>
 
       {showForm ? (
-        <div className="flex flex-col gap-2 mt-5 mx-auto max-w-96 items-start">
-          <div className="rounded-lg bg-destructive text-white p-2">
+        <div className="mx-auto mt-5 flex max-w-96 flex-col items-start gap-2">
+          <div className="rounded-lg bg-destructive p-2 text-white">
             This will clean delete the user from the build in tables. It will
-            also{" "}
+            also{' '}
             <strong>remove all oidc logins from the credentials table</strong>,
             which means everyone will need to re-authenticate with the app.
           </div>
@@ -46,7 +46,7 @@ export default function DestroyUser() {
                         {/* @ts-ignore */}
                         <Button variant="link">Go back home</Button>
                       </Link>
-                    </div>
+                    </div>,
                   );
                 } else {
                   setMessage(<div>Hm, something bad happened.</div>);

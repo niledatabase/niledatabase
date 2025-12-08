@@ -1,12 +1,12 @@
-"use server";
+'use server';
 // ^^^ This has to run on the server because it uses database operations and updates the cache
 
-import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
+import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
-import { nile } from "@/lib/nile";
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
+import { nile } from '@/lib/nile';
 
 export async function addTodo(tId: string, prevState: any, formData: FormData) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
@@ -17,36 +17,36 @@ export async function addTodo(tId: string, prevState: any, formData: FormData) {
     tenantId: tId,
   };
 
-  const title = formData.get("todo");
+  const title = formData.get('todo');
 
   try {
     // need to set tenant ID because it is part of the primary key
     await nile.withContext(context, async ({ db, getContext }) => {
       const { tenantId, userId } = getContext();
       console.log(
-        "adding Todo " +
+        'adding Todo ' +
           title +
-          " for tenant:" +
+          ' for tenant:' +
           tenantId +
-          " for user:" +
-          userId
+          ' for user:' +
+          userId,
       );
       await db.query(
         `INSERT INTO todos (tenant_id, title, complete) VALUES ($1, $2, $3)`,
-        [tenantId, title, false]
+        [tenantId, title, false],
       );
     });
-    revalidatePath("/tenants/${tenantID}/todos");
+    revalidatePath('/tenants/${tenantID}/todos');
   } catch (e) {
     console.error(e);
-    return { message: "Failed to add todo" };
+    return { message: 'Failed to add todo' };
   }
 }
 
 export async function completeTodo(
   tenantId: string,
   id: string,
-  complete: boolean
+  complete: boolean,
 ) {
   // Each  a Nile instance is connected to our current tenant DB with the current user permissions
   const session = await getServerSession(authOptions);
@@ -60,12 +60,12 @@ export async function completeTodo(
   const tenantNile = await nile.withContext(context);
   const ctx = tenantNile.getContext();
   console.log(
-    "updating Todo " +
+    'updating Todo ' +
       id +
-      " for tenant:" +
+      ' for tenant:' +
       ctx.tenantId +
-      " for user:" +
-      ctx.userId
+      ' for user:' +
+      ctx.userId,
   );
 
   try {
@@ -74,7 +74,7 @@ export async function completeTodo(
       complete,
       id,
     ]);
-    revalidatePath("/tenants/${tenantID}/todos");
+    revalidatePath('/tenants/${tenantID}/todos');
   } catch (e) {
     console.error(e);
   }

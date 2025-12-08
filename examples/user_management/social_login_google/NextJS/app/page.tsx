@@ -7,7 +7,7 @@ import {
   Slack,
   X,
   Google,
-} from "@niledatabase/react";
+} from '@niledatabase/react';
 
 export default function Home() {
   return (

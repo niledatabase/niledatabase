@@ -1,18 +1,18 @@
-import { Inter } from "next/font/google";
-import Link from "next/link";
-import Providers from "@/components/providers";
-import Image from "next/image";
-import { AuthButtons } from "@/components/auth-buttons";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { Toaster } from "@/components/ui/toaster";
-import "./globals.css";
+import { Inter } from 'next/font/google';
+import Link from 'next/link';
+import Providers from '@/components/providers';
+import Image from 'next/image';
+import { AuthButtons } from '@/components/auth-buttons';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { Toaster } from '@/components/ui/toaster';
+import './globals.css';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: "Holiday Wishes App",
-  description: "A multi-tenant app for generating holiday wishes",
+  title: 'Holiday Wishes App',
+  description: 'A multi-tenant app for generating holiday wishes',
 };
 
 export default async function RootLayout({
@@ -25,11 +25,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} bg-gradient-to-r from-red-100 to-green-100 min-h-screen`}
+        className={`${inter.className} min-h-screen bg-gradient-to-r from-red-100 to-green-100`}
       >
         <Providers session={session}>
-          <nav className="bg-white/80 backdrop-blur-sm p-4 shadow-md">
-            <div className="container mx-auto flex justify-between items-center">
+          <nav className="bg-white/80 p-4 shadow-md backdrop-blur-sm">
+            <div className="container mx-auto flex items-center justify-between">
               <Link href="/" className="text-2xl font-bold text-red-600">
                 Holiday Wishes
               </Link>
@@ -38,7 +38,7 @@ export default async function RootLayout({
           </nav>
           <main className="container mx-auto py-8">{children}</main>
           <Toaster />
-          <footer className="fixed bottom-0 w-full bg-white/80 backdrop-blur-sm p-4 shadow-md">
+          <footer className="fixed bottom-0 w-full bg-white/80 p-4 shadow-md backdrop-blur-sm">
             <div className="container mx-auto flex items-center justify-center space-x-6">
               <div className="flex items-center space-x-2">
                 <span>Built with</span>

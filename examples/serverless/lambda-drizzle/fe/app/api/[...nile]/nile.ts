@@ -1,6 +1,6 @@
-import "server-only";
-import { Nile } from "@niledatabase/server";
-import { nextJs } from "@niledatabase/nextjs";
+import 'server-only';
+import { Nile } from '@niledatabase/server';
+import { nextJs } from '@niledatabase/nextjs';
 
 const _nile = await Nile({
   debug: true,

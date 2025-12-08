@@ -1,0 +1,49 @@
+---
+title: 'Slack'
+icon: 'slack'
+description: 'Integrate Slack Single Sign-On with Nile Auth'
+---
+
+<Steps>
+<Step title="Setup Slack Developer Portal">
+
+1. Create a [Slack Developer](https://api.slack.com/apps) account.
+2. Navigate to the **Your Apps** section and create a new application.
+3. Obtain a **Client ID** and **Client Secret** from the [Slack OAuth settings](https://api.slack.com/apps). Be sure to set the redirect URL to your application handling the Nile Auth requests.
+   <Accordion title="Slack dashboard example">
+     <img
+       height="500"
+       width="500"
+       src="/images/auth/slackexample.png"
+       alt="Discord SSO"
+     />
+   </Accordion>
+
+</Step>
+<Step title="Save Client ID and Client Secret in Nile">
+Save the **Client ID** and **Client Secret** to your database at `console.thenile.dev` under Slack in **Tenants & Users -> Configuration**  
+![Slack configuration on console.thenile.dev](/images/singlesignon/slack.png)
+</Step>
+<Step title="Add the `Slack` button to your login page">
+The button will redirect the user to Slack for authentication. Upon successful authentication, the user will be redirected back to your application.
+
+```jsx
+import { Slack } from '@niledatabase/react';
+
+function App() {
+  return (
+    <div>
+      <Slack callbackUrl="/" />
+    </div>
+  );
+}
+```
+
+</Step>
+</Steps>
+
+## Related Topics
+
+- [OAuth Concepts](/auth/concepts/oauth)
+- [User Management](/auth/concepts/users)
+- [Other SSO Providers](/auth/singlesignon/google)

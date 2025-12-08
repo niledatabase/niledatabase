@@ -1,0 +1,54 @@
+---
+title: 'Tenants'
+description: 'Learn about tenant management in Nile Auth'
+---
+
+This guide explains the concept of tenants in Nile Auth and how to manage them effectively within your application.
+
+## What is a Tenant?
+
+A **tenant** in Nile Auth represents a logical partition of the system, allowing for isolated user data and configurations. Each tenant operates independently with its own set of users, resources, and configurations, while sharing common underlying infrastructure. This is a fundamental feature for multi-tenant applications.
+
+## Tenant Features
+
+- **Multi-tenancy support**: Handle multiple tenants within the same application without interference.
+- **Tenant isolation**: Each tenant's data is isolated, ensuring privacy and security.
+- **Tenant-specific configurations**: Customize settings, resources, and behavior per tenant.
+
+## Working with Tenants
+
+To manage tenants, you can interact with Nile Auth's API and middleware. Below is an example of how you can set the `tenantId` based on the URL parameter and handle tenant-specific tasks:
+
+```typescript
+// Middleware to set the tenantId from the URL parameter
+app.param('tenantId', (req, res, next, tenantId) => {
+  nile.withContext({ tenantId });
+  next();
+});
+
+// get all tasks for tenant
+app.get('/api/tenants/:tenantId/todos', async (req, res) => {
+  // No need for a "where" clause here because we are setting the tenant ID in the context
+  const todos = await nile.query(
+    `SELECT * FROM todos 
+     ORDER BY title`,
+  );
+  res.json(todos.rows);
+});
+```
+
+It is also possible to set a tenant id in a header using `niledb-tenant-id`
+
+## Best Practices
+
+- **Ensure proper tenant isolation**: Use tenant-specific identifiers (e.g., `tenantId`) in all queries and resource access to prevent cross-tenant data leakage.
+- **Handle authentication per tenant**: Authenticate users and sessions per tenant to maintain secure access controls.
+- **Configure tenant-specific limits**: For example, limit the number of tasks per tenant or customize resource allocations.
+
+## Related Concepts
+
+- [Users](/auth/concepts/users)
+- [Sessions](/auth/concepts/sessions)
+- [JWT](/auth/concepts/jwt)
+
+---

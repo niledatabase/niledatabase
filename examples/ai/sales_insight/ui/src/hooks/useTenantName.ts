@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function useTenantName(tenantId: string | undefined) {
   const [tenantName, setTenantName] = useState<string | null>(null);
@@ -14,19 +14,19 @@ export function useTenantName(tenantId: string | undefined) {
           return res.json();
         } else {
           console.log(
-            "failed to get tenant name, redirecting for re-login " +
+            'failed to get tenant name, redirecting for re-login ' +
               res.status +
-              " " +
-              res.statusText
+              ' ' +
+              res.statusText,
           );
-          throw new Error("Failed to fetch tenant name");
+          throw new Error('Failed to fetch tenant name');
         }
       })
       .then((data) => {
         setTenantName(data.name);
       })
       .catch(() => {
-        navigate("/");
+        navigate('/');
       });
   }, [tenantId, navigate]);
 

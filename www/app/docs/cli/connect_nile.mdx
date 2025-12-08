@@ -1,0 +1,205 @@
+---
+title: 'Connecting to Nile'
+icon: 'keyboard'
+---
+
+Nile CLI supports two primary methods of authentication:
+
+1. Browser-based OAuth authentication (Recommended)
+2. API key authentication
+
+## Browser-based Authentication
+
+Browser-based authentication provides a secure and convenient way to connect to Nile. When you run the login command, the CLI will:
+
+1. Open your default browser
+2. Direct you to Nile's authentication page
+3. After successful login, automatically configure your CLI
+
+```bash Browser Login
+# Start the authentication flow
+nile connect login
+
+# Example output
+Opening authorization URL: https://console.thenile.dev/authorize
+Authentication successful!
+✓ Successfully connected to Nile!
+```
+
+<img height="100" noZoom src="/images/login.gif" />
+
+### Authentication Flow
+
+The following illustrate the browser-based authentication flow:
+
+1. CLI initiates auth flow
+2. Browser opens to Nile login
+3. User authenticates
+4. Token returned to CLI
+5. CLI stores credentials
+
+### Verifying Connection
+
+After authentication, verify your connection:
+
+```bash Verify Connection
+# Check connection status
+nile connect status
+
+# Example output
+✓ Connected to Nile
+
+# Try a simple command
+nile workspace list
+```
+
+### Session Management
+
+Browser-based authentication creates a session that:
+
+- Remains valid for extended periods
+- Automatically refreshes when needed
+- Can be explicitly terminated
+
+```bash Session Management
+# Check current session
+nile connect status
+
+# End your session
+nile connect logout
+
+# Start a new session
+nile connect login
+```
+
+## API Key Authentication
+
+For automated workflows or CI/CD environments, you can use API key authentication. API keys can be:
+
+- Used directly in commands
+- Stored in configuration
+- Set via environment variables
+
+### Using API Keys
+
+```bash API Key Examples
+# 1. Direct usage in commands
+nile --api-key YOUR_API_KEY db list
+
+# 2. Save in configuration
+nile config --api-key YOUR_API_KEY
+
+# 3. Use environment variable
+export NILE_API_KEY=YOUR_API_KEY
+nile db list
+```
+
+### API Key Best Practices
+
+```bash API Key Security
+# 1. Store in environment file
+echo "NILE_API_KEY=your-api-key" >> .env
+echo ".env" >> .gitignore
+
+# 2. Use in CI/CD (GitHub Actions example)
+env:
+  NILE_API_KEY: ${{ secrets.NILE_API_KEY }}
+
+# 3. Regular rotation
+nile config --api-key NEW_API_KEY
+```
+
+## Common Issues and Debugging
+
+### Authentication Failures
+
+When authentication fails:
+
+```bash Auth Issues
+# 1. Connection timeout
+nile connect login
+Error: Authentication timed out after 2 minutes
+
+# Solution: Try again or check network
+
+# 2. Invalid API key
+nile --api-key INVALID_KEY db list
+Error: Invalid API key
+
+# Solution: Verify API key or try browser auth
+nile connect login
+```
+
+### Network Issues
+
+When experiencing network problems:
+
+```bash Network Debug
+# Enable debug output
+nile --debug connect login
+
+# Example output
+Debug - Auth parameters:
+Debug - Auth URL: https://console.thenile.dev/authorize
+Debug - Starting auth with config:
+Debug - Received callback request: /callback
+```
+
+### Session Issues
+
+When encountering session problems:
+
+```bash Session Issues [expandable]
+# 1. Check session status
+nile connect status
+Not connected to Nile
+
+# 2. Clear existing session
+nile connect logout
+
+# 3. Remove stored credentials
+rm ~/.nile/credentials
+
+# 4. Start fresh session
+nile connect login
+```
+
+## Environment Configuration
+
+Configure your environment for different authentication methods:
+
+```bash Environment Setup
+# 1. Development (browser-based)
+nile connect login
+nile config --workspace dev
+
+# 2. CI/CD (API key)
+export NILE_API_KEY=your-api-key
+export NILE_WORKSPACE=ci-cd
+
+# 3. Production (API key)
+export NILE_API_KEY=prod-api-key
+export NILE_WORKSPACE=production
+```
+
+## Workspace Selection
+
+After authentication, select your workspace:
+
+```bash Workspace Selection
+# List available workspaces
+nile workspace list
+
+# Set default workspace
+nile config --workspace my-workspace
+
+# Verify workspace
+nile workspace show
+```
+
+## Related Commands
+
+- `nile connect status` - Check connection status
+- `nile connect logout` - End current session
+- `nile config` - Configure CLI settings
+- `nile workspace list` - List available workspaces

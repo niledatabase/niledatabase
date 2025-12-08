@@ -1,13 +1,13 @@
-"use client";
-import Heading from "@/app/_components/common/Heading";
-import Image from "next/image";
-import { useCallback, useMemo, useState } from "react";
-import faqs from "./faqs";
-import Arrow from "@/public/icons/arrow.svg";
-import useGoToHash from "@/app/_components/common/useGoToHash";
+'use client';
+import Heading from '@/app/_components/common/Heading';
+import Image from 'next/image';
+import { useCallback, useMemo, useState } from 'react';
+import faqs from './faqs';
+import Arrow from '@/public/icons/arrow.svg';
+import useGoToHash from '@/app/_components/common/useGoToHash';
 const variants = {
-  open: "!h-auto",
-  closed: "opacity-60 hover:opacity-100",
+  open: '!h-auto',
+  closed: 'opacity-60 hover:opacity-100',
 };
 
 const PADDING = 72;
@@ -20,14 +20,14 @@ const ExpandItem = (props: {
     return setShow(!show);
   }, [show]);
   const { header, content } = props;
-  const [headerHeight, setHeader] = useState<string | Element>("");
-  const classes = variants[show ? "open" : "closed"];
+  const [headerHeight, setHeader] = useState<string | Element>('');
+  const classes = variants[show ? 'open' : 'closed'];
   const rows = useMemo(() => {
-    if (typeof document !== "undefined") {
-      const canvas = document.createElement("canvas");
-      const canvasContext = canvas.getContext("2d");
+    if (typeof document !== 'undefined') {
+      const canvas = document.createElement('canvas');
+      const canvasContext = canvas.getContext('2d');
       if (canvasContext) {
-        canvasContext.font = "18px Roboto";
+        canvasContext.font = '18px Roboto';
         const result = canvasContext.measureText(String(headerHeight)).width;
         return Math.ceil((result + PADDING) / window.innerWidth);
       }
@@ -37,14 +37,14 @@ const ExpandItem = (props: {
   return (
     <div
       onClick={toggleShow}
-      className={`overflow-hidden transition-all ${classes} flex flex-col  border border-gray rounded-[12px] px-[20px] py-[16px] items-start cursor-pointer`}
+      className={`overflow-hidden transition-all ${classes} flex cursor-pointer flex-col items-start rounded-[12px] border border-gray px-[20px] py-[16px]`}
       style={{
         height: `${Math.max(62, 48 * rows)}px`,
       }}
     >
-      <div className="flex flex-row w-full justify-between items-center">
+      <div className="flex w-full flex-row items-center justify-between">
         <span
-          className="text-[16px] leading-[16px] lg:leading-[20px] lg:text-[20px]"
+          className="text-[16px] leading-[16px] lg:text-[20px] lg:leading-[20px]"
           ref={(node) => {
             if (node) {
               setHeader(header as unknown as Element);
@@ -54,7 +54,7 @@ const ExpandItem = (props: {
           {header}
         </span>
         <Image
-          className={`transition-all ${show ? "rotate-90" : "rotate-0"}`}
+          className={`transition-all ${show ? 'rotate-90' : 'rotate-0'}`}
           src={Arrow}
           alt="arrow"
           width={25}
@@ -63,7 +63,7 @@ const ExpandItem = (props: {
         />
       </div>
       <div
-        className={`${show ? "visible" : "invisible"} opacity-60 text-[18px]`}
+        className={`${show ? 'visible' : 'invisible'} text-[18px] opacity-60`}
       >
         {content}
       </div>
@@ -72,13 +72,13 @@ const ExpandItem = (props: {
 };
 
 export default function FAQ() {
-  const ref = useGoToHash({ hash: "#faq" });
+  const ref = useGoToHash({ hash: '#faq' });
   return (
-    <div className="mt-24 container mx-auto">
-      <div className="md:px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4">
+    <div className="container mx-auto mt-24">
+      <div className="pb-0 md:px-4 md:py-4 2xl:px-24 2xl:py-4">
         <Heading text="Frequently Asked Questions" />
         <a href="#faq" ref={ref}></a>
-        <div className="flex gap-4 flex-col mt-10">
+        <div className="mt-10 flex flex-col gap-4">
           {faqs.map(({ header, content }) => {
             return (
               <ExpandItem key={header} header={header} content={content} />

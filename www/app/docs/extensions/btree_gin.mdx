@@ -1,0 +1,70 @@
+---
+title: 'Btree_gin'
+description: 'Enables GIN indexes to support B-tree indexable data types.'
+---
+
+The [btree_gin](https://www.postgresql.org/docs/current/btree-gin.html) extension in PostgreSQL enables GIN indexes to support B-tree indexable data types. It is useful when you want to use a GIN index for multi-column queries that include standard B-tree searchable data types like `int`, `text`, `timestamp`, and `uuid`.
+Your Nile database arrives with `btree_gin` extension already enabled, so there's no need to run `create extension`.
+
+## Creating and Populating a Sample Table
+
+Before creating the index, let's create a sample table and populate it with data:
+
+```sql
+CREATE TABLE my_table (
+    id SERIAL PRIMARY KEY,
+    column1 TEXT,
+    column2 INT,
+    column3 TIMESTAMP
+);
+
+INSERT INTO my_table (column1, column2, column3) VALUES
+    ('apple', 10, '2024-01-01 10:00:00'),
+    ('banana', 20, '2024-02-01 11:30:00'),
+    ('grape', 15, '2024-03-01 14:15:00'),
+    ('orange', 25, '2024-04-01 09:45:00'),
+    ('lemon', 30, '2024-05-01 16:20:00');
+```
+
+## Creating a GIN Index with btree_gin
+
+A GIN index with `btree_gin` is useful when performing multi-column searches that include B-tree indexable columns. Here's how to create one:
+
+```sql
+CREATE INDEX gin_idx ON my_table
+USING gin (column1, column2, column3);
+```
+
+<Info>
+  Note: `USING gin` specifies that this is a GIN index. The extension allows
+  `column1` (text), `column2` (integer), and `column3` (timestamp) to be indexed
+  efficiently using GIN.
+</Info>
+
+## Querying with GIN Index
+
+Once the GIN index is created, it can be used to optimize queries filtering on indexed columns:
+
+```sql
+SELECT * FROM my_table WHERE column1 = 'apple' AND column2 = 10;
+```
+
+## Limitations
+
+- GIN indexes are optimized for **fast lookups** but have **slower insert/update performance** compared to B-tree indexes.
+- They work best when querying multiple indexed columns together.
+- Unlike B-tree indexes, they **do not support range queries efficiently**.
+
+## Removing a GIN Index
+
+If you need to remove a GIN index:
+
+```sql
+DROP INDEX gin_idx;
+```
+
+## Conclusion
+
+The `btree_gin` extension enhances GIN indexes by allowing them to handle B-tree indexable data types efficiently. It is particularly useful for **multi-column indexing** scenarios where a mix of text, integer, and timestamp fields are queried together.
+
+For more details, refer to the [PostgreSQL documentation](https://www.postgresql.org/docs/current/btree-gin.html).

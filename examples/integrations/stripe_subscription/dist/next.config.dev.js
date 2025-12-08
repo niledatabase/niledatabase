@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /** @type {import('next').NextConfig} */
 module.exports = {

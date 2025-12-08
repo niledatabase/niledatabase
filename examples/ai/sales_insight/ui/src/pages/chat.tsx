@@ -1,20 +1,20 @@
-import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Link as ReactLink } from "react-router-dom";
-import { useTranscriptHandler } from "../hooks/useTranscriptHandler";
-import { useTranscripts } from "../hooks/useTranscripts";
-import { useTenantName } from "../hooks/useTenantName";
+import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Link as ReactLink } from 'react-router-dom';
+import { useTranscriptHandler } from '../hooks/useTranscriptHandler';
+import { useTranscripts } from '../hooks/useTranscripts';
+import { useTenantName } from '../hooks/useTenantName';
 
 // MUI joy components
-import Box from "@mui/joy/Box";
-import Grid from "@mui/joy/Grid";
-import { Typography } from "@mui/joy";
-import MUILink from "@mui/joy/Link";
+import Box from '@mui/joy/Box';
+import Grid from '@mui/joy/Grid';
+import { Typography } from '@mui/joy';
+import MUILink from '@mui/joy/Link';
 
-import Layout from "../layout";
-import ContentViewer from "../components/ContentViewer";
-import Sidebar from "../components/Sidebar";
-import Chatbox from "../components/Chatbox";
+import Layout from '../layout';
+import ContentViewer from '../components/ContentViewer';
+import Sidebar from '../components/Sidebar';
+import Chatbox from '../components/Chatbox';
 
 // TODO: Right now, this is set to select one sales conversation and chat with it.
 // Do we want to have a chat with *all* conversations in the tenant?
@@ -24,7 +24,7 @@ export default function Chat() {
   const tenantId = params.tenantId;
   if (!tenantId) {
     React.useEffect(() => {
-      navigate("/tenants");
+      navigate('/tenants');
     }, []);
     return null; // Render nothing while redirecting
   }
@@ -36,8 +36,8 @@ export default function Chat() {
 
   return (
     <Layout>
-      <Box sx={{ padding: 4, width: "100%" }}>
-        <Grid container spacing={2} sx={{ height: "70vh" }}>
+      <Box sx={{ padding: 4, width: '100%' }}>
+        <Grid container spacing={2} sx={{ height: '70vh' }}>
           <Grid xs={2}>
             <Typography level="body-md">
               Current tenant: {tenantName}
@@ -47,12 +47,12 @@ export default function Chat() {
             <MUILink
               component={ReactLink}
               to="/tenants"
-              justifyContent={"center"}
+              justifyContent={'center'}
             >
-              (Back to tenant selection){" "}
+              (Back to tenant selection){' '}
             </MUILink>
           </Grid>
-          <Grid md={2} sx={{ overflow: "auto", height: "65vh" }}>
+          <Grid md={2} sx={{ overflow: 'auto', height: '65vh' }}>
             <Sidebar
               items={transcripts}
               onClick={handleTranscriptClick}

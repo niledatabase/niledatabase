@@ -1,0 +1,129 @@
+---
+title: 'Hstore'
+description: 'Store key-value pairs within a single PostgreSQL value'
+---
+
+The `hstore` extension provides a data type for storing sets of key-value pairs within a single PostgreSQL value. This can be particularly useful when dealing with semi-structured data or when you need to store attributes that don't warrant their own columns.
+Your Nile database arrives with `hstore` extension already enabled.
+
+## Creating Tables with hstore
+
+Here's how to create a table that includes an hstore column:
+
+```sql
+CREATE TABLE products (
+    id int,
+    tenant_id uuid NOT NULL,
+    name text,
+    attributes hstore,
+    PRIMARY KEY(tenant_id, id)
+);
+```
+
+### Inserting Data
+
+First, create a tenant:
+
+```sql
+INSERT INTO tenants (id, name)
+VALUES ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 'Example Store');
+```
+
+Then you can insert products for this tenant:
+
+```sql
+-- Using the => operator
+INSERT INTO products (tenant_id, id, name, attributes)
+VALUES ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, 'Laptop', 'color=>silver, RAM=>16GB, storage=>512GB');
+
+-- Using the hstore function
+INSERT INTO products (tenant_id, id, name, attributes)
+VALUES ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, 'Phone', hstore(ARRAY['color', 'black', 'storage', '256GB']));
+```
+
+### Querying hstore Data
+
+The hstore data type comes with several useful operators and functions:
+
+```sql
+-- Get a specific value by key
+SELECT attributes->'color' as color FROM products;
+
+-- Check if a key exists
+SELECT * FROM products WHERE attributes ? 'RAM';
+
+-- Check if a key/value pair exists
+SELECT * FROM products WHERE attributes @> 'color=>silver';
+
+-- Get all keys
+SELECT akeys(attributes) FROM products;
+
+-- Get all values
+SELECT avals(attributes) FROM products;
+
+-- Get key/value pairs as a set
+SELECT skeys(attributes), svals(attributes) FROM products;
+```
+
+## Updating hstore Values
+
+You can update individual key/value pairs or the entire hstore.
+We use `SET nile.tenant_id` to guarantee the operation is performed on the correct tenant:
+
+```sql
+SET nile.tenant_id = 'd1c06023-3421-4fbb-9dd1-c96e42d2fd02';
+-- Update a single key/value pair
+UPDATE products
+SET attributes = attributes || 'RAM=>32GB'::hstore
+WHERE id = 1;
+
+-- Delete a key
+UPDATE products
+SET attributes = delete(attributes, 'storage')
+WHERE id = 1;
+```
+
+## Combining hstore Values
+
+You can combine multiple hstore values using the concatenation operator (||):
+
+```sql
+SELECT 'a=>1, b=>2'::hstore || 'c=>3'::hstore;
+```
+
+## Converting To/From JSON
+
+hstore can be converted to and from JSON:
+
+```sql
+-- Convert hstore to JSON
+SELECT hstore_to_json(attributes) FROM products;
+
+-- Convert JSON to hstore using the array syntax
+SELECT hstore(ARRAY['color', 'red', 'size', 'large']);
+```
+
+## Best Practices
+
+1. Use hstore when dealing with dynamic attributes that don't require strict schema validation.
+2. Consider using JSON/JSONB instead if you need to store nested structures or arrays.
+3. Create indexes on frequently queried keys using GiST or GIN indexes:
+
+```sql
+CREATE INDEX idx_products_attributes ON products USING GIN (attributes);
+```
+
+## Performance Considerations
+
+- hstore is generally more efficient than JSON for simple key-value pairs
+- GIN indexes can significantly improve query performance on hstore columns
+- The storage size of hstore is typically smaller than equivalent JSON storage
+
+## Limitations
+
+- Keys and values must be text strings
+- No support for nested structures
+- No array support within values
+- Maximum size is limited by the maximum TOAST size in PostgreSQL
+
+For more details, refer to the [hstore documentation](https://www.postgresql.org/docs/current/hstore.html).

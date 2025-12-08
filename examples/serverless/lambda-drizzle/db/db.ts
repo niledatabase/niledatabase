@@ -1,11 +1,11 @@
-import { NodePgDatabase, drizzle } from "drizzle-orm/node-postgres";
+import { NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres';
 // using the standard node-postgres library. You can use it with "Pool" too
-import pkg from "pg";
+import pkg from 'pg';
 const { Client } = pkg;
-import dotenv from "dotenv";
-import { sql } from "drizzle-orm";
-import { PgTransaction } from "drizzle-orm/pg-core";
-import { AsyncLocalStorage } from "async_hooks";
+import dotenv from 'dotenv';
+import { sql } from 'drizzle-orm';
+import { PgTransaction } from 'drizzle-orm/pg-core';
+import { AsyncLocalStorage } from 'async_hooks';
 
 dotenv.config();
 
@@ -16,7 +16,7 @@ const client = new Client({
 
 // Drizzle expects the connection to be open when using a client. Alternatively, you can use a pool
 client.connect();
-console.log("connected to db");
+console.log('connected to db');
 
 export const db = drizzle(client, { logger: true });
 export const tenantContext = new AsyncLocalStorage<string | undefined>();
@@ -24,7 +24,7 @@ export const tenantContext = new AsyncLocalStorage<string | undefined>();
 export function tenantDB<T>(cb: (tx: any) => T | Promise<T>): Promise<T> {
   return db.transaction(async (tx) => {
     const tenantId = tenantContext.getStore();
-    console.log("executing query with tenant: " + tenantId);
+    console.log('executing query with tenant: ' + tenantId);
     // clean old context
     await tx.execute(sql`reset nile.tenant_id`);
     // if there's a tenant ID, set it in the context

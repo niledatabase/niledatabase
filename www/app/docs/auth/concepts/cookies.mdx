@@ -1,0 +1,98 @@
+---
+title: 'Cookies'
+description: 'Understanding cookie usage in Nile Auth'
+---
+
+## What are Cookies?
+
+A cookie is a small piece of data that is sent from a website and stored in the user's browser. Cookies are often used to store session data, preferences, or authentication information, allowing websites to remember users between sessions. Each time the user revisits the site, the browser sends the stored cookies back to the server to maintain a persistent session or store user-specific data.
+
+## Nile Auth Cookies
+
+Nile Auth uses cookies to maintain user sessions and facilitate secure authentication flows.
+Here are the key cookies used by Nile Auth:
+
+### Session Token Cookie
+
+- **Cookie Name**: `nile.session-token`
+- **Purpose**: This cookie stores the session token (usually a JWT or a session ID) to maintain the user's authenticated session across multiple requests.
+- **How it Works**: When a user logs in successfully, the session token is stored in this cookie. This token is then sent automatically with each request to the server, allowing the backend to authenticate the user and retrieve session data.
+- **Options**:
+  - `httpOnly`: Ensures the cookie is inaccessible to JavaScript, preventing XSS attacks.
+  - `secure`: Ensures the cookie is only sent over HTTPS.
+  - `sameSite: 'lax'`: Prevents the cookie from being sent with cross-site requests, but allows it for top-level navigation.
+  - `path: '/'`: Makes the cookie available across the entire site.
+
+### Callback URL Cookie
+
+- **Cookie Name**: `nile.callback-url`
+- **Purpose**: This cookie stores the URL the user should be redirected to after completing an authentication flow (such as logging in via OAuth).
+- **How it Works**: Before redirecting a user to an external provider for authentication, the `callbackUrl` is stored in this cookie. Once authentication is successful, the user is redirected back to this URL.
+- **Options**:
+  - `sameSite: 'lax'`: This ensures the cookie is only sent when making same-site requests, improving security.
+  - `secure`: Ensures the cookie is only sent over HTTPS connections.
+  - `path: '/'`: Ensures the cookie is available across the entire site.
+
+### CSRF Token Cookie
+
+- **Cookie Name**: `nile.csrf-token`
+- **Purpose**: This cookie stores a CSRF token to protect against cross-site request forgery attacks.
+- **How it Works**: The CSRF token is generated during the login or authorization process and stored in this cookie. It must then be included in the headers of state-changing requests (e.g., form submissions, API calls). The server checks the validity of the token to ensure the request is legitimate.
+- **Options**:
+  - `httpOnly`: The cookie is inaccessible to JavaScript, preventing attacks where an attacker could access the CSRF token.
+  - `sameSite: 'lax'`: Prevents the cookie from being sent with cross-origin requests, but allows it for same-site requests and top-level navigation.
+  - `secure`: Ensures the cookie is only sent over HTTPS to prevent interception.
+
+### PKCE Code Verifier Cookie
+
+- **Cookie Name**: `nile.pkce.code_verifier`
+- **Purpose**: This cookie stores the code verifier used in the PKCE (Proof Key for Code Exchange) flow, which is commonly used in OAuth 2.0 authentication.
+- **How it Works**: During OAuth authorization, the PKCE flow involves generating a code verifier and code challenge. The code verifier is stored in this cookie and used to validate the code challenge received from the OAuth provider, ensuring the request is secure and preventing token interception.
+- **Options**:
+  - `httpOnly`: Prevents the cookie from being accessed via JavaScript.
+  - `sameSite: 'lax'`: Limits the cookie's availability to same-site requests, improving security.
+  - `secure`: Ensures the cookie is only sent over secure HTTPS connections.
+  - `maxAge: 900`: Sets the cookie's expiration time to 15 minutes (900 seconds), which is typical for OAuth PKCE flows.
+
+### State Cookie
+
+- **Cookie Name**: `nile.state`
+- **Purpose**: This cookie stores the state parameter used to prevent CSRF attacks during the OAuth flow.
+- **How it Works**: The state parameter is generated during the OAuth authorization request and stored in this cookie. It is later verified during the callback to ensure that the request originated from the legitimate application, protecting against CSRF attacks.
+- **Options**:
+  - `httpOnly`: Prevents the cookie from being accessed by JavaScript, mitigating potential XSS attacks.
+  - `sameSite: 'lax'`: Limits cross-site cookie transmission to prevent potential cross-origin attacks.
+  - `secure`: Ensures the cookie is only sent over secure connections.
+  - `maxAge: 900`: Sets the cookie's expiration time to 15 minutes, aligning with the OAuth flow's expected duration.
+
+### Nonce Cookie
+
+- **Cookie Name**: `nile.nonce`
+- **Purpose**: This cookie stores a nonce (a random value used once) that is used in the OAuth flow to protect against replay attacks.
+- **How it Works**: The nonce is generated before redirecting the user to the OAuth provider and stored in this cookie. It is sent along with the OAuth request and verified by the server to ensure that the response is legitimate and has not been replayed by an attacker.
+- **Options**:
+  - `httpOnly`: Ensures the cookie is not accessible to JavaScript, mitigating the risk of attacks that access browser storage.
+  - `sameSite: 'lax'`: Limits the cookie to same-site requests, preventing cross-site request forgery.
+  - `secure`: The cookie is only sent over HTTPS, providing security for sensitive data.
+
+### Tenant cookie
+
+- **Cookie Name**: `nile.tenant-id`
+- **Purpose**: This cookie stores the tenant id, if selected. If it is present, the SDK and nile auth will use this value as the context for any query or request.
+- **Options**:
+  - `sameSite: 'lax'`: Limits the cookie to same-site requests, preventing cross-site request forgery.
+  - `secure`: The cookie is only sent over HTTPS, providing security for sensitive data.
+
+### Password reset cookie
+
+- **Cookie Name**: `nile.reset`
+- **Purpose**: This cookie stores a signed value that is allowed to reset a user&apos;s password.
+- **Options**:
+  - `sameSite: 'lax'`: Limits the cookie to same-site requests, preventing cross-site request forgery.
+  - `secure`: The cookie is only sent over HTTPS, providing security for sensitive data.
+
+## Related Topics
+
+- [Sessions](/auth/concepts/sessions)
+- [JWT](/auth/concepts/jwt)
+- [Security](/auth/concepts/oauth)

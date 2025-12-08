@@ -1,7 +1,7 @@
-"use client";
-import { Remark } from "react-remark";
-import rehypeRaw from "rehype-raw";
-import rehypeSanitize from "rehype-sanitize";
+'use client';
+import { Remark } from 'react-remark';
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
 export default function Markdown({
   contents,
 }: {

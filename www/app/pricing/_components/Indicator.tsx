@@ -1,7 +1,7 @@
-import React from "react";
-import Image from "next/image";
+import React from 'react';
+import Image from 'next/image';
 
-import check from "@/public/icons/check.svg";
+import check from '@/public/icons/check.svg';
 
 export default function Indicator({
   value,
@@ -12,15 +12,15 @@ export default function Indicator({
   hideDivider?: boolean;
   header?: string;
 }) {
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     return (
       <>
-        <div className="flex align-center justify-between lg:justify-center">
+        <div className="align-center flex justify-between lg:justify-center">
           <div className="opacity-70 lg:hidden">{header}</div>
           {value}
         </div>
         <div
-          className={"h-px  bg-white"}
+          className={'h-px bg-white'}
           style={{ opacity: hideDivider ? 0 : 0.3 }}
         />
       </>
@@ -28,10 +28,10 @@ export default function Indicator({
   }
   return (
     <>
-      <div className="flex align-center justify-between lg:justify-center">
+      <div className="align-center flex justify-between lg:justify-center">
         <div className="opacity-70 lg:hidden">{header}</div>
         {value ? (
-          <div className="bg-brightOrange rounded-full flex align-center justify-center w-5 h-5">
+          <div className="align-center flex h-5 w-5 justify-center rounded-full bg-brightOrange">
             <Image src={check} alt="check" width={14} height={14} />
           </div>
         ) : (
@@ -39,7 +39,7 @@ export default function Indicator({
         )}
       </div>
       <div
-        className={"h-px  bg-white"}
+        className={'h-px bg-white'}
         style={{ opacity: hideDivider ? 0 : 0.3 }}
       />
     </>
@@ -47,7 +47,7 @@ export default function Indicator({
 }
 
 export const NotApplicable = () => (
-  <div className="bg-gray rounded-full w-5 h-5 text-slate-950 text-[20px] font-bold leading-[19px] text-center">
+  <div className="h-5 w-5 rounded-full bg-gray text-center text-[20px] font-bold leading-[19px] text-slate-950">
     -
   </div>
 );

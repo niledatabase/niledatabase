@@ -1,26 +1,26 @@
-import Tenants from "./TenantPage.jsx";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ErrorPage from "./error-page.jsx";
-import Todos from "./todos.jsx";
-import SignIn from "./SignIn.jsx";
-import SignUp from "./SignUp.jsx";
+import Tenants from './TenantPage.jsx';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import ErrorPage from './error-page.jsx';
+import Todos from './todos.jsx';
+import SignIn from './SignIn.jsx';
+import SignUp from './SignUp.jsx';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <SignIn />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/sign-up",
+    path: '/sign-up',
     element: <SignUp />,
   },
   {
-    path: "/tenants",
+    path: '/tenants',
     element: <Tenants />,
   },
   {
-    path: "tenants/:tenantId/todos",
+    path: 'tenants/:tenantId/todos',
     element: <Todos />,
   },
 ]);

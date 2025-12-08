@@ -1,9 +1,9 @@
-import Container from "../_components/common/Container";
-import PageHeader from "../_components/common/PageHeader";
+import Container from '../_components/common/Container';
+import PageHeader from '../_components/common/PageHeader';
 
 const styles = {
-  flexContainer: "flex items-start justify-between gap-1 m-0 mt-1",
-  flexSpacer: "min-w-[12rem]",
+  flexContainer: 'flex items-start justify-between gap-1 m-0 mt-1',
+  flexSpacer: 'min-w-[12rem]',
 };
 
 export default function PrivacyPolicy() {
@@ -587,7 +587,7 @@ export default function PrivacyPolicy() {
 
         <p>
           <strong>
-            To create anonymous, aggregated or de-identified data.{" "}
+            To create anonymous, aggregated or de-identified data.{' '}
           </strong>
           We may create anonymous, aggregated or de-identified data from your
           personal information and other individuals whose personal information
@@ -1128,9 +1128,9 @@ export default function PrivacyPolicy() {
           <li>
             <strong
               style={{
-                fontSize: "18px",
-                letterSpacing: "-0.004em",
-                display: "inline !important",
+                fontSize: '18px',
+                letterSpacing: '-0.004em',
+                display: 'inline !important',
               }}
             >
               Delete
@@ -1174,7 +1174,7 @@ export default function PrivacyPolicy() {
             <strong />
             <strong>For users in the European Economic Area</strong> – the
             contact information for the data protection regulator in your place
-            of residence can be found here:{" "}
+            of residence can be found here:{' '}
             <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en">
               https://edpb.europa.eu/about-edpb/about-edpb/members_en
             </a>
@@ -1194,7 +1194,7 @@ export default function PrivacyPolicy() {
           <br />
           Tel. <a href="tel:443031231113">+44 303 123 1113</a>
           <br />
-          Website:{" "}
+          Website:{' '}
           <a href="https://ico.org.uk/make-a-complaint/">
             https://ico.org.uk/make-a-complaint/
           </a>

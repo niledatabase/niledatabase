@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/ui/input";
-import { useChat } from "@ai-sdk/react";
-import { useTheme } from "next-themes";
-import { ElementRef, FC, useEffect, useRef, useState } from "react";
-import { BeatLoader } from "react-spinners";
-import { useRouter } from "next/navigation";
-import UserMessage from "./user-message";
-import AIMessage from "./ai-message";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
-import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-import { toast } from "sonner";
-import ReactMarkdown from "react-markdown";
-import { MemoizedReactMarkdown } from "./markdown";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
+import { Input } from '@/components/ui/input';
+import { useChat } from '@ai-sdk/react';
+import { useTheme } from 'next-themes';
+import { ElementRef, FC, useEffect, useRef, useState } from 'react';
+import { BeatLoader } from 'react-spinners';
+import { useRouter } from 'next/navigation';
+import UserMessage from './user-message';
+import AIMessage from './ai-message';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Copy } from 'lucide-react';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
+import { toast } from 'sonner';
+import ReactMarkdown from 'react-markdown';
+import { MemoizedReactMarkdown } from './markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from "@/components/ui/resizable";
-import PdfRenderer from "@/components/pdf-renderer";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+} from '@/components/ui/resizable';
+import PdfRenderer from '@/components/pdf-renderer';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 type Message = {
   id: string;
@@ -55,13 +55,13 @@ export const Chat: FC<ChatProps> = ({
 
   const { messages, status, sendMessage } = useChat({
     onError(error) {
-      toast.error("Error Processing Request");
+      toast.error('Error Processing Request');
       console.error(error);
     },
   });
 
-  const [input, setInput] = useState("");
-  const isLoading = status === "streaming" || status === "submitted";
+  const [input, setInput] = useState('');
+  const isLoading = status === 'streaming' || status === 'submitted';
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -78,33 +78,33 @@ export const Chat: FC<ChatProps> = ({
           user_id: userId,
           tenant_id: tenant_id,
         },
-      }
+      },
     );
-    setInput("");
+    setInput('');
   };
 
   const { theme } = useTheme();
-  const scrollRef = useRef<ElementRef<"div">>(null);
+  const scrollRef = useRef<ElementRef<'div'>>(null);
   useEffect(() => {
-    scrollRef?.current?.scrollIntoView({ behavior: "smooth" });
+    scrollRef?.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages.length]);
   const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 2000 });
 
   const onCopy = (content: string) => {
     if (isCopied) return;
     copyToClipboard(content);
-    toast.success("Message Copied to Clipboard");
+    toast.success('Message Copied to Clipboard');
   };
   console.log(pastMessages);
   return (
     <>
       <ResizablePanelGroup direction="horizontal" className="w-full">
-        <ResizablePanel className="w-[50vw] max-h-[85vh]">
-          <PdfRenderer url={url} />{" "}
+        <ResizablePanel className="max-h-[85vh] w-[50vw]">
+          <PdfRenderer url={url} />{' '}
         </ResizablePanel>
         <ResizableHandle className="mx-5" withHandle />
         <ResizablePanel className="overflow-x-hidden last:mb-12">
-          <ScrollArea className="h-[77vh] overflow-x-hidden overflow-auto w-full">
+          <ScrollArea className="h-[77vh] w-full overflow-auto overflow-x-hidden">
             <ScrollBar orientation="vertical" forceMount />
             {pastMessages.length > 0 ? (
               <>
@@ -120,30 +120,30 @@ export const Chat: FC<ChatProps> = ({
                 ))}
               </>
             ) : (
-              ""
+              ''
             )}
             {messages.map((m) => {
               const content = m.parts
                 ? m.parts
-                    .filter((part) => part.type === "text")
+                    .filter((part) => part.type === 'text')
                     .map((part) => part.text)
-                    .join("")
-                : "";
+                    .join('')
+                : '';
               return (
                 <div
                   key={m.id}
-                  className={cn("whitespace-pre-wrap group", {
-                    "text-blue-500 text-right p-4  gap-x-8 rounded-lg max-w-lg ":
-                      m.role === "user",
-                    "text-green-500 p-4 w-full flex items-start gap-x-8 rounded-lg max-w-lg bg-muted":
-                      m.role !== "user",
-                    "prose-p:text-indigo-400 prose-li:text-indigo-400":
-                      m.role === "user",
+                  className={cn('group whitespace-pre-wrap', {
+                    'max-w-lg gap-x-8 rounded-lg p-4 text-right text-blue-500':
+                      m.role === 'user',
+                    'flex w-full max-w-lg items-start gap-x-8 rounded-lg bg-muted p-4 text-green-500':
+                      m.role !== 'user',
+                    'prose-p:text-indigo-400 prose-li:text-indigo-400':
+                      m.role === 'user',
                   })}
                 >
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm, remarkMath]}
-                    className="text-base prose dark:prose-invert prose-ul:m-0 prose-li:m-0 prose-p:my-0 prose-h3:my-0"
+                    className="prose dark:prose-invert prose-ul:m-0 prose-li:m-0 prose-p:my-0 prose-h3:my-0 text-base"
                   >
                     {content}
                   </ReactMarkdown>
@@ -153,7 +153,7 @@ export const Chat: FC<ChatProps> = ({
                     size="icon"
                     variant="ghost"
                   >
-                    <Copy className="w-4 h-4" />
+                    <Copy className="h-4 w-4" />
                   </Button>
                 </div>
               );
@@ -161,16 +161,16 @@ export const Chat: FC<ChatProps> = ({
             {/* <div className="bg-white">Some</div> */}
             <form onSubmit={handleSubmit}>
               {isLoading && (
-                <div className="p-4 rounded-lg w-1/2 flex items-center justify-center bg-muted mt-10">
+                <div className="mt-10 flex w-1/2 items-center justify-center rounded-lg bg-muted p-4">
                   <BeatLoader
-                    color={theme === "light" ? "black" : "white"}
+                    color={theme === 'light' ? 'black' : 'white'}
                     size={5}
                   />
                 </div>
               )}
               <div ref={scrollRef} />
               <Input
-                className="fixed bottom-0 w-[80vw] md:w-full max-w-md p-2 mb-8 min-h-4 border border-gray-300 rounded shadow-xl"
+                className="fixed bottom-0 mb-8 min-h-4 w-[80vw] max-w-md rounded border border-gray-300 p-2 shadow-xl md:w-full"
                 value={input}
                 placeholder="Talk to the document..."
                 onChange={handleInputChange}

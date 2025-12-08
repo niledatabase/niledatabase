@@ -1,19 +1,19 @@
-import { cookies } from "next/headers";
-import styles from "../page.module.css";
-import NextLink from "next/link";
-import { nile } from "../api/[...nile]/nile";
-import { redirect } from "next/navigation";
-import { SignOutButton } from "@niledatabase/react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { cookies } from 'next/headers';
+import styles from '../page.module.css';
+import NextLink from 'next/link';
+import { nile } from '../api/[...nile]/nile';
+import { redirect } from 'next/navigation';
+import { SignOutButton } from '@niledatabase/react';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
 export const revalidate = 0;
-export const fetchCache = "force-no-store";
+export const fetchCache = 'force-no-store';
 
 export default async function Page() {
   const headers = new Headers({ cookie: (await cookies()).toString() });
@@ -26,7 +26,7 @@ export default async function Page() {
   if (tenants instanceof Response) {
     // signed out
     if (tenants.status === 401) {
-      return redirect("/");
+      return redirect('/');
     }
     return (
       <div>

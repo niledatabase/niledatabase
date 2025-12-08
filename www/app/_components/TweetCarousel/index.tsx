@@ -1,85 +1,85 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useCallback, useRef } from "react";
-import { TweetCard, type Tweet } from "./TweetCard";
-import { NewHeading } from "../common/NewHeading";
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { TweetCard, type Tweet } from './TweetCard';
+import { NewHeading } from '../common/NewHeading';
 
 const tweets: Tweet[] = [
   {
-    id: "1717203591944089762",
+    id: '1717203591944089762',
     author: {
-      name: "Guillermo Rauch",
-      handle: "@rauchg",
-      avatar: "/profiles/rauch.jpg",
-      title: "CEO, Vercel",
+      name: 'Guillermo Rauch',
+      handle: '@rauchg',
+      avatar: '/profiles/rauch.jpg',
+      title: 'CEO, Vercel',
     },
-    content: "Tenant-aware serverless Postgres. So clever!",
+    content: 'Tenant-aware serverless Postgres. So clever!',
   },
   {
-    id: "1717518173824569471",
+    id: '1717518173824569471',
     author: {
-      name: "Oz Katz",
-      handle: "@ozkatz100",
-      avatar: "/profiles/ozkatz.jpg",
-      title: "CTO, lakeFS",
+      name: 'Oz Katz',
+      handle: '@ozkatz100',
+      avatar: '/profiles/ozkatz.jpg',
+      title: 'CTO, lakeFS',
     },
     content:
       'This looks INCREDIBLE!\nI\'ve had the "pleasure" of designing multi-tenant SaaS applications several times in my career. Nile seems to tackle exactly all the right problems.',
   },
   {
-    id: "1717235597063213325",
+    id: '1717235597063213325',
     author: {
-      name: "Simon Eskildsen",
-      handle: "@sirupsen",
-      avatar: "/profiles/sirupsen.jpg",
-      title: "CEO, Turbopuffer",
+      name: 'Simon Eskildsen',
+      handle: '@sirupsen',
+      avatar: '/profiles/sirupsen.jpg',
+      title: 'CEO, Turbopuffer',
     },
     content:
       "fascinating as a primitive. Always wanted this.\n\nMulti Tenancy Engineering is a real thing that's often a massive % of what SaaS companies' infra teams do, without naming it.",
   },
   {
-    id: "1717205300259017054",
+    id: '1717205300259017054',
     author: {
-      name: "Siva Narayanan",
-      handle: "@sivanarayanan",
-      avatar: "/profiles/siva.jpg",
-      title: "CTO, Fyle",
+      name: 'Siva Narayanan',
+      handle: '@sivanarayanan',
+      avatar: '/profiles/siva.jpg',
+      title: 'CTO, Fyle',
     },
     content:
-      "I wish we had all of these things when we started @FyleHQ. This should help startups immensely.",
+      'I wish we had all of these things when we started @FyleHQ. This should help startups immensely.',
   },
   {
-    id: "1836501428631691683",
+    id: '1836501428631691683',
     author: {
-      name: "Tanel Poder",
-      handle: "@TanelPoder",
-      avatar: "/profiles/tanel.jpg",
-      title: "Co-founder, Gluent",
+      name: 'Tanel Poder',
+      handle: '@TanelPoder',
+      avatar: '/profiles/tanel.jpg',
+      title: 'Co-founder, Gluent',
     },
     content:
-      "I like how the @niledatabase positions itself. Not a yet another scalable Postgres database, but a SaaS platform with a lot of built-in integrations (yes also AI) for rapid app development *and* shipping!",
+      'I like how the @niledatabase positions itself. Not a yet another scalable Postgres database, but a SaaS platform with a lot of built-in integrations (yes also AI) for rapid app development *and* shipping!',
   },
   {
-    id: "1836457299629498374",
+    id: '1836457299629498374',
     author: {
-      name: "Jay Kreps",
-      handle: "@jaykreps",
-      avatar: "/profiles/kreps.png",
-      title: "CEO, Confluent",
+      name: 'Jay Kreps',
+      handle: '@jaykreps',
+      avatar: '/profiles/kreps.png',
+      title: 'CEO, Confluent',
     },
     content:
-      "Postgres, as a service, done right. Awesome team and an awesome product. Excited to see it launch…",
+      'Postgres, as a service, done right. Awesome team and an awesome product. Excited to see it launch…',
   },
   {
-    id: "1721951479031054364",
+    id: '1721951479031054364',
     author: {
-      name: "Milos Gajdos",
-      handle: "@milosgajdos",
-      avatar: "/profiles/milos.jpg",
-      title: "Tech Lead, Docker Hub",
+      name: 'Milos Gajdos',
+      handle: '@milosgajdos',
+      avatar: '/profiles/milos.jpg',
+      title: 'Tech Lead, Docker Hub',
     },
     content:
-      "There are a lot of Postgres startups out there but Nile is one of the more interesting things happening in the PG space. To anyone who has worked on some SaaS product, this must look like a no-brainer: multitenant PG.",
+      'There are a lot of Postgres startups out there but Nile is one of the more interesting things happening in the PG space. To anyone who has worked on some SaaS product, this must look like a no-brainer: multitenant PG.',
   },
 ];
 
@@ -88,7 +88,7 @@ const extendedTweets = [...tweets, ...tweets, ...tweets];
 
 const SCROLL_SPEED = 0.65; // pixels per frame (increased by 20% from 0.4)
 const CARD_WIDTH =
-  typeof window !== "undefined" && window.innerWidth < 640 ? 300 : 406; // width + gap for mobile/desktop
+  typeof window !== 'undefined' && window.innerWidth < 640 ? 300 : 406; // width + gap for mobile/desktop
 const WHEEL_SCROLL_SPEED = 25; // pixels per wheel event
 const TOTAL_WIDTH = tweets.length * CARD_WIDTH;
 
@@ -123,9 +123,9 @@ export default function TweetCarousel() {
       }, 150);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
       clearTimeout(scrollTimeout);
     };
   }, []);
@@ -183,7 +183,7 @@ export default function TweetCarousel() {
       dragStartTranslateX.current = translateX;
       currentX.current = clientX;
     },
-    [translateX]
+    [translateX],
   );
 
   const handleDragMove = useCallback(
@@ -199,7 +199,7 @@ export default function TweetCarousel() {
         return handleLoop(newValue);
       });
     },
-    [isDragging, handleLoop]
+    [isDragging, handleLoop],
   );
 
   const handleDragEnd = useCallback(() => {
@@ -212,7 +212,7 @@ export default function TweetCarousel() {
       e.preventDefault();
       handleDragStart(e.clientX);
     },
-    [handleDragStart]
+    [handleDragStart],
   );
 
   const handleMouseMove = useCallback(
@@ -220,7 +220,7 @@ export default function TweetCarousel() {
       e.preventDefault();
       handleDragMove(e.clientX);
     },
-    [handleDragMove]
+    [handleDragMove],
   );
 
   const handleMouseUp = useCallback(() => {
@@ -232,14 +232,14 @@ export default function TweetCarousel() {
     (e: React.TouchEvent) => {
       handleDragStart(e.touches[0].clientX);
     },
-    [handleDragStart]
+    [handleDragStart],
   );
 
   const handleTouchMove = useCallback(
     (e: React.TouchEvent) => {
       handleDragMove(e.touches[0].clientX);
     },
-    [handleDragMove]
+    [handleDragMove],
   );
 
   const handleTouchEnd = useCallback(() => {
@@ -280,18 +280,18 @@ export default function TweetCarousel() {
         });
       }
     },
-    [handleLoop]
+    [handleLoop],
   );
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 py-6 sm:py-16">
-      <div className="mb-6 sm:mb-12 flex justify-center">
+    <div className="mx-auto w-full max-w-7xl px-2 py-6 sm:px-6 sm:py-16">
+      <div className="mb-6 flex justify-center sm:mb-12">
         <NewHeading>What People Are Saying</NewHeading>
       </div>
 
       <div
         ref={containerRef}
-        className="relative overflow-hidden cursor-grab active:cursor-grabbing"
+        className="relative cursor-grab overflow-hidden active:cursor-grabbing"
         onMouseEnter={handleMouseEnter}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -309,10 +309,10 @@ export default function TweetCarousel() {
           className="flex gap-3 sm:gap-6"
           style={{
             transform: `translateX(${translateX}px)`,
-            width: "fit-content",
+            width: 'fit-content',
             transition:
-              isDragging || isScrolling ? "none" : "transform 100ms linear",
-            willChange: "transform",
+              isDragging || isScrolling ? 'none' : 'transform 100ms linear',
+            willChange: 'transform',
           }}
         >
           {extendedTweets.map((tweet, index) => (
@@ -320,14 +320,14 @@ export default function TweetCarousel() {
               key={`${tweet.id}-${index}`}
               style={{
                 minWidth:
-                  typeof window !== "undefined" && window.innerWidth < 640
-                    ? "300px"
-                    : "400px",
+                  typeof window !== 'undefined' && window.innerWidth < 640
+                    ? '300px'
+                    : '400px',
                 maxWidth:
-                  typeof window !== "undefined" && window.innerWidth < 640
-                    ? "300px"
-                    : "400px",
-                userSelect: "none",
+                  typeof window !== 'undefined' && window.innerWidth < 640
+                    ? '300px'
+                    : '400px',
+                userSelect: 'none',
               }}
             >
               <TweetCard tweet={tweet} />

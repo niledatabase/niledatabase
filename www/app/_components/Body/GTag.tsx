@@ -1,7 +1,7 @@
-import Script from "next/script";
+import Script from 'next/script';
 
 export default function GTag() {
-  const gtagEnabled = process.env.NODE_ENV === "production";
+  const gtagEnabled = process.env.NODE_ENV === 'production';
   const gtag = process.env.NEXT_PUBLIC_GTAG;
 
   return gtagEnabled ? (

@@ -1,23 +1,23 @@
-import express from "express";
-import { match } from "path-to-regexp";
-import { Prisma, PrismaClient } from "@prisma/client";
-import expressBasicAuth from "express-basic-auth";
-import { v4 as uuidv4, parse } from "uuid";
-import { tenantContext } from "./storage";
-import { dbAuthorizer, getUnauthorizedResponse } from "./basicauth";
-import type { tenants } from "@prisma/client";
+import express from 'express';
+import { match } from 'path-to-regexp';
+import { Prisma, PrismaClient } from '@prisma/client';
+import expressBasicAuth from 'express-basic-auth';
+import { v4 as uuidv4, parse } from 'uuid';
+import { tenantContext } from './storage';
+import { dbAuthorizer, getUnauthorizedResponse } from './basicauth';
+import type { tenants } from '@prisma/client';
 import {
   findSimilarTasks,
   aiEstimate,
   embedTask,
   EmbeddingTasks,
   embeddingToSQL,
-} from "./AiUtils.js";
+} from './AiUtils.js';
 
 const PORT = process.env.PORT || 3001;
 const REQUIRE_AUTH = process.env.REQUIRE_AUTH || false;
 
-const prisma = new PrismaClient({ log: ["query", "info", "warn", "error"] });
+const prisma = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] });
 const app = express();
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
@@ -37,7 +37,7 @@ app.use(express.urlencoded({ extended: true }));
  */
 //@ts-ignore
 function tenantDbExtension(
-  tenantId: string | null | undefined
+  tenantId: string | null | undefined,
 ): (client: any) => PrismaClient<any, any, any, Types.Extensions.Args> {
   return Prisma.defineExtension((prisma) =>
     // @ts-ignore (Excessive stack depth comparing types...)
@@ -50,7 +50,7 @@ function tenantDbExtension(
             const [, result] = tenantId
               ? await prisma.$transaction([
                   prisma.$executeRawUnsafe(
-                    `SET nile.tenant_id = '${tenantId}';`
+                    `SET nile.tenant_id = '${tenantId}';`,
                   ),
                   query(args),
                 ])
@@ -62,14 +62,14 @@ function tenantDbExtension(
           },
         },
       },
-    })
+    }),
   );
 }
 
 // Express middleware that sets gets a Prisma Client Extension with tenant context
 // and sets it in the AsyncLocalStorage context
 app.use((req, res, next) => {
-  const fn = match("/api/tenants/:tenantId/todos", {
+  const fn = match('/api/tenants/:tenantId/todos', {
     decode: decodeURIComponent,
   });
   const m = fn(req.path);
@@ -77,12 +77,12 @@ app.use((req, res, next) => {
   //@ts-ignore
   const tenantId = m?.params?.tenantId;
   console.log(
-    "Creating async storage with extended prisma client for: " + tenantId
+    'Creating async storage with extended prisma client for: ' + tenantId,
   );
   //@ts-ignore
   tenantContext.run(
     prisma.$extends(tenantDbExtension(tenantId)) as any as PrismaClient,
-    next
+    next,
   );
 });
 
@@ -94,12 +94,12 @@ if (REQUIRE_AUTH) {
       authorizer: dbAuthorizer,
       authorizeAsync: true,
       unauthorizedResponse: getUnauthorizedResponse,
-    })
+    }),
   );
 }
 
 // endpoint to create new tenants
-app.post("/api/tenants", async (req, res) => {
+app.post('/api/tenants', async (req, res) => {
   try {
     const tenantDB = tenantContext.getStore();
     const name = req.body.name;
@@ -126,15 +126,15 @@ app.post("/api/tenants", async (req, res) => {
 
     res.json(tenant);
   } catch (error: any) {
-    console.log("error creating tenant: " + error.message);
+    console.log('error creating tenant: ' + error.message);
     res.status(500).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
     });
   }
 });
 
 // return list of tenants for current user
-app.get("/api/tenants", async (req, res) => {
+app.get('/api/tenants', async (req, res) => {
   let tenants: any;
   try {
     const tenantDB = tenantContext.getStore();
@@ -155,19 +155,19 @@ app.get("/api/tenants", async (req, res) => {
 
     res.json(tenants);
   } catch (error: any) {
-    console.log("error listing tenants: " + error.message);
+    console.log('error listing tenants: ' + error.message);
     res.status(500).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
     });
   }
 });
 
 // add new task for tenant, with AI-based estimate
-app.post("/api/tenants/:tenantId/todos", async (req, res) => {
+app.post('/api/tenants/:tenantId/todos', async (req, res) => {
   try {
     const tenantDB = tenantContext.getStore();
     if (!tenantDB) {
-      throw new Error("No tenant DB found");
+      throw new Error('No tenant DB found');
     }
 
     const { title, complete } = req.body;
@@ -178,15 +178,15 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
     if (process.env.AI_API_KEY) {
       // We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
       const similarTasks = await findSimilarTasks(tenantDB, title);
-      console.log("found similar tasks: " + JSON.stringify(similarTasks));
+      console.log('found similar tasks: ' + JSON.stringify(similarTasks));
 
       estimate = await aiEstimate(title, similarTasks);
-      console.log("estimated time: " + estimate);
+      console.log('estimated time: ' + estimate);
 
       // get the embedding for the task, so we can find it in future similarity searches
       embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
     }
-    console.log("tenant_id: " + tenantId);
+    console.log('tenant_id: ' + tenantId);
     // This is safe because Nile validates the tenant ID and protects against SQL injection
     const newTodo = await tenantDB.$queryRawUnsafe(
       `INSERT INTO todos (tenant_id, title, complete, estimate, embedding) VALUES ('${tenantId}', $1, $2, $3, $4::vector) 
@@ -194,22 +194,22 @@ app.post("/api/tenants/:tenantId/todos", async (req, res) => {
       title,
       complete,
       estimate,
-      embedding ? embeddingToSQL(embedding) : null
+      embedding ? embeddingToSQL(embedding) : null,
     );
 
     res.json(newTodo);
   } catch (error: any) {
-    console.log("error adding task: " + error.message);
+    console.log('error adding task: ' + error.message);
     console.log(error);
     res.status(500).json({
-      message: "Internal Server Error: " + error.message,
+      message: 'Internal Server Error: ' + error.message,
     });
   }
 });
 
 // update tasks for tenant
 // No need for "tenant_id" in the where clause because we are in the tenant virtual DB
-app.put("/api/tenants/:tenantId/todos", async (req, res) => {
+app.put('/api/tenants/:tenantId/todos', async (req, res) => {
   try {
     const tenantDB = tenantContext.getStore();
     const { id, complete } = req.body;
@@ -224,22 +224,22 @@ app.put("/api/tenants/:tenantId/todos", async (req, res) => {
     });
     res.sendStatus(200);
   } catch (error: any) {
-    console.log("error updating tasks: " + error.message);
+    console.log('error updating tasks: ' + error.message);
     res.status(500).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
     });
   }
 });
 
 // get all tasks for tenant
-app.get("/api/tenants/:tenantId/todos", async (req, res) => {
+app.get('/api/tenants/:tenantId/todos', async (req, res) => {
   try {
     const tenantDB = tenantContext.getStore();
     // No need for a "where" clause here because we are setting the tenant ID in the context
     const todos = await tenantDB?.todos.findMany();
     res.json(todos);
   } catch (error: any) {
-    console.log("error listing tasks: " + error.message);
+    console.log('error listing tasks: ' + error.message);
     res.status(500).json({
       message: error.message,
     });
@@ -247,15 +247,15 @@ app.get("/api/tenants/:tenantId/todos", async (req, res) => {
 });
 
 // insecure endpoint to get all todos - don't try this in production 😅
-app.get("/insecure/all_todos", async (req, res) => {
+app.get('/insecure/all_todos', async (req, res) => {
   try {
     const tenantDB = tenantContext.getStore();
     const todos = await tenantDB?.todos.findMany();
     res.json(todos);
   } catch (error: any) {
-    console.log("error in insecure endpoint: " + error.message);
+    console.log('error in insecure endpoint: ' + error.message);
     res.status(500).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
     });
   }
 });
