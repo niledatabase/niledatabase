@@ -3,7 +3,7 @@ title: 'Users'
 description: 'Learn how to use the Nile Auth User component'
 ---
 
-import Theming from '/snippets/theming.mdx'
+import Theming from '/snippets/theming.mdx';
 
 ## Overview
 
@@ -34,11 +34,11 @@ export default function ProfilePage() {
 
 ## Props
 
-| Name                      | Type                | Description |
-|---------------------------|---------------------|-------------|
-| `user`                    | `User \| null \| undefined` | The user object, if already available. |
-| `fetchUrl`                | `string` _(optional)_ | API endpoint to fetch user data if not provided. Defaults to `"/api/me"`. |
-| `profilePicturePlaceholder` | `React.ReactElement` _(optional)_ | Placeholder component for the profile picture if the user has none. |
+| Name                        | Type                              | Description                                                               |
+| --------------------------- | --------------------------------- | ------------------------------------------------------------------------- |
+| `user`                      | `User \| null \| undefined`       | The user object, if already available.                                    |
+| `fetchUrl`                  | `string` _(optional)_             | API endpoint to fetch user data if not provided. Defaults to `"/api/me"`. |
+| `profilePicturePlaceholder` | `React.ReactElement` _(optional)_ | Placeholder component for the profile picture if the user has none.       |
 
 ## User Type
 
@@ -69,11 +69,11 @@ export type User = {
 import { UserInfo } from '@niledatabase/react';
 
 const user = {
-  name: "John Doe",
-  email: "johndoe@example.com",
+  name: 'John Doe',
+  email: 'johndoe@example.com',
   emailVerified: true,
-  picture: "https://example.com/avatar.jpg",
-  created: "2023-01-01T12:00:00Z",
+  picture: 'https://example.com/avatar.jpg',
+  created: '2023-01-01T12:00:00Z',
 };
 
 export default function ProfilePage() {
@@ -97,15 +97,14 @@ export default function ProfilePage() {
 }
 ```
 
-
 - If `user` is provided, the component will not make a fetch request.
 - Profile pictures are displayed if available; otherwise, a random gradient is used as a placeholder.
 - The component ensures proper accessibility by setting the `alt` attribute for images.
 
-<Theming component="<UserInfo />"/>
+<Theming component="<UserInfo />" />
 
 ## Related Components
 
 - [Sign In](/auth/components/signin)
 - [Sign Up](/auth/components/signup)
-- [Organization](/auth/components/organization) 
+- [Organization](/auth/components/organization)

@@ -1,12 +1,12 @@
-import { OpenAI } from "openai";
-import { Server } from "@niledatabase/server";
-import { todos as todoSchema } from "./db/schema";
-import { cosineDistance, desc, lt, sql } from "drizzle-orm";
-import { Context } from "hono";
+import { OpenAI } from 'openai';
+import { Server } from '@niledatabase/server';
+import { todos as todoSchema } from './db/schema';
+import { cosineDistance, desc, lt, sql } from 'drizzle-orm';
+import { Context } from 'hono';
 
 export enum EmbeddingTasks {
-  SEARCH_DOCUMENT = "search_document:",
-  SEARCH_QUERY = "search_query:",
+  SEARCH_DOCUMENT = 'search_document:',
+  SEARCH_QUERY = 'search_query:',
 }
 
 export interface todo {
@@ -17,11 +17,11 @@ export interface todo {
 // logically, this should be part of the db module, but we only need this type here...
 type TenantDB<T> = (c: Context, cb: (tx: any) => T | Promise<T>) => Promise<T>;
 
-const DEFAULT_MODEL = "nomic-ai/nomic-embed-text-v1.5";
+const DEFAULT_MODEL = 'nomic-ai/nomic-embed-text-v1.5';
 const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || DEFAULT_MODEL;
 
 function adjust_input(text: string, task: EmbeddingTasks): string {
-  if (EMBEDDING_MODEL?.indexOf("nomic") >= 0) {
+  if (EMBEDDING_MODEL?.indexOf('nomic') >= 0) {
     return task + text;
   } else {
     return text;
@@ -53,12 +53,12 @@ export async function embedTask(title: string, task: EmbeddingTasks) {
 export async function findSimilarTasks(
   tenantDB: TenantDB<any>,
   c: Context,
-  title: string
+  title: string,
 ): Promise<todo[]> {
   const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
   const similarity = sql<number>`(${cosineDistance(
     todoSchema.embedding,
-    embedding
+    embedding,
   )})`;
 
   // get similar tasks, no need to filter by tenant because we are already in the tenant context
@@ -86,12 +86,12 @@ export async function aiEstimate(title: string, similarTasks: todo[]) {
 
   const model =
     process.env.AI_MODEL ||
-    "accounts/fireworks/models/llama-v3p1-405b-instruct";
+    'accounts/fireworks/models/llama-v3p1-405b-instruct';
 
   const aiEstimate = await ai.chat.completions.create({
     messages: [
       {
-        role: "user",
+        role: 'user',
         content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
         I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
         respond with just the estimate, keep the answer short.`,
@@ -102,9 +102,9 @@ export async function aiEstimate(title: string, similarTasks: todo[]) {
   });
 
   // if we got a valid response, return it
-  if (aiEstimate.choices[0].finish_reason === "stop") {
+  if (aiEstimate.choices[0].finish_reason === 'stop') {
     return aiEstimate.choices[0].message.content;
   }
   // otherwise, we simply don't have an estimate
-  return "unknown";
+  return 'unknown';
 }

@@ -3,7 +3,7 @@ title: 'Managing Users'
 description: 'Learn how to manage users using the Nile Auth Dashboard'
 ---
 
-Nile console includes a dashboard for managing users, as part of Nile's multi-tenant authentication. It allows you, as a developer, to create, edit, and delete users. 
+Nile console includes a dashboard for managing users, as part of Nile's multi-tenant authentication. It allows you, as a developer, to create, edit, and delete users.
 
 This guide explains how to manage users using [Nile Console](https://console.thenile.dev).
 
@@ -30,12 +30,14 @@ Filling in the required fields and clicking on the "Create" button will create a
 ![Create user](/images/auth/create_user.png)
 
 <Tip>
-Creating a user in this dashboard will not add them to any tenant (you can do that later in the [tenants dashboard](/auth/dashboard/managing-tenants)) and will not send them an email to verify their account.
+  Creating a user in this dashboard will not add them to any tenant (you can do
+  that later in the [tenants dashboard](/auth/dashboard/managing-tenants)) and
+  will not send them an email to verify their account.
 </Tip>
 
 ### Editing Users
 
-You can edit a user by clicking on the field you want to change and starting to type. 
+You can edit a user by clicking on the field you want to change and starting to type.
 This works both in the top level list view and in the user details view.
 
 ![Edit user](/images/auth/edit_user.png)
@@ -48,8 +50,8 @@ You can delete a user by clicking on the "Delete" button in the user list view.
 
 ## User Properties
 
-All user properties are stored in the `users.users` table. The dashboard, APIs 
-and SDK all use this table and therefore have access to the same properties. 
+All user properties are stored in the `users.users` table. The dashboard, APIs
+and SDK all use this table and therefore have access to the same properties.
 
 ```bash
                                        Table "users.users"
@@ -95,9 +97,9 @@ export interface User {
 
 ## User Account Verification
 
-It is common to want to verify a user's email address before allowing them to access your application. 
+It is common to want to verify a user's email address before allowing them to access your application.
 This is especially important for email/password users since there is no other way to know if the email address is valid.
-Nile Auth APIs and SDK support email verification with the `<EmailSignInButton />` component. 
+Nile Auth APIs and SDK support email verification with the `<EmailSignInButton />` component.
 You can learn how to use it in the [Email Verification](/auth/email/verification) guide.
 
 In addition, you may want to verify (or unverify) a user's email address manually.
@@ -128,4 +130,4 @@ UPDATE users.users SET email_verified = NULL WHERE id = '<user_id>';
 
 - [Managing Tenants](/auth/dashboard/managing-tenants)
 - [Configurations](/auth/dashboard/configurations)
-- [User Management Concepts](/auth/concepts/users) 
+- [User Management Concepts](/auth/concepts/users)

@@ -1,6 +1,6 @@
 ---
-title: "Build AI-Native B2B application with Postgres and Drizzle ORM"
-sidebarTitle: "Drizzle"
+title: 'Build AI-Native B2B application with Postgres and Drizzle ORM'
+sidebarTitle: 'Drizzle'
 ---
 
 In this tutorial, you will learn about Nile's tenant virtualization features, while building a backend service for a todo list application.
@@ -49,11 +49,13 @@ using this data with text generation models is a key part of [RAG (Retrieval Aug
 
 See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
 ![Creating a table in Nile's admin dashboard](/images/gui-create-table.png)
+
   </Step>
   <Step title="Get credentials">
     In the left-hand menu, click on "Settings" and then select "Connection".
 
 Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
+
   </Step>
   <Step title="Get third party credentials">
 This example uses AI chat and embedding models to generate automated time estimates for each task in the todo
@@ -89,6 +91,7 @@ Install dependencies with `yarn install` or `npm install`.
 ```bash
 npm install
 ```
+
 </Step>
 <Step title="Run the application">
 Start the web service with `npm start` or `yarn start`.
@@ -117,6 +120,7 @@ curl  -X GET \
 curl  -X GET \
   'http://localhost:3001/insecure/all_todos'
 ```
+
 </Step>
 <Step title="Check the data in Nile">
 Go back to the Nile query editor and see the data you created from the app.
@@ -136,7 +140,7 @@ This example is a good starting point for building your own application with Nil
 
 You have learned basic Nile, AI and RAG concepts and how to use them with Drizzle ORM.
 
-You can learn how the example application works more in detail below or you can learn 
+You can learn how the example application works more in detail below or you can learn
 more about Nile's tenant virtualization features in the following tutorials:
 
 - [Tenant management](/tenant-virtualization/tenant-management)
@@ -176,14 +180,14 @@ Immediately after the middleware that sets up the Express app, we add a middlewa
 
 ```typescript
 app.use((req, res, next) => {
-  const fn = match("/api/tenants/:tenantId/todos", {
+  const fn = match('/api/tenants/:tenantId/todos', {
     decode: decodeURIComponent,
   });
   const m = fn(req.path);
 
   //@ts-ignore
   const tenantId = m?.params?.tenantId;
-  console.log("setting context to tenant: " + tenantId);
+  console.log('setting context to tenant: ' + tenantId);
   tenantContext.run(tenantId, next);
 });
 ```
@@ -205,8 +209,8 @@ const client = new Client({
 await client.connect();
 
 // check the connection
-const res = await client.query("SELECT $1::text as message", [
-  "Client connected to Nile",
+const res = await client.query('SELECT $1::text as message', [
+  'Client connected to Nile',
 ]);
 console.log(res.rows[0].message);
 
@@ -257,10 +261,10 @@ const tenantId = req.params.tenantId;
 
 // We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
 const similarTasks = await findSimilarTasks(tenantDB, title);
-console.log("found similar tasks: " + JSON.stringify(similarTasks));
+console.log('found similar tasks: ' + JSON.stringify(similarTasks));
 
 const estimate = await aiEstimate(title, similarTasks);
-console.log("estimated time: " + estimate);
+console.log('estimated time: ' + estimate);
 
 // get the embedding for the task, so we can find it in future similarity searches
 const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
@@ -272,7 +276,7 @@ const newTodo = await tenantDB(async (tx) => {
     .returning();
 });
 // return without the embedding vector, since it is huge and useless
-res.json(newTodo.map((t: any) => ({ ...t, embedding: "<omitted>" })));
+res.json(newTodo.map((t: any) => ({ ...t, embedding: '<omitted>' })));
 ```
 
 As you can see, we look up similar tasks and then use the AI model to generate the estimate. We then store the task, with the estimate and the task embedding in the database.
@@ -286,7 +290,7 @@ Getting similar tasks is done by querying the database for tasks with similar em
 const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
 const similarity = sql<number>`(${cosineDistance(
   todoSchema.embedding,
-  embedding
+  embedding,
 )})`;
 
 // get similar tasks, no need to filter by tenant because we are already in the tenant context
@@ -328,7 +332,7 @@ generate similar estimates:
 const aiEstimate = await ai.chat.completions.create({
   messages: [
     {
-      role: "user",
+      role: 'user',
       content: `you are an amazing project manager. I need to ${title}. How long do you think this will take?
         I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
         respond with just the estimate, keep the answer short.`,

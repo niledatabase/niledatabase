@@ -12,50 +12,50 @@ This document describes the available configuration options, and how to set them
 
 The following configuration options are available at the overall SDK level:
 
-| Configuration Option | Environment Variable                   | Required | Default            | Description                                                                        |
-| -------------------- | -------------------------------------- | -------- | ------------------ | ---------------------------------------------------------------------------------- |
-| `databaseId`         | `NILEDB_ID` or `NILEDB_API_URL`        | Yes      | -                  | The ID of the database to use                                                      |
-| `user`               | `NILEDB_USER`                          | Yes      | -                  | The user to use for the database                                                   |
-| `password`           | `NILEDB_PASSWORD`                      | Yes      | -                  | The password to use for the database                                               |
-| `databaseName`       | `NILEDB_NAME` or `NILEDB_POSTGRES_URL` | Yes      | -                  | The name of the database to use                                                    |
-| `tenantId`           | `NILEDB_TENANT`                        | No       | -                  | Current tenant ID used for scoping API and DB calls                                |
-| `userId`             | -                                      | No       | -                  | Optional user identifier used for DB access, e.g. for impersonation                |
-| `debug`              | -                                      | No       | `false`            | Whether to enable debug logging                                                    |
-| `apiUrl`             | `NILEDB_API_URL`                       | No       | -                  | Base URL for Nile Auth requests                                                    |
-| `callbackUrl`        | `NILEDB_CALLBACK_URL`                  | No       | -                  | Used to override the client-provided callback URL during authentication            |
-| `origin`             | -                                      | No       | -                  | Controls origin used in requests (e.g. for cookie handling in cross-origin apps)   |
-| `headers`            | -                                      | No       | -                  | Additional headers sent with API requests. Include `cookie` for session management |
-| `routes`             | -                                      | No       | -                  | Overrides for default auth routes (e.g. signin path)                               |
-| `routePrefix`        | -                                      | No       | `/api`             | Prefix for API routes                                                              |
-| `secureCookies`      | `NILEDB_SECURECOOKIES`                 | No       | Based on NODE\_ENV | Enforces use of secure cookies                                                     |
-| `extensions`         | -                                      | No       | -                  | Array of pre/post-processing hooks for each API request                            |
-| `preserveHeaders`    | -                                      | No       | false              | Whether to retain incoming headers across extension execution                      |
-| `logger`             | -                                      | No       | -                  | Optional custom logger implementation                                              |
-| `db`                 | -                                      | No       | -                  | Database connection pool configuration (see below)                                 |
+| Configuration Option | Environment Variable                   | Required | Default           | Description                                                                        |
+| -------------------- | -------------------------------------- | -------- | ----------------- | ---------------------------------------------------------------------------------- |
+| `databaseId`         | `NILEDB_ID` or `NILEDB_API_URL`        | Yes      | -                 | The ID of the database to use                                                      |
+| `user`               | `NILEDB_USER`                          | Yes      | -                 | The user to use for the database                                                   |
+| `password`           | `NILEDB_PASSWORD`                      | Yes      | -                 | The password to use for the database                                               |
+| `databaseName`       | `NILEDB_NAME` or `NILEDB_POSTGRES_URL` | Yes      | -                 | The name of the database to use                                                    |
+| `tenantId`           | `NILEDB_TENANT`                        | No       | -                 | Current tenant ID used for scoping API and DB calls                                |
+| `userId`             | -                                      | No       | -                 | Optional user identifier used for DB access, e.g. for impersonation                |
+| `debug`              | -                                      | No       | `false`           | Whether to enable debug logging                                                    |
+| `apiUrl`             | `NILEDB_API_URL`                       | No       | -                 | Base URL for Nile Auth requests                                                    |
+| `callbackUrl`        | `NILEDB_CALLBACK_URL`                  | No       | -                 | Used to override the client-provided callback URL during authentication            |
+| `origin`             | -                                      | No       | -                 | Controls origin used in requests (e.g. for cookie handling in cross-origin apps)   |
+| `headers`            | -                                      | No       | -                 | Additional headers sent with API requests. Include `cookie` for session management |
+| `routes`             | -                                      | No       | -                 | Overrides for default auth routes (e.g. signin path)                               |
+| `routePrefix`        | -                                      | No       | `/api`            | Prefix for API routes                                                              |
+| `secureCookies`      | `NILEDB_SECURECOOKIES`                 | No       | Based on NODE_ENV | Enforces use of secure cookies                                                     |
+| `extensions`         | -                                      | No       | -                 | Array of pre/post-processing hooks for each API request                            |
+| `preserveHeaders`    | -                                      | No       | false             | Whether to retain incoming headers across extension execution                      |
+| `logger`             | -                                      | No       | -                 | Optional custom logger implementation                                              |
+| `db`                 | -                                      | No       | -                 | Database connection pool configuration (see below)                                 |
 
 ## Database Configuration
 
 The `db` object configures the connection to Postgres, using settings compatible with the `pg` library.
 
-| Configuration Option                    | Environment Variable                   | Required | Default          | Description                                              |
-| --------------------------------------- | -------------------------------------- | -------- | ---------------- | -------------------------------------------------------- |
-| user                                    | `NILEDB_USER`                          | No       | -                | Will default to the top-level `user` config if not set   |
-| password                                | `NILEDB_PASSWORD`                      | No       | -                | Will default to the top-level `password` if not set      |
-| host                                    | `NILEDB_HOST` or `NILEDB_POSTGRES_URL` | No       | `db.thenile.dev` | Postgres host                                            |
-| port                                    | `NILEDB_PORT` or `NILEDB_POSTGRES_URL` | No       | 5432             | Postgres port                                            |
-| database                                | `NILEDB_NAME` or `NILEDB_POSTGRES_URL` | No       | -                | Postgres database name                                   |
-| connectionString                        | -                                      | No       | -                | Full connection string. Overrides other DB config values |
-| ssl                                     | -                                      | No       | -                | TLS socket options for secure DB connection              |
-| types                                   | -                                      | No       | -                | Custom Postgres type parsers                             |
-| statement\_timeout                      | -                                      | No       | -                | Statement timeout in ms                                  |
-| query\_timeout                          | -                                      | No       | -                | Query timeout in ms                                      |
-| lock\_timeout                           | -                                      | No       | -                | Lock timeout in ms                                       |
-| application\_name                       | -                                      | No       | -                | Name used by the DB client connection                    |
-| connectionTimeoutMillis                 | -                                      | No       | -                | How long to wait before failing a DB connection attempt  |
-| idle\_in\_transaction\_session\_timeout | -                                      | No       | -                | Idle timeout for sessions with open transactions         |
-| idleTimeoutMillis                       | -                                      | No       | 10000            | Time a client can sit idle before being dropped          |
-| max                                     | -                                      | No       | 10               | Max number of DB clients in the pool                     |
-| allowExitOnIdle                         | -                                      | No       | false            | Allow Node to exit early when pool is idle               |
+| Configuration Option                | Environment Variable                   | Required | Default          | Description                                              |
+| ----------------------------------- | -------------------------------------- | -------- | ---------------- | -------------------------------------------------------- |
+| user                                | `NILEDB_USER`                          | No       | -                | Will default to the top-level `user` config if not set   |
+| password                            | `NILEDB_PASSWORD`                      | No       | -                | Will default to the top-level `password` if not set      |
+| host                                | `NILEDB_HOST` or `NILEDB_POSTGRES_URL` | No       | `db.thenile.dev` | Postgres host                                            |
+| port                                | `NILEDB_PORT` or `NILEDB_POSTGRES_URL` | No       | 5432             | Postgres port                                            |
+| database                            | `NILEDB_NAME` or `NILEDB_POSTGRES_URL` | No       | -                | Postgres database name                                   |
+| connectionString                    | -                                      | No       | -                | Full connection string. Overrides other DB config values |
+| ssl                                 | -                                      | No       | -                | TLS socket options for secure DB connection              |
+| types                               | -                                      | No       | -                | Custom Postgres type parsers                             |
+| statement_timeout                   | -                                      | No       | -                | Statement timeout in ms                                  |
+| query_timeout                       | -                                      | No       | -                | Query timeout in ms                                      |
+| lock_timeout                        | -                                      | No       | -                | Lock timeout in ms                                       |
+| application_name                    | -                                      | No       | -                | Name used by the DB client connection                    |
+| connectionTimeoutMillis             | -                                      | No       | -                | How long to wait before failing a DB connection attempt  |
+| idle_in_transaction_session_timeout | -                                      | No       | -                | Idle timeout for sessions with open transactions         |
+| idleTimeoutMillis                   | -                                      | No       | 10000            | Time a client can sit idle before being dropped          |
+| max                                 | -                                      | No       | 10               | Max number of DB clients in the pool                     |
+| allowExitOnIdle                     | -                                      | No       | false            | Allow Node to exit early when pool is idle               |
 
 ## Example Configurations
 
@@ -87,10 +87,11 @@ const nile = Nile({
   databaseName: 'my_database',
   user: '0195f45d-c3ca-7b29-8a9c-717a99d993a1',
   password: '5e64c8e9-8ac7-4c0d-b6f1-dab7672fe1be',
-  apiUrl: 'https://us-west-2.api.thenile.dev/v2/databases/0195f4dd-22d3-68c6-a6c1-1ddc24f0f37c',
+  apiUrl:
+    'https://us-west-2.api.thenile.dev/v2/databases/0195f4dd-22d3-68c6-a6c1-1ddc24f0f37c',
   db: {
     host: 'us-west-2.db.thenile.dev',
-  }
+  },
 });
 ```
 

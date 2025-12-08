@@ -9,6 +9,7 @@ Your Nile database arrives with the xicor extension already enabled.
 ## Overview
 
 The xicor extension provides:
+
 - Calculation of Xi correlation coefficient
 - Support for incremental correlation updates
 - Robust handling of non-linear relationships
@@ -41,7 +42,7 @@ INSERT INTO group_measurements (tenant_id, group_id, x, y) VALUES
 SELECT xicor(x, y) FROM measurements;
 
 -- Calculate correlation by group
-SELECT 
+SELECT
     group_id,
     xicor(x, y) as correlation
 FROM group_measurements
@@ -53,6 +54,7 @@ GROUP BY group_id;
 The Xi correlation coefficient has several advantages over traditional correlation measures:
 
 1. Robust to Non-linearity:
+
 ```sql
 -- Xi correlation detects monotonic relationships
 -- even when they're not linear
@@ -60,11 +62,13 @@ SELECT xicor(x, exp(x)) FROM generate_series(1, 5) as x;
 ```
 
 2. Range of Values:
+
 - Returns values between 0 and 1
 - 0 indicates no correlation
 - 1 indicates perfect correlation (monotonic relationship)
 
 3. Interpretation:
+
 ```sql
 -- Perfect correlation (monotonic)
 SELECT xicor(x, x) FROM generate_series(1, 5) as x;  -- Returns 1.0
@@ -88,7 +92,7 @@ CREATE TABLE stock_prices (
 );
 
 -- Calculate correlation between stock prices
-SELECT 
+SELECT
     s1.stock_symbol as stock1,
     s2.stock_symbol as stock2,
     xicor(s1.price, s2.price) as price_correlation
@@ -112,12 +116,13 @@ CREATE TABLE sensor_readings (
 );
 
 -- Calculate correlation between temperature and humidity
-SELECT 
+SELECT
     sensor_id,
     xicor(temperature, humidity) as temp_humidity_correlation
 FROM sensor_readings
 GROUP BY sensor_id;
 ```
+
 ## Additional Resources
 
 - [Xi Correlation Extension repository](https://github.com/Florents-Tselai/pgxicor)

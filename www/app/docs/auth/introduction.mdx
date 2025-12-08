@@ -15,8 +15,8 @@ Nile re-engineers Postgres to make it easy to build and scale B2B apps. Our Auth
 
 ![Tenant-Selector](/images/auth/tenantselector.png)
 
-Auth solutions usually don’t support B2B apps, or the focus is not full-time. In Nile’s Auth case, we have designed the product for only B2B apps. Nile Auth will support the entire tenant lifecycle, including managing tenants, inviting users to tenants, overriding tenant-specific settings, tenant domains, and more. 
- 
+Auth solutions usually don’t support B2B apps, or the focus is not full-time. In Nile’s Auth case, we have designed the product for only B2B apps. Nile Auth will support the entire tenant lifecycle, including managing tenants, inviting users to tenants, overriding tenant-specific settings, tenant domains, and more.
+
 ![Tenant-API](/images/auth/tenantapi.png)
 
 Authenticated users can access data from any tenant they have access to - this access control is enforced at all layers - from the browser to the authentication service to the database itself. All authentication features can be enabled at the application level or disabled for a specific tenant.
@@ -26,13 +26,14 @@ Authenticated users can access data from any tenant they have access to - this a
 ### Unlimited active users
 
 One of our key focuses in developing Nile Auth was to offer the ability to support unlimited active users. Traditionally, authentication providers set a fixed limit on the number of active users, often requiring additional payments as you scale up. However, with Nile Auth, there are no extra charges for active users. You will only pay for the PostgreSQL database, allowing you to store and scale to an unlimited number of active users without incurring additional costs.
+
 <Video src="/blog/2025-03-10-introducing-nile-auth/counterforblog.mp4" />
 <video
   autoPlay
   muted
   loop
   playsInline
-  className="w-full aspect-video"
+  className="aspect-video w-full"
   src="/images/auth/counterforblog.mp4"
 ></video>
 ### Customer and user data stored in your DB
@@ -71,6 +72,7 @@ Auth services really have to be comprehensive. Unlike other parts of the app whe
 There is more on the roadmap, and our goal is to support a comprehensive list of features for B2B apps. We would [love to know](https://github.com/orgs/niledatabase/discussions?discussions_q=is%3Aopen+label%3Aauth) if you need any specific features not currently available. We also welcome community contributions.
 
 ![Session-Auth](/images/auth/sessionauth.png)
+
 ### **Self-host or let Nile manage it**
 
 One of our design goals was to make it easy to self-host Nile Auth. We believe we have made it easy for developers to use our managed solution or self-host the auth service. The auth service will still use hosted Nile’s Postgres, but one can get the benefit of running core security logic within their account in the cloud. For development purposes, the entire Nile stack, including Postgres and Nile Auth, is available as a [docker image](http://localhost:3003/getting-started/postgres_testing). Developers can test locally and use the hosted offering when deploying to production.
@@ -89,8 +91,8 @@ Easily integrate pre-built authentication UI modules into your application in fi
 
 ### Support multiple languages
 
-To truly democratize B2B authentication, we wanted to build a solution that can be leveraged with as many languages as possible. 
-We currently support the Typescript/Javascript ecosystem but plan to support more languages. 
+To truly democratize B2B authentication, we wanted to build a solution that can be leveraged with as many languages as possible.
+We currently support the Typescript/Javascript ecosystem but plan to support more languages.
 We have published our public [Auth APIs](/auth/api-reference/auth/sign-in-to-the-application) and hope to provide more language coverage. We would also love the community to build and contribute SDKs for their favorite language.
 
 ### Auth as a service vs a library
@@ -99,7 +101,7 @@ Auth solutions have been tackled as a service and as a library. Based on our exp
 
 1. Libraries are convenient till the new CISO in a B2B company mandates that auth has to be moved to a service for security reasons. Having the auth logic across many services is usually not what CISOs want. Security teams prefer to control the authentication logic centrally.
 2. Security hotfixes are a nightmare with thick clients. When a security hole is identified, it becomes critical for B2B companies to deploy the fix immediately. It is much easier to hotfix the central service vs upgrading the library in multiple services.
-3. In most cases, B2B Companies need to support multiple languages from the start. For example, companies build their data plane with Typescript but their control plane using Go. Users will authenticate against both the control plane and the data plane. 
+3. In most cases, B2B Companies need to support multiple languages from the start. For example, companies build their data plane with Typescript but their control plane using Go. Users will authenticate against both the control plane and the data plane.
 
 We have invested in making it easy to launch and operate the Nile Auth service.
 
@@ -115,4 +117,4 @@ We have spent years doing open-source and believe this is the right path for Nil
 
 - [Quickstart Guide](/auth/quickstarts)
 - [Self Hosting](/auth/selfhosting)
-- [Concepts](/auth/concepts/tenants) 
+- [Concepts](/auth/concepts/tenants)

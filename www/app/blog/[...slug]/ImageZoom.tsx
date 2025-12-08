@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import imageZoom from "fast-image-zoom";
-import { useEffect, useState } from "react";
+import imageZoom from 'fast-image-zoom';
+import { useEffect, useState } from 'react';
 
 export default function BlogImageZoom() {
   const [isClient, setIsClient] = useState(false);

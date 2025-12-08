@@ -1,7 +1,7 @@
 ---
-title: "Tenant Isolation"
-sidebarTitle: "Tenant Isolation"
-icon: "people-arrows"
+title: 'Tenant Isolation'
+sidebarTitle: 'Tenant Isolation'
+icon: 'people-arrows'
 ---
 
 All SaaS applications provide service to multiple customers or tenants. Isolating each tenant's data from another tenant is so basic yet hard to do. Nile enables tenant data isolation without any complex, buggy code or dealing with messy row-level security policies. With Postgres being tenant-aware in Nile, this becomes straightforward.
@@ -73,13 +73,13 @@ Now we have a table of candidates for multiple customers populated.
 select * from candidates;
 ```
 
-| tenant_id | id | name | status | resume_url | job_applied | applied_date |
-|-----------|-----|------|---------|------------|-------------|--------------|
-| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | 1324 | Candidate 1 | New Application | http://myresume.com/index.html | software engineer | 2023-08-22T19:10:25.000 |
-| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | 2356 | Candidate 2 | Phone Interview | http://myprofile.com/index.html | senior software engineer | 2023-07-12T18:09:15.000Z |
-| 018ade1a-7843-7e60-9686-714bab650998 | 2532 | Candidate 1 | Onsite | http://checkresume.com/index.html | Principal engineer | 2023-07-20T12:08:14.000Z |
-| 018ade1a-7843-7e60-9686-714bab650998 | 7374 | Candidate 2 | Final round | http://forinterview.com/index.html | Product manager | 2023-06-04T11:08:11.000Z |
-| 018ade1a-7843-7e60-9686-714bab650998 | 8345 | Candidate 3 | Recruiter screen | http://career.com/index.html | Sales engineer | 2023-09-10T10:08:12.000Z |
+| tenant_id                            | id   | name        | status           | resume_url                         | job_applied              | applied_date             |
+| ------------------------------------ | ---- | ----------- | ---------------- | ---------------------------------- | ------------------------ | ------------------------ |
+| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | 1324 | Candidate 1 | New Application  | http://myresume.com/index.html     | software engineer        | 2023-08-22T19:10:25.000  |
+| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | 2356 | Candidate 2 | Phone Interview  | http://myprofile.com/index.html    | senior software engineer | 2023-07-12T18:09:15.000Z |
+| 018ade1a-7843-7e60-9686-714bab650998 | 2532 | Candidate 1 | Onsite           | http://checkresume.com/index.html  | Principal engineer       | 2023-07-20T12:08:14.000Z |
+| 018ade1a-7843-7e60-9686-714bab650998 | 7374 | Candidate 2 | Final round      | http://forinterview.com/index.html | Product manager          | 2023-06-04T11:08:11.000Z |
+| 018ade1a-7843-7e60-9686-714bab650998 | 8345 | Candidate 3 | Recruiter screen | http://career.com/index.html       | Sales engineer           | 2023-09-10T10:08:12.000Z |
 
 In a typical SaaS application, you would want to access the data of a specific tenant when user accesses the application. You also want to make sure the data from another tenant is not seen. This is typically hard without implementing complex permissions at the application level or enforcing row level security policies in Postgres which is hard to maintain, debug and error prone.
 
@@ -96,14 +96,14 @@ select * from candidates;
 ```typescript
 // get a connection to the virtual tenant DB you want to access.
 const tenantNile = nile.withContext({ headers, tenantId });
-const candidates = await tenantNile.query("select * from candidates")
+const candidates = await tenantNile.query('select * from candidates');
 ```
 
 </CodeGroups>
 
-| tenant_id | id | name | status | resume_url | job_applied | applied_date |
-|-----------|-----|------|---------|------------|-------------|--------------|
-| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | 1324 | Candidate 1 | New Application | http://myresume.com/index.html | software engineer | 2023-08-22T19:10:25.000 |
+| tenant_id                            | id   | name        | status          | resume_url                      | job_applied              | applied_date             |
+| ------------------------------------ | ---- | ----------- | --------------- | ------------------------------- | ------------------------ | ------------------------ |
+| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | 1324 | Candidate 1 | New Application | http://myresume.com/index.html  | software engineer        | 2023-08-22T19:10:25.000  |
 | 018ade1a-7830-7981-b23f-f3a7f7b8f09f | 2356 | Candidate 2 | Phone Interview | http://myprofile.com/index.html | senior software engineer | 2023-07-12T18:09:15.000Z |
 
 ## Querying across tenants
@@ -124,8 +124,8 @@ select count(*) as no_of_customers from tenants;
 ```
 
 | no_of_customers |
-|-----------------|
-| 5 |
+| --------------- |
+| 5               |
 
 2. Querying the total no of candidates per customer
 
@@ -138,11 +138,11 @@ count(c1.id) as no_of_candidates from candidates c1
 right join tenants t1 on c1.tenant_id=t1.id group by t1.id,t1.name;
 ```
 
-| customer_id | customer_name | no_of_candidates |
-|-------------|---------------|------------------|
-| 018ad859-3977-7c0d-8de1-7c6add417cdb | customer 1 | 2 |
-| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | customer 2 | 3 |
-| 018ade1a-7843-7e60-9686-714bab650998 | customer 3 | 0 |
+| customer_id                          | customer_name | no_of_candidates |
+| ------------------------------------ | ------------- | ---------------- |
+| 018ad859-3977-7c0d-8de1-7c6add417cdb | customer 1    | 2                |
+| 018ade1a-7830-7981-b23f-f3a7f7b8f09f | customer 2    | 3                |
+| 018ade1a-7843-7e60-9686-714bab650998 | customer 3    | 0                |
 
 3. Finding the number of customers that have atleast one candidate added in June:
 
@@ -151,8 +151,8 @@ select tenant_id from candidates
 where extract(month from applied_date)=6;
 ```
 
-| tenant_id |
-|-----------|
+| tenant_id                            |
+| ------------------------------------ |
 | 018ade1a-7843-7e60-9686-714bab650998 |
 
 ## What is tenant performance isolation?

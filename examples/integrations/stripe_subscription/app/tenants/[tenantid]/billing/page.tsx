@@ -1,26 +1,26 @@
-import styles from "@/app/page.module.css";
-import Typography from "@mui/joy/Typography";
-import Stack from "@mui/joy/Stack";
-import Card from "@mui/joy/Card";
-import CardContent from "@mui/joy/CardContent";
-import CardActions from "@mui/joy/CardActions";
-import Button from "@mui/joy/Button";
-import Grid from "@mui/joy/Grid";
-import NextLink from "next/link";
-import MUILink from "@mui/joy/Link";
-import { cookies } from "next/headers";
-import { configureNile } from "@/lib/NileServer";
+import styles from '@/app/page.module.css';
+import Typography from '@mui/joy/Typography';
+import Stack from '@mui/joy/Stack';
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import CardActions from '@mui/joy/CardActions';
+import Button from '@mui/joy/Button';
+import Grid from '@mui/joy/Grid';
+import NextLink from 'next/link';
+import MUILink from '@mui/joy/Link';
+import { cookies } from 'next/headers';
+import { configureNile } from '@/lib/NileServer';
 import {
   createCheckoutSession,
   cancelSubscription,
   redirectToStripePortal,
-} from "./checkout-actions";
+} from './checkout-actions';
 // Forcing to re-evaluate each time.
 // This guarantees that users will only see their own data and not another user's data via cache
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
 export const revalidate = 0;
-export const fetchCache = "force-no-store";
+export const fetchCache = 'force-no-store';
 
 // Todo: replace "raw" context setting with nicer SDK
 export default async function Page(props: {
@@ -31,7 +31,7 @@ export default async function Page(props: {
   // if we already got such connection earlier, it will reuse the existing one
   const tenantNile = await configureNile(params.tenantid);
   const tenantTier = await tenantNile.db.query(
-    `SELECT tenant_tier FROM tenants`
+    `SELECT tenant_tier FROM tenants`,
   );
 
   /* console.log(
@@ -43,20 +43,20 @@ export default async function Page(props: {
   // Get tenant name doesn't need any input parameters because it uses the tenant ID and user token from the context
   const tenant = await tenantNile.tenants.get();
   if (tenant instanceof Response) {
-    throw new Error("unable to get tenant");
+    throw new Error('unable to get tenant');
   }
   return (
     <div className={styles.center}>
       <Stack>
         <Typography
           level="h2"
-          textAlign={"center"}
-          sx={{ textTransform: "uppercase" }}
+          textAlign={'center'}
+          sx={{ textTransform: 'uppercase' }}
         >
           {tenant.name}&apos;s Plan and Billing
         </Typography>
-        <MUILink href="/tenants" component={NextLink} justifyContent={"center"}>
-          (Back to tenant selection){" "}
+        <MUILink href="/tenants" component={NextLink} justifyContent={'center'}>
+          (Back to tenant selection){' '}
         </MUILink>
 
         <Grid
@@ -64,7 +64,7 @@ export default async function Page(props: {
           spacing={2}
           justifyContent="center"
           alignItems="flex-start"
-          sx={{ flexGrow: 1, padding: "2rem" }}
+          sx={{ flexGrow: 1, padding: '2rem' }}
         >
           <Grid xs={2}>
             <Card variant="outlined">
@@ -78,7 +78,7 @@ export default async function Page(props: {
               </CardContent>
 
               <CardActions buttonFlex="0 1 120px">
-                {tenantTier.rows[0].tenant_tier === "free" ? (
+                {tenantTier.rows[0].tenant_tier === 'free' ? (
                   <Button disabled variant="outlined">
                     Current Plan
                   </Button>
@@ -108,7 +108,7 @@ export default async function Page(props: {
                 </Typography>
               </CardContent>
               <CardActions buttonFlex="0 1 120px">
-                {tenantTier.rows[0].tenant_tier === "basic" ? (
+                {tenantTier.rows[0].tenant_tier === 'basic' ? (
                   <form action={redirectToStripePortal}>
                     <input
                       type="hidden"
@@ -153,7 +153,7 @@ export default async function Page(props: {
               <CardContent>
                 <Typography level="title-lg">Enterprise </Typography>
                 <Typography level="title-md">
-                  {" "}
+                  {' '}
                   Starting at $1000/month
                 </Typography>
                 <Typography level="body-sm">
@@ -162,7 +162,7 @@ export default async function Page(props: {
                 </Typography>
               </CardContent>
               <CardActions buttonFlex="0 1 120px">
-                {tenantTier.rows[0].tenant_tier === "enterprise" ? (
+                {tenantTier.rows[0].tenant_tier === 'enterprise' ? (
                   <Button id="checkout-and-portal-button" variant="outlined">
                     Current Plan
                   </Button>

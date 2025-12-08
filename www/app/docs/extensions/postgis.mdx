@@ -49,8 +49,9 @@ INSERT INTO points_of_interest (tenant_id, id, name, type, location) VALUES
 ### Basic Spatial Queries
 
 Find all points within 5km of a location:
+
 ```sql
-SELECT name, 
+SELECT name,
        ST_Distance(
          location::geography,
          ST_SetSRID(ST_MakePoint(-73.985428, 40.748817), 4326)::geography
@@ -65,6 +66,7 @@ ORDER BY distance_meters;
 ```
 
 Calculate distance between two points:
+
 ```sql
 -- Distance calculations default to meters, you can multiple by 0.000621371 to get miles
 SELECT ST_Distance(
@@ -76,6 +78,7 @@ SELECT ST_Distance(
 ### Working with Areas
 
 Create and query polygons:
+
 ```sql
 -- Create a table for areas
 CREATE TABLE areas (
@@ -125,6 +128,7 @@ WHERE a.name = 'Central Park';
 ### Coordinate Transformations
 
 Convert between coordinate systems:
+
 ```sql
 -- Convert from WGS84 (EPSG:4326) to Web Mercator (EPSG:3857)
 SELECT ST_Transform(

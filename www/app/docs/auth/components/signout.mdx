@@ -2,7 +2,8 @@
 title: 'Sign Out'
 description: 'Learn how to use the Nile Auth Sign Out component'
 ---
-import Theming from '/snippets/theming.mdx'
+
+import Theming from '/snippets/theming.mdx';
 
 ## Overview
 
@@ -16,7 +17,6 @@ npm install @niledatabase/react @niledatabase/client
 
 ## Usage
 
-
 <Tabs>
 <Tab title="Preview">
 <iframe src="https://storybook.thenile.dev/iframe.html?globals=&args=&id=sign-out-button--sign-out-button" width="100%" height="130px" className="rounded-xl"/>
@@ -26,9 +26,10 @@ npm install @niledatabase/react @niledatabase/client
 import { SignOutButton } from "@niledatabase/react";
 
 const MyComponent = () => {
-  return <SignOutButton callbackUrl="/sign-in" buttonText="Logout" />;
+return <SignOutButton callbackUrl="/sign-in" buttonText="Logout" />;
 };
-```
+
+````
 </Tab>
 </Tabs>
 
@@ -44,7 +45,7 @@ const MyComponent = () => {
 
 ```tsx
 <SignOutButton redirect={false} buttonText="Log Out" />
-```
+````
 
 ## Internal Functionality
 
@@ -62,11 +63,10 @@ The `signOut` function makes a `POST` request to the sign-out endpoint, optional
 - `callbackUrl`: A URL to redirect the user after logging out.
 - `redirect`: A boolean indicating whether to reload the page post-logout.
 
-
-<Theming component="<SignOut />"/>
+<Theming component="<SignOut />" />
 
 ## Related Components
 
 - [Sign In](/auth/components/signin)
 - [Sign Up](/auth/components/signup)
-- [User Profile](/auth/components/user) 
+- [User Profile](/auth/components/user)

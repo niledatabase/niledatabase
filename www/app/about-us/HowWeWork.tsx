@@ -1,9 +1,9 @@
-import Heading from "../_components/common/Heading";
+import Heading from '../_components/common/Heading';
 
 const rows = [
   {}, // placeholder for header
   {
-    title: "Love Developers",
+    title: 'Love Developers',
     content: (
       <>
         We have a maniacal focus on developer experience. We take great pride in
@@ -15,7 +15,7 @@ const rows = [
     ),
   },
   {
-    title: "Mission Driven",
+    title: 'Mission Driven',
     content: (
       <>
         Our mission is to enable developers to accelerate the next billion
@@ -27,7 +27,7 @@ const rows = [
     ),
   },
   {
-    title: "First Principles Thinking",
+    title: 'First Principles Thinking',
     content: (
       <>
         To build something truly groundbreaking, you need to break every past
@@ -39,7 +39,7 @@ const rows = [
     ),
   },
   {
-    title: "Strive for World-Class",
+    title: 'Strive for World-Class',
     content: (
       <>
         We want to create a company that is among the best in the world. We
@@ -52,7 +52,7 @@ const rows = [
     ),
   },
   {
-    title: "Intensely Execute and Iterate",
+    title: 'Intensely Execute and Iterate',
     content: (
       <>
         Iteration velocity has a significant impact. We move fast, build
@@ -70,19 +70,19 @@ export default function HowWeWork() {
   return (
     <>
       <Heading text="How we work" />
-      <div className="self-start relative w-full mt-8">
-        <div className="flex-row justify-between absolute -z-20 h-full hidden md:flex">
+      <div className="relative mt-8 w-full self-start">
+        <div className="absolute -z-20 hidden h-full flex-row justify-between md:flex">
           <div className="relative ml-20">
-            <div className="bg-orangeBlur absolute top-0 left-0 right-0 bottom-0 bg-[center] bg-[size:100%] no-repeat blur-3xl "></div>
-            <div className="relative bg-orangeBlurText bg-clip-text text-transparent font-mono text-[12px] leading-[18px] text-justify h-full">
+            <div className="no-repeat absolute bottom-0 left-0 right-0 top-0 bg-orangeBlur bg-[size:100%] bg-[center] blur-3xl"></div>
+            <div className="relative h-full bg-orangeBlurText bg-clip-text text-justify font-mono text-[12px] leading-[18px] text-transparent">
               {Text}
               {Text}
             </div>
           </div>
           <div className="w-96"></div>
           <div className="relative pr-20 xl:pl-96">
-            <div className="bg-blueBlur absolute top-0 left-0 right-0 bottom-0 bg-[center] bg-[size:100%] no-repeat blur-3xl"></div>
-            <div className="relative right-0 bg-blueBlurText bg-clip-text text-transparent font-mono text-[12px] leading-[18px] text-justify h-full">
+            <div className="no-repeat absolute bottom-0 left-0 right-0 top-0 bg-blueBlur bg-[size:100%] bg-[center] blur-3xl"></div>
+            <div className="relative right-0 h-full bg-blueBlurText bg-clip-text text-justify font-mono text-[12px] leading-[18px] text-transparent">
               {Text}
               {Text}
             </div>
@@ -90,23 +90,23 @@ export default function HowWeWork() {
         </div>
         <div className="container mx-auto">
           <div className="lg:px-32">
-            <div className="py-2 px-2.5 border border-gray rounded-md bg-[#000] w-screen lg:w-auto overflow-y-scroll">
-              <div className="table bg-divider min-w-[1000px]">
+            <div className="w-screen overflow-y-scroll rounded-md border border-gray bg-[#000] px-2.5 py-2 lg:w-auto">
+              <div className="table min-w-[1000px] bg-divider">
                 {rows.map((row, idx) => {
                   if (idx === 0) {
                     return (
                       <div className="table-header-group" key={row.title}>
-                        <div className="table-cell py-1 px-4 bg-[#000] -translate-x-[1px] border-gray border-b border-t gapFiller-right rounded-tl-[4px]">
+                        <div className="gapFiller-right table-cell -translate-x-[1px] rounded-tl-[4px] border-b border-t border-gray bg-[#000] px-4 py-1">
                           <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
                             ID
                           </span>
                         </div>
-                        <div className="table-cell py-1 px-4 bg-[#000] border-gray border-b border-t">
+                        <div className="table-cell border-b border-t border-gray bg-[#000] px-4 py-1">
                           <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
                             Values
                           </span>
                         </div>
-                        <div className="table-cell py-1 px-4 bg-[#000] translate-x-[1px] border-gray  border-b border-t bourder-r rounded-tr-[4px] gapFiller-right">
+                        <div className="bourder-r gapFiller-right table-cell translate-x-[1px] rounded-tr-[4px] border-b border-t border-gray bg-[#000] px-4 py-1">
                           <span className="bg-gradient-white bg-clip-text text-transparent subpixel-antialiased">
                             Description
                           </span>
@@ -116,28 +116,28 @@ export default function HowWeWork() {
                   }
                   if (idx === rows.length - 1) {
                     return (
-                      <div key={row.title} className="flex-row table-row">
-                        <div className="table-cell bg-[#000] -translate-x-[1px] border-gray border-b rounded-bl-[4px] gapFiller-right p-4 align-top">
+                      <div key={row.title} className="table-row flex-row">
+                        <div className="gapFiller-right table-cell -translate-x-[1px] rounded-bl-[4px] border-b border-gray bg-[#000] p-4 align-top">
                           <span className="opacity-60">{idx}</span>
                         </div>
-                        <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4  align-top">
+                        <div className="table-cell whitespace-nowrap border-b border-gray bg-[#000] p-4 align-top text-[20px] lg:text-[24px]">
                           <span className="opacity-80">{row.title}</span>
                         </div>
-                        <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right rounded-br-[4px] p-4  align-top text-[16px]">
+                        <div className="gapFiller-right table-cell translate-x-[1px] rounded-br-[4px] border-b border-gray bg-[#000] p-4 align-top text-[16px]">
                           <span className="opacity-60">{row.content}</span>
                         </div>
                       </div>
                     );
                   }
                   return (
-                    <div key={row.title} className="flex-row table-row">
-                      <div className="table-cell bg-[#000] -translate-x-[1px] border-gray gapFiller-right border-b p-4 align-top">
+                    <div key={row.title} className="table-row flex-row">
+                      <div className="gapFiller-right table-cell -translate-x-[1px] border-b border-gray bg-[#000] p-4 align-top">
                         <span className="opacity-60">{idx}</span>
                       </div>
-                      <div className="table-cell bg-[#000] border-gray border-b text-[20px] lg:text-[24px] whitespace-nowrap p-4 align-top">
+                      <div className="table-cell whitespace-nowrap border-b border-gray bg-[#000] p-4 align-top text-[20px] lg:text-[24px]">
                         <span className="opacity-80">{row.title}</span>
                       </div>
-                      <div className="table-cell bg-[#000] translate-x-[1px] border-gray border-b gapFiller-right p-4 align-top text-[16px]">
+                      <div className="gapFiller-right table-cell translate-x-[1px] border-b border-gray bg-[#000] p-4 align-top text-[16px]">
                         <span className="opacity-60">{row.content}</span>
                       </div>
                     </div>

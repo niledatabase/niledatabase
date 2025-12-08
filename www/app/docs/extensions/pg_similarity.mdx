@@ -3,8 +3,8 @@ title: 'pg_similarity'
 description: 'Text similarity measures in PostgreSQL'
 ---
 
-The `pg_similarity` extension provides a collection of similarity measures for comparing text strings in PostgreSQL databases. 
-It includes a comprehensive collection of search algorithms, which you can find listed toward the end of this document. 
+The `pg_similarity` extension provides a collection of similarity measures for comparing text strings in PostgreSQL databases.
+It includes a comprehensive collection of search algorithms, which you can find listed toward the end of this document.
 Your Nile database arrives with this extension already enabled.
 
 ## Usage Examples
@@ -40,7 +40,7 @@ INSERT INTO products (tenant_id, id, name, description) VALUES
 
 ```sql
 -- Using Levenshtein for typo detection
-SELECT name, 
+SELECT name,
        lev(name, 'Laptop Computer') as similarity
 FROM products
 ORDER BY similarity DESC;
@@ -62,7 +62,7 @@ WHERE name ~== 'Laptop Computer';
 
 ```sql
 -- Using Cosine for content matching
-SELECT name, 
+SELECT name,
        cosine(description, 'high performance notebook') as similarity
 FROM products
 WHERE cosine(description, 'high performance notebook') > 0.5
@@ -118,27 +118,27 @@ RESET pg_similarity.cosine_threshold;
 
 The extension includes the following similarity algorithms:
 
-| Algorithm | Function | Operator |
-|-----------|----------|----------|
-| Block | `block(text, text)` | `~++` |
-| Cosine | `cosine(text, text)` | `~##` |
-| Dice | `dice(text, text)` | `~-~` |
-| Euclidean | `euclidean(text, text)` | ~!! |
-| Hamming | `hamming(text, text)` | ~@~ |
-| Jaccard | `jaccard(text, text)` | `~??` |
-| Jaro | `jaro(text, text)` | `~%%` |
-| Jaro-Winkler | `jarowinkler(text, text)` | `~@@` |
-| Levenshtein | `lev(text, text)` | `~==` |
-| Matching | `matching(text, text)` | ~^^ |
-| Monge-Elkan | `mongeelkan(text, text)` | ~|| |
-| Needleman-Wunsch | `needlemanwunch(text, text)` | ~#~ |
-| Overlap | `overlap(text, text)` | `~**` |
-| Q-Gram | `qgram(text, text)` | `~~~` |
-| Smith-Waterman | `smithwaterman(text, text)` | ~=~ |
-| Smith-Waterman-Gotoh | `smithwatermangotoh(text, text)` | ~!~ |
-| Soundex | `soundex(text, text)` | `~*~` |
+| Algorithm            | Function                         | Operator |
+| -------------------- | -------------------------------- | -------- | --- | --- |
+| Block                | `block(text, text)`              | `~++`    |
+| Cosine               | `cosine(text, text)`             | `~##`    |
+| Dice                 | `dice(text, text)`               | `~-~`    |
+| Euclidean            | `euclidean(text, text)`          | ~!!      |
+| Hamming              | `hamming(text, text)`            | ~@~      |
+| Jaccard              | `jaccard(text, text)`            | `~??`    |
+| Jaro                 | `jaro(text, text)`               | `~%%`    |
+| Jaro-Winkler         | `jarowinkler(text, text)`        | `~@@`    |
+| Levenshtein          | `lev(text, text)`                | `~==`    |
+| Matching             | `matching(text, text)`           | ~^^      |
+| Monge-Elkan          | `mongeelkan(text, text)`         | ~        |     |     |
+| Needleman-Wunsch     | `needlemanwunch(text, text)`     | ~#~      |
+| Overlap              | `overlap(text, text)`            | `~**`    |
+| Q-Gram               | `qgram(text, text)`              | `~~~`    |
+| Smith-Waterman       | `smithwaterman(text, text)`      | ~=~      |
+| Smith-Waterman-Gotoh | `smithwatermangotoh(text, text)` | ~!~      |
+| Soundex              | `soundex(text, text)`            | `~*~`    |
 
-Each algorithm is best suited for a different use case. 
+Each algorithm is best suited for a different use case.
 For example, `jaro` is better for name matching, while `levenshtein` is better for typo detection.
 
 ## Limitations

@@ -12,6 +12,7 @@ nile local [command] [options]
 ```
 
 Available commands:
+
 - `start` - Start the local environment
 - `stop` - Stop the local environment
 - `info` - Display connection information
@@ -19,6 +20,7 @@ Available commands:
 ## Prerequisites
 
 Before using the local environment, ensure you have:
+
 1. Docker installed and running
 2. PostgreSQL client tools (psql) installed
 3. Sufficient permissions to run Docker commands
@@ -41,9 +43,9 @@ nile local start [options]
 
 ### Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--no-prompt` | Start without prompting for psql connection | false |
+| Flag          | Description                                 | Default |
+| ------------- | ------------------------------------------- | ------- |
+| `--no-prompt` | Start without prompting for psql connection | false   |
 
 ### Examples
 
@@ -200,11 +202,13 @@ Error: Docker failed to start
 ## Best Practices
 
 1. **Clean Environment**: Always stop the environment when not in use:
+
    ```bash
    nile local stop
    ```
 
 2. **Connection Management**: Save connection information for reuse:
+
    ```bash
    nile local info > connection.txt
    ```
@@ -237,4 +241,4 @@ POSTGRES_PORT=5432
 1. The local environment is for development only
 2. Default credentials should never be used in production
 3. The environment is not encrypted by default
-4. Container is accessible only from localhost 
+4. Container is accessible only from localhost

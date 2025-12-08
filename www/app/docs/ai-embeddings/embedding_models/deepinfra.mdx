@@ -1,6 +1,6 @@
 ---
-title: "Embedding Models served by DeepInfra"
-sidebarTitle: "DeepInfra"
+title: 'Embedding Models served by DeepInfra'
+sidebarTitle: 'DeepInfra'
 ---
 
 ## Availble models
@@ -8,12 +8,9 @@ sidebarTitle: "DeepInfra"
 Fireworks provide a larger variety of models, here's the one we use in our example. You can replace it with any
 embedding model supported by DeepInfra:
 
-
-| Model               | Dimensions | Max Tokens | Cost               | MTEB Avg Score | Similarity Metric |
-|---------------------|------------|------------|--------------------|----------------|-------------------|
-| thenlper/gte-large  | 1024       | 512        | $0.010 / 1M tokens | 63.23          | cosine            |
-
-
+| Model              | Dimensions | Max Tokens | Cost               | MTEB Avg Score | Similarity Metric |
+| ------------------ | ---------- | ---------- | ------------------ | -------------- | ----------------- |
+| thenlper/gte-large | 1024       | 512        | $0.010 / 1M tokens | 63.23          | cosine            |
 
 ## Usage
 
@@ -32,15 +29,15 @@ npm install @niledatabase/server openai
 
 ```javascript
 // set up OpenAI SDK with Fireworks configuration
-const { OpenAI } = await import("openai");
-const DEEPINFRA_API_KEY = "your deepinfra api key";
+const { OpenAI } = await import('openai');
+const DEEPINFRA_API_KEY = 'your deepinfra api key';
 
 const openai = new OpenAI({
   apiKey: DEEPINFRA_API_KEY,
-  baseURL: "https://api.deepinfra.com/v1/openai",
+  baseURL: 'https://api.deepinfra.com/v1/openai',
 });
 
-const MODEL = "thenlper/gte-large"; // or any other model supported by DeepInfra
+const MODEL = 'thenlper/gte-large'; // or any other model supported by DeepInfra
 const input_text = `The future belongs to those who believe in the beauty of their 
                     dreams.`;
 
@@ -59,23 +56,23 @@ let embedding = resp.data[0].embedding;
 
 ```javascript
 // set up Nile as the vector store
-const { Nile } = await import("@niledatabase/server");
-const NILEDB_USER = "you need a nile user with access to a nile database";
-const NILEDB_PASSWORD = "and a password for that user";
+const { Nile } = await import('@niledatabase/server');
+const NILEDB_USER = 'you need a nile user with access to a nile database';
+const NILEDB_PASSWORD = 'and a password for that user';
 const nile = Nile({
   user: NILEDB_USER,
   password: NILEDB_PASSWORD,
 });
 
 // store vector in a table
-await nile.db.query("INSERT INTO embeddings (embedding) values ($1)", [
+await nile.db.query('INSERT INTO embeddings (embedding) values ($1)', [
   JSON.stringify(embedding.map((v) => Number(v))),
 ]);
 
 // search for similar vectors
 let db_resp = await nile.db.query(
-  "select embedding from embeddings order by embedding<=>$1 limit 1",
-  [JSON.stringify(embedding.map((v) => Number(v)))]
+  'select embedding from embeddings order by embedding<=>$1 limit 1',
+  [JSON.stringify(embedding.map((v) => Number(v)))],
 );
 
 // Postgres returns an object, with array of rows each column is a
@@ -83,7 +80,7 @@ let db_resp = await nile.db.query(
 let similar_str = db_resp.rows[0].embedding;
 let similar = similar_str
   .substring(1, similar_str.length - 1)
-  .split(",")
+  .split(',')
   .map((v) => parseFloat(v));
 
 // check that we got the same vector back
@@ -95,7 +92,7 @@ for (let i = 0; i < similar.length; i++) {
   }
 }
 
-console.log("got same vector? " + same);
+console.log('got same vector? ' + same);
 ```
 
 ## Additional information

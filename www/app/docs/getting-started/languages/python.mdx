@@ -1,6 +1,6 @@
 ---
-title: "Build AI-Native B2B application with Postgres and Python"
-sidebarTitle: "Python"
+title: 'Build AI-Native B2B application with Postgres and Python'
+sidebarTitle: 'Python'
 ---
 
 In this tutorial, you will learn to build a multi-tenant AI-native todo list application, using Nile with Python, FastAPI, SQLAlchemy, and OpenAI's client.
@@ -49,15 +49,26 @@ for each task in the todo list.
 
     See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
     ![Creating a table in Nile's admin dashboard](/images/gui-create-table.png)
+
   </Step>
 
-  <Step title="Get credentials">
-    In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
-  </Step>
+{" "}
 
-  <Step title="Get third party credentials">
-    This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
-  </Step>
+<Step title="Get credentials">
+  In the left-hand menu, click on "Settings" and then select "Credentials".
+  Generate credentials and keep them somewhere safe. These give you access to
+  the database.
+</Step>
+
+{" "}
+
+<Step title="Get third party credentials">
+  This example uses AI chat and embedding models to generate automated time
+  estimates for each task in the todo list. In order to use this functionality,
+  you will need access to models from a vendor with OpenAI compatible APIs. Make
+  sure you have an API key, API base URL and the [names of the models you'll
+  want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
+</Step>
 
   <Step title="Set the environment">
     Enough GUI for now. Let's get to some code.
@@ -99,6 +110,7 @@ for each task in the todo list.
     ```bash
     pip install -r requirements.txt
     ```
+
   </Step>
 
   <Step title="Run the application">
@@ -152,6 +164,7 @@ for each task in the todo list.
       --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
       'http://localhost:8000/api/todos'
     ```
+
   </Step>
 
   <Step title="Check the data in Nile">
@@ -163,6 +176,7 @@ for each task in the todo list.
     ```
 
     You should see all the todos you created, and the tenants they belong to.
+
   </Step>
 
   <Step title="What's next?">
@@ -179,6 +193,7 @@ for each task in the todo list.
 
     - [Chat with PDFs](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
     - [Code Assistant](https://www.thenile.dev/docs/getting-started/examples/code_assistant)
+
   </Step>
 </Steps>
 

@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
 import {
   List,
   ListItem,
   ListItemButton,
   ListItemContent,
   ListItemDecorator,
-} from "@mui/joy";
-import Typography from "@mui/joy/Typography";
-import Description from "@mui/icons-material/Description";
+} from '@mui/joy';
+import Typography from '@mui/joy/Typography';
+import Description from '@mui/icons-material/Description';
 
 interface SidebarProps {
   items: string[];

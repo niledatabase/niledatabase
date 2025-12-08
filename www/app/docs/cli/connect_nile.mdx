@@ -4,12 +4,14 @@ icon: 'keyboard'
 ---
 
 Nile CLI supports two primary methods of authentication:
+
 1. Browser-based OAuth authentication (Recommended)
 2. API key authentication
 
 ## Browser-based Authentication
 
 Browser-based authentication provides a secure and convenient way to connect to Nile. When you run the login command, the CLI will:
+
 1. Open your default browser
 2. Direct you to Nile's authentication page
 3. After successful login, automatically configure your CLI
@@ -54,6 +56,7 @@ nile workspace list
 ### Session Management
 
 Browser-based authentication creates a session that:
+
 - Remains valid for extended periods
 - Automatically refreshes when needed
 - Can be explicitly terminated
@@ -72,6 +75,7 @@ nile connect login
 ## API Key Authentication
 
 For automated workflows or CI/CD environments, you can use API key authentication. API keys can be:
+
 - Used directly in commands
 - Stored in configuration
 - Set via environment variables
@@ -198,4 +202,4 @@ nile workspace show
 - `nile connect status` - Check connection status
 - `nile connect logout` - End current session
 - `nile config` - Configure CLI settings
-- `nile workspace list` - List available workspaces 
+- `nile workspace list` - List available workspaces

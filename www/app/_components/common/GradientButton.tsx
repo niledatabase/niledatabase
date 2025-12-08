@@ -1,11 +1,11 @@
-"use client";
-import { MouseEventHandler, useMemo } from "react";
-import { useRouter } from "next/navigation";
+'use client';
+import { MouseEventHandler, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function GradientButton({
   href,
   onClick,
-  type = "button",
+  type = 'button',
   children,
   variant,
   className,
@@ -13,9 +13,9 @@ export default function GradientButton({
 }: {
   href?: string;
   onClick?: () => void;
-  type?: "submit" | "button";
+  type?: 'submit' | 'button';
   children: (string | JSX.Element)[] | string | JSX.Element;
-  variant?: "soft" | "launch";
+  variant?: 'soft' | 'launch';
   className?: string;
   subclasses?: string;
 }) {
@@ -28,27 +28,27 @@ export default function GradientButton({
         onClick();
       }
     },
-    [href, onClick, push]
+    [href, onClick, push],
   );
   const subClasses = useMemo(() => {
-    if (variant === "soft") {
+    if (variant === 'soft') {
       return `py-3 px-4 bg-clip-text text-transparent gradientBorderButtonFade subpixel-antialiased bg-black overflow-hidden whitespace-nowrap${
-        _subz ? ` ${_subz}` : ""
+        _subz ? ` ${_subz}` : ''
       }`;
     }
-    if (variant === "launch") {
+    if (variant === 'launch') {
       return `bg-gradient-text-144 py-3 px-4 bg-clip-text text-transparent gradientBorderButtonLaunch subpixel-antialiased bg-black overflow-hidden whitespace-nowrap${
-        _subz ? ` ${_subz}` : ""
+        _subz ? ` ${_subz}` : ''
       }`;
     }
     return `py-3 px-4 rounded-[7px] text-transparent gradientBorderButton subpixel-antialiased overflow-hidden whitespace-nowrap${
-      _subz ? ` ${_subz}` : ""
+      _subz ? ` ${_subz}` : ''
     }`;
   }, [_subz]);
   return (
     <button
-      className={`flex-1 rounded-xl relative z-[9]${
-        className ? ` ${className}` : ""
+      className={`relative flex-1 rounded-xl z-[9]${
+        className ? ` ${className}` : ''
       }`}
       type={type}
       onClick={handleClick}

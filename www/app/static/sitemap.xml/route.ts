@@ -1,38 +1,38 @@
 export async function GET() {
   const entries = [
     {
-      url: "https://www.thenile.dev/",
-      changefreq: "yearly",
+      url: 'https://www.thenile.dev/',
+      changefreq: 'yearly',
       priority: 1,
     },
     {
-      url: "https://www.thenile.dev/about-us",
-      changefreq: "yearly",
+      url: 'https://www.thenile.dev/about-us',
+      changefreq: 'yearly',
       priority: 0.2,
     },
     {
-      url: "https://www.thenile.dev/community",
-      changefreq: "yearly",
+      url: 'https://www.thenile.dev/community',
+      changefreq: 'yearly',
       priority: 0.2,
     },
     {
-      url: "https://www.thenile.dev/pricing",
-      changefreq: "yearly",
+      url: 'https://www.thenile.dev/pricing',
+      changefreq: 'yearly',
       priority: 0.2,
     },
     {
-      url: "https://www.thenile.dev/templates",
-      changefreq: "monthly",
+      url: 'https://www.thenile.dev/templates',
+      changefreq: 'monthly',
       priority: 0.5,
     },
     {
-      url: "https://www.thenile.dev/auth",
-      changefreq: "monthly",
+      url: 'https://www.thenile.dev/auth',
+      changefreq: 'monthly',
       priority: 0.5,
     },
     {
-      url: "https://www.thenile.dev/blog",
-      changefreq: "monthly",
+      url: 'https://www.thenile.dev/blog',
+      changefreq: 'monthly',
       priority: 0.5,
     },
   ];
@@ -46,14 +46,14 @@ ${entries
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>${entry.changefreq}</changefreq>
     <priority>${entry.priority}</priority>
-  </url>`
+  </url>`,
   )
-  .join("\n")}
+  .join('\n')}
 </urlset>`;
 
   return new Response(sitemap, {
     headers: {
-      "Content-Type": "application/xml",
+      'Content-Type': 'application/xml',
     },
   });
 }

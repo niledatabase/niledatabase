@@ -1,78 +1,78 @@
-import Image from "next/image";
-import fineGrainedBranching from "@/public/bottom-four/fine-grained-branching.svg";
-import link1 from "@/public/bottom-four/link-1.svg";
-import link2 from "@/public/bottom-four/link-2.svg";
-import link3 from "@/public/bottom-four/link-3.svg";
-import table1 from "@/public/bottom-four/table-1.svg";
-import table2 from "@/public/bottom-four/table-2.svg";
-import table3 from "@/public/bottom-four/table-3.svg";
-import table4 from "@/public/bottom-four/table-4.svg";
-import backups from "@/public/bottom-four/backups.svg";
+import Image from 'next/image';
+import fineGrainedBranching from '@/public/bottom-four/fine-grained-branching.svg';
+import link1 from '@/public/bottom-four/link-1.svg';
+import link2 from '@/public/bottom-four/link-2.svg';
+import link3 from '@/public/bottom-four/link-3.svg';
+import table1 from '@/public/bottom-four/table-1.svg';
+import table2 from '@/public/bottom-four/table-2.svg';
+import table3 from '@/public/bottom-four/table-3.svg';
+import table4 from '@/public/bottom-four/table-4.svg';
+import backups from '@/public/bottom-four/backups.svg';
 
-import ChartHover from "./ChartHover";
+import ChartHover from './ChartHover';
 
-import Box from "./Box";
-import { NewHeading } from "../common/NewHeading";
+import Box from './Box';
+import { NewHeading } from '../common/NewHeading';
 export default function BottomFour() {
   return (
-    <div className="container mx-auto mt-44 flex gap-16 flex-col">
-      <div className="flex justify-center flex-col items-center">
+    <div className="container mx-auto mt-44 flex flex-col gap-16">
+      <div className="flex flex-col items-center justify-center">
         <NewHeading>
           Tenant-level branching, backups, schema migration, and insights
         </NewHeading>
       </div>
       <div className="flex flex-row flex-wrap">
-        <div className="w-full lg:w-1/2 lg:h-[640px] xl:h-[720px] mb-6">
-          <div className="lg:pr-3 h-full">
+        <div className="mb-6 w-full lg:h-[640px] lg:w-1/2 xl:h-[720px]">
+          <div className="h-full lg:pr-3">
             <Box
-              title={["Fine grained", "branching"]}
+              title={['Fine grained', 'branching']}
               bullets={[
-                "DB level and tenant-level branching",
-                "Branch production data for testing",
-                "Reproduce customer issues by branching specific tenant data",
+                'DB level and tenant-level branching',
+                'Branch production data for testing',
+                'Reproduce customer issues by branching specific tenant data',
               ]}
             >
               <Image src={fineGrainedBranching} alt="lines with dots" />
             </Box>
           </div>
         </div>
-        <div className="w-full lg:w-1/2 lg:h-[640px] xl:h-[720px] mb-6">
-          <div className="lg:pl-3 h-full">
+        <div className="mb-6 w-full lg:h-[640px] lg:w-1/2 xl:h-[720px]">
+          <div className="h-full lg:pl-3">
             <div className="relative h-full">
               <ChartHover />
               <Box
-                title={["Instant customer", "dashboard"]}
+                title={['Instant customer', 'dashboard']}
                 bullets={[
-                  "Track growth of customers, embeddings and queries",
-                  "Dive into per customer metrics",
-                  "Manage user profiles for each customer",
+                  'Track growth of customers, embeddings and queries',
+                  'Dive into per customer metrics',
+                  'Manage user profiles for each customer',
                 ]}
               >
                 <div className="relative px-10 pb-10">
                   <div className="flex flex-col gap-14">
-                    <div className="flex flex-row gap-2 items-center">
-                      <div className="text-xs font-inter w-[32px] text-right">
+                    <div className="flex flex-row items-center gap-2">
+                      <div className="w-[32px] text-right font-inter text-xs">
                         1,950
                       </div>
-                      <div className="border-b w-full opacity-10"></div>
+                      <div className="w-full border-b opacity-10"></div>
                     </div>
-                    <div className="flex flex-row gap-2 items-center">
-                      <div className="text-xs font-inter w-[32px] text-right">
+                    <div className="flex flex-row items-center gap-2">
+                      <div className="w-[32px] text-right font-inter text-xs">
                         1,350
                       </div>
-                      <div className="border-b w-full opacity-10"></div>
+                      <div className="w-full border-b opacity-10"></div>
                     </div>
-                    <div className="flex flex-row gap-2 items-center">
-                      <div className="text-xs font-inter w-[32px]  text-right">
+                    <div className="flex flex-row items-center gap-2">
+                      <div className="w-[32px] text-right font-inter text-xs">
                         650
                       </div>
-                      <div className="border-b w-full opacity-10"></div>
+                      <div className="w-full border-b opacity-10"></div>
                     </div>
-                    <div className="flex flex-row gap-2 items-center">
-                      <div className="text-xs font-inter w-[32px] text-right">
+                    <div className="flex flex-row items-center gap-2">
+                      <div className="w-[32px] text-right font-inter text-xs">
                         0
                       </div>
-                      <div className="border-b w-full opacity-10"></div>
+                      <div className="w-full border-b opacity-10"></div>
                     </div>
                   </div>
                 </div>
@@ -80,21 +80,21 @@ export default function BottomFour() {
             </div>
           </div>
         </div>
-        <div className="w-full lg:w-1/2 lg:h-[720px] mb-3">
-          <div className="lg:pr-3 h-full overflow-hidden">
+        <div className="mb-3 w-full lg:h-[720px] lg:w-1/2">
+          <div className="h-full overflow-hidden lg:pr-3">
             <Box
-              title={["Automated schema migration across tenants"]}
+              title={['Automated schema migration across tenants']}
               bullets={[
-                "Execute DDL once across tenants",
-                "Schema migrations are fully atomic",
-                "Integrates with existing Postgres tooling",
+                'Execute DDL once across tenants',
+                'Schema migrations are fully atomic',
+                'Integrates with existing Postgres tooling',
               ]}
             >
-              <div className="relative pl-10 pt-10 lg:pt-0 h-[255px] origin-top-left lg:origin-left scale-[0.534] md:scale-[0.634] lg:scale-[.74] xl:scale-[0.841] 2xl:scale-100">
+              <div className="relative h-[255px] origin-top-left scale-[0.534] pl-10 pt-10 md:scale-[0.634] lg:origin-left lg:scale-[.74] lg:pt-0 xl:scale-[0.841] 2xl:scale-100">
                 <div
                   className="absolute"
                   style={{
-                    transform: "translate(0px, 186px)",
+                    transform: 'translate(0px, 186px)',
                   }}
                 >
                   <Image src={table1} alt="graphs" />
@@ -105,7 +105,7 @@ export default function BottomFour() {
                     src={table2}
                     alt="graphs"
                     style={{
-                      transform: "translate(420px, 44px)",
+                      transform: 'translate(420px, 44px)',
                     }}
                   />
                 </div>
@@ -114,7 +114,7 @@ export default function BottomFour() {
                     src={table3}
                     alt="graphs"
                     style={{
-                      transform: "translate(420px, 210px)",
+                      transform: 'translate(420px, 210px)',
                     }}
                   />
                 </div>
@@ -126,7 +126,7 @@ export default function BottomFour() {
                     src={link1}
                     alt="graphs"
                     style={{
-                      transform: "translate(320px, 120px)",
+                      transform: 'translate(320px, 120px)',
                     }}
                   />
                 </div>
@@ -135,7 +135,7 @@ export default function BottomFour() {
                     src={link2}
                     alt="graphs"
                     style={{
-                      transform: "translate(322px, 50px)",
+                      transform: 'translate(322px, 50px)',
                     }}
                   />
                 </div>
@@ -144,7 +144,7 @@ export default function BottomFour() {
                     src={link3}
                     alt="graphs"
                     style={{
-                      transform: "translate(386px, 128px)",
+                      transform: 'translate(386px, 128px)',
                     }}
                   />
                 </div>
@@ -152,14 +152,14 @@ export default function BottomFour() {
             </Box>
           </div>
         </div>
-        <div className="w-full lg:w-1/2 lg:h-[720px] mb-3">
-          <div className="lg:pl-3 h-full">
+        <div className="mb-3 w-full lg:h-[720px] lg:w-1/2">
+          <div className="h-full lg:pl-3">
             <Box
-              title={["Tenant-level backups for instant restores"]}
+              title={['Tenant-level backups for instant restores']}
               bullets={[
-                "Execute DDL once across tenants",
-                "Schema migrations are fully atomic",
-                "Integrates with existing Postgres tooling",
+                'Execute DDL once across tenants',
+                'Schema migrations are fully atomic',
+                'Integrates with existing Postgres tooling',
               ]}
             >
               <div className="flex items-center justify-center px-8">

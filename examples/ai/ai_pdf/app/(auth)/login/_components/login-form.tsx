@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 // import { Icons } from "@/components/icons"
-import { Spinner } from "@/components/spinner";
-import { Button } from "@/components/ui/button";
+import { Spinner } from '@/components/spinner';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import * as z from "zod";
-import { toast } from "sonner";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { toast } from 'sonner';
 
 interface UserAuthLoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -39,8 +39,8 @@ export function UserAuthLoginForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
   type FormData = z.infer<typeof formSchema>;
@@ -51,20 +51,20 @@ export function UserAuthLoginForm({
       const response = await axios.post(`/api/login`, values);
       // console.log(values, "VALUES VALUES");
       form.reset();
-      toast.success("Successfully logged in");
-      router.push("/dashboard");
+      toast.success('Successfully logged in');
+      router.push('/dashboard');
     } catch (error) {
       console.error(error);
-      toast.error("Error logging in");
+      toast.error('Error logging in');
     }
   };
   const isLoading = form.formState.isSubmitting;
   return (
-    <div className={cn("grid gap-6 min-w-[300px]", className)} {...props}>
+    <div className={cn('grid min-w-[300px] gap-6', className)} {...props}>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col w-full grid-cols-12 gap-2 px-2 py-4 mt-5 border rounded-lg md:px-4 focus-within:shadow-sm"
+          className="mt-5 flex w-full grid-cols-12 flex-col gap-2 rounded-lg border px-2 py-4 focus-within:shadow-sm md:px-4"
         >
           <div className="grid gap-2">
             <div className="grid gap-1">

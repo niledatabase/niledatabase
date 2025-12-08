@@ -14,8 +14,8 @@ export function Metadata({
       <div className="flex flex-row items-center gap-3">
         <div className="opacity-60">{publishDate}</div>
       </div>
-      <div className="text-2xl my-4">{title}</div>
-      <div className="line-clamp-2 overflow-hidden text-ellipsis opacity-60 mb-4 text-base leading-normal">
+      <div className="my-4 text-2xl">{title}</div>
+      <div className="mb-4 line-clamp-2 overflow-hidden text-ellipsis text-base leading-normal opacity-60">
         {sizzle}
       </div>
     </>

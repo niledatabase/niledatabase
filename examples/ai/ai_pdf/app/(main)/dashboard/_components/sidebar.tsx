@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Plus } from "lucide-react";
-import { useLocalStorage } from "usehooks-ts";
+import Link from 'next/link';
+import { Plus } from 'lucide-react';
+import { useLocalStorage } from 'usehooks-ts';
 
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 
-import { NavItem, Organization } from "./nav-item";
-import { useParams } from "next/navigation";
+import { NavItem, Organization } from './nav-item';
+import { useParams } from 'next/navigation';
 
 interface SidebarProps {
   storageKey?: string;
 }
 
-export const Sidebar = ({ storageKey = "t-sidebar-state" }: SidebarProps) => {
+export const Sidebar = ({ storageKey = 't-sidebar-state' }: SidebarProps) => {
   const [expanded, setExpanded] = useLocalStorage<Record<string, any>>(
     storageKey,
-    {}
+    {},
   );
 
   const params = useParams();
@@ -45,7 +45,7 @@ export const Sidebar = ({ storageKey = "t-sidebar-state" }: SidebarProps) => {
 
       return acc;
     },
-    []
+    [],
   );
 
   const onExpand = (id: string) => {

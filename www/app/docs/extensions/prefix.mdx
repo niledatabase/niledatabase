@@ -3,22 +3,24 @@ title: 'Prefix'
 description: 'Prefix search functionality for PostgreSQL'
 ---
 
-The `prefix` extension provides efficient prefix (starts-with) search functionality in PostgreSQL. 
-While it's useful for implementing autocomplete features and prefix-based filtering, it's particularly 
-important in telephony applications where call routing and costs depend on matching phone numbers 
+The `prefix` extension provides efficient prefix (starts-with) search functionality in PostgreSQL.
+While it's useful for implementing autocomplete features and prefix-based filtering, it's particularly
+important in telephony applications where call routing and costs depend on matching phone numbers
 to operator prefixes.
 Your Nile database arrives with the `prefix` extension already enabled.
 
 ## Understanding Prefix Search
 
-A prefix search finds strings that begin with a specific pattern. In telephony applications, 
+A prefix search finds strings that begin with a specific pattern. In telephony applications,
 this is crucial for:
+
 - Matching phone numbers to carrier prefixes
 - Determining call routing paths
 - Calculating call costs based on destination
 - Identifying geographic regions from area codes
 
 For example:
+
 - "1212" is a prefix for all London phone numbers starting with "1212"
 - "+1" is a prefix for North American numbers
 - "91" is a prefix for calls to India
@@ -59,17 +61,18 @@ INSERT INTO phone_prefixes (id, prefix, carrier, region, rate_per_minute) VALUES
 ### Basic Phone Number Queries
 
 Find carrier and rate for a specific phone number:
+
 ```sql
 -- Find the matching prefix for a phone number
 -- You should see that '1212' and 'UK Telecom' are returned
 SELECT prefix, carrier, rate_per_minute
-FROM phone_prefixes 
+FROM phone_prefixes
 WHERE prefix @> '12125551234'
 ORDER BY length(prefix) DESC
 LIMIT 1;
 ```
 
-###  Call Cost Calculations
+### Call Cost Calculations
 
 ```sql
 -- Create a table for call records
@@ -90,7 +93,7 @@ INSERT INTO call_records (tenant_id, id, caller_number, callee_number, duration_
     ('123e4567-e89b-12d3-a456-426614174000', 3, '16175550123', '861234567890', 8);
 
 -- Example query to calculate call costs directly
-SELECT 
+SELECT
     cr.callee_number,
     cr.duration_minutes,
     (cr.duration_minutes * pp.rate_per_minute) as cost
@@ -156,7 +159,6 @@ In addition, operators `<=`, `>=`, `<`, `>`, `=`, `<>` are supported for prefix 
 - Product SKU searches (e.g., finding all products starting with 'ELEC-')
 - URL path routing and matching
 - File system path lookups
-
 
 ## Additional Resources
 

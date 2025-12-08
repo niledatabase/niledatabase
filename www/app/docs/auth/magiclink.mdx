@@ -3,19 +3,21 @@ title: 'Magic Link'
 description: 'Magic Link Authentication'
 icon: 'wand-magic-sparkles'
 ---
-import InstallNile from '/snippets/installnile.mdx'
-import CreateNextApp from '/snippets/createnextapp.mdx'
-import DbCreds from '/snippets/dbcreds.mdx'
 
-Magic Link authentication provides a passwordless sign-in experience where users 
-receive a secure link via email to authenticate. This method eliminates the need for 
+import InstallNile from '/snippets/installnile.mdx';
+import CreateNextApp from '/snippets/createnextapp.mdx';
+import DbCreds from '/snippets/dbcreds.mdx';
+
+Magic Link authentication provides a passwordless sign-in experience where users
+receive a secure link via email to authenticate. This method eliminates the need for
 passwords while maintaining security.
 
 ## Overview
 
 Magic Link authentication flow:
+
 1. User enters their email address
-2. They receive a secure link with an authentication token via email. The token is valid for 4 hours by default and is saved in the `auth.verification_tokens` table in your database. 
+2. They receive a secure link with an authentication token via email. The token is valid for 4 hours by default and is saved in the `auth.verification_tokens` table in your database.
 3. Clicking the link automatically exchanges the token for a session, logs them into your application and redirects them to the `callbackUrl` configured in the `sign` component.
 
 ## Implementation Steps
@@ -49,14 +51,8 @@ The `<EmailSignIn />` component is used to send a magic link to the user's email
     return <EmailSignIn callbackUrl="/dashboard" />
     }
     ```
+
 </Tab>
 </Tabs>
 </Step>
 </Steps>
-
-
-
-
-
-
-

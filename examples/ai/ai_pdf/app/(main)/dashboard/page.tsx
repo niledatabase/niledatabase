@@ -1,22 +1,22 @@
-import { Card } from "@/components/ui/card";
-import { configureNile, nile } from "@/lib/NileServer";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { FC } from "react";
+import { Card } from '@/components/ui/card';
+import { configureNile, nile } from '@/lib/NileServer';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { FC } from 'react';
 
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import AddOrgButton from "./_components/add-org-button";
-import Link from "next/link";
-import { Navbar } from "@/app/(marketing)/_components/navbar";
-import { Tenant } from "@niledatabase/server";
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import AddOrgButton from './_components/add-org-button';
+import Link from 'next/link';
+import { Navbar } from '@/app/(marketing)/_components/navbar';
+import { Tenant } from '@niledatabase/server';
 
 interface pageProps {}
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
 export const revalidate = 0;
-export const fetchCache = "force-no-store";
+export const fetchCache = 'force-no-store';
 
 const page: FC<pageProps> = async ({}) => {
   const tenants = await nile.tenants.list<Tenant[]>();
@@ -25,23 +25,24 @@ const page: FC<pageProps> = async ({}) => {
     <>
       <Navbar />
       {/* <div className="mt-24">Select Org or Create org logic will come here</div> */}
-      <div className="ml-[5vw] flex flex-col justify-center items-center mt-24">
-        <Card className="max-w-sm p-3 flex flex-col items-center justify-center">
+      <div className="ml-[5vw] mt-24 flex flex-col items-center justify-center">
+        <Card className="flex max-w-sm flex-col items-center justify-center p-3">
           <AddOrgButton count={tenants.length} />
         </Card>
-        <Separator className="max-w-xl my-5" />
+        <Separator className="my-5 max-w-xl" />
         <Label className="text-lg">Your Workspaces</Label>
         {tenants.length === 0 && (
           <>
             <h1 className="mt-3">
-              You are not part of any workspace. This should not have happened.{" "}
+              You are not part of any workspace. This should not have
+              happened.{' '}
             </h1>
           </>
         )}
         {tenants.map((tenant: { id: string; name: string }) => (
           <Link
             href={`/dashboard/organization/${tenant.id}`}
-            className="group space-y-3 mt-3"
+            className="group mt-3 space-y-3"
             key={tenant.id}
           >
             <Card

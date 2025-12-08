@@ -1,5 +1,4 @@
 ---
-
 title: 'Tenants'
 description: 'Managing tenants for the current user'
 ---
@@ -9,7 +8,8 @@ The Tenants module provides methods to create, fetch, update, delete, and intera
 Each user may belong to multiple tenants, and most operations automatically default to the currently selected tenant. You can explicitly override this by providing a tenant ID to most methods.
 
 <Note>
-Most methods assume the current user is authenticated. If not, a 401 Unauthorized error will be returned.
+  Most methods assume the current user is authenticated. If not, a 401
+  Unauthorized error will be returned.
 </Note>
 
 ---
@@ -18,29 +18,34 @@ Most methods assume the current user is authenticated. If not, a 401 Unauthorize
 
 You can manually set the current tenant using `await nile.withContext({ tenantId })`. `withContext` returns a copy of the nile instance with a context that captures what was passed. It also accepts a second parameter for convenience for multiple requests.
 
-```ts Returns a nile with the context 
-const nileWithContext = await nile.withContext({ tenantId: '019612d7-56e7-7e87-8f30-ad6b05d85645' });
+```ts Returns a nile with the context
+const nileWithContext = await nile.withContext({
+  tenantId: '019612d7-56e7-7e87-8f30-ad6b05d85645',
+});
 ```
 
-```ts Self contained callback 
-const [currentUser, listOfTenantUsers]= await nile.withContext({ 
-    tenantId: '019612d7-56e7-7e87-8f30-ad6b05d85645' 
-  }, 
-  async(_nile) => Promise.all([_nile.users.getSelf, _nile.users.list])
+```ts Self contained callback
+const [currentUser, listOfTenantUsers] = await nile.withContext(
+  {
+    tenantId: '019612d7-56e7-7e87-8f30-ad6b05d85645',
+  },
+  async (_nile) => Promise.all([_nile.users.getSelf, _nile.users.list]),
 );
 ```
 
 This method updates the internal configuration to use the given tenant in subsequent API calls.
 
 <Note>
-Framework-specific integrations may set context automatically, so calling `withContext` every time may not be necessary in those environments. see [extensions](../../../concepts/extensions.mdx) for more information
+  Framework-specific integrations may set context automatically, so calling
+  `withContext` every time may not be necessary in those environments. see
+  [extensions](../../../concepts/extensions.mdx) for more information
 </Note>
 
 This ID is typically sourced from:
 
-* The result of `create()`
-* A specific tenant via `get()`
-* A selected tenant from `list()`
+- The result of `create()`
+- A specific tenant via `get()`
+- A selected tenant from `list()`
 
 <CodeGroup>
 ```ts setCurrentTenant from list
@@ -72,8 +77,8 @@ const tenant = await nile.tenants.create({ name: 'My Org', id: 'custom-uuid' });
 
 ### Parameters
 
-* `name`: Name of the tenant (required)
-* `id`: Optional. Unique ID to use instead of auto-generating
+- `name`: Name of the tenant (required)
+- `id`: Optional. Unique ID to use instead of auto-generating
 
 ### Returns
 
@@ -108,7 +113,7 @@ const tenant = await n.tenants.get();
 
 ### Parameters
 
-* `id`: Optional. If omitted, uses the current context
+- `id`: Optional. If omitted, uses the current context
 
 ### Returns
 
@@ -127,16 +132,14 @@ const tenant = await n.tenants.update({ name: 'New Name' });
 
 ### Parameters
 
-* `name`: New name of the tenant
-* `id`: Optional. If omitted, uses context
+- `name`: New name of the tenant
+- `id`: Optional. If omitted, uses context
 
 ### Returns
 
 Updated `Tenant` object or a `Response`.
 
-<Note>
-Only the name is currently updatable.
-</Note>
+<Note>Only the name is currently updatable.</Note>
 
 ---
 
@@ -175,7 +178,7 @@ const tenants = await nile.tenants.list();
 Array of `Tenant` objects:
 
 ```ts
-[{ id: '...', name: '...' }]
+[{ id: '...', name: '...' }];
 ```
 
 401 if the user is unauthenticated.
@@ -217,7 +220,7 @@ The added `User` object or a `Response`.
 Remove a user from the tenant.
 
 ```ts
-const n  = await nile.withContext({ tenantId: '0196...' });
+const n = await nile.withContext({ tenantId: '0196...' });
 await n.tenants.removeMember('user-id');
 ```
 
@@ -269,16 +272,19 @@ await n.tenants.invite('user@example.com');
 
 ```ts invite with callback
 const n = await nile.withContext({ tenantId: '0196...' });
-await n.tenants.invite({ email: 'user@example.com', callbackUrl: 'https://myapp.com/welcome' });
+await n.tenants.invite({
+  email: 'user@example.com',
+  callbackUrl: 'https://myapp.com/welcome',
+});
 ```
 
 </CodeGroup>
 
 ### Parameters
 
-* `email`: Email of the user to invite
-* `callbackUrl`: Optional URL to redirect after acceptance
-* `redirectUrl`: Optional URL used as the base in the email
+- `email`: Email of the user to invite
+- `callbackUrl`: Optional URL to redirect after acceptance
+- `redirectUrl`: Optional URL used as the base in the email
 
 ### Returns
 

@@ -61,12 +61,12 @@ import {
   SignedIn,
   SignedOut,
   UserInfo,
-} from "@niledatabase/react";
-import "@niledatabase/react/styles.css";
+} from '@niledatabase/react';
+import '@niledatabase/react/styles.css';
 
 export default function SignUpPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex min-h-screen flex-col items-center justify-center">
       <SignedIn>
         <UserInfo />
         <SignOutButton />
@@ -78,6 +78,7 @@ export default function SignUpPage() {
   );
 }
 ```
+
 <img height="50" src="/images/quickstart_signup.png" />
 
 ## Environment Variables
@@ -127,28 +128,31 @@ NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/your_database
 ### Common Issues
 
 1. **Quickstart Command Fails**
+
    ```bash
    # Ensure you're connected to Nile
    nile connect login
-   
+
    # Verify workspace and database are set
    nile config
    ```
 
 2. **Environment Variables Not Working**
+
    ```bash
    # Regenerate environment variables
    nile auth env --output .env.local
-   
+
    # Restart your development server
    npm run dev
    ```
 
 3. **Authentication Components Not Showing**
+
    ```bash
    # Ensure Nile packages are installed
    npm install @niledatabase/server @niledatabase/react @niledatabase/client
-   
+
    # Check API routes are properly configured
    ls app/api/[...nile]/
    ```
@@ -178,17 +182,20 @@ npm run dev
 ### Custom Authentication Flow
 
 1. Create a new Next.js app manually
+
    ```bash
    npx create-next-app@latest my-app
    cd my-app
    ```
 
 2. Install Nile packages
+
    ```bash
    npm install @niledatabase/server @niledatabase/react @niledatabase/client
    ```
 
 3. Generate environment variables
+
    ```bash
    nile auth env --output .env.local
    ```
@@ -205,11 +212,13 @@ npm run dev
 ### `nile auth quickstart`
 
 Options:
+
 - `--nextjs` - Create a Next.js application (required)
 
 ### `nile auth env`
 
 Options:
+
 - `--output <file>` - Save variables to a file (optional)
 
 ## Further Reading
@@ -218,4 +227,6 @@ Options:
 - [Next.js Integration Guide](https://thenile.dev/docs/integrations/nextjs)
 - [Custom Authentication Flows](https://thenile.dev/docs/authentication/custom)
 
-``` 
+```
+
+```

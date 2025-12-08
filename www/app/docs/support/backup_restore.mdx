@@ -1,13 +1,14 @@
 ---
-title: "Backup and Restore"
-sidebarTitle: "Backup and Restore"
-icon: "database"
+title: 'Backup and Restore'
+sidebarTitle: 'Backup and Restore'
+icon: 'database'
 ---
 
 In case database backup and restore is required, please follow the steps below. Our team is here to assist you throughout the process.
 
 <Tip>
-This is available for paid tiers only. We hope to make this process self-serve soon.
+  This is available for paid tiers only. We hope to make this process self-serve
+  soon.
 </Tip>
 
 ## 1. Notify Us
@@ -24,15 +25,15 @@ Once we receive your message, we will acknowledge it within **15 minutes**. If y
 
 ## 3. Backup Availability
 
-We take **three backups daily** to ensure your data is well-protected. Upon your request, an appropriate backup, based on the time when the data issue occurred, will be restored in a separate schema within your database or alternatively into the original schema in an empty database of your choice. 
+We take **three backups daily** to ensure your data is well-protected. Upon your request, an appropriate backup, based on the time when the data issue occurred, will be restored in a separate schema within your database or alternatively into the original schema in an empty database of your choice.
 
-In the case of separate schema, the backup schema will have a name in the format: `<original_schema_name>_bkp`. 
+In the case of separate schema, the backup schema will have a name in the format: `<original_schema_name>_bkp`.
 For example, if your original schema is `sales_data`, the backup schema will be named: `sales_data_bkp`
 
 ## 4. How to Restore Data
 
 <Tip>
-Only needed if data is restored within the same database into another schema
+  Only needed if data is restored within the same database into another schema
 </Tip>
 
 You can restore the data from the backup schema using SQL commands. Below is an example query to copy data back to the original schema:

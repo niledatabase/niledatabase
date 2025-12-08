@@ -3,13 +3,14 @@ title: 'Seg'
 description: 'Line segment and floating-point interval data type for PostgreSQL'
 ---
 
-The `seg` extension provides support for representing line segments or floating-point intervals in PostgreSQL. 
+The `seg` extension provides support for representing line segments or floating-point intervals in PostgreSQL.
 This type represents both ranges of values and also measurements with uncertainty, randomness or tolerances.
 Your Nile database arrives with the seg extension already enabled.
 
 ## Overview
 
 The seg extension adds a new data type `seg` that can represent:
+
 - Line segments on a number line
 - Floating-point intervals
 - Exact or inexact bounds
@@ -19,20 +20,21 @@ The seg extension adds a new data type `seg` that can represent:
 
 The `seg` data type accepts several input formats:
 
-| Format | Example | Description |
-|--------|---------|-------------|
-| `x` | `5.0` | Single value, a point |
-| `x .. y` | `1.0 .. 2.0` | Interval from x to y |
-| `x ..` | `1.0 ..` | Everything greater than x |
-| `.. y` | `.. 2.0` | Everything less than y |
-| `<x` | `<5.0` | A point at X. `<` is preserved as a comment |
-| `>x` | `>5.0` | A point at X. `>` is preserved as a comment |
-| `~x` | `~5.0` | A point at X. `~` is preserved as a comment |
-| `x(+-)d` | `5.0(+-)0.1` | Interval from x-d to x+d |
+| Format   | Example      | Description                                 |
+| -------- | ------------ | ------------------------------------------- |
+| `x`      | `5.0`        | Single value, a point                       |
+| `x .. y` | `1.0 .. 2.0` | Interval from x to y                        |
+| `x ..`   | `1.0 ..`     | Everything greater than x                   |
+| `.. y`   | `.. 2.0`     | Everything less than y                      |
+| `<x`     | `<5.0`       | A point at X. `<` is preserved as a comment |
+| `>x`     | `>5.0`       | A point at X. `>` is preserved as a comment |
+| `~x`     | `~5.0`       | A point at X. `~` is preserved as a comment |
+| `x(+-)d` | `5.0(+-)0.1` | Interval from x-d to x+d                    |
 
 ## Examples
 
 ### Creating Segments
+
 ```sql
 -- Create basic intervals
 SELECT '-1..1'::seg AS basic_interval;
@@ -44,6 +46,7 @@ SELECT '~5.0'::seg AS approximately_five;
 ```
 
 ### Comparison Operations
+
 ```sql
 -- Check if segments overlap
 SELECT '-1..1'::seg && '0..2'::seg AS overlaps;
@@ -67,15 +70,15 @@ CREATE TABLE measurements (
 );
 
 -- Insert measurements with tolerances
-INSERT INTO measurements (value) VALUES 
+INSERT INTO measurements (value) VALUES
     ('~10.5'),                -- Approximately 10.5
     ('10.3..10.7'),         -- Between 10.3 and 10.7
     ('..11.0'),               -- Less than 11.0
     ('9.5..');                -- Greater than 9.5
 
 -- Find overlapping measurements
-SELECT a.value, b.value 
-FROM measurements a, measurements b 
+SELECT a.value, b.value
+FROM measurements a, measurements b
 WHERE a.value && b.value and a.value < b.value;
 ```
 
@@ -89,6 +92,7 @@ But it is most useful for recording laboratory measurements with uncertainty or 
 For better query performance with seg data:
 
 1. Create GiST indexes on seg columns:
+
 ```sql
 -- Create a table with a seg column
 CREATE TABLE temperature_readings (
@@ -102,6 +106,7 @@ CREATE INDEX idx_temp_range ON temperature_readings USING gist(temp_range);
 ```
 
 2. Common operators that can use the GiST index:
+
 - `<<` (strictly left of)
 - `>>` (strictly right of)
 - `&<` (does not extend right of)

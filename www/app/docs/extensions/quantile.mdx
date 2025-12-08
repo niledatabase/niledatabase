@@ -9,6 +9,7 @@ Your Nile database arrives with the `quantile` extension already enabled.
 ## Understanding Quantiles
 
 A quantile divides a dataset into equal-sized groups. Common examples include:
+
 - Median (50th percentile)
 - Quartiles (25th, 50th, 75th percentiles)
 - Percentiles (dividing data into 100 groups)
@@ -63,14 +64,16 @@ INSERT INTO api_responses (tenant_id, id, endpoint, response_time_ms, timestamp)
 ### Basic Quantile Calculations
 
 Calculate median response time:
+
 ```sql
 SELECT quantile(response_time_ms, 0.5) as median_response_time
 FROM api_responses;
 ```
 
 Calculate multiple percentiles:
+
 ```sql
-SELECT 
+SELECT
     endpoint,
     quantile(response_time_ms, 0.5) as p50,
     quantile(response_time_ms, 0.90) as p90,
@@ -84,7 +87,7 @@ GROUP BY endpoint;
 
 ```sql
 -- Calculate rolling percentiles for API response times
-SELECT 
+SELECT
     endpoint as service,
     date_trunc('hour', timestamp) as hour,
     quantile(response_time_ms, ARRAY[0.5, 0.90, 0.95, 0.99]) as percentiles

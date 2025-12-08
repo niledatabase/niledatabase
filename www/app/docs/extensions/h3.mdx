@@ -1,15 +1,17 @@
 ---
-title: "H3"
-description: "H3 is a spatial indexing system developed by Uber."
+title: 'H3'
+description: 'H3 is a spatial indexing system developed by Uber.'
 ---
 
 The [h3-pg](https://github.com/zachasme/h3-pg) extension in PostgreSQL provides support for the **H3 spatial indexing system**, developed by Uber. H3 divides the world into hexagonal cells, where each cell has a unique identifier (called an H3 cell ID or H3 index). These hexagonal cells enable efficient geospatial operations and proximity searches.
 Your Nile database arrives with `H3` extension already installed and enabled.
 
 ## H3 Functions and Usage
+
 The `h3` extension provides several functions for working with H3 hexagonal cells.
 
 ### Converting Latitude/Longitude to H3 Cell ID
+
 You can convert a latitude/longitude coordinate into an H3 cell ID at a given resolution (0-15). Higher resolution numbers create smaller hexagons:
 
 ```sql
@@ -17,6 +19,7 @@ SELECT h3_lat_lng_to_cell(POINT('37.7749, -122.4194'), 9);
 ```
 
 ### Getting the Center Coordinates of an H3 Cell
+
 To retrieve the latitude and longitude of the center of an H3 cell:
 
 ```sql
@@ -24,6 +27,7 @@ SELECT h3_cell_to_lat_lng('8928308280fffff');
 ```
 
 ### Finding Neighboring H3 Cells
+
 To get the immediate neighbors of an H3 cell:
 
 ```sql
@@ -31,6 +35,7 @@ SELECT h3_grid_disk('8928308280fffff', 1);
 ```
 
 ### Finding the H3 Resolution of a Cell
+
 To determine the resolution of a given H3 cell index:
 
 ```sql
@@ -38,6 +43,7 @@ SELECT h3_get_resolution('8928308280fffff');
 ```
 
 ### Finding the Parent or Child Cells
+
 To get the parent or child H3 cells of a given resolution:
 
 ```sql
@@ -46,6 +52,7 @@ SELECT h3_cell_to_children('8928308280fffff', 10);
 ```
 
 ## Example: Storing H3 Indices in a Table
+
 A typical use case involves storing H3 cell indices (or cell IDs) for geospatial queries:
 
 ```sql
@@ -62,10 +69,11 @@ VALUES ('San Francisco', 37.7749, -122.4194, h3_lat_lng_to_cell(Point('37.7749, 
 ```
 
 ## Querying Locations by Proximity
+
 Find all locations within a given H3 ring distance:
 
 ```sql
-SELECT l.name 
+SELECT l.name
 FROM locations l
 JOIN LATERAL (
     SELECT h3_grid_disk(h3_lat_lng_to_cell(Point('37.7749, -122.4194'), 9), 1) AS h3_idx
@@ -74,15 +82,18 @@ ON l.h3_index = disk.h3_idx;
 ```
 
 ## Use Cases
+
 - **Geospatial clustering** for mapping applications.
 - **Proximity searches** for efficient location-based queries.
 - **Hierarchical geospatial analysis** for different zoom levels.
 
 ## Limitations
+
 - H3 cells are approximations of geographic areas and may not perfectly align with political boundaries.
 - Higher-resolution cells result in significantly more data points, increasing storage and computational requirements.
 
 ## Conclusion
+
 The `h3` extension in PostgreSQL enables powerful geospatial indexing and proximity searches using the H3 hexagonal grid system. It is particularly useful for geospatial applications requiring efficient location queries.
 
 For more details, refer to the [`h3-pg` GitHub repository](https://github.com/bytesandbrains/h3-pg).

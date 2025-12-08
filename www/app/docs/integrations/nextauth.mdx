@@ -1,7 +1,7 @@
 ---
-title: "NextAuth Authentication with Nile"
-sidebarTitle: "NextAuth"
-icon: "clock-nine"
+title: 'NextAuth Authentication with Nile'
+sidebarTitle: 'NextAuth'
+icon: 'clock-nine'
 ---
 
 This example shows how to use [NextAuth](https://next-auth.js.org/) with Nile's tenant management and isolation. NextAuth is a popular and easy to use authentication
@@ -195,9 +195,9 @@ Which we then use in our application.
 NextAuth SDK provides `signIn()` method that we call and it handles the login flow for us. We use it in [`app/pages.tsx`](https://github.com/niledatabase/niledatabase/blob/main/examples/user_management/NextAuth/app/page.tsx).
 
 ```javascript
-import { signIn } from "next-auth/react";
+import { signIn } from 'next-auth/react';
 
-<Button onClick={() => signIn("github", { callbackUrl: "/tenants" })}>
+<Button onClick={() => signIn('github', { callbackUrl: '/tenants' })}>
   Sign in with Github
 </Button>;
 ```

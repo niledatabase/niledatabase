@@ -1,9 +1,9 @@
-import { cookies } from "next/headers";
-import { nile } from "../[...nile]/nile";
+import { cookies } from 'next/headers';
+import { nile } from '../[...nile]/nile';
 
 export async function GET() {
   const currentUser = await nile.users.getSelf();
-  console.log("currentUser", currentUser);
+  console.log('currentUser', currentUser);
   if (currentUser instanceof Response) {
     return Response.json({ userID: null, error: currentUser.text() });
   }

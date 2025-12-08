@@ -1,15 +1,17 @@
 ---
-title: "HLL"
-description: "Probabilistic data structure that estimates the number of unique elements in a set."
+title: 'HLL'
+description: 'Probabilistic data structure that estimates the number of unique elements in a set.'
 ---
+
 The [hll](https://github.com/citusdata/postgresql-hll) extension in PostgreSQL provides a **HyperLogLog** data structure for **approximate distinct counting**. It is highly efficient for estimating the number of unique elements in large datasets while using minimal memory.
 Your Nile database arrives with `hll` extension already enabled.
 
-Let's create a sample analytics system that efficiently tracks unique user interactions. 
-We'll use a fact table to store raw events and leverage **HLL (HyperLogLog)** for efficient approximate distinct 
+Let's create a sample analytics system that efficiently tracks unique user interactions.
+We'll use a fact table to store raw events and leverage **HLL (HyperLogLog)** for efficient approximate distinct
 counting in our aggregated statistics. This pattern is common in analytics systems where you need to track unique users across different time periods while maintaining reasonable storage and query performance.
 
 ## Creating and Populating `events` Table
+
 Let's create a sample table to store unique user interactions, using **HLL** for approximate distinct counts:
 
 ```sql
@@ -34,8 +36,8 @@ CREATE TABLE daily_event_stats (
 );
 
 -- Insert some raw events
-INSERT INTO event_facts (tenant_id, event_timestamp, user_id, event_type) 
-VALUES 
+INSERT INTO event_facts (tenant_id, event_timestamp, user_id, event_type)
+VALUES
     ('123e4567-e89b-12d3-a456-426614174000', '2024-03-01 10:00:00', 1, 'click'),
     ('123e4567-e89b-12d3-a456-426614174000', '2024-03-01 10:05:00', 2, 'click'),
     ('123e4567-e89b-12d3-a456-426614174000', '2024-03-01 10:10:00', 3, 'click'),
@@ -47,7 +49,7 @@ VALUES
 -- Aggregate the raw events into daily stats using HLL
 SET nile.tenant_id = '123e4567-e89b-12d3-a456-426614174000';
 INSERT INTO daily_event_stats
-SELECT 
+SELECT
     tenant_id,
     date_trunc('day', event_timestamp)::DATE as event_date,
     event_type,
@@ -57,20 +59,24 @@ GROUP BY tenant_id,date_trunc('day', event_timestamp)::DATE, event_type;
 ```
 
 ### Understanding HLL Hashing
+
 Before values can be added to an HLL data structure, they must first be hashed. The `hll` extension provides several hashing functions for different data types:
+
 - `hll_hash_integer(value)` - for integer values
 - `hll_hash_text(value)` - for text values
 - `hll_hash_bytea(value)` - for binary data
 - `hll_hash_any(value)` - for other data types
 
 These hash functions convert the input values into consistent hash values that the HLL algorithm can process. Hashing ensures that:
+
 1. Values are uniformly distributed
 2. The same input always produces the same hash
 3. Different inputs are likely to produce different hashes
 
 ## Approximate Counting with HLL - Estimating the Number of Unique Users
-Here's how to estimate the number of unique users for each event type across all dates. 
-Note that you can't simply add up the HLL values to get the total distinct count, as this would double-count users. 
+
+Here's how to estimate the number of unique users for each event type across all dates.
+Note that you can't simply add up the HLL values to get the total distinct count, as this would double-count users.
 Instead, you need to use the `hll_union_agg` function:
 
 ```sql
@@ -80,17 +86,20 @@ GROUP BY event_type;
 ```
 
 ## Use Cases
+
 - **Efficient distinct counting** for large-scale analytics.
 - **Web traffic analysis** (e.g., unique visitors per day).
 - **Approximate user engagement tracking**.
 - **Optimized analytics dashboards** that require fast estimations.
 
 ## Limitations
+
 - HyperLogLog provides an **approximate** distinct count, not an exact value.
 - The accuracy of estimates depends on the **HLL precision settings**.
 - Cannot retrieve individual elements once they are added to an HLL aggregate.
 
 ## Conclusion
+
 The `hll` extension in PostgreSQL is an efficient solution for large-scale distinct counting, offering fast and memory-efficient approximations. It is particularly useful for analytics and tracking unique values over time.
 
 For more details, refer to the [`hll` GitHub repository](https://github.com/citusdata/postgresql-hll).

@@ -1,10 +1,11 @@
 ---
-title: "BetterAuth"
-sidebarTitle: "BetterAuth"
-description: "Integrate BetterAuth with Postgres"
-icon: "clock"
+title: 'BetterAuth'
+sidebarTitle: 'BetterAuth'
+description: 'Integrate BetterAuth with Postgres'
+icon: 'clock'
 ---
-A Next.js-based authentication project using the Better-Auth plugin for organizations, adapted to work with the Nile database. 
+
+A Next.js-based authentication project using the Better-Auth plugin for organizations, adapted to work with the Nile database.
 While we can use the Better-Auth organization plugin with Nile without modifications, doing so loses the tenant isolation features that Nile offers.
 
 For the Better-Auth organization plugin to work with Nile, we need to achieve the following 4 things:
@@ -27,6 +28,7 @@ For the Better-Auth organization plugin to work with Nile, we need to achieve th
 
     To store user information, optionally, we can use the integrated users table from Nile instead of the user table used by Better-Auth. While this does not affect Nile's operation, using the users table prevents having two tables performing the same function.
     To use these tables, we simply define a custom schema for the plugin in the auth.ts file.
+
   </Step>
 
   <Step title="Consider foreign key and unique constraints when using Nile">
@@ -46,16 +48,21 @@ For the Better-Auth organization plugin to work with Nile, we need to achieve th
 
     Foreign keys: To adapt foreign keys to Nile while considering the limitations of shared tables, the user reference is moved to a table that is isolated. See images for details.
 
-    Better-Auth Plugin Table Relationships 
+    Better-Auth Plugin Table Relationships
     <img src="/images/tablerelationship.png" width="400" height="400"/>
 
     Custom Relationships: The users table remains shared, so it will have no foreign keys.
     <img src="/images/customrelationship.webp" width="400" height="400"/>
+
   </Step>
 
-  <Step title="Make the organization plugin work with UUID instead of nanoid">
-    Although Better-Auth provides a function to generate custom IDs, it currently does not work with the plugins. To fix this, we modify the function used to generate the ID.
-  </Step>
+{" "}
+
+<Step title="Make the organization plugin work with UUID instead of nanoid">
+  Although Better-Auth provides a function to generate custom IDs, it currently
+  does not work with the plugins. To fix this, we modify the function used to
+  generate the ID.
+</Step>
 
   <Step title="Modify some CRUD operations to adapt to using composite primary keys">
     To do this, we need to add the tenant_id reference to some CRUD operations. For example, we change from:
@@ -83,6 +90,7 @@ For the Better-Auth organization plugin to work with Nile, we need to achieve th
     ```
 
     Modify the role type to be compatible with Nile: In the Better-Auth plugin, organization member roles are stored as strings, whereas Nile stores them as an array. To use the roles column integrated in Nile, we modify how Better-Auth stores roles, for example, changing from "admin" to ['admin'].
+
   </Step>
 </Steps>
 
@@ -91,9 +99,9 @@ For the Better-Auth organization plugin to work with Nile, we need to achieve th
 1. Run the migrations.sql in your Nile console [see](https://github.com/aris-2/better-auth-nile/blob/main/apps/demo/lib/migrations.sql).
 
 2. Run npm install better-auth-nile.
-  
+
 3. Configure the environment variables.
-  
+
 4. Configure custom ID generation in your auth.ts to use UUID [see](https://github.com/aris-2/better-auth-nile/blob/main/apps/demo/lib/auth.ts).
 
 5. Define a custom schema for the users table, which will allow using Nile's users table [see](https://github.com/aris-2/better-auth-nile/blob/main/apps/demo/lib/auth.ts).

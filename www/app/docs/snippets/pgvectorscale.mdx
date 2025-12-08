@@ -1,4 +1,3 @@
-
 The `pgvectorscale` extension adds diskANN index support for pgvector.
 This extension is useful in cases where `pgvector`'s `hnsw` index does not fit into available memory and as a result the ANN search does not perform as expected.
 
@@ -10,7 +9,7 @@ This extension is useful in cases where `pgvector`'s `hnsw` index does not fit i
 
 ## Example: DiskANN index on shared table
 
-To keep the example readable we'll work with **3-dimensional vectors**. 
+To keep the example readable we'll work with **3-dimensional vectors**.
 Swap `VECTOR(3)` for `VECTOR(768)` or `VECTOR(1536)` in real apps.
 
 ```sql
@@ -86,6 +85,7 @@ Label-based filtering is a technique that allows you to filter the results of an
 Other filters are supported, but will use pgvector's post-filtering (i.e. after the ANN search).
 
 In order to use label based filtering, you need to:
+
 - Create a label column in your table. It has to be an array of `smallint`s. Other types will revert to using the post-filtering.
 - Create a diskann index that uses both the embedding and the label column.
 - Use the `&&` (array intersection) operator in search queries.
@@ -149,4 +149,5 @@ LIMIT 5;
 - DiskANN is best suited for datasets where `hnsw` index would be too large to fit into memory. For smaller datasets, `hnsw` is still a good choice.
 
 ## Additional Resources
+
 [Pgvectorscale github repository](https://github.com/timescale/pgvectorscale)

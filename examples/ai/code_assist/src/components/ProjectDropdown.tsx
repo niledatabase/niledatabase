@@ -1,6 +1,6 @@
 // components/ProjectDropdown.tsx
-import React from "react";
-import { Select, Option } from "@mui/joy";
+import React from 'react';
+import { Select, Option } from '@mui/joy';
 
 interface ProjectDropdownProps {
   projects: { id: string; name: string }[];

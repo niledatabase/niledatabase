@@ -1,6 +1,6 @@
 ---
-title: "Cohere Embedding Models"
-sidebarTitle: "Cohere"
+title: 'Cohere Embedding Models'
+sidebarTitle: 'Cohere'
 ---
 
 ## Availble models
@@ -8,9 +8,9 @@ sidebarTitle: "Cohere"
 Cohere has multiple models with various sizes and languages, here's the one we use in our example.
 You can replace it with any embedding model supported by Cohere:
 
-| Model               | Dimensions | Max Tokens | Cost               | MTEB Avg Score | Similarity Metrics |
-|---------------------|------------|------------|--------------------|----------------|---------------------|
-| embed-english-v3.0 | 1024       | 512        | $0.10 / 1M Tokens  | 64.5           | cosine              |
+| Model              | Dimensions | Max Tokens | Cost              | MTEB Avg Score | Similarity Metrics |
+| ------------------ | ---------- | ---------- | ----------------- | -------------- | ------------------ |
+| embed-english-v3.0 | 1024       | 512        | $0.10 / 1M Tokens | 64.5           | cosine             |
 
 ## Usage
 
@@ -27,14 +27,14 @@ npm install @niledatabase/server cohere-ai
 ### Generating embeddings with Cohere
 
 ```javascript
-const { CohereClient } = require("cohere-ai");
-const COHERE_API_KEY = "your cohere api key";
+const { CohereClient } = require('cohere-ai');
+const COHERE_API_KEY = 'your cohere api key';
 
 const cohere = new CohereClient({
   token: COHERE_API_KEY,
 });
 
-const model = "embed-english-v3.0"; // replace with your favorite cohere model
+const model = 'embed-english-v3.0'; // replace with your favorite cohere model
 
 const input_text = `The future belongs to those who believe in the beauty of their 
                     dreams.`;
@@ -42,15 +42,15 @@ const input_text = `The future belongs to those who believe in the beauty of the
 const doc_vec_resp = await cohere.embed({
   texts: [input_text], // you can pass multiple texts to embed in one batch call
   model: model,
-  inputType: "search_document", // for embedding of documents stored in pg_vector
+  inputType: 'search_document', // for embedding of documents stored in pg_vector
 });
 
-const question = "Who does the future belong to?";
+const question = 'Who does the future belong to?';
 
 const question_vec_resp = await cohere.embed({
   texts: [question],
   model: model,
-  inputType: "search_query", // for embedding of questions used to search documents
+  inputType: 'search_query', // for embedding of questions used to search documents
 });
 
 // Cohere's response is an object with an array of vector embeddings
@@ -63,23 +63,23 @@ const question_vec = question_vec_resp.embeddings[0];
 
 ```javascript
 // set up Nile as the vector store
-const { Nile } = await import("@niledatabase/server");
-const NILEDB_USER = "you need a nile user with access to a nile database";
-const NILEDB_PASSWORD = "and a password for that user";
+const { Nile } = await import('@niledatabase/server');
+const NILEDB_USER = 'you need a nile user with access to a nile database';
+const NILEDB_PASSWORD = 'and a password for that user';
 const nile = Nile({
   user: NILEDB_USER,
   password: NILEDB_PASSWORD,
 });
 
 // store vector in a table
-await nile.db.query("INSERT INTO embeddings (embedding) values ($1)", [
+await nile.db.query('INSERT INTO embeddings (embedding) values ($1)', [
   JSON.stringify(doc_vec.map((v) => Number(v))),
 ]);
 
 // search for similar vectors
 let db_resp = await nile.db.query(
-  "select embedding from embeddings order by embedding<=>$1 limit 1",
-  [JSON.stringify(question_vec.map((v) => Number(v)))]
+  'select embedding from embeddings order by embedding<=>$1 limit 1',
+  [JSON.stringify(question_vec.map((v) => Number(v)))],
 );
 
 // Postgres returns an object, with array of rows each column is a
@@ -87,7 +87,7 @@ let db_resp = await nile.db.query(
 let similar_str = db_resp.rows[0].embedding;
 let similar = similar_str
   .substring(1, similar_str.length - 1)
-  .split(",")
+  .split(',')
   .map((v) => parseFloat(v));
 
 // check that we got the same vector back
@@ -99,5 +99,5 @@ for (let i = 0; i < similar.length; i++) {
   }
 }
 
-console.log("got same vector? " + same);
+console.log('got same vector? ' + same);
 ```

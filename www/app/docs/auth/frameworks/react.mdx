@@ -19,52 +19,49 @@ npm install @niledatabase/react @niledatabase/client
 `<SignedIn />` will only render children if the user is logged in. Conversely, `<SignedOut />` will always render its children unless signed in.
 
 ```jsx
-<SignedIn>
-   Jerry, hello!
-</SignedIn>
+<SignedIn>Jerry, hello!</SignedIn>
 ```
+
 ```jsx
-<SignedOut>
-  No soup for you!
-</SignedOut>
+<SignedOut>No soup for you!</SignedOut>
 ```
 
 It is also possible to be explicit and obtain the session server side. To do that, you would use the following:
 
 ```jsx
-import { SignedIn } from "@niledatabase/react";
-import { nile } from "@/lib/nile";
+import { SignedIn } from '@niledatabase/react';
+import { nile } from '@/lib/nile';
 
 export default async function SignUpPage() {
-  const nileCtx = nile.withContext({ headers }) // headers from request
-  const session = await nileCtx.auth.getSession(); 
+  const nileCtx = nile.withContext({ headers }); // headers from request
+  const session = await nileCtx.auth.getSession();
 
   if (session.status === 'unauthenticated') {
-    return <div>No soup for you!</div>
+    return <div>No soup for you!</div>;
   }
 
-  return (
-    <SignedIn session={session}>
-      Jerry, hello!
-    </SignedIn>
-  );
+  return <SignedIn session={session}>Jerry, hello!</SignedIn>;
 }
 ```
 
 ## Functions
 
 ### signIn
+
 makes a `POST` request to the sign in endpoint. Expects a provider, and optional params for `callbackUrl`. For the cases of `credentials` (email + password) and `email`, you can opt out of redirection by passing `redirect: false` in the options
-```jsx
-signIn('google', { callbackUrl: '/dashboard' })
-signIn('credentials', { callbackUrl: '/dashboard' })
-```
-### signOut
-makes a `POST` request to the sign out endpoint, with an optional params for `callbackUrl` to redirect the user, and `redirect` to leave the user on the page, but delete the session and notify the session providers the user has been logged out. 
 
 ```jsx
-signOut({ callbackUrl: '/sign-in' }) // go back to some sign in page
-signOut({ redirect: false }) // Log out, leave the user on the page they're on
+signIn('google', { callbackUrl: '/dashboard' });
+signIn('credentials', { callbackUrl: '/dashboard' });
+```
+
+### signOut
+
+makes a `POST` request to the sign out endpoint, with an optional params for `callbackUrl` to redirect the user, and `redirect` to leave the user on the page, but delete the session and notify the session providers the user has been logged out.
+
+```jsx
+signOut({ callbackUrl: '/sign-in' }); // go back to some sign in page
+signOut({ redirect: false }); // Log out, leave the user on the page they're on
 ```
 
 ## Hooks
@@ -74,24 +71,22 @@ signOut({ redirect: false }) // Log out, leave the user on the page they're on
 You can obtain the current session via `useSession()`. This must be called within a `<SignedIn />` or `<SignedOut />` provider.
 
 ```jsx
-import { useSession, UserInfo } from "@niledatabase/react";
+import { useSession, UserInfo } from '@niledatabase/react';
 
 export default function SignUpPage() {
   const session = useSession();
 
   if (session.status !== 'authenticated') {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
-  return (
-    <UserInfo />
-  );
+  return <UserInfo />;
 }
 ```
 
 ### useTenantId
 
-The `useTenantId` hook manages the current tenant ID, persisting it in cookies and refetching tenant data when necessary. A tenant id is accessible via `document.cookie` with the name `nile.tenant_id`. This cookie is used by the server side SDK to make requests to the auth service. 
+The `useTenantId` hook manages the current tenant ID, persisting it in cookies and refetching tenant data when necessary. A tenant id is accessible via `document.cookie` with the name `nile.tenant_id`. This cookie is used by the server side SDK to make requests to the auth service.
 
 ```tsx
 import { useTenantId } from '@niledatabase/react';
@@ -110,16 +105,16 @@ export default function TenantSelector() {
 }
 ```
 
-| Value        | Type                             | Description |
-|-------------|----------------------------------|-------------|
-| `tenantId`  | `string \| undefined`           | The current tenant ID. |
-| `setTenantId` | `(tenant: string) => void`   | Function to update the tenant ID. |
+| Value         | Type                       | Description                       |
+| ------------- | -------------------------- | --------------------------------- |
+| `tenantId`    | `string \| undefined`      | The current tenant ID.            |
+| `setTenantId` | `(tenant: string) => void` | Function to update the tenant ID. |
 
+| Name     | Type                             | Default     | Description                  |
+| -------- | -------------------------------- | ----------- | ---------------------------- |
+| `params` | `HookProps & { tenant: Tenant }` | `undefined` | Initial tenant data.         |
+| `client` | `QueryClient`                    | `undefined` | React Query client instance. |
 
-| Name        | Type                            | Default | Description |
-|------------|---------------------------------|---------|-------------|
-| `params`   | `HookProps & { tenant: Tenant }` | `undefined` | Initial tenant data. |
-| `client`   | `QueryClient`                   | `undefined` | React Query client instance. |
 ```ts
 export type HookProps = {
   tenants?: Tenant[]; // a list of tenants
@@ -127,6 +122,7 @@ export type HookProps = {
   baseUrl?: string; // fetch origin
 };
 ```
+
 - Initializes the tenant ID from `params.tenant.id`, if provided.
 - If no tenant is found, it attempts to read from a cookie (`nile.tenant_id`).
 - If no cookie exists, it triggers a refetch of tenants.
@@ -135,7 +131,6 @@ export type HookProps = {
 ### useTenants
 
 The `useTenants` hook fetches a list of tenants from an API endpoint using React Query. It supports optional preloaded data and can be disabled to prevent automatic queries.
-
 
 ```tsx
 import { useTenants } from '@niledatabase/react';
@@ -158,19 +153,19 @@ export default function TenantList() {
 
 This hook returns the result of `useQuery`, which includes:
 
-| Property   | Type                | Description |
-|------------|---------------------|-------------|
-| `data`     | `Tenant[] \| undefined` | List of tenants. |
-| `isLoading` | `boolean`           | `true` while fetching data. |
-| `error`    | `Error \| null`      | Fetch error, if any. |
-| `refetch`  | `() => void`         | Function to manually refetch tenants. |
+| Property    | Type                    | Description                           |
+| ----------- | ----------------------- | ------------------------------------- |
+| `data`      | `Tenant[] \| undefined` | List of tenants.                      |
+| `isLoading` | `boolean`               | `true` while fetching data.           |
+| `error`     | `Error \| null`         | Fetch error, if any.                  |
+| `refetch`   | `() => void`            | Function to manually refetch tenants. |
 
 **Parameters**
 
-| Name          | Type                                        | Default     | Description |
-|--------------|-------------------------------------------|-------------|-------------|
-| `params`     | `HookProps & { disableQuery?: boolean }`  | `undefined` | Hook configuration options. |
-| `client`     | `QueryClient`                             | `undefined` | Optional React Query client instance. |
+| Name     | Type                                     | Default     | Description                           |
+| -------- | ---------------------------------------- | ----------- | ------------------------------------- |
+| `params` | `HookProps & { disableQuery?: boolean }` | `undefined` | Hook configuration options.           |
+| `client` | `QueryClient`                            | `undefined` | Optional React Query client instance. |
 
 ```ts
 export type HookProps = {
@@ -207,15 +202,13 @@ export default function Login() {
 }
 ```
 
-
-| Name          | Type                          | Default  | Description |
-|--------------|------------------------------|----------|-------------|
-| `onSuccess`  | `(data: Response) => void`   | `undefined` | Callback after a successful sign-in. |
-| `onError`    | `(error: Error) => void`     | `undefined` | Callback if sign-in fails. |
+| Name           | Type                       | Default     | Description                              |
+| -------------- | -------------------------- | ----------- | ---------------------------------------- |
+| `onSuccess`    | `(data: Response) => void` | `undefined` | Callback after a successful sign-in.     |
+| `onError`      | `(error: Error) => void`   | `undefined` | Callback if sign-in fails.               |
 | `beforeMutate` | `(data: any) => any`       | `undefined` | Function to modify data before mutation. |
-| `callbackUrl` | `string`                    | `undefined` | URL to redirect after login. |
-| `redirect`   | `boolean`                    | `false`  | Whether to redirect after login. |
-
+| `callbackUrl`  | `string`                   | `undefined` | URL to redirect after login.             |
+| `redirect`     | `boolean`                  | `false`     | Whether to redirect after login.         |
 
 - Calls `signIn('email', data)` with optional modifications via `beforeMutate`.
 - Throws an error if authentication fails.
@@ -238,10 +231,10 @@ export default function Profile() {
 }
 ```
 
-| Name       | Type                          | Default       | Description |
-|------------|-------------------------------|---------------|-------------|
-| `fetchUrl` | `string`                      | `/api/me`     | API endpoint to fetch the user data. |
-| `user`     | `User \| undefined \| null` | `undefined`   | Initial user data, avoids fetching if provided. |
+| Name       | Type                        | Default     | Description                                     |
+| ---------- | --------------------------- | ----------- | ----------------------------------------------- |
+| `fetchUrl` | `string`                    | `/api/me`   | API endpoint to fetch the user data.            |
+| `user`     | `User \| undefined \| null` | `undefined` | Initial user data, avoids fetching if provided. |
 
 - If a `user` is passed in props, it is set immediately.
 - If `user` is not provided, the hook fetches from `fetchUrl` and updates the state.
@@ -250,7 +243,6 @@ export default function Profile() {
 ### useResetPassword
 
 The `useResetPassword` hook provides a way to handle password reset functionality. It sends reset requests to an authentication API and supports optional callbacks and preprocessing of request data.
-
 
 ```tsx
 import { useResetPassword } from '@niledatabase/react';
@@ -271,16 +263,21 @@ export default function ResetPasswordForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="email" name="email" required placeholder="Enter your email" />
+      <input
+        type="email"
+        name="email"
+        required
+        placeholder="Enter your email"
+      />
       <button type="submit">Reset Password</button>
     </form>
   );
 }
 ```
 
-| Name           | Type                                        | Default     | Description |
-|---------------|-------------------------------------------|-------------|-------------|
-| `params`      | `Params`                                  | `undefined` | Hook configuration options. |
+| Name     | Type     | Default     | Description                 |
+| -------- | -------- | ----------- | --------------------------- |
+| `params` | `Params` | `undefined` | Hook configuration options. |
 
 ```ts
 export type Params = {
@@ -299,8 +296,8 @@ export type Params = {
 - Runs a CSRF request when the hook is initialized.
 - Allows modifying data before sending using `beforeMutate`.
 
-
 ### useSignUp
+
 The `useSignUp` hook provides a way to handle user sign-up requests. It supports tenant creation, API customization, and session updates after successful registration.
 
 ```tsx
@@ -332,10 +329,10 @@ export default function SignUpForm() {
 }
 ```
 
-| Name           | Type                                    | Default     | Description |
-|---------------|----------------------------------------|-------------|-------------|
-| `params`      | `Props`                                | `undefined` | Hook configuration options. |
-| `client`      | `QueryClient` (optional)              | `undefined` | React Query client instance. |
+| Name     | Type                     | Default     | Description                  |
+| -------- | ------------------------ | ----------- | ---------------------------- |
+| `params` | `Props`                  | `undefined` | Hook configuration options.  |
+| `client` | `QueryClient` (optional) | `undefined` | React Query client instance. |
 
 ```ts
 export type Props = {
@@ -398,11 +395,9 @@ export default function SignInForm() {
 }
 ```
 
-
-| Name          | Type                                  | Default       | Description |
-|--------------|--------------------------------------|---------------|-------------|
-| `params`     | `Props`                              | `undefined`   | Hook configuration options. |
-
+| Name     | Type    | Default     | Description                 |
+| -------- | ------- | ----------- | --------------------------- |
+| `params` | `Props` | `undefined` | Hook configuration options. |
 
 ```ts
 export type Props = {
@@ -412,7 +407,6 @@ export type Props = {
   callbackUrl?: string;
 };
 ```
-
 
 ```ts
 export type LoginInfo = {
@@ -431,4 +425,4 @@ export type LoginInfo = {
 ## Related Topics
 
 - [Next.js Integration](/auth/frameworks/nextjs)
-- [Components](/auth/components/signin) 
+- [Components](/auth/components/signin)

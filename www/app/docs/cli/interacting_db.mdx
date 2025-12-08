@@ -2,6 +2,7 @@
 title: 'Interacting with Database'
 icon: 'database'
 ---
+
 The Nile CLI provides a powerful set of commands for managing your databases. With the CLI, you can create, delete, and manage databases, connect to them using standard PostgreSQL tools, and more.
 
 ```bash
@@ -9,6 +10,7 @@ nile db [command] [options]
 ```
 
 Available commands:
+
 - `list` - View all databases
 - `show` - Display database details
 - `create` - Create a new database
@@ -35,7 +37,8 @@ nile config --workspace test
 <img height="50" src="/images/nilesetworkspace.png" />
 
 <Note>
-The workspace can also be set using the `NILE_WORKSPACE` environment variable or by using the flag `--workspace` in the command.
+  The workspace can also be set using the `NILE_WORKSPACE` environment variable
+  or by using the flag `--workspace` in the command.
 </Note>
 
 ## Listing Databases
@@ -48,10 +51,10 @@ nile db list [options]
 
 ### Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--format` | Output format (human, json, csv) | human |
-| `--workspace` | Specific workspace to list from | Current workspace |
+| Flag          | Description                      | Default           |
+| ------------- | -------------------------------- | ----------------- |
+| `--format`    | Output format (human, json, csv) | human             |
+| `--workspace` | Specific workspace to list from  | Current workspace |
 
 ### Examples
 
@@ -65,6 +68,7 @@ nile db list --format json
 # Specific workspace
 nile db list --workspace test
 ```
+
 <img height="100" src="/images/niledblist.png" />
 
 ## Setting active database in config
@@ -93,9 +97,9 @@ nile db show [databaseName] [options]
 
 ### Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--format` | Output format (human, json, csv) | human |
+| Flag          | Description                       | Default           |
+| ------------- | --------------------------------- | ----------------- |
+| `--format`    | Output format (human, json, csv)  | human             |
 | `--workspace` | Workspace containing the database | Current workspace |
 
 ### Examples
@@ -123,10 +127,10 @@ nile db regions [options]
 
 ### Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--format` | Output format (human, json, csv) | human |
-| `--workspace` | Workspace to list regions for | Current workspace |
+| Flag          | Description                      | Default           |
+| ------------- | -------------------------------- | ----------------- |
+| `--format`    | Output format (human, json, csv) | human             |
+| `--workspace` | Workspace to list regions for    | Current workspace |
 
 ### Examples
 
@@ -153,17 +157,17 @@ nile db create [options]
 
 ### Required Options
 
-| Flag | Description |
-|------|-------------|
-| `--name` | Name for the new database |
+| Flag       | Description                      |
+| ---------- | -------------------------------- |
+| `--name`   | Name for the new database        |
 | `--region` | Region to create the database in |
 
 ### Additional Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--format` | Output format (human, json, csv) | human |
-| `--workspace` | Workspace to create in | Current workspace |
+| Flag          | Description                      | Default           |
+| ------------- | -------------------------------- | ----------------- |
+| `--format`    | Output format (human, json, csv) | human             |
+| `--workspace` | Workspace to create in           | Current workspace |
 
 ### Examples
 
@@ -174,6 +178,7 @@ nile db create --name myapp_db --region AWS_US_WEST_2
 # Create in specific workspace
 nile db create --name prod_db --region AWS_US_WEST_2 --workspace test
 ```
+
 Use the nile db region command to see the available regions.
 After creating the db, you can use the nile db show command to see the database details. You also want to set the config to the db you just created.
 
@@ -189,9 +194,9 @@ nile db delete [databaseName] [options]
 
 ### Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--force` | Skip confirmation prompt | false |
+| Flag          | Description                       | Default           |
+| ------------- | --------------------------------- | ----------------- |
+| `--force`     | Skip confirmation prompt          | false             |
 | `--workspace` | Workspace containing the database | Current workspace |
 
 ### Examples
@@ -217,15 +222,15 @@ nile db psql [databaseName] [options]
 
 ### Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
+| Flag          | Description                       | Default           |
+| ------------- | --------------------------------- | ----------------- |
 | `--workspace` | Workspace containing the database | Current workspace |
 
 ### Examples
 
 ```bash PSQL Examples
 # Connect to database using the config
-nile db psql 
+nile db psql
 
 # Connect in specific db and workspace
 nile db psql --name determined_house --workspace test
@@ -257,23 +262,24 @@ The `copy` command allows you to import data from files into database tables. Th
 ```bash
 nile db copy [options]
 ```
+
 <img height="100" src="/images/niledbcopy.png" />
 
 ### Required Options
 
-| Flag | Description |
-|------|-------------|
+| Flag           | Description                                       |
+| -------------- | ------------------------------------------------- |
 | `--table-name` | Name of the target table (must exist in database) |
-| `--format` | File format (csv or text) |
-| `--file-name` | Path to the input file |
+| `--format`     | File format (csv or text)                         |
+| `--file-name`  | Path to the input file                            |
 
 ### Additional Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--delimiter` | Column delimiter character | comma for CSV |
+| Flag            | Description                          | Default               |
+| --------------- | ------------------------------------ | --------------------- |
+| `--delimiter`   | Column delimiter character           | comma for CSV         |
 | `--column-list` | Comma-separated list of column names | All columns from file |
-| `--debug` | Show detailed progress information | false |
+| `--debug`       | Show detailed progress information   | false                 |
 
 ### Examples
 
@@ -292,6 +298,7 @@ nile db copy --table-name products --format csv --file-name products.csv --debug
 ```
 
 ### Features
+
 - Shows progress bar with completion status and import speed
 - Supports CSV files with headers
 - Allows custom column mapping
@@ -299,7 +306,8 @@ nile db copy --table-name products --format csv --file-name products.csv --debug
 - Processes data in batches for optimal performance
 
 <Note>
-Make sure your target table exists and has the correct schema before running the import. The columns in your input file should match the table's structure.
+  Make sure your target table exists and has the correct schema before running
+  the import. The columns in your input file should match the table's structure.
 </Note>
 
 ## Common Workflows
@@ -368,4 +376,4 @@ nile db help psql
 - [Connecting to Nile](./connect_nile) - Authentication guide
 - [Working with Tenants](./managing_tenants) - Tenant management
 - [Configuration](./setting_configs) - CLI configuration
-- [Workspaces](./managing_workspaces) - Workspace management 
+- [Workspaces](./managing_workspaces) - Workspace management

@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-type TabName = "nile.ts" | "route.ts" | "page.jsx";
+type TabName = 'nile.ts' | 'route.ts' | 'page.jsx';
 
 function highlightCode(code: string): string {
   const escapeHtml = (str: string) => {
     return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   };
 
-  const lines = code.split("\n");
+  const lines = code.split('\n');
   const lineNumbers = lines
     .map(
       (_, i) =>
         `<span class="select-none text-[#636669] w-[40px] inline-block text-right pr-4">${
           i + 1
-        }</span>`
+        }</span>`,
     )
-    .join("\n");
+    .join('\n');
 
   const highlightedCode = lines
     .map((line) => {
@@ -33,27 +33,27 @@ function highlightCode(code: string): string {
         // Keywords
         .replace(
           /\b(const|let|var|return|export|default|async|await|function|import|from)\b/g,
-          '<span style="color: #E06C75">$1</span>'
+          '<span style="color: #E06C75">$1</span>',
         )
         // Built-in objects and types
         .replace(
           /\b(Promise|String|Number|Boolean|Object|Array|RegExp)\b/g,
-          '<span style="color: #E5C07B">$1</span>'
+          '<span style="color: #E5C07B">$1</span>',
         )
         // JSX Components and HTML tags
         .replace(
           /(&lt;\/?)([\w-]+)/g,
-          '$1<span style="color: #E06C75">$2</span>'
+          '$1<span style="color: #E06C75">$2</span>',
         )
         // JSX props
         .replace(
           /\b(\w+)=(&quot;|&#039;)/g,
-          '<span style="color: #D19A66">$1</span>=$2'
+          '<span style="color: #D19A66">$1</span>=$2',
         )
         // String literals
         .replace(
           /(&quot;.*?&quot;|&#039;.*?&#039;)/g,
-          '<span style="color: #98C379">$1</span>'
+          '<span style="color: #98C379">$1</span>',
         )
         // Imports and exports
         .replace(/({[^}]+})/g, '<span style="color: #61AFEF">$1</span>')
@@ -64,22 +64,22 @@ function highlightCode(code: string): string {
 
       return highlighted;
     })
-    .join("\n");
+    .join('\n');
 
   return `<div class="flex">\n<div class="line-numbers">${lineNumbers}</div>\n<div class="code-content">${highlightedCode}</div>\n</div>`;
 }
 
 const codeExamples: Record<TabName, string> = {
-  "nile.ts": `import { Nile } from "@niledatabase/server";
+  'nile.ts': `import { Nile } from "@niledatabase/server";
 
 export const nile = await Nile();
 export const { handlers } = nile.api;`,
 
-  "route.ts": `import { handlers } from "./nile";
+  'route.ts': `import { handlers } from "./nile";
 
 export const { POST, GET, DELETE, PUT } = handlers;`,
 
-  "page.jsx": `import {
+  'page.jsx': `import {
   SignOutButton,
   SignUpForm,
   SignedIn,
@@ -105,7 +105,7 @@ export default function SignUpPage() {
 };
 
 export default function CodeEditor() {
-  const [activeTab, setActiveTab] = useState<TabName>("page.jsx");
+  const [activeTab, setActiveTab] = useState<TabName>('page.jsx');
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {
@@ -117,24 +117,24 @@ export default function CodeEditor() {
 
   return (
     <div className="lg:w-1/2">
-      <div className="bg-[#1a1a1a] rounded-xl overflow-hidden border border-[#2a2a2a]">
+      <div className="overflow-hidden rounded-xl border border-[#2a2a2a] bg-[#1a1a1a]">
         {/* Mac-style window header */}
-        <div className="bg-[#141414] px-4 py-2 flex items-center">
-          <div className="flex gap-2 items-center">
-            <div className="w-3 h-3 rounded-full bg-[#FF5F57]"></div>
-            <div className="w-3 h-3 rounded-full bg-[#FEBC2E]"></div>
-            <div className="w-3 h-3 rounded-full bg-[#28C840]"></div>
+        <div className="flex items-center bg-[#141414] px-4 py-2">
+          <div className="flex items-center gap-2">
+            <div className="h-3 w-3 rounded-full bg-[#FF5F57]"></div>
+            <div className="h-3 w-3 rounded-full bg-[#FEBC2E]"></div>
+            <div className="h-3 w-3 rounded-full bg-[#28C840]"></div>
           </div>
           {/* Tabs */}
-          <div className="flex gap-4 ml-6">
+          <div className="ml-6 flex gap-4">
             {(Object.keys(codeExamples) as TabName[]).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`px-3 py-1 text-sm transition-colors ${
                   activeTab === tab
-                    ? "bg-[#1a1a1a] rounded-md text-white/90"
-                    : "text-white/40 hover:text-white/60"
+                    ? 'rounded-md bg-[#1a1a1a] text-white/90'
+                    : 'text-white/40 hover:text-white/60'
                 }`}
               >
                 {tab}
@@ -143,10 +143,10 @@ export default function CodeEditor() {
           </div>
         </div>
         {/* Code content */}
-        <div className="p-6 font-mono text-sm relative group">
+        <div className="group relative p-6 font-mono text-sm">
           <button
             onClick={copyToClipboard}
-            className="absolute top-8 right-8 p-2 rounded-md bg-[#2a2a2a] text-white/60 opacity-0 group-hover:opacity-100 transition-opacity hover:text-white/90 hover:bg-[#3a3a3a]"
+            className="absolute right-8 top-8 rounded-md bg-[#2a2a2a] p-2 text-white/60 opacity-0 transition-opacity hover:bg-[#3a3a3a] hover:text-white/90 group-hover:opacity-100"
             title="Copy to clipboard"
           >
             {copied ? (
@@ -181,7 +181,7 @@ export default function CodeEditor() {
             )}
           </button>
           <pre
-            className="text-[#e4e4e4] leading-6 w-[600px] overflow-x-auto"
+            className="w-[600px] overflow-x-auto leading-6 text-[#e4e4e4]"
             dangerouslySetInnerHTML={{
               __html: highlightCode(codeExamples[activeTab]),
             }}

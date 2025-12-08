@@ -1,14 +1,17 @@
 ---
-title: "Fuzzystrmatch"
-description: "Provides functions for fuzzy string matching."
+title: 'Fuzzystrmatch'
+description: 'Provides functions for fuzzy string matching.'
 ---
+
 The [`fuzzystrmatch`](https://www.postgresql.org/docs/current/fuzzystrmatch.html) extension in PostgreSQL provides functions for fuzzy string matching. It is useful for approximate string comparisons, spell-checking, and searching similar words in a database.
 Your Nile database arrives with `fuzzystrmatch` extension already enabled.
 
 ## Available Functions
+
 The `fuzzystrmatch` extension provides several functions for different types of string matching algorithms:
 
 ### Soundex
+
 The `soundex()` function returns a four-character Soundex code based on how a word sounds:
 
 ```sql
@@ -16,6 +19,7 @@ SELECT soundex('example');
 ```
 
 ### Difference
+
 The `difference()` function compares two Soundex codes and returns a similarity score from 0 to 4 (higher means more similar):
 
 ```sql
@@ -23,6 +27,7 @@ SELECT difference('example', 'exampel');
 ```
 
 ### Levenshtein Distance
+
 The `levenshtein()` function computes the edit distance (number of single-character edits required to transform one string into another):
 
 ```sql
@@ -30,6 +35,7 @@ SELECT levenshtein('example', 'exampel');
 ```
 
 ### Levenshtein Distance with Custom Costs
+
 You can specify different costs for insertions, deletions, and substitutions:
 
 ```sql
@@ -37,6 +43,7 @@ SELECT levenshtein('example', 'exampel', 1, 2, 1);
 ```
 
 ### Metaphone
+
 The `metaphone()` function returns a phonetic representation of a word, useful for English-language fuzzy searches:
 
 ```sql
@@ -44,6 +51,7 @@ SELECT metaphone('example', 10);
 ```
 
 ## Example: Finding Similar Names
+
 If you have a table with names and want to find names similar to a given input:
 
 ```sql
@@ -55,7 +63,7 @@ CREATE TABLE contacts (
 );
 
 -- Create a tenant first
-INSERT INTO tenants (id, name) VALUES 
+INSERT INTO tenants (id, name) VALUES
     ('11111111-1111-1111-1111-111111111111', 'Example Corp');
 
 INSERT INTO contacts (tenant_id, name, email) VALUES
@@ -63,22 +71,25 @@ INSERT INTO contacts (tenant_id, name, email) VALUES
     ('11111111-1111-1111-1111-111111111111', 'Jon', 'jon@example.com'),
     ('11111111-1111-1111-1111-111111111111', 'Johnny', 'johnny@example.com'),
     ('11111111-1111-1111-1111-111111111111', 'Jonathan', 'jonathan@example.com');
-    
+
 
 SELECT name FROM contacts WHERE difference(name, 'Jon') > 2;
 ```
 
 ## Use Cases
+
 - Finding similar names in a customer database.
 - Detecting typos in text input.
 - Enhancing search functionality with approximate string matching.
 
 ## Limitations
+
 - Soundex is optimized for English and may not work well for other languages.
 - Levenshtein distance can be computationally expensive for large datasets.
 - Phonetic matching may not always align perfectly with intended pronunciations.
 
 ## Conclusion
+
 The `fuzzystrmatch` extension provides multiple methods for fuzzy string matching, making it a valuable tool for approximate searches and typo detection in PostgreSQL databases.
 
 For more details, refer to the [PostgreSQL documentation](https://www.postgresql.org/docs/current/fuzzystrmatch.html).

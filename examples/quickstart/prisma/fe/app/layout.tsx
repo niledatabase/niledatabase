@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import "./globals.css";
-import styles from "./page.module.css";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import Link from "@mui/joy/Link";
-import Card from "@mui/joy/Card";
-import CardContent from "@mui/joy/CardContent";
-import Typography from "@mui/joy/Typography";
-const inter = Inter({ subsets: ["latin"] });
-import { usePathname } from "next/navigation";
+import './globals.css';
+import styles from './page.module.css';
+import Image from 'next/image';
+import { Inter } from 'next/font/google';
+import Link from '@mui/joy/Link';
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import Typography from '@mui/joy/Typography';
+const inter = Inter({ subsets: ['latin'] });
+import { usePathname } from 'next/navigation';
 
 export default function RootLayout({
   children,
@@ -22,14 +22,14 @@ export default function RootLayout({
       <body className={inter.className}>
         <main className={styles.main}>
           <div
-            style={{ display: "flex", flexDirection: "column", width: "100%" }}
+            style={{ display: 'flex', flexDirection: 'column', width: '100%' }}
           >
             <div className={styles.description}>
               <div
                 style={{
-                  fontSize: "18px",
-                  alignItems: "center",
-                  display: "flex",
+                  fontSize: '18px',
+                  alignItems: 'center',
+                  display: 'flex',
                 }}
               >
                 <Image
@@ -38,8 +38,8 @@ export default function RootLayout({
                   className={styles.logo}
                   width={24}
                   height={29}
-                  style={{ marginRight: "0.5rem" }}
-                />{" "}
+                  style={{ marginRight: '0.5rem' }}
+                />{' '}
                 Prisma
               </div>
               <Typography level="h2">
@@ -51,7 +51,7 @@ export default function RootLayout({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Created by{"    "}
+                  Created by{'    '}
                   <Image
                     src="/nile_logo.svg"
                     alt="Nile Logo"
@@ -62,9 +62,9 @@ export default function RootLayout({
                 </a>
               </div>
             </div>
-            {pathname === "/" ? null : (
+            {pathname === '/' ? null : (
               <div className={styles.logout}>
-                <Link href="/?logout" style={{ color: "black" }}>
+                <Link href="/?logout" style={{ color: 'black' }}>
                   [ Logout ]
                 </Link>
               </div>
@@ -76,9 +76,9 @@ export default function RootLayout({
             <Card
               variant="outlined"
               sx={{
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
+                '&:hover': {
+                  boxShadow: 'md',
+                  borderColor: 'neutral.outlinedHoverBorder',
                 },
               }}
             >
@@ -88,10 +88,10 @@ export default function RootLayout({
                 target="_blank"
                 rel="noopener"
                 style={{
-                  fontSize: "18px",
-                  alignItems: "center",
-                  display: "flex",
-                  color: "black",
+                  fontSize: '18px',
+                  alignItems: 'center',
+                  display: 'flex',
+                  color: 'black',
                 }}
               >
                 <Image
@@ -100,8 +100,8 @@ export default function RootLayout({
                   className={styles.logo}
                   width={24}
                   height={29}
-                  style={{ marginRight: "0.5rem" }}
-                />{" "}
+                  style={{ marginRight: '0.5rem' }}
+                />{' '}
                 Prisma
               </Link>
               <CardContent>
@@ -112,10 +112,10 @@ export default function RootLayout({
             <Card
               variant="outlined"
               sx={{
-                "--card-padding": "1rem",
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
+                '--card-padding': '1rem',
+                '&:hover': {
+                  boxShadow: 'md',
+                  borderColor: 'neutral.outlinedHoverBorder',
                 },
               }}
             >
@@ -141,10 +141,10 @@ export default function RootLayout({
             <Card
               variant="outlined"
               sx={{
-                "--card-padding": "1rem",
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
+                '--card-padding': '1rem',
+                '&:hover': {
+                  boxShadow: 'md',
+                  borderColor: 'neutral.outlinedHoverBorder',
                 },
               }}
             >

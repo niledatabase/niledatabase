@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import "./globals.css";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-const inter = Inter({ subsets: ["latin"] });
-import { usePathname } from "next/navigation";
+import './globals.css';
+import Image from 'next/image';
+import { Inter } from 'next/font/google';
+const inter = Inter({ subsets: ['latin'] });
+import { usePathname } from 'next/navigation';
 
-import styles from "./page.module.css";
-import Link from "next/link";
-import { SignOutButton } from "@niledatabase/react";
+import styles from './page.module.css';
+import Link from 'next/link';
+import { SignOutButton } from '@niledatabase/react';
 function Card({ children }: { children: JSX.Element }) {
   return (
-    <div className="p-4 hover:shadow-lg hover:border-gray-700 border border-gray-600 rounded-lg w-60 transition-all">
+    <div className="w-60 rounded-lg border border-gray-600 p-4 transition-all hover:border-gray-700 hover:shadow-lg">
       {children}
     </div>
   );
@@ -25,13 +25,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="h-screen flex items-center flex-col">
+        <main className="flex h-screen flex-col items-center">
           <div
-            style={{ display: "flex", flexDirection: "column", width: "100%" }}
+            style={{ display: 'flex', flexDirection: 'column', width: '100%' }}
           >
-            <div className="bg-black text-white border-b-px flex flex-row justify-between w-full items-center px-6 py-4">
+            <div className="border-b-px flex w-full flex-row items-center justify-between bg-black px-6 py-4 text-white">
               <div className="container mx-auto">
-                <div className="flex space-between items-center w-full">
+                <div className="space-between flex w-full items-center">
                   <div className="flex items-center text-lg">
                     <Image
                       src="/lambda_logo.svg"
@@ -39,11 +39,11 @@ export default function RootLayout({
                       className={styles.logo}
                       width={40}
                       height={40}
-                      style={{ marginRight: "1rem" }}
-                    />{" "}
+                      style={{ marginRight: '1rem' }}
+                    />{' '}
                     AWS Lambda
                   </div>
-                  <div className="text-4xl flex-1 text-center">
+                  <div className="flex-1 text-center text-4xl">
                     Yet Another Todo Application
                   </div>
                   <div>
@@ -52,7 +52,7 @@ export default function RootLayout({
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Created by{"    "}
+                      Created by{'    '}
                       <Image
                         src="/nile_logo.svg"
                         alt="Nile Logo"
@@ -64,22 +64,22 @@ export default function RootLayout({
                   </div>
                 </div>
               </div>
-              {pathname === "/" ? null : <SignOutButton callbackUrl="/" />}
+              {pathname === '/' ? null : <SignOutButton callbackUrl="/" />}
             </div>
           </div>
-          <div className="flex flex-col flex-1">{children}</div>
+          <div className="flex flex-1 flex-col">{children}</div>
           <div className="flex flex-row gap-8 p-4">
             <Card>
-              <div className="flex flex-col space-between h-full">
+              <div className="space-between flex h-full flex-col">
                 <Link
                   href="https://www.thenile.dev/docs/serverless/lambda"
                   target="_blank"
                   rel="noopener"
                   style={{
-                    fontSize: "18px",
-                    alignItems: "center",
-                    display: "flex",
-                    color: "black",
+                    fontSize: '18px',
+                    alignItems: 'center',
+                    display: 'flex',
+                    color: 'black',
                   }}
                 >
                   <Image
@@ -88,15 +88,15 @@ export default function RootLayout({
                     className={styles.logo}
                     width={30}
                     height={30}
-                    style={{ marginRight: "1rem" }}
-                  />{" "}
+                    style={{ marginRight: '1rem' }}
+                  />{' '}
                   AWS Lambda
                 </Link>
                 Getting started guide
               </div>
             </Card>
             <Card>
-              <div className="flex flex-col justify-between h-full">
+              <div className="flex h-full flex-col justify-between">
                 <Link href="https://thenile.dev" target="_blank" rel="noopener">
                   <Image
                     src="/nile_logo.svg"
@@ -110,7 +110,7 @@ export default function RootLayout({
             </Card>
 
             <Card>
-              <div className="flex flex-col justify-between h-full">
+              <div className="flex h-full flex-col justify-between">
                 <Link
                   href="https://www.thenile.dev/templates"
                   target="_blank"

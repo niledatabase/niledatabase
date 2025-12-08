@@ -1,5 +1,5 @@
-import React from "react";
-import { basename } from "path";
+import React from 'react';
+import { basename } from 'path';
 import {
   List,
   ListItem,
@@ -7,10 +7,10 @@ import {
   ListItemContent,
   ListItemDecorator,
   Tooltip,
-} from "@mui/joy";
-import Typography from "@mui/joy/Typography";
-import Description from "@mui/icons-material/Description";
-import LlmResponseData from "@/lib/llmResponse";
+} from '@mui/joy';
+import Typography from '@mui/joy/Typography';
+import Description from '@mui/icons-material/Description';
+import LlmResponseData from '@/lib/llmResponse';
 
 interface SidebarProps {
   files: string[];
@@ -24,7 +24,7 @@ export const truncateCommonPath = (paths: string[]): string[] => {
   if (paths.length === 0) return [];
 
   const findCommonPrefix = (arr: string[]): string => {
-    if (!arr.length) return "";
+    if (!arr.length) return '';
 
     const sortedArr = arr.concat().sort();
     const first = sortedArr[0];
@@ -39,7 +39,7 @@ export const truncateCommonPath = (paths: string[]): string[] => {
 
   const commonPrefix = findCommonPrefix(paths);
 
-  return paths.map((path) => path.replace(commonPrefix, ""));
+  return paths.map((path) => path.replace(commonPrefix, ''));
 };
 
 const Sidebar: React.FC<SidebarProps> = ({

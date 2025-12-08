@@ -1,18 +1,18 @@
-"use client";
+'use client';
 // @ts-ignore
-import { useFormState } from "react-dom";
-import { createTenant } from "@/app/tenants/tenant-actions";
+import { useFormState } from 'react-dom';
+import { createTenant } from '@/app/tenants/tenant-actions';
 import {
   Dialog,
   DialogTrigger,
   DialogContent,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 const initialState = {
-  message: "",
+  message: '',
 };
 
 export function AddForm() {
@@ -21,7 +21,7 @@ export function AddForm() {
   return (
     <div>
       <Dialog>
-        <DialogTrigger className="h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+        <DialogTrigger className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
           Create tenant
         </DialogTrigger>
         <DialogContent>
@@ -35,7 +35,7 @@ export function AddForm() {
                 <div
                   aria-live="polite"
                   role="status"
-                  className="bg-destructive text-white px-3 py-2 rounded-md"
+                  className="rounded-md bg-destructive px-3 py-2 text-white"
                 >
                   {state?.message}
                 </div>

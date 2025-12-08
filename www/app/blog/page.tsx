@@ -1,17 +1,17 @@
-import Container from "../_components/common/Container";
-import Image from "next/image";
-import Link from "next/link";
-import { glob } from "glob";
-import Divider from "../_components/common/Divider";
-import { Authors } from "./_components/Authors";
-import { Metadata as Meta } from "./_components/Metadata";
-import { parseMetadata } from "./_components/parseMetadata";
-import algoliasearch from "algoliasearch/lite";
-import Search from "./_components/Search";
-import Hit from "./_components/Search/Hit";
-import Coffee from "@/public/blog/coffee.webp";
-import { RefinementList } from "./_components/Search/RefinementList";
-import uniq from "lodash/uniq";
+import Container from '../_components/common/Container';
+import Image from 'next/image';
+import Link from 'next/link';
+import { glob } from 'glob';
+import Divider from '../_components/common/Divider';
+import { Authors } from './_components/Authors';
+import { Metadata as Meta } from './_components/Metadata';
+import { parseMetadata } from './_components/parseMetadata';
+import algoliasearch from 'algoliasearch/lite';
+import Search from './_components/Search';
+import Hit from './_components/Search/Hit';
+import Coffee from '@/public/blog/coffee.webp';
+import { RefinementList } from './_components/Search/RefinementList';
+import uniq from 'lodash/uniq';
 type Props = {
   fileName: string;
   title: string;
@@ -23,26 +23,26 @@ type Props = {
 
 const searchClient = algoliasearch(
   String(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID),
-  String(process.env.ALGOLIA_API_KEY)
+  String(process.env.ALGOLIA_API_KEY),
 );
-const index = searchClient.initIndex("blog");
+const index = searchClient.initIndex('blog');
 export const metadata = {
-  title: "Blog | Nile Database",
-  description: "All things database SaaS",
+  title: 'Blog | Nile Database',
+  description: 'All things database SaaS',
   alternates: {
     types: {
-      "application/atom+xml": "/blog/feed.atom",
+      'application/atom+xml': '/blog/feed.atom',
     },
   },
 };
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 function HeroArticle(props: Props) {
   const { fileName, title, authors: _authors, content, sizzle, image } = props;
   const { publishDate, slug, readLength } = parseMetadata(fileName, content);
   return (
-    <Link href={`/blog/${slug}`} className="mt-12 -mb-10">
-      <div className="flex flex-col xl:flex-row gap-16">
-        <div className="bg-[#2D2D2D] rounded-xl overflow-hidden flex-shrink-0 items-center justify-center flex">
+    <Link href={`/blog/${slug}`} className="-mb-10 mt-12">
+      <div className="flex flex-col gap-16 xl:flex-row">
+        <div className="flex flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#2D2D2D]">
           {image ? (
             <Image
               className="aspect-video w-full"
@@ -63,7 +63,7 @@ function HeroArticle(props: Props) {
             />
           )}
         </div>
-        <div className="flex justify-center flex-col">
+        <div className="flex flex-col justify-center">
           <Meta
             publishDate={publishDate}
             readLength={readLength}
@@ -78,7 +78,7 @@ function HeroArticle(props: Props) {
 }
 
 export default async function Blog() {
-  const [mostRecent]: any = await glob("app/blog/**.mdx");
+  const [mostRecent]: any = await glob('app/blog/**.mdx');
   let hits: any[] = [];
 
   //@ts-expect-error - this exists
@@ -93,12 +93,12 @@ export default async function Blog() {
   // }, []);
   // const refinementItems = uniq(refinements);
 
-  const [localFile] = mostRecent.split("/").reverse();
+  const [localFile] = mostRecent.split('/').reverse();
   const { default: FirstArticle, metadata } = await import(`./${localFile}`);
   return (
     <Container background={null}>
       <div className="container mx-auto">
-        <div className="px-4 md:py-4 pb-0 2xl:px-24 2xl:py-4 mt-32">
+        <div className="mt-32 px-4 pb-0 md:py-4 2xl:px-24 2xl:py-4">
           <div className="mb-32">
             <HeroArticle
               fileName={mostRecent}
@@ -106,7 +106,7 @@ export default async function Blog() {
               content={FirstArticle}
             />
           </div>
-          <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-20 relative z-10">
+          <div className="bgDivider relative z-10 flex flex-1 flex-col pt-20 text-center align-middle">
             <Search />
           </div>
           <div className="mt-8">
@@ -120,7 +120,7 @@ export default async function Blog() {
 
 function Hits({ initialHits }: { initialHits: any[] }) {
   return (
-    <div className="flex flex-row flex-wrap justify-start server-side-hits pt-4">
+    <div className="server-side-hits flex flex-row flex-wrap justify-start pt-4">
       {initialHits.map((hit) => {
         return <Hit hit={hit} key={hit.objectID} />;
       })}

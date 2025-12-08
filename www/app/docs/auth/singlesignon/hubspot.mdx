@@ -12,8 +12,9 @@ description: 'Integrate HubSpot Single Sign-On with Nile Auth'
 </Step>
 
 <Step title="Save Client ID and Client Secret in Nile">
-Save them to your database at `console.thenile.dev` under HubSpot in **Tenants & Users -> Configuration**
-![Hubspot configuration on console.thenile.dev](/images/singlesignon/hubspot.png)
+  Save them to your database at `console.thenile.dev` under HubSpot in **Tenants
+  & Users -> Configuration** ![Hubspot configuration on
+  console.thenile.dev](/images/singlesignon/hubspot.png)
 </Step>
 
 <Step title="Add the `HubSpot` button to your login page">
@@ -22,12 +23,12 @@ The button will redirect the user to HubSpot for authentication. Upon successful
 import { HubSpot } from '@niledatabase/react';
 
 function App() {
-  return (
-    <div>
-      <HubSpotSignInButton callbackUrl="/" />
-    </div>
-  );
-}
+return (
+
+<div>
+  <HubSpotSignInButton callbackUrl="/" />
+</div>
+); }
 
 ```
 </Step>
@@ -37,4 +38,5 @@ function App() {
 
 - [OAuth Concepts](/auth/concepts/oauth)
 - [User Management](/auth/concepts/users)
-- [Other SSO Providers](/auth/singlesignon/google) 
+- [Other SSO Providers](/auth/singlesignon/google)
+```

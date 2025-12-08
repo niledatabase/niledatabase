@@ -1,8 +1,8 @@
 ---
-title: "Cloudflare"
-sidebarTitle: "Cloudflare"
-description: "Deploy globally accelerated B2B applications with Cloudflare Workers and Hyperdrive"
-icon: "clock-eleven"
+title: 'Cloudflare'
+sidebarTitle: 'Cloudflare'
+description: 'Deploy globally accelerated B2B applications with Cloudflare Workers and Hyperdrive'
+icon: 'clock-eleven'
 ---
 
 Cloudflare Workers enables you to deploy serverless functions or entire application backends globally, drastically reducing latency between your application and users. Combined with Cloudflare Hyperdrive's caching proxy capabilities, you can achieve exceptional database performance for your B2B applications.
@@ -10,18 +10,23 @@ Cloudflare Workers enables you to deploy serverless functions or entire applicat
 ## Why Nile with Cloudflare?
 
 ### Global Scale
+
 Deploy your B2B applications worldwide using Cloudflare Workers, while Nile ensures tenant isolation, auth-scaling, and tenant insights.
 
 ### Accelerated Performance
+
 Leverage Cloudflare Hyperdrive to accelerate database queries, making interactions lightning-fast for your users.
 
 ### Multi-Tenant Isolation
+
 Nile's tenant-aware architecture ensures that your customers' data is securely isolated, enabling you to build scalable and compliant apps effortlessly.
 
 ### Simplified Deployment
+
 Combine Nile's serverless Postgres with Cloudflare's edge network to streamline the deployment of modern B2B applications with less operational overhead.
 
 ### Optimized for AI Workloads
+
 Build AI-driven, multi-tenant applications with Nile and deploy them globally with Cloudflare. This architecture minimizes latency while easily scaling to millions of embeddings.
 
 ## Quick Start Guide
@@ -46,6 +51,7 @@ Build AI-driven, multi-tenant applications with Nile and deploy them globally wi
     - [Hono](https://hono.dev/): A lightweight web framework
     - [Drizzle](https://orm.drizzle.team/): A TypeScript ORM
     - Built-in multi-tenant todo list functionality
+
   </Step>
 
   <Step title="Configure Hyperdrive">
@@ -62,6 +68,7 @@ Build AI-driven, multi-tenant applications with Nile and deploy them globally wi
     [hyperdrive]
     id = "your_hyperdrive_id"
     ```
+
   </Step>
 
   <Step title="Deploy">
@@ -76,6 +83,7 @@ Build AI-driven, multi-tenant applications with Nile and deploy them globally wi
     ```
 
     Your globally accelerated multi-tenant application is now live! 🚀
+
   </Step>
 
   <Step title="What's Next?">
@@ -101,13 +109,14 @@ const app = new Hono();
 app.post('/api/todos', async (c) => {
   const { title } = await c.req.json();
   const tenant_id = c.req.header('x-tenant-id');
-  
+
   const db = drizzle(c.env.HYPERDRIVE);
-  
-  const [todo] = await db.insert(todos)
+
+  const [todo] = await db
+    .insert(todos)
     .values({ title, tenant_id })
     .returning();
-    
+
   return c.json(todo);
 });
 

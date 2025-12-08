@@ -1,9 +1,9 @@
 ---
-title: "Schema Migrations with Django"
-sidebarTitle: "Django"
+title: 'Schema Migrations with Django'
+sidebarTitle: 'Django'
 ---
 
-Django has built-in support for schema migrations. Below, we'll walk through the process of setting up a Django project 
+Django has built-in support for schema migrations. Below, we'll walk through the process of setting up a Django project
 with Nile and running your first migration.
 
 <Steps>
@@ -57,6 +57,7 @@ myproject/
         tests.py
         views.py
 ```
+
 </Step>
 <Step title="Setting up Nile Database">
 Edit the `myproject/settings.py` file to include the Nile database URL:
@@ -75,6 +76,7 @@ DATABASES = {
 ```
 
 You can find your database credentials in the Nile dashboard.
+
 </Step>
 
 <Step title="Run the migrations built-in migrations">
@@ -113,6 +115,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 ```
+
 </Step>
 
 <Step title="Create a new migration">
@@ -142,5 +145,3 @@ Connect to your database and see a new table created, called `myapp_mymodel`.
 </Step>
 
 </Steps>
-
-

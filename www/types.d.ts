@@ -1,1 +1,1 @@
-declare module "fast-image-zoom";
+declare module 'fast-image-zoom';

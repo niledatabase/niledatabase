@@ -10,8 +10,8 @@ Your Nile database arrives with the `pg_trgm` extension already enabled.
 
 A trigram is created by taking three consecutive characters from a text string. For example, the word "hello" contains these trigrams: " h" (with two spaces), "he", "hel", "ell", "llo", "lo " (with two spaces). The spaces at the beginning and end are important for matching word boundaries.
 
-Similarity between strings is calculated by counting how many trigrams they share in common. 
-For example, "hello" and "helo" share most of their trigrams (like " h", "hel", "lo "), 
+Similarity between strings is calculated by counting how many trigrams they share in common.
+For example, "hello" and "helo" share most of their trigrams (like " h", "hel", "lo "),
 resulting in a high similarity score. This makes trigrams excellent for fuzzy matching and finding similar strings even when they contain typos.
 
 ## Usage Examples
@@ -123,17 +123,21 @@ ORDER BY sim DESC;
 pg_trgm supports two types of indexes:
 
 ### GiST Index
+
 ```sql
 CREATE INDEX trgm_gist_idx ON table_name USING gist (column_name gist_trgm_ops);
 ```
+
 - Balanced performance between search and update
 - Smaller index size
 - Good for dynamic data
 
 ### GIN Index
+
 ```sql
 CREATE INDEX trgm_gin_idx ON table_name USING gin (column_name gin_trgm_ops);
 ```
+
 - Faster searches
 - Slower updates
 - Larger index size

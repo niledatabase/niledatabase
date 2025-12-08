@@ -3,9 +3,9 @@ title: 'Sign In'
 description: 'Learn how to use the Nile Auth Sign In component'
 ---
 
-import Theming from '/snippets/theming.mdx'
+import Theming from '/snippets/theming.mdx';
 
-Users can sign up and be entered into the database via email + password.  A JWT is used (which has a default expiry in 30 days). For Single Sign On, sessions are kept in the database in the `auth.session` table.
+Users can sign up and be entered into the database via email + password. A JWT is used (which has a default expiry in 30 days). For Single Sign On, sessions are kept in the database in the `auth.session` table.
 `@tanstack/react-query` and `react-hook-form` are used to do much of the heavy lifting in the component. The component is styled via tailwind.
 
 ## Installation
@@ -15,7 +15,6 @@ npm install @niledatabase/react @niledatabase/client
 ```
 
 ## Email + Password Sign In
-
 
 Uses simple `<Email />` and `<Password />` fields, along with the `useSignIn()` hook to sign a user in, if they exist. In most cases, you want to supply a `callbackUrl`, which is where the user will be redirected upon successful sign in. Error handling works the same as it does in `<SignUpForm />`
 
@@ -34,11 +33,9 @@ export default function SignUpPage() {
 </Tab>
 </Tabs>
 
-
-
 ## Email Only Sign In
 
-With an SMTP provider configured on your database, users can supply their emails and be sent a link for sign in. The users enters their email, which causes the auth service to create a token (saved to the auth.verification_tokens table in your database), and send it in an email. The token is valid for 4 hours by default. 
+With an SMTP provider configured on your database, users can supply their emails and be sent a link for sign in. The users enters their email, which causes the auth service to create a token (saved to the auth.verification_tokens table in your database), and send it in an email. The token is valid for 4 hours by default.
 
 Once the user clicks the link, they will exchange their token for a session and be redirected to whichever page was provided in the `callbackUrl`
 
@@ -72,18 +69,18 @@ npm install @niledatabase/react @niledatabase/client
 #### Usage
 
 ```tsx
-import { useSignIn } from "@niledatabase/react";
+import { useSignIn } from '@niledatabase/react';
 
 const SignInComponent = () => {
   const signIn = useSignIn({
-    beforeMutate: (data) => ({ ...data, extraParam: "value" }),
-    onSuccess: () => console.log("Login successful"),
-    onError: (error) => console.error("Login failed", error),
-    callbackUrl: "/dashboard",
+    beforeMutate: (data) => ({ ...data, extraParam: 'value' }),
+    onSuccess: () => console.log('Login successful'),
+    onError: (error) => console.error('Login failed', error),
+    callbackUrl: '/dashboard',
   });
 
   const handleLogin = () => {
-    signIn({ email: "user@example.com", password: "securepassword" });
+    signIn({ email: 'user@example.com', password: 'securepassword' });
   };
 
   return <button onClick={handleLogin}>Sign In</button>;
@@ -96,9 +93,9 @@ const SignInComponent = () => {
 
 ##### Parameters
 
-| Name         | Type                           | Description |
-|-------------|--------------------------------|-------------|
-| `params`    | `Props` _(optional)_          | Configuration options |
+| Name     | Type                 | Description           |
+| -------- | -------------------- | --------------------- |
+| `params` | `Props` _(optional)_ | Configuration options |
 
 ##### Returns
 
@@ -106,14 +103,13 @@ A function that accepts `LoginInfo` containing user credentials to initiate the 
 
 #### Props
 
-
-| Name           | Type                                       | Description |
-|---------------|------------------------------------------|-------------|
-| `callbackUrl`  | `string` _(recommended)_                                   | The URL to redirect to upon successful login. |
-| `beforeMutate` | `(data: any) => any`   _(optional)_       | Optional function executed before the mutation occurs, allowing modification of request data. |
-| `onSuccess`    | `(data: LoginSuccess) => void` _(optional)_            | Callback function triggered on a successful login. |
-| `onError`      | `(error: Error, data: any) => void` _(optional)_   | Callback function triggered if the login fails. |
-| `client`       | `QueryClient` _(optional)_               | React Query client instance. |
+| Name           | Type                                             | Description                                                                                   |
+| -------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| `callbackUrl`  | `string` _(recommended)_                         | The URL to redirect to upon successful login.                                                 |
+| `beforeMutate` | `(data: any) => any` _(optional)_                | Optional function executed before the mutation occurs, allowing modification of request data. |
+| `onSuccess`    | `(data: LoginSuccess) => void` _(optional)_      | Callback function triggered on a successful login.                                            |
+| `onError`      | `(error: Error, data: any) => void` _(optional)_ | Callback function triggered if the login fails.                                               |
+| `client`       | `QueryClient` _(optional)_                       | React Query client instance.                                                                  |
 
 ##### LoginInfo Type
 
@@ -148,11 +144,10 @@ signIn({ email: "user@example.com", password: "wrongpassword" });
 - Use `beforeMutate` to modify request payloads before submission.
 - The `callbackUrl` parameter determines the redirection URL post-login.
 
-<Theming component="<SignIn />"/>
- 
+<Theming component="<SignIn />" />
 
 ## Related Components
 
 - [Single Sign On](/auth/singlesignon)
 - [Sign Out](/auth/components/signout)
-- [User Profile](/auth/components/user) 
+- [User Profile](/auth/components/user)

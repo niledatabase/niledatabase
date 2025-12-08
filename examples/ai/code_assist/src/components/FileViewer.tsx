@@ -1,9 +1,9 @@
 // components/FileViewer.tsx
-import React from "react";
-import { Box } from "@mui/joy";
-import Highlight from "react-highlight";
-import Typography from "@mui/joy/Typography";
-import LlmResponseData from "../lib/llmResponse";
+import React from 'react';
+import { Box } from '@mui/joy';
+import Highlight from 'react-highlight';
+import Typography from '@mui/joy/Typography';
+import LlmResponseData from '../lib/llmResponse';
 
 interface FileViewerProps {
   llmResponse: LlmResponseData | undefined;
@@ -17,11 +17,11 @@ const FileViewer: React.FC<FileViewerProps> = ({ llmResponse, content }) => {
   return (
     <Box
       sx={{
-        height: "65vh",
-        border: "1px solid #ccc",
+        height: '65vh',
+        border: '1px solid #ccc',
         borderRadius: 1,
         padding: 2,
-        overflow: "auto",
+        overflow: 'auto',
       }}
       key={Date.now()} // This is a hack to force re-rendering of the Highlight component
     >
@@ -38,17 +38,17 @@ const FileViewer: React.FC<FileViewerProps> = ({ llmResponse, content }) => {
                 ? llmResponse.files.map(
                     (
                       fileName: string,
-                      index: number // this happens when we load files as result of a question, llmResponse gets reset when a file is clicked
+                      index: number, // this happens when we load files as result of a question, llmResponse gets reset when a file is clicked
                     ) =>
                       llmResponse.content[index] === undefined
-                        ? ""
-                        : "//" +
+                        ? ''
+                        : '//' +
                           fileName +
-                          "\n" +
+                          '\n' +
                           llmResponse.content[index] +
-                          "\n"
+                          '\n',
                   )
-                : content.join("\n") // this happens when we load a file by clicking on sidebar
+                : content.join('\n') // this happens when we load a file by clicking on sidebar
             }
           </Box>
         </Highlight>

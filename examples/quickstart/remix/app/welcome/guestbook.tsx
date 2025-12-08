@@ -1,6 +1,6 @@
-import { Form, useNavigation } from "react-router";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Form, useNavigation } from 'react-router';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 export default function GuestBook({
   guestBook,
   guestBookError,
@@ -14,16 +14,16 @@ export default function GuestBook({
   message?: string;
 }) {
   const navigation = useNavigation();
-  if (message === "Unauthorized") {
+  if (message === 'Unauthorized') {
     return null;
   }
   return (
-    <section className="rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4">
+    <section className="space-y-4 rounded-3xl border border-gray-200 p-6 dark:border-gray-700">
       <Form
         method="post"
-        className="space-y-4 w-full max-w-lg"
+        className="w-full max-w-lg space-y-4"
         onSubmit={(event) => {
-          if (navigation.state === "submitting") {
+          if (navigation.state === 'submitting') {
             event.preventDefault();
           }
           const form = event.currentTarget;
@@ -39,7 +39,7 @@ export default function GuestBook({
           placeholder="your@email.com"
           required
         />
-        <Button type="submit" disabled={navigation.state === "submitting"}>
+        <Button type="submit" disabled={navigation.state === 'submitting'}>
           Sign Guest Book
         </Button>
         {guestBookError && (

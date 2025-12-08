@@ -30,15 +30,21 @@ When a user signs in via an OAuth provider, the following flow occurs:
 All providers can be configured on the **Configuration** screen under **Providers**, which is located in the **Tenant and Users** page
 ![Provider Configuration](/images/auth/providers.png)
 
-<Info>When using SSO providers and email + password, the `email_verified` column in the `users.users` table must be set. An error will be produced if an SSO user attempts to log in with email + password.</Info>
+<Info>
+  When using SSO providers and email + password, the `email_verified` column in
+  the `users.users` table must be set. An error will be produced if an SSO user
+  attempts to log in with email + password.
+</Info>
 
 ## Error Handling
 
 Because your backend service proxy's Nile auth's API, you can intercept errors for your users and handle them accordingly (vs using the default pages).
 In this example, a previously existing user has tried to log in with an email that already exists within the system, and it is tied to a different provider (eg the user used the same email in Google and Discord)
+
 ### Example error handling
 
 `/api/auth/error/route.tsx`
+
 ```jsx
 import { redirect } from "next/navigation";
 import { handlers } from "../../[...nile]/nile";
@@ -53,13 +59,14 @@ export async function GET(req: Request) {
 ```
 
 `/app/errors/oauth-not-linked.tsx`
+
 ```jsx
-import Link from "next/link";
+import Link from 'next/link';
 
 export default function OauthNotLinked() {
   return (
     <div className="container mx-auto">
-      <div className="flex flex-col gap-4 mt-9">
+      <div className="mt-9 flex flex-col gap-4">
         <div className="text-2xl">Something went wrong.</div>
         <div>
           You have selected a provider, but you have previously logged into the
@@ -67,7 +74,9 @@ export default function OauthNotLinked() {
         </div>
         <div className="text-center text-lg">
           <Link href="/">
-            <button>Go back and select the provider associated with this email</button>
+            <button>
+              Go back and select the provider associated with this email
+            </button>
           </Link>
         </div>
       </div>
@@ -76,8 +85,8 @@ export default function OauthNotLinked() {
 }
 ```
 
-
 ### OAuth Errors
+
 If an error occurs in the OAuth flow, query params redirecting back to an error page will occur. Below are a list of errors:
 
 **OAuthAccountNotLinked**
@@ -93,16 +102,15 @@ Could not create OAuth provider user in the database.
 Could not create email provider user in the database.
 
 **Callback**
-Error in the OAuth callback 
+Error in the OAuth callback
 
 **EmailSignin**
 Sending the e-mail with the verification token failed
 
 There should also be further details logged when this occurs, such as the error is thrown, and the request body itself to aid in debugging.
 
-
 ## Related Topics
 
 - [Single Sign On](/auth/singlesignon/google)
 - [JWT](/auth/concepts/jwt)
-- [Sessions](/auth/concepts/sessions) 
+- [Sessions](/auth/concepts/sessions)

@@ -41,8 +41,8 @@ INSERT INTO product_categories (tenant_id, product_id, category_ids) VALUES
 SELECT product_id, category_ids
 FROM product_categories
 WHERE category_ids && (
-    SELECT category_ids 
-    FROM product_categories 
+    SELECT category_ids
+    FROM product_categories
     WHERE product_id = 1
 )
 AND product_id != 1;
@@ -51,8 +51,8 @@ AND product_id != 1;
 SELECT product_id, category_ids
 FROM product_categories
 WHERE category_ids @> (
-    SELECT category_ids 
-    FROM product_categories 
+    SELECT category_ids
+    FROM product_categories
     WHERE product_id = 2
 );
 ```
@@ -63,13 +63,13 @@ The extension provides set operations for combining arrays:
 
 ```sql
 -- Union of two category sets
-SELECT 
+SELECT
     '{1,2,3}'::int[] + '{3,4,5}'::int[] as union_result,
     '{1,2,3}'::int[] & '{3,4,5}'::int[] as intersection_result,
     '{1,2,3,4}'::int[] - '{3,4}'::int[] as difference_result;
 
 -- Practical example: Find common categories between products
-SELECT 
+SELECT
     p1.product_id as product1,
     p2.product_id as product2,
     p1.category_ids & p2.category_ids as common_categories
@@ -94,7 +94,7 @@ FROM product_categories
 WHERE product_id = 1;
 
 -- Add/remove elements
-SELECT 
+SELECT
     category_ids || 5 as added_element,    -- Standard array concatenation
     category_ids || '{5,6}'::int[] as added_array
 FROM product_categories
@@ -114,6 +114,7 @@ CREATE INDEX idx_category_gin ON product_categories USING gin (category_ids gin_
 ```
 
 These indexes can significantly improve performance for the following types of queries:
+
 - Overlap (`&&`)
 - Contains (`@>`)
 - Contained by (`<@`)

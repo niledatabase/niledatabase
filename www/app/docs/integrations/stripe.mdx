@@ -1,7 +1,7 @@
 ---
-title: "Build SaaS with paid subscriptions - using Nile and Stripe"
-sidebarTitle: "Stripe"
-icon: "clock-ten"
+title: 'Build SaaS with paid subscriptions - using Nile and Stripe'
+sidebarTitle: 'Stripe'
+icon: 'clock-ten'
 ---
 
 In this quick tutorial, you will learn how to extend Nile's built-in tables with a Stripe subscription data, and how to use Stripe's API to manage subscriptions.
@@ -146,7 +146,7 @@ This is also where all the environment variables we've set earlier are being use
 
 ```typescript
 const nile = Nile({
-  basePath: String(process.env.NEXT_PUBLIC_NILE_API)
+  basePath: String(process.env.NEXT_PUBLIC_NILE_API),
 });
 ```
 
@@ -163,9 +163,12 @@ After this point, we can use `nile` to access the database and APIs, and it will
 When tenants are created, we initially create them in the `free` tier. This is done in `app/tenants/tenant-actions.tsx`:
 
 ```typescript
-const createTenantResponse = await nile.tenants.create({
-  name: tenantName,
-}, true);
+const createTenantResponse = await nile.tenants.create(
+  {
+    name: tenantName,
+  },
+  true,
+);
 ```
 
 Note that we don't pass in a `tier` parameter. This is because we want to create the tenant in the default tier, which is `free`.
@@ -190,27 +193,27 @@ When a user clicks the button, it triggets `createCheckoutSession` which is a Ne
 
 ```typescript
 export async function createCheckoutSession(formData: FormData) {
-  const tenantid = formData.get("tenantid")?.toString();
+  const tenantid = formData.get('tenantid')?.toString();
   const prices = await stripe.prices.list(); // (1)
   const price = prices.data[0].id;
 
   const session = await stripe.checkout.sessions.create({
     // (2)
-    billing_address_collection: "auto",
+    billing_address_collection: 'auto',
     line_items: [
       {
         price: price,
         quantity: 1,
       },
     ],
-    mode: "subscription",
+    mode: 'subscription',
     success_url:
       process.env.NEXT_PUBLIC_BASE_PATH +
       `/api/checkout-success?session_id={CHECKOUT_SESSION_ID}&tenant_id=${tenantid}`,
     cancel_url:
       process.env.NEXT_PUBLIC_BASE_PATH + `/tenants/${tenantid}/billing`,
   });
-  const url: string = session.url || "/"; // (3)
+  const url: string = session.url || '/'; // (3)
   redirect(url);
 }
 ```
@@ -229,11 +232,11 @@ When the user completes the checkout process, Stripe will call the success URL w
 This is where we upgrade the tenant to a paid tier and store his customer and subscription references in our `tenants` table:
 
 ```typescript
-console.log("checkout-success called");
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+console.log('checkout-success called');
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 const searchParams = req.nextUrl.searchParams;
-const tenantId = searchParams.get("tenant_id")?.toString();
-const session_id = searchParams.get("session_id")?.toString();
+const tenantId = searchParams.get('tenant_id')?.toString();
+const session_id = searchParams.get('session_id')?.toString();
 let location: string;
 
 const checkoutSession = await stripe.checkout.sessions.retrieve(session_id); // (1)
@@ -242,14 +245,13 @@ const checkoutSession = await stripe.checkout.sessions.retrieve(session_id); // 
 const tenantNile = await nile.withContext({ headers, tenantId }); // (2)
 
 // Store the Stripe customer ID  and subscription in the database
-const resp = await tenantNile.query("update tenants set (stripe_customer_id = $1, stripe_subscription_id = $2, tenant_tier = $3", [
-  checkoutSession.customer,
-  checkoutSession.subscription,
-  "basic",
-]);
+const resp = await tenantNile.query(
+  'update tenants set (stripe_customer_id = $1, stripe_subscription_id = $2, tenant_tier = $3',
+  [checkoutSession.customer, checkoutSession.subscription, 'basic'],
+);
 
-revalidatePath("/tenants");
-return respond("/tenants/" + tenantId + "/billing");
+revalidatePath('/tenants');
+return respond('/tenants/' + tenantId + '/billing');
 ```
 
 1. First we call Stripe to get the checkout session. This is where we get the customer ID and subscription ID.
@@ -263,8 +265,8 @@ To direct users to the dashboard, we use Stripe's `customer_portal` API. This is
 
 ```typescript
 export async function redirectToStripePortal(formData: FormData) {
-  const tenantId = formData.get("tenantid")?.toString();
-  const tenantNile = await nile.withContext({headers, tenantId});
+  const tenantId = formData.get('tenantid')?.toString();
+  const tenantNile = await nile.withContext({ headers, tenantId });
 
   const resp = await tenantNile.tenants.list();
   const customerId = resp[0].stripe_customer_id;
@@ -290,23 +292,25 @@ A tenant who is subscribed to the "basic" tier can downgrade to the "free" tier.
 
 ```typescript
 export async function cancelSubscription(formData: FormData) {
-  const tenantid = formData.get("tenantid")?.toString();
+  const tenantid = formData.get('tenantid')?.toString();
   const tenantNile = await nile.withContext({ headers, tenantId });
 
-  const resp = await tenantNile.tenants.list()
+  const resp = await tenantNile.tenants.list();
   const subscriptionId = resp[0].stripe_subscription_id;
 
   try {
     await stripe.subscriptions.cancel(subscriptionId);
     // if we got here, subscription was cancelled successfully, lets downgrade the tenant tier too
-    await tenantNile.query("update tenants set (tenant_tier = 'free' AND stripe_subscription_id = NULL)")
+    await tenantNile.query(
+      "update tenants set (tenant_tier = 'free' AND stripe_subscription_id = NULL)",
+    );
   } catch (e) {
     console.error(e);
-    return { message: "Failed to cancel subscription" };
+    return { message: 'Failed to cancel subscription' };
   }
 
-  revalidatePath("/tenants/" + tenantid + "/billing");
-  redirect("/tenants/" + tenantid + "/billing");
+  revalidatePath('/tenants/' + tenantid + '/billing');
+  redirect('/tenants/' + tenantid + '/billing');
 }
 ```
 

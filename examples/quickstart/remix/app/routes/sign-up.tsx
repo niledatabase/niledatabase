@@ -1,12 +1,12 @@
-import { SignUpForm } from "@niledatabase/react";
-import { Link, redirect } from "react-router";
-import logoDark from "../welcome/logo-dark.svg";
-import logoLight from "../welcome/logo-light.svg";
+import { SignUpForm } from '@niledatabase/react';
+import { Link, redirect } from 'react-router';
+import logoDark from '../welcome/logo-dark.svg';
+import logoLight from '../welcome/logo-light.svg';
 
 export default function SignIn() {
   return (
     <main className="flex items-center justify-center pt-16 pb-4">
-      <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
+      <div className="flex min-h-0 flex-1 flex-col items-center gap-16">
         <header className="flex flex-col items-center gap-9">
           <div className="w-[500px] max-w-[100vw] p-4">
             <img
@@ -23,7 +23,7 @@ export default function SignIn() {
         </header>
         <SignUpForm
           onSuccess={() => {
-            redirect("/dashboard");
+            redirect('/dashboard');
           }}
         />
         <div>

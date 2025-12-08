@@ -10,6 +10,7 @@ nile config [options]
 ```
 
 The configuration system supports:
+
 - Viewing current settings
 - Setting individual values
 - Setting multiple values at once
@@ -23,6 +24,7 @@ View your current configuration settings:
 ```bash
 nile config
 ```
+
 <img height="100" src="/images/configshow.png" />
 
 ## Setting API Key
@@ -43,6 +45,7 @@ nile config --api-key sk_test_1234...
 export NILE_API_KEY=sk_test_1234...
 nile config
 ```
+
 <img height="100" src="/images/configapi.png" />
 
 ## Setting Workspace
@@ -63,6 +66,7 @@ nile config --workspace development
 nile config --workspace production
 nile workspace show
 ```
+
 ## Setting Database
 
 Set your default database:
@@ -81,6 +85,7 @@ nile config --db customer-db
 nile config --db myapp-db
 nile db show
 ```
+
 ## Setting Multiple Configurations
 
 Set multiple configuration values at once:
@@ -122,7 +127,6 @@ nile config
 ```
 
 <img height="100" src="/images/configreset.png" />
-
 
 ## Environment Variables
 
@@ -204,15 +208,17 @@ nile db list
 ## Best Practices
 
 1. **Environment-specific Configurations**:
+
    ```bash
    # Development
    nile config --workspace dev --db dev-db
-   
+
    # Production
    nile config --workspace prod --db prod-db
    ```
 
 2. **Configuration Verification**:
+
    ```bash
    # Set and verify
    nile config --workspace development
@@ -220,10 +226,11 @@ nile db list
    ```
 
 3. **Security Best Practices**:
+
    ```bash
    # Store API key in environment
    export NILE_API_KEY=sk_test_1234...
-   
+
    # Use configuration file for non-sensitive settings
    nile config --workspace development --db dev-db
    ```
@@ -233,4 +240,4 @@ nile db list
 - `nile workspace` - Manage workspaces
 - `nile db` - Manage databases
 - `nile connect` - Authentication management
-- `nile tenants` - Tenant management 
+- `nile tenants` - Tenant management

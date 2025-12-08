@@ -2,6 +2,7 @@
 title: 'Built-in Tables'
 description: 'Understanding built-in database tables in Nile Auth'
 ---
+
 ## User Tables
 
 ### `users.users`
@@ -27,7 +28,6 @@ Referenced by:
     TABLE "auth.oidc_auth_attempts" CONSTRAINT "oidc_auth_attempts_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
     TABLE "auth.sessions" CONSTRAINT "sessions_userId_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ```
-
 
 ### `users.tenant_users`
 
@@ -89,6 +89,7 @@ Foreign-key constraints:
 ```
 
 ### `auth.verification_tokens`
+
 ```sql
    Column   |            Type             | Collation | Nullable |                Default
 ------------+-----------------------------+-----------+----------+---------------------------------------
@@ -101,6 +102,7 @@ Indexes:
 ```
 
 ### `auth.invites`
+
 ```sql
    Column   |           Type           | Collation | Nullable |      Default
 ------------+--------------------------+-----------+----------+-------------------
@@ -119,6 +121,7 @@ Indexes:
 ## OIDC Provider tables
 
 ### `auth.oidc_providers`
+
 ```sql
     Column    |            Type             | Collation | Nullable |          Default
 --------------+-----------------------------+-----------+----------+---------------------------
@@ -141,7 +144,8 @@ Referenced by:
 ```
 
 ### `auth.oidc_relying_parties`
-```sql    
+
+```sql
 Column     |            Type             | Collation | Nullable |          Default
 ---------------+-----------------------------+-----------+----------+---------------------------
  id            | uuid                        |           | not null | public.uuid_generate_v7()
@@ -161,9 +165,10 @@ Referenced by:
     TABLE "auth.oidc_auth_attempts" CONSTRAINT "oidc_auth_attempts_relying_party_fkey" FOREIGN KEY (relying_party) REFERENCES auth.oidc_relying_parties(id)
 ```
 
-## Tenant override tables 
+## Tenant override tables
 
 ### `auth.tenant_oidc_relying_parties`
+
 ```sql
     Column     |            Type             | Collation | Nullable |          Default
 ---------------+-----------------------------+-----------+----------+---------------------------
@@ -189,7 +194,6 @@ Referenced by:
     TABLE "auth.tenant_oidc_auth_attempts" CONSTRAINT "tenant_oidc_auth_attempts_registration_id_tenant_id_fkey" FOREIGN KEY (registration_id, tenant_id) REFERENCES auth.tenant_oidc_relying_parties(id, tenant_id)
 ```
 
-
 - [Tenants](/auth/concepts/tenants)
 - [Users](/auth/concepts/users)
-- [Per-tenant Overrides](/auth/concepts/per-tenantoverrides) 
+- [Per-tenant Overrides](/auth/concepts/per-tenantoverrides)

@@ -4,9 +4,9 @@ description: 'Integrate Nile Auth with Express.js applications'
 icon: 'server'
 ---
 
-import DbCreds from '/snippets/dbcreds.mdx'
+import DbCreds from '/snippets/dbcreds.mdx';
 
-Learn how to integrate Nile Auth with your Express.js application. The integration allows the application to interact with Nile's APIs and databases, 
+Learn how to integrate Nile Auth with your Express.js application. The integration allows the application to interact with Nile's APIs and databases,
 providing tenant-aware data management.
 
 This guide provides an overview of how to use Nile-Auth core functionality with an Express.js application. We'll cover the following topics:
@@ -15,7 +15,10 @@ This guide provides an overview of how to use Nile-Auth core functionality with 
 - Tenant isolation
 - Securing endpoints
 
-<Tip>It is important to note that the Auth service is designed to work with actions a **user** would take in the context of your B2B web application.</Tip>
+<Tip>
+  It is important to note that the Auth service is designed to work with actions
+  a **user** would take in the context of your B2B web application.
+</Tip>
 
 ## Authentication
 
@@ -40,33 +43,34 @@ npm install @niledatabase/server @niledatabase/express express dotenv --save
 Create a new file called `server.mjs` and add the following code:
 
 ```javascript server.mjs
-import "dotenv/config";
-import express from "express";
-import { Nile } from "@niledatabase/server";
-import { express as nileExpress } from "@niledatabase/express";
+import 'dotenv/config';
+import express from 'express';
+import { Nile } from '@niledatabase/server';
+import { express as nileExpress } from '@niledatabase/express';
 
 const startServer = async () => {
-    try {
-        const app = express();
-        const nile = Nile({
-          extensions: [nileExpress(app)],
-        });
-        
-        app.use(express.json());
-        app.use(express.urlencoded({ extended: true }));
+  try {
+    const app = express();
+    const nile = Nile({
+      extensions: [nileExpress(app)],
+    });
 
-        const PORT = process.env.PORT || 3040;
-        app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
-        });
-    } catch (error) {
-        console.error("Error starting server:", error);
-        process.exit(1);
-    }
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
+
+    const PORT = process.env.PORT || 3040;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Error starting server:', error);
+    process.exit(1);
+  }
 };
 
 startServer();
 ```
+
 </Step>
 <Step title="Run the server">
 
@@ -126,32 +130,35 @@ chmod +x get_cookies.sh
 ```
 
 Run the command with the required params
-```bash
+
+````bash
 ./get_cookies.sh spongebob@squarepants.com no-this-is-patrick
 
 You should see the following output
 ```bash
 # Login successful. Use login_cookies.txt for authenticated requests:
 # curl "http://localhost:3040/api/me" -b login_cookies.txt
-```
+````
 
 You can then curl the API with the cookies
+
 ```bash
 curl "http://localhost:3040/api/me" -b login_cookies.txt
 
 # You should see the following output
 # {"email":"spongebob@squarepants.com","name":"Spongebob Squarepants","tenantId":"0192830912830912"}
 ```
+
 </Step>
 </Steps>
 
 ## Tenant Isolation and Secure Endpoints
 
-Since Nile-Auth is designed to work with B2B applications, it is important to understand how to work with tenants, their access to data, 
-and how to secure endpoints. 
+Since Nile-Auth is designed to work with B2B applications, it is important to understand how to work with tenants, their access to data,
+and how to secure endpoints.
 
-We are going to extend the previous example with new functionality. 
-We'll add a new table to the database, and a new endpoint that queries the data, making sure the 
+We are going to extend the previous example with new functionality.
+We'll add a new table to the database, and a new endpoint that queries the data, making sure the
 endpoint is both secure and isolated to the tenant.
 
 <Steps>
@@ -165,22 +172,25 @@ curl -X POST 'localhost:3040/api/tenants' \
   -d '{"name":"my first customer"}' \
   -b login_cookies.txt
 ```
+
 </Step>
 <Step title="Extract the tenant ID from the request params">
 There are multiple ways to pass the current tenant to the web app on each request. 
 You can pass it as a param, a header, or a cookie. In this example we'll pass it as a param.
 
-Add the following code to your `server.mjs` file, just after the `app.use(express.urlencoded({ extended: true }));` line. 
-This will extract the tenant ID from the request params, and configure the nile client to use it as 
+Add the following code to your `server.mjs` file, just after the `app.use(express.urlencoded({ extended: true }));` line.
+This will extract the tenant ID from the request params, and configure the nile client to use it as
 the current tenant before handling any request.
 
 `server.mjs`
+
 ```javascript
-app.param("tenantId", (req, res, next, tenantId) => {
+app.param('tenantId', (req, res, next, tenantId) => {
   nile.withContext({ tenantId });
   next();
 });
 ```
+
 </Step>
 <Step title="Create a Tenant-Aware Todos Table">
 In Nile console or another database client of your choice, run the following SQL to create a new table called `todos` 
@@ -205,6 +215,7 @@ VALUES
   ('019637b6-6d72-774b-9796-8c35813f9f78', 'Finish Express integration', '2h', false),
   ('019637b6-6d72-774b-9796-8c35813f9f78', 'Write documentation', '1h', false);
 ```
+
 </Step>
 <Step title="Add route">
 Add a route that takes a tenant Id and queries the database. if `app.param` is set
@@ -215,33 +226,36 @@ if there are multiple tenants in the database and even though the query does not
 Add the following code to your `server.mjs` file, just after the `app.delete(paths.delete, handler);` line:
 
 `server.mjs`
+
 ```javascript
 // Get all tasks for tenant
-app.get("/api/tenants/:tenantId/todos", async (req, res) => {
+app.get('/api/tenants/:tenantId/todos', async (req, res) => {
   try {
     // the nile.tenantId is set in the previous `app.param`
     const todos = await nile.query(`SELECT * FROM todos ORDER BY title`);
     res.json(todos.rows);
     return;
   } catch (error) {
-    console.log("error listing tasks: " + error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.log('error listing tasks: ' + error.message);
+    res.status(500).json({ message: 'Internal Server Error' });
     return;
   }
 });
 ```
+
 </Step>
 <Step title="Securing Routes">
 The route we created is isolated to a specific tenant, however at this point, any user can call it. It is not secure.
 Lets protect it by checking if the user is authenticated. Add the following code to your `server.mjs` file, just after the `app.get("/api/tenants/:tenantId/todos", async (req, res) => {` line:
 
 ```javascript
-  const session = await nile.auth.getSession(req);
-  if (!session?.user) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
-  }
+const session = await nile.auth.getSession(req);
+if (!session?.user) {
+  res.status(401).json({ message: 'Unauthorized' });
+  return;
+}
 ```
+
 <Tip>
 You can add this logic in a middleware function, so it will be applied to all routes that need to be protected.
 </Tip>
@@ -273,7 +287,7 @@ Now, lets try to access the route with authentication. Make sure you replace the
 First, authenticate the user
 
 ```bash
-./get_cookies.sh spongebob@squarepants.com no-this-is-patrick 
+./get_cookies.sh spongebob@squarepants.com no-this-is-patrick
 ```
 
 Then, access the route, using the cookies we got in the previous step
@@ -287,14 +301,16 @@ You should see the following output
 ```bash
 [{"id":"019637b6-6d72-774b-9796-8c35813f9f78","title":"Finish Express integration","estimate":"2h","complete":false},{"id":"019637b6-6d72-774b-9796-8c35813f9f78","title":"Write documentation","estimate":"1h","complete":false}]
 ```
+
 </Step>
 </Steps>
 
 ## Related Topics
+
 ## Next Steps
 
-- [Learn more about Nile-Auth with Express](/auth/frameworks/express) 
+- [Learn more about Nile-Auth with Express](/auth/frameworks/express)
 - [JWT Concepts](/auth/concepts/jwt)
-- [Sessions](/auth/concepts/sessions) 
+- [Sessions](/auth/concepts/sessions)
 - [Tenant Isolation](/tenant-virtualization/tenant-isolation)
 - [SDK Reference](/auth/sdk-reference/javascript/overview)

@@ -4,12 +4,16 @@ description: 'Integrate Nile Auth with Remix applications'
 icon: 'route'
 ---
 
-import DbCreds from '/snippets/dbcreds.mdx'
-
+import DbCreds from '/snippets/dbcreds.mdx';
 
 This guide explains how to integrate **Nile Database** with **Remix** and set up routes for handling various HTTP requests (`GET`, `POST`, `PUT`, `DELETE`). Additionally, you'll see how to include **client-side components** for user authentication and interaction using **Nile's React SDK**.
 
-<Note>This guide assumes you are running an application similar to `npx create-react-router@latest --template remix-run/react-router-templates/node-postgres`, and have already updated your `.env` file from [the installation](../getting-started/installation.mdx)</Note>
+<Note>
+  This guide assumes you are running an application similar to `npx
+  create-react-router@latest --template
+  remix-run/react-router-templates/node-postgres`, and have already updated your
+  `.env` file from [the installation](../getting-started/installation.mdx)
+</Note>
 
 ---
 
@@ -21,61 +25,58 @@ This guide explains how to integrate **Nile Database** with **Remix** and set up
     ```
 </Step>
 
-
 <Step title="Update to node-pg">
 
 Update `/server/app.ts`
 
 ```ts server/app.ts
-import postgres from "pg";
+import postgres from 'pg';
 ```
 
 Along with that change, sync up `database/context.ts` to be sure its using the same types, changing from `PostgresJsDatabase`, to `NodePgDatabase`. In addition, there are may be some compatibility changes that need handled if you are updating an existing project [based on our compatibility](../../postgres/postgres-compatibility)
 
 ```ts
-
-import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 export const DatabaseContext = new AsyncLocalStorage<
   NodePgDatabase<typeof schema>
 >();
-
 ```
+
 </Step>
 
 <Step title="Add Nile to the server">
 Now we need to add the nile instance and route handlers to allow our server to respond to authentication, user, and tenant requests.
 
 ```ts app/routes/api.$.ts
-import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node"
-import { nile } from "~/nile"; // the nile instance
+import type { LoaderFunctionArgs, ActionFunctionArgs } from '@remix-run/node';
+import { nile } from '~/nile'; // the nile instance
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const method = request.method.toUpperCase();
-  return nile.handlers[method](request)
+  return nile.handlers[method](request);
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const method = request.method.toUpperCase();
-  return nile.handlers[method](request)
+  return nile.handlers[method](request);
 };
 ```
- Then update your route config to allow the handlers to work
 
-``` ts app/routes.ts
-import { type RouteConfig, index, route } from "@react-router/dev/routes";
+Then update your route config to allow the handlers to work
+
+```ts app/routes.ts
+import { type RouteConfig, index, route } from '@react-router/dev/routes';
 
 export default [
-  index("routes/home.tsx"),
-  route("api/*", "app/routes/api.$.ts"),
+  index('routes/home.tsx'),
+  route('api/*', 'app/routes/api.$.ts'),
 ] satisfies RouteConfig;
 ```
 
 </Step>
 
-
 </Steps>
-
 
 ## Creating a loader
 
@@ -89,7 +90,7 @@ import { nile } from "~/nile";
 export const loader: LoaderFunction = async ({ request }) => {
   try {
     const _nile = nile.withContext({ headers: request.headers });// be sure the context is correct from the request
-    const user = await _nile.users.getSelf(); 
+    const user = await _nile.users.getSelf();
     if (user) {
       // If the user is authenticated, we can return their info or pass it to the UI
       return json({ user });
@@ -118,4 +119,4 @@ export default function Profile({ loaderData }: : Route.ComponentProps) {
 ## Related Topics
 
 - [React Integration](/auth/frameworks/react)
-- [Components](/auth/components/signin) 
+- [Components](/auth/components/signin)

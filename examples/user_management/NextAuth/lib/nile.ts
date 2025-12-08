@@ -1,5 +1,5 @@
-import { Nile } from "@niledatabase/server";
-import { nextJs } from "@niledatabase/nextjs";
+import { Nile } from '@niledatabase/server';
+import { nextJs } from '@niledatabase/nextjs';
 
 const nile = Nile({
   debug: true,

@@ -9,6 +9,7 @@ Your Nile database arrives with the unit extension already enabled.
 ## Overview
 
 The unit extension provides:
+
 - Storage and manipulation of SI units and measurements
 - Automatic unit conversion
 - Dimensional analysis
@@ -79,7 +80,7 @@ INSERT INTO physical_measurements (tenant_id, id, distance, mass, temperature) V
     ('11111111-1111-1111-1111-111111111111', 2, '2.5 km', '80 kg', '36.5 degC');
 
 -- Query with conversions
-SELECT 
+SELECT
     distance @ 'm' AS distance_meters,
     mass @ 'g' AS mass_grams,
     temperature @ 'degF' AS temp_fahrenheit
@@ -96,10 +97,11 @@ SELECT '1 m'::unit + '1 kg'::unit;          -- Error: dimension mismatch
 SELECT '100 m^2'::unit @ 'm';              -- Error: dimension mismatch
 SELECT '10 m/s'::unit * '5 kg/m'::unit;     -- Works: results in 50 kg/s
 ```
+
 ## Additional Resources
 
-Unit extension supports a large number of units and conversions, 
-and we've only scratched the surface of what it can do. 
+Unit extension supports a large number of units and conversions,
+and we've only scratched the surface of what it can do.
 You can find more information in the [unit extension repository](https://github.com/df7cb/postgresql-unit).
-The extension uses (among others) the unit definitions from Gnu Units. 
+The extension uses (among others) the unit definitions from Gnu Units.
 The [unit definition file](https://github.com/df7cb/postgresql-unit/blob/master/definitions.units) has comprehensive documentation on the 2400 units it supports.

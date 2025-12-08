@@ -24,11 +24,11 @@ nile --db my-database db list
 nile --api-key YOUR_API_KEY --workspace my-workspace db list
 ```
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--api-key <key>` | API key for authentication | Environment variable: `NILE_API_KEY` |
-| `--workspace <name>` | Workspace to use | Environment variable: `NILE_WORKSPACE` |
-| `--db <name>` | Database to use | Environment variable: `NILE_DB` |
+| Flag                 | Description                | Default                                |
+| -------------------- | -------------------------- | -------------------------------------- |
+| `--api-key <key>`    | API key for authentication | Environment variable: `NILE_API_KEY`   |
+| `--workspace <name>` | Workspace to use           | Environment variable: `NILE_WORKSPACE` |
+| `--db <name>`        | Database to use            | Environment variable: `NILE_DB`        |
 
 ## Output Format Flags
 
@@ -45,11 +45,11 @@ nile --format csv db list
 nile --no-color db list
 ```
 
-| Flag | Description | Default |
-|------|-------------|---------|
+| Flag              | Description                      | Default |
+| ----------------- | -------------------------------- | ------- |
 | `--format <type>` | Output format (human, json, csv) | `human` |
-| `--color` | Enable colored output | `true` |
-| `--no-color` | Disable colored output | - |
+| `--color`         | Enable colored output            | `true`  |
+| `--no-color`      | Disable colored output           | -       |
 
 ## Host Configuration Flags
 
@@ -66,11 +66,11 @@ nile --global-host api.example.com db list
 nile --auth-url auth.example.com connect login
 ```
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--db-host <host>` | Custom database host | Environment variable: `NILE_DB_HOST` |
-| `--global-host <host>` | Custom global host | Environment variable: `NILE_GLOBAL_HOST` |
-| `--auth-url <url>` | Custom authentication URL | Environment variable: `NILE_AUTH_URL` |
+| Flag                   | Description               | Default                                  |
+| ---------------------- | ------------------------- | ---------------------------------------- |
+| `--db-host <host>`     | Custom database host      | Environment variable: `NILE_DB_HOST`     |
+| `--global-host <host>` | Custom global host        | Environment variable: `NILE_GLOBAL_HOST` |
+| `--auth-url <url>`     | Custom authentication URL | Environment variable: `NILE_AUTH_URL`    |
 
 ## Debug Flag
 
@@ -87,8 +87,8 @@ nile --debug --format json db list
 nile --debug connect login
 ```
 
-| Flag | Description | Default |
-|------|-------------|---------|
+| Flag      | Description         | Default |
+| --------- | ------------------- | ------- |
 | `--debug` | Enable debug output | `false` |
 
 ## Environment Variables
@@ -127,4 +127,4 @@ nile --workspace workspace2 db list  # Uses workspace2
 # Flag overrides config
 nile config --workspace workspace1
 nile --workspace workspace2 db list  # Uses workspace2
-``` 
+```

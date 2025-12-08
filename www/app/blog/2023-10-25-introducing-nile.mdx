@@ -1,10 +1,10 @@
 export const metadata = {
-  title: "Introducing Nile, Serverless Postgres for modern SaaS",
-  authors: ["ram"],
-  image: "introducing_nile.png",
+  title: 'Introducing Nile, Serverless Postgres for modern SaaS',
+  authors: ['ram'],
+  image: 'introducing_nile.png',
   sizzle:
-    "I am thrilled to announce Nile, a serverless Postgres database designed for modern SaaS applications.",
-  tags: ["database", "serverless", "postgres", "saas"],
+    'I am thrilled to announce Nile, a serverless Postgres database designed for modern SaaS applications.',
+  tags: ['database', 'serverless', 'postgres', 'saas'],
 };
 
 I am thrilled to announce Nile, a serverless Postgres database designed for modern SaaS applications. Modern SaaS applications are multi-tenant. We’re the first database that virtualizes tenants into the database. This enables seamless tenant isolation, per-tenant backups, and placement on multi-tenant or dedicated infrastructure, anywhere on the planet. You can do all this with the experience of a single Postgres! You don’t have to manage multiple databases, build complex permissions for isolation, or write buggy scripts to read specific tenant data from backups. On top of the tenant model, we provide opt-in user management capabilities, customer-specific vector embeddings, and instant tenant admin dashboards. You can do all of this with very little code. Moreover, Nile's Postgres is built for the cloud, enabling effortless scaling and a true serverless experience. You can [sign up for our waitlist](https://www.thenile.dev/) today to try it out.
@@ -212,8 +212,8 @@ select * from employees
     </tbody>
   </table>
 </div>
-**The best part is you should still be able to query across the tenant DBs like a
-standard table if you don’t specify any context.**
+**The best part is you should still be able to query across the tenant DBs like
+a standard table if you don’t specify any context.**
 
 ```sql
 select * from employees
@@ -290,11 +290,12 @@ select * from employees
     </tbody>
   </table>
 </div>
-While there’s a need for virtual tenant DBs that isolate data, there’s also a need
-to [share data across tenants](https://www.thenile.dev/docs/tenant-virtualization/tenant-sharing).
-It should be easy to create shared tables that can be accessed by/[across] all tenants
-and are globally available. All standard queries should work seamlessly both on tenant-aware
-and shared tables
+While there’s a need for virtual tenant DBs that isolate data, there’s also a
+need to [share data across
+tenants](https://www.thenile.dev/docs/tenant-virtualization/tenant-sharing). It
+should be easy to create shared tables that can be accessed by/[across] all
+tenants and are globally available. All standard queries should work seamlessly
+both on tenant-aware and shared tables
 
 ```sql
 

@@ -1,6 +1,6 @@
 ---
-title: "Schema Migrations with Drizzle"
-sidebarTitle: "Drizzle"
+title: 'Schema Migrations with Drizzle'
+sidebarTitle: 'Drizzle'
 ---
 
 Drizzle is a TypeScript ORM that supports Postgres, MySQL, and SQLite. It also has a CLI, `drizzle-kit`, for managing migrations and few other things.
@@ -21,34 +21,37 @@ This will install `drizzle-kit`, `drizzle-orm`, `dotenv`, and `pg-node` - all of
 
 To run this example, you'll need a .env file with a DATABASE_URL environment variable set to a postgres database.
 You can copy the connection string from your Nile database home page.
+
 </Step>
 
 <Step title="Configure Drizzle">
 Drizzle kit is configured via a `drizzle.config.ts` file, which you can find in the root of the example project.
 
 Here's an example `drizzle.config.ts` file. You'll need to set:
+
 - The `schema` field to the path to your schema file
 - The `out` field to the path where you want to store your migrations
 - The `dialect` field to `postgresql` for Nile databases
 - The `dbCredentials` field with your database credentials
 
 ```javascript
-import { defineConfig } from "drizzle-kit";
-import dotenv from "dotenv";
+import { defineConfig } from 'drizzle-kit';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 export default defineConfig({
-  schema: "./src/db/schema.ts",
-  out: "./db/out",
-  dialect: "postgresql",
+  schema: './src/db/schema.ts',
+  out: './db/out',
+  dialect: 'postgresql',
   dbCredentials: {
     url:
       process.env.DATABASE_URL ||
-      "postgresql://username:password@db.thenile.dev:5432/db",
+      'postgresql://username:password@db.thenile.dev:5432/db',
   },
 });
 ```
+
 </Step>
 
 <Step title="Define Your Schema">
@@ -57,7 +60,7 @@ In code-first schema management, you define your schema as Typescript objects, a
 Create your schema in `src/db/schema.ts`. Note that we include the built-in `tenants` table that Nile automatically provisions:
 
 ```javascript
-import { sql } from "drizzle-orm";
+import { sql } from 'drizzle-orm';
 import {
   pgTable,
   primaryKey,
@@ -67,35 +70,36 @@ import {
   varchar,
   boolean,
   vector,
-} from "drizzle-orm/pg-core";
+} from 'drizzle-orm/pg-core';
 
-export const tenants = pgTable("tenants", {
-  id: uuid("id")
+export const tenants = pgTable('tenants', {
+  id: uuid('id')
     .default(sql`gen_random_uuid()`)
     .primaryKey(),
-  name: text("name"),
-  created: timestamp("created"),
-  updated: timestamp("updated"),
-  deleted: timestamp("deleted"),
+  name: text('name'),
+  created: timestamp('created'),
+  updated: timestamp('updated'),
+  deleted: timestamp('deleted'),
 });
 
 export const todos = pgTable(
-  "todos",
+  'todos',
   {
-    id: uuid("id").default(sql`gen_random_uuid()`),
-    tenantId: uuid("tenant_id"),
-    title: varchar("title", { length: 256 }),
-    estimate: varchar("estimate", { length: 256 }),
-    embedding: vector("embedding", { dimensions: 768 }),
-    complete: boolean("complete"),
+    id: uuid('id').default(sql`gen_random_uuid()`),
+    tenantId: uuid('tenant_id'),
+    title: varchar('title', { length: 256 }),
+    estimate: varchar('estimate', { length: 256 }),
+    embedding: vector('embedding', { dimensions: 768 }),
+    complete: boolean('complete'),
   },
   (table) => {
     return {
       pk: primaryKey({ columns: [table.tenantId, table.id] }),
     };
-  }
+  },
 );
 ```
+
 </Step>
 
 <Step title="Generate and Run Migrations">
@@ -106,6 +110,7 @@ npx drizzle-kit generate
 ```
 
 You should see output like:
+
 ```bash
 2 tables
 tenants 5 columns 0 indexes 0 fks
@@ -119,6 +124,7 @@ Then run the migration:
 ```bash
 npx drizzle-kit migrate
 ```
+
 </Step>
 
 <Step title="Seed and Query Data">
@@ -154,11 +160,13 @@ main();
 ```
 
 Run the example:
+
 ```bash
 npx tsx src/index.ts
 ```
 
 You should see output showing the created tenant and todo:
+
 ```bash
 New tenant created!
 New todo created!
@@ -173,6 +181,7 @@ Getting all todos from the database:  [
   }
 ]
 ```
+
 </Step>
 
 <Step title="Make Schema Changes">
@@ -186,14 +195,17 @@ To add new columns, update your schema file. For example, to add a due date:
 ```
 
 Generate and run a new migration:
+
 ```bash
 npx drizzle-kit generate
 npx drizzle-kit migrate
 ```
 
 This will generate a migration file like:
+
 ```sql
 ALTER TABLE "todos" ADD COLUMN "due_date" timestamp;
 ```
+
 </Step>
 </Steps>

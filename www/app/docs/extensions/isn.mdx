@@ -63,17 +63,17 @@ The ISN types automatically validate check digits and can handle various input f
 
 ```sql
 -- ISBN validation and formatting
-SELECT 
+SELECT
     '978-0-7475-3269-9'::isbn as valid_isbn,  -- Works
     '978-0-7475-3269-X'::isbn as invalid_isbn; -- Fails check digit
 
 -- Format conversion (ISBN-10 to ISBN-13)
-SELECT 
+SELECT
     isbn13('0-7475-3269-9'::isbn) as isbn13,
     isbn('978-0-7475-3269-9'::isbn) as isbn10;
 
 -- EAN13/UPC validation
-SELECT 
+SELECT
     '4006381333931'::ean13 as valid_ean,      -- Works
     '4006381333932'::ean13 as invalid_ean;    -- Fails check digit
 ```
@@ -84,8 +84,8 @@ SELECT
 
 ```sql
 -- Look up a book by ISBN
-SELECT title, isbn 
-FROM products 
+SELECT title, isbn
+FROM products
 WHERE isbn = '978-0-7475-3269-9'::isbn;
 ```
 
@@ -95,12 +95,12 @@ WHERE isbn = '978-0-7475-3269-9'::isbn;
 -- Find books in a specific ISBN publisher range
 SELECT title, isbn
 FROM products
-WHERE 
-    isbn IS NOT NULL 
+WHERE
+    isbn IS NOT NULL
     AND isbn13(isbn)::text LIKE '978-0-7475-%';
 
 -- Group books by publisher prefix
-SELECT 
+SELECT
     substring(isbn13(isbn)::text, 1, 8) as publisher_prefix,
     count(*) as book_count
 FROM products
@@ -123,6 +123,7 @@ GROUP BY publisher_prefix;
 4. Consider indexing frequently searched ISN columns
 
 For more details, refer to the [PostgreSQL ISN documentation](https://www.postgresql.org/docs/current/isn.html) and the relevant standards:
+
 - [ISBN](https://www.isbn-international.org/)
 - [ISSN](https://www.issn.org/)
 - [ISMN](https://www.ismn-international.org/)

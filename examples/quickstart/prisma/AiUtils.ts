@@ -1,12 +1,12 @@
-import { OpenAI } from "openai";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { OpenAI } from 'openai';
+import { Prisma, PrismaClient } from '@prisma/client';
 
-const DEFAULT_MODEL = "nomic-ai/nomic-embed-text-v1.5";
+const DEFAULT_MODEL = 'nomic-ai/nomic-embed-text-v1.5';
 const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || DEFAULT_MODEL;
 
 export enum EmbeddingTasks {
-  SEARCH_DOCUMENT = "search_document:",
-  SEARCH_QUERY = "search_query:",
+  SEARCH_DOCUMENT = 'search_document:',
+  SEARCH_QUERY = 'search_query:',
 }
 
 export interface Todo {
@@ -19,7 +19,7 @@ export function embeddingToSQL(embedding: number[]) {
 }
 
 function adjust_input(text: string, task: EmbeddingTasks): string {
-  if (EMBEDDING_MODEL?.indexOf("nomic") >= 0) {
+  if (EMBEDDING_MODEL?.indexOf('nomic') >= 0) {
     return task + text;
   } else {
     return text;
@@ -47,7 +47,7 @@ export async function embedTask(title: string, task: EmbeddingTasks) {
 //@ts-ignore
 export async function findSimilarTasks(
   tenantNile: PrismaClient<any, any, any, Types.Extensions.Args>,
-  title: string
+  title: string,
 ) {
   const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
 
@@ -55,9 +55,9 @@ export async function findSimilarTasks(
   const similarTasks =
     await tenantNile.$queryRaw`SELECT title, estimate FROM todos WHERE 
     embedding <-> ${embeddingToSQL(
-      embedding
+      embedding,
     )}::vector < 1 order by embedding <-> ${embeddingToSQL(
-      embedding
+      embedding,
     )}::vector limit 3`;
 
   console.log(` found ${similarTasks.length} similar tasks`);
@@ -75,15 +75,15 @@ export async function aiEstimate(title: string, similarTasks: Todo[]) {
 
   const model =
     process.env.AI_MODEL ||
-    "accounts/fireworks/models/llama-v3p1-405b-instruct";
+    'accounts/fireworks/models/llama-v3p1-405b-instruct';
 
   const aiEstimate = await ai.chat.completions.create({
     messages: [
       {
-        role: "user",
+        role: 'user',
         content: `you are an amazing project manager. I need to ${title}. How long do you think this will take? 
         I have a few similar tasks with their estimates, please use them as reference: ${JSON.stringify(
-          similarTasks
+          similarTasks,
         )}.
         respond with just the estimate, no yapping.`,
       },
@@ -92,9 +92,9 @@ export async function aiEstimate(title: string, similarTasks: Todo[]) {
   });
 
   // if we got a valid response, return it
-  if (aiEstimate.choices[0].finish_reason === "stop") {
+  if (aiEstimate.choices[0].finish_reason === 'stop') {
     return aiEstimate.choices[0].message.content;
   }
   // otherwise, we simply don't have an estimate
-  return "unknown";
+  return 'unknown';
 }

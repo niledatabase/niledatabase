@@ -3,7 +3,7 @@ title: 'Routes'
 description: 'Routes in the Nile-JS SDK'
 ---
 
-The Nile-JS SDK includes generated routes for all its operations. 
+The Nile-JS SDK includes generated routes for all its operations.
 These routes are used by the SDK methods to proxy requests to nile-auth, as well as directly from the React hooks and components in `@niledatabase/react`.
 
 ## Generating routes
@@ -24,10 +24,11 @@ export const { handlers } = nile;
 
 ```ts route.ts
 // app/api/[...nile]/route.ts
-import { handlers } from "./nile";
+import { handlers } from './nile';
 
 export const { POST, GET, DELETE, PUT } = handlers;
 ```
+
 </CodeGroup>
 
 ### Remix example
@@ -44,36 +45,36 @@ export const { handlers } = nile;
 ```ts nile-api.ts
 //app/routes/nile-api.ts
 // This is where the routes are exported
-import type { Route } from "./+types/home";
-import { handlers } from "~/nile";
+import type { Route } from './+types/home';
+import { handlers } from '~/nile';
 
 const { GET, POST, PUT, DELETE } = handlers;
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   switch (request.method.toUpperCase()) {
-    case "GET":
+    case 'GET':
       return GET(request);
-    case "POST":
+    case 'POST':
       return POST(request);
-    case "PUT":
+    case 'PUT':
       return PUT(request);
-    case "DELETE":
+    case 'DELETE':
       return DELETE(request);
     default:
-      return new Response("Method Not Allowed", { status: 405 });
+      return new Response('Method Not Allowed', { status: 405 });
   }
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
   switch (request.method.toUpperCase()) {
-    case "POST":
+    case 'POST':
       return POST(request);
-    case "PUT":
+    case 'PUT':
       return PUT(request);
-    case "DELETE":
+    case 'DELETE':
       return DELETE(request);
     default:
-      return new Response("Method Not Allowed", { status: 405 });
+      return new Response('Method Not Allowed', { status: 405 });
   }
 };
 ```
@@ -81,13 +82,14 @@ export const action = async ({ request }: Route.ActionArgs) => {
 ```ts routes.ts
 // app/routes.ts
 // This routes all the api/* requests to the routes in nile-api.ts
-import { type RouteConfig, index, route } from "@react-router/dev/routes";
+import { type RouteConfig, index, route } from '@react-router/dev/routes';
 
 export default [
-  index("routes/home.tsx"),
-  route("api/*", "routes/nile-api.ts"),
+  index('routes/home.tsx'),
+  route('api/*', 'routes/nile-api.ts'),
 ] satisfies RouteConfig;
 ```
+
 </CodeGroup>
 
 ### Express example
@@ -100,12 +102,11 @@ import { Nile } from "@niledatabase/server";
 import { NileExpressHandler } from "@niledatabase/server/express";
 
 const startServer = async () => {
-    try {
-        const app = express();
-        const nile = Nile();
-        // This is where the route handlers are imported
-        const { paths, handler } = await NileExpressHandler(nile);
-        
+try {
+const app = express();
+const nile = Nile();
+// This is where the route handlers are imported
+const { paths, handler } = await NileExpressHandler(nile);
 
         app.use(express.json());
         app.use(express.urlencoded({ extended: true }));
@@ -126,15 +127,17 @@ const startServer = async () => {
         console.error("Error starting server:", error);
         process.exit(1);
     }
+
 };
 
 startServer();
-```
+
+````
 </CodeGroup>
 
 ## Using routes
 
-You typically don't need to use the routes directly. 
+You typically don't need to use the routes directly.
 The SDK methods and react/web components use the routes under the hood to communicate with nile-auth.
 
 The generated routes are available via `nile.paths`. For reference, here are the paths for the default routes:
@@ -159,15 +162,16 @@ export const appRoutes = (prefix = '/api'): Routes => ({
   SIGNUP: `${prefix}/signup`,
   LOG: `${prefix}/_log`,
 });
-```
+````
 
 A case where you might want to use the routes directly is when these routes are exposed as a REST API of your application backend.
 
-For example, if you use the `@niledatabase/server/express` package, the routes are exposed in the `app` object and 
-while you may have a frontend that uses `@niledatabase/react` to call these routes from the application UI, 
+For example, if you use the `@niledatabase/server/express` package, the routes are exposed in the `app` object and
+while you may have a frontend that uses `@niledatabase/react` to call these routes from the application UI,
 you may want to also use them as a REST API for another backend or external service.
 
 In this case, you need to use the routes directly. The key is to:
+
 1. Include both the session cookie and the CRSF cookie in the request headers.
 2. Include the CSRF token in the request body.
 
@@ -213,6 +217,7 @@ curl -X POST 'localhost:3040/api/tenants' \
   -d '{"name":"my first customer"}' \
   -b login_cookies.txt
 ```
+
 </CodeGroup>
 
 ## Overriding routes
@@ -237,27 +242,27 @@ import { handlers } from "./nile";
 
 // Middleware function to log request and response details
 const logRequestAndResponseDetails = (handler) => async (req, res) => {
-  // Log the request method and URL
-  console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
+// Log the request method and URL
+console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
 
-  // Log the request headers
-  console.log('Request Headers:', req.headers);
+// Log the request headers
+console.log('Request Headers:', req.headers);
 
-  // Clone the request to safely read the body
-  const clonedReq = req.clone();
+// Clone the request to safely read the body
+const clonedReq = req.clone();
 
-  // Log the request body if it's a POST or PUT request
-  if (req.method === 'POST') {
-    const body = await clonedReq.text();
-    console.log('Request Body:', body);
-  }
-  // Call the original handler and return its result
-  const result = await handler(req, res);
+// Log the request body if it's a POST or PUT request
+if (req.method === 'POST') {
+const body = await clonedReq.text();
+console.log('Request Body:', body);
+}
+// Call the original handler and return its result
+const result = await handler(req, res);
 
-  // Log the response status after the handler has executed
-  console.log('Result Status:', result.status);
+// Log the response status after the handler has executed
+console.log('Result Status:', result.status);
 
-  return result;
+return result;
 };
 
 // Wrap each handler with the logging middleware
@@ -265,7 +270,8 @@ export const POST = logRequestAndResponseDetails(handlers.POST);
 export const GET = logRequestAndResponseDetails(handlers.GET);
 export const DELETE = logRequestAndResponseDetails(handlers.DELETE);
 export const PUT = logRequestAndResponseDetails(handlers.PUT);
-```
+
+````
 
 ```ts Remix route wrappers
 // app/routes/nile-api.ts
@@ -331,61 +337,62 @@ export const action = async ({ request }: Route.ActionArgs) => {
   console.log('Response Status:', response.status);
   return response;
 };
-```
+````
 
 ```ts Express route wrappers
 // server.mjs
-import "dotenv/config";
-import express from "express";
-import { Nile } from "@niledatabase/server";
-import { NileExpressHandler } from "@niledatabase/server/express";
+import 'dotenv/config';
+import express from 'express';
+import { Nile } from '@niledatabase/server';
+import { NileExpressHandler } from '@niledatabase/server/express';
 
 const startServer = async () => {
-    try {
-        const app = express();
-        const nile = Nile({
-            debug: true,
-        });
-        const { paths, handler } = await NileExpressHandler(nile);
-        console.log(paths);
+  try {
+    const app = express();
+    const nile = Nile({
+      debug: true,
+    });
+    const { paths, handler } = await NileExpressHandler(nile);
+    console.log(paths);
 
-        app.use(express.json());
-        app.use(express.urlencoded({ extended: true }));
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
 
-        // Create logging wrapper
-        const withLogging = (handler) => async (req, res, next) => {
-            console.log('Request Headers:', req.headers);
-            if (req.method === 'POST') {
-                console.log('Request Body:', req.body);
-            }
-            return handler(req, res, next);
-        };
+    // Create logging wrapper
+    const withLogging = (handler) => async (req, res, next) => {
+      console.log('Request Headers:', req.headers);
+      if (req.method === 'POST') {
+        console.log('Request Body:', req.body);
+      }
+      return handler(req, res, next);
+    };
 
-        // Apply wrapper to specific routes
-        app.get(paths.get, withLogging(handler));
-        app.post(paths.post, withLogging(handler));
-        app.put(paths.put, withLogging(handler));
-        app.delete(paths.delete, withLogging(handler));
+    // Apply wrapper to specific routes
+    app.get(paths.get, withLogging(handler));
+    app.post(paths.post, withLogging(handler));
+    app.put(paths.put, withLogging(handler));
+    app.delete(paths.delete, withLogging(handler));
 
-        const PORT = process.env.PORT || 3040;
-        app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
-        });
-    } catch (error) {
-        console.error("Error starting server:", error);
-        process.exit(1);
-    }
+    const PORT = process.env.PORT || 3040;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Error starting server:', error);
+    process.exit(1);
+  }
 };
 
 startServer();
 ```
+
 </CodeGroup>
 
 ### Route overrides
 
-In the examples below, we'll add a new route that will override the default route for `\auth\google\callback` with 
-custom logic. We are using `handlersWithContext` to get the `nile` object in the route handler. 
-`handlersWithContext` returns a tuple with the `nile` object, configured based on the response from the route handler, 
+In the examples below, we'll add a new route that will override the default route for `\auth\google\callback` with
+custom logic. We are using `handlersWithContext` to get the `nile` object in the route handler.
+`handlersWithContext` returns a tuple with the `nile` object, configured based on the response from the route handler,
 and the response from the route handler.
 
 <CodeGroup>
@@ -398,19 +405,20 @@ import { registerTenants } from "@/lib/TenantRegistration";
 
 export async function GET(req: NextRequest) {
   // call the original route
-  const {nile, response} = await handlersWithContext.GET(req); 
+  const {nile, response} = await handlersWithContext.GET(req);
 
-  if (nile) {
-      const me = await nile.users.getSelf();
-      if ("id" in me) {
-        // custom logic is here
-        await registerTenants(me.id);
-      }
-  }
-  // return the original response from the route
-  return response;
+if (nile) {
+const me = await nile.users.getSelf();
+if ("id" in me) {
+// custom logic is here
+await registerTenants(me.id);
 }
-```
+}
+// return the original response from the route
+return response;
+}
+
+````
 
 ```ts Remix route overrides
 // app/routes/auth-callback-google.tsx
@@ -446,7 +454,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
   return nileResponse;
 };
-```
+````
 
 ```ts Express route overrides
 // server.mjs
@@ -454,85 +462,88 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 // do not return a response by default. In order to use them in a custom handler,
 // you need some extra configuration and extra handling of all routes
 
-import "dotenv/config";
-import express from "express";
-import { Nile } from "@niledatabase/server";
-import { NileExpressHandler } from "@niledatabase/server/express";
+import 'dotenv/config';
+import express from 'express';
+import { Nile } from '@niledatabase/server';
+import { NileExpressHandler } from '@niledatabase/server/express';
 
 const startServer = async () => {
-    try {
-        const app = express();
-        const nile = Nile({
-           // debug: true,
-        });
-        // muteResponse is set to true to avoid sending the response back to the client from the route handler
-        // this is useful when you want to override the route with your own logic
-        const { paths, handler } = await NileExpressHandler(nile, {muteResponse:true});
-        console.log(paths);
+  try {
+    const app = express();
+    const nile = Nile({
+      // debug: true,
+    });
+    // muteResponse is set to true to avoid sending the response back to the client from the route handler
+    // this is useful when you want to override the route with your own logic
+    const { paths, handler } = await NileExpressHandler(nile, {
+      muteResponse: true,
+    });
+    console.log(paths);
 
-        app.use(express.json());
-        app.use(express.urlencoded({ extended: true }));
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
 
-        // Add custom Google OAuth callback route - This has to be done before all the default routes
-        app.get('/auth/google/callback', async (req, res, next) => {
-          const { status, headers, body } = await handler(req, res, next);
-          if (status === 200) {
-              // Fetch user information
-              const nileCtx = nile.withContext({ headers });
-              const me = await nileCtx.users.getSelf();
-              if ("id" in me) {
-                  // Custom logic: register tenants
-                  await registerTenants(me.id);
-              }
-          }
-          res.status(status).set(headers);
-          if (typeof body === 'string') {
-              res.send(body);
-          } else {
-              res.json(body ?? {});
-          }
-          return;
-        });
+    // Add custom Google OAuth callback route - This has to be done before all the default routes
+    app.get('/auth/google/callback', async (req, res, next) => {
+      const { status, headers, body } = await handler(req, res, next);
+      if (status === 200) {
+        // Fetch user information
+        const nileCtx = nile.withContext({ headers });
+        const me = await nileCtx.users.getSelf();
+        if ('id' in me) {
+          // Custom logic: register tenants
+          await registerTenants(me.id);
+        }
+      }
+      res.status(status).set(headers);
+      if (typeof body === 'string') {
+        res.send(body);
+      } else {
+        res.json(body ?? {});
+      }
+      return;
+    });
 
-        // Create response logging wrapper
-        // This is critical to ensure that the response is sent back to the client from the route handlers
-        // So make sure you use with `{ muteResponse: true }` even if you don't want to log all the responses.
-        const withResponseLogging = (handler) => async (req, res, next) => {
-            try {
-                // Wait for the handler to complete
-                const result = await handler(req, res, next);
-                // Log the result
-                console.log('Handler result:', result);
-                const { status, headers, body } = result;
-                res.status(status).set(headers);
-                if (typeof body === 'string') {
-                    res.send(body);
-                } else {
-                    res.json(body ?? {});
-                }
-                return;
-            } catch (error) {
-                console.error('Handler error:', error);
-                throw error;
-            }
-        };
+    // Create response logging wrapper
+    // This is critical to ensure that the response is sent back to the client from the route handlers
+    // So make sure you use with `{ muteResponse: true }` even if you don't want to log all the responses.
+    const withResponseLogging = (handler) => async (req, res, next) => {
+      try {
+        // Wait for the handler to complete
+        const result = await handler(req, res, next);
+        // Log the result
+        console.log('Handler result:', result);
+        const { status, headers, body } = result;
+        res.status(status).set(headers);
+        if (typeof body === 'string') {
+          res.send(body);
+        } else {
+          res.json(body ?? {});
+        }
+        return;
+      } catch (error) {
+        console.error('Handler error:', error);
+        throw error;
+      }
+    };
 
-        // Apply wrapper to routes
-        app.get(paths.get, withResponseLogging(handler));
-        app.post(paths.post, withResponseLogging(handler));
-        app.put(paths.put, withResponseLogging(handler));
-        app.delete(paths.delete, withResponseLogging(handler));
+    // Apply wrapper to routes
+    app.get(paths.get, withResponseLogging(handler));
+    app.post(paths.post, withResponseLogging(handler));
+    app.put(paths.put, withResponseLogging(handler));
+    app.delete(paths.delete, withResponseLogging(handler));
 
-        const PORT = process.env.PORT || 3040;
-        app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
-        });
-    } catch (error) {
-        console.error("Error starting server:", error);
-        process.exit(1);
-    }
+    const PORT = process.env.PORT || 3040;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Error starting server:', error);
+    process.exit(1);
+  }
 };
 
 startServer();
 ```
+
 </CodeGroup>

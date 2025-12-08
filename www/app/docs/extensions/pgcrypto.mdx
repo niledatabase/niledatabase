@@ -10,6 +10,7 @@ Your Nile database arrives with the pgcrypto extension already enabled.
 ## Overview
 
 The pgcrypto extension provides functions for:
+
 - Password hashing
 - General-purpose hashing
 - Encryption (symmetric and asymmetric)
@@ -39,9 +40,9 @@ INSERT INTO password_hashes (tenant_id, email, password_hash) VALUES
      public.crypt('user_password', public.gen_salt('bf')));
 
 -- Verify password
-SELECT user_id 
-FROM password_hashes 
-WHERE email = 'user@example.com' 
+SELECT user_id
+FROM password_hashes
+WHERE email = 'user@example.com'
   AND password_hash = public.crypt('user_password', password_hash);
 ```
 
@@ -94,13 +95,14 @@ SELECT public.gen_random_uuid();               -- Random UUID
 
 ### Password Storage
 
-✅ Use crypt() with Blowfish: 
+✅ Use crypt() with Blowfish:
 `password_hash = public.crypt(password, public.gen_salt('bf', 8))`
 
-❌ Don't store plain MD5 (unsafe!): 
+❌ Don't store plain MD5 (unsafe!):
 `password_hash = public.md5(password)`
 
 ### Encryption Key Management
+
 ✅ Store keys securely outside the database: `encrypted_data = public.encrypt(data, current_setting('app.encryption_key'), 'aes')`
 
 ❌ Don't store keys in the database
@@ -108,6 +110,7 @@ SELECT public.gen_random_uuid();               -- Random UUID
 ❌ Don't hardcode keys in application code
 
 ### Salt Generation
+
 ✅ Generate a new salt for each password: `SELECT public.gen_salt('bf', 8);`
 
 ❌ Don't reuse salts

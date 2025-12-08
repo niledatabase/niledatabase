@@ -77,13 +77,13 @@ When the user successfully authenticates with Google, they are redirected to the
 ```ts
 export async function POST(req: Request) {
   const formData = await req.formData();
-  const event = formData.get("event");
+  const event = formData.get('event');
 
   let location: string;
 
-  if (event === "AUTH_ERROR") {
-    const message = formData.get("error");
-    location = redirectOnError(message ? message.toString() : "Unknown error");
+  if (event === 'AUTH_ERROR') {
+    const message = formData.get('error');
+    location = redirectOnError(message ? message.toString() : 'Unknown error');
   } else {
     location = redirectOnSuccess(formData);
   }

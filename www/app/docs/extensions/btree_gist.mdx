@@ -1,12 +1,13 @@
 ---
-title: "Btree_gist"
-description: "Allows GiST indexes to support B-tree indexable data types."
+title: 'Btree_gist'
+description: 'Allows GiST indexes to support B-tree indexable data types.'
 ---
 
 The [btree_gist](https://www.postgresql.org/docs/current/btree-gist.html) extension in PostgreSQL allows GiST indexes to support B-tree indexable data types. It is useful for indexing columns that typically use B-tree indexes but require additional GiST-specific features such as **multicolumn indexing**, **range queries**, and **support for exclusion constraints**.
 Your Nile database arrives with `btree_gist` extension already enabled, so there's no need to run `create extension`.
 
 ## Creating and Populating a Sample Table
+
 Before creating the index, let's create a sample table and populate it with data:
 
 ```sql
@@ -26,17 +27,22 @@ INSERT INTO my_table (column1, column2, column3) VALUES
 ```
 
 ## Creating a GiST Index with btree_gist
+
 A GiST index with `btree_gist` can be used for multi-column searches and exclusion constraints. Here's how to create one:
 
 ```sql
 CREATE INDEX gist_idx ON my_table
 USING gist (column1, column2, column3);
 ```
-<Info> 
-Note: `USING gist` specifies that this is a GiST index. The extension allows `column1` (text), `column2` (integer), and `column3` (timestamp) to be indexed efficiently using GiST.
+
+<Info>
+  Note: `USING gist` specifies that this is a GiST index. The extension allows
+  `column1` (text), `column2` (integer), and `column3` (timestamp) to be indexed
+  efficiently using GiST.
 </Info>
 
 ## Querying with GiST Index
+
 Once the GiST index is created, it can be used to optimize queries filtering on indexed columns:
 
 ```sql
@@ -44,11 +50,13 @@ SELECT * FROM my_table WHERE column1 = 'apple' AND column2 = 10;
 ```
 
 ## Limitations
+
 - GiST indexes generally **do not provide the same performance as B-tree indexes** for single-column lookups.
 - They **excel at multi-column queries** and range searches but can be **slower for simple equality lookups**.
 - `btree_gist` is useful primarily for **exclusion constraints** rather than improving query performance.
 
 ## Removing a GiST Index
+
 If you need to remove a GiST index:
 
 ```sql
@@ -56,6 +64,7 @@ DROP INDEX gist_idx;
 ```
 
 ## Conclusion
+
 The `btree_gist` extension enhances GiST indexes by allowing them to handle B-tree indexable data types efficiently. It is particularly useful for **multi-column indexing**, **range queries**, and **exclusion constraints**.
 
 For more details, refer to the [PostgreSQL documentation](https://www.postgresql.org/docs/current/btree-gist.html).

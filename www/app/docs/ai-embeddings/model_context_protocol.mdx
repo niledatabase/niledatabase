@@ -2,11 +2,12 @@
 title: 'Model Context Protocol'
 description: 'Model Context Protocol for Nile'
 icon: 'm'
---- 
+---
 
 The Model Context Protocol (MCP) is a standardized interface that enables Large Language Models (LLMs) like Claude to interact with external tools and services. For Nile, MCP provides a natural language interface to manage databases, execute queries, and handle database operations through AI assistants.
 
 Key benefits:
+
 - Natural language interaction with your databases
 - Standardized interface across different AI tools
 - Type-safe operations with input validation
@@ -16,18 +17,23 @@ Key benefits:
 ## Installing Nile Model Context Protocol
 
 ### Stable Version
+
 ```bash
 npm install @niledatabase/nile-mcp-server
 ```
+
 This will install @niledatabase/nile-mcp-server in your node_modules folder. For example: node_modules/@niledatabase/nile-mcp-server/dist/
 
 ### Latest Alpha/Preview Version
+
 ```bash
 npm install @niledatabase/nile-mcp-server@alpha
 ```
+
 This will install @niledatabase/nile-mcp-server in your node_modules folder. For example: node_modules/@niledatabase/nile-mcp-server/dist/
 
 ### Manual Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/nile-mcp-server.git
@@ -41,7 +47,9 @@ npm run build
 ```
 
 ### Configuration
+
 Create a `.env` file in your project root:
+
 ```env
 NILE_API_KEY=your_api_key_here
 NILE_WORKSPACE_SLUG=your_workspace_slug
@@ -53,26 +61,32 @@ You can get the API key and workspace from [Nile console](https://console.thenil
 ## Available Tools
 
 ### Database Management
+
 - **create-database**: Create new databases
 - **list-databases**: List all databases in workspace
 - **get-database**: Get detailed database information
 - **delete-database**: Delete databases
 
 ### Credential Management
+
 - **list-credentials**: List database credentials
 - **create-credential**: Create new database credentials
 
 ### Region Management
+
 - **list-regions**: List available regions for database creation
 
 ### SQL Operations
+
 - **execute-sql**: Execute SQL queries with results as markdown tables
 
 ### Resource Management
+
 - **read-resource**: Get detailed schema information
 - **list-resources**: List all database resources
 
 ### Tenant Management
+
 - **list-tenants**: List all database tenants
 - **create-tenant**: Create new tenants
 - **delete-tenant**: Delete existing tenants
@@ -80,9 +94,11 @@ You can get the API key and workspace from [Nile console](https://console.thenil
 ## Server Modes
 
 ### STDIN Mode (Default)
+
 STDIN mode uses standard input/output for communication, ideal for direct integration with AI tools.
 
 1. Start the server:
+
 ```bash
 node dist/index.js
 ```
@@ -90,25 +106,30 @@ node dist/index.js
 2. The server automatically uses STDIN/STDOUT for communication
 
 ### SSE Mode
+
 Server-Sent Events (SSE) mode enables HTTP-based, event-driven communication.
 
 1. Configure SSE mode in `.env`:
+
 ```env
 MCP_SERVER_MODE=sse
 ```
 
 2. Start the server:
+
 ```bash
 node dist/index.js
 ```
 
 3. Connect to SSE endpoint:
+
 ```bash
 # Listen for events
 curl -N http://localhost:3000/sse
 ```
 
 4. Send commands:
+
 ```bash
 # Send a command
 curl -X POST http://localhost:3000/messages \
@@ -135,9 +156,7 @@ curl -X POST http://localhost:3000/messages \
   "mcpServers": {
     "nile-database": {
       "command": "node",
-      "args": [
-        "/path/to/your/nile-mcp-server/dist/index.js"
-      ],
+      "args": ["/path/to/your/nile-mcp-server/dist/index.js"],
       "env": {
         "NILE_API_KEY": "your_api_key_here",
         "NILE_WORKSPACE_SLUG": "your_workspace_slug"
@@ -165,7 +184,7 @@ curl -X POST http://localhost:3000/messages \
 
 3. Add server configuration:
    - Name: `nile-database`
-   - Command: 
+   - Command:
      ```bash
      env NILE_API_KEY=your_key NILE_WORKSPACE_SLUG=your_workspace node /absolute/path/to/nile-mcp-server/dist/index.js
      ```
@@ -178,20 +197,19 @@ curl -X POST http://localhost:3000/messages \
 5. Click Save and restart Cursor
 
 ## Windsurf Setup
+
 1. Open Windsurf and go to the Cascade assistant
 
 2. Click on the hammmer icon (should show MCP on hover) and then on configure
 
 3. Paste the configuration below into the mcp_configuration.json file
 
- ```json
+```json
 {
   "mcpServers": {
     "nile-database": {
       "command": "node",
-      "args": [
-        "/path/to/your/nile-mcp-server/dist/index.js"
-      ],
+      "args": ["/path/to/your/nile-mcp-server/dist/index.js"],
       "env": {
         "NILE_API_KEY": "your_api_key_here",
         "NILE_WORKSPACE_SLUG": "your_workspace_slug"
@@ -209,6 +227,7 @@ curl -X POST http://localhost:3000/messages \
 5. On saving, Windsurf will ask for confirmation. Once confirmed, it should show nile-database MCP active with a green active status
 
 ## Cline Setup
+
 1. Click on MCP Servers in the Cline chat window
 
 2. Click on the Installed tab and tap the "Configure MCP Servers" SignOutButton
@@ -220,9 +239,7 @@ curl -X POST http://localhost:3000/messages \
   "mcpServers": {
     "nile-database": {
       "command": "node",
-      "args": [
-        "/path/to/your/nile-mcp-server/dist/index.js"
-      ],
+      "args": ["/path/to/your/nile-mcp-server/dist/index.js"],
       "env": {
         "NILE_API_KEY": "your_api_key_here",
         "NILE_WORKSPACE_SLUG": "your_workspace_slug"
@@ -231,6 +248,7 @@ curl -X POST http://localhost:3000/messages \
   }
 }
 ```
+
 4. Replace:
    - `/path/to/your/nile-mcp-server` with your actual project path
    - `your_api_key_here` with your Nile API key
@@ -241,6 +259,7 @@ curl -X POST http://localhost:3000/messages \
 ## Claude Code Setup
 
 1. Install Claude Code
+
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
@@ -301,4 +320,4 @@ Added stdio MCP server nile_local_mcp with command: node /path/to/your/nile-mcp-
 - Check server logs in the `logs` directory
 - Review error messages in AI tool
 - Ensure all environment variables are set
-- Verify network connectivity 
+- Verify network connectivity

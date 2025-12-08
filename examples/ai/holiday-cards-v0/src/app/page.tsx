@@ -1,17 +1,17 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { GiftIcon, UsersIcon, SparklesIcon } from "lucide-react";
+} from '@/components/ui/card';
+import { GiftIcon, UsersIcon, SparklesIcon } from 'lucide-react';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-r from-red-100 to-green-100 flex flex-col items-center justify-center p-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-r from-red-100 to-green-100 p-4">
       <Card className="w-full max-w-4xl bg-white/80 backdrop-blur-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-4xl font-bold text-red-600">
@@ -22,7 +22,7 @@ export default function LandingPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+          <div className="grid grid-cols-1 gap-4 text-center md:grid-cols-3">
             <div className="flex flex-col items-center space-y-2">
               <GiftIcon className="h-12 w-12 text-red-500" />
               <h3 className="text-lg font-semibold">Personalized Wishes</h3>
@@ -47,9 +47,9 @@ export default function LandingPage() {
           </div>
           <div className="flex justify-center">
             <p className="text-sm text-gray-600">
-              You can skip registration and just login with{" "}
-              <span className="font-bold text-green-600">demo@demo.com</span>{" "}
-              and password{" "}
+              You can skip registration and just login with{' '}
+              <span className="font-bold text-green-600">demo@demo.com</span>{' '}
+              and password{' '}
               <span className="font-bold text-green-600">demo</span>
             </p>
           </div>

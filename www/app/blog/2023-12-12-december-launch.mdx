@@ -1,11 +1,11 @@
 export const metadata = {
   title:
     "Announcing Nile's Behdet release - user management, invitations, and more",
-  authors: ["gwenshap"],
-  image: "2023-12-12-dec-release-user-mgmt/cover.png",
+  authors: ['gwenshap'],
+  image: '2023-12-12-dec-release-user-mgmt/cover.png',
   sizzle:
-    "Nile announces its December monthly launch, called Behdet. It includes new user management capabilities, invitations and more.",
-  tags: ["serverless", "postgres", "saas", "user management", "launch"],
+    'Nile announces its December monthly launch, called Behdet. It includes new user management capabilities, invitations and more.',
+  tags: ['serverless', 'postgres', 'saas', 'user management', 'launch'],
 };
 
 We are proud to announce the second monthly launch from the Nile team. This release, code named “Behdet”. This release is a bit unique in that every feature we are announcing today was requested by members of Nile community.
@@ -26,7 +26,7 @@ We've introduced new APIs that you can use to add user management screen to your
 You can now update users:
 
 ```jsx
-const params = { email: "email", preferredName: "Inigo Montoya" };
+const params = { email: 'email', preferredName: 'Inigo Montoya' };
 
 const res = await nile.api.updateUser(userId, params);
 ```

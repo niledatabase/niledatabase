@@ -1,7 +1,7 @@
 ---
 title: "Integration testing with Nile's Postgres platform using Docker"
-sidebarTitle: "Testing"
-icon: "vials"
+sidebarTitle: 'Testing'
+icon: 'vials'
 ---
 
 Nile provides a cloud offering to help build multi-tenant apps. However, it is a lot easier to build and iterate
@@ -39,26 +39,26 @@ npm install testcontainers pg
 and then you can run the following snippet:
 
 ```typescript
-import { GenericContainer, Wait } from "testcontainers";
-import pg from "pg";
+import { GenericContainer, Wait } from 'testcontainers';
+import pg from 'pg';
 
-const image = "ghcr.io/niledatabase/testingcontainer:latest";
+const image = 'ghcr.io/niledatabase/testingcontainer:latest';
 const container = await new GenericContainer(image)
   .withExposedPorts(5432)
   .withWaitStrategy(
-    Wait.forLogMessage("Database has been created and is ready")
+    Wait.forLogMessage('Database has been created and is ready'),
   )
   .start();
 
 const client = new pg.Client({
   host: container.getHost(),
   port: container.getMappedPort(5432),
-  user: "00000000-0000-0000-0000-000000000000",
-  password: "password",
-  database: "test",
+  user: '00000000-0000-0000-0000-000000000000',
+  password: 'password',
+  database: 'test',
 });
 await client.connect();
-const res = await client.query("SELECT version()");
+const res = await client.query('SELECT version()');
 console.log(res.rows[0]);
 await client.end();
 ```

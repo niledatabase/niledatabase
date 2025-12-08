@@ -1,10 +1,10 @@
 ---
 title: "Getting started with Nile's Postgres platform locally with Docker"
-sidebarTitle: "Run Locally"
-icon: "docker"
+sidebarTitle: 'Run Locally'
+icon: 'docker'
 ---
 
-import LocalDevelopment from '/snippets/localdevelopment.mdx'
+import LocalDevelopment from '/snippets/localdevelopment.mdx';
 
 <Steps>
 <LocalDevelopment/>
@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS "todos" (
 ```
 
 If you are using `psql`, you can view the table schema by running `\d todos`.
+
 </Step>
 <Step title="Create tenants">
 Nile ships with built-in tables, like `tenants` table. Lets create our first tenant by inserting a row into the `tenants` table:
@@ -43,6 +44,7 @@ insert into tenants (id, name)
 values ('d24419bf-6122-4879-afa5-1d9c1b051d72', 'my first customer');
 select * from tenants;
 ```
+
 </Step>
 <Step title="Insert data into a tenant-aware table">
 
@@ -75,6 +77,7 @@ insert into todos (tenant_id, title, estimate, embedding, complete)
 values ('7e93c45f-fe65-4f26-8ab6-922850fa4c7a', 'take out the trash', '2h', '[0.8,0.2,0.6]', false);
 select * from todos;
 ```
+
 </Step>
 <Step title="Tenant isolation">
 
@@ -93,6 +96,7 @@ FROM todos join tenants on tenants.id = todos.tenant_id;
 
 ✏️ Note that the container uses ephemeral storage, so all the data will be lost when the container is stopped.
 This is intentional, as it simplifies the setup (and more importantly - the cleanup), while still allowing you to experiment and test your application.
+
 </Step>
 </Steps>
 ### Looking good! What's next?
@@ -141,6 +145,7 @@ You can do this by first deleting existing images of `niledatabase/testingcontai
 Please check if any of the common issues and solutions below help solve your problem. If not, we welcome you to report the issue on either [GitHub](https://github.com/niledatabase/niledatabase) or [Discord](https://discord.com/invite/8UuBB84tTy)
 
 When reporting the issue, please include:
+
 - The docker container logs (`docker logs <container_id>`)
 - The exact error message you're encountering
 
@@ -179,9 +184,8 @@ It is likely that you have another Postgres instance running on your machine tha
 You can either:
 
 - Stop the other Postgres instance - the exact command depends on your operating system and Postgres installation method.
-- Change the port mapping when running the container. For example to port 5433, and then connect to the new port: 
+- Change the port mapping when running the container. For example to port 5433, and then connect to the new port:
   ```bash
   docker run -p 5433:5432 -ti ghcr.io/niledatabase/testingcontainer:latest
   psql postgres://00000000-0000-0000-0000-000000000000:password@localhost:5433/test
   ```
-

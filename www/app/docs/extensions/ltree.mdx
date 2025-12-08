@@ -43,16 +43,19 @@ INSERT INTO categories (path) VALUES
 ### Querying Examples
 
 Find all subcategories under 'Electronics':
+
 ```sql
 SELECT path FROM categories WHERE path <@ 'Electronics';
 ```
 
 Find immediate children of 'Electronics.Computers':
+
 ```sql
 SELECT path FROM categories WHERE path ~ 'Electronics.Computers.*{1}';
 ```
 
 Find the parent category:
+
 ```sql
 SELECT subpath(path, 0, -1) FROM categories WHERE path = 'Electronics.Computers.Laptops';
 ```

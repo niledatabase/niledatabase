@@ -1,12 +1,12 @@
 export function slugify(text: string): string {
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
 }
 
 export function getHeadings(
-  content: string
+  content: string,
 ): { text: string; level: number }[] {
   const headingRegex = /^(##)\s+(.+)$/gm;
   const headings: { text: string; level: number }[] = [];

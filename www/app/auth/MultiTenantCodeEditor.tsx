@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
 type CodeEditorProps = {
   tabs?: Record<string, string>;
@@ -31,14 +31,14 @@ id                                     name
 };
 
 export const setupCodeExamples: Record<string, string> = {
-  "nile.ts": `import { Nile } from "@niledatabase/server";
+  'nile.ts': `import { Nile } from "@niledatabase/server";
 export const nile = await Nile();
 export const { handlers } = nile.api;`,
 
-  "route.ts": `import { handlers } from "./nile";
+  'route.ts': `import { handlers } from "./nile";
 export const { POST, GET, DELETE, PUT } = handlers;`,
 
-  "page.jsx": `import {
+  'page.jsx': `import {
   SignOutButton,
   SignUpForm,
   SignedIn,
@@ -144,13 +144,13 @@ app.get("/some-path", async (req, res) => {
   });
 });`,
 
-  "reset-password": `import { PasswordResetRequestForm } from "./path/to/ResetForm";
+  'reset-password': `import { PasswordResetRequestForm } from "./path/to/ResetForm";
 
 const MyComponent = () => {
   return <PasswordResetRequestForm callbackUrl="/change-password" />;
 };`,
 
-  "change-password": `<PasswordResetForm
+  'change-password': `<PasswordResetForm
   defaultValues={{ email: "user@example.com" }}
   onSuccess={() => console.log("Password updated successfully")}
   onError={(error) => console.error("Update failed", error)}
@@ -188,7 +188,7 @@ export const selfHostExamples: Record<string, string> = {
 NILEDB_PASSWORD=niledb_password
 NILEDB_API_URL=https://us-west-2.api.thenile.dev/v2/databases/<database_id>
 NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/<database_name>`,
-  "self host": `docker run -d \\
+  'self host': `docker run -d \\
   --name nile-auth-server \\
   -p 3001:3001 \\
   -e NODE_ENV=production \\
@@ -200,26 +200,26 @@ NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/<database_name>`,
 };
 
 function highlightCode(code: string): string {
-  if (!code) return ""; // Add safety check for undefined or empty code
+  if (!code) return ''; // Add safety check for undefined or empty code
 
   const escapeHtml = (str: string) => {
     return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   };
 
-  const lines = code.split("\n");
+  const lines = code.split('\n');
   const lineNumbers = lines
     .map(
       (_, i) =>
         `<span class="select-none text-[#636669] w-[40px] inline-block text-right pr-4">${
           i + 1
-        }</span>`
+        }</span>`,
     )
-    .join("\n");
+    .join('\n');
 
   const highlightedCode = lines
     .map((line) => {
@@ -230,27 +230,27 @@ function highlightCode(code: string): string {
         // Keywords
         .replace(
           /\b(const|let|var|return|export|default|async|await|function|import|from|if)\b/g,
-          '<span style="color: #E06C75">$1</span>'
+          '<span style="color: #E06C75">$1</span>',
         )
         // Built-in objects and types
         .replace(
           /\b(Response|console)\b/g,
-          '<span style="color: #E5C07B">$1</span>'
+          '<span style="color: #E5C07B">$1</span>',
         )
         // JSX Components and HTML tags
         .replace(
           /(&lt;\/?)([\w-]+)/g,
-          '$1<span style="color: #E06C75">$2</span>'
+          '$1<span style="color: #E06C75">$2</span>',
         )
         // SQL Keywords
         .replace(
           /\b(select|from)\b/gi,
-          '<span style="color: #E06C75">$1</span>'
+          '<span style="color: #E06C75">$1</span>',
         )
         // String literals
         .replace(
           /(&quot;.*?&quot;|&#039;.*?&#039;)/g,
-          '<span style="color: #98C379">$1</span>'
+          '<span style="color: #98C379">$1</span>',
         )
         // Imports and exports
         .replace(/({[^}]+})/g, '<span style="color: #61AFEF">$1</span>')
@@ -261,7 +261,7 @@ function highlightCode(code: string): string {
 
       return highlighted;
     })
-    .join("\n");
+    .join('\n');
 
   return `<div class="flex">\n<div class="line-numbers">${lineNumbers}</div>\n<div class="code-content">${highlightedCode}</div>\n</div>`;
 }
@@ -271,26 +271,26 @@ export default function MultiTenantCodeEditor({
   defaultTab,
 }: CodeEditorProps) {
   const [activeTab, setActiveTab] = useState<string>(
-    defaultTab || Object.keys(tabs)[0]
+    defaultTab || Object.keys(tabs)[0],
   );
 
   return (
-    <div className="bg-[#000000] rounded-xl overflow-hidden border border-[#2a2a2a]">
-      <div className="bg-[#000000] px-4 py-2 flex items-center">
-        <div className="flex gap-2 items-center">
-          <div className="w-3 h-3 rounded-full bg-[#FF5F57]"></div>
-          <div className="w-3 h-3 rounded-full bg-[#FEBC2E]"></div>
-          <div className="w-3 h-3 rounded-full bg-[#28C840]"></div>
+    <div className="overflow-hidden rounded-xl border border-[#2a2a2a] bg-[#000000]">
+      <div className="flex items-center bg-[#000000] px-4 py-2">
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-full bg-[#FF5F57]"></div>
+          <div className="h-3 w-3 rounded-full bg-[#FEBC2E]"></div>
+          <div className="h-3 w-3 rounded-full bg-[#28C840]"></div>
         </div>
-        <div className="flex gap-4 ml-6">
+        <div className="ml-6 flex gap-4">
           {Object.keys(tabs).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-3 py-1 text-sm transition-colors ${
                 activeTab === tab
-                  ? "bg-[#000000] rounded-md text-white/90"
-                  : "text-white/40 hover:text-white/60"
+                  ? 'rounded-md bg-[#000000] text-white/90'
+                  : 'text-white/40 hover:text-white/60'
               }`}
             >
               {tab}
@@ -300,7 +300,7 @@ export default function MultiTenantCodeEditor({
       </div>
       <div className="p-6 font-mono text-sm">
         <pre
-          className="text-[#e4e4e4] leading-6 whitespace-pre overflow-x-auto"
+          className="overflow-x-auto whitespace-pre leading-6 text-[#e4e4e4]"
           dangerouslySetInnerHTML={{
             __html: highlightCode(tabs[activeTab]),
           }}

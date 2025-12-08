@@ -1,17 +1,17 @@
 export const metadata = {
-  title: "Building successful multi-tenant RAG applications",
-  authors: ["gwenshap"],
-  image: "2024-10-24-multi-tenant-rag/cover.png",
+  title: 'Building successful multi-tenant RAG applications',
+  authors: ['gwenshap'],
+  image: '2024-10-24-multi-tenant-rag/cover.png',
   sizzle:
     "Multi-tenant RAG applications provide privacy, reliability and scalability. Nile makes it easy to build multi-tenant RAG applications and in this blog, we'll show you how.",
   tags: [
-    "postgres",
-    "AI",
-    "B2B",
-    "multi-tenant",
-    "LlamaIndex",
-    "Vector Store",
-    "RAG",
+    'postgres',
+    'AI',
+    'B2B',
+    'multi-tenant',
+    'LlamaIndex',
+    'Vector Store',
+    'RAG',
   ],
 };
 
@@ -146,7 +146,7 @@ const similarTasks = await tenantNile.db.query(
   `SELECT title, estimate FROM todos 
   ORDER BY embedding <-> $1
   LIMIT 10`,
-  [embeddingToSQL(embedding)]
+  [embeddingToSQL(embedding)],
 );
 ```
 

@@ -3,10 +3,13 @@ title: 'Express'
 description: 'Integrate Nile Auth with express applications'
 icon: 'server'
 ---
-This guide will help you get started with Nile Auth and Express. This guide outlines the steps required to configure and integrate authentication in your 
+
+This guide will help you get started with Nile Auth and Express. This guide outlines the steps required to configure and integrate authentication in your
 application. This guide assumes that you have already created an Express application, if you haven't, you can use the [Quickstart](/auth/quickstarts/express) to get started.
+
 <Note>
-If you have not done so yet, be sure you have [obtained credentials from the console](../getting-started/installation).
+  If you have not done so yet, be sure you have [obtained credentials from the
+  console](../getting-started/installation).
 </Note>
 
 <Steps>
@@ -14,14 +17,17 @@ If you have not done so yet, be sure you have [obtained credentials from the con
 <CodeGroup>
 
 ```bash npm
-  npm install @niledatabase/server @niledatabase/express 
+  npm install @niledatabase/server @niledatabase/express
 ```
-```bash yarn 
-  yarn add @niledatabase/server @niledatbase/express 
+
+```bash yarn
+  yarn add @niledatabase/server @niledatbase/express
 ```
+
 ```bash pnpm
-  pnpm add @niledatabase/server @niledatabase/express 
+  pnpm add @niledatabase/server @niledatabase/express
 ```
+
 </CodeGroup>
 </Step>
 
@@ -29,18 +35,18 @@ If you have not done so yet, be sure you have [obtained credentials from the con
 Out of the box, the express extension will add all routes and middleware to your express application to ensure everything works properly.
 
 ```ts app/api/[...nile]/route.ts
-import { express } from 'express'
-import { Nile } from '@niledatabase/server'
-import { express as nileExpress } from '@niledatabase/express'
+import { express } from 'express';
+import { Nile } from '@niledatabase/server';
+import { express as nileExpress } from '@niledatabase/express';
 
 const app = express();
 
-export const nile = Nile({ 
+export const nile = Nile({
   extensions: [nileExpress(app)],
-  origin: fe_url, // whitelist your FE origin 
+  origin: fe_url, // whitelist your FE origin
 });
-
 ```
+
 </Step>
 
 </Steps>

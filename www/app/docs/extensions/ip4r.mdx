@@ -50,7 +50,7 @@ The extension provides various operators for IP address manipulation and compari
 
 ```sql
 -- Check if an IP is in a range
-SELECT network, description 
+SELECT network, description
 FROM ip_access_rules
 WHERE network >> '10.0.1.5'::ip4;
 
@@ -73,30 +73,30 @@ WHERE network >>= '192.168.1.0/24'::ip4r;
 ```sql
 -- Check if an IP address is allowed (direct query)
 SELECT EXISTS (
-    SELECT 1 
-    FROM ip_access_rules 
+    SELECT 1
+    FROM ip_access_rules
     WHERE network >> '10.0.1.5'::ip4
     AND is_allowed = true
 );
 
 -- Get all matching rules for an IP address
 SELECT network, description, is_allowed
-FROM ip_access_rules 
+FROM ip_access_rules
 WHERE network >> '10.0.1.5'::ip4
 ORDER BY masklen(network) DESC  -- Most specific match first
 LIMIT 1;
 
 -- Check multiple IPs at once
-SELECT 
+SELECT
     client_ip,
     EXISTS (
-        SELECT 1 
-        FROM ip_access_rules 
+        SELECT 1
+        FROM ip_access_rules
         WHERE network >> client_ip::ipaddress
         AND is_allowed = true
     ) as is_allowed
 FROM (
-    VALUES 
+    VALUES
         ('10.0.1.5'),
         ('192.168.1.100'),
         ('203.0.113.1')
@@ -112,10 +112,10 @@ FROM ip_access_rules
 WHERE network <<= '10.0.0.0/8'::ip4r;
 
 -- Calculate number of addresses in each range
-SELECT 
+SELECT
     network,
     description,
-    CASE 
+    CASE
         WHEN family(network) = 4 THEN masklen(network::ip4r)
         ELSE masklen(network::ip6r)
     END as prefix_length
@@ -132,6 +132,7 @@ CREATE INDEX idx_ip_ranges ON ip_access_rules USING gist (network);
 ```
 
 This index improves performance for these operators:
+
 - `>>` (contains)
 - `>>=` (contains or equals)
 - `<<` (contained by)
@@ -160,5 +161,5 @@ For some use cases, you might want to consider:
 2. Using `cidr` type for network ranges without host bits
 3. Using separate columns for IPv4 and IPv6 if operations are always version-specific
 
-For more details, refer to the [PostgreSQL documentation on network address types](https://www.postgresql.org/docs/current/datatype-net-types.html) and 
+For more details, refer to the [PostgreSQL documentation on network address types](https://www.postgresql.org/docs/current/datatype-net-types.html) and
 the [ip4r extension documentation](https://github.com/RhodiumToad/ip4r).

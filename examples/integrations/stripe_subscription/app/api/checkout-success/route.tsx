@@ -1,9 +1,9 @@
-import { cookies } from "next/headers";
-import Stripe from "stripe";
-import { configureNile } from "@/lib/NileServer";
-import { redirect } from "next/navigation";
-import { type NextRequest } from "next/server";
-import { revalidatePath } from "next/cache";
+import { cookies } from 'next/headers';
+import Stripe from 'stripe';
+import { configureNile } from '@/lib/NileServer';
+import { redirect } from 'next/navigation';
+import { type NextRequest } from 'next/server';
+import { revalidatePath } from 'next/cache';
 
 function respond(location: string) {
   return new Response(null, {
@@ -13,16 +13,16 @@ function respond(location: string) {
 }
 
 export async function GET(req: NextRequest) {
-  console.log("checkout-success called");
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+  console.log('checkout-success called');
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
   const searchParams = req.nextUrl.searchParams;
-  const tenantId = searchParams.get("tenant_id")?.toString();
-  const session_id = searchParams.get("session_id")?.toString();
+  const tenantId = searchParams.get('tenant_id')?.toString();
+  const session_id = searchParams.get('session_id')?.toString();
   let location: string;
 
   if (!tenantId || !session_id) {
-    console.log("missing tenant_id or session_id parameters from request");
-    return respond("/"); // TODO: Better error handling
+    console.log('missing tenant_id or session_id parameters from request');
+    return respond('/'); // TODO: Better error handling
   }
 
   const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
@@ -30,10 +30,10 @@ export async function GET(req: NextRequest) {
 
   if (!customerId) {
     console.log(
-      "missing customer_id from checkout session " +
-        JSON.stringify(checkoutSession, null, 2)
+      'missing customer_id from checkout session ' +
+        JSON.stringify(checkoutSession, null, 2),
     );
-    return respond("/"); // TODO: Better error handling
+    return respond('/'); // TODO: Better error handling
   }
 
   const nile = await configureNile();
@@ -45,9 +45,9 @@ export async function GET(req: NextRequest) {
          stripe_subscription_id = $2,
          tenant_tier = $3
      WHERE id = $4`,
-    [checkoutSession.customer, checkoutSession.subscription, "basic", tenantId]
+    [checkoutSession.customer, checkoutSession.subscription, 'basic', tenantId],
   );
 
-  revalidatePath("/tenants");
-  return respond("/tenants/" + tenantId + "/billing");
+  revalidatePath('/tenants');
+  return respond('/tenants/' + tenantId + '/billing');
 }

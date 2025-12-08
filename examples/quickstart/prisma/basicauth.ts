@@ -1,13 +1,13 @@
-import { PrismaClient } from "@prisma/client";
-import { tenantContext } from "./storage";
+import { PrismaClient } from '@prisma/client';
+import { tenantContext } from './storage';
 
 export const REQUIRE_AUTH = process.env.REQUIRE_AUTH || false;
 export async function dbAuthorizer(
   username: string,
   password: string,
-  cb: (err: any, result: boolean) => void
+  cb: (err: any, result: boolean) => void,
 ) {
-  console.log("authenticating user: " + username);
+  console.log('authenticating user: ' + username);
   if (!REQUIRE_AUTH) {
     return cb(null, true);
   }
@@ -29,6 +29,6 @@ export async function dbAuthorizer(
 
 export function getUnauthorizedResponse(req: any) {
   return req.auth
-    ? "Credentials " + req.auth.user + ":" + req.auth.password + " rejected"
-    : "No credentials provided";
+    ? 'Credentials ' + req.auth.user + ':' + req.auth.password + ' rejected'
+    : 'No credentials provided';
 }

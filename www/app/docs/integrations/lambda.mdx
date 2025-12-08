@@ -1,7 +1,7 @@
 ---
-title: "Serverless Multi-tenant Backend with AWS Lambda"
-sidebarTitle: "AWS Lambda"
-icon: "clock-eight"
+title: 'Serverless Multi-tenant Backend with AWS Lambda'
+sidebarTitle: 'AWS Lambda'
+icon: 'clock-eight'
 ---
 
 In this tutorial, you will learn how to use Nile's tenant virtualization from a serverless application, using a todo list application example.
@@ -156,7 +156,7 @@ In the example, we used `serverless-http` NodeJS module, which wraps an Express 
 Using it is very straightforward:
 
 ```javascript
-import serverless from "serverless-http";
+import serverless from 'serverless-http';
 
 const app = express();
 
@@ -193,7 +193,7 @@ The first is the general configuration. We set the name of the service, the fram
 
 ```yaml
 service: lambda-drizzle
-frameworkVersion: "3"
+frameworkVersion: '3'
 useDotenv: true
 ```
 
@@ -219,7 +219,7 @@ functions:
   api:
     handler: app.handler
     events:
-      - httpApi: "*"
+      - httpApi: '*'
 ```
 
 And last, Serverless Framework has a collection of plugins that extend its basic capabilities. In this case, because we are using

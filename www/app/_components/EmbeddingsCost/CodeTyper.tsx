@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 type Props = {
   lines: Array<Array<{ text: string; comma?: boolean; color: string }>>;
@@ -68,7 +68,7 @@ export default function CodeTyper({ lines, allowTyping }: Props) {
   */
 
   return (
-    <div className="relative pl-5 w-full" style={{ height: lines.length * 18 }}>
+    <div className="relative w-full pl-5" style={{ height: lines.length * 18 }}>
       {lines.map((words, line) => {
         let currentWordPosition = wordPosition;
         if (line > lineNumber) {
@@ -79,7 +79,7 @@ export default function CodeTyper({ lines, allowTyping }: Props) {
         return (
           <div
             key={`${line}${wordPosition}`}
-            className="absolute h-4 leading-4 inline whitespace-nowrap"
+            className="absolute inline h-4 whitespace-nowrap leading-4"
             style={{ top: line * 18 }}
           >
             {words.map((word, currentWord) => {

@@ -9,14 +9,15 @@ Your Nile database arrives with the `postgis_raster` extension and its dependenc
 ## Understanding Raster Data
 
 A raster consists of a matrix of cells (pixels) organized into rows and columns where each cell contains a value representing information such as:
+
 - Elevation data (DEM - Digital Elevation Model)
 - Satellite imagery
 - Temperature maps
 - Land use classification
 - Any other grid-based spatial data
 
-A raster can store multiple layers of data, each layer is called a band. For example a band can 
-represent elevation data, another band can represent temperature data. In satellite imagery, each band 
+A raster can store multiple layers of data, each layer is called a band. For example a band can
+represent elevation data, another band can represent temperature data. In satellite imagery, each band
 typically represents a different wavelength of light (Red, Green, Blue).
 
 ## Quick Start
@@ -42,7 +43,7 @@ CREATE TABLE elevation_data (
 
 -- Insert a simple 3x3 raster representing elevation data
 INSERT INTO elevation_data (id, name, acquisition_date, rast)
-SELECT 
+SELECT
     1,
     'Sample DEM',
     '2024-01-01',
@@ -70,6 +71,7 @@ WHERE id = 1;
 ### Basic Raster Operations
 
 Query pixel values at a specific point:
+
 ```sql
 -- Get elevation at a specific coordinate
 SELECT ST_Value(rast, 1, ST_SetSRID(ST_MakePoint(-74.0, 41.0), 4326))
@@ -78,9 +80,10 @@ WHERE id = 1;
 ```
 
 Calculate statistics for a raster:
+
 ```sql
 -- Get summary statistics for the raster
-SELECT 
+SELECT
     ST_SummaryStats(rast) AS stats,
     (ST_SummaryStats(rast)).min AS min_elevation,
     (ST_SummaryStats(rast)).max AS max_elevation,
@@ -90,6 +93,7 @@ WHERE id = 1;
 ```
 
 Resample a raster to different resolution:
+
 ```sql
 -- Resample to 50% of original resolution
 SELECT ST_Resample(
@@ -105,6 +109,7 @@ WHERE id = 1;
 ### Raster Analysis
 
 Calculate slope from elevation data:
+
 ```sql
 -- Generate slope (in degrees) from elevation raster
 -- Returns a new raster where pixel values represent slope angles
@@ -140,7 +145,7 @@ WHERE id = 1;
 
 ```sql
 -- Get raster metadata
-SELECT 
+SELECT
     ST_Width(rast) AS width,
     ST_Height(rast) AS height,
     ST_NumBands(rast) AS num_bands,
@@ -203,7 +208,6 @@ WHERE id = 1;
 - Memory usage can be high for large raster operations
 
 ## Additional Resources
+
 - [Introduction to Rasters in PostGIS](https://postgis.net/workshops/de/postgis-intro/rasters.html)
 - [PostGIS Raster Reference](https://postgis.net/docs/RT_reference.html)
-
-

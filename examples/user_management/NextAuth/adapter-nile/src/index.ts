@@ -3,10 +3,10 @@ import type {
   AdapterUser,
   VerificationToken,
   AdapterSession,
-} from "@auth/core/adapters";
+} from '@auth/core/adapters';
 
 // TODO: Move to Nile SDK
-import type { Pool } from "pg";
+import type { Pool } from 'pg';
 
 export function mapExpiresAt(account: any): any {
   const expires_at: number = parseInt(account.expires_at);
@@ -89,7 +89,7 @@ export function mapExpiresAt(account: any): any {
 export default function NileAdapter(client: Pool): Adapter {
   return {
     async createVerificationToken(
-      verificationToken: VerificationToken
+      verificationToken: VerificationToken,
     ): Promise<VerificationToken> {
       const { identifier, expires, token } = verificationToken;
       const sql = `
@@ -113,7 +113,7 @@ export default function NileAdapter(client: Pool): Adapter {
       return result.rowCount !== 0 ? result.rows[0] : null;
     },
 
-    async createUser(user: Omit<AdapterUser, "id">) {
+    async createUser(user: Omit<AdapterUser, 'id'>) {
       const { name, email, emailVerified, image } = user;
       const sql = `
           INSERT INTO users.users (name, email, "emailVerified", picture) 
@@ -250,7 +250,7 @@ export default function NileAdapter(client: Pool): Adapter {
       }
       const result1 = await client.query(
         `select * from sessions where "sessionToken" = $1`,
-        [sessionToken]
+        [sessionToken],
       );
       if (result1.rowCount === 0) {
         return null;
@@ -258,8 +258,8 @@ export default function NileAdapter(client: Pool): Adapter {
       let session: AdapterSession = result1.rows[0];
 
       const result2 = await client.query(
-        "select * from users.users where id = $1",
-        [session.userId]
+        'select * from users.users where id = $1',
+        [session.userId],
       );
       if (result2.rowCount === 0) {
         return null;
@@ -271,12 +271,12 @@ export default function NileAdapter(client: Pool): Adapter {
       };
     },
     async updateSession(
-      session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
+      session: Partial<AdapterSession> & Pick<AdapterSession, 'sessionToken'>,
     ): Promise<AdapterSession | null | undefined> {
       const { sessionToken } = session;
       const result1 = await client.query(
         `select * from sessions where "sessionToken" = $1`,
-        [sessionToken]
+        [sessionToken],
       );
       if (result1.rowCount === 0) {
         return null;

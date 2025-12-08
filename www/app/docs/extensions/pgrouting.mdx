@@ -9,13 +9,14 @@ Your Nile database arrives with the `pgRouting` extension and its dependency `po
 ## Understanding pgRouting
 
 pgRouting works with network topologies stored in PostgreSQL/PostGIS. A network topology consists of:
+
 - Vertices (nodes/intersections)
 - Edges (segments/roads)
 - Costs (distance, time, or other metrics)
 
 ### Key Features
 
-- **Multiple Routing Algorithms**: Dijkstra, A*, Traveling Salesperson Problem (TSP)
+- **Multiple Routing Algorithms**: Dijkstra, A\*, Traveling Salesperson Problem (TSP)
 - **Flexible Cost Calculations**: Support for distance, time, and custom cost functions
 - **Turn Restriction Support**: Handle real-world routing constraints
 - **Dynamic Cost Updates**: Modify costs based on traffic or other conditions
@@ -51,13 +52,13 @@ CREATE INDEX roads_geom_idx ON roads USING GIST(the_geom);
 ```sql
 -- Insert sample road segments with pre-defined source/target nodes
 INSERT INTO roads (name, the_geom, length_m, cost, reverse_cost, source, target) VALUES
-    ('Main St', 
+    ('Main St',
      ST_GeomFromText('LINESTRING(-122.678 45.526, -122.675 45.526)', 4326),
      300, 300, 300, 1, 2),
-    ('Oak Ave', 
+    ('Oak Ave',
      ST_GeomFromText('LINESTRING(-122.675 45.526, -122.675 45.524)', 4326),
      200, 200, 200, 2, 3),
-    ('Pine St', 
+    ('Pine St',
      ST_GeomFromText('LINESTRING(-122.675 45.524, -122.678 45.524)', 4326),
      300, 300, 300, 3, 4);
 ```
@@ -65,6 +66,7 @@ INSERT INTO roads (name, the_geom, length_m, cost, reverse_cost, source, target)
 ### Basic Shortest Path Query
 
 Using Dijkstra's algorithm:
+
 ```sql
 -- Find shortest path between two points
 SELECT seq, node, edge, cost
@@ -76,13 +78,14 @@ FROM pgr_dijkstra(
 );
 ```
 
-### A* Search
+### A\* Search
 
 When you have geographic coordinates:
+
 ```sql
 SELECT seq, node, edge, cost
 FROM pgr_astar(
-    'SELECT id, source, target, cost, 
+    'SELECT id, source, target, cost,
             ST_X(ST_StartPoint(the_geom)) AS x1,
             ST_Y(ST_StartPoint(the_geom)) AS y1,
             ST_X(ST_EndPoint(the_geom)) AS x2,
@@ -97,6 +100,7 @@ FROM pgr_astar(
 ### Driving Distance
 
 Find all reachable nodes within a certain cost:
+
 ```sql
 SELECT node, edge, cost
 FROM pgr_drivingDistance(

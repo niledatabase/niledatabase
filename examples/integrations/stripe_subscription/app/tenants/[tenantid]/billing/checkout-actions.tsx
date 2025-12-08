@@ -1,25 +1,25 @@
-"use server";
-import { redirect } from "next/navigation";
-import { configureNile } from "@/lib/NileServer";
-import { revalidatePath } from "next/cache";
+'use server';
+import { redirect } from 'next/navigation';
+import { configureNile } from '@/lib/NileServer';
+import { revalidatePath } from 'next/cache';
 
 // This is a public sample test API key.
 // Don’t submit any personally identifiable information in requests made with this key.
 // You will need your own API key from Stripe
-import Stripe from "stripe";
-import { nile } from "@/app/api/[...nile]/nile";
+import Stripe from 'stripe';
+import { nile } from '@/app/api/[...nile]/nile';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 
 export async function createCheckoutSession(formData: FormData) {
-  console.log("createCheckoutSession called");
+  console.log('createCheckoutSession called');
 
-  const tenantid = formData.get("tenantid")?.toString();
+  const tenantid = formData.get('tenantid')?.toString();
 
   const prices = await stripe.prices.list();
 
   const session = await stripe.checkout.sessions.create({
-    billing_address_collection: "auto",
+    billing_address_collection: 'auto',
     line_items: [
       {
         price: prices.data[0].id, // we are cheating a bit because we only have one SKU, but you should filter this by price ID
@@ -27,31 +27,31 @@ export async function createCheckoutSession(formData: FormData) {
         quantity: 1,
       },
     ],
-    mode: "subscription",
+    mode: 'subscription',
     success_url:
       process.env.NEXT_PUBLIC_BASE_PATH +
       `/api/checkout-success?session_id={CHECKOUT_SESSION_ID}&tenant_id=${tenantid}`,
     cancel_url:
       process.env.NEXT_PUBLIC_BASE_PATH + `/tenants/${tenantid}/billing`,
   });
-  const url: string = session.url || "/";
+  const url: string = session.url || '/';
   redirect(url);
 }
 
 export async function cancelSubscription(formData: FormData) {
-  console.log("cancelSubscription called");
+  console.log('cancelSubscription called');
 
-  const tenantId = formData.get("tenantid")?.toString();
+  const tenantId = formData.get('tenantid')?.toString();
   const tenantNile = await nile.withContext({ tenantId });
 
   // We are looking up the subscription ID from the tenant database
   const resp = await tenantNile.db.query(
-    `SELECT stripe_subscription_id FROM tenants`
+    `SELECT stripe_subscription_id FROM tenants`,
   );
 
   const subscriptionId = resp.rows[0].stripe_subscription_id;
   console.log(
-    "cancelling subscription " + subscriptionId + " for tenant " + tenantId
+    'cancelling subscription ' + subscriptionId + ' for tenant ' + tenantId,
   );
 
   // and we ask Stripe to cancel the subscription immediately
@@ -64,23 +64,23 @@ export async function cancelSubscription(formData: FormData) {
        SET tenant_tier = $1,
            stripe_subscription_id = NULL
        WHERE id = $2`,
-      ["free", tenantId]
+      ['free', tenantId],
     );
   } catch (e) {
-    console.log("error cancelling subscription", e);
+    console.log('error cancelling subscription', e);
     console.error(e);
   }
 
-  revalidatePath("/tenants/" + tenantId + "/billing");
-  redirect("/tenants/" + tenantId + "/billing");
+  revalidatePath('/tenants/' + tenantId + '/billing');
+  redirect('/tenants/' + tenantId + '/billing');
 }
 
 export async function redirectToStripePortal(formData: FormData) {
-  console.log("stripe-portal-redirect called");
-  const tenantId = formData.get("tenantid")?.toString();
+  console.log('stripe-portal-redirect called');
+  const tenantId = formData.get('tenantid')?.toString();
 
   if (!tenantId) {
-    console.log("missing tenant_id from request");
+    console.log('missing tenant_id from request');
   }
 
   // Here we are getting a connection to a specific tenant database
@@ -88,7 +88,7 @@ export async function redirectToStripePortal(formData: FormData) {
 
   // Get the Stripe customer ID from the database
   const resp = await tenantNile.db.query(
-    `SELECT stripe_customer_id FROM tenants`
+    `SELECT stripe_customer_id FROM tenants`,
   );
 
   const customerId = resp.rows[0].stripe_customer_id;

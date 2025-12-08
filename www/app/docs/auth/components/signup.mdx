@@ -22,9 +22,10 @@ export default function SignUpPage() {
 </Tab>
 </Tabs>
 
-#### Error handling 
+#### Error handling
+
 In the case of errors from the API, or you want to do something more custom with the response, you can use the `onError` and `onSuccess` callbacks.
-Note that `redirect` is set to the current page by default, so you may want to set it to `false` if you want 
+Note that `redirect` is set to the current page by default, so you may want to set it to `false` if you want
 to handle the redirect yourself - especially if you want to display a custom error message.
 
 ```jsx
@@ -51,6 +52,7 @@ export default function SignUpPage() {
 ```
 
 #### Custom sign up form
+
 <Tabs>
 <Tab title="Preview">
   <iframe src="https://storybook.thenile.dev/iframe.html?globals=&args=&id=sign-up-form--custom-sign-up-form" width="100%" height="400px" className="rounded-xl"/>
@@ -77,126 +79,125 @@ import {
 
 import { useSignUp } from '@niledatabase/react';
 
-
 function SignUpCustom() {
-  const signUp = useSignUp({
-    onSuccess: () => {
-      // nothing to do here
-    },
-  });
-  const form = useForm({
-    defaultValues: {
-      givenName: '',
-      name: '',
-      familyName: '',
-      picture: '',
-      email: '',
-      password: '',
-      newTenantName: '',
-    },
-  });
-  return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((formData) => signUp(formData))}
-        className="space-y-8"
-      >
-        <Email />
-        <Password />
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>New tenant name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Name" {...field} />
-                </FormControl>
-                <FormDescription>The name of the user</FormDescription>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
-        />
-        <FormField
-          control={form.control}
-          name="familyName"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Family name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Family name" {...field} />
-                </FormControl>
-                <FormDescription>The family name of the user</FormDescription>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
-        />
-        <FormField
-          control={form.control}
-          name="givenName"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Given name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Given name" {...field} />
-                </FormControl>
-                <FormDescription>The given name of the user</FormDescription>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
-        />
-        <FormField
-          control={form.control}
-          name="picture"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Picture</FormLabel>
-                <FormControl>
-                  <Input placeholder="Picture" {...field} />
-                </FormControl>
-                <FormDescription>A picture of the user</FormDescription>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
-        />
-        <FormField
-          control={form.control}
-          name="newTenantName"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>New tenant name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Tenant name" {...field} />
-                </FormControl>
-                <FormDescription>
-                  The name of the tenant for the user to join
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
-        />
-        <Button>Sign up</Button>
-      </form>
-    </Form>
-  );
+const signUp = useSignUp({
+onSuccess: () => {
+// nothing to do here
+},
+});
+const form = useForm({
+defaultValues: {
+givenName: '',
+name: '',
+familyName: '',
+picture: '',
+email: '',
+password: '',
+newTenantName: '',
+},
+});
+return (
+
+<Form {...form}>
+<form
+onSubmit={form.handleSubmit((formData) => signUp(formData))}
+className="space-y-8" >
+<Email />
+<Password />
+<FormField
+control={form.control}
+name="name"
+render={({ field }) => {
+return (
+<FormItem>
+<FormLabel>New tenant name</FormLabel>
+<FormControl>
+<Input placeholder="Name" {...field} />
+</FormControl>
+<FormDescription>The name of the user</FormDescription>
+<FormMessage />
+</FormItem>
+);
+}}
+/>
+<FormField
+control={form.control}
+name="familyName"
+render={({ field }) => {
+return (
+<FormItem>
+<FormLabel>Family name</FormLabel>
+<FormControl>
+<Input placeholder="Family name" {...field} />
+</FormControl>
+<FormDescription>The family name of the user</FormDescription>
+<FormMessage />
+</FormItem>
+);
+}}
+/>
+<FormField
+control={form.control}
+name="givenName"
+render={({ field }) => {
+return (
+<FormItem>
+<FormLabel>Given name</FormLabel>
+<FormControl>
+<Input placeholder="Given name" {...field} />
+</FormControl>
+<FormDescription>The given name of the user</FormDescription>
+<FormMessage />
+</FormItem>
+);
+}}
+/>
+<FormField
+control={form.control}
+name="picture"
+render={({ field }) => {
+return (
+<FormItem>
+<FormLabel>Picture</FormLabel>
+<FormControl>
+<Input placeholder="Picture" {...field} />
+</FormControl>
+<FormDescription>A picture of the user</FormDescription>
+<FormMessage />
+</FormItem>
+);
+}}
+/>
+<FormField
+control={form.control}
+name="newTenantName"
+render={({ field }) => {
+return (
+<FormItem>
+<FormLabel>New tenant name</FormLabel>
+<FormControl>
+<Input placeholder="Tenant name" {...field} />
+</FormControl>
+<FormDescription>
+The name of the tenant for the user to join
+</FormDescription>
+<FormMessage />
+</FormItem>
+);
+}}
+/>
+<Button>Sign up</Button>
+</form>
+</Form>
+);
 }
 const queryClient = new QueryClient();
 export function CustomSignUpForm() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <SignUpCustom />
-    </QueryClientProvider>
-  );
+return (
+<QueryClientProvider client={queryClient}>
+<SignUpCustom />
+</QueryClientProvider>
+);
 }
 
 ```
@@ -207,4 +208,5 @@ export function CustomSignUpForm() {
 
 - [Sign In](/auth/components/signin)
 - [Sign Out](/auth/components/signout)
-- [User Profile](/auth/components/user) 
+- [User Profile](/auth/components/user)
+```

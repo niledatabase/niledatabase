@@ -3,15 +3,15 @@ title: 'From Firebase'
 description: 'Learn how to migrate from Firebase Authentication to Nile Auth'
 ---
 
-import AuthMigrationTesting from '/snippets/auth_migration_testing.mdx'
-import AuthMigrationBestPractices from '/snippets/auth_migration_best_practices.mdx'
-import AuthMigrationSocial from '/snippets/auth_migration_social.mdx'
+import AuthMigrationTesting from '/snippets/auth_migration_testing.mdx';
+import AuthMigrationBestPractices from '/snippets/auth_migration_best_practices.mdx';
+import AuthMigrationSocial from '/snippets/auth_migration_social.mdx';
 
 If you are currently using Firebase Authentication, this guide will help you migrate to Nile Auth.
-Migrating production applications from one auth provider to another is a non-trivial task, 
+Migrating production applications from one auth provider to another is a non-trivial task,
 and we recommend you do thorough testing.
 
-Before you begin, you'll need a Nile account. If you don't have one, you can sign up [here](https://console.thenile.dev). 
+Before you begin, you'll need a Nile account. If you don't have one, you can sign up [here](https://console.thenile.dev).
 
 ## Migration Steps
 
@@ -34,33 +34,38 @@ import * as admin from 'firebase-admin';
 import * as fs from 'fs';
 
 async function listAllTenants(nextPageToken, allTenants = []) {
-  const result = await admin.auth().tenantManager().listTenants(100, nextPageToken);
-  
-  allTenants.push(...result.tenants.map(tenant => tenant.toJSON()));
-  
+  const result = await admin
+    .auth()
+    .tenantManager()
+    .listTenants(100, nextPageToken);
+
+  allTenants.push(...result.tenants.map((tenant) => tenant.toJSON()));
+
   if (result.pageToken) {
     return await listAllTenants(result.pageToken, allTenants);
   }
-  
+
   return allTenants;
 }
 
 async function listAllUsers(tenantId, nextPageToken, allUsers = []) {
   const tenantAuth = admin.auth().tenantManager().authForTenant(tenantId);
-  
+
   try {
     const listUsersResult = await tenantAuth.listUsers(1000, nextPageToken);
-    
+
     // Add users with their tenant ID
-    allUsers.push(...listUsersResult.users.map(user => ({
-      ...user.toJSON(),
-      tenantId: tenantId
-    })));
-    
+    allUsers.push(
+      ...listUsersResult.users.map((user) => ({
+        ...user.toJSON(),
+        tenantId: tenantId,
+      })),
+    );
+
     if (listUsersResult.pageToken) {
       return await listAllUsers(tenantId, listUsersResult.pageToken, allUsers);
     }
-    
+
     return allUsers;
   } catch (error) {
     console.error(`Error listing users for tenant ${tenantId}:`, error);
@@ -84,8 +89,10 @@ async function exportAllTenantsAndUsers() {
     // Write tenants and users to separate files
     fs.writeFileSync('firebase-tenants.json', JSON.stringify(tenants, null, 2));
     fs.writeFileSync('firebase-users.json', JSON.stringify(allUsers, null, 2));
-    
-    console.log('Export completed! Data written to firebase-tenants.json and firebase-users.json');
+
+    console.log(
+      'Export completed! Data written to firebase-tenants.json and firebase-users.json',
+    );
   } catch (error) {
     console.error('Export failed:', error);
   }
@@ -95,127 +102,133 @@ async function exportAllTenantsAndUsers() {
 exportAllTenantsAndUsers();
 ```
 
-Firebase supports exporting password hashes, but note that you can only load them into Nile Auth if you are using **bcrypt**. 
+Firebase supports exporting password hashes, but note that you can only load them into Nile Auth if you are using **bcrypt**.
 To determine the password hash parameters used for your project navigate to the `Authentication > Users` section of the Firebase console and click the three dots icon above the list of users.
+
 </Step>
 
 <Step title="Import User Data into Nile Auth">
 
-You'll need a small script to import the user data into Nile Auth. 
+You'll need a small script to import the user data into Nile Auth.
 The script will iterate over the exported user data and create users in Nile Auth.
 
 The following example script shows how to import user data from a JSON file:
 
 ```typescript [expandable]
-import { Nile } from "@niledatabase/server";
+import { Nile } from '@niledatabase/server';
 import * as fs from 'fs';
 
 interface FirebaseUser {
-    tenantId: string;
-    uid: string;
-    email: string;
-    emailVerified: boolean;
-    disabled: boolean;
-    metadata: {
-        lastSignInTime: string;
-        lastSignInIp: string;
-        lastLoginAt: string;
-        lastLoginIp: string;
-    };
-    password: string;
-    "Updated At": string;
+  tenantId: string;
+  uid: string;
+  email: string;
+  emailVerified: boolean;
+  disabled: boolean;
+  metadata: {
+    lastSignInTime: string;
+    lastSignInIp: string;
+    lastLoginAt: string;
+    lastLoginIp: string;
+  };
+  password: string;
+  'Updated At': string;
 }
 
 interface FirebaseOrganization {
-    id: string;
-    name: string;
-    display_name: string;
-    metadata?: Record<string, any>;
+  id: string;
+  name: string;
+  display_name: string;
+  metadata?: Record<string, any>;
 }
 
 async function migrateUsers(nile: any) {
-    try {
-        // Read and parse the JSON file
-        const rawData = fs.readFileSync('firebase-users.json', 'utf8');
-        const users: FirebaseUser[] = JSON.parse(rawData);
-        let newUser;
+  try {
+    // Read and parse the JSON file
+    const rawData = fs.readFileSync('firebase-users.json', 'utf8');
+    const users: FirebaseUser[] = JSON.parse(rawData);
+    let newUser;
 
-        // Process each user
-        for (const user of users) {
-            try {
-                // Generate a temporary password (you might want to adjust this strategy)
-                const tempPassword = `temp-${Math.random().toString(36).slice(-8)}`;
+    // Process each user
+    for (const user of users) {
+      try {
+        // Generate a temporary password (you might want to adjust this strategy)
+        const tempPassword = `temp-${Math.random().toString(36).slice(-8)}`;
 
-                // Get the tenant id from the organization name
-                const tenant = await nile.db.query(`SELECT id FROM tenants WHERE name = $1`, 
-                    [user.tenantId]);
+        // Get the tenant id from the organization name
+        const tenant = await nile.db.query(
+          `SELECT id FROM tenants WHERE name = $1`,
+          [user.tenantId],
+        );
 
-                if (!tenant.rows[0]) {
-                    console.error(`Tenant ${user.tenantId} not found`);
-                    continue;
-                }
-                nile.tenant_id = tenant.rows[0].id; // Set the tenant id so the user is created in the correct tenant
-                const preferredName = user.Nickname || user.Name;
-                const {rows: [newUser] }= await nile.db.query('insert into users.users (email, password, preferredName) values ($1, $2, $3) returning *', 
-                    [user.email, tempPassword, preferredName]
-                )
-
-                // uncomment this to update the password hash in the credentials table
-                // only do this if you exported the password hashes in bcrypt format
-                // await nile.db.query(
-                //   `UPDATE auth.credentials SET payload = jsonb_build_object('crypt', 'crypt-bf/8', 'hash', $1) 
-                //    WHERE user_id = $2 AND method = 'PASSWORD';`,
-                //    [user.Password, newUser.Id]
-                // )
-
-                console.log(`Successfully migrated user: ${user.email}`);
-                // You might want to store the temporary passwords to communicate them to users
-                console.log(`Temporary password for ${user.email}: ${tempPassword}`);
-            } catch (error) {
-                console.error(`Failed to migrate user ${user.email}:`, error);
-                // Continue with next user even if one fails
-                continue;
-            }
+        if (!tenant.rows[0]) {
+          console.error(`Tenant ${user.tenantId} not found`);
+          continue;
         }
-        console.log('Migration completed');
-    } catch (error) {
-        console.error('Migration failed:', error);
+        nile.tenant_id = tenant.rows[0].id; // Set the tenant id so the user is created in the correct tenant
+        const preferredName = user.Nickname || user.Name;
+        const {
+          rows: [newUser],
+        } = await nile.db.query(
+          'insert into users.users (email, password, preferredName) values ($1, $2, $3) returning *',
+          [user.email, tempPassword, preferredName],
+        );
+
+        // uncomment this to update the password hash in the credentials table
+        // only do this if you exported the password hashes in bcrypt format
+        // await nile.db.query(
+        //   `UPDATE auth.credentials SET payload = jsonb_build_object('crypt', 'crypt-bf/8', 'hash', $1)
+        //    WHERE user_id = $2 AND method = 'PASSWORD';`,
+        //    [user.Password, newUser.Id]
+        // )
+
+        console.log(`Successfully migrated user: ${user.email}`);
+        // You might want to store the temporary passwords to communicate them to users
+        console.log(`Temporary password for ${user.email}: ${tempPassword}`);
+      } catch (error) {
+        console.error(`Failed to migrate user ${user.email}:`, error);
+        // Continue with next user even if one fails
+        continue;
+      }
     }
+    console.log('Migration completed');
+  } catch (error) {
+    console.error('Migration failed:', error);
+  }
 }
 
 // This is necessary only if the organizations don't already exist in Nile
 async function migrateTenants(nile: any) {
-    try {
-        // Read and parse the organizations JSON file
-        const rawData = fs.readFileSync('firebase-tenants.json', 'utf8');
-        const organizations: FirebaseOrganization[] = JSON.parse(rawData);
+  try {
+    // Read and parse the organizations JSON file
+    const rawData = fs.readFileSync('firebase-tenants.json', 'utf8');
+    const organizations: FirebaseOrganization[] = JSON.parse(rawData);
 
-        // Process each organization
-        for (const org of organizations) {
-            try {
-                const tenant = await nile.tenants.create({
-                    name: org.name,
-                });
+    // Process each organization
+    for (const org of organizations) {
+      try {
+        const tenant = await nile.tenants.create({
+          name: org.name,
+        });
 
-                console.log(`Successfully created tenant: ${org.name}`);
-            } catch (error) {
-                console.error(`Failed to create tenant ${org.name}:`, error);
-                // Continue with next organization even if one fails
-                continue;
-            }
-        }
-
-        console.log('Tenant migration completed');
-    } catch (error) {
-        console.error('Tenant migration failed:', error);
+        console.log(`Successfully created tenant: ${org.name}`);
+      } catch (error) {
+        console.error(`Failed to create tenant ${org.name}:`, error);
+        // Continue with next organization even if one fails
+        continue;
+      }
     }
+
+    console.log('Tenant migration completed');
+  } catch (error) {
+    console.error('Tenant migration failed:', error);
+  }
 }
 
 // Single initialization of Nile
 async function migrateAll() {
-    const nile = Nile({});
-    await migrateTenants(nile);
-    await migrateUsers(nile);
+  const nile = Nile({});
+  await migrateTenants(nile);
+  await migrateUsers(nile);
 }
 
 migrateAll();
@@ -235,6 +248,7 @@ you can insert into `users.users` to create the user.
 </Steps>
 
 ## Testing
+
 <AuthMigrationTesting />
 
 ## Best Practices
@@ -245,4 +259,4 @@ you can insert into `users.users` to create the user.
 
 - [Auth0 Migration](/auth/migration/fromauth0)
 - [User Management](/auth/concepts/users)
-- [Security Concepts](/auth/concepts/jwt) 
+- [Security Concepts](/auth/concepts/jwt)

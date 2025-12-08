@@ -1,6 +1,6 @@
 ---
-title: "Google Embedding Models"
-sidebarTitle: "Google"
+title: 'Google Embedding Models'
+sidebarTitle: 'Google'
 ---
 
 Note that Google has to AI API products:
@@ -16,10 +16,9 @@ However, Vertex AI has more embedding models - multi-lingual, multi-modal, image
 The example below is based on the new `text-embedding-preview-0409` model, also called `text-embedding-0004` in Gemini APIs.\
 It is the best text embedding model available from Google and ranks well in the MTEB benchmark.
 
-| Model                                    | Dimensions        | Max Tokens | Cost                                      | MTEB Avg Score | Similarity Metric |
-|------------------------------------------|-------------------|------------|-------------------------------------------|----------------|-------------------|
+| Model                                             | Dimensions        | Max Tokens | Cost                                       | MTEB Avg Score | Similarity Metric |
+| ------------------------------------------------- | ----------------- | ---------- | ------------------------------------------ | -------------- | ----------------- |
 | text-embedding-preview-0409 / text-embedding-0004 | 768 (scales down) | 2048       | $0.025/1M tokens in Vertex, free in Gemini | 66.31          | cosine, L2        |
-
 
 ## Usage
 
@@ -41,9 +40,9 @@ npm install @niledatabase/server @google/generative-ai
 ### Generating embeddings with Google
 
 ```javascript
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const GOOGLE_API_KEY = "my-google-api-key";
-const model = "models/text-embedding-004"; // or your favorite Google model
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const GOOGLE_API_KEY = 'my-google-api-key';
+const model = 'models/text-embedding-004'; // or your favorite Google model
 
 const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
 
@@ -59,17 +58,17 @@ const input_text = `The future belongs to those who believe in the beauty of the
 // const doc_vec_resp = await model.embedContent(input_text);
 const doc_vec_resp = await embed.embedContent({
   content: { parts: [{ text: input_text }] },
-  taskType: "RETRIEVAL_DOCUMENT", // for embeddings of documents stored in pg_vector
+  taskType: 'RETRIEVAL_DOCUMENT', // for embeddings of documents stored in pg_vector
   // title of the document. can be used with RETRIEVAL_DOCUMENT and
   // possibly improve the quality of the embeddings
   // title: ""
 });
 
-const question = "Who does the future belong to?";
+const question = 'Who does the future belong to?';
 
 const question_vec_resp = await embed.embedContent({
   content: { parts: [{ text: question }] },
-  taskType: "RETRIEVAL_QUERY", //embeddings of questions used to search documents
+  taskType: 'RETRIEVAL_QUERY', //embeddings of questions used to search documents
 });
 
 // Google returns a response object with an embedding field that
@@ -82,9 +81,9 @@ const question_vec = question_vec_resp.embedding.values;
 
 ```javascript
 // set up Nile as the vector store
-const { Nile } = await import("@niledatabase/server");
-const NILEDB_USER = "you need a nile user with access to a nile database";
-const NILEDB_PASSWORD = "and a password for that user";
+const { Nile } = await import('@niledatabase/server');
+const NILEDB_USER = 'you need a nile user with access to a nile database';
+const NILEDB_PASSWORD = 'and a password for that user';
 const nile = Nile({
   user: NILEDB_USER,
   password: NILEDB_PASSWORD,
@@ -92,18 +91,18 @@ const nile = Nile({
 
 // create table to store vectors - vector size must match the model dimensions
 await nile.db.query(
-  "CREATE TABLE IF NOT EXISTS embeddings (embedding vector(768))"
+  'CREATE TABLE IF NOT EXISTS embeddings (embedding vector(768))',
 );
 
 // store vector in a table
-await nile.db.query("INSERT INTO embeddings (embedding) values ($1)", [
+await nile.db.query('INSERT INTO embeddings (embedding) values ($1)', [
   JSON.stringify(doc_vec.map((v) => Number(v))),
 ]);
 
 // search for similar vectors
 let db_resp = await nile.db.query(
-  "select embedding from embeddings order by embedding<=>$1 limit 1",
-  [JSON.stringify(question_vec.map((v) => Number(v)))]
+  'select embedding from embeddings order by embedding<=>$1 limit 1',
+  [JSON.stringify(question_vec.map((v) => Number(v)))],
 );
 
 // Postgres returns an object, with array of rows each column is a
@@ -111,7 +110,7 @@ let db_resp = await nile.db.query(
 let similar_str = db_resp.rows[0].embedding;
 let similar = similar_str
   .substring(1, similar_str.length - 1)
-  .split(",")
+  .split(',')
   .map((v) => parseFloat(v));
 
 // check that we got the same vector back
@@ -123,7 +122,7 @@ for (let i = 0; i < similar.length; i++) {
   }
 }
 
-console.log("got same vector? " + same);
+console.log('got same vector? ' + same);
 ```
 
 ## Additional notes

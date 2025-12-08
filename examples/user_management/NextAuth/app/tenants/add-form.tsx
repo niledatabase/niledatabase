@@ -1,25 +1,25 @@
-"use client";
-import { useFormState } from "react-dom";
-import { useState } from "react";
-import Button from "@mui/joy/Button";
-import Typography from "@mui/joy/Typography";
-import ModalDialog from "@mui/joy/ModalDialog";
-import Modal from "@mui/joy/Modal";
-import Stack from "@mui/joy/Stack";
-import Input from "@mui/joy/Input";
-import styles from "../page.module.css";
-import { createTenant } from "@/app/tenants/tenant-actions";
+'use client';
+import { useFormState } from 'react-dom';
+import { useState } from 'react';
+import Button from '@mui/joy/Button';
+import Typography from '@mui/joy/Typography';
+import ModalDialog from '@mui/joy/ModalDialog';
+import Modal from '@mui/joy/Modal';
+import Stack from '@mui/joy/Stack';
+import Input from '@mui/joy/Input';
+import styles from '../page.module.css';
+import { createTenant } from '@/app/tenants/tenant-actions';
 // ^^^ the actual actions are in a server component because they are database operations
 
 const initialState = {
-  message: "",
+  message: '',
 };
 
 export function AddForm() {
   const [state, formAction] = useFormState(
     (prevState: { message: string } | undefined, formData: FormData) =>
       createTenant(prevState, formData),
-    initialState
+    initialState,
   );
   const [open, setOpen] = useState(false);
 
@@ -31,7 +31,7 @@ export function AddForm() {
         color="primary"
         aria-label="add-tenant"
         onClick={() => setOpen(true)}
-        sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+        sx={{ ml: 'auto', alignSelf: 'center', fontWeight: 600 }}
       >
         CREATE TENANT
       </Button>

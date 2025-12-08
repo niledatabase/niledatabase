@@ -1,38 +1,38 @@
-"use client";
-import Image from "next/image";
-import { useRef, useState } from "react";
-import Arrow from "@/public/icons/arrow.svg";
+'use client';
+import Image from 'next/image';
+import { useRef, useState } from 'react';
+import Arrow from '@/public/icons/arrow.svg';
 export default function JoinWaitlist() {
   const [submitted, setDidSubmit] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
   return (
     <div
       className={`relative mt-[24px] flex flex-col gap-2${
-        submitted ? " pointer-events-none" : ""
+        submitted ? 'pointer-events-none' : ''
       }`}
     >
       <input
         ref={ref}
-        className={`w-full bg-[#141414] border border-[#373737] rounded-[12px] text-[16px] py-2.5 px-4 placeholder:opacity-40 focus:outline-none`}
+        className={`w-full rounded-[12px] border border-[#373737] bg-[#141414] px-4 py-2.5 text-[16px] placeholder:opacity-40 focus:outline-none`}
         placeholder="Email Address"
       />
       <button
         onClick={async () => {
           if (ref.current?.value && !submitted) {
             const res = await fetch(`/api/subscribe`, {
-              method: "POST",
+              method: 'POST',
               body: JSON.stringify({ email: ref.current.value }),
             });
             if (res.status === 204) {
               setDidSubmit(true);
             }
-            ref.current.value = "";
+            ref.current.value = '';
           }
         }}
-        className="flex flex-row gap-2 text-[16px] gradientButton mb-[24px] leading-[24px] after:rounded-[12px] px-1 w-full"
+        className="gradientButton mb-[24px] flex w-full flex-row gap-2 px-1 text-[16px] leading-[24px] after:rounded-[12px]"
       >
         <div
-          className="flex flex-row  duration-500 transition-opacity gap-[24px] justify-between w-full"
+          className="flex w-full flex-row justify-between gap-[24px] transition-opacity duration-500"
           style={{
             opacity: submitted ? 0 : 100,
           }}
@@ -49,7 +49,7 @@ export default function JoinWaitlist() {
           />
         </div>
         <div
-          className="absolute whitespace-nowrap pointer-events-none transition-opacity delay-500 duration-500 -ml-2"
+          className="pointer-events-none absolute -ml-2 whitespace-nowrap transition-opacity delay-500 duration-500"
           style={{
             opacity: submitted ? 100 : 0,
           }}

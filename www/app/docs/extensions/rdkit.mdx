@@ -3,13 +3,14 @@ title: 'RDKit'
 description: 'RDKit extension for chemical structure handling in PostgreSQL'
 ---
 
-RDKit is a powerful open-source cheminformatics and machine learning toolkit that provides PostgreSQL 
+RDKit is a powerful open-source cheminformatics and machine learning toolkit that provides PostgreSQL
 with the ability to handle and analyze chemical structures within the database.
 Your Nile database arrives with the RDKit extension already enabled.
 
 ## Overview
 
 The RDKit PostgreSQL extension adds support for:
+
 - Chemical structure storage and retrieval
 - Substructure and similarity searching
 - Chemical structure manipulation
@@ -17,6 +18,7 @@ The RDKit PostgreSQL extension adds support for:
 - Chemical reaction handling
 
 RDKit provides several custom data types:
+
 - `mol` - Represents a molecule (constracted from SMILES notation)
 - `qmol` - Represents a molecule containing query information (constructed from SMARTS notation)
 - `sfp` - Represents a sparse vector fingerprint
@@ -25,6 +27,7 @@ RDKit provides several custom data types:
 ## Basic Operations
 
 1. **Creating Molecules**
+
 ```sql
 -- Create a molecule from SMILES notation
 SELECT mol_from_smiles('CCO') AS ethanol;
@@ -34,6 +37,7 @@ SELECT qmol_from_smarts('[OH]') AS hydroxyl;
 ```
 
 2. **Molecular Properties**
+
 ```sql
 -- Calculate molecular weight
 SELECT mol_amw(mol_from_smiles('CCO')) AS molecular_weight;
@@ -43,6 +47,7 @@ SELECT mol_numatoms(mol_from_smiles('CCO')) AS atom_count;
 ```
 
 3. **Substructure Searching**
+
 ```sql
 -- Check if a molecule contains a substructure
 SELECT mol_from_smiles('CCO') @> qmol_from_smarts('[OH]') AS has_hydroxyl;
@@ -51,6 +56,7 @@ SELECT mol_from_smiles('CCO') @> qmol_from_smarts('[OH]') AS has_hydroxyl;
 ### Similarity Searching
 
 RDKit supports various similarity metrics:
+
 ```sql
 -- Calculate Tanimoto similarity between molecules
 SELECT tanimoto_sml(
@@ -62,6 +68,7 @@ SELECT tanimoto_sml(
 ## Use Cases
 
 RDKit is particularly useful for:
+
 - Drug discovery and development
 - Chemical database management
 - Structure-activity relationship analysis
@@ -73,11 +80,13 @@ RDKit is particularly useful for:
 For better performance when working with large chemical databases:
 
 1. Create indexes on chemical structure columns:
+
 ```sql
 CREATE INDEX idx_molecule_substructure ON your_table USING gist(molecule);
 ```
 
 2. Use appropriate fingerprint types for your specific use case:
+
 - Morgan fingerprints for general similarity searching
 - MACCS keys for substructure screening
 - Topological fingerprints for specific pattern matching

@@ -3,9 +3,12 @@ title: 'Nitro'
 description: 'Integrate Nile Auth with Nitro applications'
 icon: 'bolt-lightning'
 ---
+
 This guide will help you get started with Nile Auth and Nitro. This guide outlines the steps required to configure and integrate authentication in your application. This guide uses the `Nuxt` layouts, and can be adjusted for any `Nitro` application
+
 <Note>
-If you have not done so yet, be sure you have [obtained credentials from the console](../getting-started/installation).
+  If you have not done so yet, be sure you have [obtained credentials from the
+  console](../getting-started/installation).
 </Note>
 
 <Steps>
@@ -15,12 +18,15 @@ If you have not done so yet, be sure you have [obtained credentials from the con
 ```bash npm
   npm install @niledatabase/server @niledatabase/nitro
 ```
-```bash yarn 
+
+```bash yarn
   yarn add @niledatabase/server @niledatbase/nitro
 ```
+
 ```bash pnpm
   pnpm add @niledatabase/server @niledatabase/nitro
 ```
+
 </CodeGroup>
 </Step>
 
@@ -38,14 +44,13 @@ export const nile = Nile<withNitro>({
 }));
 
 ```
+
 </Step>
 
 <Step>
-Add the route so that the APIs can be handled
-```ts server/api/[...slug].ts
-import { nile } from "~/composables/useNile";
-export default defineEventHandler(nile.handlers);
-```
+  Add the route so that the APIs can be handled ```ts server/api/[...slug].ts
+  import {nile} from "~/composables/useNile"; export default
+  defineEventHandler(nile.handlers); ```
 </Step>
 
 </Steps>
@@ -56,13 +61,10 @@ Under the hood, the nitro extension does the following reconfigures `handlers` t
 For instance, the calls on the server-side will still need to have their context set.
 
 ```ts
-import { nile } from "~/composables/useNile";
+import { nile } from '~/composables/useNile';
 
 const serverFunction = (event) => {
   const ctxNile = nile.withContext({ headers: event.headers });
   const userTenants = await ctxNile.tenants.list();
-}
+};
 ```
-
-
-

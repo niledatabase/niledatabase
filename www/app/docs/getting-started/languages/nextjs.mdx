@@ -1,6 +1,6 @@
 ---
-title: "Build a B2B Application with Postgres and NextJS"
-sidebarTitle: "NextJS"
+title: 'Build a B2B Application with Postgres and NextJS'
+sidebarTitle: 'NextJS'
 ---
 
 In this quick tutorial, you will learn about Nile's tenant virtualization features, while building a todo list application with NextJS 13.
@@ -43,16 +43,26 @@ In this quick tutorial, you will learn about Nile's tenant virtualization featur
 
     The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find semantically
     related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and using this data with text generation models is called [**RAG (Retrieval Augmented Generation)**](https://www.thenile.dev/docs/ai-embeddings/rag).
+
   </Step>
 
-  <Step title="Get credentials">
-    In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
-  </Step>
+{" "}
 
-  <Step title="Get third party credentials">
-    This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will
-    need access to models from a vendor with OpenAI compatible APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
-  </Step>
+<Step title="Get credentials">
+  In the left-hand menu, click on "Settings" and then select "Credentials".
+  Generate credentials and keep them somewhere safe. These give you access to
+  the database.
+</Step>
+
+{" "}
+
+<Step title="Get third party credentials">
+  This example uses AI chat and embedding models to generate automated time
+  estimates for each task in the todo list. In order to use this functionality,
+  you will need access to models from a vendor with OpenAI compatible APIs. Make
+  sure you have an API key, API base URL and the [names of the models you'll
+  want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
+</Step>
 
   <Step title="Set the environment">
     Enough GUI for now. Let's get to some code.
@@ -85,6 +95,7 @@ In this quick tutorial, you will learn about Nile's tenant virtualization featur
     ```bash
     npm install
     ```
+
   </Step>
 
   <Step title="Run the application">
@@ -97,6 +108,7 @@ In this quick tutorial, you will learn about Nile's tenant virtualization featur
     Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
     If all went well, your browser should show you the first page in the app, asking you to login or sign up.
+
   </Step>
 
   <Step title="Check the data in Nile">
@@ -112,6 +124,7 @@ In this quick tutorial, you will learn about Nile's tenant virtualization featur
     select tenants.name, title, estimate, complete from
     tenants join todos on tenants.id=todos.tenant_id;
     ```
+
   </Step>
 
   <Step title="What's next?">
@@ -130,6 +143,7 @@ In this quick tutorial, you will learn about Nile's tenant virtualization featur
 
     - [Chat with PDFs](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
     - [Code Assistant](https://www.thenile.dev/docs/getting-started/examples/code_assistant)
+
   </Step>
 </Steps>
 
@@ -152,9 +166,9 @@ The route file `api/[...nile]/route.ts` intercepts routes from the client and re
 In addition, the NextJS extension automatically handles obtaining the cookies from the request.
 
 ```typescript
-import { Nile } from "@niledatabase/server";
+import { Nile } from '@niledatabase/server';
 import { nextJs } from '@niledatabase/nextjs';
-export const nile = Nile({ extensions: [nextJs]});
+export const nile = Nile({ extensions: [nextJs] });
 ```
 
 ### Listing tenants
@@ -209,7 +223,7 @@ Instead of using SQL `where` clauses to get only todos for this specific tenant,
 ```typescript
 const _nile = await nile.withContext({ tenantId });
 // no need for where clause because we previously set Nile context
-const todos = await _nile.query("select * from todos");
+const todos = await _nile.query('select * from todos');
 ```
 
 Note that this time we are configuring Nile with the tenant ID too. Previously called `configureNile` without parameters because there was no tenant yet.
@@ -239,7 +253,7 @@ await _nile.query(
     estimate?.substring(0, 255),
     embeddingToSQL(embedding),
     false,
-  ]
+  ],
 );
 ```
 
@@ -251,7 +265,7 @@ await _nile.query(
   `UPDATE todos 
   SET complete = $1
   WHERE id = $2`,
-  [complete, id]
+  [complete, id],
 );
 ```
 
@@ -294,7 +308,7 @@ context (see the use of `tenantNile` client), we only look up tasks for this ten
 ```typescript
 const similarTasks = await tenantNile.query(
   `SELECT title, estimate FROM todos WHERE embedding <-> $1 < 1`,
-  [embeddingToSQL(embedding)]
+  [embeddingToSQL(embedding)],
 );
 ```
 
@@ -304,7 +318,7 @@ and finally, we use the AI model to generate the estimate. We include the simila
 const aiEstimate = await ai.chat.completions.create({
   messages: [
     {
-      role: "user",
+      role: 'user',
       content: `you are an amazing project manager. I need to ${title}. How long do you think this will take?
         I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
         respond with just the estimate, no yapping.`,

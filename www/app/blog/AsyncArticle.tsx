@@ -1,9 +1,9 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Authors } from "./_components/Authors";
-import { Metadata } from "./_components/Metadata";
-import { parseMetadata } from "./_components/parseMetadata";
-import Coffee from "@/public/blog/coffee.webp";
+import Image from 'next/image';
+import Link from 'next/link';
+import { Authors } from './_components/Authors';
+import { Metadata } from './_components/Metadata';
+import { parseMetadata } from './_components/parseMetadata';
+import Coffee from '@/public/blog/coffee.webp';
 
 export async function AsyncArticle({ fileName }: { fileName: string }) {
   const { default: Article, metadata } = await import(`${fileName}`);
@@ -11,7 +11,7 @@ export async function AsyncArticle({ fileName }: { fileName: string }) {
   return (
     <Link href={`/blog/${slug}`}>
       <div className="w-[384px]">
-        <div className="bg-[#2D2D2D] rounded-xl w-[384px] h-[242px] overflow-hidden flex-shrink-0 mb-4 items-center justify-center flex">
+        <div className="mb-4 flex h-[242px] w-[384px] flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#2D2D2D]">
           {metadata?.image ? (
             <Image
               alt={metadata.image}

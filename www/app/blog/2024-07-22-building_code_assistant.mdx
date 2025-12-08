@@ -1,11 +1,11 @@
 export const metadata = {
   title:
-    "AI Code Assistant SaaS built on GPT-4o-mini, Langchain, Postgres and pg_vector",
-  authors: ["gwenshap"],
-  image: "2024-07-22-building_code_assistant/cover.webp",
+    'AI Code Assistant SaaS built on GPT-4o-mini, Langchain, Postgres and pg_vector',
+  authors: ['gwenshap'],
+  image: '2024-07-22-building_code_assistant/cover.webp',
   sizzle:
     "Building a RAG-based AI SaaS isn't hard - but there are gotchas and decisions you need to be mindful of. Here's how to build a code assistant from scratch - including the design decisions and the implementation details. ",
-  tags: ["ai", "generative", "rag", "embedding", "vector", "SaaS"],
+  tags: ['ai', 'generative', 'rag', 'embedding', 'vector', 'SaaS'],
 };
 
 Few months ago, I knew almost nothing about AI. I used ChatGPT and Co-Pilot (I'm civilized, after all), but a lot of the content around AI was Greek to me.
@@ -199,10 +199,10 @@ And with OpenAI API directly:
 ```javascript
 const answer = await openai.chat.completions.create({
   messages: [
-    { role: "system", content: "..." },
-    { role: "user", content: "..." },
+    { role: 'system', content: '...' },
+    { role: 'user', content: '...' },
   ],
-  model: "gpt-4o-mini",
+  model: 'gpt-4o-mini',
 });
 ```
 
@@ -251,32 +251,32 @@ The next step is to use this method to embed the files and then store the result
 
 ```javascript
 const client = await nile.db.connect();
-await client.query("BEGIN");
+await client.query('BEGIN');
 try {
   for (const file of files) {
-    const content = fs.readFileSync(file, "utf-8");
+    const content = fs.readFileSync(file, 'utf-8');
     // skip files that are larger than the max-token limit of the model
     if (content.length > 0 && content.length < 8192) {
       const result = await nile.db.query(
         // store file
         `INSERT INTO file_content(tenant_id, project_id, file_name, contents) 
           VALUES($1, $2, $3, $4) RETURNING id`,
-        [tenant_id, project_id, file, content]
+        [tenant_id, project_id, file, content],
       );
       const embedding = await createVectorEmbedding(content); // embed
       const formattedEmbedding = JSON.stringify(embedding);
       await client.query(
         // store embedding
         `INSERT INTO ${EMBEDDING_TABLE}(tenant_id, file_id, embedding) VALUES($1, $2, $3)`,
-        [tenant_id, result.rows[0].id, formattedEmbedding]
+        [tenant_id, result.rows[0].id, formattedEmbedding],
       );
     }
   }
 } catch (error) {
-  await client.query("ROLLBACK");
+  await client.query('ROLLBACK');
   throw error;
 }
-await client.query("COMMIT");
+await client.query('COMMIT');
 ```
 
 Note how **we embed and store the entire repository in a single transaction**. This way we don't end up with files that lack embeddings,or with a partially embedded repository.
@@ -316,7 +316,7 @@ And the last step is to take the user question and the retrieved code and send i
 
 ```javascript
 const model = new ChatOpenAI({
-  model: "gpt-4o-mini",
+  model: 'gpt-4o-mini',
   temperature: 0.9,
 });
 
@@ -326,9 +326,9 @@ const respStream = await model.stream([
                 Use the following snippets of retrieved code to answer the question. 
                 They represent code snippets from the files most similar to the question.
                 Include code snippets from the provided context in your answer when relevant.
-                Context: ${allContent.join("\n")}`),
+                Context: ${allContent.join('\n')}`),
   new HumanMessage(
-    `Please answer this question: ${body.question}. Helpful Answer:`
+    `Please answer this question: ${body.question}. Helpful Answer:`,
   ),
 ]);
 ```
@@ -347,7 +347,7 @@ part of the project.
 Looking at the LangChain or OpenAI example for working with a streaming response, you see something like this:
 
 ```javascript
-const stream = await model.stream("Tell me a joke.");
+const stream = await model.stream('Tell me a joke.');
 
 for await (const chunk of stream) {
   console.log(chunk);
@@ -396,7 +396,7 @@ Putting things back together on the React side is more involved. First, we had t
 const reader = resp.body.getReader();
 const decoder = new TextDecoder();
 let done = false; // we need to read the stream until it's done
-let partialData = ""; // accumulate the data as it comes in
+let partialData = ''; // accumulate the data as it comes in
 let recievedFiles = false;
 
 while (!done) {
@@ -406,19 +406,19 @@ while (!done) {
   if (!recievedFiles) {
     partialData += chunkValue;
     // first part of the response is json, second part is the answer
-    const dataParts = partialData.split("EOJSON");
+    const dataParts = partialData.split('EOJSON');
     if (dataParts.length > 1) {
       const jsonPart = JSON.parse(dataParts[0]);
       setLlmResponse(jsonPart);
       // display first part of the answer
-      dispatch({ type: "updateAnswer", text: dataParts[1] });
+      dispatch({ type: 'updateAnswer', text: dataParts[1] });
       recievedFiles = true;
     }
   } else {
     // display another part of the answer
-    dispatch({ type: "updateAnswer", text: chunkValue });
+    dispatch({ type: 'updateAnswer', text: chunkValue });
     if (done) {
-      dispatch({ type: "done", text: "" });
+      dispatch({ type: 'done', text: '' });
     }
   }
 }

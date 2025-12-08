@@ -1,15 +1,15 @@
-import { ChatOpenAI } from "@langchain/openai";
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import { Nile } from "@niledatabase/server";
-import { createVectorEmbedding, EMBEDDING_TABLE } from "@/lib/EmbeddingUtils";
+import { ChatOpenAI } from '@langchain/openai';
+import { HumanMessage, SystemMessage } from '@langchain/core/messages';
+import { Nile } from '@niledatabase/server';
+import { createVectorEmbedding, EMBEDDING_TABLE } from '@/lib/EmbeddingUtils';
 
-const MODEL = "gpt-4o-mini"; // until we find a better model, this is a low cost start...
+const MODEL = 'gpt-4o-mini'; // until we find a better model, this is a low cost start...
 
 function iteratorToStream(iterator: any, response: string) {
   return new ReadableStream({
     start(controller) {
       controller.enqueue(response);
-      controller.enqueue("EOJSON"); // this is our separator. Streaming LLM answer comes next
+      controller.enqueue('EOJSON'); // this is our separator. Streaming LLM answer comes next
     },
     async pull(controller) {
       const { value, done } = await iterator.next();
@@ -30,12 +30,12 @@ export async function POST(req: Request) {
   const stream = new TransformStream();
   const writer = stream.writable.getWriter();
   let counter = 0;
-  let string = "";
+  let string = '';
 
   const body = await req.json();
-  console.log("Received body:", body);
+  console.log('Received body:', body);
   if (!body.question && !body.tenant_id && !body.project_id) {
-    return new Response("Bad Request", { status: 400 });
+    return new Response('Bad Request', { status: 400 });
   }
 
   const embedding = await createVectorEmbedding(body.question);
@@ -73,7 +73,7 @@ export async function POST(req: Request) {
     ]); // no need to specify tenant_id, as we set the context above
     let allContent: string[] = [];
     let fileNames: string[] = [];
-    let response = { files: fileNames, content: allContent, answer: "" };
+    let response = { files: fileNames, content: allContent, answer: '' };
 
     // now we need to read the actual files into a string and send it to the model
 
@@ -82,12 +82,12 @@ export async function POST(req: Request) {
       const file_name = file.file_name;
       console.log(`file ${file_name} has ${content.length} characters.`);
       console.log(
-        "cosine distance:",
+        'cosine distance:',
         file.cosine_distance,
-        "euclidean distance:",
+        'euclidean distance:',
         file.euclidean_distance,
-        "inner product:",
-        file.inner_product
+        'inner product:',
+        file.inner_product,
       );
       response.content.push(content);
       response.files.push(file_name);
@@ -104,9 +104,9 @@ export async function POST(req: Request) {
                     Use the following snippets of retrieved code to answer the question. 
                   They represent code snippets from the files most similar to the question.
                   Include code snippets from the provided context in your answer when relevant.
-                  Context: ${allContent.join("\n")}`),
+                  Context: ${allContent.join('\n')}`),
       new HumanMessage(
-        `Please answer this question: ${body.question}. Helpful Answer:`
+        `Please answer this question: ${body.question}. Helpful Answer:`,
       ),
     ]);
 
@@ -114,7 +114,7 @@ export async function POST(req: Request) {
 
     return new Response(stream);
   } catch (error) {
-    console.error("Error querying the database:", error);
-    return new Response("Internal Server Error", { status: 500 });
+    console.error('Error querying the database:', error);
+    return new Response('Internal Server Error', { status: 500 });
   }
 }

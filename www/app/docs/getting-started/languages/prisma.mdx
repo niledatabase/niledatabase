@@ -1,6 +1,6 @@
 ---
-title: "Build AI-Native B2B application with Postgres and Prisma"
-sidebarTitle: "Prisma"
+title: 'Build AI-Native B2B application with Postgres and Prisma'
+sidebarTitle: 'Prisma'
 ---
 
 In this tutorial, you will learn about Nile's tenant virtualization features, while building a todo list application.
@@ -50,19 +50,23 @@ This technique is known as [RAG architecture](https://www.thenile.dev/docs/ai-em
 
     See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
     ![Creating a table in Nile's admin dashboard](/images/gui-create-table.png)
+
   </Step>
 
   <Step title="Get credentials">
     In the left-hand menu, click on "Settings" and then select "Connection".
 
     Click on the Postgres button, then click "Generate Credentials" on the top right corner. Copy the connection string - it should now contain the credentials we just generated.
+
   </Step>
 
-  <Step title="Get third party credentials">
-    This example uses AI chat and embedding models to generate automated time estimates for each task in the todo
-    list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible
-    APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
-  </Step>
+<Step title="Get third party credentials">
+  This example uses AI chat and embedding models to generate automated time
+  estimates for each task in the todo list. In order to use this functionality,
+  you will need access to models from a vendor with OpenAI compatible APIs. Make
+  sure you have an API key, API base URL and the [names of the models you'll
+  want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
+</Step>
 
   <Step title="Set the environment">
     Enough GUI for now. Let's get to some code.
@@ -92,6 +96,7 @@ This technique is known as [RAG architecture](https://www.thenile.dev/docs/ai-em
     ```bash
     npm install
     ```
+
   </Step>
 
   <Step title="Run the application">
@@ -121,23 +126,24 @@ This technique is known as [RAG architecture](https://www.thenile.dev/docs/ai-em
     curl  -X GET \
       'http://localhost:3001/insecure/all_todos'
     ```
+
   </Step>
 
-  <Step title="Check the data in Nile">
-    Go back to the Nile query editor and see the data you created from the app.
-    ```sql
-    SELECT tenants.name, title, estimate, complete
-    FROM todos join tenants on tenants.id = todos.tenant_id;
-    ```
-    You should see all the todos you created, and the tenants they belong to.
-  </Step>
+{" "}
+
+<Step title="Check the data in Nile">
+  Go back to the Nile query editor and see the data you created from the app.
+  ```sql SELECT tenants.name, title, estimate, complete FROM todos join tenants
+  on tenants.id = todos.tenant_id; ``` You should see all the todos you created,
+  and the tenants they belong to.
+</Step>
 
   <Step title="What's next?">
     This example is a good starting point for building your own application with Nile.
 
     You have learned basic Nile, AI and RAG concepts and how to use them with Prisma.
 
-    You can learn more about this example in detail below or you can learn more about 
+    You can learn more about this example in detail below or you can learn more about
     Nile's tenant virtualization features in the following tutorials:
 
     - [Tenant management](/tenant-virtualization/tenant-management)
@@ -149,6 +155,7 @@ This technique is known as [RAG architecture](https://www.thenile.dev/docs/ai-em
 
     - [Chat with PDFs](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
     - [Code Assistnat](https://www.thenile.dev/docs/getting-started/examples/code_assistant)
+
   </Step>
 </Steps>
 
@@ -227,14 +234,14 @@ const tenantDB = tenantContext.getStore();
 // ... some setup redacted...
 // We are using tenantDB with tenant context to ensure that we only find tasks for the current tenant
 const similarTasks = await findSimilarTasks(tenantDB, title);
-console.log("found similar tasks: " + JSON.stringify(similarTasks));
+console.log('found similar tasks: ' + JSON.stringify(similarTasks));
 
 const estimate = await aiEstimate(title, similarTasks);
-console.log("estimated time: " + estimate);
+console.log('estimated time: ' + estimate);
 
 // get the embedding for the task, so we can find it in future similarity searches
 const embedding = await embedTask(title, EmbeddingTasks.SEARCH_DOCUMENT);
-console.log("tenant_id: " + tenantId);
+console.log('tenant_id: ' + tenantId);
 
 // This is safe because Nile validates the tenant ID and protects against SQL injection
 const newTodo = await tenantDB.$queryRawUnsafe(
@@ -243,7 +250,7 @@ const newTodo = await tenantDB.$queryRawUnsafe(
   title,
   complete,
   estimate,
-  embeddingToSQL(embedding)
+  embeddingToSQL(embedding),
 );
 
 res.json(newTodo);
@@ -266,10 +273,10 @@ const embedding = await embedTask(title, EmbeddingTasks.SEARCH_QUERY);
 const similarTasks =
   await tenantNile.$queryRaw`SELECT title, estimate FROM todos WHERE
     embedding <-> ${embeddingToSQL(
-      embedding
+      embedding,
     )}::vector < 1 order by embedding <-> ${embeddingToSQL(
-    embedding
-  )}::vector limit 3`;
+      embedding,
+    )}::vector limit 3`;
 
 console.log(` found ${similarTasks.length} similar tasks`);
 
@@ -304,7 +311,7 @@ generate similar estimates:
 const aiEstimate = await ai.chat.completions.create({
   messages: [
     {
-      role: "user",
+      role: 'user',
       content: `you are an amazing project manager. I need to ${title}. How long do you think this will take?
         I have a few similar tasks with their estimates, please use them as reference: ${similarTasks}.
         respond with just the estimate, keep the answer short.`,
@@ -330,17 +337,17 @@ We use Express middleware to get the tenant ID from the HTTP request, use it to 
 
 ```typescript
 app.use((req, res, next) => {
-  const fn = match("/api/tenants/:tenantId/todos", {
+  const fn = match('/api/tenants/:tenantId/todos', {
     decode: decodeURIComponent,
   });
   const m = fn(req.path);
 
   const tenantId = m?.params?.tenantId;
-  console.log("setting context to tenant: " + tenantId);
+  console.log('setting context to tenant: ' + tenantId);
 
   tenantContext.run(
     prisma.$extends(tenantDB(tenantId)) as any as PrismaClient,
-    next
+    next,
   );
 });
 ```
@@ -356,7 +363,7 @@ Lets take a look at the tenantDB object:
 
 ```typescript
 function tenantDB(
-  tenantId: string | null | undefined
+  tenantId: string | null | undefined,
 ): (client: any) => PrismaClient<any, any, any, Types.Extensions.Args> {
   return Prisma.defineExtension((prisma) =>
     // @ts-ignore (Excessive stack depth comparing types...)
@@ -369,7 +376,7 @@ function tenantDB(
             const [, result] = tenantId
               ? await prisma.$transaction([
                   prisma.$executeRawUnsafe(
-                    `SET nile.tenant_id = '${tenantId}';`
+                    `SET nile.tenant_id = '${tenantId}';`,
                   ),
                   query(args),
                 ])
@@ -381,7 +388,7 @@ function tenantDB(
           },
         },
       },
-    })
+    }),
   );
 }
 ```

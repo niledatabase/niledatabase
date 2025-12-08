@@ -2,14 +2,15 @@
 title: 'FAQ'
 description: 'Common questions and answers about Nile Auth'
 ---
+
 ## General Questions
 
 ### What is Nile Auth?
 
-Nile Auth is a multi-tenant authentication service that provides authentication and authorization features for multi-tenant applications. 
-This service ensures secure, scalable authentication while maintaining tenant isolation. 
-All B2B applications are multi-tenanted, and they all have concepts of tenants, users and data. Nile Auth brings these together 
-in a single service - authenticating users, managing tenants and access to their data. 
+Nile Auth is a multi-tenant authentication service that provides authentication and authorization features for multi-tenant applications.
+This service ensures secure, scalable authentication while maintaining tenant isolation.
+All B2B applications are multi-tenanted, and they all have concepts of tenants, users and data. Nile Auth brings these together
+in a single service - authenticating users, managing tenants and access to their data.
 
 ### How is Nile Auth different from other auth providers?
 
@@ -26,7 +27,7 @@ in a single service - authenticating users, managing tenants and access to their
 The short answer is that Nile separates tenant's data by isolating each tenant into a virtual database - separate blocks in memory and on disk.
 By default, all tenants share the same compute resources (CPU, memory, etc), but you can also provision dedicated compute resources for a subset of tenants.
 
-When a user authenticates, Nile Auth is aware of the tenants the user belongs to and can enforce access to data based on the 
+When a user authenticates, Nile Auth is aware of the tenants the user belongs to and can enforce access to data based on the
 user's tenant membership. Nile also handles the routing of each user's queries to the correct tenant's database.
 
 This is just at the high level. You can read more about it in the [tenant isolation](/tenant-virtualization/tenant-isolation) documentation.
@@ -78,4 +79,4 @@ And of course, it is open source, so you can build and deploy it in any way you 
 
 - [Error Reference](/auth/help/errors)
 - [Join our Community](/auth/help/community)
-- [Contact Support](https://www.thenile.dev/contact-us) 
+- [Contact Support](https://www.thenile.dev/contact-us)

@@ -1,29 +1,29 @@
-import React from "react";
-import Card from "@mui/joy/Card";
-import Typography from "@mui/joy/Typography";
-import Button from "@mui/joy/Button";
-import CardContent from "@mui/joy/CardContent";
-import Divider from "@mui/joy/Divider";
-import Stack from "@mui/joy/Stack";
-import ModalDialog from "@mui/joy/ModalDialog";
-import Modal from "@mui/joy/Modal";
-import Add from "@mui/icons-material/Add";
-import FormControl from "@mui/joy/FormControl";
-import Input from "@mui/joy/Input";
-import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
-import ListItemButton from "@mui/joy/ListItemButton";
-import Cookies from "js-cookie";
-import { Link, useNavigate } from "react-router-dom";
-import styles from "../assets/page.module.css";
-import Layout from "../layout";
+import React from 'react';
+import Card from '@mui/joy/Card';
+import Typography from '@mui/joy/Typography';
+import Button from '@mui/joy/Button';
+import CardContent from '@mui/joy/CardContent';
+import Divider from '@mui/joy/Divider';
+import Stack from '@mui/joy/Stack';
+import ModalDialog from '@mui/joy/ModalDialog';
+import Modal from '@mui/joy/Modal';
+import Add from '@mui/icons-material/Add';
+import FormControl from '@mui/joy/FormControl';
+import Input from '@mui/joy/Input';
+import List from '@mui/joy/List';
+import ListItem from '@mui/joy/ListItem';
+import ListItemButton from '@mui/joy/ListItemButton';
+import Cookies from 'js-cookie';
+import { Link, useNavigate } from 'react-router-dom';
+import styles from '../assets/page.module.css';
+import Layout from '../layout';
 
 function getUserName() {
-  const raw = Cookies.get("user_data") || "";
+  const raw = Cookies.get('user_data') || '';
   let decoded = decodeURIComponent(raw);
-  decoded = decoded.replace(/\\054/g, ",");
+  decoded = decoded.replace(/\\054/g, ',');
   decoded = decoded.replace(/'/g, '"');
-  decoded = decoded.replace(/None/g, "null");
+  decoded = decoded.replace(/None/g, 'null');
   console.log(decoded);
   const authData = raw ? JSON.parse(decoded) : null;
   if (authData) {
@@ -47,20 +47,20 @@ function Tenants() {
   const [data, setData] = React.useState<Tenant[]>([]);
   const [open, setOpen] = React.useState(false);
   const [userName, setUserName] = React.useState(null);
-  const [error, setError] = React.useState<string>("");
+  const [error, setError] = React.useState<string>('');
 
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    fetch("/api/tenants")
+    fetch('/api/tenants')
       .then((res) => {
         if (!res.ok) {
           setError(
-            "Error fetching tenants " + res.status + " " + res.statusText
+            'Error fetching tenants ' + res.status + ' ' + res.statusText,
           );
           return res.json();
         } else {
-          setError("");
+          setError('');
           return res.json();
         }
       })
@@ -80,9 +80,9 @@ function Tenants() {
           <CardContent>
             <div
               style={{
-                display: "flex",
-                justifyContent: "center",
-                padding: "1rem",
+                display: 'flex',
+                justifyContent: 'center',
+                padding: '1rem',
               }}
             >
               <div>
@@ -93,7 +93,7 @@ function Tenants() {
                   aria-label="add-tenant"
                   startDecorator={<Add />}
                   onClick={() => setOpen(true)}
-                  sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+                  sx={{ ml: 'auto', alignSelf: 'center', fontWeight: 600 }}
                 >
                   CREATE TENANT
                 </Button>
@@ -109,15 +109,15 @@ function Tenants() {
               {(() => {
                 if (!data) {
                   return (
-                    <Typography level="h2" textAlign={"center"}>
-                      {" "}
+                    <Typography level="h2" textAlign={'center'}>
+                      {' '}
                       Loading...
                     </Typography>
                   );
-                } else if (error != "") {
+                } else if (error != '') {
                   return (
-                    <Typography level="h2" textAlign={"center"}>
-                      {" "}
+                    <Typography level="h2" textAlign={'center'}>
+                      {' '}
                       {error}
                     </Typography>
                   );
@@ -138,8 +138,8 @@ function Tenants() {
           </CardContent>
           <CardContent>
             <Typography level="body-md" textAlign="center">
-              {" "}
-              You are logged in as {userName}{" "}
+              {' '}
+              You are logged in as {userName}{' '}
             </Typography>
           </CardContent>
         </Card>
@@ -158,10 +158,10 @@ function Tenants() {
                 const tenant = (
                   event.currentTarget.elements[0] as HTMLInputElement
                 ).value;
-                fetch("/api/tenants", {
-                  method: "POST",
+                fetch('/api/tenants', {
+                  method: 'POST',
                   headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                   },
                   body: JSON.stringify({
                     name: tenant,

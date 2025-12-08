@@ -1,32 +1,32 @@
-import type { Route } from "./+types/home";
-import { nile } from "~/nile";
+import type { Route } from './+types/home';
+import { nile } from '~/nile';
 
 const { GET, POST, PUT, DELETE } = nile.handlers;
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   switch (request.method.toUpperCase()) {
-    case "GET":
+    case 'GET':
       return GET(request);
-    case "POST":
+    case 'POST':
       return POST(request);
-    case "PUT":
+    case 'PUT':
       return PUT(request);
-    case "DELETE":
+    case 'DELETE':
       return DELETE(request);
     default:
-      return new Response("Method Not Allowed", { status: 405 });
+      return new Response('Method Not Allowed', { status: 405 });
   }
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
   switch (request.method.toUpperCase()) {
-    case "POST":
+    case 'POST':
       return POST(request);
-    case "PUT":
+    case 'PUT':
       return PUT(request);
-    case "DELETE":
+    case 'DELETE':
       return DELETE(request);
     default:
-      return new Response("Method Not Allowed", { status: 405 });
+      return new Response('Method Not Allowed', { status: 405 });
   }
 };

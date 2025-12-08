@@ -1,7 +1,7 @@
 ---
-title: "Joins in Postgres"
-sidebarTitle: "Joins"
-icon: "diagram-venn"
+title: 'Joins in Postgres'
+sidebarTitle: 'Joins'
+icon: 'diagram-venn'
 ---
 
 ### What Are Joins?
@@ -35,7 +35,6 @@ VALUES (101, 'HR'), (102, 'Engineering'), (103, 'Finance');
 1. **Inner Join**:
 
    ![InnerJoin](/images/innerjoin.png)
-
    - Returns records with matching values in both tables.
    - Example: Combining `employees` and `departments` tables based on matching department IDs.
    - SQL:
@@ -60,7 +59,6 @@ VALUES (101, 'HR'), (102, 'Engineering'), (103, 'Finance');
 2. **Left Join (Left Outer Join)**:
 
    ![LeftOuterJoin](/images/leftjoin.png)
-
    - Includes all records from the left table and matched records from the right table.
    - If no match exists, NULL values are returned for right table columns.
    - Example: Retrieving all employees along with their department names (even if they don't belong to any department).
@@ -87,7 +85,6 @@ VALUES (101, 'HR'), (102, 'Engineering'), (103, 'Finance');
 3. **Right Join (Right Outer Join)**:
 
    ![RightJoin](/images/rightjoin.png)
-
    - Similar to left join but prioritizes the right table.
    - Example: Retrieving all departments along with their employees (even if there are no employees in a department).
    - SQL:
@@ -113,7 +110,6 @@ VALUES (101, 'HR'), (102, 'Engineering'), (103, 'Finance');
 4. **Full Outer Join**:
 
    ![OuterJoin](/images/outerjoin.png)
-
    - Combines results from both left and right outer joins.
    - Includes unmatched records from both tables.
    - Example: Getting all employees and their department names.

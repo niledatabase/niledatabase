@@ -2,7 +2,8 @@
 title: 'Organization'
 description: 'Learn how to use the Nile Auth Organization component'
 ---
-import Theming from '/snippets/theming.mdx'
+
+import Theming from '/snippets/theming.mdx';
 
 # Tenant Selector
 
@@ -43,11 +44,11 @@ export default function App() {
 
 #### Props
 
-| Name       | Type               | Default | Description |
-|------------|--------------------|---------|-------------|
-| `client`   | `QueryClient`      | `null`  | React Query client instance. |
-| `baseUrl`  | `string`           | `''`    | Base API URL for tenant requests. |
-| `className`| `string`           | `''`    | Additional CSS classes. |
+| Name        | Type          | Default | Description                       |
+| ----------- | ------------- | ------- | --------------------------------- |
+| `client`    | `QueryClient` | `null`  | React Query client instance.      |
+| `baseUrl`   | `string`      | `''`    | Base API URL for tenant requests. |
+| `className` | `string`      | `''`    | Additional CSS classes.           |
 
 ---
 
@@ -60,6 +61,7 @@ const { data: tenants, isLoading, refetch } = useTenants();
 ```
 
 Returns:
+
 - `tenants`: List of available tenants.
 - `isLoading`: Whether data is loading.
 - `refetch()`: Function to refresh data.
@@ -75,6 +77,7 @@ const [tenantId, setTenant] = useTenantId();
 ```
 
 Returns:
+
 - `tenantId`: The currently selected tenant ID.
 - `setTenant(id: string)`: Function to change the active tenant.
 
@@ -93,12 +96,12 @@ A component for creating a new organization.
 
 #### Props
 
-| Name         | Type                          | Description |
-|-------------|-------------------------------|-------------|
-| `trigger`   | `React.ReactElement`          | Element to trigger modal. |
-| `onSuccess` | `(tenant: Tenant) => void`    | Callback when tenant is created. |
-| `onError`   | `(error: Error) => void`      | Callback when creation fails. |
-| `fetchUrl`  | `string`                      | API endpoint for tenant creation. |
+| Name        | Type                       | Description                       |
+| ----------- | -------------------------- | --------------------------------- |
+| `trigger`   | `React.ReactElement`       | Element to trigger modal.         |
+| `onSuccess` | `(tenant: Tenant) => void` | Callback when tenant is created.  |
+| `onError`   | `(error: Error) => void`   | Callback when creation fails.     |
+| `fetchUrl`  | `string`                   | API endpoint for tenant creation. |
 
 ---
 
@@ -117,11 +120,10 @@ A component for creating a new organization.
 - If the user has no tenants, they are prompted to create one.
 - Clicking "Create Tenant" opens a form to enter an organization name.
 
-
-<Theming component="<TenantSelector />"/>
+<Theming component="<TenantSelector />" />
 
 ## Related Topics
 
 - [User Management](/auth/concepts/users)
 - [Tenants](/auth/concepts/tenants)
-- [User Component](/auth/components/user) 
+- [User Component](/auth/components/user)

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import ReactFlow from "reactflow";
-import { LiveEditor, LiveError, LivePreview, LiveProvider } from "react-live";
-import ELK from "elkjs";
-import "reactflow/dist/style.css";
-import { PrismTheme } from "prism-react-renderer";
+import ReactFlow from 'reactflow';
+import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live';
+import ELK from 'elkjs';
+import 'reactflow/dist/style.css';
+import { PrismTheme } from 'prism-react-renderer';
 
 const code = `  
 // import ReactFlow from "reactflow";
@@ -71,15 +71,15 @@ const scope = {
   Button,
   ReactFlow,
   initialNodes: [
-    { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
-    { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
+    { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
+    { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
   ],
-  initialEdges: [{ id: "e1-2", source: "1", target: "2" }],
+  initialEdges: [{ id: 'e1-2', source: '1', target: '2' }],
   ELK,
 };
 export default function DataFlow() {
   return (
-    <div className="flex flex-col w-full rounded-md overflow-hidden font-mono">
+    <div className="flex w-full flex-col overflow-hidden rounded-md font-mono">
       <LiveProvider code={code} scope={scope} theme={theme}>
         <div className="live-preview">
           <LivePreview />
@@ -92,62 +92,62 @@ export default function DataFlow() {
 }
 const theme: PrismTheme = {
   plain: {
-    color: "#79c0ff",
-    backgroundColor: "#000",
+    color: '#79c0ff',
+    backgroundColor: '#000',
   },
   styles: [
     {
-      types: ["prolog", "constant", "builtin"],
+      types: ['prolog', 'constant', 'builtin'],
       style: {
-        color: "rgb(189, 147, 249)",
+        color: 'rgb(189, 147, 249)',
       },
     },
     {
-      types: ["inserted", "function"],
+      types: ['inserted', 'function'],
       style: {
-        color: "#d2a8ff",
+        color: '#d2a8ff',
       },
     },
     {
-      types: ["deleted"],
+      types: ['deleted'],
       style: {
-        color: "rgb(255, 85, 85)",
+        color: 'rgb(255, 85, 85)',
       },
     },
     {
-      types: ["changed"],
+      types: ['changed'],
       style: {
-        color: "rgb(255, 184, 108)",
+        color: 'rgb(255, 184, 108)',
       },
     },
     {
-      types: ["punctuation", "symbol"],
+      types: ['punctuation', 'symbol'],
       style: {
-        color: "rgb(248, 248, 242)",
+        color: 'rgb(248, 248, 242)',
       },
     },
     {
-      types: ["string", "char", "tag", "selector"],
+      types: ['string', 'char', 'tag', 'selector'],
       style: {
-        color: "#a5d6ff",
+        color: '#a5d6ff',
       },
     },
     {
-      types: ["keyword", "variable", "console"],
+      types: ['keyword', 'variable', 'console'],
       style: {
-        color: "#ff7b72",
+        color: '#ff7b72',
       },
     },
     {
-      types: ["comment"],
+      types: ['comment'],
       style: {
-        color: "rgb(98, 114, 164)",
+        color: 'rgb(98, 114, 164)',
       },
     },
     {
-      types: ["attr-name", "plain"],
+      types: ['attr-name', 'plain'],
       style: {
-        color: "#79c0ff",
+        color: '#79c0ff',
       },
     },
   ],

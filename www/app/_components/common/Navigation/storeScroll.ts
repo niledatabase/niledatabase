@@ -1,4 +1,4 @@
-"use client";
+'use client';
 // shamelessly taken from https://pqina.nl/blog/applying-styles-based-on-the-user-scroll-position-with-smart-css/
 // could be react, but seems overkill - used in tandem with global.css .navBlur
 
@@ -21,15 +21,15 @@ const debounce = (fn: (...params: any) => any) => {
   };
 };
 
-if (typeof document !== "undefined") {
+if (typeof document !== 'undefined') {
   // Reads out the scroll position and stores it in the data attribute
   // so we can use it in our stylesheets
   const storeScroll = () => {
     document.documentElement.style.setProperty(
-      "--scroll",
-      String(document.documentElement.scrollTop)
+      '--scroll',
+      String(document.documentElement.scrollTop),
     );
   };
 
-  document.addEventListener("scroll", debounce(storeScroll), { passive: true });
+  document.addEventListener('scroll', debounce(storeScroll), { passive: true });
 }

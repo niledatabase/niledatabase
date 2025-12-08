@@ -1,16 +1,16 @@
 export const metadata = {
-  title: "Visualizing Multitenant Data Flows in Serverless Postgres",
-  authors: ["joseph"],
-  image: "2024-02-09-building-schema-visualizer/2024-schema-viewer.webp",
+  title: 'Visualizing Multitenant Data Flows in Serverless Postgres',
+  authors: ['joseph'],
+  image: '2024-02-09-building-schema-visualizer/2024-schema-viewer.webp',
   sizzle:
     "From optimizing performance when querying and rendering database structures to visualizing a directional graph within the browser, we'll take you behind the scenes of Nile's schema visualization, revealing the intricacies of querying Postgres for essential data and serving up a delectable UI experience.",
   tags: [
-    "serverless",
-    "postgres",
-    "saas",
-    "data models",
-    "schema visualizer",
-    "engineering blog",
+    'serverless',
+    'postgres',
+    'saas',
+    'data models',
+    'schema visualizer',
+    'engineering blog',
   ],
 };
 
@@ -265,16 +265,16 @@ As to the implementation, the first thing we want to be sure to handle is the `e
 
 ```tsx
 export default async function layout({ children, edges }) {
-  const ELK = (await import("elkjs")).default; // <-- always do this so it does not clog up every page
+  const ELK = (await import('elkjs')).default; // <-- always do this so it does not clog up every page
   const elk = new ELK();
   return await elk.layout({
     children,
     edges,
-    id: "root",
+    id: 'root',
     layoutOptions: {
-      algorithm: "layered",
-      "spacing.nodeNodeBetweenLayers": "80.0",
-      hierarchyHandling: "INCLUDE_CHILDREN",
+      algorithm: 'layered',
+      'spacing.nodeNodeBetweenLayers': '80.0',
+      hierarchyHandling: 'INCLUDE_CHILDREN',
     },
   });
 }
@@ -288,17 +288,17 @@ After the initial setup, it's all about taking the data from the API and make it
 A slightly updated version from the elkjs readme:
 
 ```tsx
-import layout from "./layout";
+import layout from './layout';
 
 const items = await layout({
   children: [
-    { id: "n1", width: 30, height: 30 },
-    { id: "n2", width: 30, height: 30 },
-    { id: "n3", width: 30, height: 30 },
+    { id: 'n1', width: 30, height: 30 },
+    { id: 'n2', width: 30, height: 30 },
+    { id: 'n3', width: 30, height: 30 },
   ],
   edges: [
-    { id: "e1", sources: ["n1"], targets: ["n2"] },
-    { id: "e2", sources: ["n1"], targets: ["n3"] },
+    { id: 'e1', sources: ['n1'], targets: ['n2'] },
+    { id: 'e2', sources: ['n1'], targets: ['n3'] },
   ],
 }).catch(console.error);
 ```

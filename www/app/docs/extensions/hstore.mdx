@@ -3,7 +3,6 @@ title: 'Hstore'
 description: 'Store key-value pairs within a single PostgreSQL value'
 ---
 
-
 The `hstore` extension provides a data type for storing sets of key-value pairs within a single PostgreSQL value. This can be particularly useful when dealing with semi-structured data or when you need to store attributes that don't warrant their own columns.
 Your Nile database arrives with `hstore` extension already enabled.
 
@@ -26,7 +25,7 @@ CREATE TABLE products (
 First, create a tenant:
 
 ```sql
-INSERT INTO tenants (id, name) 
+INSERT INTO tenants (id, name)
 VALUES ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 'Example Store');
 ```
 
@@ -34,11 +33,11 @@ Then you can insert products for this tenant:
 
 ```sql
 -- Using the => operator
-INSERT INTO products (tenant_id, id, name, attributes) 
+INSERT INTO products (tenant_id, id, name, attributes)
 VALUES ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, 'Laptop', 'color=>silver, RAM=>16GB, storage=>512GB');
 
 -- Using the hstore function
-INSERT INTO products (tenant_id, id, name, attributes) 
+INSERT INTO products (tenant_id, id, name, attributes)
 VALUES ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, 'Phone', hstore(ARRAY['color', 'black', 'storage', '256GB']));
 ```
 
@@ -68,19 +67,19 @@ SELECT skeys(attributes), svals(attributes) FROM products;
 
 ## Updating hstore Values
 
-You can update individual key/value pairs or the entire hstore. 
+You can update individual key/value pairs or the entire hstore.
 We use `SET nile.tenant_id` to guarantee the operation is performed on the correct tenant:
 
 ```sql
 SET nile.tenant_id = 'd1c06023-3421-4fbb-9dd1-c96e42d2fd02';
 -- Update a single key/value pair
-UPDATE products 
-SET attributes = attributes || 'RAM=>32GB'::hstore 
+UPDATE products
+SET attributes = attributes || 'RAM=>32GB'::hstore
 WHERE id = 1;
 
 -- Delete a key
-UPDATE products 
-SET attributes = delete(attributes, 'storage') 
+UPDATE products
+SET attributes = delete(attributes, 'storage')
 WHERE id = 1;
 ```
 

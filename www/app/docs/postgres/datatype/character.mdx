@@ -1,6 +1,6 @@
 ---
-title: "Character types in Postgres"
-sidebarTitle: "Character"
+title: 'Character types in Postgres'
+sidebarTitle: 'Character'
 ---
 
 When working with strings in PostgreSQL, understanding the available character types is crucial. As a new user, let’s explore these types in more detail.
@@ -12,7 +12,6 @@ When working with strings in PostgreSQL, understanding the available character t
   - Can store strings up to `n` characters (not bytes) in length.
   - Excess characters beyond the specified length result in an error unless they are spaces (in which case the string is truncated).
 - **Example:**
-
   - Suppose we want to create a `users` table to store usernames. First, let’s create the table:
 
     ```sql
@@ -39,7 +38,6 @@ When working with strings in PostgreSQL, understanding the available character t
   - Fixed-length, blank-padded character type.
   - Similar to `character varying(n)` but always pads with spaces.
 - **Example:**
-
   - Let’s create an `employees` table to store employee IDs:
 
     ```sql
@@ -65,7 +63,6 @@ When working with strings in PostgreSQL, understanding the available character t
   - Similar to `char`, but without a specified length.
   - Accepts strings of any length, and trailing spaces are insignificant.
 - **Example:**
-
   - Create a `products` table for storing product codes:
 
     ```sql
@@ -91,7 +88,6 @@ When working with strings in PostgreSQL, understanding the available character t
   - PostgreSQL’s native string data type.
   - Stores strings of any length.
 - **Example:**
-
   - Let’s create an `articles` table for storing article content:
 
     ```sql

@@ -1,9 +1,9 @@
-"use client";
-import { RefObject, useEffect, useState } from "react";
+'use client';
+import { RefObject, useEffect, useState } from 'react';
 
 export default function useIntersection(
   element: RefObject<HTMLElement | null>,
-  config?: { rootMargin?: string; threshold?: number }
+  config?: { rootMargin?: string; threshold?: number },
 ) {
   const [isVisible, setState] = useState(false);
 
@@ -14,7 +14,7 @@ export default function useIntersection(
       }
     };
     const observer = new IntersectionObserver(handleObserver, {
-      rootMargin: config?.rootMargin ?? "0px",
+      rootMargin: config?.rootMargin ?? '0px',
       threshold: config?.threshold ?? 0,
     });
 

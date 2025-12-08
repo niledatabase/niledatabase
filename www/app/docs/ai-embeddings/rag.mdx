@@ -1,7 +1,7 @@
 ---
-title: "Retrieval Augmented Generation (RAG)"
-sidebarTitle: "RAG"
-icon: "robot"
+title: 'Retrieval Augmented Generation (RAG)'
+sidebarTitle: 'RAG'
+icon: 'robot'
 ---
 
 RAG, or retrieval augumented generation is one of the most popular methods of building applications on top of general large language model. It allows using the knowledge and language skills of a world-class pre-trained model, while delivering results specific to a vertical or a company.
@@ -101,13 +101,13 @@ In this example, we will use OpenAI's GPT-3.5 model and Nile's pg_vector extensi
 We will embed a few documents, and then search for the most relevant document to a user's question:
 
 ```javascript
-const { OpenAIEmbeddings } = await import("@langchain/openai");
-const { Nile } = await import("@niledatabase/server");
+const { OpenAIEmbeddings } = await import('@langchain/openai');
+const { Nile } = await import('@niledatabase/server');
 
-const EMBEDDING_MODEL = "text-embedding-3-large";
-const OPEN_API_KEY = "bring your own key";
-const NILEDB_USER = "we use nile as the vector store, so we need a user";
-const NILEDB_PASSWORD = "and their password";
+const EMBEDDING_MODEL = 'text-embedding-3-large';
+const OPEN_API_KEY = 'bring your own key';
+const NILEDB_USER = 'we use nile as the vector store, so we need a user';
+const NILEDB_PASSWORD = 'and their password';
 
 let model = new OpenAIEmbeddings({
   apiKey: OPEN_API_KEY,
@@ -122,9 +122,9 @@ let nile = Nile({
 
 // some documents:
 const documents = [
-  "JavaScript is a programming language commonly used in web development.",
-  "Node.js is a runtime environment that allows you to run JavaScript on the server side.",
-  "React is a JavaScript library for building user interfaces.",
+  'JavaScript is a programming language commonly used in web development.',
+  'Node.js is a runtime environment that allows you to run JavaScript on the server side.',
+  'React is a JavaScript library for building user interfaces.',
 ];
 
 // embed documents
@@ -132,28 +132,28 @@ let vectors = await model.embedDocuments(documents);
 
 // store embeddings
 await nile.db.query(
-  "CREATE TABLE IF NOT EXISTS embeddings (id integer, embedding vector(1024));"
+  'CREATE TABLE IF NOT EXISTS embeddings (id integer, embedding vector(1024));',
 );
 for (const [i, vec] of vectors.entries()) {
   await nile.db.query(
-    "INSERT INTO embeddings (id, embedding) values ($1, $2)",
-    [i, JSON.stringify(vec.map((v) => Number(v)))]
+    'INSERT INTO embeddings (id, embedding) values ($1, $2)',
+    [i, JSON.stringify(vec.map((v) => Number(v)))],
   );
 }
 
 // now lets ask a question
-let question_vec = await model.embedDocuments(["Tell me about React"]);
+let question_vec = await model.embedDocuments(['Tell me about React']);
 
 // search for the nearest document by cosine distance of embedding
 let answer_vec = await nile.db.query(
-  "select id from embeddings order by embedding<=>$1 limit 1",
-  [JSON.stringify(question_vec[0])]
+  'select id from embeddings order by embedding<=>$1 limit 1',
+  [JSON.stringify(question_vec[0])],
 );
 
 // return the answer:
 console.log(
-  "based on your question, this document is relevant: " +
-    documents[answer_vec.rows[0].id]
+  'based on your question, this document is relevant: ' +
+    documents[answer_vec.rows[0].id],
 );
 ```
 

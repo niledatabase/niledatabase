@@ -1,4 +1,4 @@
-import NileAsDeps from '/snippets/nileasdeps.mdx'
+import NileAsDeps from '/snippets/nileasdeps.mdx';
 
 <NileAsDeps />
 
@@ -14,14 +14,15 @@ mkdir -p app/api/\[...nile\]
 Create following files handle the calls to your server, as well as expose the `nile` instance to your application:
 
 ```typescript app/api/[...nile]/nile.ts
-import { Nile } from "@niledatabase/server";
+import { Nile } from '@niledatabase/server';
 import { nextJs } from '@niledatabase/nextjs';
 
 export const nile = Nile({ extensions: [nextJs] });
 ```
 
 ```typescript app/api/[...nile]/route.ts
-import { nile } from "./nile";
+import { nile } from './nile';
 export const { POST, GET, DELETE, PUT } = nile.handlers;
 ```
+
 </Step>

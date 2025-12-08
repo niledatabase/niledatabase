@@ -93,13 +93,15 @@ body {
 }
 
 .gradientBorderBox::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: 22px;
   padding: 1px;
   background: linear-gradient(90deg, #f4c587 25%, #d6d3e9 50%, #99d2ec 100%);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -108,7 +110,7 @@ body {
 }
 .gradientBorderGray::before {
   pointer-events: none;
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: 7px;
@@ -118,19 +120,23 @@ body {
     rgba(255, 255, 255, 0.2),
     rgba(255, 255, 255, 1)
   );
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0.25;
 }
 .gradientBorderButton::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: 7px;
   padding: 1px;
   background: linear-gradient(90deg, #f4c587 25%, #d6d3e9 50%, #99d2ec 100%);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0.25;
@@ -138,7 +144,7 @@ body {
 }
 .gradientBorderGray::before {
   pointer-events: none;
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: 7px;
@@ -148,20 +154,24 @@ body {
     rgba(255, 255, 255, 0.2),
     rgba(255, 255, 255, 1)
   );
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0.25;
 }
 .gradientBorderButtonLaunch::before {
   pointer-events: none;
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: 0.75rem;
   padding: 1px;
   background: linear-gradient(144deg, #fdc066 0%, #d8d3e9 51%, #7bd1ed 100%);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   animation: gradient 6s ease infinite;
@@ -169,7 +179,7 @@ body {
 }
 
 .gradientBorderButtonFade::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: 0.75rem;
@@ -180,7 +190,9 @@ body {
     #d8d3e935 51%,
     #7bd1ed35 100%
   );
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
@@ -200,7 +212,7 @@ body {
 
 .gradientButton::after {
   background: linear-gradient(144deg, #fdc066 0%, #d8d3e9 51%, #7bd1ed 100%);
-  content: "";
+  content: '';
   height: 100%;
   left: 0;
   position: absolute;
@@ -233,7 +245,8 @@ html .navBlur {
   padding-bottom: 110px;
   margin-bottom: -58px;
 
-  background-image: linear-gradient(black, black),
+  background-image:
+    linear-gradient(black, black),
     linear-gradient(
       90deg,
       rgba(255, 255, 255, 0.1) 0%,
@@ -257,7 +270,7 @@ html .navBlur {
     rgba(255, 255, 255, 0.1) 0%,
     rgba(255, 255, 255, 0.2) 100%
   );
-  content: "";
+  content: '';
   height: 100%;
   left: 0;
   position: absolute;
@@ -273,7 +286,8 @@ html .navBlur {
   border-radius: 24px;
   border-bottom: none;
 
-  background-image: linear-gradient(black, black),
+  background-image:
+    linear-gradient(black, black),
     linear-gradient(
       90deg,
       rgba(255, 255, 255, 0.1) 0%,
@@ -289,7 +303,7 @@ html .navBlur {
   position: absolute;
   background-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
   border-radius: 24px;
-  content: "";
+  content: '';
   display: block;
   height: 100%;
   left: -1px;
@@ -306,7 +320,8 @@ html .navBlur {
   border-radius: 12px;
   border-bottom: none;
 
-  background-image: linear-gradient(black, black),
+  background-image:
+    linear-gradient(black, black),
     linear-gradient(
       90deg,
       rgba(255, 255, 255, 0.1) 0%,
@@ -320,7 +335,7 @@ html .navBlur {
   position: absolute;
   background-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
   border-radius: 12px;
-  content: "";
+  content: '';
   display: block;
   height: 100%;
   left: -1px;
@@ -343,15 +358,13 @@ html .navBlur {
 }
 
 .garbage2::after {
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0),
-      rgba(255, 255, 255, 0)
-    ),
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)),
     linear-gradient(144deg, #fdc066 0%, #d8d3e9 51%, #7bd1ed 100%);
 
   position: absolute;
   border-radius: 9px;
-  content: "";
+  content: '';
   display: block;
   left: -2px;
   right: -2px;
@@ -368,14 +381,15 @@ html .navBlur {
   border: solid 1px transparent;
   width: 60px;
   height: 60px;
-  background-image: linear-gradient(225deg, #202020 0%, #000 69.6%),
+  background-image:
+    linear-gradient(225deg, #202020 0%, #000 69.6%),
     linear-gradient(225deg, #ffffff38 0%, #ffffff00 69.6%);
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
 
 [id]::before {
-  content: "";
+  content: '';
   display: block;
   height: 62px;
   margin-top: -62px;
@@ -573,7 +587,7 @@ iframe {
 }
 p code::before,
 p code::after {
-  content: "" !important;
+  content: '' !important;
 }
 .prose p {
   opacity: 0.9;
@@ -623,7 +637,7 @@ a {
 .live-preview > div {
   height: 100%;
 }
-pre[class*="console"] {
+pre[class*='console'] {
   color: #ff7b72 !important;
 }
 span.token.tag.class-name {
@@ -648,7 +662,7 @@ code.hljs {
 }
 
 .gradient-dashed-border:before {
-  content: "";
+  content: '';
   position: absolute;
   top: -4px;
   bottom: -4px;
@@ -658,7 +672,8 @@ code.hljs {
   display: inline-block;
   border-radius: 25px;
   border: 6px dashed #000000;
-  background: linear-gradient(#000000 0 0) padding-box,
+  background:
+    linear-gradient(#000000 0 0) padding-box,
     linear-gradient(to right, #f4c587 0%, #d6d3e9 50%, #99d2ec 100%) border-box;
   z-index: -1;
 }
@@ -696,7 +711,8 @@ code.hljs {
 
   /* Create gradient border */
   border: 1px solid transparent;
-  background-image: linear-gradient(black, black),
+  background-image:
+    linear-gradient(black, black),
     linear-gradient(-45deg, #f4c587 0%, #d6d3e9 50%, #99d2ec 100%);
   background-origin: border-box;
   background-clip: content-box, border-box;
@@ -719,7 +735,7 @@ code.hljs {
 }
 .cube::before {
   transition: all 400ms ease-in-out;
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -818,7 +834,7 @@ code.hljs {
   }
 }
 @property --angle {
-  syntax: "<angle>";
+  syntax: '<angle>';
   inherits: false;
   initial-value: 0deg;
 }
@@ -826,8 +842,10 @@ code.hljs {
   mask-composite: xor;
   -webkit-mask-composite: xor;
   animation: inherit;
-  content: "";
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  content: '';
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   border-radius: inherit;
   position: absolute;
   inset: 0;
@@ -852,8 +870,10 @@ code.hljs {
   mask-composite: xor;
   -webkit-mask-composite: xor;
   animation: inherit;
-  content: "";
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  content: '';
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   border-radius: inherit;
   position: absolute;
   inset: 0;
@@ -874,7 +894,7 @@ code.hljs {
 }
 
 .dashed-gradient-line::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -910,7 +930,7 @@ code.hljs {
   left: 0;
   right: 0;
   bottom: 0;
-  content: "";
+  content: '';
   background: linear-gradient(180deg, #f4c587, #d6d3e9, #99d2ec);
   opacity: 0;
 }

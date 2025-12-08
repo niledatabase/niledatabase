@@ -1,8 +1,8 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 export function Links({ className: cn }: { className?: string }) {
   const className = `whitespace-nowrap text-[16px] leading-[20px] px-4 py-2 ${
-    cn ? cn : ""
+    cn ? cn : ''
   }`;
   return (
     <>

@@ -1,13 +1,13 @@
-import { Form, Link, useNavigation } from "react-router";
+import { Form, Link, useNavigation } from 'react-router';
 
-import logoDark from "./logo-dark.svg";
-import logoLight from "./logo-light.svg";
-import { Discord, SignInForm } from "@niledatabase/react";
+import logoDark from './logo-dark.svg';
+import logoLight from './logo-light.svg';
+import { Discord, SignInForm } from '@niledatabase/react';
 
 export function Welcome() {
   return (
     <main className="flex items-center justify-center pt-16 pb-4">
-      <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
+      <div className="flex min-h-0 flex-1 flex-col items-center gap-16">
         <header className="flex flex-col items-center gap-9">
           <div className="w-[500px] max-w-[100vw] p-4">
             <img
@@ -22,9 +22,9 @@ export function Welcome() {
             />
           </div>
         </header>
-        <div className="max-w-[300px] w-full space-y-6 px-4 items-center flex flex-col">
+        <div className="flex w-full max-w-[300px] flex-col items-center space-y-6 px-4">
           <Discord callbackUrl="/profile" />
-          <div className="flex flex-row gap-4 items-center w-full">
+          <div className="flex w-full flex-row items-center gap-4">
             <div className="bg-muted h-px flex-1" />
             or
             <div className="bg-muted h-px flex-1" />
@@ -32,7 +32,7 @@ export function Welcome() {
 
           <SignInForm callbackUrl="/profile" className="w-full" />
           <div className="text-sm">
-            Not a user yet?{" "}
+            Not a user yet?{' '}
             <Link
               className="text-primary hover:underline hover:opacity-80"
               to="/sign-up"
@@ -48,8 +48,8 @@ export function Welcome() {
 
 const resources = [
   {
-    href: "https://reactrouter.com/docs",
-    text: "React Router Docs",
+    href: 'https://reactrouter.com/docs',
+    text: 'React Router Docs',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -68,8 +68,8 @@ const resources = [
     ),
   },
   {
-    href: "https://rmx.as/discord",
-    text: "Join Discord",
+    href: 'https://rmx.as/discord',
+    text: 'Join Discord',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"

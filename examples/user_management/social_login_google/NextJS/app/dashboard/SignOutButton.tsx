@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { signOut } from "@niledatabase/client";
+import { Button } from '@/components/ui/button';
+import { signOut } from '@niledatabase/client';
 
 export default function SignOutButton({
-  text = "Sign out",
+  text = 'Sign out',
 }: {
   text?: string;
 }) {
   return (
     <Button
       variant="link"
-      onClick={() => signOut({ callbackUrl: "/" })}
+      onClick={() => signOut({ callbackUrl: '/' })}
       className="px-0 text-white"
     >
       {text}

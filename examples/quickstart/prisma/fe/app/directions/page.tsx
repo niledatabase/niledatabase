@@ -1,12 +1,12 @@
-"use client";
+'use client';
 // ^^^ required by the syntax highlighter. Note that this also means that I can't use NextJS cookies here (they are for the server side only)
-import SyntaxHighlighter from "react-syntax-highlighter";
-import Stack from "@mui/joy/Stack";
-import Typography from "@mui/joy/Typography";
-import "highlight.js/styles/github-dark.css";
-import Cookies from "js-cookie";
-import { v4 as uuidv4 } from "uuid";
-import { useEffect, useState } from "react";
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
+import 'highlight.js/styles/github-dark.css';
+import Cookies from 'js-cookie';
+import { v4 as uuidv4 } from 'uuid';
+import { useEffect, useState } from 'react';
 
 export default function Page() {
   const [isClient, setIsClient] = useState(false);
@@ -15,11 +15,11 @@ export default function Page() {
   }, []);
 
   const backendServer = String(
-    process.env.NEXT_PUBLIC_BASE_PATH || "http://localhost:8080"
+    process.env.NEXT_PUBLIC_BASE_PATH || 'http://localhost:8080',
   );
-  const raw = Cookies.get("authData");
+  const raw = Cookies.get('authData');
   const authData = raw ? JSON.parse(decodeURIComponent(raw)) : null;
-  var userID = "<user id>";
+  var userID = '<user id>';
   if (authData) {
     userID = authData.tokenData?.sub;
   }
@@ -75,10 +75,10 @@ export default function Page() {
     <Stack direction="column" spacing={2}>
       <Typography
         level="body-md"
-        style={{ whiteSpace: "pre-line", padding: "0 0 2rem 0" }}
+        style={{ whiteSpace: 'pre-line', padding: '0 0 2rem 0' }}
       >
-        {" "}
-        {introText}{" "}
+        {' '}
+        {introText}{' '}
       </Typography>
       {isClient ? (
         <SyntaxHighlighter

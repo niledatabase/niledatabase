@@ -10,6 +10,7 @@ nile workspace [command] [options]
 ```
 
 Available commands:
+
 - `list` - View all available workspaces
 - `show` - Display current workspace details
 
@@ -37,9 +38,9 @@ nile workspace list [options]
 
 ### Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--format` | Output format (human, json, csv) | human |
+| Flag       | Description                      | Default |
+| ---------- | -------------------------------- | ------- |
+| `--format` | Output format (human, json, csv) | human   |
 
 ### Examples
 
@@ -53,6 +54,7 @@ nile workspace list --format json
 # CSV format
 nile workspace list --format csv
 ```
+
 <img height="100" src="/images/nileworkspacelist.png" />
 
 ## Showing Current Workspace
@@ -65,9 +67,9 @@ nile workspace show [options]
 
 ### Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--format` | Output format (human, json, csv) | human |
+| Flag       | Description                      | Default |
+| ---------- | -------------------------------- | ------- |
+| `--format` | Output format (human, json, csv) | human   |
 
 ### Examples
 
@@ -85,7 +87,6 @@ nile workspace show --format csv
 ### Sample Output
 
 <img height="100" src="/images/nileworkspaceshow.png" />
-
 
 ## Common Workflows
 
@@ -162,15 +163,17 @@ nile workspace list
 ## Best Practices
 
 1. **Environment Variables**: Use environment variables for different contexts:
+
    ```bash
    # Development
    export NILE_WORKSPACE=development
-   
+
    # Production
    export NILE_WORKSPACE=production
    ```
 
 2. **Configuration File**: Set default workspace in configuration:
+
    ```bash
    nile config --workspace default-workspace
    ```
@@ -185,4 +188,4 @@ nile workspace list
 - `nile config` - Configure CLI settings
 - `nile db list` - List databases in workspace
 - `nile connect` - Authentication management
-- `nile tenants` - Tenant management within workspace 
+- `nile tenants` - Tenant management within workspace

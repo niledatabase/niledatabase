@@ -1,37 +1,37 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from 'next/cache';
 
-import { createSafeAction } from "@/lib/create-safe-action";
+import { createSafeAction } from '@/lib/create-safe-action';
 
-import { StripeRedirect } from "./schema";
-import { InputType, ReturnType } from "./types";
+import { StripeRedirect } from './schema';
+import { InputType, ReturnType } from './types';
 
-import { absoluteUrl } from "@/lib/utils";
-import { stripe } from "@/lib/stripe";
-import { getUserId } from "@/lib/AuthUtils";
-import { cookies } from "next/headers";
-import { nile } from "@/lib/NileServer";
+import { absoluteUrl } from '@/lib/utils';
+import { stripe } from '@/lib/stripe';
+import { getUserId } from '@/lib/AuthUtils';
+import { cookies } from 'next/headers';
+import { nile } from '@/lib/NileServer';
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const orgId = data.orgId;
   const nextCookies = await cookies();
-  const user = nextCookies.get("authData");
+  const user = nextCookies.get('authData');
   const userId = getUserId(user);
   if (!orgId || !user || !userId) {
     return {
-      error: "Unauthorized",
+      error: 'Unauthorized',
     };
   }
 
   const settingsUrl = absoluteUrl(`/dashboard/organization/${orgId}`);
 
-  let url = "";
+  let url = '';
 
   try {
     const orgSubscription = await nile.query(
-      "select * from user_subscription where user_id = $1",
-      [userId]
+      'select * from user_subscription where user_id = $1',
+      [userId],
     );
 
     console.log(orgSubscription);
@@ -41,27 +41,27 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         customer: orgSubscription.rows[0].stripe_customer_id,
         return_url: settingsUrl,
       });
-      console.log("Exist:", stripeSession);
+      console.log('Exist:', stripeSession);
       url = stripeSession.url;
     } else {
       const stripeSession = await stripe.checkout.sessions.create({
         success_url: settingsUrl,
         cancel_url: settingsUrl,
-        payment_method_types: ["card"],
-        mode: "subscription",
-        billing_address_collection: "auto",
+        payment_method_types: ['card'],
+        mode: 'subscription',
+        billing_address_collection: 'auto',
         // customer_email: user.email, // TBD: Get email from user auth cookie
         line_items: [
           {
             price_data: {
-              currency: "USD",
+              currency: 'USD',
               product_data: {
-                name: "KnowledgeAI - Pro",
-                description: "Unlimited boards for your organization",
+                name: 'KnowledgeAI - Pro',
+                description: 'Unlimited boards for your organization',
               },
               unit_amount: 2000,
               recurring: {
-                interval: "month",
+                interval: 'month',
               },
             },
             quantity: 1,
@@ -72,17 +72,17 @@ const handler = async (data: InputType): Promise<ReturnType> => {
           userId,
         },
       });
-      console.log("New:", stripeSession);
-      url = stripeSession.url || "";
+      console.log('New:', stripeSession);
+      url = stripeSession.url || '';
     }
   } catch (err) {
     return {
-      error: "Something went wrong! " + err,
+      error: 'Something went wrong! ' + err,
     };
   }
 
   revalidatePath(`/dashboard/organization/${orgId}`);
-  console.log("url: ", url);
+  console.log('url: ', url);
   return { data: url };
 };
 

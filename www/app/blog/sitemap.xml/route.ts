@@ -1,7 +1,7 @@
-import { glob } from "glob";
+import { glob } from 'glob';
 
 export async function GET() {
-  const files = await glob("app/blog/**.mdx", {
+  const files = await glob('app/blog/**.mdx', {
     stat: true,
     withFileTypes: true,
   });
@@ -10,11 +10,11 @@ export async function GET() {
     .map((file) => {
       const path = file
         .relative()
-        .replace(".mdx", "")
-        .replace("/[[...slug]]", "")
-        .replace("/index", "")
-        .replace(/^app\//, "")
-        .replace(/\/\d{4}-\d{2}-\d{2}-/, "/");
+        .replace('.mdx', '')
+        .replace('/[[...slug]]', '')
+        .replace('/index', '')
+        .replace(/^app\//, '')
+        .replace(/\/\d{4}-\d{2}-\d{2}-/, '/');
 
       return `  <url>
     <loc>https://www.thenile.dev/${path}</loc>
@@ -25,7 +25,7 @@ export async function GET() {
     <priority>0.7</priority>
   </url>`;
     })
-    .join("\n");
+    .join('\n');
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -34,7 +34,7 @@ ${entries}
 
   return new Response(sitemap, {
     headers: {
-      "Content-Type": "application/xml",
+      'Content-Type': 'application/xml',
     },
   });
 }

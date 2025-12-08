@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import mailchimp from "@mailchimp/mailchimp_marketing";
+import mailchimp from '@mailchimp/mailchimp_marketing';
 
 const MAILCHIMP_KEY = process.env.MAILCHIMP_KEY;
 const MAILCHIMP_LIST_ID = process.env.MAILCHIMP_LIST_ID;
@@ -28,11 +28,11 @@ export async function POST(req: NextRequest) {
   await mailchimp.lists
     .addListMember(MAILCHIMP_LIST_ID, {
       email_address: email,
-      status: "subscribed",
+      status: 'subscribed',
     })
     .catch((e: any) => {
       failed = true;
-      console.log("[ERROR]", e);
+      console.log('[ERROR]', e);
     });
 
   if (failed) {

@@ -1,12 +1,12 @@
-"use client";
-import { useCallback, useRef, useState } from "react";
+'use client';
+import { useCallback, useRef, useState } from 'react';
 
 type Props = {
   children: JSX.Element | JSX.Element[];
 };
 export default function BgHoverer(props: Props) {
   const { children } = props;
-  const [bgPosition, setBgPosition] = useState("50% 50%");
+  const [bgPosition, setBgPosition] = useState('50% 50%');
   const [active, setActive] = useState(false);
 
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -27,15 +27,15 @@ export default function BgHoverer(props: Props) {
         });
       }
     },
-    []
+    [],
   );
 
   return (
     <div
       ref={containerRef}
-      className="bg-hover w-full h-full flex relative overflow-hidden"
+      className="bg-hover relative flex h-full w-full overflow-hidden"
       style={{
-        transition: "background 0.3s ease",
+        transition: 'background 0.3s ease',
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => {
@@ -46,16 +46,16 @@ export default function BgHoverer(props: Props) {
       }}
     >
       <div
-        className="pointer-events-none absolute blur-[25px] bg-white opacity-20 h-[180px] w-[180px] bg-90 rounded-full translate-z-0 will-change-transform"
+        className="translate-z-0 pointer-events-none absolute h-[180px] w-[180px] rounded-full bg-white bg-90 opacity-20 blur-[25px] will-change-transform"
         style={{
           transform: `translate(${position.x}px, ${position.y}px)`,
-          transition: "opacity 200ms",
+          transition: 'opacity 200ms',
           opacity: !active ? 0 : 0.2,
         }}
       ></div>
       <div
-        className="flex-1 flex flex-col"
-        style={{ pointerEvents: active ? "none" : "all" }}
+        className="flex flex-1 flex-col"
+        style={{ pointerEvents: active ? 'none' : 'all' }}
       >
         {children}
       </div>

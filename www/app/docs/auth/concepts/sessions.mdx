@@ -13,8 +13,9 @@ For all other providers, database session tokens are used.
 ## Accessing sessions
 
 You can access the session client side by using `useSession`. This is rare, however, as the session contains the bare minimum information required for authorization and authentication. It is more likely you will use API requests to return information about the user (for instance, `useMe()` to get user profile information)
+
 ```jsx
-import { useSession } from "@niledatabase/react";
+import { useSession } from '@niledatabase/react';
 
 function Profile() {
   const { data: session } = useSession();
@@ -23,32 +24,31 @@ function Profile() {
     return <p>You are not logged in.</p>;
   }
 
-  return (
-    <p>You are logged in</p>
-  );
+  return <p>You are logged in</p>;
 }
 
 export default Profile;
 ```
+
 You can access the session server side by using `nile.auth.getSession`.
+
 ```jsx
-import { Nile } from "@niledatabase/server";
+import { Nile } from '@niledatabase/server';
 
 const nile = Nile();
 
-app.get("/some-path", async (req, res) => {
+app.get('/some-path', async (req, res) => {
   const session = await nile.auth.getSession(req);
   if (!session) {
     res.status(401).json({
-      message: "Unauthorized",
+      message: 'Unauthorized',
     });
     return;
   }
   res.json({
-    message: "You are authorized",
+    message: 'You are authorized',
   });
 });
-
 ```
 
 ## Session Expiry
@@ -57,11 +57,11 @@ The default expiry time is 30 days. When a session expires, the user will need t
 
 ## Revoking sessions
 
-You can revoke a database session by deleting it from the database. This will cause the user to be logged out of *all* tenants the next time they make a request.
+You can revoke a database session by deleting it from the database. This will cause the user to be logged out of _all_ tenants the next time they make a request.
 JWT sessions exist on the client side, so they cannot be revoked.
 
 ## Related Topics
 
 - [JWT](/auth/concepts/jwt)
 - [Users](/auth/concepts/users)
-- [Cookies](/auth/concepts/cookies) 
+- [Cookies](/auth/concepts/cookies)

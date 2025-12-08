@@ -1,12 +1,13 @@
 ---
-title: "Bloom"
-description: "Probabilistic index that can be useful for columns with many distinct values."
+title: 'Bloom'
+description: 'Probabilistic index that can be useful for columns with many distinct values.'
 ---
 
 The [Bloom Index](https://www.postgresql.org/docs/current/bloom.html) in PostgreSQL is a type of index that can be useful for columns with many distinct values. It is particularly effective when searching across multiple indexed columns using equality queries.
 Your Nile database arrives with `bloom` extension already enabled, so there's no need to run `create extension`.
 
 ## Creating and Populating Sample Table
+
 Before creating the index, let's create a sample table and populate it with data:
 
 ```sql
@@ -24,21 +25,24 @@ INSERT INTO my_table (column1, column2) VALUES
     ('lemon', 'yellow');
 ```
 
-
 ## Creating a Bloom Index
+
 A Bloom index is most useful for queries that filter on multiple columns. You need to specify the indexed columns and configure the number of bits per column (`colN`):
 
 ```sql
 CREATE INDEX bloom_idx ON my_table
-USING bloom (column1, column2) 
+USING bloom (column1, column2)
 WITH (col1 = 4, col2 = 4);
 ```
 
 <Info>
-Note: `USING bloom` specifies that this is a Bloom filter index and `col1 = 4, col2 = 4` defines the number of bits per column to be used in the index (default is 4).
+  Note: `USING bloom` specifies that this is a Bloom filter index and `col1 = 4,
+  col2 = 4` defines the number of bits per column to be used in the index
+  (default is 4).
 </Info>
 
 ## Querying with Bloom Index
+
 Once the Bloom index is created, it can be used to optimize queries with equality conditions on indexed columns:
 
 ```sql
@@ -46,11 +50,13 @@ SELECT * FROM my_table WHERE column1 = 'value1' AND column2 = 'value2';
 ```
 
 ## Limitations
+
 - Bloom filters are probabilistic and can produce **false positives**, meaning they may return more results than expected.
 - They are best suited for queries filtering multiple indexed columns using **equality conditions** (`=`).
 - Unlike B-tree indexes, they **do not support range queries** (`<`, `>`, `BETWEEN`).
 
 ## Removing a Bloom Index
+
 If you need to remove a Bloom index:
 
 ```sql
@@ -58,6 +64,7 @@ DROP INDEX bloom_idx;
 ```
 
 ## Conclusion
+
 Bloom indexes in PostgreSQL are useful for multi-column searches with high-cardinality data. They offer space efficiency but come with some trade-offs, such as potential false positives and lack of range query support.
 
 For more details, refer to the [PostgreSQL documentation](https://www.postgresql.org/docs/current/bloom.html).

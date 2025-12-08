@@ -1,5 +1,5 @@
-import { nile } from "../api/[...nile]/nile";
-import { SignOutButton, UserInfo } from "@niledatabase/react";
+import { nile } from '../api/[...nile]/nile';
+import { SignOutButton, UserInfo } from '@niledatabase/react';
 
 export default async function Success() {
   const me = await nile.users.getSelf();
@@ -7,7 +7,7 @@ export default async function Success() {
     return (
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="text-xl">Unauthorized</div>
-        <a className="px-y py-2 hover:underline text-primary" href="/">
+        <a className="px-y py-2 text-primary hover:underline" href="/">
           Back to home
         </a>
       </div>

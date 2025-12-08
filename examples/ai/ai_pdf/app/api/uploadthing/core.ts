@@ -1,23 +1,23 @@
-import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { createUploadthing, type FileRouter } from 'uploadthing/next';
 
-import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
-import { TextLoader } from "langchain/document_loaders/fs/text";
+import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf';
+import { TextLoader } from 'langchain/document_loaders/fs/text';
 
-import { configureNile, nile } from "@/lib/NileServer";
-import { getUserToken, getUserId, getUserName } from "@/lib/AuthUtils";
-import { OpenAIEmbeddings } from "@langchain/openai";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { cookies } from "next/headers";
-import { checkSubscription } from "@/lib/subscription";
+import { configureNile, nile } from '@/lib/NileServer';
+import { getUserToken, getUserId, getUserName } from '@/lib/AuthUtils';
+import { OpenAIEmbeddings } from '@langchain/openai';
+import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
+import { cookies } from 'next/headers';
+import { checkSubscription } from '@/lib/subscription';
 import {
   MAX_PRO_PAGES,
   MAX_FREE_PAGES,
   MAX_FREE_MB,
   MAX_PRO_MB,
-} from "@/constants/limits";
-import { revalidatePath } from "next/cache";
-import { currentTenantId } from "@/lib/tenent-id";
-import { User } from "@niledatabase/server";
+} from '@/constants/limits';
+import { revalidatePath } from 'next/cache';
+import { currentTenantId } from '@/lib/tenent-id';
+import { User } from '@niledatabase/server';
 
 export const maxDuration = 60;
 
@@ -27,10 +27,10 @@ const f = createUploadthing();
 const middleware = async ({ req, files }) => {
   // nile.api.headers = new Headers({ cookie: (await cookies()).toString() }); // Commented out
   const user = await nile.users.getSelf(); // Changed nile.api.users.me to nile.users.getSelf
-  if (!user || user instanceof Response) throw new Error("Unauthorized");
+  if (!user || user instanceof Response) throw new Error('Unauthorized');
   const orgId = await currentTenantId(); // extracting tenant id from the "referer" header. the alternative is to introduce tenant-id cookie
   const isPro = await checkSubscription(orgId);
-  console.log("isPro: ", isPro, " orgId: ", orgId, user);
+  console.log('isPro: ', isPro, ' orgId: ', orgId, user);
   return { userInfo: user as User, orgId, isPro };
 };
 
@@ -38,7 +38,7 @@ function checkTime(startTime: [number, number]) {
   const [ms, nanos] = process.hrtime(startTime);
   const elapsedSec = ms * 1000 + nanos / 1000000;
   if (elapsedSec > maxDuration * 1000 - 500) {
-    throw new Error("Timeout");
+    throw new Error('Timeout');
   }
 }
 
@@ -53,50 +53,50 @@ const onUploadComplete = async ({
     url: string;
   };
 }) => {
-  console.log("metadata in onUploadComplete:", JSON.stringify(metadata));
+  console.log('metadata in onUploadComplete:', JSON.stringify(metadata));
   const { nile: tenantNile } = await configureNile(metadata.orgId);
-  console.log("1: On upload complete. Trying to get file: ", file.key);
-  console.log("file url", file.url);
+  console.log('1: On upload complete. Trying to get file: ', file.key);
+  console.log('file url', file.url);
 
   const startTime = process.hrtime();
   try {
     const response = await fetch(`${file.url}`);
-    console.log("on upload complete: ", response.status, response.ok);
+    console.log('on upload complete: ', response.status, response.ok);
     if (!response.ok) {
-      return { status: "FAILED TO GET FILE" };
+      return { status: 'FAILED TO GET FILE' };
     }
     const blob = await response.blob();
 
     console.log(blob.size);
     const loader = new PDFLoader(blob) || new TextLoader(blob);
 
-    console.log("attempting to load", loader);
+    console.log('attempting to load', loader);
     const pageLevelDocs = await loader.load().catch((e) => {
-      console.log(e, "did this fail");
+      console.log(e, 'did this fail');
     });
     if (!pageLevelDocs) {
-      console.log("failed to load file");
-      return { status: "FAILED TO LOAD FILE" };
+      console.log('failed to load file');
+      return { status: 'FAILED TO LOAD FILE' };
     }
 
     // Check if the pages amount exceeds the limit for the subscription plan
     const maxPageLimit = metadata.isPro ? MAX_PRO_PAGES : MAX_FREE_PAGES;
     const pagesAmt = pageLevelDocs.length;
 
-    console.log("parsing", pagesAmt, pageLevelDocs);
+    console.log('parsing', pagesAmt, pageLevelDocs);
     if (pagesAmt === 0) {
-      return { status: "PARSE FAILED" };
+      return { status: 'PARSE FAILED' };
     }
 
     const isPageLimitExceeded = pagesAmt > maxPageLimit;
 
     console.log(
-      "PAGE CHECK result: ",
+      'PAGE CHECK result: ',
       !isPageLimitExceeded,
-      " number of pages: ",
+      ' number of pages: ',
       pagesAmt,
-      " page limit: ",
-      maxPageLimit
+      ' page limit: ',
+      maxPageLimit,
     );
 
     console.log([
@@ -122,12 +122,12 @@ const onUploadComplete = async ({
           false,
           file.name,
           pagesAmt,
-        ]
+        ],
       );
 
       const fileId = createdFile.rows[0].id;
 
-      console.log("File stored in Nile with ID:" + fileId);
+      console.log('File stored in Nile with ID:' + fileId);
       try {
         for (const doc of pageLevelDocs) {
           checkTime(startTime);
@@ -139,15 +139,15 @@ const onUploadComplete = async ({
           //Split text into chunks (documents)
           const chunks = await textSplitter.createDocuments([text]);
           console.log(`Total chunks: ${chunks.length}`);
-          console.log("Generating AI embeddings during upload here:");
+          console.log('Generating AI embeddings during upload here:');
           const modelName =
-            process.env.OPENAI_EMBEDDING_MODEL_NAME || "text-embedding-3-small";
+            process.env.OPENAI_EMBEDDING_MODEL_NAME || 'text-embedding-3-small';
           const embeddingsArrays = await new OpenAIEmbeddings({
             openAIApiKey: process.env.OPENAI_API_KEY,
             dimensions: +(process.env.OPENAI_EMBEDDING_DIMENSIONS || 1024),
             modelName: modelName,
           }).embedDocuments(
-            chunks.map((chunk: any) => chunk.pageContent.replace(/\n/g, " "))
+            chunks.map((chunk: any) => chunk.pageContent.replace(/\n/g, ' ')),
           );
           const batchSize = 100;
           let batch: any = [];
@@ -168,7 +168,7 @@ const onUploadComplete = async ({
             batch = [...batch, vector];
             if (batch.length === batchSize || idx === chunks.length - 1) {
               for (const vector of batch) {
-                const uuid = vector.id.split("_")[0];
+                const uuid = vector.id.split('_')[0];
                 await nile.query(
                   `INSERT INTO file_embedding (file_id, tenant_id, embedding_api_id, embedding, "pageContent", location) VALUES ($1, $2, $3, $4, $5, $6)`,
                   [
@@ -178,7 +178,7 @@ const onUploadComplete = async ({
                     JSON.stringify(vector.values),
                     JSON.stringify(vector.metadata.pageContent),
                     JSON.stringify(vector.metadata.loc),
-                  ]
+                  ],
                 );
               }
               batch = [];
@@ -192,20 +192,20 @@ const onUploadComplete = async ({
           fileId,
         ]);
       } catch (err) {
-        console.log("error: Error in updating file status in Nile", err);
-        return { status: "EMBEDDING FAILED" };
+        console.log('error: Error in updating file status in Nile', err);
+        return { status: 'EMBEDDING FAILED' };
       }
       // trigger re-render of file list, since the new file exists
       revalidatePath(`/dashboard/organization/${metadata.orgId}`);
-      return { status: "SUCCESS" };
+      return { status: 'SUCCESS' };
     } else {
-      return { status: "LIMIT EXCEEDED" };
+      return { status: 'LIMIT EXCEEDED' };
     }
   } catch (err) {
-    console.log("error: Error in uploading file", err);
-    return { status: "UPLOAD FAILED" };
+    console.log('error: Error in uploading file', err);
+    return { status: 'UPLOAD FAILED' };
   } finally {
-    console.log("Asking for re-render of file list");
+    console.log('Asking for re-render of file list');
     // trigger re-render of file list
     revalidatePath(`/dashboard/organization/${metadata.orgId}`);
   }

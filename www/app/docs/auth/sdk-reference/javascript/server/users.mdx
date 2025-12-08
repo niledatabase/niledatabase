@@ -8,7 +8,10 @@ The Users module provides authenticated users with a focused set of methods to r
 These APIs are scoped to the logged-in user. User creation, session management, and tenant access are now delegated to the `auth` and `tenants` modules.
 
 <Note>
-This module only exposes endpoints related to the current user (`/api/me`) and does not support administrative actions like creating or managing other users. Creating users would be done by the user via `nile.auth.signUp()`, and managing users that are not yourself is not yet support.
+  This module only exposes endpoints related to the current user (`/api/me`) and
+  does not support administrative actions like creating or managing other users.
+  Creating users would be done by the user via `nile.auth.signUp()`, and
+  managing users that are not yourself is not yet support.
 </Note>
 
 ---
@@ -72,14 +75,15 @@ await nile.users.updateSelf({ name: 'Jane Doe' }, true); // returns raw Response
 
 ### Allowed Fields
 
-* `name`: Full display name of the user
-* `familyName`: Surname or last name
-* `givenName`: First name
-* `picture`: Optional URL to an avatar or profile image
-* `emailVerified`: The date when the email was verified
+- `name`: Full display name of the user
+- `familyName`: Surname or last name
+- `givenName`: First name
+- `picture`: Optional URL to an avatar or profile image
+- `emailVerified`: The date when the email was verified
 
 <Note>
-The following fields cannot be modified: `email`, `tenants`, `created`, `updated`, or `id`.
+  The following fields cannot be modified: `email`, `tenants`, `created`,
+  `updated`, or `id`.
 </Note>
 
 If the user is not authenticated, a 401 will be returned.
@@ -100,9 +104,9 @@ await nile.users.removeSelf();
 
 A `Response` object:
 
-* `200 OK` if the user was successfully marked for deletion
-* `401 Unauthorized` if not logged in
-* `404 Not Found` if the user does not exist
+- `200 OK` if the user was successfully marked for deletion
+- `401 Unauthorized` if not logged in
+- `404 Not Found` if the user does not exist
 
 This is often used in account settings for "Delete My Account" functionality.
 
@@ -131,19 +135,20 @@ await nile.users.verifySelf(true); // bypass + raw response
 
 ### Options
 
-* `callbackUrl`: Optional. Where to redirect the user after successful verification.
-* `bypassEmail`: Optional. If `true`, skips the email and sets `emailVerified = true` directly.
+- `callbackUrl`: Optional. Where to redirect the user after successful verification.
+- `bypassEmail`: Optional. If `true`, skips the email and sets `emailVerified = true` directly.
 
 <Note>
-This bypass is useful for local development and CI environments where SMTP is not configured.
+  This bypass is useful for local development and CI environments where SMTP is
+  not configured.
 </Note>
 
 ### Returns
 
-* If `bypassEmail` is used, resolves to the updated `User` object.
-* Otherwise, resolves to a `Response` from the verification endpoint.
-
+- If `bypassEmail` is used, resolves to the updated `User` object.
+- Otherwise, resolves to a `Response` from the verification endpoint.
 
 <Note>
-Use `nile.auth.signUp()` and `nile.auth.signIn()` for authentication, and manage other users through tenant-related APIs where applicable.
+  Use `nile.auth.signUp()` and `nile.auth.signIn()` for authentication, and
+  manage other users through tenant-related APIs where applicable.
 </Note>

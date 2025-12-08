@@ -3,11 +3,11 @@ title: 'Customize'
 description: 'Learn how to style and customize the Nile Auth components'
 ---
 
-The Nile Auth components are imported from the `@niledatabase/react` package. 
+The Nile Auth components are imported from the `@niledatabase/react` package.
 They are built with Tailwind CSS and React and are designed to be easily customized.
 
-There are a few ways to customize the components, and the best approach depends on how much customization you need. 
-In this document we will cover the different approaches and provide examples of how to customize the components. 
+There are a few ways to customize the components, and the best approach depends on how much customization you need.
+In this document we will cover the different approaches and provide examples of how to customize the components.
 You will find more details in the documentation for the specific component you are using.
 
 ## Nile Auth Default CSS
@@ -15,15 +15,15 @@ You will find more details in the documentation for the specific component you a
 Nile's react package includes a CSS file that you can use to style the components.
 
 ```jsx
-import "@niledatabase/react/styles.css";
+import '@niledatabase/react/styles.css';
 ```
 
-This will apply the default styles to all the components and is an easy way to get started 
+This will apply the default styles to all the components and is an easy way to get started
 if you just want things to look nice but don't need to match a specific design.
 
 ## Styling with Component Props
 
-Some of Nile Auth components are a single element, such as a button. This includes the `<SignOutButton>`, `<CreateTenant>` and 
+Some of Nile Auth components are a single element, such as a button. This includes the `<SignOutButton>`, `<CreateTenant>` and
 all the social login buttons.
 
 These components can be customized using the `className` prop. For example, if you want your signout button to have a different color, you can do the following:
@@ -32,13 +32,14 @@ These components can be customized using the `className` prop. For example, if y
 <SignOutButton className="bg-red-500" />
 ```
 
-More complex components, such as the `<SignInForm>`, `<SignUpForm>`, `<UserProfile>` and `<TenantSelector>` components, 
-include child components and text. They can still be customized using the `className` prop, to an extent - for example you can add margins to the form by adding a `className` to the component. 
+More complex components, such as the `<SignInForm>`, `<SignUpForm>`, `<UserProfile>` and `<TenantSelector>` components,
+include child components and text. They can still be customized using the `className` prop, to an extent - for example you can add margins to the form by adding a `className` to the component.
 But it isn't the best approach for achieving a specific design.
 
 <Tip>
-Some components also have a `buttonText` prop that can be used to change the text of the button. 
-Check the documentation for the specific component for more details.
+  Some components also have a `buttonText` prop that can be used to change the
+  text of the button. Check the documentation for the specific component for
+  more details.
 </Tip>
 
 ## Theming with CSS Variables
@@ -48,15 +49,15 @@ We support the same CSS variables that [Shadcn uses](https://ui.shadcn.com/docs/
 
 If you are not using Shadcn, you can still use Tailwind CSS to style the components. This requires two steps:
 
-1. Modify Tailwind config to include Nile Auth components and the theme variables. 
+1. Modify Tailwind config to include Nile Auth components and the theme variables.
 
 If you are using a Tailwind config file, add the following to your config:
 
 ```js tailwind.config.js [expandable]
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./node_modules/@niledatabase/react/dist/**/*.js",
+    './src/**/*.{js,jsx,ts,tsx}',
+    './node_modules/@niledatabase/react/dist/**/*.js',
   ],
   theme: {
     extend: {
@@ -113,12 +114,12 @@ module.exports = {
 If you are using Tailwind v4 without a config file, add the following to your `globals.css` file:
 
 ```css global.css [expandable]
-@source "../../node_modules/@niledatabase/react/**/*.{html,js,jsx,ts,tsx}";
+@source '../../node_modules/@niledatabase/react/**/*.{html,js,jsx,ts,tsx}';
 
 @theme {
   --theme-background-color: hsl(var(--background));
   --theme-foreground-color: hsl(var(--foreground));
-  
+
   --radius: 0.5rem;
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -156,12 +157,12 @@ If you are using Tailwind v4 without a config file, add the following to your `g
 }
 ```
 
-2. Add the theme variables to the `:root` selector in the `globals.css` file. You can use [shadcn theme generator](https://ui.shadcn.com/themes) to get 
-a nice theme for your app. In the example below, I picked a purple theme.
+2. Add the theme variables to the `:root` selector in the `globals.css` file. You can use [shadcn theme generator](https://ui.shadcn.com/themes) to get
+   a nice theme for your app. In the example below, I picked a purple theme.
 
 ```css [expandable]
 @layer base {
-  :root  {
+  :root {
     --background: 276 100% 95%;
     --foreground: 276 5% 10%;
     --card: 276 50% 90%;
@@ -169,7 +170,7 @@ a nice theme for your app. In the example below, I picked a purple theme.
     --popover: 276 100% 95%;
     --popover-foreground: 276 100% 10%;
     --primary: 276 85% 48%;
-    --primary-foreground: 0 0% 100%; 
+    --primary-foreground: 0 0% 100%;
     --secondary: 276 30% 70%;
     --secondary-foreground: 0 0% 0%;
     --muted: 238 30% 85%;
@@ -183,7 +184,7 @@ a nice theme for your app. In the example below, I picked a purple theme.
     --ring: 276 85% 48%;
     --radius: 0.5rem;
   }
-  .dark  {
+  .dark {
     --background: 276 50% 10%;
     --foreground: 276 5% 90%;
     --card: 276 50% 10%;
@@ -210,29 +211,30 @@ a nice theme for your app. In the example below, I picked a purple theme.
 
 ## Additional customizations
 
-If you need more customization, if you are not using Tailwind CSS, or if you have your own UI component library, 
+If you need more customization, if you are not using Tailwind CSS, or if you have your own UI component library,
 you can use Nile Auth React hooks with any components you want and any styles you want.
 
 For example, to use Nile's SignIn hook with your own button, you can do the following:
 
 ```jsx
-import { useSignIn } from "@niledatabase/react";
+import { useSignIn } from '@niledatabase/react';
 
 const SignInComponent = () => {
   const signIn = useSignIn({
-    beforeMutate: (data) => ({ ...data, extraParam: "value" }),
-    onSuccess: () => console.log("Login successful"),
-    onError: (error) => console.error("Login failed", error),
-    callbackUrl: "/dashboard",
+    beforeMutate: (data) => ({ ...data, extraParam: 'value' }),
+    onSuccess: () => console.log('Login successful'),
+    onError: (error) => console.error('Login failed', error),
+    callbackUrl: '/dashboard',
   });
 
   const handleLogin = () => {
-    signIn({ email: "user@example.com", password: "securepassword" });
+    signIn({ email: 'user@example.com', password: 'securepassword' });
   };
 
   return <button onClick={handleLogin}>Sign In</button>;
 };
 ```
+
 This snippet uses the `useSignIn` hook to sign in a user and the `beforeMutate` option to add an extra parameter to the sign in request.
 Note how customizable the hook is - you can add extra parameters, handle the success and error cases, and redirect the user after login.
 

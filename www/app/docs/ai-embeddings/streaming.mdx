@@ -1,7 +1,7 @@
 ---
-title: "Streaming model responses to the client in real-time"
-sidebarTitle: "Streaming"
-icon: "bars-staggered"
+title: 'Streaming model responses to the client in real-time'
+sidebarTitle: 'Streaming'
+icon: 'bars-staggered'
 ---
 
 Some generative models offer streaming responses. This greatly improves the user experience by providing ongoing interaction as the model generates the response.
@@ -14,18 +14,18 @@ This tells the model to start streaming the response as soon as it starts genera
 Here is an example that uses OpenAI:
 
 ```javascript
-import OpenAI from "openai";
+import OpenAI from 'openai';
 
 const openai = new OpenAI();
 
 async function main() {
   const stream = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [{ role: "user", content: "Say this is a test" }],
+    model: 'gpt-3.5-turbo',
+    messages: [{ role: 'user', content: 'Say this is a test' }],
     stream: true,
   });
   for await (const chunk of stream) {
-    process.stdout.write(chunk.choices[0]?.delta?.content || "");
+    process.stdout.write(chunk.choices[0]?.delta?.content || '');
   }
 }
 
@@ -62,8 +62,8 @@ Then you can use this function to send the model response to the client like thi
 
 ```javascript
 const stream = await openai.chat.completions.create({
-  model: "gpt-3.5-turbo",
-  messages: [{ role: "user", content: "Say this is a test" }],
+  model: 'gpt-3.5-turbo',
+  messages: [{ role: 'user', content: 'Say this is a test' }],
   stream: true,
 });
 
@@ -82,7 +82,7 @@ The last step is for the client to display the response as it arrives. This invo
 This is how you can read a streaming response in the client and call a hook to update the UI:
 
 ```javascript
-const resp = await fetch("/api/ask-question", {
+const resp = await fetch('/api/ask-question', {
   body: JSON.stringify({ question: input, tenant_id: tenantid }),
 });
 
@@ -96,9 +96,9 @@ if (resp.body) {
     done = doneReading;
     const chunkValue = decoder.decode(value);
     // dispatch function updates the UI with the new chunk
-    dispatch({ type: "updateAnswer", text: chunkValue });
+    dispatch({ type: 'updateAnswer', text: chunkValue });
     if (done) {
-      dispatch({ type: "done", text: "" });
+      dispatch({ type: 'done', text: '' });
     }
   }
 }
@@ -239,7 +239,7 @@ if (resp.body) {
   const decoder = new TextDecoder();
   let done = false;
   // accumulate the data as it comes in, so we can parse the metadata
-  let partialData = "";
+  let partialData = '';
   let recievedMetadata = false; // track if we finished with the JSON yet
 
   while (!done) {
@@ -249,21 +249,21 @@ if (resp.body) {
     if (!recievedMetadata) {
       partialData += chunkValue;
       // first part of the response is json, second part is the answer
-      const dataParts = partialData.split("EOJSON");
+      const dataParts = partialData.split('EOJSON');
       if (dataParts.length > 1) {
         const metadata = JSON.parse(dataParts[0]);
         // use the metadata, for example to update the UI with the model name
         handleMetadata(metadata);
         // handle the first chunk of the answer
-        dispatch({ type: "updateAnswer", text: dataParts[1] });
+        dispatch({ type: 'updateAnswer', text: dataParts[1] });
         recievedFiles = true;
-        partialData = "";
+        partialData = '';
       }
     } else {
       // handle the rest of the answer
-      dispatch({ type: "updateAnswer", text: chunkValue });
+      dispatch({ type: 'updateAnswer', text: chunkValue });
       if (done) {
-        dispatch({ type: "done", text: "" });
+        dispatch({ type: 'done', text: '' });
       }
     }
   }

@@ -1,5 +1,5 @@
-import Container from "../_components/common/Container";
-import PageHeader from "../_components/common/PageHeader";
+import Container from '../_components/common/Container';
+import PageHeader from '../_components/common/PageHeader';
 
 export default function () {
   return (
@@ -557,7 +557,7 @@ export default function () {
             other party receives such Notice, unless an extension is mutually
             agreed upon by the parties. Notice to Company that you intend to
             initiate an Informal Dispute Resolution Conference should be sent by
-            email to:{" "}
+            email to:{' '}
             <a href="mailto:contacts@thenile.dev">contacts@thenile.dev</a>, or
             by regular mail to PO Box 7775 PMB 99846, San Francisco, California
             94120. The Notice must include:
@@ -612,16 +612,16 @@ export default function () {
             involving claims and counterclaims with an amount in controversy
             under $250,000, not inclusive of attorneys’ fees and interest, shall
             be subject to JAMS’ most current version of the Streamlined
-            Arbitration Rules and procedures available at{" "}
+            Arbitration Rules and procedures available at{' '}
             <a href="http://www.jamsadr.com/rules-streamlined-arbitration/">
               http://www.jamsadr.com/rules-streamlined-arbitration/
             </a>
             ; all other claims shall be subject to JAMS’s most current version
-            of the Comprehensive Arbitration Rules and Procedures, available at{" "}
+            of the Comprehensive Arbitration Rules and Procedures, available at{' '}
             <a href="http://www.jamsadr.com/rules-comprehensive-arbitration/">
               http://www.jamsadr.com/rules-comprehensive-arbitration/
             </a>
-            . JAMS’s rules are also available at{" "}
+            . JAMS’s rules are also available at{' '}
             <a href="http://www.jamsadr.com">www.jamsadr.com</a> or by calling
             JAMS at 800-352-5267.
           </p>

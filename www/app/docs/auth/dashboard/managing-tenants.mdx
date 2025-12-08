@@ -3,10 +3,10 @@ title: 'Managing Tenants'
 description: 'Learn how to manage tenants using the Nile Auth Dashboard'
 ---
 
-Nile Console includes a dashboard for managing tenants, as part of Nile's multi-tenant authentication. It allows you, as a developer, to create, edit, and delete tenants, 
-as well as manage users and configurations for each tenant. 
+Nile Console includes a dashboard for managing tenants, as part of Nile's multi-tenant authentication. It allows you, as a developer, to create, edit, and delete tenants,
+as well as manage users and configurations for each tenant.
 
-This guide explains how to manage tenants using [Nile Console](https://console.thenile.dev). 
+This guide explains how to manage tenants using [Nile Console](https://console.thenile.dev).
 The same functionality is also available in the [Nile CLI](/cli/introduction).
 
 ## Dashboard Overview
@@ -26,8 +26,8 @@ You can access the tenant management dashboard by navigating to the "Tenants and
 
 ### Creating a New Tenant
 
-To create a new tenant, click the "Create Tenant" button in the top right corner of the dashboard. 
-Then fill in the tenant name and click "Create". 
+To create a new tenant, click the "Create Tenant" button in the top right corner of the dashboard.
+Then fill in the tenant name and click "Create".
 This is the equivalent of running `insert into tenants (name) values ('<tenant_name>')` in SQL or `nile tenants create --name <tenant_name>` in the CLI.
 
 ![Create tenant](/images/auth/create_tenant.png)
@@ -36,12 +36,12 @@ This is the equivalent of running `insert into tenants (name) values ('<tenant_n
 
 To configure tenant settings, click on the tenant you want to configure.
 
-In the "Profile" tab, you can modify the tenant's name. Simply click on the pencil icon next to the current name and 
+In the "Profile" tab, you can modify the tenant's name. Simply click on the pencil icon next to the current name and
 type in the new name.
 
 ![Configure tenant](/images/auth/configure_tenant.png)
 
-Nile Auth also supports tenant-specific authentication providers. 
+Nile Auth also supports tenant-specific authentication providers.
 To configure a tenant's authentication provider, click on the "Configuration" tab and select the providers you want to use.
 
 ![Configure tenant authentication](/images/auth/configure_tenant_auth.png)
@@ -54,8 +54,8 @@ To manage tenant users, click on the tenant you want to manage and then click th
 
 In this tab, you can see a list of all the users that are part of the tenant.
 
-To remove a user from the tenant, click the "Delete" button next to the user you want to delete. 
-Note that this will revoke the user's access to the tenant, but they will still exist in the database 
+To remove a user from the tenant, click the "Delete" button next to the user you want to delete.
+Note that this will revoke the user's access to the tenant, but they will still exist in the database
 and can still authenticate with the other tenants.
 
 You can also edit the user's name or email address by clicking on the field and typing in the new value.
@@ -70,8 +70,8 @@ Or you can create new users and they will be added to the tenant automatically:
 
 ### Deleting a Tenant
 
-To delete a tenant, click on the tenant you want to delete and then click the "Delete" button. 
-Note that the tenant will not be deleted from the database - this is a soft delete, it will be marked as deleted and users will 
+To delete a tenant, click on the tenant you want to delete and then click the "Delete" button.
+Note that the tenant will not be deleted from the database - this is a soft delete, it will be marked as deleted and users will
 no longer be able to access it. But the tenant and all of its data will still exist in the database and can be undeleted if needed.
 
 ![Delete tenant](/images/auth/delete_tenant.png)
@@ -85,6 +85,7 @@ DELETE FROM tenants WHERE id = '<tenant_id>';
 This guide explains how to manage tenants using the Nile Auth Dashboard.
 
 ## Best Practices
+
 - Give tenants clear, descriptive names that help identify the organization (e.g., "Acme Corp - Production" rather than just "Acme")
 - The tenants table is yours! You can add fields to it to store any information you need about the tenant - stripe customer id, subscription tier, etc.
 - Remove inactive users promptly to maintain security
@@ -94,4 +95,4 @@ This guide explains how to manage tenants using the Nile Auth Dashboard.
 ## Related Topics
 
 - [Managing Users](/auth/dashboard/managing-users)
-- [Configurations](/auth/dashboard/configurations) 
+- [Configurations](/auth/dashboard/configurations)

@@ -35,6 +35,7 @@ CREATE TABLE articles (
 ### Creating a GIN Index
 
 `pg_bigm` supports full-text search indexes:
+
 - gin must be used as an index method. GiST is not available for pg_bigm.
 - gin_bigm_ops must be used as an operator class.
 
@@ -58,13 +59,15 @@ INSERT INTO articles (tenant_id, id, title, content) VALUES
 ### Search Examples
 
 Simple partial matching:
+
 ```sql
-SELECT title, content 
-FROM articles 
+SELECT title, content
+FROM articles
 WHERE content LIKE '%database%';
 ```
 
 Using similarity search:
+
 ```sql
 SELECT title, content, similarity(content, 'postgresql database') as sim
 FROM articles
@@ -73,6 +76,7 @@ ORDER BY sim DESC;
 ```
 
 Finding similar strings:
+
 ```sql
 SELECT title
 FROM articles

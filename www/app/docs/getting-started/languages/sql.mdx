@@ -1,6 +1,6 @@
 ---
-title: "Explore Nile in 5 minutes with PSQL"
-sidebarTitle: "SQL"
+title: 'Explore Nile in 5 minutes with PSQL'
+sidebarTitle: 'SQL'
 ---
 
 Learn about Nile's tenant aware tables and how they provide tenant isolation through virtual tenant databases.
@@ -43,6 +43,7 @@ Learn about Nile's tenant aware tables and how they provide tenant isolation thr
 
     See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
     ![Creating a table in Nile's admin dashboard](/images/gui-create-table.png)
+
   </Step>
 
   <Step title="Insert first tenant/customer">
@@ -55,6 +56,7 @@ Learn about Nile's tenant aware tables and how they provide tenant isolation thr
     insert into tenants (id, name) values ('d24419bf-6122-4879-afa5-1d9c1b051d72', 'my first customer');
     select * from tenants;
     ```
+
   </Step>
 
   <Step title="Insert first todo task">
@@ -76,6 +78,7 @@ Learn about Nile's tenant aware tables and how they provide tenant isolation thr
     -------------------------------------------------------------------------------
     my first customer    feed my cat     [1,2,3]             1h            false
     ```
+
   </Step>
 
   <Step title="Add another tenant and todo">
@@ -101,6 +104,7 @@ Learn about Nile's tenant aware tables and how they provide tenant isolation thr
     my first customer    feed my cat           [1,2,3]                   1h             false
     second customer   take out the trash       [0.8,0.2,0.6]             2h             false
     ```
+
   </Step>
 
   <Step title="Try tenant isolation">
@@ -126,6 +130,7 @@ Learn about Nile's tenant aware tables and how they provide tenant isolation thr
     -------------------------------------------------------------------------------------
     second customer   take out the trash    [0.8,0.2,0.6]             2h             false
     ```
+
   </Step>
 
   <Step title="Use vector similarity with tenant isolation">
@@ -162,6 +167,7 @@ Learn about Nile's tenant aware tables and how they provide tenant isolation thr
     second customer   take out the trash       [0.8,0.2,0.6]                2h             false
     second customer   clean the house          [0.78,0.18,0.62]             2h             false
     ```
+
   </Step>
 
   <Step title="What's next?">
@@ -174,5 +180,6 @@ Learn about Nile's tenant aware tables and how they provide tenant isolation thr
 
     Next, you will probably want to learn how to use Nile for building an app in your favorite language.
     Check out our [Getting Started](/getting-started/languages/python) guides for more information.
+
   </Step>
 </Steps>

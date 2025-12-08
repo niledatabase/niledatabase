@@ -3,9 +3,12 @@ title: 'Nuxt'
 description: 'Integrate Nile Auth with Nuxt applications'
 icon: 'mountain'
 ---
-This guide will help you get started with Nile Auth and Nuxt. This guide outlines the steps required to configure and integrate authentication in your application. 
+
+This guide will help you get started with Nile Auth and Nuxt. This guide outlines the steps required to configure and integrate authentication in your application.
+
 <Note>
-If you have not done so yet, be sure you have [obtained credentials from the console](../getting-started/installation).
+  If you have not done so yet, be sure you have [obtained credentials from the
+  console](../getting-started/installation).
 </Note>
 
 <Steps>
@@ -15,12 +18,15 @@ If you have not done so yet, be sure you have [obtained credentials from the con
 ```bash npm
   npm install @niledatabase/server @niledatabase/nitro @niledatabase/client
 ```
-```bash yarn 
+
+```bash yarn
   yarn add @niledatabase/server @niledatbase/nitro @niledatabase/client
 ```
+
 ```bash pnpm
   pnpm add @niledatabase/server @niledatabase/nitro @niledatabase/client
 ```
+
 </CodeGroup>
 </Step>
 
@@ -38,14 +44,13 @@ export const nile = Nile<withNitro>({
 }));
 
 ```
+
 </Step>
 
 <Step>
-Add the route so that the APIs can be handled
-```ts server/api/[...slug].ts
-import { nile } from "~/composables/useNile";
-export default defineEventHandler(nile.handlers);
-```
+  Add the route so that the APIs can be handled ```ts server/api/[...slug].ts
+  import {nile} from "~/composables/useNile"; export default
+  defineEventHandler(nile.handlers); ```
 </Step>
 
 </Steps>
@@ -95,9 +100,8 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const res = ctxNile.tenants.invite({ email: body.email });
   if (res instanceof Response) {
-    return { message: "An error has occurred" };
+    return { message: 'An error has occurred' };
   }
-  return { message: "Invite sent" };
+  return { message: 'Invite sent' };
 });
-
 ```

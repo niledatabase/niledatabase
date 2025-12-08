@@ -10,6 +10,7 @@ nile tenants [command] [options]
 ```
 
 Available commands:
+
 - `list` - View all tenants
 - `create` - Create a new tenant
 - `delete` - Remove a tenant
@@ -18,6 +19,7 @@ Available commands:
 ## Prerequisites
 
 Before managing tenants, ensure you have:
+
 1. Selected a workspace
 2. Selected a database
 3. Authenticated with Nile
@@ -40,11 +42,11 @@ nile tenants list [options]
 
 ### Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--format` | Output format (human, json, csv) | human |
+| Flag          | Description                       | Default           |
+| ------------- | --------------------------------- | ----------------- |
+| `--format`    | Output format (human, json, csv)  | human             |
 | `--workspace` | Workspace containing the database | Current workspace |
-| `--db` | Database to list tenants from | Current database |
+| `--db`        | Database to list tenants from     | Current database  |
 
 ### Examples
 
@@ -58,6 +60,7 @@ nile tenants list --format json
 # List from specific database
 nile tenants list --db customer-db
 ```
+
 <img height="100" src="/images/tenantlist.png" />
 
 ## Creating Tenants
@@ -70,18 +73,18 @@ nile tenants create [options]
 
 ### Required Options
 
-| Flag | Description |
-|------|-------------|
+| Flag     | Description        |
+| -------- | ------------------ |
 | `--name` | Name of the tenant |
 
 ### Additional Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--id` | Custom ID for the tenant | Auto-generated |
-| `--format` | Output format (human, json, csv) | human |
+| Flag          | Description                       | Default           |
+| ------------- | --------------------------------- | ----------------- |
+| `--id`        | Custom ID for the tenant          | Auto-generated    |
+| `--format`    | Output format (human, json, csv)  | human             |
 | `--workspace` | Workspace containing the database | Current workspace |
-| `--db` | Database to create tenant in | Current database |
+| `--db`        | Database to create tenant in      | Current database  |
 
 ### Examples
 
@@ -95,6 +98,7 @@ nile tenants create --name "Globex Inc" --id globex-2024
 # Create with JSON output
 nile tenants create --name "Initech" --format json
 ```
+
 <img height="100" src="/images/tenantcreate.png" />
 
 ## Updating Tenants
@@ -107,18 +111,18 @@ nile tenants update [options]
 
 ### Required Options
 
-| Flag | Description |
-|------|-------------|
-| `--id` | ID of the tenant to update |
-| `--new_name` | New name for the tenant |
+| Flag         | Description                |
+| ------------ | -------------------------- |
+| `--id`       | ID of the tenant to update |
+| `--new_name` | New name for the tenant    |
 
 ### Additional Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--format` | Output format (human, json, csv) | human |
+| Flag          | Description                       | Default           |
+| ------------- | --------------------------------- | ----------------- |
+| `--format`    | Output format (human, json, csv)  | human             |
 | `--workspace` | Workspace containing the database | Current workspace |
-| `--db` | Database containing the tenant | Current database |
+| `--db`        | Database containing the tenant    | Current database  |
 
 ### Examples
 
@@ -132,6 +136,7 @@ nile tenants update --id tenant_123 --new_name "Acme Corp Ltd" --format json
 # Update in specific database
 nile tenants update --id tenant_123 --new_name "New Name" --db customer-db
 ```
+
 <img height="100" src="/images/tenantupdate.png" />
 
 ## Deleting Tenants
@@ -144,17 +149,17 @@ nile tenants delete [options]
 
 ### Required Options
 
-| Flag | Description |
-|------|-------------|
+| Flag   | Description                |
+| ------ | -------------------------- |
 | `--id` | ID of the tenant to delete |
 
 ### Additional Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--force` | Skip confirmation prompt | false |
+| Flag          | Description                       | Default           |
+| ------------- | --------------------------------- | ----------------- |
+| `--force`     | Skip confirmation prompt          | false             |
 | `--workspace` | Workspace containing the database | Current workspace |
-| `--db` | Database containing the tenant | Current database |
+| `--db`        | Database containing the tenant    | Current database  |
 
 ### Examples
 
@@ -168,6 +173,7 @@ nile tenants delete --id tenant_123 --force
 # Delete from specific database
 nile tenants delete --id tenant_123 --db customer-db
 ```
+
 <img height="100" src="/images/tenantdelete.png" />
 
 ## Common Workflows
@@ -260,11 +266,13 @@ nile tenants create --name "New Tenant"
 ## Best Practices
 
 1. **Naming Conventions**: Use clear, consistent tenant names:
+
    ```bash
    nile tenants create --name "Company Name - Environment"
    ```
 
 2. **Regular Verification**: Periodically verify tenant list:
+
    ```bash
    nile tenants list --format json > tenant_audit.json
    ```
@@ -279,4 +287,4 @@ nile tenants create --name "New Tenant"
 - `nile db psql` - Connect to tenant's database
 - `nile db connectionstring` - Get tenant-specific connection
 - `nile config` - Configure CLI settings
-- `nile workspace` - Manage workspaces 
+- `nile workspace` - Manage workspaces

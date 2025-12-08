@@ -1,13 +1,13 @@
-import { Navbar } from "../../_components/navbar";
-import { Sidebar } from "../../_components/sidebar";
+import { Navbar } from '../../_components/navbar';
+import { Sidebar } from '../../_components/sidebar';
 
 const OrganizationIdLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="h-full">
       <Navbar />
-      <main className="pt-20 md:pt-24 px-4 max-w-6xl 2xl:max-w-screen-2xl mx-auto">
+      <main className="mx-auto max-w-6xl px-4 pt-20 md:pt-24 2xl:max-w-screen-2xl">
         <div className="flex flex-col gap-x-7">
-          <div className="max-w-sm flex flex-row space-x-4">
+          <div className="flex max-w-sm flex-row space-x-4">
             <Sidebar />
           </div>
           {children}

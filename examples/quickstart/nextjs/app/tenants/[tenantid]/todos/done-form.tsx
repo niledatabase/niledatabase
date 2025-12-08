@@ -1,7 +1,7 @@
-"use client";
-import { useTransition } from "react";
-import { completeTodo } from "./todo-actions";
-import { Checkbox } from "@/components/ui/checkbox";
+'use client';
+import { useTransition } from 'react';
+import { completeTodo } from './todo-actions';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export function DoneForm({
   tenantId,
@@ -12,7 +12,7 @@ export function DoneForm({
 }) {
   const [, startTransition] = useTransition();
   return (
-    <div className="flex flex-row gap-4 items-center">
+    <div className="flex flex-row items-center gap-4">
       <Checkbox
         checked={todo.complete}
         onCheckedChange={() =>

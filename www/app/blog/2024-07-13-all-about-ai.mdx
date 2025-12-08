@@ -1,10 +1,10 @@
 export const metadata = {
-  title: "Everything a developer needs to know about Generative AI for SaaS",
-  authors: ["gwenshap"],
-  image: "2024-07-13-all-about-ai/cover.webp",
+  title: 'Everything a developer needs to know about Generative AI for SaaS',
+  authors: ['gwenshap'],
+  image: '2024-07-13-all-about-ai/cover.webp',
   sizzle:
-    "Everyone talks about generative AI - but do you actually understand every word? I got a bit tired of digging through papers just to understand common terminology and decided to write a blog post that explains everything you need to know about generative AI for SaaS.",
-  tags: ["ai", "generative", "rag", "embedding", "vector"],
+    'Everyone talks about generative AI - but do you actually understand every word? I got a bit tired of digging through papers just to understand common terminology and decided to write a blog post that explains everything you need to know about generative AI for SaaS.',
+  tags: ['ai', 'generative', 'rag', 'embedding', 'vector'],
 };
 
 Few months ago, I knew almost nothing about AI. I used ChatGPT and Co-Pilot (I'm civilized, after all), but a lot of the content around AI was Greek to me.
@@ -161,13 +161,13 @@ there are some nuances that you should consider. We'll cover these in the next b
 In the next blog post, I'll show you how I put all these concepts together to build the AI Code Assistant, but meanwhile, lets peek now at a small example of how RAG works, so you are not left with just theory:
 
 ```javascript
-const { OpenAIEmbeddings } = await import("@langchain/openai");
-const { Nile } = await import("@niledatabase/server");
+const { OpenAIEmbeddings } = await import('@langchain/openai');
+const { Nile } = await import('@niledatabase/server');
 
-const EMBEDDING_MODEL = "text-embedding-3-large";
-const OPEN_API_KEY = "bring your own key";
-const NILEDB_USER = "we use nile as the vector store, so we need a user";
-const NILEDB_PASSWORD = "and their password";
+const EMBEDDING_MODEL = 'text-embedding-3-large';
+const OPEN_API_KEY = 'bring your own key';
+const NILEDB_USER = 'we use nile as the vector store, so we need a user';
+const NILEDB_PASSWORD = 'and their password';
 
 let model = new OpenAIEmbeddings({
   apiKey: OPEN_API_KEY,
@@ -182,9 +182,9 @@ let nile = Nile({
 
 // some documents:
 const documents = [
-  "JavaScript is a programming language commonly used in web development.",
-  "Node.js is a runtime environment that allows you to run JavaScript on the server side.",
-  "React is a JavaScript library for building user interfaces.",
+  'JavaScript is a programming language commonly used in web development.',
+  'Node.js is a runtime environment that allows you to run JavaScript on the server side.',
+  'React is a JavaScript library for building user interfaces.',
 ];
 
 // embed docs
@@ -192,28 +192,28 @@ let vectors = await model.embedDocuments(documents);
 
 // store embeddings
 await nile.db.query(
-  "CREATE TABLE IF NOT EXISTS embeddings (id integer, embedding vector(1024));"
+  'CREATE TABLE IF NOT EXISTS embeddings (id integer, embedding vector(1024));',
 );
 for (const [i, vec] of vectors.entries()) {
   await nile.db.query(
-    "INSERT INTO embeddings (id, embedding) values ($1, $2)",
-    [i, JSON.stringify(vec.map((v) => Number(v)))]
+    'INSERT INTO embeddings (id, embedding) values ($1, $2)',
+    [i, JSON.stringify(vec.map((v) => Number(v)))],
   );
 }
 
 // now lets ask a question
-let question_vec = await model.embedDocuments(["Tell me about React"]);
+let question_vec = await model.embedDocuments(['Tell me about React']);
 
 // search for the nearest document by cosine distance of embedding
 let answer_vec = (answer_vec = await nile.db.query(
-  "select id from embeddings order by embedding<=>$1 limit 1",
-  [JSON.stringify(question_vec[0])]
+  'select id from embeddings order by embedding<=>$1 limit 1',
+  [JSON.stringify(question_vec[0])],
 ));
 
 // return the answer:
 console.log(
-  "based on your question, this document is relevant: " +
-    documents[answer_vec.rows[0].id]
+  'based on your question, this document is relevant: ' +
+    documents[answer_vec.rows[0].id],
 );
 ```
 

@@ -23,16 +23,16 @@ Install the Nile SDK that will handle the authentication logic for you.
   src="/blog/2025-03-10-introducing-nile-auth/sdkinstall.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
+  style={{ borderRadius: '4px' }}
 />
 We will create a NextJS app with an app router and integrate Nile Auth.
 <Image
   src="/blog/2025-03-10-introducing-nile-auth/createapp.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
+  style={{ borderRadius: '4px' }}
 />
-Create two files{" "}
+Create two files
 
 - 'nile.ts' will expose the nile instance to the rest of the app.
 - 'route.ts' handles the calls to Nile on the server side.
@@ -41,8 +41,8 @@ Create two files{" "}
   src="/blog/2025-03-10-introducing-nile-auth/routeauth.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
-/>{" "}
+  style={{ borderRadius: '4px' }}
+/>
 
 Your application will interact with the above authentication routes using SDK components. Replace the boilerplate app/page.tsx with the following code that adds signup, sign-post out, tenant selector, and user info components to your app.
 
@@ -50,14 +50,14 @@ Your application will interact with the above authentication routes using SDK co
   src="/blog/2025-03-10-introducing-nile-auth/componentauth.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
+  style={{ borderRadius: '4px' }}
 />
 <Image
   src="/blog/2025-03-10-introducing-nile-auth/startauth.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
-/>{" "}
+  style={{ borderRadius: '4px' }}
+/>
 
 With just these lines of code, you have a fully functional authentication system for your B2B app.
 
@@ -73,8 +73,8 @@ Nile re-engineers Postgres to make it easy to build and scale B2B apps. Our Auth
   src="/blog/2025-03-10-introducing-nile-auth/tenantselector.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
-/>{" "}
+  style={{ borderRadius: '4px' }}
+/>
 
 Auth solutions usually don’t support B2B apps, or the focus is not full-time. In Nile’s Auth case, we have designed the product for only B2B apps. Nile Auth will support the entire tenant lifecycle, including managing tenants, inviting users to tenants, overriding tenant-specific settings, tenant domains, and more.
 
@@ -82,17 +82,17 @@ Auth solutions usually don’t support B2B apps, or the focus is not full-time. 
   src="/blog/2025-03-10-introducing-nile-auth/tenantapi.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
+  style={{ borderRadius: '4px' }}
 />
-Authenticated users can access data from any tenant they have access to - this access
-control is enforced at all layers - from the browser to the authentication service
-to the database itself. All authentication features can be enabled at the application
-level or disabled for a specific tenant.
+Authenticated users can access data from any tenant they have access to - this
+access control is enforced at all layers - from the browser to the
+authentication service to the database itself. All authentication features can
+be enabled at the application level or disabled for a specific tenant.
 <Image
   src="/blog/2025-03-10-introducing-nile-auth/tenantsql.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
+  style={{ borderRadius: '4px' }}
 />
 ### Unlimited active users
 
@@ -113,26 +113,27 @@ While Nile Postgres will integrate with third-party auth providers as well, we b
   src="/blog/2025-03-10-introducing-nile-auth/tabletenants.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
+  style={{ borderRadius: '4px' }}
 />
-There are also other benefits of building Nile Auth on Nile’s Postgres. Tenant management
-is not just an Auth problem. It is a data problem. Nile’s Postgres has taken a first
-principles approach to solving multi-tenant problems by Isolating tenant data, addressing
-noisy neighbor problems, providing usage and cost insights by tenants, placing tenants
-on different compute types and regions, and supporting all the DB operations at the
-tenant level. Using Nile Auth and Nile’s Postgres provides a truly end to end solution
-to building and scaling B2B apps.
+There are also other benefits of building Nile Auth on Nile’s Postgres. Tenant
+management is not just an Auth problem. It is a data problem. Nile’s Postgres
+has taken a first principles approach to solving multi-tenant problems by
+Isolating tenant data, addressing noisy neighbor problems, providing usage and
+cost insights by tenants, placing tenants on different compute types and
+regions, and supporting all the DB operations at the tenant level. Using Nile
+Auth and Nile’s Postgres provides a truly end to end solution to building and
+scaling B2B apps.
 <Image
   src="/blog/2025-03-10-introducing-nile-auth/tableusers.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
+  style={{ borderRadius: '4px' }}
 />
 <Image
   src="/blog/2025-03-10-introducing-nile-auth/tabletenantusers.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
+  style={{ borderRadius: '4px' }}
 />
 ### Comprehensive B2B auth features
 
@@ -157,7 +158,7 @@ There is more on the roadmap, and our goal is to support a comprehensive list of
   src="/blog/2025-03-10-introducing-nile-auth/sessionauth.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
+  style={{ borderRadius: '4px' }}
 />
 ### Self-host or let Nile manage it
 
@@ -167,7 +168,7 @@ One of our design goals was to make it easy to self-host Nile Auth. We believe w
   src="/blog/2025-03-10-introducing-nile-auth/selfhost.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
+  style={{ borderRadius: '4px' }}
 />
 ### Drop-in fully customizable auth UI modules
 
@@ -177,13 +178,13 @@ Easily integrate pre-built authentication UI modules into your application in fi
   src="/blog/2025-03-10-introducing-nile-auth/googleauth.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
+  style={{ borderRadius: '4px' }}
 />
 <Image
   src="/blog/2025-03-10-introducing-nile-auth/discordauth.png"
   width="800"
   height="800"
-  style={{ borderRadius: "4px" }}
+  style={{ borderRadius: '4px' }}
 />
 ## Other design principles of Nile Auth
 

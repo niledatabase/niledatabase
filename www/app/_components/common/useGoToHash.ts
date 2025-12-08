@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 // only the last one of these in the dom will do the scroll.
 export default function useGoToHash(config: {
   offset?: number;
-  hash: "#careers" | "#faq";
+  hash: '#careers' | '#faq';
 }) {
   const ref = useRef<HTMLAnchorElement>(null);
 
@@ -14,7 +14,7 @@ export default function useGoToHash(config: {
   useEffect(() => {
     if (
       ref.current &&
-      typeof "window" !== undefined &&
+      typeof 'window' !== undefined &&
       window.location.hash === hash
     ) {
       window.scrollTo({

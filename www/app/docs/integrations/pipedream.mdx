@@ -1,8 +1,8 @@
 ---
-title: "Pipedream"
-sidebarTitle: "Pipedream"
-description: "Automate customer workflow"
-icon: "clock"
+title: 'Pipedream'
+sidebarTitle: 'Pipedream'
+description: 'Automate customer workflow'
+icon: 'clock'
 ---
 
 By combining Nile's tenant-aware database with [Pipedream](https://pipedream.com/)'s workflow automation, you can build these integrations quickly and reliably, without getting lost in integration code. Pipedream has hundreds of integrations (over 2400 per their website), so you can truly connect your tenants to anything.
@@ -40,7 +40,8 @@ Lets start with a very simple example that you can try without having access to 
 
     Once you gave Pipedream access to Nile, you'll be able to pick your workspace and database from the dropdown menus. Then, provide username and password credentials to the database you picked.
     Nile configuration
-    <img src="/images/pipedream-3.png" width="400" height="400"/> 
+    <img src="/images/pipedream-3.png" width="400" height="400"/>
+
   </Step>
 
   <Step title="Configure the query">
@@ -56,6 +57,7 @@ Lets start with a very simple example that you can try without having access to 
     ```sql
     CREATE TABLE pipe (client_ip VARCHAR(16), url VARCHAR(1024));
     ```
+
   </Step>
 
   <Step title="Test the workflow">
@@ -69,6 +71,7 @@ Lets start with a very simple example that you can try without having access to 
      75.3.243.203 | https://eoly6egu9oxmmq2.m.pipedream.net/
     (2 rows)
     ```
+
   </Step>
 </Steps>
 
@@ -79,18 +82,21 @@ Hopefully this was fun. While HTTP triggers may not be what you are after, you c
 Let's look at a few useful B2B workflows that you can build with Nile and Pipedream:
 
 ### New Customer (From product):
+
 1. Trigger: Nile
 2. Event: New tenant
 3. Actions: Add new customer in Hubspot
 4. Actions: Update team via Slack
 
 ### New Customer (From sales team):
+
 1. Trigger: Hubspot
 2. Event: New Deal in Stage. Configure the source to only trigger on "won" deals.
 3. Actions: Create tenant in Nile
 4. Actions: Send welcome email via SendGrid
 
 ### Support Ticket
+
 1. Trigger: Zendesk
 2. Event: New ticket
 3. Actions: Query Nile for more information about tenant - subscription type, number of users, etc.
@@ -98,6 +104,7 @@ Let's look at a few useful B2B workflows that you can build with Nile and Pipedr
 5. Actions: If ticket is high priority, send Slack message to customer success team
 
 ### Subscription Cancelled
+
 1. Trigger: Stripe
 2. Event: Cancelled subscription
 3. Actions: Update tenant status in Nile

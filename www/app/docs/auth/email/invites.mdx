@@ -1,18 +1,18 @@
+import InstallNileAndNext from '/snippets/installnile.mdx';
 
-import InstallNileAndNext from '/snippets/installnile.mdx'
+## Overview
 
-## Overview  
+Email invites allow users to invite additional users to their tenants.
 
-Email invites allow users to invite additional users to their tenants.  
+When a user invites another user, Nile Auth:
 
-When a user invites another user, Nile Auth:  
-1. Sends an invite email using your configured SMTP server.  
-2. Grants access to the user after they click the invite link.  
+1. Sends an invite email using your configured SMTP server.
+2. Grants access to the user after they click the invite link.
 
 ## Prerequisites
 
 - A configured SMTP server is required to send verification emails. You can set this up in the Nile Auth UI under **Tenants & Users -> Configuration -> Email templates**.
-- A web server configured to handle Nile Auth requests and serve html. 
+- A web server configured to handle Nile Auth requests and serve html.
 
 ## Implementation
 
@@ -28,7 +28,7 @@ When a user invites another user, Nile Auth:
         // better to save tenantId with a cookie or get with extension, but this works too
         { tenantId: parseTenantId(await headers()) },
         async(_nile) => Promise.all([
-          _nile.tenants.invites(); 
+          _nile.tenants.invites();
           _nile.tenants.users()
         ]);
       );
@@ -46,6 +46,7 @@ When a user invites another user, Nile Auth:
     }
 
     ```
+
   </Step>
 
 <Step title="Basic invite user action">
@@ -57,22 +58,23 @@ export async function inviteUser(
 ): Promise<ServerResponse> {
   'use server';
 
-  const email = formData.get('email') as string;
-    }); // tenant context set by extension, else you need `nile.withContext` here
-  const response = await nile.tenants.invite({ 
-    email,  
-    callbackUrl: `/your-callback-handler`
-  })
-  if (response instanceof Response) {
-    return {
-      ok: false,
-      message: `Failed to create invite for user: ${await response.text()}`,
-    };
-  }
-
-  return { ok: true, data: response };
+const email = formData.get('email') as string;
+}); // tenant context set by extension, else you need `nile.withContext` here
+const response = await nile.tenants.invite({
+email,  
+ callbackUrl: `/your-callback-handler`
+})
+if (response instanceof Response) {
+return {
+ok: false,
+message: `Failed to create invite for user: ${await response.text()}`,
+};
 }
-```
+
+return { ok: true, data: response };
+}
+
+````
 </Step>
 
   <Step title="Callback after invite">
@@ -110,12 +112,13 @@ export async function GET(req: NextRequest) {
   return redirect('/invites');
 }
 
-  ```
+````
+
   </Step>
 </Steps>
 
 ## Related Topics
 
 - [Email Templates](/auth/email/templates)
-- [Email Verification](/auth/email/verification) 
-- [Custom SMTP](/auth/email/customsmtp) 
+- [Email Verification](/auth/email/verification)
+- [Custom SMTP](/auth/email/customsmtp)

@@ -1,17 +1,17 @@
-import Heading from "../_components/common/Heading";
-import Image from "next/image";
-import Team from "@/public/team.png";
+import Heading from '../_components/common/Heading';
+import Image from 'next/image';
+import Team from '@/public/team.png';
 
 export default function OurStory() {
   return (
     <div className="flex w-full flex-col">
-      <div className="flex flex-col text-center align-middle flex-1 bgDivider pt-20 mt-20 -z-20">
+      <div className="bgDivider -z-20 mt-20 flex flex-1 flex-col pt-20 text-center align-middle">
         <Heading text="Our story" />
       </div>
-      <div className="flex flex-col md:flex-row bg-[#000]">
-        <div className="lg:w-1/2 flex">
-          <div className="p-10 flex justify-center items-center w-full">
-            <div className="border border-gray rounded-lg p-1">
+      <div className="flex flex-col bg-[#000] md:flex-row">
+        <div className="flex lg:w-1/2">
+          <div className="flex w-full items-center justify-center p-10">
+            <div className="rounded-lg border border-gray p-1">
               <Image
                 className="rounded-md"
                 src={Team}
@@ -23,7 +23,7 @@ export default function OurStory() {
           </div>
         </div>
         <div className="lg:w-1/2">
-          <div className="p-10 opacity-60 text-[18px]">
+          <div className="p-10 text-[18px] opacity-60">
             <p className="mb-2">
               Over the course of six years at Confluent, we transformed the
               company from being primarily on-premise to a globally successful

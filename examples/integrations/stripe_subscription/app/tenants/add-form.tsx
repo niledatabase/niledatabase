@@ -1,12 +1,12 @@
-"use client";
-import { useState } from "react";
-import Button from "@mui/joy/Button";
-import Typography from "@mui/joy/Typography";
-import ModalDialog from "@mui/joy/ModalDialog";
-import Modal from "@mui/joy/Modal";
-import Stack from "@mui/joy/Stack";
-import Input from "@mui/joy/Input";
-import { createTenant } from "@/app/tenants/tenant-actions";
+'use client';
+import { useState } from 'react';
+import Button from '@mui/joy/Button';
+import Typography from '@mui/joy/Typography';
+import ModalDialog from '@mui/joy/ModalDialog';
+import Modal from '@mui/joy/Modal';
+import Stack from '@mui/joy/Stack';
+import Input from '@mui/joy/Input';
+import { createTenant } from '@/app/tenants/tenant-actions';
 // ^^^ the actual actions are in a server component because they are database operations
 
 export function AddForm() {
@@ -26,7 +26,7 @@ export function AddForm() {
         color="primary"
         aria-label="add-tenant"
         onClick={() => setOpen(true)}
-        sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+        sx={{ ml: 'auto', alignSelf: 'center', fontWeight: 600 }}
       >
         CREATE TENANT
       </Button>

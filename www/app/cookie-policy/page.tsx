@@ -1,5 +1,5 @@
-import Container from "../_components/common/Container";
-import PageHeader from "../_components/common/PageHeader";
+import Container from '../_components/common/Container';
+import PageHeader from '../_components/common/PageHeader';
 
 export default function () {
   return (
@@ -8,10 +8,10 @@ export default function () {
       <div className="prose prose-invert">
         <p>
           This Cookie Notice explains how Nile Platform, Inc. (
-          <strong>“Nile”</strong>, <strong>“we”</strong>, <strong>“us”</strong>{" "}
+          <strong>“Nile”</strong>, <strong>“we”</strong>, <strong>“us”</strong>{' '}
           or <strong>“our”</strong>) uses cookies and similar technologies in
           connection with the Site and any other website that we own or control
-          and that posts or links to this Cookie Notice (collectively, the{" "}
+          and that posts or links to this Cookie Notice (collectively, the{' '}
           <strong>“Sites”</strong>).
         </p>
 
@@ -156,7 +156,7 @@ export default function () {
           <li>
             <strong>
               Control cookies by managing your consent preferences on our Site.
-            </strong>{" "}
+            </strong>{' '}
             You can manage your consent preferences by visiting the Do Not Sell
             My Personal Information link at the bottom of this webpage.
           </li>
@@ -191,7 +191,7 @@ export default function () {
           <li>
             <strong>
               Blocking advertising ID use in your mobile settings.
-            </strong>{" "}
+            </strong>{' '}
             Your mobile device settings may provide functionality to limit use
             of the advertising ID associated with your mobile device for
             interest-based advertising purposes.

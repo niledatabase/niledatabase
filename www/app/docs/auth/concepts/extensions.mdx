@@ -19,9 +19,9 @@ Each of these can be set and will cause the SDK to use them either as a REST cal
 
 ### Headers
 
-Headers contain the auth cookies used to allows users access to `nile-auth`. 
+Headers contain the auth cookies used to allows users access to `nile-auth`.
 
-More often than not, a framework-specific extension will handle setting `headers` automatically when it comes to serving REST request to the client. 
+More often than not, a framework-specific extension will handle setting `headers` automatically when it comes to serving REST request to the client.
 
 ```ts nextjs
 // because NextJS uses an import, we must set it outside of the request lifecycle to be used later
@@ -34,7 +34,7 @@ export function nextJs = () => ({
     ctx.set({ headers: headersHelper });
     // rest of context
   },
-    // rest of extension 
+    // rest of extension
 })
 ```
 
@@ -67,7 +67,6 @@ The tenantId and userId are used to further authorize users in the database. The
 Lets have a look at a cookie in express for illustrative purposes.
 
 ```ts naive approach
-
 app.get(async (req) => {
   const tenantId = getTenant(req.headers); // your logic
   const ctx = await nile.withContext({ tenantId });
@@ -81,7 +80,7 @@ Doing this manually on every route is repetitive and error-prone.
 
 Instead, you can use Express middleware to call withContext once per request. The SDK caches the last used context, so any subsequent SDK calls will automatically use it within the same request chain:
 
-```ts 
+```ts
 app.use((req, res, next) => {
   const tenantId = getTenant(req.headers); // your logic
   nile.withContext({ tenantId });
@@ -90,15 +89,19 @@ app.use((req, res, next) => {
 
 app.get(async (req, res) => {
   // Context is already set by the middleware
-  const users = await nile.users.list(); 
+  const users = await nile.users.list();
   res.json(users);
 });
-
 ```
-<Note>This relies on synchronous execution within the same request lifecycle. If you await or dispatch across async boundaries without using the SDK&apos;s internal context propagation (like AsyncLocalStorage), the context may be lost, which defaults to the last used.</Note>
+
+<Note>
+  This relies on synchronous execution within the same request lifecycle. If you
+  await or dispatch across async boundaries without using the SDK&apos;s
+  internal context propagation (like AsyncLocalStorage), the context may be
+  lost, which defaults to the last used.
+</Note>
 
 Depending on where you are in the lifecycle of your application, you will want to call different functions within your extension.
-
 
 ## Extension methods
 
@@ -134,5 +137,3 @@ Called with `withContext`, allows overriding of a tenant id within the context.
 ### replace.handlers
 
 Allows a full replacement of handlers that do not match any expected signature from the SDK. This is specifically for server side frameworks like Nitro, which expect a specific signature from `defineEventHandler` that the sdk does not have, as the standard signature is `const { GET, POST, PUT, DELETE } = nile.handlers`
-
-
