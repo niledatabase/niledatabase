@@ -1,0 +1,67 @@
+---
+title: 'Sessions'
+description: 'Understanding session management in Nile Auth'
+---
+
+## What is a Session?
+
+A session represents an authenticated user's state within your application. When a user successfully logs in, a session is created, storing information like the user's ID, email, and any custom properties you choose. This session allows the user to remain authenticated across multiple requests without needing to re-enter credentials.
+
+Nile auth has two kinds of session tokens: JWT and database session tokens. For email + password, JWTs are used.
+For all other providers, database session tokens are used.
+
+## Accessing sessions
+
+You can access the session client side by using `useSession`. This is rare, however, as the session contains the bare minimum information required for authorization and authentication. It is more likely you will use API requests to return information about the user (for instance, `useMe()` to get user profile information)
+```jsx
+import { useSession } from "@niledatabase/react";
+
+function Profile() {
+  const { data: session } = useSession();
+
+  if (!session) {
+    return <p>You are not logged in.</p>;
+  }
+
+  return (
+    <p>You are logged in</p>
+  );
+}
+
+export default Profile;
+```
+You can access the session server side by using `nile.auth.getSession`.
+```jsx
+import { Nile } from "@niledatabase/server";
+
+const nile = Nile();
+
+app.get("/some-path", async (req, res) => {
+  const session = await nile.auth.getSession(req);
+  if (!session) {
+    res.status(401).json({
+      message: "Unauthorized",
+    });
+    return;
+  }
+  res.json({
+    message: "You are authorized",
+  });
+});
+
+```
+
+## Session Expiry
+
+The default expiry time is 30 days. When a session expires, the user will need to log in again to create a new session.
+
+## Revoking sessions
+
+You can revoke a database session by deleting it from the database. This will cause the user to be logged out of *all* tenants the next time they make a request.
+JWT sessions exist on the client side, so they cannot be revoked.
+
+## Related Topics
+
+- [JWT](/auth/concepts/jwt)
+- [Users](/auth/concepts/users)
+- [Cookies](/auth/concepts/cookies) 

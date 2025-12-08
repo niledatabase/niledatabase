@@ -1,0 +1,165 @@
+---
+title: 'From NextAuth.js'
+description: 'Learn how to migrate from NextAuth.js to Nile Auth'
+---
+import AuthMigrationTesting from '/snippets/auth_migration_testing.mdx'
+import AuthMigrationBestPractices from '/snippets/auth_migration_best_practices.mdx'
+import AuthMigrationSocial from '/snippets/auth_migration_social.mdx'
+
+If you are currently using NextAuth.js, this guide will help you migrate to Nile Auth.
+Migrating production applications from one auth provider to another is a non-trivial task, 
+and we recommend you do thorough testing.
+
+Before you begin, you'll need a Nile account. If you don't have one, you can sign up [here](https://console.thenile.dev). 
+You should also review the [Nile Auth](/auth/introduction) documentation and validate that Nile Auth meets 
+your application requirements (That we support the providers you need, for instance). If you notice any features missing, [please let us know!](https://github.com/orgs/niledatabase/discussions?discussions_q=label%3Aauth)
+
+## Migration Steps
+
+NextAuth.js is an authentication library, rather than a service. 
+This means that your users, sessions and accounts are stored in a database.
+If your existing database is PostgreSQL, you can use Nile Auth with the same database and this document will guide you through the migration.
+Otherwise, you'll need to migrate your data to PostgreSQL. Data migrations to PostgreSQL are not covered is beyond the scope of this guide, 
+but you can reach out to us for [help](auth/help/community).
+
+<Steps>
+<Step title="Migrating NextAuth data to Nile Auth">
+
+You can see the schema of the auth tables in Nile Auth in our [built-in tables documentation](/auth/concepts/builtintables).
+If you are using the standard Postgres adapter for NextAuth.js, your schema is documented [here](https://authjs.dev/getting-started/adapters/pg?framework=next-js). This schema is the same for NextAuth versions 3, 4 and 5 (also called Auth.js).
+
+As you can see, there are quite a few similarities between the two schemas. Making the migration relatively straightforward.
+
+First, if you are not using Nile, you'll need to create the tables as [documented](/auth/concepts/builtintables).
+
+Assuming you have these tables, either built into Nile or created by yourself, you'll need to migrate the data from the NextAuth.js tables to the Nile Auth tables. In the example queries below, I'm assuming that the NextAuth.js tables are in the `nextauth` schema. Modify the queries below to match your schema.
+
+<Tip>
+If you don't mind users re-authenticating, you don't need to migrate the `sessions` and `verification_tokens` tables.
+</Tip>
+
+**Users table**
+
+Nile Auth uses `uuid` type for the `id` column, while NextAuth.js uses `serial` type (which is actually an integer).
+Since there is no automatic conversion between these types, we recommend adding a new column to store the NextAuth.js user id, 
+allowing you to keep existing references to these IDs intact.
+
+```sql
+ALTER TABLE auth.users ADD COLUMN nextauth_id integer;
+```
+
+To copy the data from the NextAuth.js users table to the Nile Auth users table, you can use the following query:
+
+```sql
+insert into users.users (email, name, email_verified, image, nextauth_id)
+select email, name, email_verified, image, id as nextauth_id
+from nextauth.users;
+```
+
+**Sessions table**
+
+The sessions table in Nile Auth is almost identical to the one in NextAuth.js. 
+We just need to convert the user IDs to be Nile Auth user IDs instead of NextAuth.js user IDs.
+
+```sql
+insert into auth.sessions (session_token, user_id, expires_at)
+select s.session_token, u.id as user_id, s.expires_at
+from nextauth.sessions s
+join users.users u on u.nextauth_id = s.user_id;
+```
+
+**Verification Tokens table**
+
+The verification tokens table in Nile Auth is identical to the one in NextAuth.js. No changes are needed.
+
+```sql
+insert into auth.verification_tokens (identifier, token, expires)
+select identifier, token, expires
+from nextauth.verification_tokens;
+```
+
+**Accounts / Credentials table**
+
+Nile Auth uses the `auth.credentials` table to store account information instead of the `accounts` table.
+The query below will migrate the data from the `accounts` table to the `credentials` table.
+
+```sql
+insert into auth.credentials (
+    user_id,
+    method,
+    provider,
+    provider_account,
+    payload
+)
+select 
+    u.id as user_id,
+    'oidc'::authentication_method as method, -- all NextAuth.js accounts are oidc
+    a.provider,
+    a."providerAccountId" as provider_account,
+    jsonb_build_object(
+        'refresh_token', a.refresh_token,
+        'access_token', a.access_token,
+        'expires_at', a.expires_at,
+        'id_token', a.id_token,
+        'scope', a.scope,
+        'session_state', a.session_state,
+        'token_type', a.token_type,
+        'type', a.type
+    ) as payload
+from nextauth.accounts a
+join users.users u on u.nextauth_id = a."userId";
+```
+</Step>
+<Step title="Linking users to tenants">
+
+Nile Auth is a multi-tenant authentication service. By linking users to tenants, 
+you can control their access to resources in your application and use Nile Auth organization components in your application.
+
+This section assumes that you are already using Nile as your database, your tenants exist in `tenants` table, and your data is in tenant-aware tables with tenant isolation.
+Migrating data from existing database into Nile's virtual tenant databases is out of scope for this guide, but you can reach out to us for [help](auth/help/community).
+
+In order to link users to tenants, you'll need to populate the `users.user_tenants` table with the relationships between users and tenants.
+You'll need to convert the current mapping of NextAuth.js users to tenants to the new Nile Auth user_tenants table.
+
+For example, if you have a `memberships` table with this mapping, you can use the following query to migrate the data:    
+
+```sql
+insert into users.user_tenants (user_id, tenant_id)
+select u.id as user_id, m.tenant_id as tenant_id
+from memberships m
+join users.users u on u.nextauth_id = m.user_id;
+```
+
+</Step>
+<Step title="Social Providers">
+<AuthMigrationSocial identity_provider="NextAuth.js"/>
+</Step>
+<Step title="Passwordless Authentication">
+If you used NextAuth.js passwordless authentication, you'll need to configure your SMTP server and email templates in Nile Auth.
+Refer to the [email configuration](/auth/dashboard/configurations#email-configuration) guide to learn how to do this.
+</Step>
+<Step title="Application Migration">
+In addition to the data migration, you'll need to update your application to use Nile Auth.
+
+Refer to the [NextJS](/auth/frameworks/nextjs) guide to learn how to set up Nile Auth environment variables and routes in your application. 
+These will replace the NextAuth.js routes in your application.
+
+NileAuth routes are purely backend and do not serve any frontend content. This means that you'll need to create login/signup pages in your application with 
+Nile's customizable components. The NextJS guide above has examples of how to do this.
+
+<Tip>
+Note that unlike NextAuth.js, you don't configure social providers and passwordless authentication in the application
+ - you already configured them in the **Social Providers** and **Passwordless Authentication** steps above. 
+</Tip>
+</Step>
+</Steps>
+## Testing
+<AuthMigrationTesting />
+
+## Best Practices
+<AuthMigrationBestPractices />
+
+## Related Guides
+
+- [Firebase Migration](/auth/migration/fromfirebase)
+- [Auth0 Migration](/auth/migration/fromauth0) 

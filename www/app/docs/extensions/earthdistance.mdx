@@ -1,0 +1,64 @@
+---
+title: "Earthdistance"
+description: "Provides functions for calculating great-circle distances between points on Earth."
+---
+
+The [earthdistance](https://www.postgresql.org/docs/current/earthdistance.html) extension in PostgreSQL provides functions for calculating great-circle distances between points on Earth. It is useful for applications that require geospatial distance calculations, such as location-based services and mapping applications.
+Your Nile database arrives with `earthdistance` extension and its dependency `cube` already enabled, so there's no need to run `create extension`.
+
+## Creating and Populating `locations` Table
+Before performing distance calculations, let's create a sample table to store latitude and longitude values:
+
+```sql
+CREATE TABLE locations (
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION
+);
+
+INSERT INTO locations (name, latitude, longitude) VALUES
+    ('San Francisco', 37.7749, -122.4194),
+    ('New York', 40.7128, -74.0060),
+    ('Los Angeles', 34.0522, -118.2437),
+    ('Chicago', 41.8781, -87.6298),
+    ('Miami', 25.7617, -80.1918);
+```
+
+## Calculating Distance Between Two Points
+To compute the great-circle distance between two points (given in latitude and longitude in degrees), use the `earth_distance()` function:
+
+```sql
+SELECT a.name AS location_a, b.name AS location_b, 
+       earth_distance(ll_to_earth(a.latitude, a.longitude), ll_to_earth(b.latitude, b.longitude)) AS distance_meters
+FROM locations a, locations b
+WHERE a.name = 'San Francisco' AND b.name = 'New York';
+```
+
+This returns the approximate distance in meters between San Francisco and New York.
+
+## Finding Locations Within a Given Radius
+To find all locations within 1000 km of San Francisco:
+
+```sql
+SELECT name, earth_distance(ll_to_earth(37.7749, -122.4194), ll_to_earth(latitude, longitude)) AS distance_meters
+FROM locations
+WHERE earth_distance(ll_to_earth(37.7749, -122.4194), ll_to_earth(latitude, longitude)) < 1000000;
+```
+
+## Limitations
+- `earthdistance` assumes a **spherical Earth model**, which may introduce minor inaccuracies.
+- Distance calculations are **approximate** and may not be suitable for high-precision geospatial applications.
+- Requires both `cube` and `earthdistance` extensions to be installed.
+
+## Removing an Index
+If you need to remove the spatial index:
+
+```sql
+DROP INDEX locations_earth_idx;
+```
+
+## Conclusion
+The `earthdistance` extension in PostgreSQL simplifies great-circle distance calculations for geographic coordinates. It is useful for applications needing fast location-based searches and distance queries.
+
+For more details, refer to the [PostgreSQL documentation](https://www.postgresql.org/docs/current/earthdistance.html).

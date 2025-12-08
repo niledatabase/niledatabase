@@ -1,0 +1,130 @@
+---
+title: 'pg_bigm'
+description: 'Full-text search using bigrams'
+---
+
+The `pg_bigm` extension provides fast full-text search functionality using 2-gram (bigram) matching in PostgreSQL databases. It's particularly useful when you need to perform similarity searches or fuzzy string matching on large text data.
+Your Nile database arrives with the `pg_bigm` extension already enabled.
+
+## Understanding pg_bigm
+
+A bigram is a pair of consecutive characters in a string. For example, the word "hello" contains the following bigrams: "he", "el", "ll", "lo". pg_bigm creates an index of these bigrams, enabling fast similarity searches and partial matching queries.
+
+### Key Features
+
+- **Fast Full-Text Search**: Efficient searching using bigram matching
+- **Similarity Calculation**: Built-in functions to measure string similarity
+- **Partial Matching**: Find strings containing specific patterns
+- **Language Agnostic**: Works well with any language, including non-Latin scripts
+- **GIN Index Support**: Fast search performance using GIN indexes
+
+## Usage Examples
+
+### Creating a Table with Text Search
+
+```sql
+CREATE TABLE articles (
+  tenant_id uuid,
+  id integer,
+  title text,
+  content text,
+  PRIMARY KEY (tenant_id, id)
+);
+```
+
+### Creating a GIN Index
+
+`pg_bigm` supports full-text search indexes:
+- gin must be used as an index method. GiST is not available for pg_bigm.
+- gin_bigm_ops must be used as an operator class.
+
+```sql
+CREATE INDEX articles_content_idx ON articles USING gin (content gin_bigm_ops);
+```
+
+### Inserting Sample Data
+
+```sql
+-- We need to create a tenant first
+INSERT INTO tenants (id, name) VALUES
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 'Tenant 1');
+
+INSERT INTO articles (tenant_id, id, title, content) VALUES
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 1, 'PostgreSQL Tutorial', 'Learn about PostgreSQL database management...'),
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 2, 'Database Design', 'Best practices for designing databases...'),
+  ('d1c06023-3421-4fbb-9dd1-c96e42d2fd02', 3, 'Query Optimization', 'Tips for optimizing database queries...');
+```
+
+### Search Examples
+
+Simple partial matching:
+```sql
+SELECT title, content 
+FROM articles 
+WHERE content LIKE '%database%';
+```
+
+Using similarity search:
+```sql
+SELECT title, content, similarity(content, 'postgresql database') as sim
+FROM articles
+WHERE content % 'postgresql database'
+ORDER BY sim DESC;
+```
+
+Finding similar strings:
+```sql
+SELECT title
+FROM articles
+WHERE similarity(title, 'PostgeSQL') > 0.3;  -- Will match 'PostgreSQL' despite typo
+```
+
+## Functions and Operators
+
+### Main Functions
+
+- `similarity(text, text)`: Returns similarity between two strings (0.0 to 1.0)
+- `show_bigm(text)`: Shows all bigrams in a string
+- `bigm_similarity_threshold`: Sets threshold for `%` operator (default: 0.3)
+
+### Operators
+
+- `LIKE`: Standard pattern matching
+- `%`: Similarity search operator
+- `=~`: Regular expression match with bigram index support
+
+## Configuration Parameters
+
+- `pg_bigm.similarity_threshold`: Default similarity threshold (0.0 to 1.0)
+- `pg_bigm.enable_recheck`: Whether to recheck similarity in search results
+- `pg_bigm.gin_key_limit`: Maximum number of bigrams for GIN index
+
+## Use Cases
+
+- Fuzzy text search
+- Spell-check functionality
+- Similar content matching
+- Auto-complete suggestions
+- Typo-tolerant search
+- Multi-language text search
+
+## Performance Considerations
+
+- GIN indexes can be large, plan storage accordingly
+- Index creation might be slow for large tables
+- Index only necessary columns
+- Monitor index size and search performance
+- Adjust similarity threshold to balance precision and recall
+- Consider using `pg_bigm.enable_recheck` for better accuracy
+
+## Limitations
+
+- Indexes can be larger compared to traditional B-tree indexes
+- Not suitable for exact matching (use standard indexes instead)
+- May require more memory during search operations
+- Performance depends on similarity threshold and data size
+
+## Additional Resources
+
+- [pg_bigm official repository](https://github.com/pgbigm/pg_bigm)
+- [PostgreSQL Text Search Documentation](https://www.postgresql.org/docs/current/textsearch.html)

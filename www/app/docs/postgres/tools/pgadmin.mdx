@@ -1,0 +1,48 @@
+---
+title: "Connecting to Postgres using PgAdmin"
+sidebarTitle: "PgAdmin"
+---
+This guide will walk you through the steps to connect to Nile using PgAdmin.
+
+1. Create a Nile's Postgres database through the UI or use one of your existing databases to follow along.
+
+![PgAdmin-1](/images/psql-1.png)
+
+2. Once you are inside a specific database, click on the settings tab on the left and navigate to the connections screen
+
+![PgAdmin-2](/images/psql-2.png)
+
+3. Click on the Postgres icon to get the connection string
+
+![PgAdmin-3](/images/psql-3.png)
+
+4. Click "Generate credentials". Use this if you really want to simplify the access. If not, you can replace the username and password manually and use that through commandline.
+
+![PgAdmin-4](/images/dbweaver-4.png)
+
+5. There are four parts of this url that is needed to connect to PgAdmin
+
+```bash
+host:db.thenile.dev
+database:diplomatic_axe
+username:018bd797-ed9d-7c02-bec4-dac1179c29fd
+password:d68af75e-47cb-4354-ada4-98abe7d8015c
+```
+
+6. Navigate to PgAdmin. Select to create a new server. Provide a name for the server
+
+![PgAdmin-5](/images/pgadmin1.png)
+
+7. Enter the host, database, username and password from step 5
+
+![PgAdmin-6](/images/pgadmin2.png)
+
+8. Press OK and PgAdmin should automatically connect to Nile's Postgres
+
+![PgAdmin-7](/images/pgadmin3.png)
+
+10. Known issues
+- You cannot create a table through the UI editor. You can create a table through the query editor
+- You cannot get information about indexes or constraints through the UI editor
+
+11. Enjoy exploring Nile with PgAdmin

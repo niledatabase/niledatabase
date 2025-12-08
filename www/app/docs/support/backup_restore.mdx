@@ -1,0 +1,68 @@
+---
+title: "Backup and Restore"
+sidebarTitle: "Backup and Restore"
+icon: "database"
+---
+
+In case database backup and restore is required, please follow the steps below. Our team is here to assist you throughout the process.
+
+<Tip>
+This is available for paid tiers only. We hope to make this process self-serve soon.
+</Tip>
+
+## 1. Notify Us
+
+Send a message to our team via Slack (if we have set up one for you) or email at [support@thenile.dev](mailto:support@thenile.dev) and include **URGENT** in the title. Include the following details to expedite the recovery process:
+
+- Database name
+- Approximate time when the issue occurred
+- Do you wish to restore to new schema in same database or to a different database? (if a different database, please provide its name as well).
+
+## 2. Acknowledgment
+
+Once we receive your message, we will acknowledge it within **15 minutes**. If you do not receive an acknowledgment, please follow up.
+
+## 3. Backup Availability
+
+We take **three backups daily** to ensure your data is well-protected. Upon your request, an appropriate backup, based on the time when the data issue occurred, will be restored in a separate schema within your database or alternatively into the original schema in an empty database of your choice. 
+
+In the case of separate schema, the backup schema will have a name in the format: `<original_schema_name>_bkp`. 
+For example, if your original schema is `sales_data`, the backup schema will be named: `sales_data_bkp`
+
+## 4. How to Restore Data
+
+<Tip>
+Only needed if data is restored within the same database into another schema
+</Tip>
+
+You can restore the data from the backup schema using SQL commands. Below is an example query to copy data back to the original schema:
+
+```sql
+-- Recover data for a specific tenant:
+SET nile.tenant_id='018ff561-ae16-7c9e-93c6-8482f9952c4f';
+INSERT INTO expense_report_items
+SELECT * FROM public_bkp.expense_report_items;
+
+-- recover data for shared table
+RESET nile.tenant_id;
+INSERT INTO flights select * from flights;
+
+-- recover data for multiple tenants:
+
+-- 1. generate statements:
+RESET nile.tenant_id;
+SELECT 'SET nile.tenant_id='''||id||'''; INSERT INTO expense_report_items SELECT * FROM public_bkp.expense_report_items;' from tenants where name like '%customer%';
+
+-- 2. Run the resulting statements:
+ SET nile.tenant_id='179027f2-e184-4df7-a568-2be746898be2'; INSERT INTO expense_report_items SELECT * FROM public_bkp.expense_report_items;
+ SET nile.tenant_id='018ff04c-9dfe-7fbd-8d1c-96ccdbe24e11'; INSERT INTO expense_report_items SELECT * FROM public_bkp.expense_report_items;
+ SET nile.tenant_id='018ff04d-7ded-7719-a2d3-79f65d19f2e8'; INSERT INTO expense_report_items SELECT * FROM public_bkp.expense_report_items;
+ SET nile.tenant_id='108124a5-2e34-418a-9735-b93082e9fbf2'; INSERT INTO expense_report_items SELECT * FROM public_bkp.expense_report_items;
+ SET nile.tenant_id='84a4358a-15a4-42ba-8606-ca948fb730c2'; INSERT INTO expense_report_items SELECT * FROM public_bkp.expense_report_items;
+ SET nile.tenant_id='a02748b7-76c9-4765-b230-dea566e38e5d'; INSERT INTO expense_report_items SELECT * FROM public_bkp.expense_report_items;
+ SET nile.tenant_id='cea8b9b8-ec0a-4144-ae3a-b67834079951'; INSERT INTO expense_report_items SELECT * FROM public_bkp.expense_report_items;
+```
+
+## Need Assistance?
+
+If you encounter any issues during the recovery process or require additional help, please do not hesitate to contact our team. We’re here to help ensure a smooth recovery.

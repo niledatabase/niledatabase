@@ -1,0 +1,150 @@
+---
+title: 'Installation'
+description: 'Install nile-auth in your application'
+icon: 'play'
+---
+import DbCreds from '/snippets/dbcreds.mdx'
+
+<Steps>
+<Step title="Install packages">
+<CodeGroup>
+
+```bash npm
+  npm install @niledatabase/server @niledatabase/client
+```
+```bash yarn 
+  yarn add @niledatabase/server @niledatabase/client
+```
+```bash pnpm
+  pnpm add @niledatabase/server @niledatabase/client
+```
+</CodeGroup>
+</Step>
+<DbCreds />
+<Step title="Import and configure the nile-auth instance">
+
+<CodeGroup>
+
+```ts nextjs
+import { Nile } from '@niledatabase/server'
+import { nextJs } from '@niledatabase/nextjs'
+export const nile = Nile({ extensions: [nextJs] });
+```
+```ts remix
+import { Nile } from '@niledatabase/server'
+export const nile = Nile();
+```
+```ts express
+import { Nile } from '@niledatabase/server'
+import { express } from '@niledatabase/express'
+export const nile = Nile({ extensions: [express(app)] });
+```
+```ts nitro
+import { Nile } from '@niledatabase/server'
+import { nitro } from '@niledatabase/nitro '
+export const nile = Nile({ extensions: [nitro] });
+```
+```ts JS
+import { Nile } from '@niledatabase/server'
+export const nile = Nile();
+```
+
+</CodeGroup>
+
+</Step>
+<Step>
+To handle requests, set up a route handler on your server.
+
+<CodeGroup>
+```ts next-js
+// app/api/[...nile]/route.ts
+import { nile } from "@/nile"; // path to nile instance
+export const { POST, GET, DELETE, PUT } = nile.handlers;
+```
+```ts remix
+// app/routes/api.$.ts`
+import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node"
+import { nile } from "~/nile"; // the nile instance
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const method = request.method.toUpperCase();
+  return nile.handlers[method](request)
+};
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const method = request.method.toUpperCase();
+  return nile.handlers[method](request)
+};
+```
+```ts express
+// server.ts
+import { Nile } from "@niledatabase/server";
+import { express } from "@niledatabase/express";
+const nile = Nile({ extensions: [express(app)] });
+```
+```ts nitro
+import { nile } from "~/nile"; // the nile instance
+import { convertToRequest } from '@niledatabase/nitro'
+ 
+export default defineEventHandler((event) => {
+    return convertToRequest(event, nile);
+});
+```
+```ts JS
+
+async function startServer(req, res) {
+  try {
+    const method = req.method?.toUpperCase() as 'GET' | 'POST' | 'PUT' | 'DELETE';
+
+    if (!method || !nile.handlers[method]) {
+      res.writeHead(405, { 'Content-Type': 'text/plain' });
+      return res.end('Method Not Allowed');
+    }
+
+    const url = `http://${req.headers.host}${req.url}`;
+    const bodyChunks: Uint8Array[] = [];
+
+    req.on('data', chunk => bodyChunks.push(chunk));
+    req.on('end', async () => {
+      const body = Buffer.concat(bodyChunks);
+      const request = new Request(url, {
+        method,
+        headers: req.headers as HeadersInit,
+        body: method === 'POST' || method === 'PUT' ? body : undefined,
+      });
+
+      let response;
+      try {
+        response = await nile.handlers[method](request);
+      } catch (err) {
+        console.error(err);
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        return res.end('Internal Server Error');
+      }
+
+      res.writeHead(response.status, Object.fromEntries(response.headers.entries()));
+      const respBody = await response.text();
+      res.end(respBody);
+    });
+  } catch (err) {
+    console.error(err);
+    res.writeHead(500, { 'Content-Type': 'text/plain' });
+    res.end('Unexpected Server Error');
+  }
+};
+```
+
+
+
+</CodeGroup>
+</Step>
+<Step title="Call APIs with the nile-auth client">
+ ```ts nile-client.ts
+import { getSession, signUp } from '@niledatabase/client'
+```
+ 
+</Step>
+</Steps>
+With that, you've successfully set up nile-auth in your application.
+
+Continue on to [Social providers](../singlesignon/discord), or check out how to [integrate into specific frameworks](/auth/frameworks/nextjs)

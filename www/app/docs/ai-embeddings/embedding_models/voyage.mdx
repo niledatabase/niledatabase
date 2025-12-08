@@ -1,0 +1,124 @@
+---
+title: "Voyage Embedding Models"
+sidebarTitle: "Voyage"
+---
+
+## Availble models
+
+Voyage has a collection of specialized models for embedding text from different domains: financial, legal
+(and large documents), code and medical.
+It also has highly ranked general embedding model that can be used for a variety of tasks,
+a general model that is optimized for retrieval, and a smaller cost-efficient retrieval model.
+
+We included a subset here for reference:
+
+| Model                     | Dimensions | Max Tokens | Cost               | MTEB Avg Score | Similarity Metric         |
+|---------------------------|------------|------------|--------------------|----------------|---------------------------|
+| voyage-large-2-instruct   | 1024       | 16000      | $0.12 / 1M tokens  | 68.28          | cosine, dot product, L2   |
+| voyage-2                  | 1024       | 4000       | $0.1 / 1M tokens   |                | cosine, dot product, L2   |
+| voyage-code-2             | 1536       | 16000      | $0.12 / 1M tokens  |                | cosine, dot product, L2   |
+| voyage-law-2              | 1024       | 16000      | $0.12 / 1M tokens  |                | cosine, dot product, L2   |
+
+
+## Usage
+
+Voyage has a Python, but not a Javascript, SDK. Their REST API is **almost** compatible with OpenAI's API,
+but unfortunately, their powerful general purpose model, `voyage-large-2-instruct` requires `inputType` parameter,
+which is not supported by OpenAI's SDK. Fortunately, LangChain has a nice community-contributed JS library for Voyage,
+which supports the `inputType` parameter. So we are going to use the LangChain community library in the example below.
+
+### Installing dependencies
+
+```bash
+npm install @niledatabase/server @langchain/community
+```
+
+### Generating embeddings with Voyage
+
+```javascript
+const VOYAGE_API_KEY = "your voyage api key";
+const { VoyageEmbeddings } = await import(
+  "@langchain/community/embeddings/voyage"
+);
+
+// we need a separate model object for documents and queries
+// because the inputType is different and is in this object
+const embedDocs = new VoyageEmbeddings({
+  apiKey: VOYAGE_API_KEY, // In Node.js defaults to process.env.VOYAGEAI_API_KEY
+  inputType: "document", // for the embedding of documents stored in pg_vector
+});
+
+const embedQueries = new VoyageEmbeddings({
+  apiKey: VOYAGE_API_KEY,
+  inputType: "query", // for the embedding of questions used to search documents
+});
+
+const input_text = `The future belongs to those who believe in the beauty of their 
+                    dreams.`;
+
+// embedDocuments is the batch API and can take multiple documents in one call
+const doc_vec_resp = await embedDocs.embedDocuments([input_text]);
+// it returns an array of embeddings, we have just one
+const doc_vec = doc_vec_resp[0];
+
+const question = "Who does the future belong to?";
+
+// embedQuery takes a single query string and returns a single vector
+const question_vec = await embedQueries.embedQuery(question);
+```
+
+### Storing and retrieving the embeddings
+
+```javascript
+// set up Nile as the vector store
+const { Nile } = await import("@niledatabase/server");
+const NILEDB_USER = "you need a nile user with access to a nile database";
+const NILEDB_PASSWORD = "and a password for that user";
+const nile = Nile({
+  user: NILEDB_USER,
+  password: NILEDB_PASSWORD,
+});
+
+// store vector in a table
+await nile.db.query("INSERT INTO embeddings (embedding) values ($1)", [
+  JSON.stringify(doc_vec.map((v) => Number(v))),
+]);
+
+// search for similar vectors
+let db_resp = await nile.db.query(
+  "select embedding from embeddings order by embedding<=>$1 limit 1",
+  [JSON.stringify(question_vec.map((v) => Number(v)))]
+);
+
+// Postgres returns an object, with array of rows each column is a
+// property of the row the vector is represented as a string
+let similar_str = db_resp.rows[0].embedding;
+let similar = similar_str
+  .substring(1, similar_str.length - 1)
+  .split(",")
+  .map((v) => parseFloat(v));
+
+// check that we got the same vector back
+let same = true;
+
+for (let i = 0; i < similar.length; i++) {
+  if (Math.abs(similar[i] - doc_vec[i]) > 0.000001) {
+    same = false;
+  }
+}
+
+console.log("got same vector? " + same);
+```
+
+## Additional information
+
+### Distance metrics
+
+Voyage embeddings are normalized to length 1, which means that you can use L2, cosine, and dot product similarity
+metrics interchangeably. Dot product is the fastest to compute.
+
+### API Rate limits
+
+Note that on the free plan, the rate limits are quite strict. Voyage gives you only 3 API calls a minute.
+Which means that after you embedded some documents, you can only generate embeddings for 2 queries before
+running out of the minute and having to wait.

@@ -1,0 +1,12 @@
+If you used social identity providers with {identity_provider}, you will need to configure the same providers in Nile Auth.
+
+You can configure social providers by going to "Tenants and Users" page in [Nile Console](https://console.thenile.dev) 
+and selecting the "Providers" tab. 
+
+Simply click on the provider you want to configure and you'll see the provider configuration page.
+All providers use OAuth, so you'll need to provide the OAuth client ID and secret. It is recommended to use the same client 
+ID and secret as the one used in {identity_provider}. And to use the same redirect URI in the social provider configuration.
+
+![Social providers](/images/auth/social_providers.png)
+
+You can see more details on how to configure and use each provider in the [Single Sign-On](/auth/singlesignon/google) section of the documentation.

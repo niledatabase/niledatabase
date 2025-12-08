@@ -1,0 +1,109 @@
+---
+title: 'Users'
+description: 'Understanding user management in Nile Auth'
+---
+
+Learn about user management concepts in Nile Auth, including how to create, update, and manage users and their sessions.
+
+## User Model
+
+The `User` model in Nile Auth defines the structure of a user object. It includes both basic and custom properties to meet the needs of your application.
+
+```typescript
+interface User {
+  id: string;
+  email: string;
+  name?: string | null;
+  familyName?: string | null;
+  givenName?: string | null;
+  picture?: string | null;
+  created: string;
+  updated?: string;
+  emailVerified?: string | null;
+  tenants: { id: string }[];
+}
+
+```
+
+## User Properties
+
+### Basic Properties
+
+- **Email**: The user's email address. This is true across all users of a database
+- **Profile information**: Includes details like the user's name, contact info, and other relevant data, along with any tenants the user is associated.
+
+## User Operations
+
+### Creating Users
+
+To create a new user, you can make a POST request to the `/users` endpoint.
+
+```typescript
+const newUser = await nile.users.createUser({ email: 'user@example.com', password: 'user1' });
+```
+
+### Adding users
+
+When a user is created, they are not automatically added to a tenant, unless `newTenant` is present. Users can only add other users to tenants of which they are a member. To add a user to a tenant, use `linkUser`
+
+```typescript
+const user1 = await nile.users.createUser({ email: 'user1@example.com', password: 'user1', newTenant: 'myTenant' });
+const user2 = await nile.users.createUser({ email: 'user2@example.com', password: 'user2' });
+// make user1 and user2 part of the same tenant
+const updated2 = await nile.tenants.addMember(user2.id);
+```
+
+
+### Updating Users
+
+Because users are isolated to their own session, existing user update themselves via `PUT` method. A custom endpoint would need to be created in order for one user to update the information of another.
+
+```typescript
+const updatedUser = await nile.users.updateSelf({ name: 'user1' });
+```
+
+### Deleting Users
+
+Because user accounts are isolated, one user is unable to delete another. It is possible remove a user from a tenant from the built-in API. In order to to that, use `unlinkUser` 
+
+```typescript
+const unlinked = await nile.tenants.removeMember(user2.id);
+```
+
+## User Authentication
+
+### Password-based Authentication
+
+<Warning>
+  Password-based authentication is not recommended for production applications. Use social authentication or other secure methods instead.
+</Warning>
+
+You can authenticate users using their email and password. After a successful login, a session token in for form of a JWT is returned. All other forms use a session token saved in the database.
+For demonstration purposes, we are using the server-side methods. It would be rare to do this in a real application.
+
+```typescript
+// Example password authentication - not recommended for production
+const session = await nile.auth.login({
+  email: 'user@example.com',
+  password: 'password123',
+});
+```
+
+### Social Authentication
+
+Nile Auth also supports social authentication via OAuth providers such as Google or Facebook. In order to configure this, see [Single Sign On](/auth/singlesignon/google)
+
+
+## User Sessions
+
+A session is always within the context of a request. You can access session data using:
+
+```typescript
+const session = await nile.auth.getSession();
+```
+
+## Related Topics
+
+- [Sessions](/auth/concepts/sessions)
+- [Tenants](/auth/concepts/tenants)
+- [JWT](/auth/concepts/jwt)

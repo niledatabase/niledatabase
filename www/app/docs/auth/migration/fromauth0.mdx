@@ -1,0 +1,209 @@
+---
+title: 'From Auth0'
+description: 'Learn how to migrate from Auth0 to Nile Auth'
+---
+import AuthMigrationTesting from '/snippets/auth_migration_testing.mdx'
+import AuthMigrationBestPractices from '/snippets/auth_migration_best_practices.mdx'
+import AuthMigrationSocial from '/snippets/auth_migration_social.mdx'
+
+If you are currently using Auth0, this guide will help you migrate to Nile Auth.
+Migrating production applications from one auth provider to another is a non-trivial task, 
+and we recommend you do thorough testing.
+
+Before you begin, you'll need a Nile account. If you don't have one, you can sign up [here](https://console.thenile.dev). 
+You should also review the [Nile Auth](/auth/introduction) documentation and validate that Nile Auth meets 
+your application requirements (That we support the providers you need, for instance). If you notice any features missing, [please let us know!](https://github.com/orgs/niledatabase/discussions?discussions_q=label%3Aauth)
+
+## Migration Steps
+<Steps>
+
+<Step title="Export User Data from Auth0">
+This step is necessary if you use Auth0's email/password or passwordless login methods. 
+In this case, your users' data is stored in Auth0's database, and you will need to export it.
+
+Auth0 has a [friendly UI for exporting user data](https://auth0.com/docs/manage-users/user-migration/user-import-export-extension), but unfortunately, it does not contain the organizations that users belong to.
+
+Therefore, you'll need to use the management API to first list all the organizations, and then for each organization, 
+list all the users.
+
+Here is an example of how to do this:
+
+```typescript [expandable]
+var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+const allUsers = [];
+const response = await fetch("https://login.auth0.com/api/v2/organizations", requestOptions);
+const organizations = await response.json();
+
+// Write organizations to a file
+fs.writeFileSync('auth0-organizations.json', JSON.stringify(organizations, null, 2));
+
+for (const organization of organizations) {
+    const response = await fetch(`https://login.auth0.com/api/v2/organizations/${organization.id}/users`, requestOptions);
+    const users = await response.json();
+    // Add organization name to each user and collect them
+    users.forEach(user => {
+        allUsers.push({
+            ...user,
+            organizationName: organization.name
+        });
+    });
+}
+
+// Write all users to a file
+const fs = require('fs');
+fs.writeFileSync('auth0-users.json', JSON.stringify(allUsers, null, 2));
+```
+
+Note that Auth0 does not export user's password hashes through these tools, you will need to open a support ticket to get 
+this data.
+</Step>
+
+<Step title="Import User Data into Nile Auth">
+
+You'll need a small script to import the user data into Nile Auth. 
+The script will iterate over the exported user data and create users in Nile Auth.
+
+The following example script shows how to import user data from a JSON file:
+
+```typescript [expandable]
+import { Nile } from "@niledatabase/server";
+import * as fs from 'fs';
+
+interface Auth0User {
+    Id: string;
+    Nickname: string;
+    Name: string;
+    email: string;
+    Connection: string;
+    "Created At": string;
+    "Updated At": string;
+}
+
+interface Auth0Organization {
+    id: string;
+    name: string;
+    display_name: string;
+    metadata?: Record<string, any>;
+}
+
+async function migrateUsers(nile: any) {
+    try {
+        // Read and parse the JSON file
+        const rawData = fs.readFileSync('auth0-users.json', 'utf8');
+        const users: Auth0User[] = JSON.parse(rawData);
+        let newUser;
+
+        // Process each user
+        for (const user of users) {
+            try {
+                // Generate a temporary password (you might want to adjust this strategy)
+                const tempPassword = `temp-${Math.random().toString(36).slice(-8)}`;
+
+                // Get the tenant id from the organization name
+                const tenant = await nile.db.query(`SELECT id FROM tenants WHERE name = $1`, 
+                    [user.organizationName]);
+
+                if (!tenant.rows[0]) {
+                    console.error(`Tenant ${user.organizationName} not found`);
+                    continue;
+                }
+                nile.tenant_id = tenant.rows[0].id; // Set the tenant id so the user is created in the correct tenant
+                const preferredName = user.Nickname || user.Name;
+                const {rows: [newUser] }= await nile.db.query('insert into users.users (email, password, preferredName) values ($1, $2, $3) returning *', 
+                    [user.email, tempPassword, preferredName]
+                )
+
+                // uncomment this to update the password hash in the credentials table
+                // only do this if you exported the password hashes in bcrypt format
+                // await nile.db.query(
+                //   `UPDATE auth.credentials SET payload = jsonb_build_object('crypt', 'crypt-bf/8', 'hash', $1) 
+                //    WHERE user_id = $2 AND method = 'PASSWORD';`,
+                //    [user.Password, newUser.Id]
+                // )
+
+                console.log(`Successfully migrated user: ${user.email}`);
+                // You might want to store the temporary passwords to communicate them to users
+                console.log(`Temporary password for ${user.email}: ${tempPassword}`);
+            } catch (error) {
+                console.error(`Failed to migrate user ${user.email}:`, error);
+                // Continue with next user even if one fails
+                continue;
+            }
+        }
+        console.log('Migration completed');
+    } catch (error) {
+        console.error('Migration failed:', error);
+    }
+}
+
+// This is necessary only if the organizations don't already exist in Nile
+async function migrateTenants(nile: any) {
+    try {
+        // Read and parse the organizations JSON file
+        const rawData = fs.readFileSync('auth0-organizations.json', 'utf8');
+        const organizations: Auth0Organization[] = JSON.parse(rawData);
+
+        // Process each organization
+        for (const org of organizations) {
+            try {
+                const tenant = await nile.tenants.create({
+                    name: org.name,
+                });
+
+                console.log(`Successfully created tenant: ${org.name}`);
+            } catch (error) {
+                console.error(`Failed to create tenant ${org.name}:`, error);
+                // Continue with next organization even if one fails
+                continue;
+            }
+        }
+
+        console.log('Tenant migration completed');
+    } catch (error) {
+        console.error('Tenant migration failed:', error);
+    }
+}
+
+// Single initialization of Nile
+async function migrateAll() {
+    const nile = Nile();
+    await migrateTenants(nile);
+    await migrateUsers(nile);
+}
+
+migrateAll();
+```
+
+If you did not have the password hashes exported, your users will need to reset their passwords after the migration (unless you used passwordless authentication) - you can read how to do this in our [password reset docs](/auth/email/password).
+
+<Tip>
+For staged migration, or for edge cases, you can implement the fallback strategy in your application. Attempt authentication with 
+Nile Auth, and in the failure handler, attempt the Auth0 authentication. If Auth0 authentication succeeds, 
+you can insert into the `users.users` table.
+</Tip>
+</Step>
+  <Step title="Migrate Social Providers">
+    <AuthMigrationSocial identity_provider="Auth0" />
+  </Step>
+</Steps>
+
+## Testing
+
+<AuthMigrationTesting />
+
+## Best Practices
+
+<AuthMigrationBestPractices />
+## Related Topics
+
+- [Firebase Migration](/auth/migration/fromfirebase)
+- [User Management](/auth/concepts/users)
+- [Tenant Management](/auth/concepts/tenants) 

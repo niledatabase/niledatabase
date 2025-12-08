@@ -1,0 +1,121 @@
+---
+title: JavaScript (client) 
+description: Use the Authorizer class from @niledatabase/client to manage authentication
+icon: js
+---
+
+## Installation
+
+`@niledatabase/client` exposes the the client side functions for various authorization requests. It handles API requests for sign-in, sign-up, sessions, and password reset. The client is designed to work with `@niledatabase/server` which provides the server-side routes.
+
+```bash
+npm install @niledatabase/client
+```
+
+## Getting Started
+
+For most cases, These helpers call the underlying singleton instance of `Authorizer`, which can be accessed via `auth`
+
+```ts
+import {
+  auth
+  // signIn // could just use this instead
+} from '@niledatabase/client';
+
+await auth.signIn('credentials', { email: 'user@example.com', password: 'pw' });
+```
+
+
+
+
+
+
+### getSession
+Fetches the current session. If a session is cached and still valid it returns that, otherwise it requests `/auth/session`.
+
+```ts
+await auth.getSession();
+```
+
+### signIn
+Sends a sign-in request to the authentication endpoint. The initial signIn values are [the supported providers for single sign on](../../../singlesignon/google), in addition to `credentials`
+
+```ts
+await auth.signIn('credentials', {
+  email: 'user@example.com',
+  password: 'password',
+});
+```
+#### Params
+| Name      | Type        | Description                                   |
+|-----------|-------------|-----------------------------------------------|
+| `callbackUrl` | `string`    | The URL to return when the request is complete.             |
+| `redirect`| `boolean`    | Allows configuration of client-side redirects in the case of credential login        |
+
+### signOut
+Logs the user out and clears the session.
+
+```ts
+await auth.signOut({ callbackUrl: '/goodbye' });
+```
+
+### signUp
+Creates a new user account. You can also create tenants during sign up. A boolean value will create a tenant with the same email address. If a string is passed, that will be the name of the created tenant.
+
+```ts
+await auth.signUp({
+  email: 'user@example.com',
+  password: 'pass',
+  createTenant: true,
+});
+```
+
+### resetPassword
+Sends requests to the password reset endpoints. You must be an authorized user to do this action.
+
+```ts
+await auth.resetPassword({
+  email: 'user@example.com',
+  password: 'new-pass',
+});
+```
+
+### getCsrfToken
+Returns a CSRF token used for form submissions.
+
+```ts
+const token = await auth.getCsrfToken();
+```
+
+### getProviders
+Returns a list of available authentication providers.
+
+```ts
+const providers = await auth.getProviders();
+```
+
+## Authorizer
+You can also customize your own authorizer on the client by creating an instance of `Authorizer`.
+
+
+```ts
+import { Authorizer } from '@niledatabase/client';
+
+const auth = new Authorizer({ baseUrl: 'https://myapp.com' });
+```
+### Constructor Options
+
+`new Authorizer(config)` accepts the following options:
+
+| Name      | Type        | Description                                   |
+|-----------|-------------|-----------------------------------------------|
+| `baseUrl` | `string`    | The base URL of your application.             |
+| `basePath`| `string`    | Optional API path, defaults to `/api`.        |
+| `init`    | `RequestInit` | Default `fetch` options for all requests.    |
+
+The instance exposes a `state` object with `baseUrl`, `session`, and loading status. You can update the configuration later by calling `auth.configure({ baseUrl })`.
+
+## Related Topics
+
+- [React Integration](/auth/frameworks/react)
+- [Components](/auth/components/signin)

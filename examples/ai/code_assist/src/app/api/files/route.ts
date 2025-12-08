@@ -3,7 +3,7 @@ import { Nile } from "@niledatabase/server";
 // TODO: Need to set nile user ID from cookie for security
 export async function POST(req: Request) {
   try {
-    const nile = await Nile();
+    const nile = Nile();
     const body = await req.json();
     nile.tenantId = body.tenant_id;
     const project_id = body.project_id;

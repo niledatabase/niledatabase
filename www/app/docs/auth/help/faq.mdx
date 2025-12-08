@@ -1,0 +1,81 @@
+---
+title: 'FAQ'
+description: 'Common questions and answers about Nile Auth'
+---
+## General Questions
+
+### What is Nile Auth?
+
+Nile Auth is a multi-tenant authentication service that provides authentication and authorization features for multi-tenant applications. 
+This service ensures secure, scalable authentication while maintaining tenant isolation. 
+All B2B applications are multi-tenanted, and they all have concepts of tenants, users and data. Nile Auth brings these together 
+in a single service - authenticating users, managing tenants and access to their data. 
+
+### How is Nile Auth different from other auth providers?
+
+- Nile Auth is purpose-built for multi-tenanted applications. It provides per-tenant authentication, authorization and user management.
+- Nile Auth is an open source service - you can self-host it or use our hosted service
+- Both managed and self-hosted options store all user data in your own database.
+- Nile Auth supports a wide range of frameworks
+- Nile Auth has beautiful and flexible UI components
+
+## Technical Questions
+
+### How does tenant isolation work?
+
+The short answer is that Nile separates tenant's data by isolating each tenant into a virtual database - separate blocks in memory and on disk.
+By default, all tenants share the same compute resources (CPU, memory, etc), but you can also provision dedicated compute resources for a subset of tenants.
+
+When a user authenticates, Nile Auth is aware of the tenants the user belongs to and can enforce access to data based on the 
+user's tenant membership. Nile also handles the routing of each user's queries to the correct tenant's database.
+
+This is just at the high level. You can read more about it in the [tenant isolation](/tenant-virtualization/tenant-isolation) documentation.
+
+### Can I use Nile Auth with my existing database?
+
+Yes, Nile Auth can be configured to use your existing database.
+
+### How do I implement SSO?
+
+SSO is not yet supported, but it is planned for the future.
+
+## Security
+
+### How does Nile Auth handle security?
+
+Nile Auth uses industry standard security best practices. All communication is encrypted using TLS, all stored data is encrypted at rest.
+Nile Auth enforces secure, http-only cookies to prevent cross-site scripting attacks. It uses CSRF tokens to prevent cross-site request forgery.
+Whenever possible, Nile Auth sessions are stored in the database, where they can be inspected and revoked if needed.
+You can read more about our use of [cookies](/auth/concepts/cookies), [jwt](/auth/concepts/jwt), [oauth](/auth/concepts/oauth) and [sessions](/auth/concepts/sessions).
+
+At the database layer, security is enforced by Nile's virtual tenant databases and the isolation they provide.
+
+## Pricing and Plans
+
+### Is there a free tier?
+
+Yes, we offer a generous free tier - with unlimited databases and users. You can see all the details on our [pricing page](https://www.thenile.dev/pricing).
+
+### How does Nile Auth compare to other auth providers?
+
+We literally give away authentication for free - you have unlimited tenants and unlimited users available in every pricing tier - including the free tier.
+
+### What are the usage limits?
+
+There are none. Everything is unlimited - tenants, users, databases.
+
+### Which frameworks are supported?
+
+We are adding new frameworks fast. For starters, we support Next.js, Express, React, Remix, and more.
+Check the [frameworks](/auth/frameworks/express) pages for the latest information.
+
+### Can I self-host Nile Auth?
+
+Yes, you can self-host Nile Auth. We provide a docker image and a helm chart.
+And of course, it is open source, so you can build and deploy it in any way you want.
+
+### Where can I get help?
+
+- [Error Reference](/auth/help/errors)
+- [Join our Community](/auth/help/community)
+- [Contact Support](https://www.thenile.dev/contact-us) 

@@ -1,0 +1,371 @@
+---
+title: 'Interacting with Database'
+icon: 'database'
+---
+The Nile CLI provides a powerful set of commands for managing your databases. With the CLI, you can create, delete, and manage databases, connect to them using standard PostgreSQL tools, and more.
+
+```bash
+nile db [command] [options]
+```
+
+Available commands:
+- `list` - View all databases
+- `show` - Display database details
+- `create` - Create a new database
+- `delete` - Remove a database
+- `regions` - List available regions
+- `psql` - Connect using PostgreSQL CLI
+- `connectionstring` - Get connection details
+
+## Setting Workspace
+
+Before using the `nile db` command, you can set the workspace to operate in.
+
+```bash
+nile config --workspace <workspaceName>
+```
+
+### Example
+
+```bash Workspace Example
+# Set workspace to 'test'
+nile config --workspace test
+```
+
+<img height="50" src="/images/nilesetworkspace.png" />
+
+<Note>
+The workspace can also be set using the `NILE_WORKSPACE` environment variable or by using the flag `--workspace` in the command.
+</Note>
+
+## Listing Databases
+
+The `list` command shows all databases in your workspace.
+
+```bash
+nile db list [options]
+```
+
+### Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--format` | Output format (human, json, csv) | human |
+| `--workspace` | Specific workspace to list from | Current workspace |
+
+### Examples
+
+```bash List Examples
+# Basic list
+nile db list
+
+# JSON format
+nile db list --format json
+
+# Specific workspace
+nile db list --workspace test
+```
+<img height="100" src="/images/niledblist.png" />
+
+## Setting active database in config
+
+You can set the active database in the config file. This simplifies other db commands. Youc an also override the db name using the flag `--database` in the command.
+
+```bash
+nile config --database <databaseName>
+```
+
+### Example
+
+```bash
+nile config --database determined_house
+```
+
+<img height="50" src="/images/niledbsetactive.png" />
+
+## Showing Database Details
+
+The `show` command provides detailed information about a specific database.
+
+```bash
+nile db show [databaseName] [options]
+```
+
+### Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--format` | Output format (human, json, csv) | human |
+| `--workspace` | Workspace containing the database | Current workspace |
+
+### Examples
+
+```bash Show Examples
+# Show specific database
+nile db show myapp-db
+
+# Show current database
+nile db show
+
+# Detailed JSON output
+nile db show myapp-db --format json
+```
+
+<img height="100" src="/images/niledbshow.png" />
+
+## Listing Regions
+
+The `regions` command shows available regions for database creation.
+
+```bash
+nile db regions [options]
+```
+
+### Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--format` | Output format (human, json, csv) | human |
+| `--workspace` | Workspace to list regions for | Current workspace |
+
+### Examples
+
+```bash Region Examples
+# List all regions
+nile db regions
+
+# JSON format
+nile db regions --format json
+
+# Check regions in specific workspace
+nile db regions --workspace test
+```
+
+<img height="100" src="/images/niledbregions.png" />
+
+## Creating Databases
+
+The `create` command sets up a new database in your workspace.
+
+```bash
+nile db create [options]
+```
+
+### Required Options
+
+| Flag | Description |
+|------|-------------|
+| `--name` | Name for the new database |
+| `--region` | Region to create the database in |
+
+### Additional Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--format` | Output format (human, json, csv) | human |
+| `--workspace` | Workspace to create in | Current workspace |
+
+### Examples
+
+```bash Create Examples
+# Create new database
+nile db create --name myapp_db --region AWS_US_WEST_2
+
+# Create in specific workspace
+nile db create --name prod_db --region AWS_US_WEST_2 --workspace test
+```
+Use the nile db region command to see the available regions.
+After creating the db, you can use the nile db show command to see the database details. You also want to set the config to the db you just created.
+
+<img height="100" src="/images/nilecreatedb.png" />
+
+## Deleting Databases
+
+The `delete` command removes a database permanently.
+
+```bash
+nile db delete [databaseName] [options]
+```
+
+### Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--force` | Skip confirmation prompt | false |
+| `--workspace` | Workspace containing the database | Current workspace |
+
+### Examples
+
+```bash Delete Examples
+# Delete with confirmation
+nile db delete myapp_db
+
+# Force delete without confirmation
+nile db delete myapp_db --force
+
+# Delete from specific workspace
+nile db delete myapp_db --workspace development
+```
+
+## Using PostgreSQL CLI
+
+The `psql` command opens an interactive PostgreSQL terminal.
+
+```bash
+nile db psql [databaseName] [options]
+```
+
+### Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--workspace` | Workspace containing the database | Current workspace |
+
+### Examples
+
+```bash PSQL Examples
+# Connect to database using the config
+nile db psql 
+
+# Connect in specific db and workspace
+nile db psql --name determined_house --workspace test
+```
+
+<img height="100" src="/images/niledbpsql.png" />
+
+## Getting Connection Strings
+
+The `connectionstring` command provides database connection details. Currently, it only supports the psql format.
+
+```bash
+nile db connectionstring --psql
+```
+
+### Examples
+
+```bash Connection String Examples
+# Get basic connection string
+nile db connectionstring --psql
+```
+
+<img height="100" src="/images/niledbconnectionstring.png" />
+
+## Importing Data
+
+The `copy` command allows you to import data from files into database tables. The target table must already exist in the database with the appropriate columns that match your input data.
+
+```bash
+nile db copy [options]
+```
+<img height="100" src="/images/niledbcopy.png" />
+
+### Required Options
+
+| Flag | Description |
+|------|-------------|
+| `--table-name` | Name of the target table (must exist in database) |
+| `--format` | File format (csv or text) |
+| `--file-name` | Path to the input file |
+
+### Additional Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--delimiter` | Column delimiter character | comma for CSV |
+| `--column-list` | Comma-separated list of column names | All columns from file |
+| `--debug` | Show detailed progress information | false |
+
+### Examples
+
+```bash Copy Examples
+# Basic CSV import
+nile db copy --table-name products --format csv --file-name products.csv
+
+# Import with specific columns
+nile db copy --table-name products --format csv --file-name products.csv --column-list "id,name,price"
+
+# Import tab-delimited text file
+nile db copy --table-name products --format text --file-name products.txt --delimiter "\t"
+
+# Import with progress details
+nile db copy --table-name products --format csv --file-name products.csv --debug
+```
+
+### Features
+- Shows progress bar with completion status and import speed
+- Supports CSV files with headers
+- Allows custom column mapping
+- Provides detailed progress information in debug mode
+- Processes data in batches for optimal performance
+
+<Note>
+Make sure your target table exists and has the correct schema before running the import. The columns in your input file should match the table's structure.
+</Note>
+
+## Common Workflows
+
+### Setting Up a New Database
+
+```bash New Database Workflow
+# 1. List available regions
+nile db regions
+
+# 2. Create database
+nile db create --name myapp_db --region AWS_US_WEST_2
+
+# 3. Verify creation
+nile db show myapp_db
+
+# 4. Connect to database
+nile db psql myapp_db
+```
+
+### Managing Multiple Environments
+
+```bash Environment Management
+# Development setup
+nile db create --name dev_db --region AWS_US_WEST_2 --workspace development
+
+# Production setup
+nile db create --name prod_db --region AWS_US_EAST_1 --workspace production
+
+# Get connection strings
+nile db connectionstring dev_db --workspace development
+nile db connectionstring prod_db --workspace production
+```
+
+### Database Cleanup
+
+```bash Cleanup Workflow
+# 1. List all databases
+nile db list
+
+# 2. Check database details
+nile db show old_db
+
+# 3. Delete unused database
+nile db delete old_db --force
+
+# 4. Verify deletion
+nile db list
+```
+
+## Getting Help
+
+For detailed help on any command:
+
+```bash
+# General database help
+nile db help
+
+# Specific command help
+nile db help create
+nile db help psql
+```
+
+## Related Topics
+
+- [Connecting to Nile](./connect_nile) - Authentication guide
+- [Working with Tenants](./managing_tenants) - Tenant management
+- [Configuration](./setting_configs) - CLI configuration
+- [Workspaces](./managing_workspaces) - Workspace management 

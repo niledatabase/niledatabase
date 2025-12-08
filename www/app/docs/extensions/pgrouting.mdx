@@ -1,0 +1,132 @@
+---
+title: 'pgRouting'
+description: 'Geospatial routing extension for PostgreSQL'
+---
+
+The `pgRouting` extension extends PostgreSQL and PostGIS to provide geospatial routing and network analysis functionality. It enables you to perform shortest path calculations, traveling salesperson solutions, and other routing operations on spatial networks like road networks.
+Your Nile database arrives with the `pgRouting` extension and its dependency `postgis` already enabled.
+
+## Understanding pgRouting
+
+pgRouting works with network topologies stored in PostgreSQL/PostGIS. A network topology consists of:
+- Vertices (nodes/intersections)
+- Edges (segments/roads)
+- Costs (distance, time, or other metrics)
+
+### Key Features
+
+- **Multiple Routing Algorithms**: Dijkstra, A*, Traveling Salesperson Problem (TSP)
+- **Flexible Cost Calculations**: Support for distance, time, and custom cost functions
+- **Turn Restriction Support**: Handle real-world routing constraints
+- **Dynamic Cost Updates**: Modify costs based on traffic or other conditions
+- **Large Network Support**: Efficient handling of large road networks
+
+## Usage Examples
+
+Let's create a simple road network and perform various routing operations.
+
+### Creating the Network Table
+
+```sql
+-- Create a table for our road network
+CREATE TABLE roads (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    source BIGINT,  -- Pre-assigned source node ID
+    target BIGINT,  -- Pre-assigned target node ID
+    cost FLOAT,
+    reverse_cost FLOAT,
+    length_m FLOAT,
+    the_geom geometry
+);
+
+-- Create indices for better performance
+CREATE INDEX roads_source_idx ON roads(source);
+CREATE INDEX roads_target_idx ON roads(target);
+CREATE INDEX roads_geom_idx ON roads USING GIST(the_geom);
+```
+
+### Inserting Sample Data
+
+```sql
+-- Insert sample road segments with pre-defined source/target nodes
+INSERT INTO roads (name, the_geom, length_m, cost, reverse_cost, source, target) VALUES
+    ('Main St', 
+     ST_GeomFromText('LINESTRING(-122.678 45.526, -122.675 45.526)', 4326),
+     300, 300, 300, 1, 2),
+    ('Oak Ave', 
+     ST_GeomFromText('LINESTRING(-122.675 45.526, -122.675 45.524)', 4326),
+     200, 200, 200, 2, 3),
+    ('Pine St', 
+     ST_GeomFromText('LINESTRING(-122.675 45.524, -122.678 45.524)', 4326),
+     300, 300, 300, 3, 4);
+```
+
+### Basic Shortest Path Query
+
+Using Dijkstra's algorithm:
+```sql
+-- Find shortest path between two points
+SELECT seq, node, edge, cost
+FROM pgr_dijkstra(
+    'SELECT id, source, target, cost FROM roads',
+    1,  -- starting vertex
+    3,  -- ending vertex
+    directed := false
+);
+```
+
+### A* Search
+
+When you have geographic coordinates:
+```sql
+SELECT seq, node, edge, cost
+FROM pgr_astar(
+    'SELECT id, source, target, cost, 
+            ST_X(ST_StartPoint(the_geom)) AS x1,
+            ST_Y(ST_StartPoint(the_geom)) AS y1,
+            ST_X(ST_EndPoint(the_geom)) AS x2,
+            ST_Y(ST_EndPoint(the_geom)) AS y2
+     FROM roads',
+    1,  -- starting vertex
+    3,  -- ending vertex
+    directed := false
+);
+```
+
+### Driving Distance
+
+Find all reachable nodes within a certain cost:
+```sql
+SELECT node, edge, cost
+FROM pgr_drivingDistance(
+    'SELECT id, source, target, cost FROM roads',
+    1,    -- starting vertex
+    1000, -- maximum cost
+    directed := false
+);
+```
+
+## Common Use Cases
+
+- Navigation systems
+- Delivery route optimization
+- Service area analysis
+- Emergency response planning
+- Public transport routing
+- Traffic impact analysis
+
+## Limitations
+
+- Memory usage increases with network size
+- Some algorithms have exponential complexity
+- Real-time updates can be challenging
+- Turn restrictions increase complexity
+- Limited support for time-dependent routing
+
+## Additional Resources
+
+- [pgRouting Documentation](https://docs.pgrouting.org/)
+- [pgRouting Workshop](https://workshop.pgrouting.org/)
+- [PostGIS Documentation](https://postgis.net/documentation/)
+- [OpenStreetMap Integration](https://wiki.openstreetmap.org/wiki/pgRouting)

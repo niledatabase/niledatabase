@@ -1,0 +1,604 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Nile Documentation",
+  "colors": {
+    "primary": "#fdb768",
+    "light": "#fdb768",
+    "dark": "#fdb768"
+  },
+  "favicon": "/images/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Postgres",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "getting-started/getting-started",
+              {
+                "group": "Languages",
+                "icon": "code",
+                "pages": [
+                  "getting-started/languages/sql",
+                  "getting-started/languages/nextjs",
+                  "getting-started/languages/drizzle",
+                  "getting-started/languages/prisma",
+                  "getting-started/languages/python",
+                  "getting-started/languages/node"
+                ]
+              },
+              "getting-started/whatisnile",
+              {
+                "group": "Usecases",
+                "icon": "folder",
+                "pages": [
+                  "getting-started/usecases/accounts",
+                  "getting-started/usecases/expensify",
+                  "getting-started/usecases/feedback",
+                  "getting-started/usecases/health",
+                  "getting-started/usecases/hiring",
+                  "getting-started/usecases/hr",
+                  "getting-started/usecases/issue-tracking",
+                  "getting-started/usecases/lead-management",
+                  "getting-started/usecases/legal",
+                  "getting-started/usecases/marketing",
+                  "getting-started/usecases/notion",
+                  "getting-started/usecases/onboarding",
+                  "getting-started/usecases/scheduler",
+                  "getting-started/usecases/schoology",
+                  "getting-started/usecases/slack",
+                  "getting-started/usecases/supply",
+                  "getting-started/usecases/support",
+                  "getting-started/usecases/tripactions"
+                ]
+              },
+              {
+                "group": "Examples",
+                "icon": "lightbulb",
+                "pages": [
+                  "getting-started/examples/chat_with_pdf",
+                  "getting-started/examples/code_assistant",
+                  "getting-started/examples/sales_insight",
+                  "getting-started/examples/task_genius"
+                ]
+              },
+              "getting-started/postgres_docker",
+              {
+                "group": "Schema Migrations",
+                "icon": "diagram-project",
+                "pages": [
+                  "getting-started/schema_migrations/alembic",
+                  "getting-started/schema_migrations/django",
+                  "getting-started/schema_migrations/drizzle",
+                  "getting-started/schema_migrations/prisma"
+                ]
+              },
+              "getting-started/architecture",
+              "getting-started/postgres_testing"
+            ]
+          },
+          {
+            "group": "Tenant Virtualization",
+            "pages": [
+              "tenant-virtualization/introduction",
+              "tenant-virtualization/tenant-isolation",
+              "tenant-virtualization/tenant-management",
+              "tenant-virtualization/tenant-placement",
+              "tenant-virtualization/tenant-sharing"
+            ]
+          },
+          {
+            "group": "Postgres Concepts",
+            "pages": [
+              "postgres/introduction",
+              "postgres/createtable",
+              {
+                "group": "Data Types",
+                "icon": "comment-text",
+                "pages": [
+                  "postgres/datatype/numeric",
+                  "postgres/datatype/character",
+                  "postgres/datatype/date",
+                  "postgres/datatype/json",
+                  "postgres/datatype/arrays"
+                ]
+              },
+              "postgres/indexes",
+              "postgres/joins",
+              "postgres/views",
+              {
+                "group": "Tools",
+                "icon": "screwdriver-wrench",
+                "pages": [
+                  "postgres/tools/dbeaver",
+                  "postgres/tools/pgadmin",
+                  "postgres/tools/psql"
+                ]
+              },
+              "postgres/postgres-compatibility"
+            ]
+          },
+          {
+            "group": "Extensions",
+            "pages": [
+              "extensions/introduction",
+              "extensions/vector",
+              "extensions/postgis",
+              "extensions/uuid-ossp",
+              "extensions/pgcrypto",
+              {
+                "group": "Search and Indexing",
+                "icon": "magnifying-glass",
+                "pages": [
+                  "extensions/bloom",
+                  "extensions/btree_gin",
+                  "extensions/btree_gist",
+                  "extensions/citext",
+                  "extensions/fuzzystrmatch",
+                  "extensions/pgvectorscale",
+                  "extensions/pg_bigm",
+                  "extensions/pg_similarity",
+                  "extensions/pg_trgm",
+                  "extensions/prefix"
+                ]
+              },
+              {
+                "group": "Statistical and Analytical",
+                "icon": "chart-line",
+                "pages": [
+                  "extensions/cube",
+                  "extensions/earthdistance",
+                  "extensions/financial",
+                  "extensions/hll",
+                  "extensions/intagg",
+                  "extensions/intarray",
+                  "extensions/quantile",
+                  "extensions/random",
+                  "extensions/tablefunc",
+                  "extensions/xicor"
+                ]
+              },
+              {
+                "group": "Data Types and Storage",
+                "icon": "comment-text",
+                "pages": [
+                  "extensions/emailaddr",
+                  "extensions/hstore",
+                  "extensions/ip4r",
+                  "extensions/isn",
+                  "extensions/ltree",
+                  "extensions/rdkit",
+                  "extensions/seg",
+                  "extensions/unit"
+                ]
+              },
+              {
+                "group": "Geospatial",
+                "icon": "map",
+                "pages": [
+                  "extensions/h3",
+                  "extensions/h3_postgis",
+                  "extensions/pgrouting",
+                  "extensions/postgis_raster"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Auth",
+        "pages": [
+          {
+            "group": "Nile Auth",
+            "pages": [
+              "auth/introduction",
+              "auth/comparison",
+              "auth/getting-started/installation",
+              {
+                "group": "Quickstart",
+                "icon": "rocket",
+                "pages": [
+                  "auth/quickstarts/nextjs",
+                  "auth/quickstarts/remix",
+                  "auth/quickstarts/express"
+                ]
+              },
+              "auth/selfhosting",
+              "auth/examples",
+              {
+                "group": "Concepts",
+                "icon": "folder",
+                "pages": [
+                  "auth/concepts/tenants",
+                  "auth/concepts/users",
+                  "auth/concepts/sessions",
+                  "auth/concepts/jwt",
+                  "auth/concepts/cookies",
+                  "auth/concepts/oauth",
+                  "auth/concepts/builtintables",
+                  "auth/concepts/per-tenantoverrides",
+                  "auth/concepts/acclinking",
+                  "auth/concepts/extensions"
+                ]
+              },
+              {
+                "group": "Email",
+                "icon": "envelope",
+                "pages": [
+                  "auth/email/password",
+                  "auth/email/templates",
+                  "auth/email/verification",
+                  "auth/email/customsmtp",
+                  "auth/email/invites"
+                ]
+              },
+              {
+                "group": "Single Sign On",
+                "icon": "right-to-bracket",
+                "pages": [
+                  "auth/singlesignon/google",
+                  "auth/singlesignon/github",
+                  "auth/singlesignon/discord",
+                  "auth/singlesignon/linkedin",
+                  "auth/singlesignon/microsoft",
+                  "auth/singlesignon/hubspot",
+                  "auth/singlesignon/x",
+                  "auth/singlesignon/slack"
+                ]
+              },
+              "auth/magiclink",
+              {
+                "group": "Components",
+                "icon": "browser",
+                "pages": [
+                  "auth/components/signin",
+                  "auth/components/signup",
+                  "auth/components/signout",
+                  "auth/components/user",
+                  "auth/components/organization",
+                  "auth/components/customization"
+                ]
+              },
+              {
+                "group": "Dashboard",
+                "icon": "table-columns",
+                "pages": [
+                  "auth/dashboard/managing-tenants",
+                  "auth/dashboard/managing-users",
+                  "auth/dashboard/configurations"
+                ]
+              },
+              {
+                "group": "Migration",
+                "icon": "truck-moving",
+                "pages": [
+                  "auth/migration/fromnextauth",
+                  "auth/migration/fromfirebase",
+                  "auth/migration/fromauth0"
+                ]
+              },
+              {
+                "group": "SDK Reference",
+                "icon": "code",
+                "pages": [
+                  {
+                    "group": "JavaScript (server)",
+                    "icon": "js",
+                    "pages": [
+                      "auth/sdk-reference/javascript/overview",
+                      "auth/sdk-reference/javascript/server/auth",
+                      "auth/sdk-reference/javascript/server/users",
+                      "auth/sdk-reference/javascript/server/tenants",
+                      "auth/sdk-reference/javascript/server/db",
+                      "auth/sdk-reference/javascript/server/routes",
+                      "auth/sdk-reference/javascript/server/configuration"
+                    ]
+                  },
+                  "auth/sdk-reference/javascript/client/authorizer"
+                ]
+              },
+              {
+                "group": "Help",
+                "icon": "question",
+                "pages": [
+                  "auth/help/errors",
+                  "auth/help/faq",
+                  "auth/help/community"
+                ]
+              },
+              {
+                "group": "Contributing",
+                "icon": "hand-holding-hand",
+                "pages": [
+                  "auth/contributing/develop",
+                  "auth/contributing/testing",
+                  "auth/contributing/report"
+                ]
+              },
+              "auth/roadmap"
+            ]
+          },
+          {
+            "group": "Frameworks",
+            "icon": "puzzle-piece",
+            "pages": [
+              "auth/frameworks/express",
+              "auth/frameworks/nextjs",
+              "auth/frameworks/nitro",
+              "auth/frameworks/nuxt",
+              "auth/frameworks/react",
+              "auth/frameworks/remix"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "AI",
+        "pages": [
+          {
+            "group": "Artificial Intelligence",
+            "pages": [
+              "ai-embeddings/introduction",
+              {
+                "group": "Vectors",
+                "icon": "vector-square",
+                "pages": [
+                  "ai-embeddings/vectors/pg_vector",
+                  "ai-embeddings/vectors/diskann",
+                  "ai-embeddings/vectors/vector_database"
+                ]
+              },
+              "ai-embeddings/rag",
+              {
+                "group": "Embedding Models",
+                "icon": "microchip",
+                "pages": [
+                  "ai-embeddings/embedding_models/overview",
+                  "ai-embeddings/embedding_models/cohere",
+                  "ai-embeddings/embedding_models/deepinfra",
+                  "ai-embeddings/embedding_models/fireworks",
+                  "ai-embeddings/embedding_models/google",
+                  "ai-embeddings/embedding_models/open_ai",
+                  "ai-embeddings/embedding_models/voyage"
+                ]
+              },
+              "ai-embeddings/streaming",
+              "ai-embeddings/rag_vs_finetune",
+              "ai-embeddings/model_context_protocol"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Platform",
+        "pages": [
+          {
+            "group": "CLI",
+            "pages": [
+              "cli/introduction",
+              "cli/connect_nile",
+              "cli/interacting_db",
+              "cli/managing_workspaces",
+              "cli/managing_tenants",
+              "cli/using_auth",
+              "cli/setting_configs",
+              "cli/local_development",
+              "cli/global-flags"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "integrations/aws_bedrock",
+              "integrations/cohere",
+              "integrations/confluent",
+              "integrations/llama_index",
+              "integrations/modal",
+              "integrations/netlify",
+              "integrations/vercel",
+              "integrations/lambda",
+              "integrations/nextauth",
+              "integrations/stripe",
+              "integrations/cloudflare",
+              "integrations/betterauth",
+              "integrations/pipedream"
+            ]
+          },
+          {
+            "group": "Support",
+            "pages": ["support/support", "support/backup_restore"]
+          }
+        ]
+      },
+      {
+        "tab": "ManagementAPI",
+        "openapi": {
+          "source": "https://global.thenile.dev/openapi.yaml",
+          "directory": "api-reference"
+        }
+      },
+      {
+        "tab": "Auth API",
+        "openapi": {
+          "source": "https://us-west-2.api.thenile.dev/v2/openapi",
+          "directory": "auth/api-reference"
+        }
+      },
+      {
+        "tab": "Pricing",
+        "href": "https://www.thenile.dev/pricing"
+      },
+      {
+        "tab": "Templates",
+        "href": "https://www.thenile.dev/templates"
+      },
+      {
+        "tab": "Discord",
+        "href": "https://discord.com/invite/8UuBB84tTy"
+      }
+    ]
+  },
+  "logo": {
+    "light": "/images/nilemintlogo.svg",
+    "dark": "/images/nilemintlogo.svg",
+    "href": "https://www.thenile.dev"
+  },
+  "appearance": {
+    "default": "dark",
+    "strict": true
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Community",
+        "href": "https://discord.com/invite/8UuBB84tTy"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get Started",
+      "href": "https://console.thenile.dev"
+    }
+  },
+  "seo": {
+    "metatags": {
+      "og:image": "https://www.thenile.dev/opengraph/docs.jpg"
+    },
+    "indexing": "navigable"
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/niledatabase",
+      "github": "https://github.com/niledatabase/niledatabase",
+      "linkedin": "https://www.linkedin.com/company/niledatabase",
+      "discord": "https://discord.com/invite/8UuBB84tTy"
+    },
+    "links": [
+      {
+        "header": "Resources",
+        "items": [
+          {
+            "label": "Blog",
+            "href": "https://www.thenile.dev/blog"
+          },
+          {
+            "label": "Pricing",
+            "href": "https://www.thenile.dev/pricing"
+          },
+          {
+            "label": "Templates",
+            "href": "https://www.thenile.dev/templates"
+          },
+          {
+            "label": "Community",
+            "href": "https://www.thenile.dev/community"
+          }
+        ]
+      },
+      {
+        "header": "Company",
+        "items": [
+          {
+            "label": "Careers",
+            "href": "https://www.thenile.dev/about-us"
+          },
+          {
+            "label": "About",
+            "href": "https://www.thenile.dev/about-us"
+          }
+        ]
+      },
+      {
+        "header": "Support",
+        "items": [
+          {
+            "label": "Contact Sales",
+            "href": "https://www.thenile.dev/contact-us"
+          },
+          {
+            "label": "Get Help",
+            "href": "https://www.thenile.dev/contact-us"
+          },
+          {
+            "label": "FAQ",
+            "href": "https://www.thenile.dev/pricing#faq"
+          }
+        ]
+      }
+    ]
+  },
+  "integrations": {
+    "ga4": {
+      "measurementId": "G-KE7812B4ZF"
+    }
+  },
+  "redirects": [
+    {
+      "source": "/getting-started",
+      "destination": "/getting-started/getting-started"
+    },
+    {
+      "source": "/getting-started/languages",
+      "destination": "/getting-started/languages/sql"
+    },
+    {
+      "source": "/getting-started/usecases",
+      "destination": "/getting-started/usecases/accounts"
+    },
+    {
+      "source": "/getting-started/examples",
+      "destination": "/getting-started/examples/chat_with_pdf"
+    },
+    {
+      "source": "/getting-started/schema_migrations",
+      "destination": "/getting-started/schema_migrations/drizzle"
+    },
+    {
+      "source": "/tenant-virtualization",
+      "destination": "/tenant-virtualization/introduction"
+    },
+    {
+      "source": "/ai-embeddings",
+      "destination": "/ai-embeddings/introduction"
+    },
+    {
+      "source": "/postgres",
+      "destination": "/postgres/introduction"
+    },
+    {
+      "source": "/postgres/datatype",
+      "destination": "/postgres/datatype/numeric"
+    },
+    {
+      "source": "/postgres/tools",
+      "destination": "/postgres/tools/dbeaver"
+    },
+    {
+      "source": "/integrations",
+      "destination": "/integrations/aws_bedrock"
+    },
+    {
+      "source": "/partners/llamandex",
+      "destination": "/integrations/llama_index"
+    },
+    {
+      "source": "/platform/integrations/lambda",
+      "destination": "/integrations/lambda"
+    },
+    {
+      "source": "/platform/integrations/nextauth",
+      "destination": "/integrations/nextauth"
+    },
+    {
+      "source": "/platform/integrations/stripe",
+      "destination": "/integrations/stripe"
+    },
+    {
+      "source": "/reference/api-reference/index",
+      "destination": "/api-reference/databases/lists-credentials-for-a-database"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+---
+title: 'X (Twitter)'
+icon: 'x-twitter'
+description: 'Integrate X (Twitter) Single Sign-On with Nile Auth'
+---
+
+<Steps>
+<Step title="Setup X Developer Portal">   
+
+1. Create a [X Developer](https://developer.x.com/) account.
+2. Navigate to the **Developer Portal** and create a new application.
+3. Obtain a **Client ID** and **Client Secret** from the [X OAuth settings](https://developer.x.com/). Be sure to set the redirect URL to your application handling the Nile Auth requests.
+</Step>
+<Step title="Save Client ID and Client Secret in Nile">
+Save the **Client ID** and **Client Secret** to your database at `console.thenile.dev` under X in **Tenants & Users -> Configuration**  
+![X configuration on console.thenile.dev](/images/singlesignon/x.png)
+</Step>
+<Step title="Add the `X` button to your login page">
+The button will redirect the user to X for authentication. Upon successful authentication, the user will be redirected back to your application.
+
+```jsx
+import { X } from '@niledatabase/react';
+
+function App() {
+  return (
+    <div>
+      <X callbackUrl="/" />
+    </div>
+  );
+}
+```
+</Step>
+</Steps>
+
+## Related Topics
+
+- [OAuth Concepts](/auth/concepts/oauth)
+- [User Management](/auth/concepts/users)
+- [Other SSO Providers](/auth/singlesignon/google) 

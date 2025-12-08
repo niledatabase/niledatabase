@@ -1,0 +1,99 @@
+---
+title: "Views in Postgres"
+sidebarTitle: "Views"
+icon: "eye"
+---
+
+Views in PostgreSQL are virtual tables that are generated based on the result of a query.
+They provide a way to present data from one or more tables in a structured format. Views are useful for simplifying complex queries,
+providing an additional layer of security, and encapsulating complex logic.
+
+### Creating a View
+
+To create a view in PostgreSQL, you use the `CREATE VIEW` statement followed by the view name and the query that defines the view.
+
+For example, assuming you have two tables `employees` and `departments` (we created them in the [tables section](./createtable) of this guide),
+you can create a view that combines data from both tables:
+
+```sql
+CREATE VIEW employee_details AS
+SELECT employees.employee_id,
+       employees.first_name,
+       employees.last_name,
+       departments.department_name
+FROM employees
+JOIN departments ON employees.department_id = departments.department_id;
+```
+
+This view provides an abstraction over the underlying tables and allows you to query the combined data without having to write the full join
+every time. You can query the view just like a regular table:
+
+```sql
+SELECT * FROM employee_details;
+```
+
+### Updating a View
+
+There are two ways to update a view in PostgreSQL:
+
+#### Recreating the View
+
+You can update a view by replacing it with the updated query. This allows you to modify the underlying query, as long as the column
+names and data types of existing columns remain the same and in the same order. You can add new columns to the end of the `SELECT`
+statement, and also modify the underlying logic behind the columns as long as the name and type remain the same.
+
+Because the view does not contain any data itself, replacing it is a fast, atomic and idempotent (repeatable) operation.
+Because the limitations prevent you from making any breaking changes, the operation is safe to perform online (while the application is running).
+
+For example, if you want to include the employee email in the `employee_details` view, you can replace the view as follows:
+
+```sql
+CREATE OR REPLACE VIEW employee_details AS
+SELECT employees.employee_id,
+       employees.first_name,
+       employees.last_name,
+       departments.department_name,
+       employees.email
+FROM employees
+JOIN departments ON employees.department_id = departments.department_id;
+```
+
+The email column is added to the view definition, and the view is replaced with the updated query. We have to add the new column as the
+last column in the SELECT statement to avoid breaking changes.
+
+#### Altering a View
+
+Some properties of a view can be altered without replacing the view definitions, for example you can change a view name, owner,
+rename a column or modify default values.
+
+For example:
+
+```sql
+ALTER VIEW employee_details RENAME COLUMN department_name TO dept_name;
+```
+
+### Dropping a View
+
+To drop a view in PostgreSQL, you use the `DROP VIEW` statement followed by the view name:
+
+```sql
+DROP VIEW employee_details;
+```
+
+Dropping a view and re-creating it is also the way to modify a view in ways that are not supported by the `CREATE OR REPLACE VIEW` syntax.
+You can do this in a single transaction to ensure that the view is always available for querying, but be aware that if you remove columns
+that are still in use, you may break the application.
+
+```sql
+BEGIN;
+DROP VIEW employee_details;
+-- note that the below view definition has different columns from the original view
+CREATE VIEW employee_details AS
+SELECT employees.employee_id,
+       employees.first_name || ' ' || employees.last_name as full_name,
+       employees.email,
+       departments.department_name
+FROM employees
+JOIN departments ON employees.department_id = departments.department_id;
+COMMIT;
+```

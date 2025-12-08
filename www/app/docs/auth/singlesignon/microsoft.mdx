@@ -1,0 +1,40 @@
+---
+title: 'Microsoft Azure'
+icon: 'microsoft'
+description: 'Integrate Azure Single Sign-On with Nile Auth'
+---
+<Steps>
+<Step title="Setup Azure Active Directory (Azure AD) Portal">  
+
+1. Create an [Azure AD](https://portal.azure.com/) account if you don’t have one.
+2. Navigate to the [Azure Portal](https://portal.azure.com/) and go to **Azure Active Directory** > **App registrations**.
+3. Click **New registration**, enter a name for your app, and set the redirect URI to your application handling the Nile Auth requests.
+4. Obtain the **Application (client) ID**, **Directory (tenant) ID**, and create a **Client Secret** under **Certificates & secrets**.
+</Step>
+
+<Step title="Save Client ID and Client Secret in Nile">
+Save the **Client ID**, **Client Secret**, and **Tenant ID** to your database at `console.thenile.dev` under Azure in **Tenants & Users -> Configuration**  
+![Azure configuration on console.thenile.dev](/images/singlesignon/azure.png)
+</Step>
+<Step title="Add the `Azure` button to your login page">
+The button will redirect the user to Azure AD for authentication. Upon successful authentication, the user will be redirected back to your application.
+
+```jsx
+import { AzureSignInButton } from '@niledatabase/react';
+
+function App() {
+  return (
+    <div>
+      <AzureSignInButton callbackUrl="/" tenantId="YOUR_TENANT_ID" />
+    </div>
+  );
+}
+```
+</Step>
+</Steps>
+
+## Related Topics
+
+- [OAuth Concepts](/auth/concepts/oauth)
+- [User Management](/auth/concepts/users)
+- [Other SSO Providers](/auth/singlesignon/google) 

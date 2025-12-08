@@ -1,0 +1,328 @@
+---
+title: "Build SaaS with paid subscriptions - using Nile and Stripe"
+sidebarTitle: "Stripe"
+icon: "clock-ten"
+---
+
+In this quick tutorial, you will learn how to extend Nile's built-in tables with a Stripe subscription data, and how to use Stripe's API to manage subscriptions.
+
+<iframe
+  width="480"
+  height="270"
+  src="https://www.youtube.com/embed/DBmG6vcjH5M?si=up7822tnQK1k01Ka"
+  title="Add Payments and Subscriptions to your SaaS - with Stripe and Nile's Postgres"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowFullScreen
+></iframe>
+
+## 1. Create a database
+
+1. Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already
+2. You should see a welcome message. Click on "Lets get started"
+   ![Nile welcome.](/images/nile-welcome.png)
+3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to “Use Token in Browser”.
+
+## 2. Extend the tenant table
+
+After you created a database, you will land in Nile's query editor. Stripe integration requires storing customer and subscription IDs.
+For that, we'll extend the built-in `tenants` table:
+
+```sql
+alter table tenants add column stripe_customer_id text;
+alter table tenants add column stripe_subscription_id text;
+alter table tenants add column tenant_tier varchar(16) default 'free';
+```
+
+If all went well, you'll see the new columns in the panel on the left side of the query editor.
+
+## 3. Get credentials
+
+In the left-hand menu, click on "Settings" and then select "credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
+Also, copy and save the workspace and database names. You'll need them later.
+
+## 4. Sign up to Stripe and Create a Product
+
+1. Sign up for a [Stripe account](https://dashboard.stripe.com/register)
+2. Go to the [Stripe Dashboard](https://dashboard.stripe.com/test/dashboard) and click on "Developers" -> "API Keys", on the upper right corner.
+3. Copy the "Secret Key" and "Publishable Key" and keep them somewhere safe. You'll need them later.
+4. On the left menu, click on "more +" and select "Product Catalog". Add a new product, and make sure you select "Recurring" as the pricing model. You can use the default values for the rest of the fields.
+
+## 4. Set the environment
+
+Enough GUI for now. Let's get to some code.
+
+If you haven't cloned this repository yet, now will be an excellent time to do so.
+
+```bash
+git clone https://github.com/niledatabase/niledatabase
+cd niledatabase/examples/quickstart/nextjs
+```
+
+Rename `.env.local.example` to `.env.local`, and update it with your workspace and database name.
+_(Your workspace and database name are displayed in the header of the Nile dashboard.)_
+Also fill in the username and password with the credentials you picked up in the previous step.
+
+It should look something like this:
+
+```bash
+# Client (public) env vars
+
+# the URL of this example + where the api routes are located
+# Use this to instantiate Nile context for client-side components
+NEXT_PUBLIC_BASE_PATH=http://localhost:3000
+NEXT_PUBLIC_WORKSPACE=todoapp_demo
+NEXT_PUBLIC_DATABASE=stripe_demo_db
+
+# Private env vars that should never show up in the browser
+# These are used by the server to connect to Nile database
+NILE_DB_HOST = "db.thenile.dev"
+NILE_USER = "018ad484-0d52-7274-8639-057814be60c3"
+NILE_PASSWORD = "0d11b8e5-fbbc-4639-be44-8ab72947ec5b"
+STRIPE_SECRET_KEY = "sk_test_51Nn2AgJ5..."
+
+# The URL of the Nile API
+# Use this to instantiate Nile Server context for server-side use of the "api" SDK
+NEXT_PUBLIC_NILE_API=https://api.thenile.dev
+
+# Uncomment if you want to try Google Auth
+# AUTH_TYPE=google
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+### 5. Run the application
+
+```bash
+npm run dev
+```
+
+💡 Note: This example only works with Node 18 and above. You can check the version with `node -v`.
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+If all went well, your browser should show you the first page in the app, asking you to login or sign up.
+
+After you sign up as a user of this example app, you'll be able to see this user by going back to Nile Console and looking at the users table
+
+```sql
+select * from users;
+```
+
+Login with the new user, and you can create a new tenant by clicking on the "Create Tenant" button. This will take you into the example billing page.
+You can play around with this - upgrade and downgrade the tenant (use Stripe's test credit card number `4242 4242 4242 4242`),
+and see the changes in the database:
+
+```sql
+select * from tenants
+```
+
+Will show you the tenant tier and the Stripe customer and subscription IDs. Note that only paid tiers have a subscription ID.
+
+## 7. How does it work?
+
+There are a few moving pieces here, so let's break it down.
+
+This example uses NextJS `app router`, so the application landing page is in `app/page.tsx`.
+We'll start here and go over the code for managing tenant subscriptions.
+
+### 7.1. Configuring Nile SDK
+
+All the signup and login methods eventually route users to `/tenants`. You'll find the code in `app/tenants/page.tsx`.
+
+The first thing we do in this page is to configure Nile SDK for the current user:
+
+```typescript
+nile.withContext({ headers });
+```
+
+This method configures a shared instance of `nile` that is used throughout the application.
+This instance is a singleton, which you get by calling Nile SDK's `Server` method, which we are doing in '@/lib/NileServer'
+This is also where all the environment variables we've set earlier are being used, so lets take a look at this file:
+
+```typescript
+const nile = Nile({
+  basePath: String(process.env.NEXT_PUBLIC_NILE_API)
+});
+```
+
+The `basePath` configuration is the URL that `nile` methods will call. This component calls Nile APIs directly, and therefore we set `basePath` to `NEXT_PUBLIC_NILE_API`.
+
+So every page, route and function in our app can use the same `nile` instance to access Nile APIs and DB.
+
+But, we need to make sure we are using the right user and tenant context.
+So we call `configureNile` and pass in the cookies and the tenant ID.
+After this point, we can use `nile` to access the database and APIs, and it will use the right user and tenant context.
+
+### 7.2 Creating a Paid subscription
+
+When tenants are created, we initially create them in the `free` tier. This is done in `app/tenants/tenant-actions.tsx`:
+
+```typescript
+const createTenantResponse = await nile.tenants.create({
+  name: tenantName,
+}, true);
+```
+
+Note that we don't pass in a `tier` parameter. This is because we want to create the tenant in the default tier, which is `free`.
+We handled that when we extended `tenants` table with a column for the tenant tier:
+
+```sql
+alter table tenants add column tenant_tier varchar(16) default 'free';
+```
+
+After the tenant is created, we can upgrade it to a paid tier. This is initiated in `app/tenants/[tenantid]/billing/page.tsx` :
+
+```jsx
+<form action={createCheckoutSession}>
+  <input type="hidden" name="tenantid" value={params.tenantid} />
+  <Button id="checkout-and-portal-button" variant="solid" type="submit">
+    Upgrade
+  </Button>
+</form>
+```
+
+When a user clicks the button, it triggets `createCheckoutSession` which is a NextJS server action implemented in `app/tenants/[tenantid]/billing/checkout-actions.tsx`:
+
+```typescript
+export async function createCheckoutSession(formData: FormData) {
+  const tenantid = formData.get("tenantid")?.toString();
+  const prices = await stripe.prices.list(); // (1)
+  const price = prices.data[0].id;
+
+  const session = await stripe.checkout.sessions.create({
+    // (2)
+    billing_address_collection: "auto",
+    line_items: [
+      {
+        price: price,
+        quantity: 1,
+      },
+    ],
+    mode: "subscription",
+    success_url:
+      process.env.NEXT_PUBLIC_BASE_PATH +
+      `/api/checkout-success?session_id={CHECKOUT_SESSION_ID}&tenant_id=${tenantid}`,
+    cancel_url:
+      process.env.NEXT_PUBLIC_BASE_PATH + `/tenants/${tenantid}/billing`,
+  });
+  const url: string = session.url || "/"; // (3)
+  redirect(url);
+}
+```
+
+What this does is:
+
+1. Call Stripe to get the price ID for the product (alternatively you can get it in Stripe's dashboard and use an environment variable for this).
+2. Call Stripe's API to create a checkout session. This is where we pass in the success and cancel URLs.
+   The success URL is a NextJS route that we'll see in a second. Note that we pass in the tenant ID as a query parameter in the success URL. This lets us identify the tenant when Stripe calls the success URL, and upgrade the correct tenant.
+   The cancel URL simply takes the user back to the billing page.
+3. Redirect the user to Stripe's checkout page. It's URL is part of the session we just created..
+
+### 7.3 Handling Stripe's checkout success
+
+When the user completes the checkout process, Stripe will call the success URL we passed in earlier. This is a NextJS route, implemented in `app/api/checkout-success/page.tsx`.
+This is where we upgrade the tenant to a paid tier and store his customer and subscription references in our `tenants` table:
+
+```typescript
+console.log("checkout-success called");
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+const searchParams = req.nextUrl.searchParams;
+const tenantId = searchParams.get("tenant_id")?.toString();
+const session_id = searchParams.get("session_id")?.toString();
+let location: string;
+
+const checkoutSession = await stripe.checkout.sessions.retrieve(session_id); // (1)
+
+// Here we are getting a connection to a specific tenant database
+const tenantNile = await nile.withContext({ headers, tenantId }); // (2)
+
+// Store the Stripe customer ID  and subscription in the database
+const resp = await tenantNile.query("update tenants set (stripe_customer_id = $1, stripe_subscription_id = $2, tenant_tier = $3", [
+  checkoutSession.customer,
+  checkoutSession.subscription,
+  "basic",
+]);
+
+revalidatePath("/tenants");
+return respond("/tenants/" + tenantId + "/billing");
+```
+
+1. First we call Stripe to get the checkout session. This is where we get the customer ID and subscription ID.
+2. Then we get an instance of the tenantDB using the tenant ID, which we cleverly asked Stripe to provide when calling this route.
+3. Finally, we update the tenant's row in the `tenants` table with the customer and subscription IDs, and upgrade the tenant to the `basic` tier.
+
+### 7.4 Managing subscriptions
+
+We use Stripe's customer dashboard to let users manage their subscriptions.
+To direct users to the dashboard, we use Stripe's `customer_portal` API. This is implemented in `app/tenants/[tenantid]/billing/checkout-actions.tsx`:
+
+```typescript
+export async function redirectToStripePortal(formData: FormData) {
+  const tenantId = formData.get("tenantid")?.toString();
+  const tenantNile = await nile.withContext({headers, tenantId});
+
+  const resp = await tenantNile.tenants.list();
+  const customerId = resp[0].stripe_customer_id;
+
+  const returnUrl =
+    process.env.NEXT_PUBLIC_BASE_PATH + `/tenants/${tenantId}/billing`;
+
+  const portalSession = await stripe.billingPortal.sessions.create({
+    customer: customerId,
+    return_url: returnUrl,
+  });
+
+  redirect(portalSession.url);
+}
+```
+
+In order to call Stripe's API, we need the customer ID. We get it from the `tenants` table, and then call Stripe's API to create a portal session.
+We then redirect the user to the portal session URL, which takes the user to the customer dashboard.
+
+### 7.5 Downgrading a tenant
+
+A tenant who is subscribed to the "basic" tier can downgrade to the "free" tier. This is implemented in `app/tenants/[tenantid]/billing/checkout-actions.tsx`:
+
+```typescript
+export async function cancelSubscription(formData: FormData) {
+  const tenantid = formData.get("tenantid")?.toString();
+  const tenantNile = await nile.withContext({ headers, tenantId });
+
+  const resp = await tenantNile.tenants.list()
+  const subscriptionId = resp[0].stripe_subscription_id;
+
+  try {
+    await stripe.subscriptions.cancel(subscriptionId);
+    // if we got here, subscription was cancelled successfully, lets downgrade the tenant tier too
+    await tenantNile.query("update tenants set (tenant_tier = 'free' AND stripe_subscription_id = NULL)")
+  } catch (e) {
+    console.error(e);
+    return { message: "Failed to cancel subscription" };
+  }
+
+  revalidatePath("/tenants/" + tenantid + "/billing");
+  redirect("/tenants/" + tenantid + "/billing");
+}
+```
+
+This is similar to the previous example, except that we use the tenant's subscription ID to call Stripe's `cancel` API and cancel the subscription.
+If this step succeeds, we downgrade the tenant in our database.
+
+## 8. What's next?
+
+This example is a good starting point for introducing subscriptions, tiered plans and billing for your SaaS application and your tenants.
+You have also learned how to extend Nile's built-in tables with additional fields and use them in your application.
+
+Next steps could be to add more tiers, display past payments in the customer dashboard, or to add a webhook to handle Stripe's subscription events.
+
+You can learn more about Nile's tenant virtualization features in the following tutorials:
+
+- [Tenant management](/tenant-virtualization/tenant-management)
+- [Tenant isolation](/tenant-virtualization/tenant-isolation)
+
+And you can explore Nile's JS SDK in the [SDK reference](/auth/sdk-reference/javascript/overview).

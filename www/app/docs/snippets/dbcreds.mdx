@@ -1,0 +1,14 @@
+<Step title="Obtain Database Credentials">
+1. If you haven't signed up for Nile yet, [sign up here](https://console.thenile.dev) and follow the steps to create a database.
+2. Navigate to **Database Settings** in your database's UI at [console.thenile.dev](https://console.thenile.dev).
+3. Go to **Connection** settings.
+4. Select the CLI icon, and click **Generate credentials**
+![Generate credentials](/images/auth/generate-credentials.png)
+5. **Copy** the required credentials and **store them in an `.env` file** so they can be used in the application to connect to the Nile auth service.
+    ```bash .env
+    NILEDB_USER=niledb_user
+    NILEDB_PASSWORD=niledb_password
+    NILEDB_API_URL=https://us-west-2.api.thenile.dev/v2/databases/<database_id>
+    NILEDB_POSTGRES_URL=postgres://us-west-2.db.thenile.dev:5432/<database_name>
+    ```
+</Step>

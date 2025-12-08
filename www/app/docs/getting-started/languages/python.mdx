@@ -1,0 +1,336 @@
+---
+title: "Build AI-Native B2B application with Postgres and Python"
+sidebarTitle: "Python"
+---
+
+In this tutorial, you will learn to build a multi-tenant AI-native todo list application, using Nile with Python, FastAPI, SQLAlchemy, and OpenAI's client.
+We'll use Nile to provide us with virtual-tenant databases - isolating the tasks for each tenant, and we'll use the AI models to generate automated time estimates
+for each task in the todo list.
+
+<iframe
+  width="480"
+  height="270"
+  src="https://www.youtube.com/embed/t2UorKhAJko?si=nHjWr0O8-0uE7DVf"
+  title="Build AI-native, multi-tenant application with Python and Nile's Postgres"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowFullScreen
+></iframe>
+
+<Steps>
+  <Step title="Create a database">
+    1. Sign up for an invite to [Nile](https://thenile.dev) if you don't have one already
+    2. You should see a welcome message. Click on "Lets get started"
+       ![Nile welcome.](/images/nile-welcome.png)
+    3. Give your workspace and database names, or you can accept the default auto-generated names. In order to complete this quickstart in a browser, make sure you select to "Use Token in Browser".
+  </Step>
+
+  <Step title="Create a table">
+    After you created a database, you will land in Nile's query editor.
+    For our todo list application, we'll need tables to store tenants, users and todos.
+    Tenants and users already exists in Nile, they are built-in tables and you can see them in the list on the left side of the screen.
+    We'll just need to create a table for todos.
+
+    ```sql
+    create table todos (
+        id uuid DEFAULT (gen_random_uuid()),
+        tenant_id uuid,
+        title varchar(256),
+        estimate varchar(256),
+        embedding vector(768),
+        complete boolean);
+    ```
+
+    You will see the new table in the panel on the left side of the screen, and you can expand it to view the columns.
+
+    The embedding column is a vector representation of the task. When the user adds new tasks, we will use these embeddings to find
+    semantically related tasks and use this as a basis of our AI-driven time estimates. This technique - looking up related data using embeddings and
+    using this data with text generation models is called [RAG (Retrieval Augumented Generation)](https://www.thenile.dev/docs/ai-embeddings/rag).
+
+    See the `tenant_id` column? By specifying this column, You are making the table **tenant aware**. The rows in it will belong to specific tenants. If you leave it out, the table is considered shared, more on this later.
+    ![Creating a table in Nile's admin dashboard](/images/gui-create-table.png)
+  </Step>
+
+  <Step title="Get credentials">
+    In the left-hand menu, click on "Settings" and then select "Credentials". Generate credentials and keep them somewhere safe. These give you access to the database.
+  </Step>
+
+  <Step title="Get third party credentials">
+    This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. In order to use this functionality, you will need access to models from a vendor with OpenAI compatible APIs. Make sure you have an API key, API base URL and the [names of the models you'll want to use](https://www.thenile.dev/docs/ai-embeddings/embedding_models).
+  </Step>
+
+  <Step title="Set the environment">
+    Enough GUI for now. Let's get to some code.
+
+    If you haven't cloned this repository yet, now will be an excellent time to do so.
+
+    ```bash
+    git clone https://github.com/niledatabase/niledatabase
+    cd niledatabase/examples/quickstart/python
+    ```
+
+    Copy `.env.example` to `.env` and fill in the details of your Nile DB. The ones you copied and kept safe in step 3.
+
+    It should look something like this:
+
+    ```bash
+    DATABASE_URL=postgresql://user:password@db.thenile.dev:5432/mydb
+    LOG_LEVEL=DEBUG
+    SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+    ALGORITHM = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+    # for AI estimates
+    AI_API_KEY=your_api_key_for_openai_compatible_service
+    AI_BASE_URL=https://api.fireworks.ai/inference/v1
+    AI_MODEL=accounts/fireworks/models/llama-v3p1-405b-instruct
+    EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
+    ```
+
+    Optional, but recommended, step is to set up a virtual Python environment:
+
+    ```bash
+    python -m venv venv
+    source venv/bin/activate
+    ```
+
+    Then, install dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+  </Step>
+
+  <Step title="Run the application">
+    If you'd like to use the app with the UI, you'll want to build the UI assets first:
+
+    ```bash
+    cd ui
+    npm install
+    npm run build
+    ```
+
+    Then start the Python webapp:
+
+    ```bash
+    uvicorn main:app --reload
+    ```
+
+    Go to http://localhost:8000 in a browser to see the app.
+
+    You can try a few things in the app:
+
+    - Sign up as a new user
+    - Create a tenant
+    - Create a todo task and see its time estimate. If you create more tasks, the estimates for new tasks will use the embeddings of the existing tasks to generate the estimates.
+
+    You can also use the API directly:
+
+    ```bash
+    # login
+    curl -c cookies -X POST 'http://localhost:8000/api/login' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{"email":"test9@pytest.org","password":"foobar"}'
+
+    # create tenant
+    curl -b cookies -X POST 'localhost:8000/api/tenants' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{"name":"my first customer"}'
+
+    # list tenants
+    curl -b cookies -X GET 'http://localhost:8000/api/tenants'
+
+    # create todo for a tenant (make sure you replace the tenant ID with the one you got from the previous step)
+    curl -b cookies -X POST \
+      'http://localhost:8000/api/todos' \
+      --header 'Content-Type: application/json' \
+      --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
+      --data-raw '{"title": "feed the cat", "complete": false}'
+
+    # list todos for a tenant (make sure you replace the tenant ID with the one you got from the previous step)
+    curl  -b cookies -X GET \
+      --header 'X-Tenant-Id: 3c9bfcd0-7702-4e0e-b3f0-4e84221e20a7' \
+      'http://localhost:8000/api/todos'
+    ```
+  </Step>
+
+  <Step title="Check the data in Nile">
+    Go back to the Nile query editor and see the data you created from the app.
+
+    ```sql
+    SELECT tenants.name, title, estimate, complete
+    FROM todos join tenants on tenants.id = todos.tenant_id;
+    ```
+
+    You should see all the todos you created, and the tenants they belong to.
+  </Step>
+
+  <Step title="What's next?">
+    This example is a good starting point for building your own application with Nile.
+
+    You have learned basic Nile concepts and how to use them with Python, FastAPI, and SQLAlchemy.
+
+    You can learn more about Nile's tenant virtualization features in the following tutorials:
+
+    - [Tenant management](/tenant-virtualization/tenant-management)
+    - [Tenant isolation](/tenant-virtualization/tenant-isolation)
+
+    You can learn [More about AI in Nile](https://www.thenile.dev/docs/ai-embeddings), or try a more advanced example like:
+
+    - [Chat with PDFs](https://www.thenile.dev/docs/getting-started/examples/chat_with_pdf)
+    - [Code Assistant](https://www.thenile.dev/docs/getting-started/examples/code_assistant)
+  </Step>
+</Steps>
+
+## How does it work?
+
+The app uses FastAPI, a modern Python web framework, and SQLAlchemy, a popular ORM. The app is built with tenants in mind, and it uses Nile's tenant context to isolate data between tenants.
+
+`main.py` is the entry point of the app. It sets up the FastAPI app, registers the middleware and has all the routes.
+
+### Using AI models for time estimates
+
+This example uses AI chat and embedding models to generate automated time estimates for each task in the todo list. We handle the time estimates in
+the `create_todo` method which is the route handler for `@app.post("/api/todos")`. This handler executes when users add new tasks.
+
+This is what the handler code looks like:
+
+```python
+    similar_tasks = get_similar_tasks(session, todo.title)
+    logger.info(f"Generating estimate based on similar tasks: {similar_tasks}")
+    estimate = ai_estimate(todo.title, similar_tasks)
+    embedding = get_embedding(todo.title, EmbeddingTasks.SEARCH_DOCUMENT)
+    todo.embedding = embedding
+    todo.estimate = estimate
+    session.add(todo)
+    session.commit()
+```
+
+As you can see, we look up similar tasks and then use the AI model to generate the estimate. We then store the task, with the estimate and the task embedding in the database.
+The stored embedding will be used to find similar tasks in the future. The methods `get_similar_tasks`, `ai_estimate` and `get_embedding` are all defined in `ai_utils.py`.
+They are wrappers around standard AI model calls and database queries, and they handle the specifics of the AI model we are using.
+This will make it easy to switch models in the future.
+
+Getting similar tasks is done by querying the database for tasks with similar embeddings. Before we search the database, we need to generate the embedding for the new task:
+
+```python
+def get_similar_tasks(session: any, text: str):
+    query_embedding = get_embedding(text, EmbeddingTasks.SEARCH_QUERY)
+
+    similar_tasks_raw = (
+        session.query(Todo)
+        .filter(Todo.embedding.cosine_distance(query_embedding) < 1)
+        .order_by(Todo.embedding.cosine_distance(query_embedding)).limit(3))
+    return [{"title": task.title, "estimate": task.estimate} for task in similar_tasks_raw]
+```
+
+We started by generating an embedding with `SEARCH_QUERY` task type. This is because we are looking for similar tasks to the new task. We use an embedding model
+from the `nomic` family, which is trained to perform specific types of embedding tasks. Telling it that we are generating the embedding for a lookup vs
+generating an embedding that we will store with the document (as we'll do in a bit), should help the model produce more relevant results.
+
+In order to use vector embeddings with SQL Alchemy and SQL Model ORM, we used [PG Vector's Python library](https://github.com/pgvector/pgvector-python).
+You'll find it in `requirements.txt` for the project. Note that we filter out results where the cosine distance is higher than 1.
+The lower the cosine distance is, the more similar the tasks are (0 indicate that they are identical).
+A cosine distance of 1 means that the vectors are essentially unrelated, and when cosine distance is closer to 2, it indicates that the vectors are semantically opposites.
+
+The `get_embedding` function uses the embedding model to generate the embedding and is a very simple wrapper on the model:
+
+```python
+response = client.embeddings.create(
+    model=os.getenv("EMBEDDING_MODEL"),
+    input=adjust_input(text, task),
+)
+```
+
+Now that we have the similar tasks, the handler calls `ai_estimate` to generate the time estimate.
+This function also wraps a model, this time a conversation model rather than an embedding model. And it icludes the similar tasks in the promopt, so the model will
+generate similar estimates:
+
+```python
+response = client.chat.completions.create(
+    model = os.getenv("AI_MODEL"),
+    messages = [
+        {
+            "role": "user",
+            "content" :
+                f'you are an amazing project manager. I need to {text}. How long do you think this will take?'
+                f'I have a few similar tasks with their estimates, please use them as reference: {similar_tasks}.'
+                f'respond with just the estimate, no yapping.',
+          },
+    ],
+)
+```
+
+This estimate is then stored in the database along with the task and its vector embedding.
+
+### Working with virtual tenant databases
+
+The first thing we do in the app is set up the tenant middleware. The `TenantAwareMiddleware` is defined in `middleware.py`,
+and it is responsible for extracting the tenant ID from the request headers and setting it in the database session.
+This ensures that all database operations are performed in the context of the current tenant.
+
+```python
+app = FastAPI()
+app.add_middleware(TenantAwareMiddleware)
+```
+
+The middleware runs before any request is processed. But not every request has a tenant context. For example, `login` or `create_tenant` routes doesn't need a tenant context.
+Requests that don't have a tenant context are considered to be `global` since they are performed on the database as a whole, not in the virtual database for a specific tenant.
+
+To handle a request in the global context, we use a global session. This is a session that doesn't have a tenant context. For example to create a new tenant:
+
+```python
+@app.post("/api/tenants")
+async def create_tenant(tenant:Tenant, request: Request, session = Depends(get_global_session)):
+    session.add(tenant)
+    session.commit()
+    return tenant
+```
+
+To handle a request in the tenant context, we use a tenant session. This is a session that has a tenant context. For example to list todos:
+
+```python
+@app.get("/api/todos")
+async def get_todos(session = Depends(get_tenant_session)):
+    todos = session.query(Todo).all()
+    return todos
+```
+
+This looks like it could return all todos from all tenants, but it doesn't. The `get_tenant_session`
+function sets the tenant context for the session, and the query is executed in the virtual database of the tenant.
+
+The last piece of the puzzle is the `get_tenant_session` function. It is defined in `db.py` and is responsible for creating the session with the correct context.
+
+```python
+def get_tenant_session():
+    session = Session(bind=engine, expire_on_commit=False)
+    try:
+        tenant_id = get_tenant_id()
+        user_id = get_user_id()
+        session.execute(text(f"SET nile.tenant_id='{tenant_id}';"))
+        session.execute(text(f"SET nile.user_id='{user_id}';"))
+        yield session
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.execute(text("RESET nile.user_id;"))
+        session.execute(text("RESET nile.tenant_id;"))
+        session.commit()
+        pass
+```
+
+We are setting both the user and tenant context in the session. This is important for security and isolation.
+The user context is used to check if the user has access to the tenant, and the tenant context is used to isolate the data.
+
+Note that we are using FastAPI dependency injection to get the session in the route handlers. This is a powerful feature of FastAPI that makes it easy to manage resources like sessions.
+The `yield` keyword is used to return the session to the caller, and the `finally` block is used to clean up the session after the request is processed.
+
+And this is it. Thats all we need to do to build a multi-tenant app with Nile, FastAPI and SQLAlchemy.
+
+## 8. Looking good!
+
+🏆 Tada! You have learned the basic Nile concepts:
+
+    - [Tenant management](/tenant-virtualization/tenant-management)
+    - [Tenant isolation](/tenant-virtualization/tenant-isolation)

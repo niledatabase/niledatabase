@@ -1,0 +1,62 @@
+---
+title: 'Magic Link'
+description: 'Magic Link Authentication'
+icon: 'wand-magic-sparkles'
+---
+import InstallNile from '/snippets/installnile.mdx'
+import CreateNextApp from '/snippets/createnextapp.mdx'
+import DbCreds from '/snippets/dbcreds.mdx'
+
+Magic Link authentication provides a passwordless sign-in experience where users 
+receive a secure link via email to authenticate. This method eliminates the need for 
+passwords while maintaining security.
+
+## Overview
+
+Magic Link authentication flow:
+1. User enters their email address
+2. They receive a secure link with an authentication token via email. The token is valid for 4 hours by default and is saved in the `auth.verification_tokens` table in your database. 
+3. Clicking the link automatically exchanges the token for a session, logs them into your application and redirects them to the `callbackUrl` configured in the `sign` component.
+
+## Implementation Steps
+
+<Steps>
+<DbCreds />
+<Step title="Configure Email Settings">
+Ensure you have configured your email settings in the Nile Dashboard. You'll need a valid 
+[SMTP provider](/auth/email/customsmtp) configured to send emails from your 
+application, and [email templates](/auth/email/templates) configured for the magic link.
+</Step>
+<Step title="Enable Passwordless Login">
+Click on Providers tab under Configure. Under Email, enable passwordless login.
+<img height="500" width="500" src="/images/auth/enable_passwordless.png" alt="Passwordless Login" />
+</Step>
+<CreateNextApp />
+<InstallNile />
+<Step title="Frontend Implementation">
+
+The `<EmailSignIn />` component is used to send a magic link to the user's email address.
+
+<Tabs>
+<Tab title="Preview">
+<iframe src="https://storybook.thenile.dev/iframe.html?args=&globals=&id=social-email--sign-in-with-email" width="100%" height="230px" className="rounded-xl"/>
+</Tab>
+    <Tab title="Component">
+    ```jsx 
+    import { EmailSignIn } from "@niledatabase/react";
+
+    export default function SignUpPage() {
+    return <EmailSignIn callbackUrl="/dashboard" />
+    }
+    ```
+</Tab>
+</Tabs>
+</Step>
+</Steps>
+
+
+
+
+
+
+

@@ -1,0 +1,165 @@
+---
+title: "Prisma"
+sidebarTitle: "Prisma"
+---
+
+Prisma is a popular ORM. It is a flexible tool for managing database migrations.
+In this guide, we'll walk through the process of setting up Prisma in a project and 
+running several migration scenarios.
+
+## Setting Up an New Prisma project
+
+<Steps>
+  <Step title="Create a new project (or clone our example project)">
+
+  ```bash
+  mkdir hello-prisma
+  cd hello-prisma
+  # Initialize a new npm project
+  npm init -y
+  # Install and initialize typescript
+  npm install typescript tsx @types/node --save-dev
+  npx tsc --init
+  # Install and initialize Prisma
+  npm install prisma --save-dev
+  npx prisma init --datasource-provider postgresql
+  ```
+
+  If you'd like to clone our example project, you can do so with the following command:
+
+  ```bash
+  git clone https://github.com/niledatabase/niledatabase
+  cd niledatabase/examples/migrations/prisma
+  ```
+  </Step>
+  <Step title="Configure your environment">
+
+  ```bash
+  # Create a .env file
+  touch .env
+  # Add your database connection string to the .env file
+  echo "DATABASE_URL='postgresql://user:password@host:5432/dbname'" >> .env
+  ```
+
+  You can get your connection string from the Nile console under the "Connections" page.
+  </Step>
+</Steps>
+
+## Using Prisma with Nile in development
+
+Nile has built-in tables that can be useful in your project. 
+Especially the `tenants` table, which is used to store tenant information.
+
+Therefore, we recommend first pulling in the built-in tables to your project, and 
+then starting to build your own tables.
+
+<Steps>
+  <Step title="Pull in the built-in tables">
+  ```bash
+  npx prisma db pull
+  ```
+
+  This will generate the `schema.prisma` file with the built-in `tenants` table.
+  </Step>
+  <Step title="Generate Prisma client">
+  ```bash
+  npx prisma generate
+  ```
+  </Step>
+  <Step title="Add your own tables">
+  To add your own tables, you can edit the `schema.prisma` file and add your own models. For example:
+
+  ```prisma
+    model posts {
+    id        String  @default(dbgenerated("public.uuid_generate_v7()")) @db.Uuid
+    tenant_id String  @db.Uuid
+    title     String
+    content   String?
+    authorId  String
+    @@id([id, tenant_id])
+    }
+  ```
+  </Step>
+  <Step title="Push changes to the database">
+  ```bash
+  npx prisma db push
+  ```
+  </Step>
+</Steps>
+
+## Using Prisma with Nile in production
+`db pull` and `db push` work well in development, where you can evolve the schema without tracking every change.
+
+However, in production, we recommend using tracked migrations to ensure that the schema is always 
+in sync with the code. 
+
+Because Nile has a built-in `tenants` table, we first create a baseline migration that will include the built-in tables, 
+and then create additional migrations for our own tables.
+
+<Steps>
+  <Step title="Create a baseline migration">
+    If you don't yet have a schema.prisma file with the built-in tables, start by creating one:
+```bash
+npx prisma db pull
+```
+
+    Then, create a baseline migration:
+```bash
+mkdir -p prisma/migrations/0_init
+
+npx prisma migrate diff \
+--from-empty \
+--to-schema-datamodel prisma/schema.prisma \
+--script > prisma/migrations/0_init/migration.sql
+```   
+  </Step>
+  <Step title="Apply the baseline migration">
+  ```bash
+  npx prisma migrate resolve --applied 0_init
+  ```
+  </Step>
+  <Step title="Create a migration for your own tables">
+  Now, lets modify the schema to include our own tables.
+  For example, we'll add a `posts` table to `schema.prisma`. 
+  If you already have this table in your schema, you can add a column instead.
+
+  ```prisma
+  model posts {
+    id        String  @default(dbgenerated("public.uuid_generate_v7()")) @db.Uuid
+    tenant_id String  @db.Uuid
+    title     String
+    content   String?
+    authorId  String
+    @@id([id, tenant_id])
+  }
+```
+    Now, we'll create a migration for this change by comparing the existing schema in the 
+    DB (the `datasource`) with the new schema in `schema.prisma` (the `datamodel`).
+
+    While both the `datasource` and `datamodel` are in the same file, the first will refer to the 
+    `datasource` definition in the `schema.prisma` file while the second will refer to the model itself.
+
+```bash
+mkdir -p prisma/migrations/1_add_posts
+npx prisma migrate diff \
+--from-schema-datasource prisma/schema.prisma \
+--to-schema-datamodel prisma/schema.prisma \
+--script > prisma/migrations/1_add_posts/migration.sql
+```
+
+    <Info>
+    Prisma docs recommend generating migrations with `npx prisma migrate dev`. However, this will not work 
+    for Nile because the `npx prisma migrate dev` command starts by attempting to "reset" a shadow database by dropping all tables.
+    This is not possible in Nile because the built-in tables are required for core functionality.
+    </Info>
+    </Step>
+    <Step title="Apply the migration">
+  Last but not least, we can apply the migration to the database:
+```bash
+npx prisma migrate deploy
+```
+  </Step>
+</Steps>
+
+
+  

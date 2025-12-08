@@ -1,0 +1,31 @@
+---
+title: 'Per-Tenant Overrides'
+description: 'Understanding per-tenant configuration overrides in Nile Auth'
+---
+
+Nile auth allows you to integrate various authentication providers (e.g., Google, Facebook, GitHub) into your application. You can configure and manage these providers globally and also override them for individual tenants to allow greater flexibility and control.
+
+## Overview
+
+Authentication providers are configured globally to provide users with the ability to sign in using third-party services. You can enable and configure multiple providers at once.
+
+You can also customize which authentication providers are available for specific tenants. For example, you may want to disable the Google provider for one tenant, but keep it enabled for others.
+
+## Configuration Areas
+
+
+### OAuth Providers
+
+To override (disable) a provider for a specific tenant
+
+1. Navigate to the tenant in question **Tenants & Users**
+2. Select your tenant from the table, then click **Configuration** from the sub menu.
+3. De-select the tenant from the list of providers to disable it for that tenant.
+
+![Tenant overrides](/images/auth/tenantoverrides.png)
+
+## Related Topics
+
+- [Tenants](/auth/concepts/tenants)
+- [Built-in Tables](/auth/concepts/builtintables)
+- [OAuth](/auth/concepts/oauth) 

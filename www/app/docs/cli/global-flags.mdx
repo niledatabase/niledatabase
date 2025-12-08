@@ -1,0 +1,130 @@
+---
+title: 'Global Flags'
+description: 'Command line flags that can be used with any Nile CLI command'
+icon: 'flag'
+---
+
+Global flags can be used with any command in the Nile CLI. They provide consistent functionality across all commands and help customize the CLI's behavior.
+
+## Authentication Flags
+
+Flags for authenticating with Nile's services.
+
+```bash Authentication Examples
+# Using API key
+nile --api-key YOUR_API_KEY db list
+
+# Using workspace
+nile --workspace my-workspace db list
+
+# Using database
+nile --db my-database db list
+
+# Combining flags
+nile --api-key YOUR_API_KEY --workspace my-workspace db list
+```
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--api-key <key>` | API key for authentication | Environment variable: `NILE_API_KEY` |
+| `--workspace <name>` | Workspace to use | Environment variable: `NILE_WORKSPACE` |
+| `--db <name>` | Database to use | Environment variable: `NILE_DB` |
+
+## Output Format Flags
+
+Customize how command output is displayed.
+
+```bash Format Examples {2-4}
+# JSON output
+nile --format json db list
+
+# CSV output
+nile --format csv db list
+
+# Disable colors
+nile --no-color db list
+```
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--format <type>` | Output format (human, json, csv) | `human` |
+| `--color` | Enable colored output | `true` |
+| `--no-color` | Disable colored output | - |
+
+## Host Configuration Flags
+
+Configure connection endpoints for Nile services.
+
+```bash Host Configuration
+# Custom database host
+nile --db-host custom.db.example.com db list
+
+# Custom global host
+nile --global-host api.example.com db list
+
+# Custom auth URL
+nile --auth-url auth.example.com connect login
+```
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--db-host <host>` | Custom database host | Environment variable: `NILE_DB_HOST` |
+| `--global-host <host>` | Custom global host | Environment variable: `NILE_GLOBAL_HOST` |
+| `--auth-url <url>` | Custom authentication URL | Environment variable: `NILE_AUTH_URL` |
+
+## Debug Flag
+
+Enable detailed output for troubleshooting.
+
+```bash Debug Examples
+# Enable debug output
+nile --debug db list
+
+# Debug with other flags
+nile --debug --format json db list
+
+# Debug authentication
+nile --debug connect login
+```
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--debug` | Enable debug output | `false` |
+
+## Environment Variables
+
+All global flags can also be set using environment variables:
+
+```bash Environment Variables [expandable]
+# Authentication
+export NILE_API_KEY=your-api-key
+export NILE_WORKSPACE=your-workspace
+export NILE_DB=your-database
+
+# Host Configuration
+export NILE_DB_HOST=your-db-host
+export NILE_GLOBAL_HOST=your-global-host
+export NILE_AUTH_URL=your-auth-url
+
+# Debug Mode
+export NILE_DEBUG=true
+```
+
+## Flag Precedence
+
+When the same setting is specified in multiple ways, the following precedence order is used (highest to lowest):
+
+1. Command line flags
+2. Environment variables
+3. Configuration file values
+4. Default values
+
+```bash Precedence Examples
+# Flag overrides environment variable
+export NILE_WORKSPACE=workspace1
+nile --workspace workspace2 db list  # Uses workspace2
+
+# Flag overrides config
+nile config --workspace workspace1
+nile --workspace workspace2 db list  # Uses workspace2
+``` 

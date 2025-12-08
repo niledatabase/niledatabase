@@ -1,0 +1,106 @@
+---
+title: 'ltree'
+description: 'Hierarchical tree-like structures in PostgreSQL databases'
+---
+
+The `ltree` extension provides support for hierarchical tree-like structures in PostgreSQL databases. It's particularly useful for storing and querying hierarchical data such as organizational structures, file systems, or category trees.
+Your Nile database arrives with the `ltree` extension already enabled.
+
+## Understanding ltree
+
+The ltree data type represents a label path - a sequence of labels separated by dots, like 'Top.Countries.USA.California'. Each label can include alphanumeric characters and underscores, with a maximum length of 256 bytes.
+
+### Key Features
+
+- **Hierarchical Data Storage**: Store tree-structured data in a single column
+- **Efficient Querying**: Fast traversal and searching of tree structures
+- **Path Manipulation**: Built-in operators for working with paths
+- **Pattern Matching**: Powerful pattern matching capabilities
+
+## Usage Examples
+
+### Creating a Table with ltree
+
+```sql
+CREATE TABLE categories (
+  id serial PRIMARY KEY,
+  path ltree
+);
+```
+
+### Inserting Data
+
+```sql
+INSERT INTO categories (path) VALUES
+  ('Electronics'),
+  ('Electronics.Computers'),
+  ('Electronics.Computers.Laptops'),
+  ('Electronics.Computers.Desktops'),
+  ('Electronics.Phones'),
+  ('Electronics.Phones.Smartphones');
+```
+
+### Querying Examples
+
+Find all subcategories under 'Electronics':
+```sql
+SELECT path FROM categories WHERE path <@ 'Electronics';
+```
+
+Find immediate children of 'Electronics.Computers':
+```sql
+SELECT path FROM categories WHERE path ~ 'Electronics.Computers.*{1}';
+```
+
+Find the parent category:
+```sql
+SELECT subpath(path, 0, -1) FROM categories WHERE path = 'Electronics.Computers.Laptops';
+```
+
+## Operators and Functions
+
+### Common Operators
+
+- `<@`: Is left argument a descendant of right (or equal)?
+- `@>`: Is left argument an ancestor of right (or equal)?
+- `~`: Does ltree match lquery?
+- `?`: Does ltree match ltxtquery?
+- `||`: Concatenate ltree paths
+
+### Useful Functions
+
+- `subpath(ltree, offset, len)`: Get subpath of ltree
+- `nlevel(ltree)`: Return number of labels in path
+- `index(ltree, ltree)`: Return position of second ltree in first
+- `text2ltree(text)`: Cast text to ltree
+- `ltree2text(ltree)`: Cast ltree to text
+
+## Best Practices
+
+1. **Plan Your Hierarchy**: Design your tree structure carefully before implementation
+2. **Index Usage**: Create GiST indexes for better query performance:
+   ```sql
+   CREATE INDEX path_idx ON categories USING GIST (path);
+   ```
+3. **Validation**: Implement checks to maintain data integrity
+4. **Path Length**: Keep paths reasonably short for better performance
+
+## Use Cases
+
+- Organization charts
+- Product categories
+- File system structures
+- Location hierarchies
+- Menu structures
+- Content taxonomies
+
+## Performance Considerations
+
+- Use appropriate indexes based on your query patterns
+- Monitor path lengths as very deep hierarchies can impact performance
+- Consider denormalization for frequently accessed ancestor/descendant information
+
+## Additional Resources
+
+- [PostgreSQL ltree Documentation](https://www.postgresql.org/docs/current/ltree.html)
+- [PostgreSQL Wiki - ltree](https://wiki.postgresql.org/wiki/Ltree)
