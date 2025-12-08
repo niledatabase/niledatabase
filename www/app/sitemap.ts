@@ -20,7 +20,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .replace("/index", "")
       .replace(/^app\//, "");
 
-    console.log(path);
     const metadataRoute = {
       url: `https://www.thenile.dev/${path}`,
       lastModified: file.mtime ? new Date(file.mtime) : new Date(),
@@ -29,8 +28,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
     pages.push(metadataRoute);
   }
+
+  let docsPages: MetadataRoute.Sitemap = [];
+  try {
+    const response = await fetch("https://nile.mintlify.app/sitemap.xml");
+    if (response.ok) {
+      const xml = await response.text();
+      const urlRegex = /<url>(.*?)<\/url>/gs;
+      const locRegex = /<loc>(.*?)<\/loc>/;
+      const lastmodRegex = /<lastmod>(.*?)<\/lastmod>/;
+
+      let match;
+      while ((match = urlRegex.exec(xml)) !== null) {
+        const urlBlock = match[1];
+        const locMatch = locRegex.exec(urlBlock);
+        const lastmodMatch = lastmodRegex.exec(urlBlock);
+
+        if (locMatch && locMatch[1]) {
+          let url = locMatch[1];
+          // Ensure www.thenile.dev
+          url = url.replace("https://thenile.dev", "https://www.thenile.dev");
+
+          docsPages.push({
+            url,
+            lastModified: lastmodMatch ? new Date(lastmodMatch[1]) : new Date(),
+            changeFrequency: "weekly",
+            priority: 0.5,
+          });
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching docs sitemap:", error);
+  }
+
   return [
     ...pages,
+    ...docsPages,
     {
       url: "https://www.thenile.dev/",
       lastModified: new Date(),
@@ -60,12 +94,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
-    },
-    {
-      url: "https://www.thenile.dev/docs",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
     },
     {
       url: "https://www.thenile.dev/templates",
