@@ -129,13 +129,16 @@ This technique is known as [RAG architecture](https://www.thenile.dev/docs/ai-em
 
   </Step>
 
-{" "}
-
 <Step title="Check the data in Nile">
   Go back to the Nile query editor and see the data you created from the app.
-  ```sql SELECT tenants.name, title, estimate, complete FROM todos join tenants
-  on tenants.id = todos.tenant_id; ``` You should see all the todos you created,
-  and the tenants they belong to.
+  ```sql 
+  SELECT tenants.name, title, estimate, complete FROM todos join tenants
+  on tenants.id = todos.tenant_id; 
+  ```
+
+You should see all the todos you created,
+and the tenants they belong to.
+
 </Step>
 
   <Step title="What's next?">
