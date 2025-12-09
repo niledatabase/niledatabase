@@ -25,7 +25,7 @@ idna==3.7
 jiter==0.6.1
 joblib==1.4.2
 llama-cloud==0.1.5
-llama-index==0.12.28
+llama-index==0.13.0
 llama-index-agent-openai==0.4.6
 llama-index-cli==0.4.1
 llama-index-core==0.13.0
