@@ -15,7 +15,7 @@ fastapi==0.115.12
 frozenlist==1.5.0
 grpclib==0.4.7
 h11==0.16.0
-h2==4.2.0
+h2==4.3.0
 hpack==4.1.0
 httpcore==1.0.7
 httpx==0.27.2 # Can't upgrade to 0.28.1 because of openai issue: https://community.openai.com/t/error-with-openai-1-56-0-client-init-got-an-unexpected-keyword-argument-proxies/1040332
