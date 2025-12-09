@@ -6,7 +6,7 @@ icon: 'atom'
 
 ## Installation
 
-`@niledatbase/react` contains components and hooks for using the API. It handles sessions, cookies, fetching data, and comes with built-in components to be used as either templates or directly in your application to handle common user tasks. It is designed to be used with `@niledatabase/server`, which handles API calls itself or forwards them to the regional API for your database.
+`@niledatabase/react` contains components and hooks for using the API. It handles sessions, cookies, fetching data, and comes with built-in components to be used as either templates or directly in your application to handle common user tasks. It is designed to be used with `@niledatabase/server`, which handles API calls itself or forwards them to the regional API for your database.
 
 ```bash
 npm install @niledatabase/react @niledatabase/client
@@ -422,7 +422,145 @@ export type LoginInfo = {
 - Calls `onSuccess` if login succeeds.
 - Calls `onError` if login fails.
 
+## Multi-factor (Client)
+
+Client-side MFA enrollment, challenge, and removal flows powered by the React SDK. The `User` object (obtained via `useSession`) will include a `multiFactor` property when MFA is enabled for the user.
+
+### Features
+
+- Authenticator app or email one-time-code enrollment against `/auth/mfa`
+- Recovery codes for authenticator challenges with remaining-count feedback
+- Redirect-aware helpers that work with custom routers or default navigation (`ChallengeRedirect`)
+- UI building blocks (`MultiFactor*` components) plus a lightweight hook
+- Optional low-level `mfa` helper for bespoke prompts or headless flows
+
+### Overview
+
+Nile Auth exposes a single `/auth/mfa` endpoint for starting MFA setup, completing challenges, and removing an enrolled method. The React SDK wraps the endpoint in `useMultiFactor` and UI components that parse server responses into ready-to-render experiences.
+
+Tokens returned from setup or sign-in responses must be echoed back on subsequent calls (challenge verification or removal). When the backend needs the browser to redirect, the helper returns `{ url: string }` (a `ChallengeRedirect`) so you can route accordingly.
+
+### Installation
+
+```sh
+npm install @niledatabase/react @niledatabase/client
+```
+
+### Quick start
+
+#### Enroll with an authenticator app
+
+```tsx
+import { useMultiFactor, MultiFactorAuthenticator } from '@niledatabase/react';
+
+export function MfaEnrollment() {
+  const { setup, loading, startSetup } = useMultiFactor({
+    method: 'authenticator',
+    currentMethod: null,
+    onRedirect: (url) => window.location.assign(url), // optional
+  });
+
+  return (
+    <>
+      <button onClick={startSetup} disabled={loading}>
+        {loading ? 'Starting...' : 'Enable authenticator MFA'}
+      </button>
+
+      {setup?.scope === 'setup' && setup.method === 'authenticator' ? (
+        <MultiFactorAuthenticator
+          setup={setup}
+          onError={console.error}
+          onSuccess={(scope) => scope === 'setup' && window.location.reload()}
+        />
+      ) : null}
+    </>
+  );
+}
+```
+
+<iframe
+  src="https://storybook.thenile.dev/iframe.html?globals=&args=&id=multifactor-setupauthenticator--default"
+  width="100%"
+  height="520px"
+  className="rounded-xl"
+/>
+
+#### Handle a challenge prompt (sign-in or removal)
+
+```tsx
+import { useMultiFactor, MultiFactorChallenge } from '@niledatabase/react';
+
+export function ChallengePrompt({ existingToken }: { existingToken: string }) {
+  const { setup, startDisable } = useMultiFactor({
+    method: 'authenticator',
+    currentMethod: 'authenticator',
+  });
+
+  return (
+    <>
+      {/* Example: Disabling MFA requires a challenge verification first */}
+      <button onClick={startDisable}>Disable MFA</button>
+
+      {setup?.scope === 'challenge' ? (
+        <MultiFactorChallenge
+          payload={setup}
+          isEnrolled
+          message="Enter code from your authenticator app"
+          onSuccess={() => window.location.replace('/app')}
+        />
+      ) : null}
+    </>
+  );
+}
+```
+
+<iframe
+  src="https://storybook.thenile.dev/iframe.html?globals=&args=&id=multifactor-challengecontent--authenticator-challenge"
+  width="100%"
+  height="420px"
+  className="rounded-xl"
+/>
+
+### API
+
+#### `useMultiFactor(options)`
+
+| Name                  | Type                                                       | Default                           | Description                                                                             |
+| --------------------- | ---------------------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------- |
+| `method`              | `'authenticator' \| 'email'`                               | _(required)_                      | MFA mechanism to enable or disable.                                                     |
+| `currentMethod`       | `'authenticator' \| 'email' \| null`                       | `null`                            | Currently enrolled method; blocks switching until disabled.                             |
+| `onRedirect`          | `(url: string) => void`                                    | `window.location.assign`          | Optional handler when the backend responds with a `url` to visit (`ChallengeRedirect`). |
+| `onChallengeRedirect` | `(params: { token; method; scope; destination? }) => void` | Internal `/mfa/prompt` navigation | Override the default challenge redirect builder.                                        |
+
+Returns `{ setup, loading, errorType, startSetup, startDisable }`.
+
+- `setup`: `null` or an MFA payload. For authenticator: `{ method: 'authenticator'; token; scope; otpauthUrl?; secret?; recoveryKeys? }`. For email: `{ method: 'email'; token; scope; maskedEmail? }`.
+- `startSetup()`: begins enrollment (POST `/auth/mfa`); `setup.scope` will be `"setup"` or `"challenge"` if a verification step is required.
+- `startDisable()`: starts removal for the given method. If verification is required, `setup.scope` will be `"challenge"`.
+- `errorType`: one of `setup`, `disable`, `parseSetup`, `parseDisable`, or `null` for success.
+
+### Components
+
+- `MultiFactorAuthenticator` — renders QR code, recovery keys, and a verification form.  
+  Props: `setup: AuthenticatorSetup`, `onError(message: string | null)`, `onSuccess(scope: 'setup' | 'challenge')`.
+- `MultiFactorEmail` — shows masked email messaging and a verification form.  
+  Props: `setup: EmailSetup`, `onSuccess(scope: 'setup' | 'challenge')`.
+- `MultiFactorChallenge` — shared challenge UI for either method (used for disable flows or sign-in prompts).  
+  Props: `payload: { token: string; scope: ChallengeScope; method: MfaMethod }`, `message: string`, `isEnrolled: boolean`, `onSuccess(scope)`.
+
+### Error handling
+
+- Non-200 responses are coerced into `{ url: string }` (`ChallengeRedirect`) with an `error` search param. `MfaVerifyForm` and the examples above parse this for user-friendly messaging.
+- If `code` is missing or shorter than 6 digits, the React forms set a validation error before calling the API.
+
+### Additional notes
+
+- Codes are expected to be 6 digits for authenticator/email verification; recovery codes are string tokens issued during setup.
+- Challenge tokens expire; expect 410 responses for stale tokens and 404 for unknown challenges.
+- Email MFA may return a `maskedEmail` and require the same token on verification and disable flows.
+
 ## Related Topics
 
+- [MFA Concepts](/auth/concepts/multifactor)
 - [Next.js Integration](/auth/frameworks/nextjs)
 - [Components](/auth/components/signin)

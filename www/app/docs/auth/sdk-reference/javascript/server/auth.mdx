@@ -279,6 +279,105 @@ A `Response` with session cookies or error headers
 
 ---
 
+## Multi-factor (Server)
+
+Server-side helpers for enrolling, challenging, and removing MFA in Nile Auth.
+
+### Features
+
+- Single `auth.mfa` entry point for setup, verification, and removal against `/auth/mfa`
+- Works with either authenticator apps or email one-time codes
+- Reuses the server context (`withContext`) so CSRF, session, and callback cookies flow automatically
+- Returns parsed JSON by default while allowing raw `Response` access when needed
+- Redirect-friendly responses for server-rendered flows (e.g., Next.js middleware)
+
+### Installation
+
+```sh
+npm install @niledatabase/server
+```
+
+### mfa
+
+Server entry point for `/api/auth/mfa`. HTTP verbs map automatically based on params.
+
+<CodeGroup>
+```ts setup
+// Start authenticator enrollment (POST /auth/mfa)
+const setup = await nile.auth.mfa({
+  scope: 'setup',
+  method: 'authenticator',
+});
+```
+
+```ts verify
+// Verify a setup or login challenge (PUT /auth/mfa)
+const verified = await nile.auth.mfa({
+  token: setup.token,
+  code: '123456',
+  scope: setup.scope,
+  method: setup.method,
+});
+```
+
+```ts remove
+// Remove MFA (DELETE /auth/mfa)
+await nile.auth.mfa({
+  method: 'authenticator',
+  remove: true,
+});
+```
+
+```ts sign-in challenge
+// Handle MFA required after sign-in
+const challenge = await nile.auth.signIn('email', {
+  email: 'user@example.com',
+  password: 'correct-horse',
+});
+
+if (challenge && typeof challenge === 'object' && 'token' in challenge) {
+  await nile.auth.mfa({
+    token: String((challenge as any).token),
+    code: '654321',
+    scope: 'challenge',
+    method: (challenge as any).method ?? 'authenticator',
+  });
+}
+```
+
+</CodeGroup>
+
+#### Parameters
+
+- `token`: string. MFA challenge token issued during setup or sign-in; required for `scope: 'challenge'`.
+- `scope`: `'setup' | 'challenge'`. Indicates setup vs. completing a challenge. Defaults to `'challenge'`.
+- `method`: `'authenticator' | 'email'`. MFA mechanism to operate on. Defaults to `'authenticator'`.
+- `code`: string. Verification or recovery code when completing a challenge.
+- `remove`: boolean. When `true`, sends `DELETE` to remove the current method. Defaults to `false`.
+- `rawResponse`: boolean. When `true`, returns the raw `Response` instead of parsed JSON.
+
+#### Behavior
+
+- `POST` to initiate setup, `PUT` with a `token` to verify, and `DELETE` when `remove` is `true`.
+- Runs inside `withNileContext`, so cookies/CSRF from prior calls are reused automatically.
+- Redirects surface as `{ url: string }` with an `error` query param; otherwise expect API status codes (400 invalid payload, 401 invalid code/unauthenticated, 403 token mismatch, 404 missing challenge, 410 expired challenge, 500 server error).
+
+#### Response shapes
+
+- Authenticator setup: `{ method: 'authenticator'; token: string; scope: 'setup' | 'challenge'; otpauthUrl?: string; secret?: string; recoveryKeys?: string[] }`
+- Email setup: `{ method: 'email'; token: string; scope: 'setup' | 'challenge'; maskedEmail?: string }`
+- Challenge/verification: `{ ok: true; scope: 'setup' | 'challenge'; recoveryCodesRemaining?: number }`
+- Redirects/errors: `{ url: string }`
+
+#### Tips
+
+- Persist and reuse the `token` returned from setup or sign-in for all follow-up calls.
+- For authenticated server-rendered pages, call `await nile.auth.getSession()` after `auth.mfa` so session cookies are hydrated in the current context.
+- Admin removal flows may return a challenge; route the user to MFA verification with the provided `token` instead of bypassing MFA.
+- Codes are typically 6 digits; recovery codes are string tokens issued during setup.
+
+---
+
 ## Utility Methods
 
 These are internal helpers that power the core authentication flows:
@@ -311,3 +410,33 @@ const resetToken = parseResetToken(response.headers);
   These functions are mostly used internally. You typically don&apos;t need to
   call them directly unless customizing the authentication flow.
 </Note>
+| Name | Type | Default | Description | | --- | --- | --- | --- | | `token` |
+`string` | `undefined` | MFA challenge token issued during setup or sign-in;
+required for `scope: 'challenge'`. | | `scope` | `'setup' \| 'challenge'` |
+`'challenge'` | Indicates whether you are starting setup or completing a
+challenge. | | `method` | `'authenticator' \| 'email'` | `'authenticator'` | MFA
+mechanism to operate on. | | `code` | `string` | `undefined` | Verification or
+recovery code when completing a challenge. | | `remove` | `boolean` | `false` |
+Sends a `DELETE` request to remove the currently enrolled method. | |
+`rawResponse` | `boolean` | `false` | When `true`, skip JSON parsing and return
+the raw `Response`. |
+
+Behavior:
+
+- HTTP verb selection follows the API spec: `POST` to initiate setup, `PUT` with a `token` to verify challenges, and `DELETE` when `remove` is `true`. Ensure you pass the correct `scope`/`token`/`remove` combination so the helper sends the intended verb; if you call the HTTP API directly, use the same verbs described above.
+- The helper runs inside `withNileContext`, so cookies and CSRF headers from prior calls (e.g., `signIn`, `getCsrf`) are reused automatically.
+- Errors are returned as `{ url: string }` with an `error` query parameter when the upstream responds with a redirect; otherwise expect HTTP status codes surfaced from the API (400 invalid payload, 401 invalid code or unauthenticated, 403 token mismatch, 404 not found, 410 expired challenge, 500 server error).
+
+### Response shapes
+
+- Authenticator setup: `{ method: 'authenticator'; token: string; scope: 'setup' \| 'challenge'; otpauthUrl?: string; secret?: string; recoveryKeys?: string[] }`
+- Email setup: `{ method: 'email'; token: string; scope: 'setup' \| 'challenge'; maskedEmail?: string }`
+- Challenge/verification: `{ ok: true; scope: 'setup' \| 'challenge'; recoveryCodesRemaining?: number }`
+- Redirects/errors: `{ url: string }` (inspect the `error` search param for the reason)
+
+### Tips
+
+- Always persist and reuse the `token` returned from setup or sign-in; it must be included on all follow-up MFA calls.
+- For authenticated server-rendered pages, call `await nile.auth.getSession()` after `auth.mfa` to ensure session cookies are hydrated in the current context.
+- When building admin tooling to disable MFA, expect a challenge response; route the user to your verification UI with the returned `token` instead of bypassing MFA.
+- Authenticator/email codes are expected to be 6 digits; recovery codes are string tokens issued during setup. An expired or missing challenge returns 410/404, and an invalid code returns 401.

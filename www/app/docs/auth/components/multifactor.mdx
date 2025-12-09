@@ -1,0 +1,162 @@
+---
+title: 'Multi-factor'
+description: 'Nile Auth React components for MFA setup, challenge, and disable flows'
+---
+
+Client-side MFA UI powered by `@niledatabase/react`. These components pair with `useMultiFactor` (and the low-level `mfa` helper) to enroll authenticator or email factors, verify challenges, and disable MFA when needed. The `User` object (obtained via `useSession`) will include a `multiFactor` property if MFA is enabled for the user.
+
+## Authenticator setup
+
+`<MultiFactorAuthenticator />` renders the otpauth QR, recovery codes, and a verification form. Pair it with `useMultiFactor` to start setup and render the payload.
+
+<Tabs>
+<Tab title="Preview">
+  <iframe src="https://storybook.thenile.dev/iframe.html?globals=&args=&id=multifactor-setupauthenticator--default" width="100%" height="800px" className="rounded-xl"/>
+</Tab>
+<Tab title="Component">
+```tsx
+import { useMultiFactor, MultiFactorAuthenticator } from '@niledatabase/react';
+
+export function AuthenticatorSetupCard() {
+  const { setup, loading, startSetup, errorType } = useMultiFactor({
+    method: 'authenticator',
+    currentMethod: null,
+  });
+
+return (
+
+<div className="space-y-4">
+<button onClick={startSetup} disabled={loading}>
+{loading ? 'Starting...' : 'Enable authenticator MFA'}
+</button>
+
+      {setup?.method === 'authenticator' && setup.scope === 'setup' ? (
+        <MultiFactorAuthenticator
+          setup={setup}
+          onError={(msg) => console.error('MFA error', msg)}
+          onSuccess={(scope) => scope === 'setup' && window.location.reload()}
+        />
+      ) : null}
+
+      {errorType ? <p className="text-red-600">Unable to start MFA ({errorType})</p> : null}
+    </div>
+
+);
+}
+
+````
+</Tab>
+</Tabs>
+
+## Email setup
+
+`<MultiFactorEmail />` shows masked email messaging and a verification form. Pair it with `useMultiFactor` to start setup and render the payload.
+
+```tsx
+import { useMultiFactor, MultiFactorEmail } from '@niledatabase/react';
+
+export function EmailSetupCard() {
+  const { setup, loading, startSetup, errorType } = useMultiFactor({
+    method: 'email',
+    currentMethod: null,
+  });
+
+  return (
+    <div className="space-y-4">
+      <button onClick={startSetup} disabled={loading}>
+        {loading ? 'Starting...' : 'Enable email MFA'}
+      </button>
+
+      {setup?.method === 'email' && setup.scope === 'setup' ? (
+        <MultiFactorEmail
+          setup={setup}
+          onSuccess={(scope) => scope === 'setup' && window.location.reload()}
+        />
+      ) : null}
+
+      {errorType ? <p className="text-red-600">Unable to start MFA ({errorType})</p> : null}
+    </div>
+  );
+}
+````
+
+## Challenge content (sign-in or disable)
+
+`<MultiFactorChallenge />` verifies a code during sign-in, setup verification, or disable flows. Feed it the `setup` payload returned from `useMultiFactor` (or the `/auth/mfa` API) and handle success.
+
+<Tabs>
+<Tab title="Preview">
+  <iframe src="https://storybook.thenile.dev/iframe.html?globals=&args=&id=multifactor-challengecontent--authenticator-challenge" width="100%" height="420px" className="rounded-xl"/>
+</Tab>
+<Tab title="Component">
+```tsx
+import { useMultiFactor, MultiFactorChallenge } from '@niledatabase/react';
+
+export function AuthenticatorChallenge({ existingToken }: { existingToken?: string }) {
+  const { setup, startDisable } = useMultiFactor({
+    method: 'authenticator',
+    currentMethod: 'authenticator',
+  });
+
+// Example: startDisable() would populate `setup` with a challenge payload when confirmation is required.
+return (
+
+<div className="space-y-4">
+<button onClick={startDisable}>Disable MFA</button>
+
+      {setup && setup.scope === 'challenge' ? (
+        <MultiFactorChallenge
+          payload={{ token: setup.token, scope: setup.scope, method: setup.method }}
+          isEnrolled
+          message="Enter a code from your authenticator (or a recovery code)."
+          onSuccess={() => window.location.replace('/app')}
+        />
+      ) : null}
+    </div>
+
+);
+}
+
+```
+</Tab>
+</Tabs>
+
+## Hooks
+
+### `useMultiFactor(options)`
+Manages MFA setup and disable flows and provides the payloads rendered by the components above.
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `method` | `'authenticator' \| 'email'` | _(required)_ | MFA mechanism to enable or disable. |
+| `currentMethod` | `'authenticator' \| 'email' \| null` | `null` | Currently enrolled method; blocks switching until disabled. |
+| `onRedirect` | `(url: string) => void` | `window.location.assign` | Handle `{ url }` redirect responses (`ChallengeRedirect`). |
+| `onChallengeRedirect` | `(params: { token; method; scope; destination? }) => void` | Internal `/mfa/prompt` navigation | Override the default challenge redirect builder. |
+
+Returns `{ setup, loading, errorType, startSetup, startDisable }`.
+
+- `setup`: MFA payload for rendering components. Authenticator shape: `{ method: 'authenticator'; token; scope; otpauthUrl?; secret?; recoveryKeys? }`. Email shape: `{ method: 'email'; token; scope; maskedEmail? }`.
+- `startSetup()`: begins enrollment (POST `/auth/mfa`); `setup.scope` can be `"setup"` or `"challenge"` when verification is required.
+- `startDisable()`: starts removal for the given method. If verification is required, `setup.scope` will be `"challenge"`.
+- `errorType`: one of `setup`, `disable`, `parseSetup`, `parseDisable`, or `null`.
+
+### `mfa(options)` (low-level helper)
+Wrapper around `/auth/mfa` from `@niledatabase/client`. Use it for custom prompts or headless flows; the React components call this under the hood.
+
+- `POST` `{ method, scope: 'setup' }` → returns a setup payload.
+- `PUT` `{ token, code, method, scope }` → verifies a challenge; returns `{ ok: true; scope; recoveryCodesRemaining? }`.
+- `DELETE` `{ token?, code?, method, remove: true }` → disables MFA; may require a valid code/token depending on backend settings.
+- Redirects surface as `{ url: string }` (`ChallengeRedirect`); parse `error` from the query string for messaging.
+
+**Notes**
+- Codes are 6 digits for authenticator/email verification; recovery codes are string tokens issued during setup.
+- Tokens expire; expect 410 for stale tokens and 404 for missing challenges.
+- Email MFA may require the same token for verification and disable flows.
+
+## Related Components
+
+- [MFA Concepts](/auth/concepts/multifactor)
+- [Sign In](/auth/components/signin)
+- [Sign Out](/auth/components/signout)
+- [User Profile](/auth/components/user)
+```
