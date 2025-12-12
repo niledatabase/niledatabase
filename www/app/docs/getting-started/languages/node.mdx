@@ -256,7 +256,7 @@ The application uses Express middleware to capture the tenant identity for the c
 
 ```js
 app.param('tenantId', (req, res, next, tenantId) => {
-  nile.tenantId = tenantId;
+  nile.setContext({ tenantId });
   next();
 });
 ```

@@ -13,7 +13,7 @@ export default function App() {
   return <TenantSelector />;
 }`,
 
-  api: `const tenant = await nile.api.tenants.createTenant(tenantName);
+  api: `const tenant = await nile.tenants.(tenantName);
 if (tenant instanceof Response) {
   console.log("ERROR creating tenant: ", tenant);
   return { message: "no tenant" };
@@ -122,17 +122,17 @@ function App() {
 };
 
 export const authExamples: Record<string, string> = {
-  users: `const user1 = await nile.api.users.createUser({ email: 'user1@example.com', password: 'user1', newTenant: 'myTenant' });
-const user2 = await nile.api.users.createUser({ email: 'user2@example.com', password: 'user2' });
+  users: `const user1 = await nile.users.create({ email: 'user1@example.com', password: 'user1', newTenant: 'myTenant' });
+const user2 = await nile.users.create({ email: 'user2@example.com', password: 'user2' });
 // make user1 and user2 part of the same tenant
-const updated2 = await nile.api.users.linkUser(user2.id);`,
+const updated2 = await nile.tenants.addMember(user2.id);`,
 
   sessions: `import { Nile } from "@niledatabase/server";
 
 const nile = await Nile();
 
 app.get("/some-path", async (req, res) => {
-  const session = await nile.api.auth.session(req);
+  const session = await nile.auth.session(req);
   if (!session) {
     res.status(401).json({
       message: "Unauthorized",

@@ -1,7 +1,7 @@
 import { ChatOpenAI } from '@langchain/openai';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
-import { Nile } from '@niledatabase/server';
 import { createVectorEmbedding, EMBEDDING_TABLE } from '@/lib/EmbeddingUtils';
+import { configureNile } from '@/lib/NileServer';
 
 const MODEL = 'gpt-4o-mini'; // until we find a better model, this is a low cost start...
 
@@ -41,8 +41,7 @@ export async function POST(req: Request) {
   const embedding = await createVectorEmbedding(body.question);
   const formattedEmbedding = JSON.stringify(embedding);
 
-  const nile = Nile();
-  nile.tenantId = body.tenant_id;
+  const nile = await configureNile(body.tenant_id);
   const project_id = body.project_id;
 
   /* Using inner product to find the most similar files. Based on suggestions from the OpenAI FAQ:

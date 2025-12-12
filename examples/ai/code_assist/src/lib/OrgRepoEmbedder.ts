@@ -7,6 +7,7 @@ import expandTilde from 'expand-tilde';
 import { v4 as uuidv4 } from 'uuid';
 import { Nile, Server } from '@niledatabase/server';
 import { EMBEDDING_TABLE, createVectorEmbedding } from './EmbeddingUtils';
+import { nile } from '@/app/api/[...nile]/nile';
 
 const LanguageMappings: Map<string, string[]> = new Map([
   ['python', ['py']],
@@ -128,18 +129,17 @@ async function embedDirectory(
   project_url: string,
 ) {
   try {
-    const nile = Nile();
-    const tenant_id = await getOrCreateTenantId(nile, tenant_name!);
-    nile.tenantId = tenant_id;
+    const nileCtx = await nile.withContext();
+    const tenant_id = await getOrCreateTenantId(nileCtx, tenant_name!);
 
     const project_id = await getOrCreateProject(
-      nile,
+      nileCtx,
       project_name,
       project_url,
       tenant_id,
     );
 
-    await processFiles(directory, language, project_id, nile, tenant_id);
+    await processFiles(directory, language, project_id, nileCtx, tenant_id);
     console.log(
       'File embeddings stored successfully for directory:',
       directory,

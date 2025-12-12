@@ -25,10 +25,9 @@ const f = createUploadthing();
 
 //@ts-ignore
 const middleware = async ({ req, files }) => {
-  // nile.api.headers = new Headers({ cookie: (await cookies()).toString() }); // Commented out
-  const user = await nile.users.getSelf(); // Changed nile.api.users.me to nile.users.getSelf
+  const user = await nile.users.getSelf();
   if (!user || user instanceof Response) throw new Error('Unauthorized');
-  const orgId = await currentTenantId(); // extracting tenant id from the "referer" header. the alternative is to introduce tenant-id cookie
+  const orgId = await currentTenantId();
   const isPro = await checkSubscription(orgId);
   console.log('isPro: ', isPro, ' orgId: ', orgId, user);
   return { userInfo: user as User, orgId, isPro };

@@ -1,4 +1,4 @@
-import { Nile } from '@niledatabase/server';
+import { configureNile } from '@/lib/NileServer';
 
 type Data = {
   projects: { id: string; name: string }[];
@@ -6,9 +6,8 @@ type Data = {
 
 export async function POST(req: Request) {
   try {
-    const nile = Nile();
     const body = await req.json();
-    nile.tenantId = body.tenant_id;
+    const nile = await configureNile(body.tenant_id);
     console.log('tenant_id:', body.tenant_id);
     const result = await nile.db
       .query(`SELECT p.id, p.name, t.name as tenant_name 

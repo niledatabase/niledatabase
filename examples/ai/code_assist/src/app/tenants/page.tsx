@@ -16,12 +16,9 @@ export const revalidate = 0;
 export const fetchCache = 'force-no-store';
 
 export default async function Page() {
-  const headers = new Headers({ cookie: (await cookies()).toString() });
-
-  const [tenants, me] = await Promise.all([
-    nile.api.tenants.listTenants(headers),
-    nile.api.users.me(headers),
-  ]);
+  const [tenants, me] = await nile.withContext(
+    async () => await Promise.all([nile.tenants.list(), nile.users.getSelf()]),
+  );
 
   if (tenants instanceof Response) {
     // signed out
