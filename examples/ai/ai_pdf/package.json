@@ -44,7 +44,7 @@
     "jwt-decode": "^4.0.0",
     "langchain": "0.2.17",
     "lucide-react": "^0.486.0",
-    "next": "15.5.7",
+    "next": "15.5.8",
     "next-themes": "^0.2.1",
     "openai": "^4.53.2",
     "pdf-parse": "^1.1.1",
