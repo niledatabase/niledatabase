@@ -3,18 +3,20 @@ import { NileJWTPayload, cookieOptions } from '@/lib/AuthUtils';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { registerTenants } from '@/lib/TenantRegistration';
+import { nextJs } from '@niledatabase/nextjs';
 import { Nile } from '@niledatabase/server';
 
+const nile = Nile({
+  debug: true,
+  extensions: [nextJs],
+});
 // Note that this route must exist in this exact location for user/password login to work
 // Nile's LoginForm component posts to this route, we call Nile's login API via the SDK
 // Nile SDK sets the right headers and cookies, but in this example, we want to add some custom information to the cookies
 // The reason we need this is that this example supports both Google SSO (which has custom information) and user/password login which doesn't
 // Check the authentication quickstart for a simpler example of using the Nile SDK without custom cookies
 export async function POST(req: Request) {
-  const nile = Nile({
-    debug: true,
-  });
-  const res = await nile.api.auth.login(req);
+  const res = await nile.auth.signIn('credentials', req);
 
   // if signup was successful, we want to set the cookies
   if (res && res.status >= 200 && res.status < 300) {
@@ -30,7 +32,12 @@ export async function POST(req: Request) {
       return new Response('No user ID in JWT', { status: 500 });
     }
     await registerTenants(decodedJWT.sub);
-    cookies().set('authData', JSON.stringify(cookieData), cookieOptions(3600));
+    const cookieStore = await cookies();
+    cookieStore.set(
+      'authData',
+      JSON.stringify(cookieData),
+      cookieOptions(3600),
+    );
     revalidatePath('/');
     return new Response(JSON.stringify(body), { status: 200 });
   } else {

@@ -1,11 +1,11 @@
+import { configureNile } from '@/lib/NileServer';
 import { Nile } from '@niledatabase/server';
 
 // TODO: Need to set nile user ID from cookie for security
 export async function POST(req: Request) {
   try {
-    const nile = Nile();
     const body = await req.json();
-    nile.tenantId = body.tenant_id;
+    const nile = await configureNile(body.tenant_id);
     const project_id = body.project_id;
     const result = await nile.db.query(
       'SELECT file_name FROM file_content where project_id=$1',

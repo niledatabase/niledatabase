@@ -4,8 +4,9 @@ import AskIndex from './AskIndex';
 async function loadProjects(
   tenantId: string,
 ): Promise<{ id: string; name: string; tenant_name: string }[]> {
-  nile.tenantId = tenantId;
-  const result = await nile.db
+  const nileCtx = await nile.withContext({ tenantId });
+
+  const result = await nileCtx.db
     .query(`SELECT p.id, p.name, t.name as tenant_name 
         FROM projects p JOIN tenants t on p.tenant_id=t.id `); // no need to specify tenant_id, as we set the context above
 
@@ -17,9 +18,9 @@ async function fileContent(
   projectId: string,
   fileName: string,
 ): Promise<string> {
-  nile.tenantId = tenantId;
+  const nileCtx = await nile.withContext({ tenantId });
   const project_id = projectId;
-  const result = await nile.db.query(
+  const result = await nileCtx.db.query(
     'SELECT contents FROM file_content WHERE project_id=$1 and file_name like $2',
     [project_id, '%' + fileName],
   ); // guaranteed to belong to current tenant
@@ -27,8 +28,8 @@ async function fileContent(
 }
 
 async function loadFiles(tenantId: string, projectId: string) {
-  nile.tenantId = tenantId;
-  const result = await nile.db.query(
+  const nileCtx = await nile.withContext({ tenantId });
+  const result = await nileCtx.db.query(
     'SELECT file_name FROM file_content where project_id=$1',
     [projectId],
   );

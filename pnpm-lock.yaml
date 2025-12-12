@@ -271,10 +271,10 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@19.1.0))(@types/react@18.3.27)(react@19.1.0)
       '@langchain/community':
         specifier: '>=0.3.3'
-        version: 1.0.6(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.52.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@6.9.1(ws@8.18.3)(zod@4.1.13))(zod@4.1.13))(@ibm-cloud/watsonx-ai@1.7.4)(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))(@opentelemetry/api@1.9.0)(ibm-cloud-sdk-core@5.4.4)(ignore@5.3.2)(jsonwebtoken@9.0.3)(lodash@4.17.21)(openai@6.9.1(ws@8.18.3)(zod@4.1.13))(pg@8.16.3)(playwright@1.57.0)(ws@8.18.3)
+        version: 1.0.6(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.52.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@6.9.1(ws@8.18.3)(zod@3.25.76))(zod@3.25.76))(@ibm-cloud/watsonx-ai@1.7.4)(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))(@opentelemetry/api@1.9.0)(ibm-cloud-sdk-core@5.4.4)(ignore@5.3.2)(jsonwebtoken@9.0.3)(lodash@4.17.21)(openai@6.9.1(ws@8.18.3)(zod@3.25.76))(pg@8.16.3)(playwright@1.57.0)(ws@8.18.3)
       '@langchain/core':
         specifier: ^0.2.0
-        version: 0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13))
+        version: 0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76))
       '@langchain/openai':
         specifier: ^0.2.0
         version: 0.2.11(ws@8.18.3)
@@ -287,12 +287,18 @@ importers:
       '@mui/material':
         specifier: ^5.14.18
         version: 5.18.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@19.1.0))(@types/react@18.3.27)(react@19.1.0))(@types/react@18.3.27)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@niledatabase/client':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@niledatabase/nextjs':
+        specifier: ^5.1.0
+        version: 5.1.0(@niledatabase/server@5.1.0)(next@15.5.8(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@niledatabase/react':
-        specifier: ^4.2.0-alpha.3
-        version: 4.2.0(@tanstack/react-query@5.90.11(react@19.1.0))(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^5.1.0
+        version: 5.1.0(@niledatabase/client@5.1.0)(@tanstack/react-query@5.90.11(react@19.1.0))(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@niledatabase/server':
-        specifier: ^4.2.0-alpha.3
-        version: 4.2.0
+        specifier: ^5.1.0
+        version: 5.1.0
       '@radix-ui/react-slot':
         specifier: ^1.1.2
         version: 1.2.3(@types/react@18.3.27)(react@19.1.0)
@@ -301,7 +307,7 @@ importers:
         version: 4.1.17
       ai:
         specifier: '>=5.0.52'
-        version: 5.0.106(zod@4.1.13)
+        version: 5.0.106(zod@3.25.76)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -322,7 +328,7 @@ importers:
         version: 4.0.0
       langchain:
         specifier: '>=0.2.19'
-        version: 0.3.19(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))(@opentelemetry/api@1.9.0)(axios@1.13.2)(handlebars@4.7.8)(openai@6.9.1(ws@8.18.3)(zod@4.1.13))(ws@8.18.3)
+        version: 0.3.19(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))(@opentelemetry/api@1.9.0)(axios@1.13.2)(handlebars@4.7.8)(openai@6.9.1(ws@8.18.3)(zod@3.25.76))(ws@8.18.3)
       lucide-react:
         specifier: ^0.486.0
         version: 0.486.0(react@19.1.0)
@@ -508,7 +514,7 @@ importers:
         version: 5.2.8
       '@mui/icons-material':
         specifier: ^5.16.7
-        version: 5.18.0(@mui/material@5.18.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.27)(react@18.3.1)
+        version: 5.18.0(@mui/material@5.14.18(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.27)(react@18.3.1)
       '@mui/joy':
         specifier: ^5.0.0-beta.28
         version: 5.0.0-beta.52(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -578,7 +584,7 @@ importers:
         version: 5.2.8
       '@mui/icons-material':
         specifier: ^5.16.7
-        version: 5.18.0(@mui/material@5.18.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.27)(react@18.3.1)
+        version: 5.18.0(@mui/material@5.14.18(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.27)(react@18.3.1)
       '@mui/joy':
         specifier: ^5.0.0-beta.28
         version: 5.0.0-beta.52(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -4487,11 +4493,6 @@ packages:
     engines: {node: '>=18.0'}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  '@niledatabase/browser@4.2.0':
-    resolution: {integrity: sha512-azSvZKFRN7DzWdIGP/vAw/zhzEvdo/1e7XPIjMUuIoa4LZk0pWUOTcL47dBs3AKKCGslAsuN23t4S2iHmebpnw==}
-    engines: {node: '>=18.0'}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-
   '@niledatabase/client@5.1.0':
     resolution: {integrity: sha512-BIaiw+BBtG6IUWgxuryWIUROXDpkPWw60Tqxb1aPovSsj8L8ugDCY5g1PDVi/dYE8r2EUbdcfKjNnVRe9ihNDQ==}
     engines: {node: '>=20.0'}
@@ -4524,14 +4525,6 @@ packages:
       react: ^18.0.0
       react-dom: ^18.0.0
 
-  '@niledatabase/react@4.2.0':
-    resolution: {integrity: sha512-XzO+xBz/0X+pUtAw1tCdey9hoq1gHMT6YbRmCusKUVzjqyZDCfdCU8eqil93NjPkqDNet3BDahWAFFmfTrq9Iw==}
-    engines: {node: '>=20.0'}
-    peerDependencies:
-      '@tanstack/react-query': ^5.23.0
-      react: ^19.0.0
-      react-dom: ^19.0.0
-
   '@niledatabase/react@5.1.0':
     resolution: {integrity: sha512-MbWea2EWN07pyEqYAInKXKqIOygAeAmT+D6XenHrkY6O2TuvhuRU3YKYAu4zQhzetZRhuIUtP8u94mxBy8lXPw==}
     engines: {node: '>=20.0'}
@@ -4540,10 +4533,6 @@ packages:
       '@tanstack/react-query': ^5.23.0
       react: ^19.0.0
       react-dom: ^19.0.0
-
-  '@niledatabase/server@4.2.0':
-    resolution: {integrity: sha512-7ZjpYi9gRWRmNmxQJaFqpbOvQaKPGsyfftlry/4SFk8BKRSs7N5T9oaDlZqYPybyC7mUXU+jmhJitsdEtjuQWQ==}
-    engines: {node: '>=18.0'}
 
   '@niledatabase/server@5.1.0':
     resolution: {integrity: sha512-mWRPKSrqvG5wM6s++5qXoS+rPl87i7NiQkAXCuK0i+y3ep2nX8OtK/StB2pC/t+jv3s6J4Oa0mHSsk1z1hwh+w==}
@@ -10028,11 +10017,6 @@ packages:
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  lucide-react@0.487.0:
-    resolution: {integrity: sha512-aKqhOQ+YmFnwq8dWgGjOuLc8V1R9/c/yOd+zDY4+ohsR2Jo05lSGc3WsstYPIzcTpeosN7LoCkLReUUITvaIvw==}
-    peerDependencies:
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
   lucide-react@0.511.0:
     resolution: {integrity: sha512-VK5a2ydJ7xm8GvBeKLS9mu1pVK6ucef9780JVUjw6bAjJL/QXnd4Y0p7SPeOUMC27YhzNCZvm5d/QX0Tp3rc0w==}
     peerDependencies:
@@ -13078,6 +13062,13 @@ packages:
 
 snapshots:
 
+  '@ai-sdk/gateway@2.0.18(zod@3.25.76)':
+    dependencies:
+      '@ai-sdk/provider': 2.0.0
+      '@ai-sdk/provider-utils': 3.0.18(zod@3.25.76)
+      '@vercel/oidc': 3.0.5
+      zod: 3.25.76
+
   '@ai-sdk/gateway@2.0.18(zod@4.1.13)':
     dependencies:
       '@ai-sdk/provider': 2.0.0
@@ -13090,6 +13081,13 @@ snapshots:
       '@ai-sdk/provider': 2.0.0
       '@ai-sdk/provider-utils': 3.0.18(zod@4.1.13)
       zod: 4.1.13
+
+  '@ai-sdk/provider-utils@3.0.18(zod@3.25.76)':
+    dependencies:
+      '@ai-sdk/provider': 2.0.0
+      '@standard-schema/spec': 1.0.0
+      eventsource-parser: 3.0.6
+      zod: 3.25.76
 
   '@ai-sdk/provider-utils@3.0.18(zod@4.1.13)':
     dependencies:
@@ -13464,17 +13462,17 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  '@browserbasehq/stagehand@1.14.0(@playwright/test@1.52.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@6.9.1(ws@8.18.3)(zod@4.1.13))(zod@4.1.13)':
+  '@browserbasehq/stagehand@1.14.0(@playwright/test@1.52.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@6.9.1(ws@8.18.3)(zod@3.25.76))(zod@3.25.76)':
     dependencies:
       '@anthropic-ai/sdk': 0.27.3
       '@browserbasehq/sdk': 2.6.0
       '@playwright/test': 1.52.0
       deepmerge: 4.3.1
       dotenv: 16.6.1
-      openai: 6.9.1(ws@8.18.3)(zod@4.1.13)
+      openai: 6.9.1(ws@8.18.3)(zod@3.25.76)
       ws: 8.18.3
-      zod: 4.1.13
-      zod-to-json-schema: 3.25.0(zod@4.1.13)
+      zod: 3.25.76
+      zod-to-json-schema: 3.25.0(zod@3.25.76)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -14241,11 +14239,11 @@ snapshots:
       - openai
       - ws
 
-  '@langchain/classic@1.0.5(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.3)(zod@4.1.13))(ws@8.18.3)':
+  '@langchain/classic@1.0.5(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.3)(zod@3.25.76))(ws@8.18.3)':
     dependencies:
-      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13))
-      '@langchain/openai': 1.1.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))(ws@8.18.3)
-      '@langchain/textsplitters': 1.0.1(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))
+      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76))
+      '@langchain/openai': 1.1.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))(ws@8.18.3)
+      '@langchain/textsplitters': 1.0.1(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))
       handlebars: 4.7.8
       js-yaml: 4.1.1
       jsonpointer: 5.0.1
@@ -14255,7 +14253,7 @@ snapshots:
       yaml: 2.7.1
       zod: 3.25.76
     optionalDependencies:
-      langsmith: 0.3.82(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.3)(zod@4.1.13))
+      langsmith: 0.3.82(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.3)(zod@3.25.76))
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-proto'
@@ -14293,19 +14291,19 @@ snapshots:
       - '@opentelemetry/sdk-trace-base'
       - peggy
 
-  '@langchain/community@1.0.6(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.52.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@6.9.1(ws@8.18.3)(zod@4.1.13))(zod@4.1.13))(@ibm-cloud/watsonx-ai@1.7.4)(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))(@opentelemetry/api@1.9.0)(ibm-cloud-sdk-core@5.4.4)(ignore@5.3.2)(jsonwebtoken@9.0.3)(lodash@4.17.21)(openai@6.9.1(ws@8.18.3)(zod@4.1.13))(pg@8.16.3)(playwright@1.57.0)(ws@8.18.3)':
+  '@langchain/community@1.0.6(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.52.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@6.9.1(ws@8.18.3)(zod@3.25.76))(zod@3.25.76))(@ibm-cloud/watsonx-ai@1.7.4)(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))(@opentelemetry/api@1.9.0)(ibm-cloud-sdk-core@5.4.4)(ignore@5.3.2)(jsonwebtoken@9.0.3)(lodash@4.17.21)(openai@6.9.1(ws@8.18.3)(zod@3.25.76))(pg@8.16.3)(playwright@1.57.0)(ws@8.18.3)':
     dependencies:
-      '@browserbasehq/stagehand': 1.14.0(@playwright/test@1.52.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@6.9.1(ws@8.18.3)(zod@4.1.13))(zod@4.1.13)
+      '@browserbasehq/stagehand': 1.14.0(@playwright/test@1.52.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@6.9.1(ws@8.18.3)(zod@3.25.76))(zod@3.25.76)
       '@ibm-cloud/watsonx-ai': 1.7.4
-      '@langchain/classic': 1.0.5(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.3)(zod@4.1.13))(ws@8.18.3)
-      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13))
-      '@langchain/openai': 1.1.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))(ws@8.18.3)
+      '@langchain/classic': 1.0.5(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.3)(zod@3.25.76))(ws@8.18.3)
+      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76))
+      '@langchain/openai': 1.1.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))(ws@8.18.3)
       binary-extensions: 2.3.0
       flat: 5.0.2
       ibm-cloud-sdk-core: 5.4.4
       js-yaml: 4.1.1
       math-expression-evaluator: 2.0.7
-      openai: 6.9.1(ws@8.18.3)(zod@4.1.13)
+      openai: 6.9.1(ws@8.18.3)(zod@3.25.76)
       uuid: 10.0.0
       zod: 3.25.76
     optionalDependencies:
@@ -14354,13 +14352,13 @@ snapshots:
     transitivePeerDependencies:
       - openai
 
-  '@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13))':
+  '@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76))':
     dependencies:
       ansi-styles: 5.2.0
       camelcase: 6.3.0
       decamelize: 1.2.0
       js-tiktoken: 1.0.19
-      langsmith: 0.1.68(openai@6.9.1(ws@8.18.3)(zod@4.1.13))
+      langsmith: 0.1.68(openai@6.9.1(ws@8.18.3)(zod@3.25.76))
       mustache: 4.2.0
       p-queue: 6.6.2
       p-retry: 4.6.2
@@ -14420,9 +14418,9 @@ snapshots:
     transitivePeerDependencies:
       - ws
 
-  '@langchain/openai@1.1.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))(ws@8.18.3)':
+  '@langchain/openai@1.1.3(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))(ws@8.18.3)':
     dependencies:
-      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13))
+      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76))
       js-tiktoken: 1.0.21
       openai: 6.9.1(ws@8.18.3)(zod@3.25.76)
       zod: 3.25.76
@@ -14434,9 +14432,9 @@ snapshots:
       '@langchain/core': 0.2.30(openai@4.95.1(ws@8.18.3)(zod@4.1.13))
       js-tiktoken: 1.0.21
 
-  '@langchain/textsplitters@0.1.0(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))':
+  '@langchain/textsplitters@0.1.0(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))':
     dependencies:
-      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13))
+      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76))
       js-tiktoken: 1.0.21
 
   '@langchain/textsplitters@0.1.0(@langchain/core@1.1.2(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))':
@@ -14449,9 +14447,9 @@ snapshots:
       '@langchain/core': 0.2.30(openai@4.95.1(ws@8.18.3)(zod@4.1.13))
       js-tiktoken: 1.0.21
 
-  '@langchain/textsplitters@1.0.1(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))':
+  '@langchain/textsplitters@1.0.1(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))':
     dependencies:
-      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13))
+      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76))
       js-tiktoken: 1.0.21
 
   '@mailchimp/mailchimp_marketing@3.0.80':
@@ -15029,8 +15027,6 @@ snapshots:
 
   '@niledatabase/browser@2.5.0-alpha.0': {}
 
-  '@niledatabase/browser@4.2.0': {}
-
   '@niledatabase/client@5.1.0': {}
 
   '@niledatabase/express@5.1.0(@niledatabase/server@5.1.0)(express@4.22.1)':
@@ -15090,25 +15086,6 @@ snapshots:
       - nodemailer
       - supports-color
 
-  '@niledatabase/react@4.2.0(@tanstack/react-query@5.90.11(react@19.1.0))(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@hookform/resolvers': 5.2.2(react-hook-form@7.55.0(react@19.1.0))
-      '@niledatabase/browser': 4.2.0
-      '@radix-ui/react-dialog': 1.1.15(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@radix-ui/react-dropdown-menu': 2.1.16(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@radix-ui/react-label': 2.1.8(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@radix-ui/react-slot': 1.2.3(@types/react@18.3.27)(react@19.1.0)
-      '@radix-ui/react-tooltip': 1.2.8(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@tanstack/react-query': 5.90.11(react@19.1.0)
-      lucide-react: 0.487.0(react@19.1.0)
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-      react-hook-form: 7.55.0(react@19.1.0)
-      react-is: 19.2.1
-    transitivePeerDependencies:
-      - '@types/react'
-      - '@types/react-dom'
-
   '@niledatabase/react@5.1.0(@niledatabase/client@5.1.0)(@tanstack/react-query@5.90.11(react@18.3.1))(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@hookform/resolvers': 5.2.2(react-hook-form@7.55.0(react@18.3.1))
@@ -15165,15 +15142,6 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
-
-  '@niledatabase/server@4.2.0':
-    dependencies:
-      dotenv: 16.5.0
-      h3: 1.15.4
-      jose: 4.15.9
-      pg: 8.16.3
-    transitivePeerDependencies:
-      - pg-native
 
   '@niledatabase/server@5.1.0':
     dependencies:
@@ -18396,6 +18364,14 @@ snapshots:
       clean-stack: 2.2.0
       indent-string: 4.0.0
 
+  ai@5.0.106(zod@3.25.76):
+    dependencies:
+      '@ai-sdk/gateway': 2.0.18(zod@3.25.76)
+      '@ai-sdk/provider': 2.0.0
+      '@ai-sdk/provider-utils': 3.0.18(zod@3.25.76)
+      '@opentelemetry/api': 1.9.0
+      zod: 3.25.76
+
   ai@5.0.106(zod@4.1.13):
     dependencies:
       '@ai-sdk/gateway': 2.0.18(zod@4.1.13)
@@ -19102,7 +19078,8 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  cookie-es@1.2.2: {}
+  cookie-es@1.2.2:
+    optional: true
 
   cookie-parser@1.4.7:
     dependencies:
@@ -19164,6 +19141,7 @@ snapshots:
   crossws@0.3.5:
     dependencies:
       uncrypto: 0.1.3
+    optional: true
 
   cssesc@3.0.0: {}
 
@@ -20714,6 +20692,7 @@ snapshots:
       radix3: 1.1.2
       ufo: 1.6.1
       uncrypto: 0.1.3
+    optional: true
 
   handlebars@4.7.8:
     dependencies:
@@ -21110,7 +21089,8 @@ snapshots:
 
   ipaddr.js@1.9.1: {}
 
-  iron-webcrypto@1.2.1: {}
+  iron-webcrypto@1.2.1:
+    optional: true
 
   is-alphabetical@1.0.4: {}
 
@@ -21479,15 +21459,15 @@ snapshots:
       - openai
       - ws
 
-  langchain@0.3.19(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))(@opentelemetry/api@1.9.0)(axios@1.13.2)(handlebars@4.7.8)(openai@6.9.1(ws@8.18.3)(zod@4.1.13))(ws@8.18.3):
+  langchain@0.3.19(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))(@opentelemetry/api@1.9.0)(axios@1.13.2)(handlebars@4.7.8)(openai@6.9.1(ws@8.18.3)(zod@3.25.76))(ws@8.18.3):
     dependencies:
-      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13))
+      '@langchain/core': 0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76))
       '@langchain/openai': 0.2.0(ws@8.18.3)
-      '@langchain/textsplitters': 0.1.0(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@4.1.13)))
+      '@langchain/textsplitters': 0.1.0(@langchain/core@0.2.36(openai@6.9.1(ws@8.18.3)(zod@3.25.76)))
       js-tiktoken: 1.0.21
       js-yaml: 4.1.1
       jsonpointer: 5.0.1
-      langsmith: 0.3.82(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.3)(zod@4.1.13))
+      langsmith: 0.3.82(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.3)(zod@3.25.76))
       openapi-types: 12.1.3
       p-retry: 4.6.2
       uuid: 10.0.0
@@ -21553,7 +21533,7 @@ snapshots:
     optionalDependencies:
       openai: 4.95.1(ws@8.18.3)(zod@4.1.13)
 
-  langsmith@0.1.68(openai@6.9.1(ws@8.18.3)(zod@4.1.13)):
+  langsmith@0.1.68(openai@6.9.1(ws@8.18.3)(zod@3.25.76)):
     dependencies:
       '@types/uuid': 10.0.0
       commander: 10.0.1
@@ -21562,7 +21542,7 @@ snapshots:
       semver: 7.7.3
       uuid: 10.0.0
     optionalDependencies:
-      openai: 6.9.1(ws@8.18.3)(zod@4.1.13)
+      openai: 6.9.1(ws@8.18.3)(zod@3.25.76)
 
   langsmith@0.3.82(@opentelemetry/api@1.9.0)(openai@4.95.1(ws@8.18.3)(zod@4.1.13)):
     dependencies:
@@ -21575,6 +21555,18 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
       openai: 4.95.1(ws@8.18.3)(zod@4.1.13)
+
+  langsmith@0.3.82(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.3)(zod@3.25.76)):
+    dependencies:
+      '@types/uuid': 10.0.0
+      chalk: 4.1.2
+      console-table-printer: 2.12.1
+      p-queue: 6.6.2
+      semver: 7.7.3
+      uuid: 10.0.0
+    optionalDependencies:
+      '@opentelemetry/api': 1.9.0
+      openai: 6.9.1(ws@8.18.3)(zod@3.25.76)
 
   langsmith@0.3.82(@opentelemetry/api@1.9.0)(openai@6.9.1(ws@8.18.3)(zod@4.1.13)):
     dependencies:
@@ -21775,10 +21767,6 @@ snapshots:
       react: 19.1.0
 
   lucide-react@0.486.0(react@19.1.0):
-    dependencies:
-      react: 19.1.0
-
-  lucide-react@0.487.0(react@19.1.0):
     dependencies:
       react: 19.1.0
 
@@ -22877,7 +22865,8 @@ snapshots:
       detect-libc: 2.0.3
     optional: true
 
-  node-mock-http@1.0.3: {}
+  node-mock-http@1.0.3:
+    optional: true
 
   node-releases@2.0.19: {}
 
@@ -23044,6 +23033,7 @@ snapshots:
     optionalDependencies:
       ws: 8.18.3
       zod: 4.1.13
+    optional: true
 
   openapi-types@12.1.3: {}
 
@@ -23551,7 +23541,8 @@ snapshots:
       '@types/react': 19.1.2
       '@types/react-dom': 19.1.2(@types/react@19.1.2)
 
-  radix3@1.1.2: {}
+  radix3@1.1.2:
+    optional: true
 
   ramda@0.28.0: {}
 
@@ -25202,7 +25193,8 @@ snapshots:
       buffer: 5.7.1
       through: 2.3.8
 
-  uncrypto@0.1.3: {}
+  uncrypto@0.1.3:
+    optional: true
 
   undici-types@5.26.5: {}
 
@@ -25924,6 +25916,10 @@ snapshots:
       readable-stream: 3.6.2
 
   zod-to-json-schema@3.24.5(zod@3.25.76):
+    dependencies:
+      zod: 3.25.76
+
+  zod-to-json-schema@3.25.0(zod@3.25.76):
     dependencies:
       zod: 3.25.76
 

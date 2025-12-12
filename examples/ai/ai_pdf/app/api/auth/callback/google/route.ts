@@ -2,7 +2,7 @@ import { nile } from '@/lib/NileServer';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
-  const postHandled = await nile.handlers.GET(req); // Changed nile.api.handlers to nile.handlers
+  const postHandled = await nile.handlers.GET(req);
 
   if (postHandled instanceof Response) {
     const setCookie = postHandled.headers.getSetCookie();
@@ -10,11 +10,10 @@ export async function GET(req: NextRequest) {
       c.includes('nile.session-token'),
     );
     if (hasSession) {
-      // nile.api.headers = new Headers({ cookie: hasSession.toString() }); // Commented out
-      const tenants = await nile.tenants.list(); // Changed nile.api.tenants.listTenants to nile.tenants.list
+      const tenants = await nile.tenants.list();
       if (Array.isArray(tenants)) {
         if (!tenants.find((t) => t.name === 'workspace')) {
-          await nile.tenants.create({ name: 'workspace' }); // Changed nile.api.tenants.createTenant to nile.tenants.create
+          await nile.tenants.create({ name: 'workspace' });
         }
       }
       return NextResponse.redirect(new URL('/dashboard', req.url)); // Redirect on successful session
