@@ -1,6 +1,7 @@
 import Container from '@/app/_components/common/Container';
 import { notFound } from 'next/navigation';
 import ConsoleEmbed from '../_components/ConsoleEmbed';
+import ClaimDatabase from './ClaimDatabase/Button';
 
 export default async function Home({
   searchParams,
@@ -12,6 +13,7 @@ export default async function Home({
   if (params?.flag === process.env.FLAG) {
     return (
       <Container background={null}>
+        <ClaimDatabase domain={process.env.CONSOLE_URL} />
         <ConsoleEmbed domain={process.env.CONSOLE_URL} />
       </Container>
     );

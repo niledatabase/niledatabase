@@ -3,18 +3,18 @@ import { randomBytes } from 'crypto';
 
 import { cookies as nextCookies } from 'next/headers';
 import { createIdToken, decode } from './jwt';
-import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
-const globalControlPlane =
-  process.env.GLOBAL_CONTROL_PLANE || 'http://localhost:8080';
-const credKeyPrefix =
-  process.env.NODE_ENV === 'production' ? '__Secure-db-creds' : 'db-creds';
-const cookieKey =
-  process.env.NODE_ENV === 'production' ? '__Secure-token' : 'token';
-const databasePrefix = 'database';
+import {
+  claimCookie,
+  cookieConfig,
+  cookieKey,
+  credKeyPrefix,
+  globalControlPlane,
+} from '@/app/embed/ClaimDatabase/utils';
 
 const headers = new Headers({
   'content-type': 'application/json; charset=utf-8',
 });
+
 // this is crazy, but whatever
 export async function POST(req: NextRequest) {
   const cookieStore = await nextCookies();
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     return new Response(null, { status: 204 });
   }
   const { nonce } = await req.json();
-  const email = `ste_${nonce}@thenile.test`;
+  const email = `ste_${nonce}@thenile.dev`;
   const password = generatePassword();
 
   const body = JSON.stringify({ email, password });
@@ -48,12 +48,6 @@ export async function POST(req: NextRequest) {
     headers,
   });
   if (signedIn.status === 200) {
-    const cookieConfig: Partial<ResponseCookie> = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 86400, // 24h
-      path: '/',
-    };
     if (process.env.NODE_ENV === 'production') {
       cookieConfig.domain = '.thenile.dev';
       cookieConfig.sameSite = 'none';
@@ -101,9 +95,8 @@ export async function POST(req: NextRequest) {
         cookieConfig,
       );
       const jwt = decode(developerToken);
-      const database64 = encodeBase64Url({ ...db, sub: jwt?.sub });
 
-      cookieStore.set(databasePrefix, database64, cookieConfig);
+      await claimCookie.set({ ...db, sub: jwt?.sub });
       return new Response(null, { status: 201 });
     } else {
       return new Response(db.message, { status: 400 });
@@ -129,8 +122,4 @@ function generatePassword(length = 32): string {
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=[]{}';
   const bytes = randomBytes(length);
   return Array.from(bytes, (b) => alphabet[b % alphabet.length]).join('');
-}
-function encodeBase64Url(obj: unknown): string {
-  const b64 = Buffer.from(JSON.stringify(obj), 'utf8').toString('base64');
-  return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
