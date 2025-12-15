@@ -19,7 +19,7 @@
     "highlight.js": "^11.9.0",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",
-    "next": "15.5.8",
+    "next": "^15.5.9",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-syntax-highlighter": "^15.6.1",
