@@ -41,7 +41,7 @@ llama-index-readers-file==0.4.7
 llama-index-readers-llama-parse==0.4.0
 llama-index-vector-stores-nile==0.2.1
 llama-parse==0.5.8
-marshmallow==3.22.0
+marshmallow==3.26.2
 multidict==6.1.0
 mypy-extensions==1.0.0
 nest-asyncio==1.6.0
