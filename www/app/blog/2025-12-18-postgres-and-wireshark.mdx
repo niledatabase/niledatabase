@@ -1,0 +1,131 @@
+export const metadata = {
+  title: 'Debugging Postgres TLS Traffic with Wireshark',
+  authors: ['gwenshap'],
+  image: '2025-12-18-postgres-and-wireshark/cover.webp',
+  sizzle:
+    'Learn how to capture and decrypt TLS-encrypted Postgres traffic for debugging using libpq 18 and Wireshark',
+  tags: ['postgres', 'debugging', 'security', 'internals'],
+};
+
+When debugging PostgreSQL applications, especially in production or when troubleshooting connectivity issues, it's valuable to inspect the actual network traffic between your client and the database server. However, Postgres connections are typically encrypted with TLS, making the traffic unreadable in standard packet captures. 
+Until Postgres 18 was released, there was no simple way to use network captures to debug Postgres in production - you either had to disable TLS (not recommended in production!) or use a specialized proxy (essentially perform "man in the middle" attack against yourself).
+
+With the release of Postgres 18, `libpq` (the official Postgres client library) added support for logging TLS session keys, which enables you to decrypt and inspect encrypted traffic using Wireshark. This is similar to the `SSLKEYLOGFILE` feature that browser developers have been using for years to debug HTTPS traffic.
+
+In this post, I'll walk you through the process of capturing and decrypting Postgres TLS traffic, including some important gotchas to watch out for.
+
+## Prerequisites
+
+To follow along, you'll need:
+
+- **libpq 18 or newer**: The easiest way to get this is to install PostgreSQL 18 locally and use its `psql` client. The server can be running any Postgres version as only the client needs libpq 18 or newer. Some popular language drivers (like `psycopg`) have also started to bundle libpq 18, so you can use those as well.
+- **tcpdump**: For capturing network traffic
+- **Wireshark**: For viewing and analyzing the decrypted traffic
+
+The examples below use Nile as the Postgres server, but this technique works with any Postgres database, regardless of version or hosting provider.
+
+## Step 1: Logging TLS session keys
+
+The first step is to configure libpq to log the TLS session keys to a file. You do this by adding the `sslkeylogfile` parameter to your connection string:
+
+```bash
+psql "postgres://user:password@us-west-2.db.thenile.dev:5432/bench_west?sslmode=require&sslkeylogfile=./psql_sslkey_log.txt"
+```
+
+When you connect, libpq will write the TLS session keys to `psql_sslkey_log.txt`. These keys are what Wireshark needs to decrypt the traffic.
+
+### Important notes on sslkeylogfile
+
+* **Don't use environment variables**: Early versions of the patch included support for a `PGSSLKEYLOGFILE` environment variable. However, this was removed from the final version due to security concerns. Unfortunately, many AI tools and older documentation still reference this environment variable, which **does not work** in libpq 18. Always use the connection string parameter instead.
+
+* **Use absolute paths**: The tilde (`~`) shortcut for your home directory doesn't work in the `sslkeylogfile` parameter. If you try to use it, psql will show an error. Use either a relative path like `./psql_sslkey_log.txt` or an absolute path like `/Users/yourname/psql_sslkey_log.txt`.
+
+* **Security warning**: The key log file contains the handshake and/or encryption keys of your database connection. Anyone with access to this file and your packet capture can decrypt your traffic. Only use this technique in controlled debugging scenarios, and delete the key log file *and* the enriched capture file when you're done.
+
+## Step 2: Capturing network traffic
+
+Next, you need to capture the actual network traffic. The standard approach is to use `tcpdump`:
+
+```bash
+sudo tcpdump -w psql_cap.pcap tcp port 5432
+```
+
+This captures all TCP traffic on port 5432 (the default Postgres port) and writes it to `psql_cap.pcap`.
+
+**MacOS users**: You can capture additional process information and flags using the `pktap` interface:
+
+```bash
+sudo tcpdump -nki pktap -w psql_cap.pcap tcp port 5432
+```
+
+The <code>-nki pktap</code> flags enable packet tap mode, which provides richer metadata about the captured packets.
+
+## Step 3: Injecting TLS keys into the capture
+
+Now comes the key step (pun intended): you need to combine the packet capture with the TLS session keys. Wireshark provides a command-line tool called `editcap` for this purpose:
+
+```bash
+editcap --inject-secrets tls,./psql_sslkey_log.txt psql_cap.pcap psql_cap_w_secrets.pcapng
+```
+
+This creates a new capture file (`psql_cap_w_secrets.pcapng`) that contains both the network traffic and the embedded TLS keys.
+
+**macOS users**: Wireshark is typically not in your PATH by default, so you'll need to use the full path:
+
+```bash
+/Applications/Wireshark.app/Contents/MacOS/editcap --inject-secrets tls,./psql_sslkey_log.txt psql_cap.pcap psql_cap_w_secrets.pcapng
+```
+
+The benefit of combining the keys into the capture file is that you can now share this single file with others (or keep it for later) without needing to manage a separate key log file.
+
+## Step 4: Viewing decrypted traffic in Wireshark
+
+Once you have the capture file with embedded keys, you can open it in Wireshark normally. The TLS traffic will be automatically decrypted, and you'll be able to see the Postgres protocol messages in plain text.
+
+### Alternative: Live capture with Wireshark
+
+If you prefer to capture and decrypt traffic in real-time, you can configure Wireshark to use your key log file directly:
+
+1. Open Wireshark
+2. Go to **Preferences → Protocols → TLS**
+3. In the **(Pre)-Master-Secret Log File Name** field, enter the path to your key log file (e.g., `./psql_sslkey_log.txt`)
+4. Start capturing on the appropriate network interface
+
+Wireshark will now decrypt TLS traffic in real-time as it's captured.
+
+## What can you do with decrypted Postgres traffic?
+
+If you haven't used Wireshark to inspect the Postgres protocol before, I think you'll be delighted with all the information you'll see. Wireshark lets you inspect the full Postgres protocol - from handshake to query execution. You can observe the query text being sent from client to server, the results being returned, and even low-level protocol details like binding parameters.
+
+This visibility is invaluable for debugging issues like query performance problems, connection errors and weird bugs in ORMs / proxies.
+
+## Debugging ORM-generated queries
+
+One of the most practical uses for this technique is inspecting what your ORM is actually sending to the database. ORMs often generate complex queries that can be difficult to understand from logs alone, and performance issues frequently stem from unexpected query patterns.
+
+You can use the instructions above to capture and decrypt traffic from your application, if it uses a driver that wraps libpq **and** they have already upgraded to libpq 18. Just add the connection parameters to the query string or the connection configuration object.
+
+Python's `psycopg` bundles libpq 18 in its latest version (3.2.3). Javascript's `node-postgres` has its own protocol implementation but also supports native libpq bindings via the `pg-native` package. It will use libpq 18 if you have it installed on your system.
+
+When debugging ORM queries, pay attention to:
+
+- **Catalog queries**: Look for unexpected `SELECT` statements against system tables. If you have a large schema, ORMs may be issuing expensive catalog queries that slow down application startup or query execution.
+- **N+1 queries**: You'll see multiple similar queries being sent when you expected one
+- **Transaction boundaries**: When transactions start and commit relative to your application code
+- **Connection pool behavior**: How many connections are actually being used
+- **Query preparation**: Whether the ORM is using prepared statements (extended protocol) or simple queries. Prepared statements are recommended, since they are more efficient and safer against SQL injection. However, they can lead to sub-optimal query plans due to plan caching.
+
+This is particularly useful when facing performance issues. You can see exactly what's being executed, in what order, and with what timing.
+
+## Conclusion
+
+The `sslkeylogfile` parameter in libpq 18 brings Postgres debugging capabilities in line with modern web development tools. Being able to inspect encrypted traffic makes it much easier to troubleshoot complex connectivity and protocol issues.
+
+Next time you're debugging a mysterious Postgres connection problem, remember that you now have the tools to see exactly what's happening on the wire.
+
+## Resources
+
+- [PostgreSQL 18 Release Notes](https://www.postgresql.org/docs/18/release-18.html) - Information about new features in Postgres 18
+- [Wireshark TLS Decryption](https://wiki.wireshark.org/TLS) - Wireshark documentation on decrypting TLS traffic
+- [PostgreSQL Wire Protocol](https://www.postgresql.org/docs/current/protocol.html) - Understanding the messages you'll see in decrypted traffic
+- [tcpdump Documentation](https://www.tcpdump.org/manpages/tcpdump.1.html) - Complete guide to tcpdump options
