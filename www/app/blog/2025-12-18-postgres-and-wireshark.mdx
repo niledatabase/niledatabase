@@ -82,9 +82,7 @@ The benefit of combining the keys into the capture file is that you can now shar
 
 Once you have the capture file with embedded keys, you can open it in Wireshark normally. The TLS traffic will be automatically decrypted, and you'll be able to see the Postgres protocol messages in plain text.
 
-### Alternative: Live capture with Wireshark
-
-If you prefer to capture and decrypt traffic in real-time, you can configure Wireshark to use your key log file directly:
+Alternatively, if you prefer to capture and decrypt traffic in real-time, you can configure Wireshark to use your key log file directly:
 
 1. Open Wireshark
 2. Go to **Preferences → Protocols → TLS**
@@ -93,9 +91,7 @@ If you prefer to capture and decrypt traffic in real-time, you can configure Wir
 
 Wireshark will now decrypt TLS traffic in real-time as it's captured.
 
-## What can you do with decrypted Postgres traffic?
-
-If you haven't used Wireshark to inspect the Postgres protocol before, I think you'll be delighted with all the information you'll see. Wireshark lets you inspect the full Postgres protocol - from handshake to query execution. You can observe the query text being sent from client to server, the results being returned, and even low-level protocol details like binding parameters.
+Regardless of whether you used Wireshark to view a capture file, or to capture and decrypt traffic in real time, Wireshark lets you inspect the full Postgres protocol. You can check every packet from handshake to query execution. You can observe the query text being sent from client to server, the results being returned, and even low-level protocol details like binding parameters.
 
 This visibility is invaluable for debugging issues like query performance problems, connection errors and weird bugs in ORMs / proxies.
 
