@@ -14,7 +14,7 @@
     "@ai-sdk/react": "^2.0.106",
     "@hookform/resolvers": "^3.3.3",
     "@langchain/community": "0.2.30",
-    "@langchain/core": "0.2.30",
+    "@langchain/core": "0.3.80",
     "@langchain/openai": "0.2.0",
     "@niledatabase/nextjs": "^5.0.0",
     "@niledatabase/react": "^5.0.0",
