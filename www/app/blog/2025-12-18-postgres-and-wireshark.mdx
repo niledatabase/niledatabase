@@ -7,7 +7,7 @@ export const metadata = {
   tags: ['postgres', 'debugging', 'security', 'internals'],
 };
 
-When debugging PostgreSQL applications, especially in production or when troubleshooting connectivity issues, it's valuable to inspect the actual network traffic between your client and the database server. However, Postgres connections are typically encrypted with TLS, making the traffic unreadable in standard packet captures. 
+When debugging PostgreSQL applications, especially in production or when troubleshooting connectivity issues, it's valuable to inspect the actual network traffic between your client and the database server. However, Postgres connections are typically encrypted with TLS, making the traffic unreadable in standard packet captures.
 Until Postgres 18 was released, there was no simple way to use network captures to debug Postgres in production - you either had to disable TLS (not recommended in production!) or use a specialized proxy (essentially perform "man in the middle" attack against yourself).
 
 With the release of Postgres 18, `libpq` (the official Postgres client library) added support for logging TLS session keys, which enables you to decrypt and inspect encrypted traffic using Wireshark. This is similar to the `SSLKEYLOGFILE` feature that browser developers have been using for years to debug HTTPS traffic.
@@ -36,11 +36,11 @@ When you connect, libpq will write the TLS session keys to `psql_sslkey_log.txt`
 
 ### Important notes on sslkeylogfile
 
-* **Don't use environment variables**: Early versions of the patch included support for a `PGSSLKEYLOGFILE` environment variable. However, this was removed from the final version due to security concerns. Unfortunately, many AI tools and older documentation still reference this environment variable, which **does not work** in libpq 18. Always use the connection string parameter instead.
+- **Don't use environment variables**: Early versions of the patch included support for a `PGSSLKEYLOGFILE` environment variable. However, this was removed from the final version due to security concerns. Unfortunately, many AI tools and older documentation still reference this environment variable, which **does not work** in libpq 18. Always use the connection string parameter instead.
 
-* **Don't use tilde**: The tilde (`~`) shortcut for your home directory doesn't work in the `sslkeylogfile` parameter. If you try to use it, psql will show an error. Instead, use an absolute or relative path.
+- **Don't use tilde**: The tilde (`~`) shortcut for your home directory doesn't work in the `sslkeylogfile` parameter. If you try to use it, psql will show an error. Instead, use an absolute or relative path.
 
-* **Security warning**: The key log file contains the handshake and/or encryption keys of your database connection. Anyone with access to this file and your packet capture can decrypt your traffic. Only use this technique in controlled debugging scenarios, and delete the key log file *and* the enriched capture file when you're done.
+- **Security warning**: The key log file contains the handshake and/or encryption keys of your database connection. Anyone with access to this file and your packet capture can decrypt your traffic. Only use this technique in controlled debugging scenarios, and delete the key log file _and_ the enriched capture file when you're done.
 
 ## Step 2: Capturing network traffic
 
