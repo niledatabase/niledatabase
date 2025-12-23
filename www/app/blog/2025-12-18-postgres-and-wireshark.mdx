@@ -38,7 +38,7 @@ When you connect, libpq will write the TLS session keys to `psql_sslkey_log.txt`
 
 * **Don't use environment variables**: Early versions of the patch included support for a `PGSSLKEYLOGFILE` environment variable. However, this was removed from the final version due to security concerns. Unfortunately, many AI tools and older documentation still reference this environment variable, which **does not work** in libpq 18. Always use the connection string parameter instead.
 
-* **Use absolute paths**: The tilde (`~`) shortcut for your home directory doesn't work in the `sslkeylogfile` parameter. If you try to use it, psql will show an error. Use either a relative path like `./psql_sslkey_log.txt` or an absolute path like `/Users/yourname/psql_sslkey_log.txt`.
+* **Don't use tilde**: The tilde (`~`) shortcut for your home directory doesn't work in the `sslkeylogfile` parameter. If you try to use it, psql will show an error. Instead, use an absolute or relative path.
 
 * **Security warning**: The key log file contains the handshake and/or encryption keys of your database connection. Anyone with access to this file and your packet capture can decrypt your traffic. Only use this technique in controlled debugging scenarios, and delete the key log file *and* the enriched capture file when you're done.
 
@@ -70,7 +70,7 @@ editcap --inject-secrets tls,./psql_sslkey_log.txt psql_cap.pcap psql_cap_w_secr
 
 This creates a new capture file (`psql_cap_w_secrets.pcapng`) that contains both the network traffic and the embedded TLS keys.
 
-**macOS users**: Wireshark is typically not in your PATH by default, so you'll need to use the full path:
+**macOS users**: Wireshark is typically not in your PATH by default, so you'll need to use the full path. If you need to do this often, consider adding Wireshark to your PATH for convenience. The command looks like this:
 
 ```bash
 /Applications/Wireshark.app/Contents/MacOS/editcap --inject-secrets tls,./psql_sslkey_log.txt psql_cap.pcap psql_cap_w_secrets.pcapng
