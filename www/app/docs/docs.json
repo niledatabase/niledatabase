@@ -332,7 +332,8 @@
               "auth/frameworks/nitro",
               "auth/frameworks/nuxt",
               "auth/frameworks/react",
-              "auth/frameworks/remix"
+              "auth/frameworks/remix",
+              "auth/frameworks/elysia"
             ]
           }
         ]
