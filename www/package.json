@@ -33,6 +33,7 @@
     "d3-zoom": "^3.0.0",
     "dotenv": "^16.5.0",
     "elkjs": "^0.9.1",
+    "embla-carousel-auto-scroll": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "fast-image-zoom": "^7.0.1",
     "highlight.js": "^11.10.0",
