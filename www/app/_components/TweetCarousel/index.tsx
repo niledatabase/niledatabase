@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
 import { TweetCard, type Tweet } from './TweetCard';
 import { NewHeading } from '../common/NewHeading';
+import useEmblaCarousel from 'embla-carousel-react';
+import AutoScroll from 'embla-carousel-auto-scroll';
 
 const tweets: Tweet[] = [
   {
@@ -83,204 +84,22 @@ const tweets: Tweet[] = [
   },
 ];
 
-// Triple the tweets array to ensure smooth looping
-const extendedTweets = [...tweets, ...tweets, ...tweets];
-
-const SCROLL_SPEED = 0.65; // pixels per frame (increased by 20% from 0.4)
-const CARD_WIDTH =
-  typeof window !== 'undefined' && window.innerWidth < 640 ? 300 : 406; // width + gap for mobile/desktop
-const WHEEL_SCROLL_SPEED = 25; // pixels per wheel event
-const TOTAL_WIDTH = tweets.length * CARD_WIDTH;
-
 export default function TweetCarousel() {
-  const [isPaused, setIsPaused] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [translateX, setTranslateX] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const lastFrameTime = useRef<number>(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const startX = useRef<number>(0);
-  const currentX = useRef<number>(0);
-  const dragStartTranslateX = useRef<number>(0);
-
-  // Handle scroll events with throttling
-  useEffect(() => {
-    let scrollTimeout: NodeJS.Timeout;
-    let isThrottled = false;
-
-    const handleScroll = () => {
-      if (isThrottled) return;
-      isThrottled = true;
-      setIsScrolling(true);
-      clearTimeout(scrollTimeout);
-
-      setTimeout(() => {
-        isThrottled = false;
-      }, 50);
-
-      scrollTimeout = setTimeout(() => {
-        setIsScrolling(false);
-      }, 150);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(scrollTimeout);
-    };
-  }, []);
-
-  // Helper function to handle looping
-  const handleLoop = useCallback((value: number) => {
-    const normalizedValue = value % TOTAL_WIDTH;
-
-    // If we've scrolled past the end, loop to the beginning
-    if (Math.abs(normalizedValue) >= TOTAL_WIDTH) {
-      return 0;
-    }
-
-    // If we've scrolled past the beginning, loop to the end
-    if (normalizedValue > 0) {
-      return normalizedValue - TOTAL_WIDTH;
-    }
-
-    return normalizedValue;
-  }, []);
-
-  // Animation with time-based movement
-  useEffect(() => {
-    let animationFrameId: number;
-
-    const animate = (timestamp: number) => {
-      if (!lastFrameTime.current) {
-        lastFrameTime.current = timestamp;
-      }
-
-      const deltaTime = timestamp - lastFrameTime.current;
-      lastFrameTime.current = timestamp;
-
-      if (!isPaused && !isScrolling && !isDragging) {
-        setTranslateX((prev) => {
-          const newValue = prev - (SCROLL_SPEED * deltaTime) / 16;
-          return handleLoop(newValue);
-        });
-      }
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animationFrameId = requestAnimationFrame(animate);
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      lastFrameTime.current = 0;
-    };
-  }, [isPaused, isScrolling, isDragging, handleLoop]);
-
-  const handleDragStart = useCallback(
-    (clientX: number) => {
-      setIsDragging(true);
-      startX.current = clientX;
-      dragStartTranslateX.current = translateX;
-      currentX.current = clientX;
+  const [emblaRef] = useEmblaCarousel(
+    {
+      loop: true,
+      dragFree: true,
+      align: 'start',
+      skipSnaps: true,
     },
-    [translateX],
-  );
-
-  const handleDragMove = useCallback(
-    (clientX: number) => {
-      if (!isDragging) return;
-
-      const delta = clientX - currentX.current;
-      currentX.current = clientX;
-
-      setTranslateX((prev) => {
-        const newValue = prev + delta;
-        // Apply looping during drag
-        return handleLoop(newValue);
-      });
-    },
-    [isDragging, handleLoop],
-  );
-
-  const handleDragEnd = useCallback(() => {
-    setIsDragging(false);
-  }, []);
-
-  // Mouse event handlers
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      handleDragStart(e.clientX);
-    },
-    [handleDragStart],
-  );
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      handleDragMove(e.clientX);
-    },
-    [handleDragMove],
-  );
-
-  const handleMouseUp = useCallback(() => {
-    handleDragEnd();
-  }, [handleDragEnd]);
-
-  // Touch event handlers
-  const handleTouchStart = useCallback(
-    (e: React.TouchEvent) => {
-      handleDragStart(e.touches[0].clientX);
-    },
-    [handleDragStart],
-  );
-
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent) => {
-      handleDragMove(e.touches[0].clientX);
-    },
-    [handleDragMove],
-  );
-
-  const handleTouchEnd = useCallback(() => {
-    handleDragEnd();
-  }, [handleDragEnd]);
-
-  const handleMouseEnter = useCallback(() => {
-    setIsPaused(true);
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    if (!isDragging) {
-      setIsPaused(false);
-    }
-  }, [isDragging]);
-
-  const handleWheel = useCallback(
-    (e: React.WheelEvent) => {
-      e.preventDefault();
-
-      // Use a smaller multiplier for smoother scrolling
-      const SMOOTH_SCROLL_SPEED = 5;
-
-      // Determine scroll direction and amount
-      const delta = e.shiftKey ? e.deltaY : e.deltaX;
-
-      if (delta !== 0) {
-        setTranslateX((prev) => {
-          const newValue = prev - (delta * SMOOTH_SCROLL_SPEED) / 100;
-          const loopedValue = handleLoop(newValue);
-
-          // Prevent large jumps by checking if the change is too big
-          if (Math.abs(loopedValue - prev) > CARD_WIDTH * 2) {
-            return prev;
-          }
-
-          return loopedValue;
-        });
-      }
-    },
-    [handleLoop],
+    [
+      AutoScroll({
+        playOnInit: true,
+        stopOnInteraction: false,
+        stopOnMouseEnter: true,
+        speed: 0.8,
+      }),
+    ],
   );
 
   return (
@@ -289,46 +108,12 @@ export default function TweetCarousel() {
         <NewHeading>What People Are Saying</NewHeading>
       </div>
 
-      <div
-        ref={containerRef}
-        className="relative cursor-grab overflow-hidden active:cursor-grabbing"
-        onMouseEnter={handleMouseEnter}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={(e) => {
-          handleMouseLeave();
-          handleMouseUp();
-        }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onWheel={handleWheel}
-      >
-        <div
-          className="flex gap-3 sm:gap-6"
-          style={{
-            transform: `translateX(${translateX}px)`,
-            width: 'fit-content',
-            transition:
-              isDragging || isScrolling ? 'none' : 'transform 100ms linear',
-            willChange: 'transform',
-          }}
-        >
-          {extendedTweets.map((tweet, index) => (
+      <div ref={emblaRef} className="overflow-hidden">
+        <div className="flex">
+          {tweets.map((tweet) => (
             <div
-              key={`${tweet.id}-${index}`}
-              style={{
-                minWidth:
-                  typeof window !== 'undefined' && window.innerWidth < 640
-                    ? '300px'
-                    : '400px',
-                maxWidth:
-                  typeof window !== 'undefined' && window.innerWidth < 640
-                    ? '300px'
-                    : '400px',
-                userSelect: 'none',
-              }}
+              key={tweet.id}
+              className="mr-3 min-w-[300px] max-w-[300px] flex-[0_0_auto] sm:mr-6 sm:min-w-[400px] sm:max-w-[400px]"
             >
               <TweetCard tweet={tweet} />
             </div>
