@@ -24,21 +24,22 @@ application.
 </Step>
 
 <Step title="Configure the extension">
-The simplest way to use Nile with Elysia is to register the extension. This will automatically mount Nile's default API routes ([authentication](/reference/api/auth), [tenant management](/reference/api/tenants), etc.) onto your Elysia application.
+The simplest way to use Nile with Elysia is to register the plugin. This will automatically mount Nile's default API routes ([authentication](/reference/api/auth), [tenant management](/reference/api/tenants), etc.) onto your Elysia application.
 
 ```typescript app.ts
 import { Elysia } from 'elysia';
 import { Nile } from '@niledatabase/server';
-import { elysia } from '@niledatabase/elysia';
+import { nilePlugin } from '@niledatabase/elysia';
 
-const app = new Elysia();
-
-// Initialize Nile with the Elysia extension
+// Initialize the Nile Server
 const nile = Nile({
-  extensions: [elysia(app)],
+  debug: true,
+  // ... configuration options
 });
 
-// The extension has now registered routes like:
+const app = new Elysia().use(nilePlugin(nile));
+
+// The plugin has now registered routes like:
 // POST /api/auth/signin
 // POST /api/auth/signup
 // GET  /api/auth/session
@@ -55,27 +56,60 @@ console.log(
 
 </Steps>
 
-## Custom Authentication Plugin
+## Accessing the Nile Instance
 
-For a more idiomatic Elysia experience, you can create a plugin that derives the authenticated user and exposes helper methods. This allows you to access the user directly in your handlers using destructuring.
+The `nilePlugin` automatically decorates the Elysia context with your `nile` server instance. This allows you to access it directly in your handlers for database queries or custom auth logic.
 
 ```typescript
-import { Elysia } from 'elysia';
-import { Nile } from '@niledatabase/server';
-import { elysia } from '@niledatabase/elysia';
+app.get('/my-data', async ({ nile, request, error }) => {
+  // 1. You can access the configured nile instance directly
+  const headers = new Headers(request.headers);
+  const tenantId = request.headers.get('X-Tenant-Id') || undefined;
 
-const app = new Elysia();
-const nile = Nile({
-  extensions: [elysia(app)],
+  // 2. Use nile.withContext to ensure isolation
+  return await nile.withContext({ headers, tenantId }, async (nileCtx) => {
+    // This query will automatically apply the tenantId for the tenant-aware table
+    const result = await nileCtx.db.query('SELECT * FROM my_table');
+    return result.rows;
+  });
+});
+```
+
+## Deriving the User
+
+For a more idiomatic Elysia experience, you can create a derivation that extracts the authenticated user from the context.
+
+```typescript
+const authApp = app.derive(async ({ nile, request }) => {
+  const headers = new Headers(request.headers);
+  // Use the decorated nile instance to fetch the session
+  const user = await nile.withContext({ headers }, async (nileCtx) => {
+    return await nileCtx.auth.getSession();
+  });
+
+  return { user };
 });
 
-// Create a plugin that derives the user for every request
+authApp.get('/profile', ({ user, error }) => {
+  if (!user) {
+    return error(401, 'Not Authenticated');
+  }
+  return user;
+});
+```
+
+## Custom Auth Helpers
+
+You can extend the derivation pattern to expose helper methods that automatically handle context, making your handlers cleaner.
+
+```typescript
+// Create a plugin that derives the user and auth helpers for every request
 const authPlugin = (app: Elysia) =>
-  app.derive(async ({ request }) => {
+  app.derive(async ({ nile, request }) => {
     // 1. Create headers from the incoming request to propagate cookies/auth
     const headers = new Headers(request.headers);
 
-    // 2. Use nile.withContext to ensure the SDK uses these headers
+    // 2. Use the decorated nile instance to get the session
     const user = await nile.withContext({ headers }, async (nileCtx) => {
       return await nileCtx.auth.getSession();
     });
@@ -99,7 +133,7 @@ const authPlugin = (app: Elysia) =>
   });
 ```
 
-Now you can use the plugin in your application and access `Auth.user` directly.
+Now you can use the plugin in your application and access `Auth.user` and methods directly.
 
 ```typescript
 app
@@ -114,42 +148,16 @@ app
     const { email, password } = body as any;
     return await Auth.signUp(email, password);
   });
-
-app.listen(3000);
 ```
 
-## Context Awareness
+## The Plugin
 
-The `@niledatabase/elysia` extension automatically handles context for the **built-in routes** it registers.
+Under the hood, the elysia plugin does the following:
 
-However, for **custom routes**, you need to manually provide the context if your logic depends on Nile (e.g., querying the DB with [tenant isolation](/tenant-isolation/isolation) or performing Auth operations).
-
-```typescript
-app.get('/my-data', async ({ request }) => {
-  const headers = new Headers(request.headers);
-  // Extract tenantId from headers, query params, or URL path as needed
-  const tenantId = request.headers.get('X-Tenant-Id') || undefined;
-
-  return await nile.withContext({ headers, tenantId }, async (nileCtx) => {
-    // This query will automatically apply the tenantId for the tenant-aware table
-    const result = await nileCtx.db.query('SELECT * FROM my_table');
-    return result.rows;
-  });
-});
-```
-
-## The extension
-
-Under the hood, the elysia extension does the following:
-
-1. Maps Nile's `handlers` and `paths` to Elysia's router (e.g. `app.get`, `app.post`).
-2. Intercepts requests using `onHandleRequest` to detect Elysia contexts.
-3. Automatically propagates request headers and tenant IDs into the Nile context for safe, isolated execution.
+1. **Registers Routes**: Maps Nile's internal route handlers to Elysia's router (e.g. `app.get`, `app.post`), exposing the full API.
+2. **Decorates Context**: Adds the `nile` server instance to the Elysia context (`ctx.nile`), making it available in all downstream handlers and plugins.
+3. **Context Isolation**: For the routes it registers, it wraps execution in `nile.withContext` to ensure tenant isolation and proper authentication handling.
 
 ### Handlers and paths
 
-The extension iterates over the configured paths in the Nile Server SDK and registers them directly with your Elysia app instance. This ensures that all standard [authentication](/reference/api/auth) and [tenant management](/reference/api/tenants) routes are available without manual configuration.
-
-### Context Management
-
-For requests handled by the extension, it wraps the execution in `nile.withContext`. This ensures that `nile.db` and `nile.auth` calls within those handlers automatically respect the current tenant and user session, applying necessary authorization policies.
+The plugin iterates over the configured paths in the Nile Server SDK and registers them directly with your Elysia app instance. This ensures that all standard [authentication](/reference/api/auth) and [tenant management](/reference/api/tenants) routes are available without manual configuration.
