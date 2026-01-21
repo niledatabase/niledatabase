@@ -31,7 +31,7 @@
     "drizzle-kit": "latest",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
-    "wrangler": "^3.88.0"
+    "wrangler": "^3.114.17"
   },
   "packageManager": "pnpm@10.8.1"
 }
