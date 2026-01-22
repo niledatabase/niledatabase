@@ -27,7 +27,7 @@
     "eslint": "^9.2.0",
     "eslint-config-next": "^15.3.3",
     "jwt-decode": "^3.1.2",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "next": "^15.5.9",
     "next-auth": "^4.24.5",
     "pg": "^8.11.3",
