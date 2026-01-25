@@ -29,7 +29,7 @@ export function TableOfContents({ headings }: Props) {
     );
 
     headings.forEach((heading) => {
-      const element = document.querySelector(`#${slugify(heading.text)}`);
+      const element = document.getElementById(slugify(heading.text));
       if (element) {
         observer.observe(element);
       }
