@@ -14,7 +14,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@langchain/community": "^0.2.0",
-    "@langchain/core": "^0.2.0",
+    "@langchain/core": "^0.3.80",
     "@langchain/openai": "^0.2.0",
     "@mui/icons-material": "^5.15.20",
     "@mui/joy": "^5.0.0-beta.36",
