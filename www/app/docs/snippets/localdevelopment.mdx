@@ -9,12 +9,20 @@
 <Step title="Run the Docker Container">
 
 ```bash
-docker run -p 5432:5432 -p 3000:3000 -ti ghcr.io/niledatabase/testingcontainer:latest
+docker run --pull=always --rm -p 5432:5432 -p 3000:3000 -ti ghcr.io/niledatabase/testingcontainer:latest
 ```
 
-This will start a Postgres database with Nile extensions installed. It will also start Nile Auth (optional).
-If this is the first time you are running the container, it will also pull the latest image,create the `test` database
-and the `00000000-0000-0000-0000-000000000000` user.
+This pulls the latest image and starts a Postgres database with Nile extensions installed, along with Nile Auth on port 3000.
+Each new container creates the `test` database and the `00000000-0000-0000-0000-000000000000` user.
+The `--rm` option removes the container and its data when it exits.
+
+Wait for the following message before connecting:
+
+```text
+Database has been created and is ready
+```
+
+Leave the container running and open another terminal for the commands below.
 
 </Step>
 <Step title="Connecting to the Database">

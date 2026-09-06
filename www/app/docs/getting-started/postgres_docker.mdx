@@ -94,8 +94,8 @@ SELECT tenants.name, title, embedding, estimate, complete
 FROM todos join tenants on tenants.id = todos.tenant_id;
 ```
 
-✏️ Note that the container uses ephemeral storage, so all the data will be lost when the container is stopped.
-This is intentional, as it simplifies the setup (and more importantly - the cleanup), while still allowing you to experiment and test your application.
+✏️ The examples use `--rm`, so Docker removes the container and its anonymous data volumes when it exits.
+Run a new container to start with a fresh database. Stopping a container without `--rm` does not remove its data.
 
 </Step>
 </Steps>
@@ -123,10 +123,10 @@ The docker container can be configured with the following environment variables:
 If you need to change the default values, you can do so by setting the environment variables when running the container.
 
 ```bash
-docker run -p 5432:5432 -ti \
+docker run --pull=always --rm -p 5432:5432 -ti \
   -e NILE_TESTING_DB_NAME=mydatabase \
   -e NILE_TESTING_DB_PASSWORD=mypassword \
-  ghcr.io/niledatabase/testingcontainer:v0.0.2
+  ghcr.io/niledatabase/testingcontainer:latest
 ```
 
 with this configuration, the connection string will be:
@@ -137,10 +137,13 @@ psql postgres://00000000-0000-0000-0000-000000000000:mypassword@127.0.0.1:5432/m
 
 You can also change the port mappings in the docker run command, if you want Postgres to listen on a different port.
 
+To test email-based authentication, see [Configuring email for local tests](/getting-started/postgres_testing#configuring-email-for-local-tests).
+
 ## Troubleshooting
 
 If you are having trouble running the container, the first step is to check that you are using the latest version of the container.
-You can do this by first deleting existing images of `niledatabase/testingcontainer:latest` (since they may refer to older versions) and then running `docker pull ghcr.io/niledatabase/testingcontainer:latest`.
+Run `docker pull ghcr.io/niledatabase/testingcontainer:latest`, then create a new container from that image.
+Pulling an image does not update an existing container. The examples above use `--pull=always` to check for updates each time you run them.
 
 Please check if any of the common issues and solutions below help solve your problem. If not, we welcome you to report the issue on either [GitHub](https://github.com/niledatabase/niledatabase) or [Discord](https://discord.com/invite/8UuBB84tTy)
 
@@ -186,6 +189,6 @@ You can either:
 - Stop the other Postgres instance - the exact command depends on your operating system and Postgres installation method.
 - Change the port mapping when running the container. For example to port 5433, and then connect to the new port:
   ```bash
-  docker run -p 5433:5432 -ti ghcr.io/niledatabase/testingcontainer:latest
+  docker run --pull=always --rm -p 5433:5432 -ti ghcr.io/niledatabase/testingcontainer:latest
   psql postgres://00000000-0000-0000-0000-000000000000:password@localhost:5433/test
   ```
