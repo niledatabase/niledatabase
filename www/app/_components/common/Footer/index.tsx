@@ -16,9 +16,9 @@ export default async function Footer({ className }: { className?: string }) {
           <div className="flex w-full flex-col justify-between gap-32 lg:flex-row">
             <div className="flex flex-row flex-wrap gap-16">
               <div className="flex flex-col gap-4">
-                <Link href="/docs" className="mb-3 text-[16px] font-medium">
+                <a href="/docs" className="mb-3 text-[16px] font-medium">
                   Documentation
-                </Link>
+                </a>
                 <Link href="/docs/getting-started" className="text-[16px]">
                   Quick Start
                 </Link>

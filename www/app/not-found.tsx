@@ -22,11 +22,11 @@ export default function NotFound() {
                 Return Home
               </button>
             </Link>
-            <Link href="/docs">
+            <a href="/docs">
               <button className="rounded-[10px] border border-[#1c1c1c] bg-[#000] px-6 py-3 text-[16px] leading-[20px] text-white transition-colors hover:bg-[#1c1c1c]">
                 View Docs
               </button>
-            </Link>
+            </a>
           </div>
         </div>
       </div>

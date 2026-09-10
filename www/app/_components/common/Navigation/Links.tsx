@@ -10,9 +10,9 @@ export function Links({ className: cn }: { className?: string }) {
         Auth
       </Link>
 
-      <Link href="/docs" className={className}>
+      <a href="/docs" className={className}>
         Docs
-      </Link>
+      </a>
       <Link className={className} href="/pricing">
         Pricing
       </Link>
