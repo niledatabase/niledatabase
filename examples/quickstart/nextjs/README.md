@@ -53,8 +53,9 @@ It should look something like this (you can see that I used Fireworks as the ven
 
 # Private env vars that should never show up in the browser
 # These are used by the server to connect to Nile database
-NILE_USER = "0190995c-44ab-7ce3-9aef-31ef87dcd5f0"
-NILE_PASSWORD = "73d32231-1d21-4990-a4f4-g6447507c271"
+NILEDB_AUTH_MODE=password
+NILEDB_USER="0190995c-44ab-7ce3-9aef-31ef87dcd5f0"
+NILEDB_PASSWORD="73d32231-1d21-4990-a4f4-g6447507c271"
 
 # Client (public) env vars
 
@@ -103,6 +104,22 @@ To learn more about how this example works and how to use Nile:
 - [Nile's Javascript SDK reference](https://www.thenile.dev/docs/reference/sdk-reference)
 
 ## Deploy on Vercel
+
+### Marketplace OIDC
+
+OIDC mode requires an enabled Nile resource, Vercel's resource-token feature, Node 20 or later, and a published `@niledatabase/server` release with the OAUTHBEARER client and `@niledatabase/server/vercel` helper. Update the SDK dependency and authoritative lockfile to that release before enabling OIDC. The existing SDK lockfile does not provide this helper. A release that sends resource tokens as passwords is incompatible. The source change alone does not upgrade the installed package. Selecting OIDC with an older package fails explicitly.
+
+Set `NILEDB_AUTH_MODE=vercel-oidc` and provide the non-secret database ID, database name, API URL, published database DNS hostname, port, dedicated `NILEDB_OIDC_LOGIN_ID`, and `NILEDB_VERCEL_RESOURCE_ID`. The Vercel resource ID is different from the Nile database UUID. Keep these values on the server. Do not configure a competing connection string or save a minted token in an environment variable.
+
+The server-only configuration loads the released helper without acquiring a token during module initialization. The helper supplies an explicit token provider, its OAUTHBEARER-capable client, and `db: { ssl: { rejectUnauthorized: true } }`. After a new physical connection negotiates OAUTHBEARER, the provider obtains the current workload identity and mints a default-claims resource token. It requests no role. Pool reuse does not mint again. The helper uses returned expiry rather than a five-minute refresh timer. Mint, provider, and certificate failures reject the connection without a password or plaintext retry. Use the published DNS hostname, not an IP address, and keep certificate and hostname verification enabled.
+
+Use explicit `password` mode with separate local database credentials until Vercel's Marketplace mint is confirmed for local or preview use. Application sign-in and tenant authorization remain unchanged. Generic Vercel workload identity support does not establish Marketplace resource-token access for a build or preview context.
+
+Establish dual mode before deploying OIDC. Redeploy every affected project and environment, verify sign-up, tenant selection and todo operations, and verify new physical connections after token expiry. Once an application uses OIDC, retain OIDC-capable backend services even while its old password remains. A password-only backend rollback requires redeploying every affected application to valid password mode and verifying new connections. If adoption is unknown, retain OIDC.
+
+Vercel's final-rotation flag and resource/installation scope remain unpublished. Do not remove integration passwords manually or invent that action. Once the matching operation is available, wait for global and regional credential revocation, scheduled deletion, the fleet password-cache barrier and environment updates before declaring removal complete. Remove password-bearing URLs as well as `NILEDB_PASSWORD`. After removal starts, keep OIDC available and resume pending operations; do not recreate passwords automatically.
+
+The [Vercel integration guide](https://www.thenile.dev/docs/integrations/vercel#marketplace-oidc-pilot) describes the same release and connection prerequisites. Do not send tokens to support; provide the mint HTTP status/error code and non-secret resource context.
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 

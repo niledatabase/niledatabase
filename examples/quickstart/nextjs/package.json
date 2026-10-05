@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/oidc": "^3.8.5",
     "@niledatabase/client": "^5.0.0",
     "@niledatabase/nextjs": "^5.0.0",
     "@niledatabase/react": "^5.0.0",
