@@ -46,7 +46,7 @@ multidict==6.1.0
 mypy-extensions==1.0.0
 nest-asyncio==1.6.0
 networkx==3.4.1
-nltk==3.9.1
+nltk==3.10.4
 numpy==1.26.4
 ollama==0.3.3
 openai==1.58.1
