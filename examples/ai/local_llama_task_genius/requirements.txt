@@ -6,7 +6,7 @@ anyio==4.2.0
 attrs==24.2.0
 bcrypt==4.1.2
 beautifulsoup4==4.12.3
-certifi==2024.7.4
+certifi==2026.10.18
 charset-normalizer==3.4.0
 click==8.1.7
 dataclasses-json==0.6.7
