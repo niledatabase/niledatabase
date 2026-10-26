@@ -1,0 +1,62 @@
+---
+title: 'Connecting to Postgres using LibreDB Studio'
+sidebarTitle: 'LibreDB Studio'
+---
+
+This guide will walk you through the steps to connect to Nile using [LibreDB Studio](https://github.com/libredb/libredb-studio), an open source (MIT) web-based SQL editor that connects to Nile as a PostgreSQL database.
+
+1. Create a Nile's Postgres database through the UI or use one of your existing databases to follow along.
+
+![LibreDB-Studio-1](/images/psql-1.png)
+
+2. Once you are inside a specific database, click on the settings tab on the left and navigate to the connections screen
+
+![LibreDB-Studio-2](/images/psql-2.png)
+
+3. Click on the Postgres icon to get the connection string
+
+![LibreDB-Studio-3](/images/psql-3.png)
+
+4. Click "Generate credentials". Use this if you really want to simplify the access. If not, you can replace the username and password manually.
+
+![LibreDB-Studio-4](/images/dbweaver-4.png)
+
+5. There are four parts of this url that is needed to connect to LibreDB Studio
+
+```sql
+psql postgres://018bd797-ed9d-7c02-bec4-dac1179c29fd:d68af75e-47cb-4354-ada4-98abe7d8015c@db.thenile.dev:5432/diplomatic_axe
+
+host:db.thenile.dev
+database:diplomatic_axe
+username:018bd797-ed9d-7c02-bec4-dac1179c29fd
+password:d68af75e-47cb-4354-ada4-98abe7d8015c
+```
+
+6. Start LibreDB Studio, either with Docker or with npx, open `http://localhost:3000` in your browser and sign in as `admin@libredb.org` with the password printed to the log on first run
+
+```bash
+docker run -p 3000:3000 ghcr.io/libredb/libredb-studio:latest
+# or
+npx @libredb/studio
+```
+
+7. Open the editor, click "New connection" and pick PostgreSQL as the choice of database
+
+![LibreDB-Studio-5](/images/libredb-studio-5.png)
+
+8. Enter the host, database, username and password from step 5, or paste the whole `postgres://` connection string with "Paste URL". Open "SSL / TLS" and set the SSL mode to `require`.
+
+![LibreDB-Studio-6](/images/libredb-studio-6.png)
+
+9. Press "Test Connection", then "Establish Connection". LibreDB Studio should connect to Nile's Postgres and list your tables, including the built-in `tenants` table.
+
+![LibreDB-Studio-7](/images/libredb-studio-7.png)
+
+10. Open a query tab and run queries against your tables, one statement at a time. To look at one tenant's rows, filter on `tenant_id`. The examples below use the `todos` table from the [SQL quickstart](/getting-started/languages/sql):
+
+```sql
+SELECT * FROM tenants;
+SELECT * FROM todos WHERE tenant_id = '7e93c45f-fe65-4f26-8ab6-922850fa4c7a';
+```
+
+11. Enjoy exploring Nile with LibreDB Studio
