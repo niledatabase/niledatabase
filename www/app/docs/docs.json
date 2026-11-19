@@ -113,6 +113,7 @@
                 "icon": "screwdriver-wrench",
                 "pages": [
                   "postgres/tools/dbeaver",
+                  "postgres/tools/libredb-studio",
                   "postgres/tools/pgadmin",
                   "postgres/tools/psql"
                 ]
